@@ -1,6 +1,6 @@
 # Discussion Documentation Approach
 
-*Part of **[discussion-documentation](skill.md)** | See also: **[template.md](template.md)** · **[guidelines.md](guidelines.md)***
+*Part of **[technical-discussion](../SKILL.md)** | See also: **[template.md](template.md)** · **[guidelines.md](guidelines.md)***
 
 ---
 

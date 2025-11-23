@@ -1,6 +1,6 @@
 # Discussion Document Template
 
-*Part of **[discussion-documentation](skill.md)** | See also: **[meeting-assistant.md](meeting-assistant.md)** · **[guidelines.md](guidelines.md)***
+*Part of **[technical-discussion](../SKILL.md)** | See also: **[meeting-assistant.md](meeting-assistant.md)** · **[guidelines.md](guidelines.md)***
 
 ---
 

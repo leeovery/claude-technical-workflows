@@ -1,6 +1,6 @@
 # Implementation Plan Template
 
-*Part of **[technical-planning](SKILL.md)** | See also: **[planning-approach.md](planning-approach.md)** · **[guidelines.md](guidelines.md)***
+*Part of **[technical-planning](../SKILL.md)** | See also: **[planning-approach.md](planning-approach.md)** · **[guidelines.md](guidelines.md)***
 
 ---
 

@@ -25,11 +25,11 @@ You stop at step 1. Capture context. Don't jump to plans or code.
 
 **On length**: Discussions can be thousands of lines. Length = whatever needed to fully capture discussion, debates, edge cases, false paths. Terseness preferred, but comprehensive documentation more important. Don't summarize - document.
 
-See **[meeting-assistant.md](meeting-assistant.md)** for detailed approach.
+See **[meeting-assistant.md](references/meeting-assistant.md)** for detailed approach.
 
 ## Structure
 
-Use **[template.md](template.md)** for discussions in `plan/discussion/`:
+Use **[template.md](references/template.md)** for discussions in `plan/discussion/`:
 
 - **Context**: What sparked this
 - **Options Explored**: Approaches considered
@@ -45,7 +45,7 @@ Use **[template.md](template.md)** for discussions in `plan/discussion/`:
 
 **Don't**: Transcribe verbatim, write code/implementation, create build phases, skip context
 
-See **[guidelines.md](guidelines.md)** for best practices and anti-hallucination techniques.
+See **[guidelines.md](references/guidelines.md)** for best practices and anti-hallucination techniques.
 
 ## Commit Frequently
 
@@ -60,6 +60,6 @@ See **[guidelines.md](guidelines.md)** for best practices and anti-hallucination
 
 ## Quick Reference
 
-- **Approach**: **[meeting-assistant.md](meeting-assistant.md)** - Dual role, workflow
-- **Template**: **[template.md](template.md)** - Structure
-- **Guidelines**: **[guidelines.md](guidelines.md)** - Best practices
+- **Approach**: **[meeting-assistant.md](references/meeting-assistant.md)** - Dual role, workflow
+- **Template**: **[template.md](references/template.md)** - Structure
+- **Guidelines**: **[guidelines.md](references/guidelines.md)** - Best practices

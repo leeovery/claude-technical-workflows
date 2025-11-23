@@ -22,7 +22,7 @@ You're at step 2. Don't implement.
 
 ## Plan Contents
 
-Use **[template.md](template.md)**:
+Use **[template.md](references/template.md)**:
 - Phases with specific tasks
 - Code examples (pseudocode/actual in plan doc)
 - Testing strategy
@@ -41,9 +41,9 @@ Use **[template.md](template.md)**:
 
 ## Reference Files
 
-- **[planning-approach.md](planning-approach.md)** - Workflow, step-by-step
-- **[template.md](template.md)** - Plan structure
-- **[guidelines.md](guidelines.md)** - Best practices, examples
+- **[planning-approach.md](references/planning-approach.md)** - Workflow, step-by-step
+- **[template.md](references/template.md)** - Plan structure
+- **[guidelines.md](references/guidelines.md)** - Best practices, examples
 
 ## Remember
 

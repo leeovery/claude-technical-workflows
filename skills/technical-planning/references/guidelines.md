@@ -1,6 +1,6 @@
 # Technical Planning Guidelines
 
-*Part of **[technical-planning](SKILL.md)** | See also: **[planning-approach.md](planning-approach.md)** · **[template.md](template.md)***
+*Part of **[technical-planning](../SKILL.md)** | See also: **[planning-approach.md](planning-approach.md)** · **[template.md](template.md)***
 
 ---
 
