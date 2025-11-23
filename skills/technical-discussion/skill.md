@@ -5,7 +5,7 @@ description: "Document technical discussions as expert architect and meeting ass
 
 # Technical Discussion
 
-Participate in technical discussions AND document them. Output: `plan/discussion/{topic}.md`
+Act as **expert software architect** participating in discussions AND **documentation assistant** capturing them. Do both simultaneously. Engage deeply while documenting for planning teams.
 
 ## Three-Phase Workflow
 
@@ -13,56 +13,53 @@ Participate in technical discussions AND document them. Output: `plan/discussion
 2. **Planning** (next): HOW - phases, structure, implementation steps
 3. **Implementation** (after): DOING - actual coding
 
-You stop at step 1. Don't plan or implement.
-
-## Your Role
-
-- **Expert architect**: Challenge approaches, identify edge cases, provide insights
-- **Documentation assistant**: Capture decisions, debates, rationale, false paths
-
-Do both simultaneously.
+You stop at step 1. Capture context. Don't jump to plans or code.
 
 ## What to Capture
 
-- Back-and-forth debates (how we decided X over Y)
-- Edge cases, constraints, concerns
-- Competing solutions and why one won
-- False paths and "aha" moments
-- **Goal**: Solve problems before planning
+- **Back-and-forth debates**: Challenging, prolonged discussions show how we decided X over Y
+- **Small details**: If discussed, it mattered - edge cases, constraints, concerns
+- **Competing solutions**: Why A won over B and C when all looked good
+- **The journey**: False paths, "aha" moments, course corrections
+- **Goal**: Solve edge cases and problems before planning
 
-See **[meeting-assistant.md](meeting-assistant.md)** for approach.
+**On length**: Discussions can be thousands of lines. Length = whatever needed to fully capture discussion, debates, edge cases, false paths. Terseness preferred, but comprehensive documentation more important. Don't summarize - document.
+
+See **[meeting-assistant.md](meeting-assistant.md)** for detailed approach.
 
 ## Structure
 
-Use **[template.md](template.md)**:
-- Context and options explored
-- Debates and false paths
-- Decisions with rationale
-- Edge cases solved
-- Impact
+Use **[template.md](template.md)** for discussions in `plan/discussion/`:
+
+- **Context**: What sparked this
+- **Options Explored**: Approaches considered
+- **Debates**: Back-and-forth, challenges
+- **False Paths**: What didn't work, why
+- **Decisions**: What we chose, rationale
+- **Edge Cases**: Problems solved
+- **Impact**: Why it matters
 
 ## Do / Don't
 
-**Do**: Capture debates, edge cases, why solutions won/lost, focus on "why"
+**Do**: Capture debates, edge cases, why solutions won/lost, high-level context, focus on "why"
 
-**Don't**:
-- ❌ Write code or implementation
-- ❌ Create build phases or plans
-- ❌ Skip context or transcribe verbatim
+**Don't**: Transcribe verbatim, write code/implementation, create build phases, skip context
 
-See **[guidelines.md](guidelines.md)** for best practices.
+See **[guidelines.md](guidelines.md)** for best practices and anti-hallucination techniques.
 
-## Commit Often
+## Commit Frequently
 
-Commit discussion docs to `plan/discussion/`:
-- At natural breaks
-- When solutions identified
-- Before context refresh
+**Commit discussion docs often** to `plan/discussion/`:
 
-**Why**: Prevents memory loss and hallucination.
+- At natural breaks in discussion
+- When solutions to problems are identified
+- When discussion branches/forks to new topics
+- Before context refresh (prevents hallucination/memory loss)
+
+**Why**: You lose memory on context refresh. Commits help you track, backtrack, and fill gaps. Critical for avoiding hallucination.
 
 ## Quick Reference
 
-- **[meeting-assistant.md](meeting-assistant.md)** - Dual role, workflow
-- **[template.md](template.md)** - Document structure
-- **[guidelines.md](guidelines.md)** - Best practices
+- **Approach**: **[meeting-assistant.md](meeting-assistant.md)** - Dual role, workflow
+- **Template**: **[template.md](template.md)** - Structure
+- **Guidelines**: **[guidelines.md](guidelines.md)** - Best practices
