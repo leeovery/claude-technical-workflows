@@ -1,11 +1,11 @@
-# claude-planning
+# claude-technical-workflows
 
 Claude Code skills for structured discussion and planning workflows.
 
 ## Installation
 
 ```bash
-composer require --dev leeovery/claude-planning
+composer require --dev leeovery/claude-technical-workflows
 ```
 
 ## Skills

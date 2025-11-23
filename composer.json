@@ -1,6 +1,6 @@
 {
-    "name": "leeovery/claude-planning",
-    "description": "Claude Code plugin: claude-planning",
+    "name": "leeovery/claude-technical-workflows",
+    "description": "Claude Code plugin: claude-technical-workflows",
     "type": "claude-plugin",
     "license": "MIT",
     "authors": [
