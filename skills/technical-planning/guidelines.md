@@ -18,13 +18,15 @@ Best practices for creating actionable implementation plans. For PLANNING only -
 
 ## Planning Mindset
 
-**You're translating decisions → execution**
+**You're translating decisions → execution strategy**
 
 - Discussion decided WHAT and WHY
-- Planning defines HOW and WHEN
+- Planning defines HOW and WHEN (phases)
 - Implementation executes the plan
 
-**Bridge the gap**: Discussion says "use caching." Plan says "Phase 1: Install Redis, Phase 2: Implement CacheManager with these methods, Phase 3: Update controllers to use cache"
+**CRITICAL**: You create the execution strategy document. You do NOT execute it. Your output is a plan in `plan/implementation/`, not code changes.
+
+**Bridge the gap**: Discussion says "use caching." Plan says "Phase 1: Install Redis, Phase 2: Implement CacheManager with these methods, Phase 3: Update controllers to use cache" - then you STOP. Implementation phase does the actual work.
 
 ## Phase Design
 
@@ -233,7 +235,7 @@ class MetricsCacheManager:
 
 ## Common Pitfalls
 
-**Starting implementation**: Planning defines HOW to build, not the actual building
+**❌ CRITICAL: Starting implementation**: Planning defines HOW to build, not the actual building. DO NOT write production code or modify project files. You create the plan document ONLY.
 
 **Re-debating decisions**: Reference discussion doc, don't second-guess architectural choices
 
@@ -245,7 +247,9 @@ class MetricsCacheManager:
 
 **Ignoring rollback**: Every deployment can fail. Plan for it.
 
-**No code examples**: Novel patterns need concrete examples, not just descriptions
+**No code examples**: Novel patterns need concrete examples in the plan (as documentation examples, not production code)
+
+**Confusing your role**: You're the architect drawing blueprints, not the construction crew building the house
 
 ## Quality Checklist
 

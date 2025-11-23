@@ -7,15 +7,24 @@ description: "Transform technical discussion documents into actionable implement
 
 Transform discussion documents into actionable implementation plans. Bridge between architectural decisions and code execution.
 
+## ⚠️ Critical: Your Role Ends at Planning
+
+**You create the plan. You do NOT implement it.**
+
+Your output is a document in `plan/implementation/` that tells developers HOW to build. You stop there. The actual coding, file changes, and implementation are handled by a separate implementation phase.
+
+**Your responsibility**: Create detailed, actionable plans
+**NOT your responsibility**: Write production code, modify files, or implement features
+
 ## Core Principle
 
 **Planning ≠ Discussion ≠ Implementation**
 
 - **Discussion** (previous phase): WHAT and WHY - decisions, architecture, edge cases
-- **Planning** (your role): HOW - phases, structure, code examples, testable steps
-- **Implementation** (next phase): DOING - actual coding
+- **Planning** (YOUR ROLE): HOW - phases, structure, code examples, testable steps
+- **Implementation** (NOT YOUR JOB): DOING - actual coding, file changes, execution
 
-Convert decisions → execution strategy.
+Convert decisions → execution strategy. Then STOP.
 
 ## What Planning Provides
 
@@ -112,20 +121,23 @@ class CacheManager:
 ## Do / Don't
 
 **Do**:
+- Create comprehensive plans in `plan/implementation/`
 - Reference discussion decisions with rationale
 - Make phases testable and specific
-- Include code examples for complex parts
+- Include code examples for complex parts (as examples in the plan)
 - Address every edge case from discussion
 - Define clear verification steps
 - Plan for rollback
 
-**Don't**:
-- Start implementing (that's next phase)
-- Re-debate architectural decisions
-- Skip edge cases
-- Use vague tasks like "handle errors"
-- Forget rollback strategy
-- Leave dependencies unclear
+**Don't - CRITICAL BOUNDARIES**:
+- ❌ **Write production code or modify actual project files**
+- ❌ **Start implementing features (that's the NEXT phase)**
+- ❌ **Execute the plan you create (you ONLY create the plan)**
+- ❌ Re-debate architectural decisions
+- ❌ Skip edge cases
+- ❌ Use vague tasks like "handle errors"
+- ❌ Forget rollback strategy
+- ❌ Leave dependencies unclear
 
 See **[guidelines.md](guidelines.md)** for best practices.
 
@@ -198,6 +210,16 @@ Before marking plan complete:
 
 ## Remember
 
-You're the bridge: Discussion decided WHAT and WHY. You define HOW and structure. Implementation executes your plan.
+**You're the architect, not the builder.**
 
-Be specific. Be concrete. Be thorough. Show the path from current state to goal, one testable phase at a time.
+- Discussion phase decided WHAT and WHY
+- You define HOW and structure
+- Implementation phase executes your plan
+
+**Your deliverable**: A document in `plan/implementation/` that guides developers
+
+**Your job ends**: When the plan is complete and committed
+
+**Not your job**: Writing production code, modifying project files, or executing the implementation
+
+Be specific. Be concrete. Be thorough. Show the path from current state to goal, one testable phase at a time. Then hand it off to implementation.
