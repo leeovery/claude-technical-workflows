@@ -5,20 +5,20 @@ description: "Transform technical discussion documents into actionable implement
 
 # Technical Planning
 
-Convert discussion docs into implementation plans. Output: `plan/implementation/{feature}.md`
+Convert discussion docs from technical-discussion into implementation plans. Output: `plan/implementation/{feature}.md`
+
+## Three-Phase Workflow
+
+1. **Discussion** (previous): WHAT and WHY - decisions, architecture, edge cases
+2. **Planning** (YOU): HOW - phases, structure, code examples in plan
+3. **Implementation** (next): DOING - actual coding
+
+You're at step 2. Don't implement.
 
 ## ⚠️ You Create Plans, NOT Code
 
 **Your job**: Write plan document
 **NOT your job**: Implement it, modify files, write production code
-
-## Three-Phase Workflow
-
-1. **Discussion** (previous): WHAT and WHY
-2. **Planning** (YOU): HOW - phases, structure, examples
-3. **Implementation** (NOT YOU): DOING - actual coding
-
-You stop at step 2.
 
 ## Plan Contents
 
