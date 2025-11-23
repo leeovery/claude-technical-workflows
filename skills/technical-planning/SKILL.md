@@ -5,89 +5,46 @@ description: "Transform technical discussion documents into actionable implement
 
 # Technical Planning
 
-Transform discussion documents into actionable implementation plans with phases and clear instructions.
+Convert discussion docs into implementation plans. Output: `plan/implementation/{feature}.md`
 
-## ⚠️ Critical: Your Role Ends at Planning
+## ⚠️ You Create Plans, NOT Code
 
-**You create the plan. You do NOT implement it.**
+**Your job**: Write plan document
+**NOT your job**: Implement it, modify files, write production code
 
-Output is a document in `plan/implementation/` that tells developers HOW to build. The actual coding, file changes, and implementation are handled by a separate implementation phase.
+## Three-Phase Workflow
 
-**Your responsibility**: Create detailed, actionable plans
-**NOT your responsibility**: Write production code, modify files, or implement features
+1. **Discussion** (previous): WHAT and WHY
+2. **Planning** (YOU): HOW - phases, structure, examples
+3. **Implementation** (NOT YOU): DOING - actual coding
 
-## Core Principle
+You stop at step 2.
 
-**Planning ≠ Discussion ≠ Implementation**
+## Plan Contents
 
-- **Discussion** (previous phase): WHAT and WHY - decisions, architecture, edge cases
-- **Planning** (your role): HOW - phases, structure, code examples in plan document
-- **Implementation** (NOT your job): DOING - actual coding, file changes
-
-Convert decisions → execution strategy. Then STOP.
-
-## What to Deliver
-
-- **Structured phases**: Foundation → Core → Edge cases → Polish
-- **Code examples**: Pseudocode/actual code showing patterns (in plan doc)
-- **Specific tasks**: Actionable items per phase
-- **Testing strategy**: How to verify each phase
-- **Traceability**: Link decisions to discussion rationale
-- **Completeness**: Edge cases, rollback, monitoring, dependencies
-
-**Goal**: Implementation team starts coding immediately without questions.
-
-See **[planning-approach.md](planning-approach.md)** for detailed workflow and methodology.
-
-## Structure
-
-Use **[template.md](template.md)** for implementation plans in `plan/implementation/`:
-
-- Overview linking to discussion
-- Architecture from discussion decisions
+Use **[template.md](template.md)**:
 - Phases with specific tasks
-- Code examples for complex parts
+- Code examples (pseudocode/actual in plan doc)
 - Testing strategy
-- Edge case handling
+- Edge case handling from discussion
 - Rollback plan
-- Dependencies
 
-## Do / Don't
+## Critical Rules
 
-**Do**: Create plans, reference discussion rationale, make phases testable, include code examples (in plan), address edge cases, define verification
+**Do**: Create plans, reference discussion rationale, make phases testable
 
-**Don't - CRITICAL**:
-- ❌ **Write production code or modify project files**
-- ❌ **Execute the plan (you ONLY create it)**
-- ❌ Re-debate decisions (reference discussion)
-- ❌ Skip edge cases or use vague tasks
+**Don't**:
+- ❌ Write production code
+- ❌ Modify project files
+- ❌ Execute the plan
+- ❌ Re-debate decisions
 
-See **[guidelines.md](guidelines.md)** for best practices, code example patterns, and anti-patterns.
+## Reference Files
 
-## Commit Plans
-
-**Commit often** to `plan/implementation/`:
-- Initial plan complete
-- After review/approval
-- Significant updates
-- Phase completions
-
-**Why**: Keeps plan current, provides history, enables collaboration.
-
-## Quick Reference
-
-- **Approach**: **[planning-approach.md](planning-approach.md)** - Your role, workflow, step-by-step process
-- **Template**: **[template.md](template.md)** - Plan structure and format
-- **Guidelines**: **[guidelines.md](guidelines.md)** - Best practices, specificity levels, examples
+- **[planning-approach.md](planning-approach.md)** - Workflow, step-by-step
+- **[template.md](template.md)** - Plan structure
+- **[guidelines.md](guidelines.md)** - Best practices, examples
 
 ## Remember
 
-**You're the architect, not the builder.**
-
-Discussion decided WHAT and WHY. You define HOW and structure. Implementation executes your plan.
-
-**Your deliverable**: A document in `plan/implementation/` that guides developers
-**Your job ends**: When the plan is complete and committed
-**Not your job**: Writing production code or executing implementation
-
-Be specific. Be concrete. Be thorough. Then hand it off to implementation.
+You're the architect, not the builder. Create the plan document, then hand off to implementation.
