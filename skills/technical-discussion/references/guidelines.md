@@ -8,6 +8,18 @@ Best practices for documenting discussions. For DOCUMENTATION only - no plans or
 
 ## Core Principles
 
+**One question at a time**: Don't overwhelm with multiple questions. Focus on single issue, get answer, move forward.
+
+**Multiple-choice preferred**: Easier to answer than open-ended. Present 2-3 options with trade-offs.
+
+**YAGNI ruthlessly**: Remove unnecessary features from all designs. If not discussed, don't add it.
+
+**Explore alternatives**: Always propose 2-3 approaches before settling. Show trade-offs.
+
+**Be flexible**: Go back and clarify when something doesn't make sense. Don't forge ahead on assumptions.
+
+**Ask questions**: Clarify ambiguity. Better to ask than assume.
+
 **Journey over destination**: "Explored MySQL, PostgreSQL, MongoDB. MySQL familiar but PostgreSQL better for JSON + ACID. Deciding factor: complex joins + JSON support" not just "Use PostgreSQL"
 
 **"Why" over "what"**: "Repository pattern lets us swap data sources (DB/API/cache) without changing actions. Eloquent would tightly couple us" not just "Use repository"

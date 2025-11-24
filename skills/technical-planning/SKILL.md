@@ -1,11 +1,11 @@
 ---
 name: technical-planning
-description: "Transform technical discussion documents into actionable implementation plans with phases, code examples, and clear instructions. Second phase of document-plan-implement workflow. Use when: (1) User asks to create/write an implementation plan, (2) User asks to plan implementation of discussed features, (3) Converting discussion documents from plan/discussion/ into implementation plans, (4) User says 'plan this' or 'create a plan' after discussions, (5) Need to structure how to build something with phases and concrete steps. Creates plans in plan/implementation/ that development teams can execute. Bridges architectural decisions to development execution."
+description: "Transform technical discussion documents into actionable implementation plans with phases, code examples, and clear instructions. Second phase of document-plan-implement workflow. Use when: (1) User asks to create/write an implementation plan, (2) User asks to plan implementation of discussed features, (3) Converting discussion documents from plan/discussion/ into implementation plans, (4) User says 'plan this' or 'create a plan' after discussions, (5) Need to structure how to build something with phases and concrete steps. Creates plans in plan/{topic-name}/ directories that development teams can execute. Bridges architectural decisions to development execution."
 ---
 
 # Technical Planning
 
-Convert discussion docs from technical-discussion into implementation plans. Output: `plan/implementation/{feature}.md`
+Convert discussion docs from technical-discussion into implementation plans. Output: `plan/{topic-name}/` directory with one or more plan files.
 
 ## Three-Phase Workflow
 

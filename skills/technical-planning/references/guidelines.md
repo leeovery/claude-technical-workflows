@@ -8,6 +8,18 @@ Best practices for creating actionable implementation plans. For PLANNING only -
 
 ## Core Principles
 
+**Bite-sized tasks**: Break work into 2-5 minute actions. Each step should be small and concrete.
+
+**TDD workflow**: Test → Fail → Implement → Pass → Commit. Make this cycle explicit in task breakdown.
+
+**Exact paths**: Specify exact file paths, not vague locations like "update the controller".
+
+**Expected output**: State what commands should produce. "Run tests, expect FAIL with specific error".
+
+**Frequent commits**: Commit after each passing test or completed mini-task.
+
+**DRY and YAGNI**: Don't repeat yourself. You aren't gonna need it - remove unnecessary features.
+
 **Actionable over theoretical**: "Phase 1: Set up Redis cache with user-key partitioning" not "Consider implementing caching strategies"
 
 **Specific over vague**: "Create CacheManager class with get/set/invalidate methods" not "Add caching layer"
@@ -24,7 +36,7 @@ Best practices for creating actionable implementation plans. For PLANNING only -
 - Planning defines HOW and WHEN (phases)
 - Implementation executes the plan
 
-**CRITICAL**: You create the execution strategy document. You do NOT execute it. Your output is a plan in `plan/implementation/`, not code changes.
+**CRITICAL**: You create the execution strategy document. You do NOT execute it. Your output is a plan in `plan/{topic-name}/`, not code changes.
 
 **Bridge the gap**: Discussion says "use caching." Plan says "Phase 1: Install Redis, Phase 2: Implement CacheManager with these methods, Phase 3: Update controllers to use cache" - then you STOP. Implementation phase does the actual work.
 
