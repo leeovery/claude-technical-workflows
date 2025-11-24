@@ -25,10 +25,6 @@ Before beginning, ask the user these questions to properly set up the discussion
    - Should I explore any particular directories or components?
    - Is there existing code related to this discussion?
 
-5. **Participants & Stakeholders**:
-   - Who else is involved in this discussion?
-   - Are there specific perspectives or concerns to consider?
-
 ## After Gathering Information
 
 Once I have this information:
