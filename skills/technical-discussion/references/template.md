@@ -116,7 +116,7 @@ What we chose, why, the deciding factor, trade-offs accepted, confidence level.
 **Anti-patterns**:
 - Don't pull false paths into a separate top-level section - keep them with the question they relate to
 - Don't turn into plan (no implementation steps)
-- Don't write code
+- Don't write code - unless it came up in discussion (e.g., API shape, pattern example) and is relevant to capture
 - Don't summarise the journey - document it
 
 **Complete when**:
