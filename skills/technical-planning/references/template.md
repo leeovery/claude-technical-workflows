@@ -4,7 +4,7 @@
 
 ---
 
-Standard structure for `plan/implementation/` documents. PLAN only - no actual code changes.
+Standard structure for `docs/specs/plans/` documents. PLAN only - no actual code changes.
 
 ## Template
 
@@ -13,7 +13,7 @@ Standard structure for `plan/implementation/` documents. PLAN only - no actual c
 
 **Date**: YYYY-MM-DD
 **Status**: Draft | Ready | In Progress | Completed
-**Discussion Source**: Link to `plan/discussion/{filename}.md`
+**Discussion Source**: Link to `docs/specs/discussions/{topic-name}/`
 **Estimated Complexity**: Low | Medium | High | Very High
 
 ## Overview
@@ -327,8 +327,8 @@ Updated phase 2 based on {reason}
 ## Usage Notes
 
 **When creating**:
-1. Start with discussion document from `plan/discussion/`
-2. Create: `plan/implementation/{feature-name}.md`
+1. Start with discussion document from `docs/specs/discussions/`
+2. Create: `docs/specs/plans/{topic-name}/`
 3. Extract key decisions and constraints from discussion
 4. Break into logical phases
 5. Add code examples for complex parts

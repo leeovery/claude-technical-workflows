@@ -1,6 +1,6 @@
 ---
 name: technical-discussion
-description: "Document technical discussions as expert architect and meeting assistant. Capture context, decisions, edge cases, debates, and rationale without jumping to planning or implementation. First phase of document-plan-implement workflow. Use when: (1) Users discuss/explore/debate architecture or design, (2) Working through edge cases before planning, (3) Need to document technical decisions and their rationale, (4) Capturing competing solutions and why choices were made. Creates documentation in plan/discussion/ that technical-planning uses to build implementation plans."
+description: "Document technical discussions as expert architect and meeting assistant. Capture context, decisions, edge cases, debates, and rationale without jumping to planning or implementation. First phase of document-plan-implement workflow. Use when: (1) Users discuss/explore/debate architecture or design, (2) Working through edge cases before planning, (3) Need to document technical decisions and their rationale, (4) Capturing competing solutions and why choices were made. Creates documentation in docs/specs/discussions/ that technical-planning uses to build implementation plans."
 ---
 
 # Technical Discussion
@@ -29,7 +29,7 @@ See **[meeting-assistant.md](references/meeting-assistant.md)** for detailed app
 
 ## Structure
 
-Discussions are stored in `plan/discussion/<topic-name>/` directories. Each discussion gets its own directory containing one or more markdown files.
+Discussions are stored in `docs/specs/discussions/<topic-name>/` directories. Each discussion gets its own directory containing one or more markdown files.
 
 **Single vs Multiple Files**:
 - Start with single file (e.g., `discussion.md`)
@@ -59,7 +59,7 @@ See **[guidelines.md](references/guidelines.md)** for best practices and anti-ha
 
 ## Commit Frequently
 
-**Commit discussion docs often** to `plan/discussion/<topic-name>/`:
+**Commit discussion docs often** to `docs/specs/discussions/<topic-name>/`:
 
 - At natural breaks in discussion
 - When solutions to problems are identified

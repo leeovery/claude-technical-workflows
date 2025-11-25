@@ -4,7 +4,7 @@
 
 ---
 
-Standard structure for `plan/discussion/<topic-name>/` documents. Each discussion gets its own directory with one or more markdown files. DOCUMENT only - no plans or code.
+Standard structure for `docs/specs/discussions/<topic-name>/` documents. Each discussion gets its own directory with one or more markdown files. DOCUMENT only - no plans or code.
 
 ## Template
 
@@ -116,7 +116,7 @@ Made decision on X, ruled out Y
 ## Usage Notes
 
 **When creating**:
-1. Create directory: `plan/discussion/<topic-name>/`
+1. Create directory: `docs/specs/discussions/<topic-name>/`
 2. Create initial file: `discussion.md` (or `part-1.md`, `main-discussion.md`)
 3. Fill header: date, status, participants
 4. Start with context: why discussing?

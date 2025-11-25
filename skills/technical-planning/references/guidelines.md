@@ -36,7 +36,7 @@ Best practices for creating actionable implementation plans. For PLANNING only -
 - Planning defines HOW and WHEN (phases)
 - Implementation executes the plan
 
-**CRITICAL**: You create the execution strategy document. You do NOT execute it. Your output is a plan in `plan/{topic-name}/`, not code changes.
+**CRITICAL**: You create the execution strategy document. You do NOT execute it. Your output is a plan in `docs/specs/plans/{topic-name}/`, not code changes.
 
 **Bridge the gap**: Discussion says "use caching." Plan says "Phase 1: Install Redis, Phase 2: Implement CacheManager with these methods, Phase 3: Update controllers to use cache" - then you STOP. Implementation phase does the actual work.
 
