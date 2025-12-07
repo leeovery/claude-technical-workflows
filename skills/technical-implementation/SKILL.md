@@ -1,0 +1,153 @@
+---
+name: technical-implementation
+description: "Execute implementation plans using strict TDD workflow with quality gates. Third phase of discussion-plan-implement workflow. Use when: (1) Implementing a plan from docs/specs/plans/, (2) User says 'implement', 'build', or 'code this' after planning, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Writes tests first, implements to pass, commits frequently, stops for user approval between phases."
+---
+
+# Technical Implementation
+
+Execute plans through strict TDD. Write tests first, then code to pass them.
+
+## Three-Phase Workflow
+
+1. **Discussion** (previous): WHAT and WHY - decisions, architecture, rationale
+2. **Planning** (previous): HOW - phases, tasks, acceptance criteria
+3. **Implementation** (YOU): DOING - tests first, then code
+
+You're at step 3. Execute the plan. Don't re-debate decisions.
+
+## Hard Rules
+
+1. **No code before tests** - Write the failing test first. Always.
+2. **No test changes to pass** - If code doesn't pass, fix the code. Tests can only be fixed if genuinely broken or poorly designed, never to accommodate broken code.
+3. **No scope expansion** - If it's not in the plan, don't build it.
+4. **No assumptions** - Uncertain? Check discussion doc. Still uncertain? Ask.
+5. **Commit after green** - Every passing test = commit point.
+
+## Workflow
+
+### With a Plan
+
+1. **Read the plan** from `docs/specs/plans/{topic}/`
+2. **For each phase**:
+   - Announce phase start
+   - Review phase acceptance criteria
+   - For each task:
+     - Derive test from task's micro acceptance criteria
+     - Write failing test
+     - Implement minimal code to pass
+     - Refactor if needed (only when green)
+     - Commit
+   - Verify all phase acceptance criteria met
+   - **Ask user before proceeding to next phase**
+3. **Reference discussion** when rationale unclear
+
+### Without a Plan (Ad Hoc)
+
+When implementing without a formal plan:
+
+1. Clarify the requirement (ask if unclear)
+2. Identify what tests should pass when done
+3. Write failing test
+4. Implement to pass
+5. Refactor when green
+6. Commit with descriptive message
+7. Repeat for next requirement
+
+Apply quality guidelines from [code-quality.md](references/code-quality.md).
+
+## Progress Announcements
+
+Keep user informed of progress:
+
+```
+📍 Starting Phase 2: Core Cache Functionality
+📝 Task 1: Implement CacheManager.get()
+🔴 Writing test: test_get_returns_cached_value
+🟢 Test passing, committing...
+✅ Phase 2 complete. Ready for Phase 3?
+```
+
+## When to Reference Discussion
+
+Check the discussion doc (`docs/specs/discussions/{topic}/`) when:
+
+- Task rationale is unclear
+- Multiple valid approaches exist
+- Edge case handling not specified in plan
+- You need the "why" behind a decision
+
+Don't re-debate. The discussion captured the decision. Follow it.
+
+## Project-Specific Conventions
+
+Follow project-specific coding skills in `.claude/skills/` for:
+
+- Framework patterns (Laravel, Vue, Python, etc.)
+- Code style and formatting
+- Architecture conventions
+- Testing conventions
+
+This skill provides the implementation **process**. Project skills provide the **style**.
+
+## Handling Problems
+
+### Plan is Incomplete
+
+Stop and escalate:
+> "Task X requires Y, but the plan doesn't specify how to handle it. Options: (A) ... (B) ... Which approach?"
+
+### Plan Seems Wrong
+
+Stop and escalate:
+> "The plan says X, but during implementation I discovered Y. This affects Z. Should I continue as planned or revise?"
+
+### Test Reveals Design Flaw
+
+Stop and escalate:
+> "Writing tests for X revealed that the approach won't work because Y. Need to revisit the design."
+
+Never silently deviate from the plan.
+
+## Quality Standards
+
+See [code-quality.md](references/code-quality.md) for:
+
+- DRY (without premature abstraction)
+- SOLID principles
+- Cyclomatic complexity
+- YAGNI enforcement
+
+## Phase Completion Checklist
+
+Before marking a phase complete:
+
+- [ ] All phase tasks implemented
+- [ ] All tests passing
+- [ ] Tests cover task acceptance criteria
+- [ ] No skipped edge cases from plan
+- [ ] Code committed
+- [ ] Manual verification steps completed (if specified in plan)
+
+## Commit Practices
+
+- Commit after each passing test
+- Use descriptive commit messages referencing the task
+- Commits can be squashed before PR if desired
+- Never commit failing tests (except intentional red phase in TDD)
+
+Example commit message:
+```
+feat(cache): implement CacheManager.get() with TTL support
+
+- Returns cached value if exists and not expired
+- Falls back to DB on cache miss
+- Handles connection failures gracefully
+
+Task: Phase 2, Task 1
+```
+
+## References
+
+- **[tdd-workflow.md](references/tdd-workflow.md)** - TDD cycle, test derivation, when tests can change
+- **[code-quality.md](references/code-quality.md)** - DRY, SOLID, complexity, YAGNI
+- **[plan-execution.md](references/plan-execution.md)** - Following plans, phase verification, hierarchy

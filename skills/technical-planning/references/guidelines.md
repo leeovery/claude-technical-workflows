@@ -8,320 +8,244 @@ Best practices for creating actionable implementation plans. For PLANNING only -
 
 ## Core Principles
 
-**Bite-sized tasks**: Break work into 2-5 minute actions. Each step should be small and concrete.
+**Phase > Task hierarchy**: Phases are milestones with acceptance criteria. Tasks are TDD-sized work units.
 
-**TDD workflow**: Test → Fail → Implement → Pass → Commit. Make this cycle explicit in task breakdown.
+**One task = One TDD cycle**: Each task should be: write test → implement → pass → commit.
+
+**Micro acceptance required**: Every task needs a test name that proves completion.
 
 **Exact paths**: Specify exact file paths, not vague locations like "update the controller".
 
-**Expected output**: State what commands should produce. "Run tests, expect FAIL with specific error".
+**Referenced over re-decided**: "Using Redis (per discussion doc)" not re-debating cache choice.
 
-**Frequent commits**: Commit after each passing test or completed mini-task.
-
-**DRY and YAGNI**: Don't repeat yourself. You aren't gonna need it - remove unnecessary features.
-
-**Actionable over theoretical**: "Phase 1: Set up Redis cache with user-key partitioning" not "Consider implementing caching strategies"
-
-**Specific over vague**: "Create CacheManager class with get/set/invalidate methods" not "Add caching layer"
-
-**Testable over aspirational**: Each phase ends with clear verification steps that prove it works
-
-**Referenced over re-decided**: "Using Redis (per discussion doc: users accept 5min staleness)" not re-debating cache choice
-
-## Planning Mindset
-
-**You're translating decisions → execution strategy**
-
-- Discussion decided WHAT and WHY
-- Planning defines HOW and WHEN (phases)
-- Implementation executes the plan
-
-**CRITICAL**: You create the execution strategy document. You do NOT execute it. Your output is a plan in `docs/specs/plans/{topic-name}/`, not code changes.
-
-**Bridge the gap**: Discussion says "use caching." Plan says "Phase 1: Install Redis, Phase 2: Implement CacheManager with these methods, Phase 3: Update controllers to use cache" - then you STOP. Implementation phase does the actual work.
+**DRY and YAGNI**: Don't repeat yourself. You aren't gonna need it.
 
 ## Phase Design
 
 **Each phase should**:
 - Be independently testable
+- Have clear acceptance criteria (checkboxes)
+- Contain 3-7 tasks
 - Provide incremental value
-- Have clear completion criteria
-- Be deployable (if applicable)
 
 **Good phase progression**:
 1. Foundation (DB schema, base classes, infrastructure)
-2. Core functionality (main features without edge cases)
+2. Core functionality (main features, happy path)
 3. Edge cases and error handling
-4. Performance optimization and monitoring
-5. Documentation and deployment
+4. Refinement (performance, monitoring)
 
 **Anti-pattern**: "Phase 1: Build entire feature, Phase 2: Test it"
 
-## Code Examples & Pseudocode
+## Task Design
 
-**When to include code**:
-- Novel patterns not obvious to implement
-- Complex algorithms or logic
-- Integration points with specific requirements
-- Data structures or class hierarchies
+**Each task should**:
+- Be a single TDD cycle
+- Have micro acceptance (specific test name)
+- Take 5-30 minutes
+- Do one clear thing
 
-**When to use pseudocode vs actual code**:
-
-**Pseudocode**: When approach matters more than language specifics
-```pseudocode
-function getCachedMetric(userId, metricKey):
-    cacheKey = buildKey(userId, metricKey)
-
-    if cache.exists(cacheKey) and !cache.isExpired(cacheKey):
-        return cache.get(cacheKey)
-
-    data = database.query(userId, metricKey)
-    cache.set(cacheKey, data, TTL=300)
-    return data
+**Task structure**:
+```markdown
+1. **{Task Name}**
+   - **Do**: What to implement
+   - **Micro Acceptance**: `"it does expected behavior"`
+   - **Edge Cases**: Special handling (optional)
+   - **Notes**: Implementation guidance (optional)
 ```
 
-**Actual code**: When specific implementation is clear from discussion
-```python
-class MetricsCacheManager:
-    def __init__(self, redis_client: Redis, db: Database):
-        self.redis = redis_client
-        self.db = db
-        self.ttl = 300  # 5 minutes per discussion
-
-    def get_metric(self, user_id: int, metric_key: str) -> dict:
-        cache_key = f"metrics:{user_id}:{metric_key}"
-
-        cached = self.redis.get(cache_key)
-        if cached:
-            return json.loads(cached)
-
-        data = self.db.query_metric(user_id, metric_key)
-        self.redis.setex(cache_key, self.ttl, json.dumps(data))
-        return data
+**Good task**:
+```markdown
+1. **Implement CacheManager.get()**
+   - **Do**: Return cached value if exists and not expired
+   - **Micro Acceptance**: `"it gets cached value when hit"`
+   - **Edge Cases**: Return null on miss, handle connection failures
 ```
 
-**Code example checklist**:
-- [ ] Shows structure clearly
-- [ ] Includes error handling approach
-- [ ] Addresses edge cases from discussion
-- [ ] Includes comments for non-obvious parts
-- [ ] Realistic and implementable
+**Bad tasks**:
+- "Implement caching layer" (too big)
+- "Handle errors" (too vague)
+- "Update the code" (meaningless)
+
+## Micro Acceptance Criteria
+
+**Purpose**: Name the test that proves task completion.
+
+**Format**: `"it does the expected behavior"`
+
+**Examples**:
+- `"it gets cached value when hit"`
+- `"it stores value with configured ttl"`
+- `"it removes key silently when not found"`
+
+**Implementation will**:
+1. Read your micro acceptance
+2. Write that test (failing)
+3. Implement to pass
+4. Commit
+
+**Your micro acceptance quality determines test quality.**
+
+## How Implementation Uses Plans
+
+Understanding this helps you write better plans:
+
+1. **Phase start**: Implementation announces phase, reviews acceptance criteria
+2. **Task loop**: For each task:
+   - Derive test from micro acceptance
+   - Write failing test
+   - Implement minimal code to pass
+   - Commit
+3. **Phase end**: Verify all acceptance criteria met
+4. **User checkpoint**: Implementation asks before next phase
+
+**Implications for planning**:
+- Acceptance criteria must be verifiable
+- Tasks must be TDD-sized
+- Micro acceptance must be specific enough to write a test
 
 ## Specificity Levels
 
 **Too vague**: "Add caching"
 **Better**: "Implement Redis caching with 5-minute TTL"
-**Best**: "Phase 2: Implement CacheManager with get(user_id, key), set(user_id, key, value), invalidate(user_id, key) methods. Use Redis with 5min TTL per discussion."
+**Best**: Task with micro acceptance:
+```markdown
+1. **Implement CacheManager.get()**
+   - **Do**: Return cached value if exists, fetch from DB if miss
+   - **Micro Acceptance**: `"it gets cached value when hit"`
+```
 
 **Too vague**: "Handle errors"
 **Better**: "Add error handling for cache failures"
-**Best**: "On Redis connection failure, log error and fall back to direct DB query. Alert if cache unavailable >5min."
-
-**Too vague**: "Update the API"
-**Better**: "Add cache status to API response"
-**Best**: "Add 'cache_status' field to /api/v1/metrics response: {cached: boolean, expires_at: timestamp}. See API contract section."
+**Best**:
+```markdown
+1. **Handle Redis connection failures**
+   - **Do**: On connection failure, log warning, fall back to DB
+   - **Micro Acceptance**: `"it falls back to db on redis error"`
+```
 
 ## Edge Case Handling
 
-**Extract from discussion document**:
-- Read discussion doc edge cases section
-- For each edge case, specify HOW to handle it
+**From discussion doc**: Extract each edge case identified.
+
+**For each one**:
+- Create a task with micro acceptance
 - Assign to specific phase
-- Add verification test
+- Reference back to discussion
 
-**Example transformation**:
-
-*Discussion doc*: "Edge case: What if user has no metrics yet?"
-
-*Implementation plan*:
+**Edge case table**:
 ```markdown
-### Edge Case: New User with No Metrics
+| Edge Case | Solution | Phase | Task | Test |
+|-----------|----------|-------|------|------|
+| User has no metrics | Return empty array | 2 | 3 | `"it returns empty array for new user"` |
+| Cache connection fails | Fall back to DB | 3 | 1 | `"it falls back to db on connection error"` |
+```
 
-**From Discussion**: Identified in discussion doc section 3.2
-**Solution**: Return empty array with proper structure
-**Phase**: Phase 2 (core functionality)
-**Implementation**:
-- Check if database query returns empty
-- Return: {data: [], cached: false, message: "No metrics found"}
-**Test**:
-- [ ] Create new user
-- [ ] Call GET /api/v1/metrics/{key}
-- [ ] Verify empty array response with 200 status
+## Code Examples
+
+**When to include**:
+- Novel patterns not obvious to implement
+- Complex algorithms or logic
+- Integration points with specific requirements
+
+**In plan, not production**: Examples show structure, not deployable code.
+
+```python
+# GOOD: Shows structure, error handling, approach
+class CacheManager:
+    def get(self, user_id: int, key: str) -> Optional[dict]:
+        cache_key = f"metrics:{user_id}:{key}"
+        try:
+            cached = self.redis.get(cache_key)
+            if cached:
+                return json.loads(cached)
+        except RedisError as e:
+            logger.error(f"Cache error: {e}")
+        return self._fetch_from_db(user_id, key)
+```
+
+```python
+# BAD: Too vague
+# Add a cache manager class with methods for getting and setting values
 ```
 
 ## Testing Strategy
 
 **Three levels**:
-
-1. **Unit**: Individual components in isolation
+1. **Unit**: Individual components (covered by task micro acceptance)
 2. **Integration**: Components working together
 3. **System**: End-to-end user flows
 
 **For each phase, specify**:
-- What to test
-- How to verify
-- Success criteria
-
-**Example**:
-```markdown
-### Phase 2 Testing
-
-**Unit Tests**:
-- CacheManager.get() returns cached data
-- CacheManager.get() fetches from DB on cache miss
-- CacheManager.set() stores with correct TTL
-
-**Integration Tests**:
-- API endpoint uses CacheManager correctly
-- Cache miss triggers DB query
-- Subsequent request hits cache
-
-**Manual Verification**:
-- [ ] First request: cached=false in response
-- [ ] Second request: cached=true in response
-- [ ] After 5min: cached=false (cache expired)
-```
-
-## Architecture Decisions
-
-**Reference discussion doc**: Don't re-debate decisions made in discussion phase
-
-**Good**: "Using PostgreSQL with JSONB for metrics storage (per discussion: need JSON queries + ACID)"
-
-**Bad**: "We should probably use PostgreSQL because it has good JSON support and ACID compliance..."
-
-**If new decision needed**: Stop, create new discussion doc, then return to planning
+- What to test (already in tasks)
+- Integration tests needed
+- Manual verification steps
 
 ## Dependencies & Sequencing
 
-**Identify dependencies early**:
-- What must exist before Phase 1?
-- What must complete in Phase N before Phase N+1?
-- External service dependencies?
-- Infrastructure requirements?
-
-**Make dependencies explicit**:
+**Make explicit**:
 ```markdown
-## Dependencies
-
 **Before Phase 1**:
-- Redis server deployed and accessible
-- Database migration environment set up
-- API versioning strategy decided
+- Redis server accessible
+- Database migrations ready
 
 **Phase Dependencies**:
-- Phase 2 requires Phase 1 complete (needs DB schema)
-- Phase 3 requires Phase 2 complete (needs CacheManager)
-
-**External**:
-- Redis cluster (Infrastructure team, ETA: 2024-01-15)
-- API Gateway rate limit increase (Platform team, ticket: PLAT-123)
+- Phase 2 requires Phase 1 (needs DB schema)
+- Phase 3 requires Phase 2 (needs CacheManager)
 ```
 
 ## Rollback Strategy
 
 **Every plan needs rollback**:
 - What triggers rollback?
-- How to roll back safely?
-- What about data created during deployment?
-
-**Example**:
-```markdown
-## Rollback Strategy
-
-**Triggers**:
-- Error rate > 5% for 10 minutes
-- P95 latency > 2s (regression from current)
-- Cache poisoning detected
-
-**Steps**:
-1. Revert application deployment
-2. Clear Redis cache entirely (to remove any poisoned entries)
-3. Database migration rollback (if Phase 1 deployed)
-4. Restore previous API version
-
-**Data Handling**:
-- New metrics stored during deployment retained (backward compatible)
-- Cache invalidation affects all users (acceptable per discussion)
-```
+- Steps to roll back
+- Data handling
 
 ## Common Pitfalls
 
-**❌ CRITICAL: Starting implementation**: Planning defines HOW to build, not the actual building. DO NOT write production code or modify project files. You create the plan document ONLY.
+**Starting implementation**: You create the plan, NOT the code.
 
-**Re-debating decisions**: Reference discussion doc, don't second-guess architectural choices
+**Tasks too big**: If task can't be done in one TDD cycle, break it down.
 
-**Skipping edge cases**: Every edge case from discussion must have handling in plan
+**Missing micro acceptance**: Every task needs a test name.
 
-**Vague phases**: "Make it work" is not a phase. "Implement CacheManager with get/set/invalidate methods" is.
+**Vague acceptance criteria**: "Works correctly" is not acceptance criteria.
 
-**Missing verification**: Each phase needs "how do we know it works?" answered
+**Re-debating decisions**: Reference discussion doc, don't second-guess.
 
-**Ignoring rollback**: Every deployment can fail. Plan for it.
-
-**No code examples**: Novel patterns need concrete examples in the plan (as documentation examples, not production code)
-
-**Confusing your role**: You're the architect drawing blueprints, not the construction crew building the house
+**Skipping edge cases**: Every edge case from discussion needs a task.
 
 ## Quality Checklist
 
 Before marking plan complete:
 
 **Structure**:
-- [ ] Clear phases with logical progression
-- [ ] Each phase independently testable
-- [ ] Tasks within phases specific and actionable
-- [ ] Success criteria defined
+- [ ] Clear phases with acceptance criteria
+- [ ] Each phase has 3-7 TDD-sized tasks
+- [ ] Each task has micro acceptance (test name)
+- [ ] Logical progression: foundation → core → edge cases
 
 **Content**:
-- [ ] Code examples for complex/novel patterns
-- [ ] All edge cases from discussion addressed
-- [ ] Data models and schemas defined
+- [ ] All edge cases from discussion mapped to tasks
+- [ ] Code examples for complex patterns
+- [ ] Data models defined
 - [ ] API contracts specified
-- [ ] Testing strategy comprehensive
-
-**Traceability**:
-- [ ] References discussion document
-- [ ] Architectural decisions traced to discussion rationale
-- [ ] Edge cases mapped to solutions
-- [ ] Assumptions called out
-
-**Completeness**:
-- [ ] Dependencies identified
-- [ ] Rollback strategy defined
-- [ ] Monitoring specified
-- [ ] Security considered
-- [ ] Documentation requirements listed
 
 **Readiness**:
-- [ ] Implementation team can start without questions
-- [ ] Verification steps clear
-- [ ] No ambiguous tasks
-- [ ] Ready for code review
+- [ ] Implementation can start Phase 1 immediately
+- [ ] No "TBD" or "figure out later"
+- [ ] Dependencies identified
+- [ ] Rollback strategy defined
 
 ## When Plan is Ready
 
 **Signs of readiness**:
-- Developer can start Phase 1 immediately
-- All "how do I..." questions answered
-- Edge cases have clear handling
-- Testing approach defined
-- Team reviewed and approved
+- Each phase has verifiable acceptance criteria
+- Each task has specific micro acceptance
+- Edge cases have tasks
+- Implementation can start without questions
 
 **Not ready if**:
-- "We'll figure it out during implementation"
-- Missing code examples for complex parts
+- Tasks like "implement the feature"
+- Missing micro acceptance
 - Edge cases marked "TBD"
-- Vague tasks like "handle errors"
-- Dependencies unclear
-
-## Iteration
-
-**Plans evolve during implementation**:
-- New edge cases discovered → Update plan
-- Dependency delay → Reorder phases
-- Simpler approach found → Document in Evolution Log
-
-**Keep plan current**: Update as implementation progresses, don't let it become stale
-
-**Document changes**: Evolution Log shows what changed and why
+- Vague acceptance criteria

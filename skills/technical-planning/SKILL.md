@@ -1,50 +1,83 @@
 ---
 name: technical-planning
-description: "Transform technical discussion documents into actionable implementation plans with phases, code examples, and clear instructions. Second phase of document-plan-implement workflow. Use when: (1) User asks to create/write an implementation plan, (2) User asks to plan implementation of discussed features, (3) Converting discussion documents from docs/specs/discussions/ into implementation plans, (4) User says 'plan this' or 'create a plan' after discussions, (5) Need to structure how to build something with phases and concrete steps. Creates plans in docs/specs/plans/{topic-name}/ directories that development teams can execute. Bridges architectural decisions to development execution."
+description: "Transform technical discussion documents into actionable implementation plans with phases, tasks, and acceptance criteria. Second phase of discussion-plan-implement workflow. Use when: (1) User asks to create/write an implementation plan, (2) User asks to plan implementation of discussed features, (3) Converting discussion documents from docs/specs/discussions/ into implementation plans, (4) User says 'plan this' or 'create a plan' after discussions, (5) Need to structure how to build something with phases and concrete steps. Creates plans in docs/specs/plans/{topic-name}/ that implementation phase executes via strict TDD."
 ---
 
 # Technical Planning
 
-Convert discussion docs from technical-discussion into implementation plans. Output: `docs/specs/plans/{topic-name}/` directory with one or more plan files.
+Convert discussion docs into implementation plans. Output: `docs/specs/plans/{topic-name}/` with plan files.
 
 ## Three-Phase Workflow
 
 1. **Discussion** (previous): WHAT and WHY - decisions, architecture, edge cases
-2. **Planning** (YOU): HOW - phases, structure, code examples in plan
-3. **Implementation** (next): DOING - actual coding
+2. **Planning** (YOU): HOW - phases, tasks, acceptance criteria
+3. **Implementation** (next): DOING - strict TDD execution of your plan
 
 You're at step 2. Don't implement.
 
-## ⚠️ You Create Plans, NOT Code
+## You Create Plans, NOT Code
 
-**Your job**: Write plan document
+**Your job**: Write plan document with phases, tasks, and acceptance criteria
 **NOT your job**: Implement it, modify files, write production code
+
+## Phase > Task Hierarchy
+
+Plans use a two-level structure:
+
+```
+Phase (higher level)
+├── Goal: What this phase accomplishes
+├── Acceptance Criteria: How we know the phase is complete
+└── Tasks (granular work units)
+    ├── Task 1: Description + micro acceptance + edge cases
+    ├── Task 2: Description + micro acceptance
+    └── Task 3: Description + micro acceptance
+```
+
+**Phase**: Independently testable milestone. Has acceptance criteria.
+**Task**: Single TDD cycle. One task = one test = one commit.
 
 ## Plan Contents
 
 Use **[template.md](references/template.md)**:
-- Phases with specific tasks
-- Code examples (pseudocode/actual in plan doc)
-- Testing strategy
+- Phases with acceptance criteria
+- Tasks with micro acceptance criteria (specific test that proves completion)
+- Code examples for complex patterns
 - Edge case handling from discussion
+- Testing strategy
 - Rollback plan
 
 ## Critical Rules
 
-**Do**: Create plans, reference discussion rationale, make phases testable
+**Do**:
+- Create phases with clear acceptance criteria
+- Break phases into TDD-sized tasks
+- Reference discussion rationale
+- Make each task independently testable
 
 **Don't**:
-- ❌ Write production code
-- ❌ Modify project files
-- ❌ Execute the plan
-- ❌ Re-debate decisions
+- Write production code
+- Modify project files
+- Execute the plan
+- Re-debate decisions
+
+## How Implementation Uses Your Plan
+
+Implementation will:
+1. Read your plan
+2. For each phase, announce start and review acceptance criteria
+3. For each task, derive test from micro acceptance, write failing test, implement, commit
+4. Verify phase acceptance criteria before proceeding
+5. Ask user before starting next phase
+
+**Your plan quality determines implementation success.**
 
 ## Reference Files
 
+- **[template.md](references/template.md)** - Plan structure with phase/task hierarchy
 - **[planning-approach.md](references/planning-approach.md)** - Workflow, step-by-step
-- **[template.md](references/template.md)** - Plan structure
-- **[guidelines.md](references/guidelines.md)** - Best practices, examples
+- **[guidelines.md](references/guidelines.md)** - Best practices, task sizing
 
 ## Remember
 
-You're the architect, not the builder. Create the plan document, then hand off to implementation.
+You're the architect, not the builder. Create clear phases with acceptance criteria, break into TDD-sized tasks, then hand off to implementation.
