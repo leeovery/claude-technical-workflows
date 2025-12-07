@@ -4,6 +4,13 @@
 
 ---
 
+## Core Principles
+
+- **One task = One TDD cycle**: write test → implement → pass → commit
+- **Exact paths**: Specify exact file paths, not "update the controller"
+- **Reference, don't re-debate**: "Using Redis (per discussion doc)" not re-debating the choice
+- **Test name required**: Every task needs a test name that proves completion
+
 ## Phase Sizing
 
 **Target**: 3-7 tasks per phase
@@ -37,6 +44,17 @@
 ```markdown
 1. **Implement caching layer**
    - **Do**: Add caching to the application
+```
+
+## Specificity Levels
+
+**Too vague**: "Add caching"
+**Better**: "Implement Redis caching with 5-minute TTL"
+**Best**: Task with test name:
+```markdown
+1. **CacheManager.get()**
+   - **Do**: Return cached value if exists, fetch from DB if miss
+   - **Test**: `"it gets cached value when hit"`
 ```
 
 ## Edge Case Mapping

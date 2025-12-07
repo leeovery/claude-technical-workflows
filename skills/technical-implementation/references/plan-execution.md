@@ -55,6 +55,8 @@ Acceptance:
 Proceed to Phase 3?
 ```
 
+**Wait for user confirmation before proceeding to next phase.**
+
 ## Referencing Discussion
 
 The discussion doc contains the WHY behind decisions.

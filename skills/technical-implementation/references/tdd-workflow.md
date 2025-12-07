@@ -34,6 +34,8 @@ Derived tests:
 "it handles connection failure"
 ```
 
+**Write test names first**: Before writing test bodies, list all test names for the task. Confirm coverage matches task acceptance criteria before implementing.
+
 ## GREEN: Minimal Implementation
 
 Write the simplest code that passes:

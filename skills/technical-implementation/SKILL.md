@@ -89,6 +89,16 @@ Need to revisit design.
 
 **Never silently deviate from plan.**
 
+## When to Reference Discussion
+
+Check `docs/specs/discussions/{topic}/` when:
+- Task rationale is unclear
+- Multiple valid approaches exist
+- Edge case handling not specified in plan
+- You need the "why" behind a decision
+
+Don't re-debate. The discussion captured the decision. Follow it.
+
 ## Phase Completion Checklist
 
 Before announcing phase complete:
