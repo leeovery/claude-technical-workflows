@@ -33,6 +33,11 @@
 
 ## Phases
 
+Each phase is independently testable with clear acceptance criteria.
+Each task is a single TDD cycle: write test → implement → commit.
+
+---
+
 ### Phase 1: {Name}
 
 **Goal**: What this phase accomplishes
@@ -59,11 +64,27 @@
 
 ---
 
-(Repeat for each phase)
+### Phase 2: {Name}
+
+**Goal**: What this phase accomplishes
+
+**Acceptance**:
+- [ ] Criterion 1
+- [ ] Criterion 2
+
+**Tasks**:
+
+1. **{Task Name}**
+   - **Do**: What to implement
+   - **Test**: `"it does expected behavior"`
+
+(Continue pattern for remaining phases)
 
 ---
 
 ## Edge Cases
+
+Map edge cases from discussion to specific tasks:
 
 | Edge Case | Solution | Phase.Task | Test |
 |-----------|----------|------------|------|
@@ -96,6 +117,15 @@ Triggers and steps
 | YYYY-MM-DD | Created from discussion |
 ```
 
+## How to Create a Plan
+
+1. Start with the discussion document
+2. Extract key decisions and architecture choices
+3. Identify logical phases (each independently testable)
+4. Break each phase into TDD-sized tasks
+5. Add test name for each task
+6. Map edge cases from discussion to specific tasks
+
 ## Sizing
 
 **Phase**: 3-7 tasks, independently testable, verifiable completion
@@ -107,6 +137,7 @@ Triggers and steps
 1. **CacheManager.get()**
    - **Do**: Return cached value if exists and not expired
    - **Test**: `"it gets cached value when hit"`
+   - **Edge cases**: Return null on miss
 ```
 
 **Bad** (too big): "Implement caching layer"
@@ -116,5 +147,13 @@ Triggers and steps
 
 - [ ] Each phase has acceptance criteria
 - [ ] Each task has a test name
-- [ ] Edge cases mapped
+- [ ] Edge cases mapped to tasks
 - [ ] Code examples for complex patterns
+- [ ] Dependencies identified
+
+## What to Avoid
+
+- Tasks too big for a single TDD cycle
+- Vague acceptance criteria
+- Missing edge case coverage
+- Re-debating decisions already made in discussion
