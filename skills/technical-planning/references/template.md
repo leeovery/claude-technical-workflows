@@ -13,8 +13,7 @@ Standard structure for `docs/specs/plans/` documents. PLAN only - no actual code
 
 **Date**: YYYY-MM-DD
 **Status**: Draft | Ready | In Progress | Completed
-**Discussion Source**: Link to `docs/specs/discussions/{topic-name}/`
-**Estimated Complexity**: Low | Medium | High | Very High
+**Discussion Source**: `docs/specs/discussions/{topic-name}/`
 
 ## Overview
 
@@ -24,340 +23,225 @@ Standard structure for `docs/specs/plans/` documents. PLAN only - no actual code
 - Measurable outcome 1
 - Measurable outcome 2
 
-**Source Context**: Brief summary from discussion doc - key decisions, constraints, rationale
+**Key Decisions** (from discussion):
+- Decision 1: Rationale
+- Decision 2: Rationale
 
 ## Architecture Overview
 
-High-level architecture diagram or description:
+High-level architecture:
 - Major components
 - Data flow
 - Integration points
 - Technology choices (from discussion)
 
-**Key Architectural Decisions**:
-1. Decision: Rationale from discussion
-2. Decision: Rationale from discussion
-
 ## Implementation Phases
 
-Break work into logical, testable phases. Each phase should:
-- Be independently deployable/testable
-- Provide incremental value
-- Have clear completion criteria
+Each phase is independently testable with clear acceptance criteria.
+Each task within a phase is a single TDD cycle (one test, one commit).
 
-### Phase 1: {Foundation/Core Setup}
+---
+
+### Phase 1: {Foundation/Setup}
 
 **Goal**: What this phase accomplishes
 
-**Duration Estimate**: Small | Medium | Large | Very Large
-
-**Prerequisites**:
-- What must exist before starting
+**Acceptance Criteria**:
+- [ ] Criterion 1 (measurable)
+- [ ] Criterion 2 (measurable)
+- [ ] All phase tests passing
 
 **Tasks**:
+
 1. **{Task Name}**
-   - Description: What needs to be done
-   - Details: Specific requirements
-   - Acceptance: How to verify completion
+   - **Do**: What to implement
+   - **Micro Acceptance**: `test_name_that_proves_completion`
+   - **Edge Cases**: Any special handling (optional)
+   - **Notes**: Implementation guidance (optional)
 
 2. **{Task Name}**
-   - Description
-   - Details
-   - Acceptance
+   - **Do**: What to implement
+   - **Micro Acceptance**: `test_name_that_proves_completion`
 
-**Deliverables**:
-- Specific outputs
-- Test results
-- Documentation
+3. **{Task Name}**
+   - **Do**: What to implement
+   - **Micro Acceptance**: `test_name_that_proves_completion`
 
-**Verification**:
-- [ ] Test case 1
-- [ ] Test case 2
-- [ ] Integration check
-
----
-
-### Phase 2: {Next Logical Step}
-
-(Repeat structure from Phase 1)
-
----
-
-### Phase 3: {Subsequent Phase}
-
-(Repeat structure)
-
-## Code Examples & Patterns
-
-Provide concrete code examples or pseudocode for complex/novel implementations:
-
-### Example: {Component/Pattern Name}
-
-**Purpose**: What this solves
-
-**Approach**: High-level strategy
-
+**Code Example** (if complex/novel):
 ```pseudocode
-// Pseudocode showing structure
-class CacheManager {
-    function get(key, userId) {
-        cacheKey = buildKey(key, userId)
-
-        if (cache.has(cacheKey) && !isExpired(cacheKey)) {
-            return cache.get(cacheKey)
-        }
-
-        data = fetchFromDatabase(key, userId)
-        cache.set(cacheKey, data, TTL)
-        return data
+// Show structure, not production code
+class Example {
+    function method() {
+        // key logic here
     }
 }
 ```
 
-**Or actual code** (when specific implementation is clear):
+---
 
-```python
-class CacheManager:
-    def __init__(self, redis_client, ttl=300):
-        self.redis = redis_client
-        self.ttl = ttl
+### Phase 2: {Core Functionality}
 
-    def get(self, key: str, user_id: int) -> dict:
-        cache_key = f"metrics:{user_id}:{key}"
+**Goal**: What this phase accomplishes
 
-        cached = self.redis.get(cache_key)
-        if cached:
-            return json.loads(cached)
+**Acceptance Criteria**:
+- [ ] Criterion 1
+- [ ] Criterion 2
+- [ ] All phase tests passing
 
-        data = self._fetch_from_db(key, user_id)
-        self.redis.setex(cache_key, self.ttl, json.dumps(data))
-        return data
-```
+**Tasks**:
 
-**Key Considerations**:
-- Edge case handling
-- Error scenarios
-- Performance implications
+1. **{Task Name}**
+   - **Do**: What to implement
+   - **Micro Acceptance**: `test_name`
+   - **Edge Cases**: Special handling
 
-(Repeat for other complex patterns)
+2. **{Task Name}**
+   - **Do**: What to implement
+   - **Micro Acceptance**: `test_name`
 
-## Data Models & Schemas
+---
 
-### Database Changes
+### Phase 3: {Edge Cases & Polish}
 
-**New Tables**:
-```sql
-CREATE TABLE user_metrics (
-    id BIGINT PRIMARY KEY,
-    user_id BIGINT NOT NULL,
-    metric_key VARCHAR(255),
-    value JSON,
-    created_at TIMESTAMP,
-    INDEX idx_user_metrics (user_id, metric_key)
-);
-```
+**Goal**: Handle edge cases and refine
 
-**Modified Tables**:
-- Table: users
-  - Add column: `last_metrics_sync TIMESTAMP`
+**Acceptance Criteria**:
+- [ ] All edge cases from discussion handled
+- [ ] Error states graceful
+- [ ] All tests passing
 
-**Migrations**:
-- Migration order and dependencies
-- Data backfill requirements
-- Rollback strategy
+**Tasks**:
 
-### API Contracts
+(List tasks with micro acceptance criteria)
 
-**New Endpoints**:
+---
 
-```
-GET /api/v1/metrics/{metric_key}
-Request: { user_id, date_range: { start, end }, filters }
-Response: { data: [...], cached: boolean, expires_at: timestamp }
-```
+## Edge Cases
 
-**Modified Endpoints**:
-- Endpoint: /api/v1/dashboard
-  - Added field: cache_status
+Map edge cases from discussion to implementation:
 
-## Integration Points
-
-### External Dependencies
-
-1. **Service/Library**: Redis
-   - Purpose: Caching layer
-   - Configuration: Connection string, TTL settings
-   - Error Handling: Fallback to direct DB queries
-
-2. **Service/Library**: {Name}
-   - Purpose
-   - Configuration
-   - Error Handling
-
-### Internal Dependencies
-
-- Component X must be updated before Y
-- Service Z needs new permissions
-
-## Edge Cases & Error Handling
-
-List edge cases from discussion document and how plan addresses them:
-
-### Edge Case: {Description}
-
-**From Discussion**: How it was identified
-**Solution**: Specific handling in implementation
-**Phase**: Where it's addressed
-**Test**: How to verify
-
-(Repeat for each edge case)
+| Edge Case | Solution | Phase | Task | Test |
+|-----------|----------|-------|------|------|
+| {From discussion} | How to handle | Phase N | Task M | `test_name` |
+| {From discussion} | How to handle | Phase N | Task M | `test_name` |
 
 ## Testing Strategy
 
 ### Unit Tests
-- Component: Tests needed
-- Coverage requirements
+- Component 1: What to test
+- Component 2: What to test
 
 ### Integration Tests
-- System flow: Test scenarios
-- Data validation
+- Flow 1: What to verify
+- Flow 2: What to verify
 
-### Performance Tests
-- Load testing requirements
-- Metrics to monitor
+### Manual Verification (if needed)
+- [ ] Scenario 1
+- [ ] Scenario 2
 
-### Manual Testing Checklist
-- [ ] Test scenario 1
-- [ ] Test scenario 2
-- [ ] Edge case verification
+## Data Models
 
-## Security Considerations
+### Database Changes
+```sql
+-- New tables or modifications
+```
 
-- Authentication/authorization changes
-- Data access controls
-- Input validation
-- Security edge cases
+### API Contracts
+```
+GET /api/endpoint
+Request: { fields }
+Response: { fields }
+```
 
-## Monitoring & Observability
+## Dependencies
 
-**Metrics to Track**:
-- Performance metric 1 (target: X)
-- Error rate (target: <Y%)
-- Usage metric
+**Before Phase 1**:
+- What must exist
 
-**Alerts**:
-- Condition → Action
+**Phase Dependencies**:
+- Phase 2 requires Phase 1 (reason)
 
-**Logging**:
-- What to log at each phase
-- Debug information needed
+**External**:
+- External dependency (owner, status)
 
 ## Rollback Strategy
 
-**Rollback Triggers**:
+**Triggers**:
 - Error rate > X%
-- Performance degradation > Y%
-- Critical bug discovered
+- Critical bug
 
-**Rollback Steps**:
-1. Step 1
-2. Step 2
-
-**Data Handling**:
-- How to handle data created during failed deployment
-
-## Dependencies & Blockers
-
-**Must Have Before Starting**:
-- Dependency 1: Status, owner
-- Dependency 2: Status, owner
-
-**Known Risks**:
-- Risk: Mitigation plan
-- Risk: Mitigation plan
-
-**Assumptions**:
-- Assumption 1: Validation needed
-- Assumption 2: Validation needed
-
-## Documentation Requirements
-
-**Code Documentation**:
-- API documentation
-- Inline comments for complex logic
-- README updates
-
-**User Documentation**:
-- Feature guide
-- API docs for consumers
-
-**Team Documentation**:
-- Architecture decision records
-- Runbook updates
-
-## Post-Implementation
-
-**Verification Period**: X days/weeks
-
-**Success Metrics Review**:
-- Metric 1: Target vs actual
-- Metric 2: Target vs actual
-
-**Follow-up Items**:
-- [ ] Optimization opportunity 1
-- [ ] Tech debt to address
-- [ ] Documentation updates
-
-**Retrospective Topics**:
-- What went well
-- What to improve
-- Lessons learned
+**Steps**:
+1. Rollback step
+2. Rollback step
 
 ## Evolution Log
 
-Track how plan evolves:
-
 ### YYYY-MM-DD - Initial Plan
-Created from discussion document
+Created from discussion document: `docs/specs/discussions/{topic}/`
 
-### YYYY-MM-DD - {Change}
-Updated phase 2 based on {reason}
+### YYYY-MM-DD - {Update}
+{What changed and why}
+```
+
+## Phase/Task Sizing Guide
+
+### Good Phase Size
+- 3-7 tasks
+- Independently testable
+- Provides incremental value
+- Can verify completion
+
+### Good Task Size
+- Single TDD cycle: write test → implement → pass → commit
+- 5-30 minutes of work
+- One clear thing to build
+- One test to prove it works
+
+### Examples
+
+**Good task**:
+```markdown
+1. **Implement CacheManager.get()**
+   - **Do**: Return cached value if exists and not expired
+   - **Micro Acceptance**: `test_get_returns_cached_value_when_hit`
+   - **Edge Cases**: Return None on cache miss
+```
+
+**Bad task** (too big):
+```markdown
+1. **Implement caching layer**
+   - **Do**: Add caching to the application
+```
+
+**Bad task** (too vague):
+```markdown
+1. **Handle errors**
+   - **Do**: Add error handling
 ```
 
 ## Usage Notes
 
 **When creating**:
-1. Start with discussion document from `docs/specs/discussions/`
-2. Create: `docs/specs/plans/{topic-name}/`
-3. Extract key decisions and constraints from discussion
-4. Break into logical phases
-5. Add code examples for complex parts
+1. Start with discussion document
+2. Identify logical phases
+3. Break each phase into TDD-sized tasks
+4. Add micro acceptance (test name) for each task
+5. Map edge cases from discussion
 
-**During planning**:
-- Reference discussion document frequently
-- Ensure all edge cases from discussion are addressed
-- Verify phases are independently testable
-- Add code examples where approach isn't obvious
-- Keep it actionable for implementation team
-
-**What to include**:
-- Clear phases with specific tasks
-- Code examples/pseudocode for novel patterns
-- Data models and API contracts
-- Testing strategy
-- Rollback plans
-
-**What to avoid**:
-- ❌ Don't start implementing (that's next phase)
-- ❌ Don't re-debate decisions (reference discussion)
-- ❌ Don't make new architectural decisions without discussion
-- ❌ Don't skip edge cases from discussion
+**Task micro acceptance**:
+- Name the specific test that proves the task is done
+- Implementation will write this test first, then implement
+- Format: `test_{method}_{scenario}_{expected}`
 
 **Ready for implementation when**:
-- [ ] All phases defined with clear tasks
-- [ ] Success criteria measurable
-- [ ] Edge cases addressed
-- [ ] Testing strategy clear
-- [ ] Code examples for complex parts
+- [ ] Each phase has clear acceptance criteria
+- [ ] Each task has micro acceptance (test name)
+- [ ] Edge cases mapped to tasks
+- [ ] Code examples for complex patterns
 - [ ] Dependencies identified
-- [ ] Team reviewed and approved
+
+**What to avoid**:
+- Tasks too big for single TDD cycle
+- Vague acceptance criteria
+- Missing edge case handling
+- Re-debating discussion decisions
