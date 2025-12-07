@@ -5,7 +5,7 @@ description: "Transform technical discussion documents into actionable implement
 
 # Technical Planning
 
-Convert discussion docs from technical-discussion into implementation plans. Output: `docs/specs/plans/{topic-name}/` with plan files.
+Convert discussion docs into implementation plans. Output: `docs/specs/plans/{topic-name}/` with plan files.
 
 ## Three-Phase Workflow
 
