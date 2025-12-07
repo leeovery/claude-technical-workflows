@@ -90,7 +90,7 @@ Understanding implementation helps you plan better:
 ```markdown
 1. **{Task Name}**
    - **Do**: What to implement
-   - **Micro Acceptance**: `it 'describes expected behavior'`
+   - **Micro Acceptance**: `"it does expected behavior"`
    - **Edge Cases**: Special handling (optional)
 ```
 
@@ -98,7 +98,7 @@ Understanding implementation helps you plan better:
 ```markdown
 1. **Implement CacheManager.get()**
    - **Do**: Return cached value if exists and not expired
-   - **Micro Acceptance**: `it 'returns cached value when cache hit'`
+   - **Micro Acceptance**: `"it gets cached value when hit"`
    - **Edge Cases**: Return null on miss
 ```
 
@@ -111,13 +111,13 @@ Understanding implementation helps you plan better:
 ### Step 4: Write Micro Acceptance
 
 **For each task, name the test**:
-- Format: `it 'describes the expected behavior'`
+- Format: `"it does the expected behavior"`
 - Implementation will write this test first
 
 **Examples**:
-- `it 'returns cached value when cache hit'`
-- `it 'stores value with configured ttl'`
-- `it 'removes key silently when not found'`
+- `"it gets cached value when hit"`
+- `"it stores value with configured ttl"`
+- `"it removes key silently when not found"`
 
 **Your micro acceptance quality determines test quality.**
 
@@ -134,8 +134,8 @@ Understanding implementation helps you plan better:
 ```markdown
 | Edge Case | Solution | Phase | Task | Test |
 |-----------|----------|-------|------|------|
-| New user, no metrics | Return empty array | 2 | 3 | `it 'returns empty for new user'` |
-| Redis connection fails | Fall back to DB | 3 | 1 | `it 'falls back to db on error'` |
+| New user, no metrics | Return empty array | 2 | 3 | `"it returns empty for new user"` |
+| Redis connection fails | Fall back to DB | 3 | 1 | `"it falls back to db on error"` |
 ```
 
 ### Step 6: Add Code Examples
@@ -193,16 +193,16 @@ class CacheManager:
 
 1. **Implement CacheManager.get()**
    - **Do**: Return cached value if exists, null if miss
-   - **Micro Acceptance**: `it 'returns cached value when cache hit'`
+   - **Micro Acceptance**: `"it gets cached value when hit"`
    - **Edge Cases**: Handle expired entries
 
 2. **Implement CacheManager.set()**
    - **Do**: Store value with configured TTL
-   - **Micro Acceptance**: `it 'stores value with configured ttl'`
+   - **Micro Acceptance**: `"it stores value with configured ttl"`
 
 3. **Implement CacheManager.invalidate()**
    - **Do**: Remove key from cache
-   - **Micro Acceptance**: `it 'removes cached value'`
+   - **Micro Acceptance**: `"it removes cached value"`
    - **Edge Cases**: No error if key doesn't exist
 ```
 

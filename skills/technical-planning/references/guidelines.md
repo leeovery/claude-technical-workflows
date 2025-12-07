@@ -48,7 +48,7 @@ Best practices for creating actionable implementation plans. For PLANNING only -
 ```markdown
 1. **{Task Name}**
    - **Do**: What to implement
-   - **Micro Acceptance**: `it 'describes expected behavior'`
+   - **Micro Acceptance**: `"it does expected behavior"`
    - **Edge Cases**: Special handling (optional)
    - **Notes**: Implementation guidance (optional)
 ```
@@ -57,7 +57,7 @@ Best practices for creating actionable implementation plans. For PLANNING only -
 ```markdown
 1. **Implement CacheManager.get()**
    - **Do**: Return cached value if exists and not expired
-   - **Micro Acceptance**: `it 'returns cached value when cache hit'`
+   - **Micro Acceptance**: `"it gets cached value when hit"`
    - **Edge Cases**: Return null on miss, handle connection failures
 ```
 
@@ -70,12 +70,12 @@ Best practices for creating actionable implementation plans. For PLANNING only -
 
 **Purpose**: Name the test that proves task completion.
 
-**Format**: `it 'describes the expected behavior'`
+**Format**: `"it does the expected behavior"`
 
 **Examples**:
-- `it 'returns cached value when cache hit'`
-- `it 'stores value with configured ttl'`
-- `it 'removes key silently when not found'`
+- `"it gets cached value when hit"`
+- `"it stores value with configured ttl"`
+- `"it removes key silently when not found"`
 
 **Implementation will**:
 1. Read your micro acceptance
@@ -111,7 +111,7 @@ Understanding this helps you write better plans:
 ```markdown
 1. **Implement CacheManager.get()**
    - **Do**: Return cached value if exists, fetch from DB if miss
-   - **Micro Acceptance**: `it 'returns cached value when cache hit'`
+   - **Micro Acceptance**: `"it gets cached value when hit"`
 ```
 
 **Too vague**: "Handle errors"
@@ -120,7 +120,7 @@ Understanding this helps you write better plans:
 ```markdown
 1. **Handle Redis connection failures**
    - **Do**: On connection failure, log warning, fall back to DB
-   - **Micro Acceptance**: `it 'falls back to db on redis error'`
+   - **Micro Acceptance**: `"it falls back to db on redis error"`
 ```
 
 ## Edge Case Handling
@@ -136,8 +136,8 @@ Understanding this helps you write better plans:
 ```markdown
 | Edge Case | Solution | Phase | Task | Test |
 |-----------|----------|-------|------|------|
-| User has no metrics | Return empty array | 2 | 3 | `it 'returns empty array for new user'` |
-| Cache connection fails | Fall back to DB | 3 | 1 | `it 'falls back to db on connection error'` |
+| User has no metrics | Return empty array | 2 | 3 | `"it returns empty array for new user"` |
+| Cache connection fails | Fall back to DB | 3 | 1 | `"it falls back to db on connection error"` |
 ```
 
 ## Code Examples

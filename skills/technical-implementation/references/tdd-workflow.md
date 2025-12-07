@@ -36,34 +36,34 @@ Plan task example:
 **Task: Implement CacheManager.get()**
 - Returns cached value if exists and not expired
 - Edge case: Handle cache connection failure gracefully
-- Micro acceptance: `it 'returns cached value when cache hit'`
+- Micro acceptance: "it gets cached value when hit"
 ```
 
 Derived tests:
 ```
-it 'returns cached value when cache hit'
-it 'returns null when cache miss'
-it 'fetches from database on cache miss'
-it 'handles connection failure gracefully'
+"it gets cached value when hit"
+"it returns null when cache miss"
+"it fetches from database on miss"
+"it handles connection failure gracefully"
 ```
 
 ### Test Naming
 
-Use descriptive `it` statements that explain the behavior:
-- Start with `it`
+Use descriptive test names that read as natural sentences:
+- Start with "it"
 - Use lowercase with spaces
-- Describe what happens, not how
+- Should read like "it [does something]"
 
 Examples:
-- `it 'returns cached value when key exists'`
-- `it 'stores value with configured ttl'`
-- `it 'removes key silently when not found'`
+- `"it gets cached value when key exists"`
+- `"it stores value with configured ttl"`
+- `"it removes key silently when not found"`
 
 ### Write Test Names First
 
 Before writing test bodies, list all test names:
 ```php
-it('returns cached value when hit');
+it('gets cached value when hit');
 it('fetches from db on miss');
 it('caches db result after fetch');
 it('handles redis connection error');
@@ -238,11 +238,11 @@ If you keep modifying tests, the design may be unclear. Stop and review the plan
 
 ## Example TDD Cycle
 
-**Task**: Implement `CacheManager::get()` - returns cached value on hit
+**Task**: Implement `CacheManager::get()` - gets cached value when hit
 
 **RED**:
 ```php
-it('returns cached value when hit', function () {
+it('gets cached value when hit', function () {
     $redis = Mockery::mock(Redis::class);
     $redis->shouldReceive('get')
         ->with('metrics:1:views')
