@@ -48,7 +48,7 @@ Best practices for creating actionable implementation plans. For PLANNING only -
 ```markdown
 1. **{Task Name}**
    - **Do**: What to implement
-   - **Micro Acceptance**: `test_name_that_proves_completion`
+   - **Micro Acceptance**: `it 'describes expected behavior'`
    - **Edge Cases**: Special handling (optional)
    - **Notes**: Implementation guidance (optional)
 ```
@@ -57,8 +57,8 @@ Best practices for creating actionable implementation plans. For PLANNING only -
 ```markdown
 1. **Implement CacheManager.get()**
    - **Do**: Return cached value if exists and not expired
-   - **Micro Acceptance**: `test_get_returns_cached_value_when_hit`
-   - **Edge Cases**: Return None on miss, handle connection failures
+   - **Micro Acceptance**: `it 'returns cached value when cache hit'`
+   - **Edge Cases**: Return null on miss, handle connection failures
 ```
 
 **Bad tasks**:
@@ -70,12 +70,12 @@ Best practices for creating actionable implementation plans. For PLANNING only -
 
 **Purpose**: Name the test that proves task completion.
 
-**Format**: `test_{method}_{scenario}_{expected_result}`
+**Format**: `it 'describes the expected behavior'`
 
 **Examples**:
-- `test_get_returns_cached_value_when_hit`
-- `test_set_stores_value_with_configured_ttl`
-- `test_invalidate_removes_key_silently_when_not_found`
+- `it 'returns cached value when cache hit'`
+- `it 'stores value with configured ttl'`
+- `it 'removes key silently when not found'`
 
 **Implementation will**:
 1. Read your micro acceptance
@@ -111,7 +111,7 @@ Understanding this helps you write better plans:
 ```markdown
 1. **Implement CacheManager.get()**
    - **Do**: Return cached value if exists, fetch from DB if miss
-   - **Micro Acceptance**: `test_get_returns_cached_value_when_hit`
+   - **Micro Acceptance**: `it 'returns cached value when cache hit'`
 ```
 
 **Too vague**: "Handle errors"
@@ -120,7 +120,7 @@ Understanding this helps you write better plans:
 ```markdown
 1. **Handle Redis connection failures**
    - **Do**: On connection failure, log warning, fall back to DB
-   - **Micro Acceptance**: `test_get_falls_back_to_db_on_redis_error`
+   - **Micro Acceptance**: `it 'falls back to db on redis error'`
 ```
 
 ## Edge Case Handling
@@ -136,8 +136,8 @@ Understanding this helps you write better plans:
 ```markdown
 | Edge Case | Solution | Phase | Task | Test |
 |-----------|----------|-------|------|------|
-| User has no metrics | Return empty array | 2 | 3 | `test_returns_empty_array_for_new_user` |
-| Cache connection fails | Fall back to DB | 3 | 1 | `test_falls_back_on_connection_error` |
+| User has no metrics | Return empty array | 2 | 3 | `it 'returns empty array for new user'` |
+| Cache connection fails | Fall back to DB | 3 | 1 | `it 'falls back to db on connection error'` |
 ```
 
 ## Code Examples

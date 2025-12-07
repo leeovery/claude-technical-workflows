@@ -55,17 +55,17 @@ Each task within a phase is a single TDD cycle (one test, one commit).
 
 1. **{Task Name}**
    - **Do**: What to implement
-   - **Micro Acceptance**: `test_name_that_proves_completion`
+   - **Micro Acceptance**: `it 'describes expected behavior'`
    - **Edge Cases**: Any special handling (optional)
    - **Notes**: Implementation guidance (optional)
 
 2. **{Task Name}**
    - **Do**: What to implement
-   - **Micro Acceptance**: `test_name_that_proves_completion`
+   - **Micro Acceptance**: `it 'describes expected behavior'`
 
 3. **{Task Name}**
    - **Do**: What to implement
-   - **Micro Acceptance**: `test_name_that_proves_completion`
+   - **Micro Acceptance**: `it 'describes expected behavior'`
 
 **Code Example** (if complex/novel):
 ```pseudocode
@@ -92,12 +92,12 @@ class Example {
 
 1. **{Task Name}**
    - **Do**: What to implement
-   - **Micro Acceptance**: `test_name`
+   - **Micro Acceptance**: `it 'describes expected behavior'`
    - **Edge Cases**: Special handling
 
 2. **{Task Name}**
    - **Do**: What to implement
-   - **Micro Acceptance**: `test_name`
+   - **Micro Acceptance**: `it 'describes expected behavior'`
 
 ---
 
@@ -122,8 +122,8 @@ Map edge cases from discussion to implementation:
 
 | Edge Case | Solution | Phase | Task | Test |
 |-----------|----------|-------|------|------|
-| {From discussion} | How to handle | Phase N | Task M | `test_name` |
-| {From discussion} | How to handle | Phase N | Task M | `test_name` |
+| {From discussion} | How to handle | Phase N | Task M | `it 'handles edge case'` |
+| {From discussion} | How to handle | Phase N | Task M | `it 'handles edge case'` |
 
 ## Testing Strategy
 
@@ -203,8 +203,8 @@ Created from discussion document: `docs/specs/discussions/{topic}/`
 ```markdown
 1. **Implement CacheManager.get()**
    - **Do**: Return cached value if exists and not expired
-   - **Micro Acceptance**: `test_get_returns_cached_value_when_hit`
-   - **Edge Cases**: Return None on cache miss
+   - **Micro Acceptance**: `it 'returns cached value when cache hit'`
+   - **Edge Cases**: Return null on cache miss
 ```
 
 **Bad task** (too big):
@@ -231,7 +231,7 @@ Created from discussion document: `docs/specs/discussions/{topic}/`
 **Task micro acceptance**:
 - Name the specific test that proves the task is done
 - Implementation will write this test first, then implement
-- Format: `test_{method}_{scenario}_{expected}`
+- Format: `it 'describes the expected behavior'`
 
 **Ready for implementation when**:
 - [ ] Each phase has clear acceptance criteria

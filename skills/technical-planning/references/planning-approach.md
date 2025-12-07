@@ -90,7 +90,7 @@ Understanding implementation helps you plan better:
 ```markdown
 1. **{Task Name}**
    - **Do**: What to implement
-   - **Micro Acceptance**: `test_name_that_proves_completion`
+   - **Micro Acceptance**: `it 'describes expected behavior'`
    - **Edge Cases**: Special handling (optional)
 ```
 
@@ -98,8 +98,8 @@ Understanding implementation helps you plan better:
 ```markdown
 1. **Implement CacheManager.get()**
    - **Do**: Return cached value if exists and not expired
-   - **Micro Acceptance**: `test_get_returns_cached_value_when_hit`
-   - **Edge Cases**: Return None on miss
+   - **Micro Acceptance**: `it 'returns cached value when cache hit'`
+   - **Edge Cases**: Return null on miss
 ```
 
 **Bad task sizing**:
@@ -111,13 +111,13 @@ Understanding implementation helps you plan better:
 ### Step 4: Write Micro Acceptance
 
 **For each task, name the test**:
-- Format: `test_{method}_{scenario}_{expected}`
+- Format: `it 'describes the expected behavior'`
 - Implementation will write this test first
 
 **Examples**:
-- `test_get_returns_cached_value_when_hit`
-- `test_set_stores_value_with_configured_ttl`
-- `test_invalidate_removes_key_silently_when_not_found`
+- `it 'returns cached value when cache hit'`
+- `it 'stores value with configured ttl'`
+- `it 'removes key silently when not found'`
 
 **Your micro acceptance quality determines test quality.**
 
@@ -134,8 +134,8 @@ Understanding implementation helps you plan better:
 ```markdown
 | Edge Case | Solution | Phase | Task | Test |
 |-----------|----------|-------|------|------|
-| New user, no metrics | Return empty array | 2 | 3 | `test_returns_empty_for_new_user` |
-| Redis connection fails | Fall back to DB | 3 | 1 | `test_falls_back_on_error` |
+| New user, no metrics | Return empty array | 2 | 3 | `it 'returns empty for new user'` |
+| Redis connection fails | Fall back to DB | 3 | 1 | `it 'falls back to db on error'` |
 ```
 
 ### Step 6: Add Code Examples
@@ -192,17 +192,17 @@ class CacheManager:
 **Tasks**:
 
 1. **Implement CacheManager.get()**
-   - **Do**: Return cached value if exists, None if miss
-   - **Micro Acceptance**: `test_get_returns_cached_value_when_hit`
+   - **Do**: Return cached value if exists, null if miss
+   - **Micro Acceptance**: `it 'returns cached value when cache hit'`
    - **Edge Cases**: Handle expired entries
 
 2. **Implement CacheManager.set()**
    - **Do**: Store value with configured TTL
-   - **Micro Acceptance**: `test_set_stores_value_with_ttl`
+   - **Micro Acceptance**: `it 'stores value with configured ttl'`
 
 3. **Implement CacheManager.invalidate()**
    - **Do**: Remove key from cache
-   - **Micro Acceptance**: `test_invalidate_removes_cached_value`
+   - **Micro Acceptance**: `it 'removes cached value'`
    - **Edge Cases**: No error if key doesn't exist
 ```
 

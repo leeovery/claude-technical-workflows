@@ -103,9 +103,9 @@ For each task, follow [TDD workflow](tdd-workflow.md):
 ```
 📝 Task 1: Implement CacheManager.get()
    Edge cases: Handle connection failure gracefully
-   Micro acceptance: test_get_returns_cached_value passes
+   Micro acceptance: it 'returns cached value when cache hit'
 
-🔴 Writing test: test_get_returns_cached_value_when_hit
+🔴 Writing test: it 'returns cached value when hit'
    [Write test code]
    Running tests... FAIL (expected)
 
@@ -300,7 +300,7 @@ If implementing across multiple plans:
 ```
 📍 Starting Phase 2: Core Cache Functionality (3 tasks)
 📝 Task 1/3: Implement CacheManager.get()
-🔴 Test 1/4: test_get_returns_cached_value
+🔴 Test 1/4: it 'returns cached value when hit'
 🟢 Test passing (1/4 complete)
 ...
 ✅ Task 1/3 complete
@@ -323,5 +323,5 @@ If context refreshes mid-implementation:
 Last commit: feat(cache): implement get() - Task 1 complete
 Current: Phase 2, Task 2: Implement CacheManager.set()
 
-Continuing from test: test_set_stores_with_ttl
+Continuing from test: it 'stores value with configured ttl'
 ```

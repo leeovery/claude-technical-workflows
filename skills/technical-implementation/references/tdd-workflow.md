@@ -36,33 +36,37 @@ Plan task example:
 **Task: Implement CacheManager.get()**
 - Returns cached value if exists and not expired
 - Edge case: Handle cache connection failure gracefully
-- Micro acceptance: test_get_returns_cached_value passes
+- Micro acceptance: `it 'returns cached value when cache hit'`
 ```
 
 Derived tests:
 ```
-test_get_returns_cached_value_when_cache_hit()
-test_get_returns_none_when_cache_miss()
-test_get_fetches_from_database_on_miss()
-test_get_handles_connection_failure_gracefully()
+it 'returns cached value when cache hit'
+it 'returns null when cache miss'
+it 'fetches from database on cache miss'
+it 'handles connection failure gracefully'
 ```
 
 ### Test Naming
 
-Use descriptive names that explain the scenario:
-- `test_{method}_{scenario}_{expected_result}`
-- `test_get_returns_cached_value_when_key_exists`
-- `test_set_stores_value_with_configured_ttl`
-- `test_invalidate_removes_key_silently_when_not_found`
+Use descriptive `it` statements that explain the behavior:
+- Start with `it`
+- Use lowercase with spaces
+- Describe what happens, not how
+
+Examples:
+- `it 'returns cached value when key exists'`
+- `it 'stores value with configured ttl'`
+- `it 'removes key silently when not found'`
 
 ### Write Test Names First
 
 Before writing test bodies, list all test names:
-```python
-def test_get_returns_cached_value_when_hit(): pass
-def test_get_fetches_from_db_on_miss(): pass
-def test_get_caches_db_result_after_fetch(): pass
-def test_get_handles_redis_connection_error(): pass
+```php
+it('returns cached value when hit');
+it('fetches from db on miss');
+it('caches db result after fetch');
+it('handles redis connection error');
 ```
 
 Confirm coverage matches task acceptance criteria before implementing.
@@ -146,10 +150,11 @@ Types: `feat`, `fix`, `refactor`, `test`
 ### Genuine Bugs in Test
 
 Test has wrong assertion:
-```python
-# Bug: should expect 300, not 200
-def test_ttl_uses_config_value():
-    assert cache.ttl == 200  # Config says 300
+```php
+// Bug: should expect 300, not 200
+it('uses config value for ttl', function () {
+    expect($cache->ttl)->toBe(200); // Config says 300
+});
 ```
 
 Fix: Correct the assertion to match intended behavior.
@@ -157,11 +162,12 @@ Fix: Correct the assertion to match intended behavior.
 ### Poor Test Design
 
 Test is brittle, unclear, or tests implementation instead of behavior:
-```python
-# Bad: Tests internal implementation detail
-def test_uses_redis_setex():
-    cache.set("key", "value")
-    mock_redis.setex.assert_called_once()
+```php
+// Bad: Tests internal implementation detail
+it('uses redis setex', function () {
+    $cache->set('key', 'value');
+    $mockRedis->shouldHaveReceived('setex')->once();
+});
 ```
 
 Fix: Rewrite to test behavior, not implementation.
@@ -169,11 +175,12 @@ Fix: Rewrite to test behavior, not implementation.
 ### Missing Setup
 
 Test fails due to missing fixture or setup:
-```python
-# Missing: needs database seeding
-def test_get_returns_user_metrics():
-    result = cache.get_metrics(user_id=1)
-    assert result["count"] == 5  # No user exists
+```php
+// Missing: needs database seeding
+it('returns user metrics', function () {
+    $result = $cache->getMetrics(userId: 1);
+    expect($result['count'])->toBe(5); // No user exists
+});
 ```
 
 Fix: Add proper test setup.
@@ -183,14 +190,17 @@ Fix: Add proper test setup.
 ### To Make Broken Code Pass
 
 **Never do this:**
-```python
-# Code returns wrong value
-def get(self, key):
-    return None  # Bug: should return cached value
+```php
+// Code returns wrong value
+public function get($key)
+{
+    return null; // Bug: should return cached value
+}
 
-# BAD: Changing test to match broken code
-def test_get_returns_cached_value():
-    assert cache.get("key") is None  # Was: == "value"
+// BAD: Changing test to match broken code
+it('returns cached value', function () {
+    expect($cache->get('key'))->toBeNull(); // Was: ->toBe('value')
+});
 ```
 
 The test was right. The code is wrong. Fix the code.
@@ -228,33 +238,46 @@ If you keep modifying tests, the design may be unclear. Stop and review the plan
 
 ## Example TDD Cycle
 
-**Task**: Implement `CacheManager.get()` - returns cached value on hit
+**Task**: Implement `CacheManager::get()` - returns cached value on hit
 
 **RED**:
-```python
-def test_get_returns_cached_value_when_hit():
-    cache = CacheManager(redis_client)
-    redis_client.set("metrics:1:views", '{"count": 42}')
+```php
+it('returns cached value when hit', function () {
+    $redis = Mockery::mock(Redis::class);
+    $redis->shouldReceive('get')
+        ->with('metrics:1:views')
+        ->andReturn('{"count": 42}');
 
-    result = cache.get(user_id=1, key="views")
+    $cache = new CacheManager($redis);
 
-    assert result == {"count": 42}
+    $result = $cache->get(userId: 1, key: 'views');
+
+    expect($result)->toBe(['count' => 42]);
+});
 ```
 
-Run: `FAIL - CacheManager has no get method`
+Run: `FAIL - Class CacheManager does not exist`
 
 **GREEN**:
-```python
-class CacheManager:
-    def __init__(self, redis):
-        self.redis = redis
+```php
+class CacheManager
+{
+    public function __construct(
+        private Redis $redis
+    ) {}
 
-    def get(self, user_id: int, key: str) -> dict | None:
-        cache_key = f"metrics:{user_id}:{key}"
-        cached = self.redis.get(cache_key)
-        if cached:
-            return json.loads(cached)
-        return None
+    public function get(int $userId, string $key): ?array
+    {
+        $cacheKey = "metrics:{$userId}:{$key}";
+        $cached = $this->redis->get($cacheKey);
+
+        if ($cached) {
+            return json_decode($cached, true);
+        }
+
+        return null;
+    }
+}
 ```
 
 Run: `PASS`
@@ -263,9 +286,9 @@ Run: `PASS`
 
 **COMMIT**:
 ```bash
-git commit -m "feat(cache): implement CacheManager.get() for cache hits
+git commit -m "feat(cache): implement CacheManager::get() for cache hits
 
 Task: Phase 2, Task 1"
 ```
 
-Next test: `test_get_returns_none_on_cache_miss`
+Next test: `it 'returns null on cache miss'`
