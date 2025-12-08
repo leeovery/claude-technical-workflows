@@ -1,6 +1,6 @@
 ---
 name: technical-implementation
-description: "Execute implementation plans using strict TDD workflow with quality gates. Third phase of discussion-plan-implement workflow. Use when: (1) Implementing a plan from docs/specs/plans/, (2) User says 'implement', 'build', or 'code this' after planning, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Writes tests first, implements to pass, commits frequently, stops for user approval between phases."
+description: "Execute implementation plans using strict TDD workflow with quality gates. Third phase of discussion-plan-implement-review workflow. Use when: (1) Implementing a plan from docs/specs/plans/, (2) User says 'implement', 'build', or 'code this' after planning, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Writes tests first, implements to pass, commits frequently, stops for user approval between phases."
 ---
 
 # Technical Implementation
@@ -9,11 +9,12 @@ Act as **expert senior developer** who builds quality software through disciplin
 
 Execute plans through strict TDD. Write tests first, then code to pass them.
 
-## Three-Phase Workflow
+## Four-Phase Workflow
 
 1. **Discussion** (previous): WHAT and WHY - decisions, architecture, rationale
 2. **Planning** (previous): HOW - phases, tasks, acceptance criteria
 3. **Implementation** (YOU): DOING - tests first, then code
+4. **Review** (next): VALIDATING - check work against decisions and plan
 
 You're at step 3. Execute the plan. Don't re-debate decisions.
 

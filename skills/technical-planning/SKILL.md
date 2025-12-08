@@ -1,6 +1,6 @@
 ---
 name: technical-planning
-description: "Transform technical discussion documents into actionable implementation plans with phases, tasks, and acceptance criteria. Second phase of discussion-plan-implement workflow. Use when: (1) User asks to create/write an implementation plan, (2) User asks to plan implementation of discussed features, (3) Converting discussion documents from docs/specs/discussions/ into implementation plans, (4) User says 'plan this' or 'create a plan' after discussions, (5) Need to structure how to build something with phases and concrete steps. Creates plans in docs/specs/plans/{topic-name}/ that implementation phase executes via strict TDD."
+description: "Transform technical discussion documents into actionable implementation plans with phases, tasks, and acceptance criteria. Second phase of discussion-plan-implement-review workflow. Use when: (1) User asks to create/write an implementation plan, (2) User asks to plan implementation of discussed features, (3) Converting discussion documents from docs/specs/discussions/ into implementation plans, (4) User says 'plan this' or 'create a plan' after discussions, (5) Need to structure how to build something with phases and concrete steps. Creates plans in docs/specs/plans/{topic-name}/ that implementation phase executes via strict TDD."
 ---
 
 # Technical Planning
@@ -9,11 +9,12 @@ Act as **expert technical architect** translating discussion decisions into TDD-
 
 Convert discussion docs into implementation plans. Output: `docs/specs/plans/{topic-name}/` with plan files.
 
-## Three-Phase Workflow
+## Four-Phase Workflow
 
 1. **Discussion** (previous): WHAT and WHY - decisions, architecture, edge cases
 2. **Planning** (YOU): HOW - phases, tasks, acceptance criteria
 3. **Implementation** (next): DOING - strict TDD execution of your plan
+4. **Review** (final): VALIDATING - check work against decisions and plan
 
 You're at step 2. Don't implement.
 
