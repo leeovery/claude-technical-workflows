@@ -57,11 +57,6 @@ Each task is a single TDD cycle: write test → implement → commit.
    - **Do**: What to implement
    - **Test**: `"it does expected behavior"`
 
-**Code example** (if pattern is non-obvious):
-```pseudocode
-// Structure, not production code
-```
-
 ---
 
 ### Phase 2: {Name}
@@ -140,7 +135,6 @@ Triggers and steps
 - [ ] Each phase has acceptance criteria
 - [ ] Each task has a test name
 - [ ] Edge cases mapped to tasks
-- [ ] Code examples for complex patterns
 - [ ] Dependencies identified
 
 ## What to Avoid
