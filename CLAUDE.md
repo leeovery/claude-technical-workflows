@@ -6,11 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Claude Code skills package for structured technical discussion and planning workflows. Distributed via Composer as `leeovery/claude-technical-workflows`.
 
-## Three-Phase Workflow
+## Four-Phase Workflow
 
 1. **Discussion** (`technical-discussion` skill): Capture WHAT and WHY - decisions, architecture, edge cases, debates
-2. **Planning** (`technical-planning` skill): Define HOW - phases, structure, code examples
-3. **Implementation**: Actual coding (outside this package's scope)
+2. **Planning** (`technical-planning` skill): Define HOW - phases, tasks, acceptance criteria
+3. **Implementation** (`technical-implementation` skill): Execute plan via strict TDD
+4. **Review** (`technical-review` skill): Validate work against discussion and plan
 
 ## Structure
 
@@ -18,6 +19,8 @@ Claude Code skills package for structured technical discussion and planning work
 skills/
   technical-discussion/    # Phase 1: Document discussions
   technical-planning/      # Phase 2: Create implementation plans
+  technical-implementation/ # Phase 3: Execute via TDD
+  technical-review/        # Phase 4: Validate against artifacts
 commands/
   start-discussion.md      # Slash command to begin discussions
 ```

@@ -4,8 +4,6 @@
 
 ---
 
-Standard structure for `docs/specs/plans/` documents. PLAN only - no actual code changes.
-
 ## Template
 
 ```markdown
@@ -13,13 +11,13 @@ Standard structure for `docs/specs/plans/` documents. PLAN only - no actual code
 
 **Date**: YYYY-MM-DD
 **Status**: Draft | Ready | In Progress | Completed
-**Discussion Source**: `docs/specs/discussions/{topic-name}/`
+**Discussion**: `docs/specs/discussions/{topic-name}/`
 
 ## Overview
 
-**Goal**: One sentence describing what we're building and why
+**Goal**: What we're building and why (one sentence)
 
-**Success Criteria**: What "done" looks like
+**Done when**:
 - Measurable outcome 1
 - Measurable outcome 2
 
@@ -27,221 +25,121 @@ Standard structure for `docs/specs/plans/` documents. PLAN only - no actual code
 - Decision 1: Rationale
 - Decision 2: Rationale
 
-## Architecture Overview
+## Architecture
 
-High-level architecture:
-- Major components
+- Components
 - Data flow
 - Integration points
-- Technology choices (from discussion)
 
-## Implementation Phases
+## Phases
 
 Each phase is independently testable with clear acceptance criteria.
-Each task within a phase is a single TDD cycle (one test, one commit).
+Each task is a single TDD cycle: write test → implement → commit.
 
 ---
 
-### Phase 1: {Foundation/Setup}
+### Phase 1: {Name}
 
 **Goal**: What this phase accomplishes
 
-**Acceptance Criteria**:
-- [ ] Criterion 1 (measurable)
-- [ ] Criterion 2 (measurable)
-- [ ] All phase tests passing
-
-**Tasks**:
-
-1. **{Task Name}**
-   - **Do**: What to implement
-   - **Micro Acceptance**: `"it does expected behavior"`
-   - **Edge Cases**: Any special handling (optional)
-   - **Notes**: Implementation guidance (optional)
-
-2. **{Task Name}**
-   - **Do**: What to implement
-   - **Micro Acceptance**: `"it does expected behavior"`
-
-3. **{Task Name}**
-   - **Do**: What to implement
-   - **Micro Acceptance**: `"it does expected behavior"`
-
-**Code Example** (if complex/novel):
-```pseudocode
-// Show structure, not production code
-class Example {
-    function method() {
-        // key logic here
-    }
-}
-```
-
----
-
-### Phase 2: {Core Functionality}
-
-**Goal**: What this phase accomplishes
-
-**Acceptance Criteria**:
+**Acceptance**:
 - [ ] Criterion 1
 - [ ] Criterion 2
-- [ ] All phase tests passing
 
 **Tasks**:
 
 1. **{Task Name}**
    - **Do**: What to implement
-   - **Micro Acceptance**: `"it does expected behavior"`
-   - **Edge Cases**: Special handling
+   - **Test**: `"it does expected behavior"`
+   - **Edge cases**: (if any)
 
 2. **{Task Name}**
    - **Do**: What to implement
-   - **Micro Acceptance**: `"it does expected behavior"`
+   - **Test**: `"it does expected behavior"`
 
 ---
 
-### Phase 3: {Edge Cases & Polish}
+### Phase 2: {Name}
 
-**Goal**: Handle edge cases and refine
+**Goal**: What this phase accomplishes
 
-**Acceptance Criteria**:
-- [ ] All edge cases from discussion handled
-- [ ] Error states graceful
-- [ ] All tests passing
+**Acceptance**:
+- [ ] Criterion 1
+- [ ] Criterion 2
 
 **Tasks**:
 
-(List tasks with micro acceptance criteria)
+1. **{Task Name}**
+   - **Do**: What to implement
+   - **Test**: `"it does expected behavior"`
+
+(Continue pattern for remaining phases)
 
 ---
 
 ## Edge Cases
 
-Map edge cases from discussion to implementation:
+Map edge cases from discussion to specific tasks:
 
-| Edge Case | Solution | Phase | Task | Test |
-|-----------|----------|-------|------|------|
-| {From discussion} | How to handle | Phase N | Task M | `"it handles edge case"` |
-| {From discussion} | How to handle | Phase N | Task M | `"it handles edge case"` |
+| Edge Case | Solution | Phase.Task | Test |
+|-----------|----------|------------|------|
+| {From discussion} | How handled | 1.2 | `"it handles X"` |
 
 ## Testing Strategy
 
-### Unit Tests
-- Component 1: What to test
-- Component 2: What to test
+**Unit**: What to test per component
+**Integration**: What flows to verify
+**Manual**: (if needed)
 
-### Integration Tests
-- Flow 1: What to verify
-- Flow 2: What to verify
+## Data Models (if applicable)
 
-### Manual Verification (if needed)
-- [ ] Scenario 1
-- [ ] Scenario 2
-
-## Data Models
-
-### Database Changes
-```sql
--- New tables or modifications
-```
-
-### API Contracts
-```
-GET /api/endpoint
-Request: { fields }
-Response: { fields }
-```
+Tables, schemas, API contracts
 
 ## Dependencies
 
-**Before Phase 1**:
-- What must exist
+- Prerequisites for Phase 1
+- Phase dependencies
+- External blockers
 
-**Phase Dependencies**:
-- Phase 2 requires Phase 1 (reason)
+## Rollback (if applicable)
 
-**External**:
-- External dependency (owner, status)
+Triggers and steps
 
-## Rollback Strategy
+## Log
 
-**Triggers**:
-- Error rate > X%
-- Critical bug
-
-**Steps**:
-1. Rollback step
-2. Rollback step
-
-## Evolution Log
-
-### YYYY-MM-DD - Initial Plan
-Created from discussion document: `docs/specs/discussions/{topic}/`
-
-### YYYY-MM-DD - {Update}
-{What changed and why}
+| Date | Change |
+|------|--------|
+| YYYY-MM-DD | Created from discussion |
 ```
 
-## Phase/Task Sizing Guide
+## How to Create a Plan
 
-### Good Phase Size
-- 3-7 tasks
-- Independently testable
-- Provides incremental value
-- Can verify completion
+1. Start with the discussion document
+2. Extract key decisions and architecture choices
+3. Identify logical phases (each independently testable)
+4. Break each phase into TDD-sized tasks
+5. Add test name for each task
+6. Map edge cases from discussion to specific tasks
 
-### Good Task Size
-- Single TDD cycle: write test → implement → pass → commit
-- 5-30 minutes of work
-- One clear thing to build
-- One test to prove it works
+## Sizing
 
-### Examples
+**Phase**: Independently testable, verifiable completion
 
-**Good task**:
-```markdown
-1. **Implement CacheManager.get()**
-   - **Do**: Return cached value if exists and not expired
-   - **Micro Acceptance**: `"it gets cached value when hit"`
-   - **Edge Cases**: Return null on cache miss
-```
+**Task**: One TDD cycle (test → implement → commit), ~5-30 min
 
-**Bad task** (too big):
-```markdown
-1. **Implement caching layer**
-   - **Do**: Add caching to the application
-```
+**Too big**: "Implement caching layer" (multiple TDD cycles)
+**Too vague**: "Handle errors" (no testable criteria)
 
-**Bad task** (too vague):
-```markdown
-1. **Handle errors**
-   - **Do**: Add error handling
-```
+## Ready for Implementation
 
-## Usage Notes
-
-**When creating**:
-1. Start with discussion document
-2. Identify logical phases
-3. Break each phase into TDD-sized tasks
-4. Add micro acceptance (test name) for each task
-5. Map edge cases from discussion
-
-**Task micro acceptance**:
-- Name the specific test that proves the task is done
-- Implementation will write this test first, then implement
-- Format: `"it does the expected behavior"`
-
-**Ready for implementation when**:
-- [ ] Each phase has clear acceptance criteria
-- [ ] Each task has micro acceptance (test name)
+- [ ] Each phase has acceptance criteria
+- [ ] Each task has a test name
 - [ ] Edge cases mapped to tasks
-- [ ] Code examples for complex patterns
 - [ ] Dependencies identified
 
-**What to avoid**:
-- Tasks too big for single TDD cycle
+## What to Avoid
+
+- Tasks too big for a single TDD cycle
 - Vague acceptance criteria
-- Missing edge case handling
-- Re-debating discussion decisions
+- Missing edge case coverage
+- Re-debating decisions already made in discussion
