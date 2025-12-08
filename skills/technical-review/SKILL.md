@@ -50,43 +50,6 @@ You're at step 4. The code exists. Your job is validation.
 
 See **[review-checklist.md](references/review-checklist.md)** for detailed checklist.
 
-## Output Format
-
-Produce a structured review:
-
-```markdown
-# Implementation Review: {Topic}
-
-**Verdict**: Approve | Request Changes | Comments Only
-
-## Summary
-[One paragraph overall assessment]
-
-## Discussion Compliance
-- [ ] Decision 1 followed: [yes/no + note]
-- [ ] Decision 2 followed: [yes/no + note]
-- [ ] Edge cases handled: [yes/no + note]
-
-## Plan Completion
-- [ ] Phase 1 acceptance criteria met
-- [ ] Phase 2 acceptance criteria met
-- [ ] All tasks completed
-- [ ] No scope creep
-
-## Code Quality
-[Issues or "No issues found"]
-
-## Test Quality
-[Issues or "Tests adequately verify requirements"]
-
-## Required Changes (if any)
-1. [Specific actionable change]
-2. [Specific actionable change]
-
-## Recommendations (optional)
-[Non-blocking suggestions]
-```
-
 ## Hard Rules
 
 1. **Don't fix code** - Identify problems, don't solve them
@@ -94,14 +57,6 @@ Produce a structured review:
 3. **Be specific** - "Test doesn't cover X" not "tests need work"
 4. **Reference artifacts** - Link findings to discussion/plan
 5. **Fresh perspective** - You haven't seen this code before; question everything
-
-## Verdict Guidelines
-
-**Approve**: All acceptance criteria met, decisions followed, no blocking issues
-
-**Request Changes**: Missing requirements, deviations from decisions, broken functionality, inadequate tests
-
-**Comments Only**: Minor suggestions, style preferences, non-blocking observations
 
 ## What Happens After Review
 
@@ -114,4 +69,5 @@ You produce feedback. User decides what to do with it.
 
 ## References
 
+- **[template.md](references/template.md)** - Review output structure and verdict guidelines
 - **[review-checklist.md](references/review-checklist.md)** - Detailed review checklist
