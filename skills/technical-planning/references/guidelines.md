@@ -24,6 +24,24 @@ If you don't know something, don't guess. If the discussion is missing informati
 
 Planning is iterative. You don't need complete information on pass one. Create structure, flag gaps, refine.
 
+### After Context Refresh
+
+You have summaries, not nuance. The planning documents ARE the nuance.
+
+**If draft/plan documents exist**: Read them. Trust them. They have reasoning you've lost.
+
+**If no documents exist**: You've lost the planning conversation. Be honest. Don't pretend you remember details you don't have.
+
+**Never invent reasoning** that wasn't captured. If it's not in the document, ask again.
+
+### Immediate Capture
+
+> After each user response, IMMEDIATELY update the planning document before asking your next question.
+
+- Capture the user's exact words and reasoning, not summaries
+- Never let more than 2-3 exchanges pass without writing
+- Record what was said AND why, not just conclusions
+
 ### Task Design
 
 - **One task = One TDD cycle**: write test → implement → pass → commit
