@@ -63,6 +63,24 @@ Everything goes in the single `plan.md` file:
 - Edge case mapping
 - Code examples for complex patterns
 
+## Flagging Incomplete Tasks
+
+When creating tasks with missing information, mark them clearly:
+
+```markdown
+### Task 3: Configure rate limiting [needs-info]
+
+**Do**: Set up rate limiting for the API endpoint
+
+**Micro acceptance**: `it throttles requests exceeding limit`
+
+**⚠️ Needs clarification**:
+- What's the rate limit threshold?
+- Per-user or per-IP?
+```
+
+Use `[needs-info]` suffix in task title. This allows iterative refinement - create the structure, flag gaps, circle back to discussion, update tasks.
+
 ## When to Use
 
 - Small to medium features

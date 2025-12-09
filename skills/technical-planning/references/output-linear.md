@@ -79,9 +79,21 @@ Discussion: `docs/specs/discussions/{topic-name}/discussion.md`
 **Labels**:
 - **Required**: `phase-1`, `phase-2`, etc. - denotes which phase the task belongs to
 - **Optional**:
+  - `needs-info` - task requires additional information before implementation
   - `edge-case` - for edge case handling tasks
   - `foundation` - for setup/infrastructure tasks
   - `refactor` - for cleanup tasks
+
+### Using `needs-info` Label
+
+When creating issues, if something is unclear or missing from the discussion:
+
+1. **Create the issue anyway** - don't block planning
+2. **Apply `needs-info` label** - makes gaps visible
+3. **Note what's missing** in description - be specific about what needs clarifying
+4. **Continue planning** - don't stop and circle back
+
+This allows iterative refinement. Create all issues, identify gaps, circle back to discussion if needed, then update issues with missing detail. Plans don't have to be perfect on first pass.
 
 ### 4. Create Local Plan File
 

@@ -6,6 +6,26 @@
 
 ## Core Principles
 
+### Plan as Source of Truth
+
+The plan (whether Linear issues, Backlog.md tasks, or local markdown) IS the source of truth. Every phase, every task must contain all information needed to execute it.
+
+- **Self-contained**: Each task should be executable without external context
+- **Reference, don't depend**: OK to link discussion docs, but if they vanish the task should still make sense
+- **No assumptions**: Don't assume implementer knows context - spell it out
+
+### No Hallucinations
+
+If you don't know something, don't guess. If the discussion is missing information:
+
+1. **Flag it explicitly** - use `needs-info` label or note in task description
+2. **Don't block on it** - create the task anyway, mark what's missing
+3. **Circle back later** - iterate over plans multiple times, adding detail progressively
+
+Planning is iterative. You don't need complete information on pass one. Create structure, flag gaps, refine.
+
+### Task Design
+
 - **One task = One TDD cycle**: write test → implement → pass → commit
 - **Exact paths**: Specify exact file paths, not "update the controller"
 - **Reference, don't re-debate**: "Using Redis (per discussion doc)" not re-debating
@@ -53,7 +73,16 @@ Extract each edge case from discussion. For each:
 - [ ] Each phase has TDD-sized tasks
 - [ ] Each task has micro acceptance (test name)
 
+**Self-Contained**:
+- [ ] Each task executable without reading discussion doc
+- [ ] No assumed context - everything spelled out
+- [ ] Links to discussion for "why", but task has the "what" and "how"
+
 **Content**:
 - [ ] All edge cases from discussion mapped to tasks
-- [ ] No "TBD" or "figure out later"
-- [ ] Implementation can start without questions
+- [ ] No hallucinations - unknown info flagged with `needs-info`
+- [ ] Gaps identified explicitly, not glossed over
+
+**Iteration**:
+- [ ] OK if first pass incomplete - flag and refine
+- [ ] Can circle back multiple times before implementation

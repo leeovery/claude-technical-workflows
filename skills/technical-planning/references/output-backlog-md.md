@@ -114,9 +114,20 @@ labels: [phase-1, api]
 |-------|---------|--------|
 | `status` | Workflow state | To Do, In Progress, Done |
 | `priority` | Importance | high, medium, low |
-| `labels` | Categories | `[phase-1, api, edge-case]` |
+| `labels` | Categories | `[phase-1, api, edge-case, needs-info]` |
 | `assignee` | Who's working on it | (optional) |
 | `dependencies` | Blocking tasks | `[task-1, task-3]` |
+
+### Using `needs-info` Label
+
+When creating tasks with incomplete information:
+
+1. **Create the task anyway** - don't block planning
+2. **Add `needs-info` to labels** - makes gaps visible
+3. **Note what's missing** in task body - be specific
+4. **Continue planning** - circle back later
+
+This allows iterative refinement. Create all tasks, identify gaps, circle back to discussion if needed, then update tasks with missing detail.
 
 ## Phase Representation
 
