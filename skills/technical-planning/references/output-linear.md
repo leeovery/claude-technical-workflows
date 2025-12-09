@@ -79,33 +79,55 @@ Discussion: `docs/specs/discussions/{topic-name}/discussion.md`
 - `foundation` - for setup/infrastructure tasks
 - `refactor` - for cleanup tasks
 
-### 4. Create Local Pointer File
+### 4. Create Local Plan File
 
-Create `docs/specs/plans/{topic-name}/linear.md`:
+Create `docs/specs/plans/{topic-name}/plan.md`:
 
 ```markdown
+---
+format: linear
+project: {PROJECT_NAME}
+project_id: {ID from MCP response}
+team: {TEAM_NAME}
+---
+
 # Plan Reference: {Topic Name}
 
-## Linear Integration
+**Discussion**: `docs/specs/discussions/{topic-name}/`
+**Created**: {DATE}
 
-- **Project**: {PROJECT_NAME}
-- **Project ID**: {ID from MCP response}
-- **Team**: {TEAM_NAME}
-- **Created**: {DATE}
+## About This Plan
 
-## Source
-
-- **Discussion**: `docs/specs/discussions/{topic-name}/discussion.md`
+This plan is managed in Linear. The source of truth for tasks and progress is the Linear project referenced above.
 
 ## How to Use
 
-This plan is managed in Linear. Implementation will:
+**To view/edit the plan**: Open Linear and navigate to the project.
+
+**Implementation will**:
 1. Read this file to find the Linear project
-2. Query Linear for current issues and milestones
+2. Query Linear for current milestones and issues
 3. Work through tasks in milestone order
 4. Update issue status as tasks complete
 
-To modify the plan, edit directly in Linear.
+**To add tasks**: Create issues in the Linear project. They'll be picked up automatically.
+
+## Key Decisions
+
+[Summary of key decisions from discussion - for quick reference]
+```
+
+## Frontmatter
+
+The frontmatter contains all information needed to query Linear:
+
+```yaml
+---
+format: linear
+project: USER-AUTH-FEATURE
+project_id: abc123-def456
+team: Engineering
+---
 ```
 
 ## Issue Content Guidelines
@@ -142,7 +164,7 @@ docs/specs/
 │       └── discussion.md     # Source decisions
 └── plans/
     └── {topic-name}/
-        └── linear.md         # Pointer to Linear project
+        └── plan.md           # format: linear (pointer)
 
 Linear:
 └── Project: {topic-name}
@@ -153,14 +175,14 @@ Linear:
         └── Issue: Task 3
 ```
 
-Implementation will read `linear.md`, query Linear via MCP, and execute tasks.
+Implementation will read `plan.md`, see `format: linear`, and query Linear via MCP.
 
 ## Fallback Handling
 
 If Linear MCP is unavailable during implementation:
 - Implementation should inform the user
-- Suggest running `/sync-plan-from-linear` when available
-- Or switch to local markdown approach
+- Cannot proceed without MCP access
+- Suggest checking MCP configuration or switching to local markdown
 
 ## MCP Tools Used
 

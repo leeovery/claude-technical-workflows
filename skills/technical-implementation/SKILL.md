@@ -30,10 +30,11 @@ You're at step 3. Execute the plan. Don't re-debate decisions.
 
 ### With a Plan
 
-1. **Find and read the plan** from `docs/specs/plans/{topic}/`
-   - Check for `plan.md` (local markdown) → read directly
-   - Check for `linear.md` (Linear pointer) → query Linear via MCP
-   - Check for `_overview.md` (Tasks.md) → read directory structure
+1. **Read the plan** from `docs/specs/plans/{topic}/plan.md`
+   - Check the `format` field in frontmatter:
+     - `local-markdown` → content is in this file
+     - `linear` → query Linear via MCP using frontmatter project_id
+     - `tasks-md` → read task files from subdirectories
 
    See **[plan-sources.md](references/plan-sources.md)** for details on each format.
 

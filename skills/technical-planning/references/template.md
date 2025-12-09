@@ -7,6 +7,10 @@
 ## Template
 
 ```markdown
+---
+format: local-markdown
+---
+
 # Implementation Plan: {Feature/Project Name}
 
 **Date**: YYYY-MM-DD

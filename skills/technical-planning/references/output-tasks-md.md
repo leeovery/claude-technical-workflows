@@ -20,7 +20,7 @@ See: https://github.com/BaldissaraMatheus/Tasks.md
 
 ```
 docs/specs/plans/{topic-name}/
-├── _overview.md              # Plan summary and metadata
+├── plan.md                   # Plan overview with format declaration
 ├── 1-{phase-name}/           # Lane = Phase
 │   ├── 01-{task-name}.md     # Task card
 │   ├── 02-{task-name}.md
@@ -33,9 +33,13 @@ docs/specs/plans/{topic-name}/
 
 ## File Structure
 
-### Overview File (`_overview.md`)
+### Plan File (`plan.md`)
 
 ```markdown
+---
+format: tasks-md
+---
+
 # Plan: {Feature Name}
 
 **Discussion**: `docs/specs/discussions/{topic-name}/`
@@ -54,11 +58,24 @@ docs/specs/plans/{topic-name}/
 - {Decision 2}: {Rationale}
 
 ## Phases
-1. **{Phase 1 Name}**: {Goal}
-2. **{Phase 2 Name}**: {Goal}
+
+Tasks are organized in subdirectories:
+
+1. **`1-{phase-name}/`**: {Phase 1 goal}
+2. **`2-{phase-name}/`**: {Phase 2 goal}
 
 ## Notes
 {Any additional context}
+```
+
+### Frontmatter
+
+The `format: tasks-md` frontmatter tells implementation to look for task subdirectories:
+
+```yaml
+---
+format: tasks-md
+---
 ```
 
 ### Phase Directory
@@ -130,7 +147,7 @@ docs/specs/
 │       └── discussion.md
 └── plans/
     └── {topic-name}/
-        ├── _overview.md
+        ├── plan.md               # format: tasks-md
         ├── 1-setup/
         │   └── 01-configure-auth.md
         ├── 2-core-features/
@@ -144,10 +161,11 @@ docs/specs/
 ## Implementation Reading
 
 Implementation will:
-1. Read `_overview.md` for context
-2. Process phases in directory order (1-, 2-, 3-)
-3. Process tasks within each phase in file order (01-, 02-)
-4. Move completed task files to `done/` directory
+1. Read `plan.md`, see `format: tasks-md`
+2. Read `plan.md` for overview context
+3. Process phases in directory order (1-, 2-, 3-)
+4. Process tasks within each phase in file order (01-, 02-)
+5. Move completed task files to `done/` directory
 
 ## Integration with Tasks.md UI
 
