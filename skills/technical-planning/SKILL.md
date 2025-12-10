@@ -37,6 +37,54 @@ The planning *approach* is the same regardless of destination. Only the output f
 
 You're at step 2. Don't implement.
 
+## Draft Planning for Complex Features
+
+For complex or deeply technical work, planning itself requires discussion. Figuring out phases and tasks IS a conversation that needs capturing.
+
+**Two-phase planning**:
+1. **Draft Planning**: Back-and-forth about structure, captured in `draft-plan.md`
+2. **Formal Planning**: Convert draft to structured `plan.md` (or Linear/Backlog.md)
+
+See **[planning-conversations.md](references/planning-conversations.md)** for the draft planning workflow.
+
+**When to use draft planning**:
+- Complex features with unclear phase boundaries
+- Deeply technical work requiring back-and-forth
+- Multiple valid ways to structure the work
+
+**Skip to formal planning when**:
+- Structure is obvious from discussion doc
+- Small feature with clear phases
+
+## Capture Planning Conversations Immediately
+
+> **After each user response, IMMEDIATELY update the planning document before asking your next question. Capture the user's exact words and reasoning, not summaries.**
+
+Context windows refresh without warning. Hours of planning discussion can vanish.
+
+**Capture frequency**:
+- Update after every natural break in discussion
+- Never let more than 2-3 exchanges pass without writing
+- When in doubt, write it down NOW
+
+**What to capture**:
+- What the user said AND why, not just conclusions
+- Trade-offs considered and rejected
+- Scope decisions with reasoning
+- The journey, not just the destination
+
+## Commit Frequently
+
+**Commit planning docs often** to `docs/specs/plans/{topic-name}/`:
+
+- After each significant exchange
+- At natural breaks in planning discussion
+- When phases/tasks become clearer
+- **Before any context refresh**
+- When creating new files
+
+**Why**: You lose memory on context refresh. Commits prevent losing hours of planning work. This is non-negotiable.
+
 ## You Create Plans, NOT Code
 
 **Your job**: Write plan document with phases, tasks, and acceptance criteria
@@ -97,6 +145,7 @@ Implementation will:
 ## Reference Files
 
 **Planning approach**:
+- **[planning-conversations.md](references/planning-conversations.md)** - Draft planning for complex features
 - **[planning-approach.md](references/planning-approach.md)** - Workflow, step-by-step
 - **[guidelines.md](references/guidelines.md)** - Best practices, task sizing
 - **[template.md](references/template.md)** - Plan document template (for local markdown)

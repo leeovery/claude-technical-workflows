@@ -13,6 +13,22 @@ Bridge between discussion and implementation. Convert decisions into executable 
 
 ## Workflow
 
+### 0. Draft Planning (For Complex Features)
+
+For complex or deeply technical work, the planning conversation itself needs capturing.
+
+**Before jumping to formal phases and tasks**:
+1. Create `draft-plan.md` in the plans directory
+2. Discuss structure with the user
+3. Capture the conversation in real-time (see below)
+4. Once structure is agreed, proceed to formal planning
+
+**Immediate capture rule**: After each user response, update the draft document BEFORE your next question. Never let 2-3 exchanges pass without writing.
+
+See **[planning-conversations.md](planning-conversations.md)** for full draft planning workflow.
+
+**Skip draft planning when**: Structure is obvious, small feature, user knows exactly what they want.
+
 ### 1. Read Discussion Document
 
 From `docs/specs/discussions/{topic}/` extract:
@@ -61,3 +77,13 @@ Verify:
 Create `docs/specs/plans/{topic-name}/plan.md` using [template.md](template.md).
 
 Implementation can execute via strict TDD without going back to discussion.
+
+## Commit Frequently
+
+Commit planning docs at:
+- After each significant exchange during draft planning
+- At natural breaks in discussion
+- When phases/tasks become clearer
+- **Before any context refresh**
+
+Context refresh = memory loss. Uncommitted work = lost work.
