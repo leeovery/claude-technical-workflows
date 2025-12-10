@@ -14,19 +14,27 @@ The plan (whether Linear issues, Backlog.md tasks, or local markdown) IS the sou
 - **Reference, don't depend**: OK to link discussion docs, but if they vanish the task should still make sense
 - **No assumptions**: Don't assume implementer knows context - spell it out
 
-### No Room for Creativity
+### Finding the Right Level of Detail
 
-Implementation agents (or humans) should have **zero creative latitude** when executing your plan. If they have to make decisions, your plan is incomplete.
+The draft process is collaborative - together with the user, you figure out how much detail is needed for THIS feature. Some features need detailed HOW guidance; others just need clear WHAT/WHY and implementation can work out the approach.
 
-**Test**: Could someone execute this plan mechanically, without making judgment calls?
+**Always include**:
+- WHAT we're building (specific, not vague)
+- WHY we're building it (the motivation)
+- Edge cases to be aware of
+- Testing ideas and acceptance criteria
+
+**Include when helpful**:
+- HOW to approach it (varies by feature complexity and team familiarity)
+- Specific patterns or constraints
 
 **Bad**: "Add caching to improve performance"
-- Implementer must decide: What to cache? TTLs? Cache keys? Invalidation strategy?
+- Too vague. What endpoints? What's the goal? What edge cases?
 
-**Good**: "Add Redis caching to /api/products endpoint. Key format: products:{id}. TTL: 300 seconds. Invalidate on Product model save event using cache tags."
-- Implementer just executes. No decisions required.
+**Good**: "Add caching to /api/products to reduce DB load. Target 80% fewer queries. Handle: empty results, large responses, Redis failures. Implementation can determine TTLs and key strategy."
+- Clear WHAT and WHY. Edge cases identified. HOW left to implementation where appropriate.
 
-This level of detail comes from **draft planning** - collaborative discussion that builds a complete specification before formal phases/tasks are created.
+This balance comes from **draft planning** - collaborative discussion that finds the right level of detail before formal phases/tasks are created.
 
 ### No Hallucinations
 

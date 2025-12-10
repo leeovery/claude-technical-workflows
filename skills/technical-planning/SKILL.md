@@ -53,7 +53,7 @@ Draft planning produces a **standalone specification** - a document containing e
 
 See **[planning-conversations.md](references/planning-conversations.md)** for the full draft planning workflow.
 
-**The draft must leave no room for interpretation**. Implementation agents should have zero creative latitude - everything needed is spelled out.
+**The draft captures** WHAT we're building, WHY, edge cases, and testing/acceptance criteria. HOW much detail to include varies - some features need detailed approach guidance, others just need clarity on what to build. The draft process is collaborative - together you find the right level of detail.
 
 **When to use draft planning**:
 - Source materials need enrichment (missing HOW details)

@@ -9,9 +9,9 @@
 Draft planning exists to produce a **standalone specification** containing everything needed to construct formal phases and tasks. It is NOT a summary. It is NOT conversation notes. It is the complete, unambiguous foundation for formal planning.
 
 The draft is where you collaborate with the user to ensure:
-1. **Nothing is missing** - all detail required for implementation is present
+1. **Nothing is missing** - the WHAT is clearly defined with enough detail
 2. **Nothing is hallucinated** - only real, validated information remains
-3. **No room for interpretation** - implementation agents have zero creative latitude
+3. **The right level of detail** - not so vague it's useless, not so prescriptive it constrains implementation unnecessarily
 
 ### Two Scenarios That Require Draft Planning
 
@@ -38,13 +38,15 @@ Most real planning involves **both** - enriching some areas while filtering othe
 ### The Draft as Deliverable
 
 At the end of draft planning, `draft-plan.md` must be a **standalone file** containing:
-- Everything needed to construct formal phases/tasks
-- Enough detail that implementation has no ambiguity
+- Clear definition of WHAT we're building and WHY
+- Edge cases the implementation needs to be aware of
+- Testing ideas and acceptance criteria
+- Optionally, guidance on HOW to approach it (when helpful, not prescriptive)
 - Only validated information, not summaries or assumptions
 
 **Anti-pattern**: A draft that summarizes the discussion into three bullet points is useless. That's just another file with vague content that requires re-discovery.
 
-**Correct pattern**: A draft that captures specific decisions, specific approaches, specific constraints, specific edge cases - everything the formal plan needs spelled out.
+**Correct pattern**: A draft that defines the feature clearly - what it does, why it exists, what edge cases matter, how we'll know it's complete. Implementation can then take charge or collaborate to figure out the approach.
 
 ## Two-Phase Planning
 
@@ -128,11 +130,15 @@ This section is the deliverable. Update it continuously as clarity emerges.
 
 ### What We're Building
 
-[Specific, concrete description - not a summary. Include enough detail that someone could understand the scope without reading source materials.]
+[Specific, concrete description of the feature - not a summary. What does it do? What problem does it solve? Include enough detail that someone understands the scope without reading source materials.]
 
-### Approach
+### Why We're Building It
 
-[How we will build this. Specific patterns, sequences, constraints. Not "we'll handle errors" but "validation errors return 422 with field-level messages using the existing ValidationException handler".]
+[The motivation. What user need or technical need does this address? This context helps implementation make good decisions.]
+
+### Approach (Optional)
+
+[Include when there's a specific approach that should be followed. Leave out or keep light when implementation should figure this out. This section can range from "use the existing X pattern" to detailed guidance - whatever level is appropriate for this feature.]
 
 ### Scope Boundaries
 
@@ -150,10 +156,25 @@ This section is the deliverable. Update it continuously as clarity emerges.
 |----------|--------|-----------|
 | [decision point] | [what we chose] | [why - be specific] |
 
-### Edge Cases and Constraints
+### Edge Cases to Handle
 
-- [Specific edge case]: [how it will be handled]
-- [Constraint]: [how it affects implementation]
+- [Edge case that implementation must be aware of]
+- [Another edge case - what makes this tricky]
+
+### Constraints
+
+- [Technical constraint that limits options]
+- [Business constraint that affects scope]
+
+### Testing and Acceptance
+
+How we'll know this is complete:
+- [Acceptance criterion]
+- [Another criterion]
+
+Testing ideas:
+- [Test scenario to cover]
+- [Edge case that needs a test]
 
 ### Open Questions (Blocking)
 
@@ -198,12 +219,14 @@ Commits are your safety net. A context refresh with uncommitted work = lost work
 ## Transitioning to Formal Plan
 
 Draft planning is complete when the **Specification section** contains:
-- [ ] Complete description of what we're building (no ambiguity)
-- [ ] Specific approach with enough detail for implementation
-- [ ] Clear scope boundaries (in/out)
-- [ ] All technical decisions documented with reasoning
-- [ ] All edge cases identified with handling approach
+- [ ] Clear description of WHAT we're building and WHY
+- [ ] Scope boundaries (in/out)
+- [ ] Edge cases implementation needs to handle
+- [ ] Testing ideas and acceptance criteria
+- [ ] Approach guidance (if needed - this varies by feature)
 - [ ] No blocking open questions remaining
+
+The right level of detail varies. Some features need detailed HOW guidance; others just need clear WHAT/WHY and can leave implementation to figure out the approach. The draft process is about finding that line.
 
 **Transition process**:
 1. Review the Specification section together
@@ -220,56 +243,61 @@ Draft planning is complete when the **Specification section** contains:
 ## What We're Building
 A caching layer for the API.
 
-## Approach
-We'll add Redis caching to improve performance.
-
 ## Scope
 - Add caching
 - Handle invalidation
 ```
 
-This is useless. It says nothing concrete. An implementation agent reading this would have to make everything up - cache keys, TTLs, what gets cached, invalidation strategy, error handling.
+This is useless. It says nothing concrete. What endpoints? What's the goal? What edge cases matter? How do we know it's working?
 
 **Good Draft** (enables formal planning):
 ```markdown
 ## What We're Building
-Response caching for the /api/products endpoints. Cache full JSON responses
-keyed by endpoint + query parameters. Target: reduce database load by 80%
-for repeated identical requests.
+Response caching for the /api/products endpoints to reduce database load
+for repeated identical requests. Target: 80% reduction in DB hits for
+product listing pages.
 
-## Approach
-- Use existing Redis connection from config/database.php
-- Cache at controller level using Laravel's Cache facade
-- Key format: "products:{endpoint}:{hash(query_params)}"
-- TTL: 5 minutes for list endpoints, 15 minutes for single product
-- Cache-Control headers: public, max-age matching TTL
-- Invalidation: Tag-based using "products" tag, clear on any Product model event
+## Why We're Building It
+Product pages are our highest-traffic endpoints. Currently every request
+hits the database, even for identical queries seconds apart. Users see
+slow page loads during peak traffic.
 
 ## Scope Boundaries
 **In scope**:
 - GET /api/products (list with filters)
 - GET /api/products/{id} (single product)
-- Cache warming not included in initial implementation
 
 **Out of scope**:
-- POST/PUT/DELETE endpoints (no caching)
+- POST/PUT/DELETE endpoints (no caching needed)
 - User-specific data (cart, wishlist) - different caching strategy later
 - CDN integration - separate initiative
 
-## Technical Decisions
-| Decision | Choice | Reasoning |
-|----------|--------|-----------|
-| Cache location | Controller | Simpler than middleware, can make per-endpoint decisions |
-| TTL strategy | Fixed per endpoint | Predictable, avoids complexity of adaptive TTLs |
-| Invalidation | Tag-based | Product updates rare, tag clear is simple and sufficient |
+## Approach
+Use Redis via Laravel's Cache facade. Consider caching at controller level
+for simplicity, but implementation can propose alternatives.
 
-## Edge Cases
-- Empty result sets: Cache them (prevents repeated DB hits for non-existent filters)
-- Large responses (>1MB): Still cache, Redis handles it, revisit if memory issues
-- Redis unavailable: Fail open, skip cache, log warning, don't break requests
+Key considerations:
+- Need to handle cache invalidation when products are updated
+- TTLs should balance freshness with cache hit rate
+
+## Edge Cases to Handle
+- Empty result sets (should we cache "no results"?)
+- Very large responses (>1MB)
+- Redis unavailable (fail open vs fail closed?)
+
+## Testing and Acceptance
+How we'll know it's complete:
+- Product list pages respond from cache on repeat requests
+- Cache invalidates when product data changes
+- No user-facing errors when Redis is unavailable
+
+Testing ideas:
+- Load test showing DB query reduction
+- Test cache invalidation on product update
+- Test Redis failure handling
 ```
 
-The good draft leaves nothing to imagination. Implementation knows exactly what to build.
+The good draft is clear about WHAT and WHY, identifies the edge cases, and gives implementation enough context to make good decisions. It includes approach guidance without being overly prescriptive.
 
 ## Anti-Hallucination
 
