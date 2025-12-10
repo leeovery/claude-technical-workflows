@@ -39,7 +39,25 @@ Which discussion would you like to create a plan for?
 
 Ask: **Which discussion would you like to plan?**
 
-## Step 3: Choose Output Destination
+## Step 3: Choose Planning Path
+
+Ask: **Do you want to create a draft plan first, or proceed directly to formal planning?**
+
+**Path A: Draft Planning**
+- Use when: Source materials need enrichment or filtering
+- Creates `draft-plan.md` to build the specification collaboratively
+- After draft is signed off, proceed to formal planning
+
+**Path B: Formal Planning**
+- Use when: Source materials already contain complete specification
+- Go straight to creating phases and tasks
+
+If user chooses Path A, skip to Step 5 (invoke skill with draft planning).
+If user chooses Path B, continue to Step 4.
+
+## Step 4: Choose Output Destination
+
+*Skip this step if doing draft planning (Path A).*
 
 Ask: **Where should this plan live?**
 
@@ -60,7 +78,7 @@ Ask: **Where should this plan live?**
 
 **If Linear or Backlog.md selected**: Check if MCP is available. If not, inform the user and suggest alternatives.
 
-## Step 4: Gather Additional Context
+## Step 5: Gather Additional Context
 
 **For Linear destination**:
 - Which team should own this project?
@@ -69,29 +87,35 @@ Ask: **Where should this plan live?**
 - Any additional context or priorities to consider?
 - Any constraints since the discussion concluded?
 
-## Step 5: Invoke Planning Skill
+## Step 6: Invoke Planning Skill
 
 Pass to the technical-planning skill:
 - Discussion path: `docs/specs/discussions/{topic-name}/`
-- Output destination: (local-markdown | linear | backlog-md)
+- Planning path: (draft | formal)
+- Output destination: (local-markdown | linear | backlog-md) - only if formal
 - Additional context gathered
 
-Example handoff:
+**Example handoff for Path A (Draft)**:
 ```
 Planning session for: {topic-name}
 Discussion: docs/specs/discussions/{topic-name}/discussion.md
+Path: Draft planning
+
+Begin planning using the technical-planning skill.
+Reference: draft-planning.md
+```
+
+**Example handoff for Path B (Formal)**:
+```
+Planning session for: {topic-name}
+Discussion: docs/specs/discussions/{topic-name}/discussion.md
+Path: Formal planning
 Output destination: Linear
 Team: Engineering
 
 Begin planning using the technical-planning skill.
-Reference: output-linear.md for output format.
+Reference: formal-planning.md, then output-linear.md
 ```
-
-The skill will:
-1. Read the discussion document
-2. Create phases and tasks
-3. Output in the specified format
-4. Create `plan.md` with appropriate frontmatter format
 
 ## Notes
 
