@@ -4,7 +4,7 @@
 
 ---
 
-Use this output format for **simple features** or when you want everything version-controlled in a single file.
+Use this format for simple features or when you want everything in a single version-controlled file.
 
 ## Output Location
 
@@ -13,11 +13,11 @@ docs/specs/plans/{topic-name}/
 └── plan.md
 ```
 
-The directory name should match the discussion topic name from `docs/specs/discussions/{topic-name}/`.
+Directory name should match the discussion topic from `docs/specs/discussions/{topic-name}/`.
 
-## File Structure
+## Template
 
-Create `plan.md` with frontmatter declaring the format:
+Create `plan.md` with this structure:
 
 ```markdown
 ---
@@ -30,63 +30,123 @@ format: local-markdown
 **Status**: Draft | Ready | In Progress | Completed
 **Discussion**: `docs/specs/discussions/{topic-name}/`
 
-... rest of plan content ...
+## Overview
+
+**Goal**: What we're building and why (one sentence)
+
+**Done when**:
+- Measurable outcome 1
+- Measurable outcome 2
+
+**Key Decisions** (from discussion):
+- Decision 1: Rationale
+- Decision 2: Rationale
+
+## Architecture
+
+- Components
+- Data flow
+- Integration points
+
+## Phases
+
+Each phase is independently testable with clear acceptance criteria.
+Each task is a single TDD cycle: write test → implement → commit.
+
+---
+
+### Phase 1: {Name}
+
+**Goal**: What this phase accomplishes
+
+**Acceptance**:
+- [ ] Criterion 1
+- [ ] Criterion 2
+
+**Tasks**:
+
+1. **{Task Name}**
+   - **Do**: What to implement
+   - **Test**: `"it does expected behavior"`
+   - **Edge cases**: (if any)
+
+2. **{Task Name}**
+   - **Do**: What to implement
+   - **Test**: `"it does expected behavior"`
+
+---
+
+### Phase 2: {Name}
+
+**Goal**: What this phase accomplishes
+
+**Acceptance**:
+- [ ] Criterion 1
+- [ ] Criterion 2
+
+**Tasks**:
+
+1. **{Task Name}**
+   - **Do**: What to implement
+   - **Test**: `"it does expected behavior"`
+
+(Continue pattern for remaining phases)
+
+---
+
+## Edge Cases
+
+Map edge cases from discussion to specific tasks:
+
+| Edge Case | Solution | Phase.Task | Test |
+|-----------|----------|------------|------|
+| {From discussion} | How handled | 1.2 | `"it handles X"` |
+
+## Testing Strategy
+
+**Unit**: What to test per component
+**Integration**: What flows to verify
+**Manual**: (if needed)
+
+## Data Models (if applicable)
+
+Tables, schemas, API contracts
+
+## Dependencies
+
+- Prerequisites for Phase 1
+- Phase dependencies
+- External blockers
+
+## Rollback (if applicable)
+
+Triggers and steps
+
+## Log
+
+| Date | Change |
+|------|--------|
+| YYYY-MM-DD | Created from discussion |
 ```
-
-Use the template from **[template.md](template.md)** for the full structure including:
-
-- Overview (goal, done-when, key decisions)
-- Architecture summary
-- Phases with acceptance criteria checkboxes
-- Tasks with micro acceptance (test names)
-- Edge case mapping table
-- Testing strategy
-- Dependencies
-- Change log
 
 ## Frontmatter
 
 The `format: local-markdown` frontmatter tells implementation that the full plan content is in this file.
 
-```yaml
----
-format: local-markdown
----
-```
-
-## What to Include
-
-Everything goes in the single `plan.md` file:
-
-- All phases and tasks inline
-- All acceptance criteria
-- Edge case mapping
-- Code examples for complex patterns
-
 ## Flagging Incomplete Tasks
 
-When creating tasks with missing information, mark them clearly:
+When information is missing, mark clearly with `[needs-info]`:
 
 ```markdown
 ### Task 3: Configure rate limiting [needs-info]
 
 **Do**: Set up rate limiting for the API endpoint
+**Test**: `it throttles requests exceeding limit`
 
-**Micro acceptance**: `it throttles requests exceeding limit`
-
-**⚠️ Needs clarification**:
+**Needs clarification**:
 - What's the rate limit threshold?
 - Per-user or per-IP?
 ```
-
-Use `[needs-info]` suffix in task title. This allows iterative refinement - create the structure, flag gaps, circle back to discussion, update tasks.
-
-## When to Use
-
-- Small to medium features
-- Solo development
-- Quick iterations
-- When you want simple git-tracked documentation
 
 ## Resulting Structure
 
@@ -102,4 +162,4 @@ docs/specs/
         └── plan.md           # format: local-markdown
 ```
 
-Implementation will read `plan.md`, see `format: local-markdown`, and execute directly from file content.
+Implementation reads `plan.md`, sees `format: local-markdown`, and executes directly from file content.
