@@ -23,21 +23,16 @@ Scan the codebase for discussions and plans:
 
 ## Step 2: Present Options to User
 
-Show what you found:
+Show what you found using a list like below:
 
 ```
 📂 Discussions found:
-  ⏳ {topic-1} - Concluded (ready for planning)
-  ⏳ {topic-2} - Concluded (ready for planning)
-  ⚠️  {topic-3} - Exploring (not ready)
-  ✅ {topic-4} - Concluded (plan exists)
+  ⏳ {topic-1} - Concluded - ready for planning
+  ⚠️ {topic-2} - Exploring - not ready for planning
+  ✅ {topic-3} - Concluded - plan exists
 
 Which discussion would you like to create a plan for?
 ```
-
-- ⏳ Concluded discussions without plans are ready for planning
-- ⚠️ Exploring discussions may not be ready yet
-- ✅ Discussions with existing plans can be extended or revised
 
 **Note:** You can pick any option—continue an exploring discussion, extend an existing plan, or even start a plan without a prior discussion.
 
