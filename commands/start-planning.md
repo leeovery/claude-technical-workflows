@@ -25,17 +25,19 @@ Show what you found:
 
 ```
 📂 Discussions found:
-  ⏳ {topic-1} - Concluded (no plan yet)
-  ⏳ {topic-2} - Concluded (no plan yet)
-  ⚠️  {topic-3} - Exploring (may not be ready)
+  ⏳ {topic-1} - Concluded (ready for planning)
+  ⏳ {topic-2} - Concluded (ready for planning)
+  ⚠️  {topic-3} - Exploring (not ready)
   ✅ {topic-4} - Concluded (plan exists)
 
 Which discussion would you like to create a plan for?
 ```
 
-- Highlight "Concluded" discussions without plans as ready
-- Warn about "Exploring" discussions (may not be ready for planning)
-- Note discussions that already have plans
+- ⏳ Concluded discussions without plans are ready for planning
+- ⚠️ Exploring discussions may not be ready yet
+- ✅ Discussions with existing plans can be extended or revised
+
+**Note:** You can pick any option—continue an exploring discussion, extend an existing plan, or even start a plan without a prior discussion.
 
 Ask: **Which discussion would you like to plan?**
 
