@@ -4,20 +4,28 @@ description: Start a planning session from an existing discussion. Discovers ava
 
 Invoke the **technical-planning** skill for this conversation.
 
+## Instructions
+
+Follow these steps EXACTLY as written. Do not skip steps or combine them. Present output using the EXACT format shown in examples - do not simplify or alter the formatting.
+
 Before beginning, discover existing work and gather necessary information.
+
+## Important
+
+Use simple, individual commands. Never combine multiple operations into bash loops or one-liners. Execute commands one at a time.
 
 ## Step 1: Discover Existing Work
 
 Scan the codebase for discussions and plans:
 
 1. **Find discussions**: Look in `docs/specs/discussions/*/discussion.md`
-   - Use ls command to list (ls `docs/specs/discussions/`)
-   - Note each topic name
-   - Check status (Concluded | Deciding | Exploring)
+   - First, run `ls docs/specs/discussions/` to list topic directories
+   - Then, for each topic, run `head -20 docs/specs/discussions/{topic}/discussion.md` to read the frontmatter and extract the `status:` field
+   - Do NOT use bash loops - run separate `head` commands for each topic
 
-2. **Find existing plans**: Look in `docs/specs/plans/*/plan.md`
-   - Use ls command to list (ls `docs/specs/plans/`)
-   - Check `format` frontmatter: `local-markdown`, `linear`, or `backlog-md`
+2. **Find existing plans**: Look in `docs/specs/plans/*/`
+   - Run `ls docs/specs/plans/` to list existing plans
+   - For each plan, run `ls docs/specs/plans/{topic}/` to see what files exist
 
 3. **Identify gaps**: Discussions without corresponding plans
 
