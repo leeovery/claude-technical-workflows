@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="#installation">Installation</a> •
-  <a href="#the-three-phase-workflow">Workflow</a> •
+  <a href="#the-four-phase-workflow">Workflow</a> •
   <a href="#skills">Skills</a> •
   <a href="#commands">Commands</a> •
   <a href="#how-it-works">How It Works</a> •
@@ -17,7 +17,7 @@
 
 ## About
 
-A structured approach to technical discussions and implementation planning with Claude Code. These skills enforce a deliberate **discuss-then-plan-then-implement** workflow that captures context, decisions, and rationale before any code is written.
+A structured approach to technical discussions and implementation planning with Claude Code. These skills enforce a deliberate **discuss-then-plan-then-implement-then-review** workflow that captures context, decisions, and rationale before any code is written—then validates the work against those artifacts.
 
 **Why this matters:** Complex features benefit from thorough discussion before implementation. These skills help you document the *what* and *why* before diving into the *how*—preserving architectural decisions, edge cases, and the reasoning behind choices that would otherwise be lost.
 
