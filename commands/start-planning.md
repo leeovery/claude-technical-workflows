@@ -25,10 +25,10 @@ Show what you found:
 
 ```
 📂 Discussions found:
-  ✅ {topic-1} - Concluded (no plan yet)
-  ✅ {topic-2} - Concluded (no plan yet)
+  ⏳ {topic-1} - Concluded (no plan yet)
+  ⏳ {topic-2} - Concluded (no plan yet)
   ⚠️  {topic-3} - Exploring (may not be ready)
-  ✓  {topic-4} - Concluded (plan exists)
+  ✅ {topic-4} - Concluded (plan exists)
 
 Which discussion would you like to create a plan for?
 ```
