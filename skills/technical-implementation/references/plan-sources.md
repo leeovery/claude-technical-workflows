@@ -4,7 +4,7 @@
 
 ---
 
-Plans are always stored in `docs/specs/plans/{topic}/plan.md`. The file's frontmatter declares the format.
+Plans are always stored in `docs/workflow/{topic}/plan.md`. The file's frontmatter declares the format.
 
 ## Detecting Plan Format
 

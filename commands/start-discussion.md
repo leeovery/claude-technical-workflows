@@ -1,5 +1,5 @@
 ---
-description: Start a technical discussion using the technical-discussion skill. Gathers information about the topic and creates discussion documentation in docs/specs/discussions/<topic-name>/
+description: Start a technical discussion using the technical-discussion skill. Gathers information about the topic and creates discussion documentation in docs/workflow/{topic}/
 ---
 
 Invoke the **technical-discussion** skill for this conversation.
@@ -8,7 +8,7 @@ Before beginning, ask the user these questions to properly set up the discussion
 
 ## Essential Information
 
-1. **Discussion Topic**: What are we discussing? (This will be used to create the directory name in `docs/specs/discussions/<topic-name>/`)
+1. **Discussion Topic**: What are we discussing? (This will be used to create the topic directory in `docs/workflow/{topic}/`)
 
 2. **Context & Background**:
    - What sparked this discussion?
@@ -28,10 +28,10 @@ Before beginning, ask the user these questions to properly set up the discussion
 ## After Gathering Information
 
 Once I have this information:
-- Create directory: `docs/specs/discussions/<topic-name>/`
+- Ensure topic directory exists: `docs/workflow/{topic}/`
 - Start documenting the discussion following the technical-discussion skill structure
-- Create initial file (e.g., `discussion.md`)
-- Add more files as the discussion evolves (research notes, supporting docs, etc.)
+- Create initial file: `docs/workflow/{topic}/discussion.md`
+- If multiple discussion files needed, move to `docs/workflow/{topic}/discussions/` with semantic names
 - Commit frequently at natural discussion breaks
 
 Ask these questions clearly and wait for responses before proceeding with the discussion.

@@ -72,7 +72,7 @@ For each task, create an issue and apply the appropriate phase label:
 - [Specific edge cases for this task]
 
 ## Context
-Discussion: `docs/specs/discussions/{topic-name}/discussion.md`
+Topic: `docs/workflow/{topic}/`
 [Optional: link to specific decision if relevant]
 ```
 
@@ -97,7 +97,7 @@ This allows iterative refinement. Create all issues, identify gaps, circle back 
 
 ### 4. Create Local Plan File
 
-Create `docs/specs/plans/{topic-name}/plan.md`:
+Create `docs/workflow/{topic}/plan.md`:
 
 ```markdown
 ---
@@ -109,7 +109,7 @@ team: {TEAM_NAME}
 
 # Plan Reference: {Topic Name}
 
-**Discussion**: `docs/specs/discussions/{topic-name}/`
+**Topic**: `docs/workflow/{topic}/`
 **Created**: {DATE}
 
 ## About This Plan
@@ -157,7 +157,7 @@ Issues should be **self-contained for execution**:
 - Any code examples for complex patterns
 
 **Link to (don't copy)**:
-- Discussion document (for "why" context)
+- Discussion document in same topic directory (for "why" context)
 - Specific decision sections if particularly relevant
 
 The goal: anyone (Claude or human) could pick up the issue and execute it.
@@ -174,16 +174,14 @@ The goal: anyone (Claude or human) could pick up the issue and execute it.
 After planning:
 
 ```
-docs/specs/
-├── discussions/
-│   └── {topic-name}/
-│       └── discussion.md     # Source decisions
-└── plans/
-    └── {topic-name}/
-        └── plan.md           # format: linear (pointer)
+docs/workflow/
+└── {topic}/
+    ├── discussion.md      # Phase 1 output
+    ├── specification.md   # Phase 2 output
+    └── plan.md            # Phase 3 output (format: linear - pointer)
 
 Linear:
-└── Project: {topic-name}
+└── Project: {topic}
     ├── Issue: Task 1 [label: phase-1]
     ├── Issue: Task 2 [label: phase-1]
     └── Issue: Task 3 [label: phase-2]

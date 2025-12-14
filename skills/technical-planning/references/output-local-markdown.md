@@ -9,11 +9,15 @@ Use this format for simple features or when you want everything in a single vers
 ## Output Location
 
 ```
-docs/specs/plans/{topic-name}/
+docs/workflow/{topic}/
 └── plan.md
 ```
 
-Directory name should match the discussion topic from `docs/specs/discussions/{topic-name}/`.
+The topic directory contains all workflow artifacts (discussion, specification, plan).
+
+**Single file (default):** `docs/workflow/{topic}/plan.md`
+
+**Multiple files (when needed):** Move to `docs/workflow/{topic}/plans/` with semantically named files.
 
 ## Template
 
@@ -28,7 +32,7 @@ format: local-markdown
 
 **Date**: YYYY-MM-DD
 **Status**: Draft | Ready | In Progress | Completed
-**Discussion**: `docs/specs/discussions/{topic-name}/`
+**Topic**: `docs/workflow/{topic}/`
 
 ## Overview
 
@@ -153,13 +157,11 @@ When information is missing, mark clearly with `[needs-info]`:
 After planning:
 
 ```
-docs/specs/
-├── discussions/
-│   └── {topic-name}/
-│       └── discussion.md     # Source decisions
-└── plans/
-    └── {topic-name}/
-        └── plan.md           # format: local-markdown
+docs/workflow/
+└── {topic}/
+    ├── discussion.md      # Phase 1 output
+    ├── specification.md   # Phase 2 output
+    └── plan.md            # Phase 3 output (format: local-markdown)
 ```
 
 Implementation reads `plan.md`, sees `format: local-markdown`, and executes directly from file content.

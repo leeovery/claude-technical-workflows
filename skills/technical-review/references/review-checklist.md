@@ -6,11 +6,12 @@
 
 ## Before Starting
 
-1. Locate discussion doc: `docs/specs/discussions/{topic}/`
-2. Locate specification: `docs/specs/specifications/{topic}/specification.md`
-3. Locate plan doc: `docs/specs/plans/{topic}/`
-4. Identify what code/files were changed
-5. Check for project-specific skills in `.claude/skills/`
+1. Locate topic directory: `docs/workflow/{topic}/`
+2. Read discussion: `docs/workflow/{topic}/discussion.md`
+3. Read specification: `docs/workflow/{topic}/specification.md`
+4. Read plan: `docs/workflow/{topic}/plan.md`
+5. Identify what code/files were changed
+6. Check for project-specific skills in `.claude/skills/`
 
 ## Chain Verification
 

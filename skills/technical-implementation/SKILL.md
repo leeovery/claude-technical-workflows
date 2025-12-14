@@ -1,6 +1,6 @@
 ---
 name: technical-implementation
-description: "Execute implementation plans using strict TDD workflow with quality gates. Fourth phase of discussion-specification-plan-implement-review workflow. Use when: (1) Implementing a plan from docs/specs/plans/, (2) User says 'implement', 'build', or 'code this' after planning, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Writes tests first, implements to pass, commits frequently, stops for user approval between phases."
+description: "Execute implementation plans using strict TDD workflow with quality gates. Fourth phase of discussion-specification-plan-implement-review workflow. Use when: (1) Implementing a plan from docs/workflow/{topic}/, (2) User says 'implement', 'build', or 'code this' after planning, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Writes tests first, implements to pass, commits frequently, stops for user approval between phases."
 ---
 
 # Technical Implementation
@@ -31,7 +31,7 @@ You're at step 4. Execute the plan. Don't re-debate decisions.
 
 ### With a Plan
 
-1. **Read the plan** from `docs/specs/plans/{topic}/plan.md`
+1. **Read the plan** from `docs/workflow/{topic}/plan.md`
    - Check the `format` field in frontmatter:
      - `local-markdown` → content is in this file
      - `linear` → query Linear via MCP using frontmatter project_id
@@ -80,7 +80,7 @@ Keep user informed of progress:
 
 ## When to Reference Discussion
 
-Check the discussion doc (`docs/specs/discussions/{topic}/`) when:
+Check the discussion doc (`docs/workflow/{topic}/discussion.md`) when:
 
 - Task rationale is unclear
 - Multiple valid approaches exist

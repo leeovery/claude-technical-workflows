@@ -53,20 +53,20 @@ Flag anything that:
 - Was planned but wasn't implemented
 - Drifted from the original intent
 
-### 2. Discussion Compliance (`docs/specs/discussions/{topic}/`)
+### 2. Discussion Compliance (`docs/workflow/{topic}/discussion.md`)
 
 - Were decisions followed?
 - Were edge cases handled as discussed?
 - Any deviations from agreed approach?
 - Were rejected alternatives accidentally implemented?
 
-### 3. Specification Coverage (`docs/specs/specifications/{topic}/specification.md`)
+### 3. Specification Coverage (`docs/workflow/{topic}/specification.md`)
 
 - Were all validated requirements implemented?
 - Any gaps between specification and implementation?
 - Did anything in the spec get missed?
 
-### 4. Plan Completion (`docs/specs/plans/{topic}/plan.md`)
+### 4. Plan Completion (`docs/workflow/{topic}/plan.md`)
 
 - Check `format` frontmatter to determine source (local-markdown, linear, backlog-md)
 - Were all phase acceptance criteria actually met?

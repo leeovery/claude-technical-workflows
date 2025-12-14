@@ -4,7 +4,11 @@
 
 ---
 
-Standard structure for `docs/specs/discussions/<topic-name>/discussion.md`. Each discussion gets its own directory with a single markdown file. DOCUMENT only - no plans or code.
+Standard structure for `docs/workflow/{topic}/discussion.md`. Each topic gets its own directory containing all workflow artifacts. DOCUMENT only - no plans or code.
+
+**Single file (default):** `docs/workflow/{topic}/discussion.md`
+
+**Multiple files (when needed):** Move to `docs/workflow/{topic}/discussions/` with semantically named files.
 
 **This is a guide, not a form.** Use the structure to capture what naturally emerges from discussion. Don't force sections that didn't come up. The goal is to document the reasoning journey, not fill in every field.
 
@@ -93,7 +97,7 @@ What we chose, why, the deciding factor, trade-offs accepted, confidence level.
 ## Usage Notes
 
 **When creating**:
-1. Create directory: `docs/specs/discussions/<topic-name>/`
+1. Ensure topic directory exists: `docs/workflow/{topic}/`
 2. Create file: `discussion.md`
 3. Fill header: date, status
 4. Start with context: why discussing?

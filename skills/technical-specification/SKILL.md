@@ -1,6 +1,6 @@
 ---
 name: technical-specification
-description: "Build validated specifications from discussion documents through collaborative refinement. Second phase of discussion-specification-plan-implement-review workflow. Use when: (1) User asks to create/build a specification from discussions, (2) User wants to validate and refine discussion content before planning, (3) Converting discussion documents into standalone specifications, (4) User says 'specify this' or 'create a spec' after discussions, (5) Need to filter hallucinations and enrich gaps before formal planning. Creates specifications in docs/specs/specifications/{topic-name}/ that technical-planning uses to build implementation plans."
+description: "Build validated specifications from discussion documents through collaborative refinement. Second phase of discussion-specification-plan-implement-review workflow. Use when: (1) User asks to create/build a specification from discussions, (2) User wants to validate and refine discussion content before planning, (3) Converting discussion documents into standalone specifications, (4) User says 'specify this' or 'create a spec' after discussions, (5) Need to filter hallucinations and enrich gaps before formal planning. Creates specifications in docs/workflow/{topic}/ that technical-planning uses to build implementation plans."
 ---
 
 # Technical Specification
@@ -23,7 +23,11 @@ You're at step 2. Build the specification. Don't jump to phases, tasks, or code.
 
 **Load**: [specification-guide.md](references/specification-guide.md)
 
-**Output**: `specification.md` in `docs/specs/specifications/{topic-name}/`
+**Output**: `docs/workflow/{topic}/specification.md`
+
+**Single file (default):** `docs/workflow/{topic}/specification.md`
+
+**Multiple files (when needed):** Move to `docs/workflow/{topic}/specifications/` with semantically named files.
 
 **When complete**: User signs off, then proceed to technical-planning.
 

@@ -19,7 +19,7 @@ See: https://github.com/MrLesk/Backlog.md
 
 ## Output Location
 
-For Backlog.md integration, use the project's `backlog/` directory (not `docs/specs/plans/`):
+For Backlog.md integration, use the project's `backlog/` directory:
 
 ```
 backlog/
@@ -27,15 +27,15 @@ backlog/
 ├── task-2 - Implement login endpoint.md
 ├── task-3 - Add session management.md
 └── docs/
-    └── {topic-name}/
-        └── plan-reference.md     # Links back to discussion
+    └── {topic}/
+        └── plan-reference.md     # Links back to topic
 ```
 
-The `plan.md` file in `docs/specs/plans/{topic}/` serves as the reference pointer.
+The `plan.md` file in `docs/workflow/{topic}/` serves as the reference pointer.
 
 ## File Structure
 
-### Plan Reference File (`docs/specs/plans/{topic}/plan.md`)
+### Plan Reference File (`docs/workflow/{topic}/plan.md`)
 
 ```markdown
 ---
@@ -45,7 +45,7 @@ project: {TOPIC_NAME}
 
 # Plan Reference: {Topic Name}
 
-**Discussion**: `docs/specs/discussions/{topic-name}/`
+**Topic**: `docs/workflow/{topic}/`
 **Created**: {DATE}
 
 ## About This Plan
@@ -104,7 +104,7 @@ labels: [phase-1, api]
 
 ## Notes
 
-- Discussion: `docs/specs/discussions/{topic-name}/discussion.md`
+- Topic: `docs/workflow/{topic}/`
 - Related decisions: [link if applicable]
 ```
 
@@ -170,13 +170,11 @@ project/
 │   └── docs/
 │       └── {topic}/
 │           └── reference.md
-├── docs/specs/
-│   ├── discussions/
-│   │   └── {topic}/
-│   │       └── discussion.md
-│   └── plans/
-│       └── {topic}/
-│           └── plan.md              # format: backlog-md
+├── docs/workflow/
+│   └── {topic}/
+│       ├── discussion.md      # Phase 1 output
+│       ├── specification.md   # Phase 2 output
+│       └── plan.md            # Phase 3 output (format: backlog-md - pointer)
 ```
 
 ## Implementation Reading

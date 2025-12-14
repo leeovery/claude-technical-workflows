@@ -6,7 +6,7 @@
 
 ## Plan Structure
 
-Plans live in `docs/specs/plans/{topic}/` with phases and tasks.
+Plans live in `docs/workflow/{topic}/plan.md` with phases and tasks.
 
 **Phase** = grouping with acceptance criteria
 **Task** = single TDD cycle = one commit
@@ -27,7 +27,7 @@ For each phase:
 
 ## Referencing Discussion
 
-Check `docs/specs/discussions/{topic}/` when:
+Check `docs/workflow/{topic}/discussion.md` when:
 - Task rationale unclear
 - Multiple valid approaches
 - Edge case handling not specified

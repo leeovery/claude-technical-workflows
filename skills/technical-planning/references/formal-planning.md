@@ -19,7 +19,7 @@ If you don't know which format, ask.
 
 ### 1. Read Specification
 
-From the specification (`docs/specs/specifications/{topic-name}/specification.md`), extract:
+From the specification (`docs/workflow/{topic}/specification.md`), extract:
 - Key decisions and rationale
 - Architectural choices
 - Edge cases identified

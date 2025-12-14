@@ -29,8 +29,10 @@ commands/
 
 ## Key Conventions
 
-- Discussion docs: `docs/specs/discussions/<topic-name>/discussion.md`
-- Specification docs: `docs/specs/specifications/<topic-name>/specification.md`
-- Plan docs: `docs/specs/plans/<topic-name>/`
+- Topic directory: `docs/workflow/{topic}/`
+- Discussion: `docs/workflow/{topic}/discussion.md`
+- Specification: `docs/workflow/{topic}/specification.md`
+- Plan: `docs/workflow/{topic}/plan.md`
+- Multiple files: Use pluralized subdirectory (e.g., `discussions/`, `specifications/`, `plans/`)
 - Commit docs frequently (natural breaks, before context refresh)
 - Skills capture context, don't implement

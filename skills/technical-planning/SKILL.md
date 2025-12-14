@@ -1,6 +1,6 @@
 ---
 name: technical-planning
-description: "Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Third phase of discussion-specification-plan-implement-review workflow. Use when: (1) User asks to create/write an implementation plan, (2) User asks to plan implementation after specification is complete, (3) Converting specifications from docs/specs/specifications/ into implementation plans, (4) User says 'plan this' or 'create a plan' after specification, (5) Need to structure how to build something with phases and concrete steps. Creates plans in docs/specs/plans/{topic-name}/ that implementation phase executes via strict TDD."
+description: "Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Third phase of discussion-specification-plan-implement-review workflow. Use when: (1) User asks to create/write an implementation plan, (2) User asks to plan implementation after specification is complete, (3) Converting specifications from docs/workflow/{topic}/ into implementation plans, (4) User says 'plan this' or 'create a plan' after specification, (5) Need to structure how to build something with phases and concrete steps. Creates plans in docs/workflow/{topic}/ that implementation phase executes via strict TDD."
 ---
 
 # Technical Planning
@@ -22,7 +22,7 @@ You're at step 3. Create the plan. Don't jump to implementation.
 ## Source Material
 
 Plans are built **exclusively** from the specification:
-- **Specification** (`docs/specs/specifications/{topic-name}/specification.md`)
+- **Specification** (`docs/workflow/{topic}/specification.md`)
 
 The specification is the **sole source of truth**. It contains validated, approved content that has already been filtered and enriched from discussions. Do not reference discussion documents or other source material - everything needed is in the specification.
 

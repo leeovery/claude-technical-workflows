@@ -18,23 +18,22 @@ Use simple, individual commands. Never combine multiple operations into bash loo
 
 Scan the codebase for discussions and specifications:
 
-1. **Find discussions**: Look in `docs/specs/discussions/*/discussion.md`
-   - First, run `ls docs/specs/discussions/` to list topic directories
-   - Then, for each topic, run `head -20 docs/specs/discussions/{topic}/discussion.md` to read the frontmatter and extract the `status:` field
+1. **Find topic directories**: Look in `docs/workflow/*/`
+   - First, run `ls docs/workflow/` to list topic directories
+   - Then, for each topic, check for `discussion.md` and `specification.md`
+
+2. **Check discussion status**: For each topic with a discussion
+   - Run `head -20 docs/workflow/{topic}/discussion.md` to read the frontmatter and extract the `status:` field
    - Do NOT use bash loops - run separate `head` commands for each topic
 
-2. **Find existing specifications**: Look in `docs/specs/specifications/*/`
-   - Run `ls docs/specs/specifications/` to list existing specifications
-   - For each specification, run `ls docs/specs/specifications/{topic}/` to see what files exist
-
-3. **Identify gaps**: Discussions without corresponding specifications
+3. **Identify gaps**: Topics with discussions but no specifications
 
 ## Step 2: Check Prerequisites
 
 **If no discussions exist:**
 
 ```
-⚠️ No discussions found in docs/specs/discussions/
+⚠️ No discussions found in docs/workflow/
 
 The specification phase requires a completed discussion. Please run /start-discussion first to document the technical decisions, edge cases, and rationale before creating a specification.
 ```
@@ -68,15 +67,17 @@ Ask:
 ## Step 5: Invoke Specification Skill
 
 Pass to the technical-specification skill:
-- Discussion path: `docs/specs/discussions/{topic-name}/`
-- Specification path: `docs/specs/specifications/{topic-name}/`
+- Topic directory: `docs/workflow/{topic}/`
+- Discussion: `docs/workflow/{topic}/discussion.md`
+- Output: `docs/workflow/{topic}/specification.md`
 - Additional context gathered
 
 **Example handoff:**
 ```
-Specification session for: {topic-name}
-Discussion: docs/specs/discussions/{topic-name}/discussion.md
-Output: docs/specs/specifications/{topic-name}/specification.md
+Specification session for: {topic}
+Topic directory: docs/workflow/{topic}/
+Discussion: docs/workflow/{topic}/discussion.md
+Output: docs/workflow/{topic}/specification.md
 
 Begin specification using the technical-specification skill.
 Reference: specification-guide.md

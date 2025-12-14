@@ -76,19 +76,26 @@ You don't need to configure anything—just install and start discussing.
 
 ### Output Structure
 
-Discussion, specification, and planning documents are stored in your project:
+Discussion, specification, and planning documents are stored in your project using a **topic-first** organization:
 
 ```
-docs/specs/
-├── discussions/
-│   └── <topic-name>/
-│       └── discussion.md      # Phase 1 output
-├── specifications/
-│   └── <topic-name>/
-│       └── specification.md   # Phase 2 output
-└── plans/
-    └── <topic-name>/
-        └── plan.md            # Phase 3 output
+docs/workflow/
+└── {topic}/
+    ├── discussion.md      # Phase 1 output
+    ├── specification.md   # Phase 2 output
+    └── plan.md            # Phase 3 output
+```
+
+Each topic gets a single directory containing all its workflow artifacts. This keeps related documents together and makes it easy to see the complete picture for any feature.
+
+**Multiple files:** If any phase needs multiple files (e.g., multiple discussion threads), they move to a pluralized subdirectory:
+```
+docs/workflow/{topic}/
+├── discussions/           # plural = directory with multiple files
+│   ├── api-design.md
+│   └── data-model.md
+├── specification.md
+└── plan.md
 ```
 
 ## Skills
@@ -152,7 +159,7 @@ Converts specifications into structured implementation plans.
 Executes plans through strict TDD. Acts as an expert senior developer who builds quality software through disciplined test-driven development.
 
 **Use when:**
-- Implementing a plan from `docs/specs/plans/`
+- Implementing a plan from `docs/workflow/{topic}/plan.md`
 - Ad hoc coding that should follow TDD and quality standards
 - Bug fixes or features benefiting from structured implementation
 
