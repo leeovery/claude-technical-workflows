@@ -54,6 +54,8 @@ Show what you found using a list like below:
 Which discussion would you like to create a specification for?
 ```
 
+**Important:** Only concluded discussions should proceed to specification. If a discussion is still exploring, advise the user to complete the discussion phase first.
+
 Ask: **Which discussion would you like to specify?**
 
 ## Step 4: Gather Additional Context

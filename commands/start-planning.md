@@ -54,6 +54,8 @@ Show what you found using a list like below:
 Which specification would you like to create a plan for?
 ```
 
+**Important:** Only completed specifications should proceed to planning. If a specification is still being built, advise the user to complete the specification phase first.
+
 Ask: **Which specification would you like to plan?**
 
 ## Step 4: Choose Output Destination
