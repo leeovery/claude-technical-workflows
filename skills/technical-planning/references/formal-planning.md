@@ -1,12 +1,10 @@
 # Formal Planning
 
-*Reference for **[technical-planning](../SKILL.md)** - Path B*
+*Reference for **[technical-planning](../SKILL.md)***
 
 ---
 
-You are creating the formal implementation plan. This is either:
-- Direct from source materials (discussion docs), OR
-- After completing draft planning (from `draft-plan.md`)
+You are creating the formal implementation plan from the specification.
 
 ## Before You Begin
 
@@ -19,13 +17,15 @@ If you don't know which format, ask.
 
 ## The Planning Process
 
-### 1. Read Source Material
+### 1. Read Specification
 
-From discussion docs or draft plan, extract:
+From the specification (`docs/specs/specifications/{topic-name}/specification.md`), extract:
 - Key decisions and rationale
 - Architectural choices
 - Edge cases identified
 - Constraints and requirements
+
+**The specification is your sole input.** Discussion documents and other source materials have already been validated, filtered, and enriched during the specification phase. Everything you need is in the specification - do not reference other documents.
 
 ### 2. Define Phases
 
@@ -52,7 +52,7 @@ Extract each edge case, create a task with micro acceptance.
 
 Only for novel patterns not obvious to implement.
 
-### 7. Review Against Source
+### 7. Review Against Specification
 
 Verify:
 - All decisions referenced

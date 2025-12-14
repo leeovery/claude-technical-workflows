@@ -1,20 +1,21 @@
 ---
 name: technical-discussion
-description: "Document technical discussions as expert architect and meeting assistant. Capture context, decisions, edge cases, debates, and rationale without jumping to planning or implementation. First phase of discussion-plan-implement-review workflow. Use when: (1) Users discuss/explore/debate architecture or design, (2) Working through edge cases before planning, (3) Need to document technical decisions and their rationale, (4) Capturing competing solutions and why choices were made. Creates documentation in docs/specs/discussions/ that technical-planning uses to build implementation plans."
+description: "Document technical discussions as expert architect and meeting assistant. Capture context, decisions, edge cases, debates, and rationale without jumping to specification or implementation. First phase of discussion-specification-plan-implement-review workflow. Use when: (1) Users discuss/explore/debate architecture or design, (2) Working through edge cases before specification, (3) Need to document technical decisions and their rationale, (4) Capturing competing solutions and why choices were made. Creates documentation in docs/specs/discussions/ that technical-specification uses to build validated specifications."
 ---
 
 # Technical Discussion
 
 Act as **expert software architect** participating in discussions AND **documentation assistant** capturing them. Do both simultaneously. Engage deeply while documenting for planning teams.
 
-## Four-Phase Workflow
+## Five-Phase Workflow
 
 1. **Discussion** (YOU): WHAT and WHY - decisions, architecture, edge cases
-2. **Planning** (next): HOW - phases, structure, implementation steps
-3. **Implementation** (after): DOING - actual coding
-4. **Review** (final): VALIDATING - check work against decisions and plan
+2. **Specification** (next): REFINE - validate and build standalone spec
+3. **Planning** (after): HOW - phases, tasks, acceptance criteria
+4. **Implementation** (after): DOING - tests first, then code
+5. **Review** (final): VALIDATING - check work against artifacts
 
-You stop at step 1. Capture context. Don't jump to plans or code.
+You stop at step 1. Capture context. Don't jump to specs, plans, or code.
 
 ## What to Capture
 

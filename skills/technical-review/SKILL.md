@@ -1,6 +1,6 @@
 ---
 name: technical-review
-description: "Review completed implementation against discussion decisions and plan acceptance criteria. Fourth phase of discussion-plan-implement-review workflow. Use when: (1) Implementation phase is complete, (2) User asks to review code against the plan, (3) User wants validation before merging/shipping, (4) Quality gate check needed after implementation. Produces structured feedback (approve, request changes, or comments) - does NOT fix code. Fresh perspective catches plan deviations, missed edge cases, and test quality issues."
+description: "Review completed implementation against discussion decisions, specification, and plan acceptance criteria. Fifth phase of discussion-specification-plan-implement-review workflow. Use when: (1) Implementation phase is complete, (2) User asks to review code against the plan, (3) User wants validation before merging/shipping, (4) Quality gate check needed after implementation. Produces structured feedback (approve, request changes, or comments) - does NOT fix code. Fresh perspective catches plan deviations, missed edge cases, and test quality issues."
 ---
 
 # Technical Review
@@ -9,14 +9,15 @@ Act as **expert code reviewer** with fresh perspective. You haven't seen this co
 
 Review completed work. Produce feedback. Don't fix code.
 
-## Four-Phase Workflow
+## Five-Phase Workflow
 
 1. **Discussion** (artifact): WHAT and WHY - decisions, architecture, rationale
-2. **Planning** (artifact): HOW - phases, tasks, acceptance criteria
-3. **Implementation** (completed): DOING - tests and code
-4. **Review** (YOU): VALIDATING - check work against artifacts
+2. **Specification** (artifact): REFINE - validated, standalone specification
+3. **Planning** (artifact): HOW - phases, tasks, acceptance criteria
+4. **Implementation** (completed): DOING - tests and code
+5. **Review** (YOU): VALIDATING - check work against artifacts
 
-You're at step 4. The code exists. Your job is validation.
+You're at step 5. The code exists. Your job is validation.
 
 ## What You Review Against
 
@@ -25,18 +26,22 @@ You're at step 4. The code exists. Your job is validation.
    - Were edge cases handled as discussed?
    - Any deviations from agreed approach?
 
-2. **Plan** (`docs/specs/plans/{topic}/plan.md`)
+2. **Specification** (`docs/specs/specifications/{topic}/specification.md`)
+   - Were validated requirements implemented?
+   - Any gaps between specification and implementation?
+
+3. **Plan** (`docs/specs/plans/{topic}/plan.md`)
    - Check `format` frontmatter to determine source (local-markdown, linear, backlog-md)
    - Were all phase acceptance criteria actually met?
    - Were all tasks completed?
    - Any scope creep or missing scope?
 
-3. **Code quality** (via project skills)
+4. **Code quality** (via project skills)
    - Does code follow project conventions?
    - Are patterns appropriate for the framework?
    - Any obvious issues?
 
-4. **Test quality**
+5. **Test quality**
    - Do tests actually verify the requirements?
    - Are tests meaningful or just passing?
    - Edge cases from discussion covered?
@@ -44,13 +49,14 @@ You're at step 4. The code exists. Your job is validation.
 ## Review Process
 
 1. **Read the discussion doc** - Understand what was decided and why
-2. **Read the plan** (`plan.md`) - Check `format` frontmatter:
+2. **Read the specification** - The validated requirements that were approved
+3. **Read the plan** (`plan.md`) - Check `format` frontmatter:
    - `local-markdown` → content is in this file
    - `linear` → query Linear via MCP for project issues
    - `backlog-md` → query Backlog.md via MCP or read `backlog/`
-3. **Read the implementation** - Code changes and tests
-4. **Check project skills** - Framework/language conventions
-5. **Produce review** - Structured feedback
+4. **Read the implementation** - Code changes and tests
+5. **Check project skills** - Framework/language conventions
+6. **Produce review** - Structured feedback
 
 See **[review-checklist.md](references/review-checklist.md)** for detailed checklist.
 

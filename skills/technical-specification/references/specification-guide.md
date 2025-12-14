@@ -1,28 +1,28 @@
-# Draft Planning
+# Specification Guide
 
-*Reference for **[technical-planning](../SKILL.md)** - Path A*
+*Reference for **[technical-specification](../SKILL.md)***
 
 ---
 
-You are creating a draft plan - a collaborative workspace where you and the user refine reference material into a validated specification.
+You are building a specification - a collaborative workspace where you and the user refine reference material into a validated, standalone document.
 
 ## Purpose
 
-Draft planning is a **two-way process**:
+Specification building is a **two-way process**:
 
 1. **Filter**: Reference material may contain hallucinations, inaccuracies, or outdated concepts. Validate before including.
 
 2. **Enrich**: Reference material may have gaps. Fill them through discussion.
 
-The draft plan is an **interim document** - a workspace for collecting validated, refined content that will feed formal planning.
+The specification is the **bridge document** - a workspace for collecting validated, refined content that will feed formal planning.
 
-**The draft plan must be standalone.** It should contain everything formal planning needs - no references back to discussions or other source material. When complete, it draws a line: formal planning uses only this document.
+**The specification must be standalone.** It should contain everything formal planning needs - no references back to discussions or other source material. When complete, it draws a line: formal planning uses only this document.
 
 ## Source Materials
 
 Before starting any topic, review ALL available reference material:
 - Discussion documents (from technical-discussion phase)
-- Any existing partial plans
+- Any existing partial specifications
 - Related documentation
 
 **Treat all source material as untrusted input.** Even discussion documents that went through a collaborative process may contain issues. Your job is to synthesize and present - the user validates.
@@ -35,7 +35,7 @@ Work through the specification **topic by topic**:
 Read all reference material for the current topic. Understand what exists.
 
 ### 2. Synthesize and Present
-Present your understanding to the user **in the format it would appear in the plan**:
+Present your understanding to the user **in the format it would appear in the specification**:
 
 > "Here's what I understand about [topic] based on the reference material. This is how I'd write it into the specification:
 >
@@ -54,7 +54,7 @@ Work through the content together:
 This is a **human-level conversation**, not form-filling. The user brings context from across the project that may not be in the reference material - decisions from other topics, implications from later work, or knowledge that can't all fit in context.
 
 ### 4. Log When Approved
-Only when the user approves ("yes, log it", "that's good", etc.) do you write it to the draft plan - **verbatim** as presented and approved.
+Only when the user approves ("yes, log it", "that's good", etc.) do you write it to the specification - **verbatim** as presented and approved.
 
 ### 5. Repeat
 Move to the next topic.
@@ -63,22 +63,22 @@ Move to the next topic.
 
 When you discover information that affects **already-logged topics**, resurface them. Even mid-discussion - interrupt, flag what you found, and discuss whether it changes anything.
 
-If it does: summarize what's changing in the chat, then re-present the full updated topic. The summary is for discussion only - the draft plan just gets the clean replacement. Standard workflow applies: user approves before you update.
+If it does: summarize what's changing in the chat, then re-present the full updated topic. The summary is for discussion only - the specification just gets the clean replacement. Standard workflow applies: user approves before you update.
 
 This is encouraged. Better to resurface and confirm "already covered" than let something slip past.
 
-## The Draft Document
+## The Specification Document
 
-Create `draft-plan.md` in `docs/specs/plans/{topic-name}/`
+Create `specification.md` in `docs/specs/specifications/{topic-name}/`
 
 Structure is **flexible** - organize around phases and subject matter, not rigid sections. This is a working document.
 
 Suggested skeleton:
 
 ```markdown
-# Draft Plan: [Topic Name]
+# Specification: [Topic Name]
 
-**Status**: Draft - building specification
+**Status**: Building specification
 **Last Updated**: [timestamp]
 
 ---
@@ -96,7 +96,7 @@ Suggested skeleton:
 
 ## Critical Rules
 
-**Present before logging**: Never write content to the draft until the user has seen and approved it.
+**Present before logging**: Never write content to the specification until the user has seen and approved it.
 
 **Log verbatim**: When approved, write exactly what was presented - no silent modifications.
 
@@ -106,15 +106,15 @@ Suggested skeleton:
 
 ## After Context Refresh
 
-Read the draft plan. It contains validated, approved content. Trust it - you built it together with the user.
+Read the specification. It contains validated, approved content. Trust it - you built it together with the user.
 
 If working notes exist, they show where you left off.
 
 ## Transitioning to Formal Planning
 
-Draft is complete when:
+Specification is complete when:
 - All topics/phases have validated content
 - User confirms the specification is complete
 - No blocking gaps remain
 
-Then proceed to formal planning → Load [formal-planning.md](formal-planning.md)
+Then proceed to formal planning with the **technical-planning** skill.
