@@ -47,14 +47,14 @@ Show what you found using a list like below:
 
 ```
 📂 Specifications found:
-  ⏳ {topic-1} - Building specification - not ready for planning
+  ⚠️ {topic-1} - Building specification - not ready for planning
   ✅ {topic-2} - Complete - ready for planning
   ✅ {topic-3} - Complete - plan exists
 
 Which specification would you like to create a plan for?
 ```
 
-**Note:** You can pick any option—extend an existing plan, or create a new plan for a completed specification.
+**Important:** Only completed specifications should proceed to planning. If a specification is still being built, advise the user to complete the specification phase first.
 
 Ask: **Which specification would you like to plan?**
 

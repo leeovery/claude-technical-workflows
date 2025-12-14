@@ -47,14 +47,14 @@ Show what you found using a list like below:
 
 ```
 📂 Discussions found:
-  ⏳ {topic-1} - Concluded - ready for specification
+  ✅ {topic-1} - Concluded - ready for specification
   ⚠️ {topic-2} - Exploring - not ready for specification
   ✅ {topic-3} - Concluded - specification exists
 
 Which discussion would you like to create a specification for?
 ```
 
-**Note:** You can pick any option—continue an exploring discussion, extend an existing specification, or create a new specification for a concluded discussion.
+**Important:** Only concluded discussions should proceed to specification. If a discussion is still exploring, advise the user to complete the discussion phase first.
 
 Ask: **Which discussion would you like to specify?**
 
