@@ -22,6 +22,7 @@ The specification is the **bridge document** - a workspace for collecting valida
 
 Before starting any topic, review ALL available reference material:
 - Discussion documents (from technical-discussion phase)
+- Any existing partial plans
 - Any existing partial specifications
 - Related documentation
 
