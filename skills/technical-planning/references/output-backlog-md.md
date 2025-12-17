@@ -25,13 +25,10 @@ For Backlog.md integration, use the project's `backlog/` directory:
 backlog/
 ├── task-1 - Phase 1 Setup.md
 ├── task-2 - Implement login endpoint.md
-├── task-3 - Add session management.md
-└── docs/
-    └── {topic}/
-        └── plan-reference.md     # Links back to topic
+└── task-3 - Add session management.md
 ```
 
-The plan file in `docs/workflow/planning/{topic}.md` serves as the reference pointer.
+The plan file in `docs/workflow/planning/{topic}.md` serves as the reference pointer to backlog tasks.
 
 ## File Structure
 

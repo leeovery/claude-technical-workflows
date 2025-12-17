@@ -157,7 +157,7 @@ Issues should be **self-contained for execution**:
 - Any code examples for complex patterns
 
 **Link to (don't copy)**:
-- Discussion document in same topic directory (for "why" context)
+- Discussion document at `docs/workflow/discussion/{topic}.md` (for "why" context)
 - Specific decision sections if particularly relevant
 
 The goal: anyone (Claude or human) could pick up the issue and execute it.
