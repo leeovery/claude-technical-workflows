@@ -31,11 +31,11 @@ backlog/
         └── plan-reference.md     # Links back to topic
 ```
 
-The `plan.md` file in `docs/workflow/{topic}/` serves as the reference pointer.
+The plan file in `docs/workflow/planning/{topic}.md` serves as the reference pointer.
 
 ## File Structure
 
-### Plan Reference File (`docs/workflow/{topic}/plan.md`)
+### Plan Reference File (`docs/workflow/planning/{topic}.md`)
 
 ```markdown
 ---
@@ -45,7 +45,7 @@ project: {TOPIC_NAME}
 
 # Plan Reference: {Topic Name}
 
-**Topic**: `docs/workflow/{topic}/`
+**Specification**: `docs/workflow/specification/{topic}.md`
 **Created**: {DATE}
 
 ## About This Plan
@@ -104,7 +104,7 @@ labels: [phase-1, api]
 
 ## Notes
 
-- Topic: `docs/workflow/{topic}/`
+- Specification: `docs/workflow/specification/{topic}.md`
 - Related decisions: [link if applicable]
 ```
 
@@ -166,15 +166,11 @@ project/
 ├── backlog/
 │   ├── task-1 - [P1] Configure auth.md
 │   ├── task-2 - [P1] Add login endpoint.md
-│   ├── task-3 - [P2] Session management.md
-│   └── docs/
-│       └── {topic}/
-│           └── reference.md
+│   └── task-3 - [P2] Session management.md
 ├── docs/workflow/
-│   └── {topic}/
-│       ├── discussion.md      # Phase 1 output
-│       ├── specification.md   # Phase 2 output
-│       └── plan.md            # Phase 3 output (format: backlog-md - pointer)
+│   ├── discussion/{topic}.md      # Phase 2 output
+│   ├── specification/{topic}.md   # Phase 3 output
+│   └── planning/{topic}.md        # Phase 4 output (format: backlog-md - pointer)
 ```
 
 ## Implementation Reading

@@ -70,13 +70,9 @@ This is encouraged. Better to resurface and confirm "already covered" than let s
 
 ## The Specification Document
 
-Create `docs/workflow/{topic}/specification.md`
+Create `docs/workflow/specification/{topic}.md`
 
-**Single file (default):** `docs/workflow/{topic}/specification.md`
-
-**Multiple files (when needed):** Move to `docs/workflow/{topic}/specifications/` with semantically named files.
-
-Structure is **flexible** - organize around phases and subject matter, not rigid sections. This is a working document.
+This is a single file per topic. Structure is **flexible** - organize around phases and subject matter, not rigid sections. This is a working document.
 
 Suggested skeleton:
 

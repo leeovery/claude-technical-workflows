@@ -173,7 +173,7 @@ Converts specifications into structured implementation plans.
 Executes plans through strict TDD. Acts as an expert senior developer who builds quality software through disciplined test-driven development.
 
 **Use when:**
-- Implementing a plan from `docs/workflow/{topic}/plan.md`
+- Implementing a plan from `docs/workflow/planning/{topic}.md`
 - Ad hoc coding that should follow TDD and quality standards
 - Bug fixes or features benefiting from structured implementation
 
