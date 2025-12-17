@@ -1,6 +1,6 @@
 ---
 name: technical-research
-description: "Explore ideas, validate concepts, and research broadly across technical, business, and market domains. Preliminary phase before discussion-specification-plan-implement-review workflow. Use when: (1) User has a new idea to explore, (2) Need to research a topic deeply, (3) Validating feasibility - technical, business, or market, (4) Learning and exploration without necessarily building anything, (5) User says 'research this' or 'explore this idea', (6) Brain dumping early thoughts before formal discussion. Creates research documents in docs/workflow/{topic}/ that may seed the technical-discussion phase."
+description: "Explore ideas, validate concepts, and research broadly across technical, business, and market domains. Preliminary phase before discussion-specification-plan-implement-review workflow. Use when: (1) User has a new idea to explore, (2) Need to research a topic deeply, (3) Validating feasibility - technical, business, or market, (4) Learning and exploration without necessarily building anything, (5) User says 'research this' or 'explore this idea', (6) Brain dumping early thoughts before formal discussion. Creates research documents in docs/workflow/research/ that may seed the technical-discussion phase."
 ---
 
 # Technical Research
@@ -22,7 +22,7 @@ You're at step 1. Explore freely.
 
 **Load**: [research-guide.md](references/research-guide.md) for detailed approach.
 
-**Output**: `docs/workflow/{topic}/research.md`
+**Output**: `docs/workflow/research/` (flat directory, semantically named files)
 
 ## Critical Rules
 

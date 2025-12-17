@@ -77,18 +77,22 @@ You don't need to configure anything—just install and start discussing.
 
 ### Output Structure
 
-Research, discussion, specification, and planning documents are stored in your project using a **topic-first** organization:
+Documents are stored using a **phase-first** organization:
 
 ```
 docs/workflow/
-└── {topic}/
-    ├── research.md        # Phase 1 output
-    ├── discussion.md      # Phase 2 output
-    ├── specification.md   # Phase 3 output
-    └── plan.md            # Phase 4 output
+├── research/              # Phase 1 - flat, semantically named files
+│   ├── competitor-analysis.md
+│   └── pricing-models.md
+├── discussion/            # Phase 2 - one file per topic
+│   └── {topic}.md
+├── specification/         # Phase 3 - one file per topic
+│   └── {topic}.md
+└── planning/              # Phase 4 - one file per topic
+    └── {topic}.md
 ```
 
-Each topic gets a single directory containing all its workflow artifacts. This keeps related documents together and makes it easy to see the complete picture for any feature.
+Research is a flat directory of semantically named files (topics emerge later). From discussion onwards, each topic gets its own file per phase.
 
 ## Skills
 

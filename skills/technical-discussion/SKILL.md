@@ -1,6 +1,6 @@
 ---
 name: technical-discussion
-description: "Document technical discussions as expert architect and meeting assistant. Capture context, decisions, edge cases, debates, and rationale without jumping to specification or implementation. Second phase of research-discussion-specification-plan-implement-review workflow. Use when: (1) Users discuss/explore/debate architecture or design, (2) Working through edge cases before specification, (3) Need to document technical decisions and their rationale, (4) Capturing competing solutions and why choices were made. Creates documentation in docs/workflow/{topic}/ that technical-specification uses to build validated specifications."
+description: "Document technical discussions as expert architect and meeting assistant. Capture context, decisions, edge cases, debates, and rationale without jumping to specification or implementation. Second phase of research-discussion-specification-plan-implement-review workflow. Use when: (1) Users discuss/explore/debate architecture or design, (2) Working through edge cases before specification, (3) Need to document technical decisions and their rationale, (4) Capturing competing solutions and why choices were made. Creates documentation in docs/workflow/discussion/{topic}.md that technical-specification uses to build validated specifications."
 ---
 
 # Technical Discussion
@@ -32,7 +32,7 @@ See **[meeting-assistant.md](references/meeting-assistant.md)** for detailed app
 
 ## Structure
 
-**Output**: `docs/workflow/{topic}/discussion.md`
+**Output**: `docs/workflow/discussion/{topic}.md`
 
 Use **[template.md](references/template.md)** for structure:
 

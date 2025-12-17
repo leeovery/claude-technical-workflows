@@ -23,10 +23,10 @@ Before beginning, ask the user these questions to get the exploration started:
 ## After Gathering Information
 
 Once I have this information:
-- Ensure topic directory exists: `docs/workflow/{topic}/`
+- Ensure research directory exists: `docs/workflow/research/`
 - Start exploring using the technical-research skill
 - Prompt before documenting: "Shall I capture that?"
-- Create `docs/workflow/{topic}/research.md` when ready to document
+- Create semantically named files in `docs/workflow/research/` when ready to document
 - Commit frequently at natural breaks
 
 This is early-stage exploration. It may lead to building something, or it may not. Both outcomes are valid.

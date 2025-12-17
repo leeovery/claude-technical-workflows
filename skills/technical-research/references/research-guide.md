@@ -34,7 +34,7 @@ When something worth capturing comes up, prompt the user:
 
 ## Output
 
-Research documents live in `docs/workflow/{topic}/research.md`.
+Research documents live in `docs/workflow/research/` as semantically named files.
 
 ## Why Commit Frequently
 

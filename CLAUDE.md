@@ -34,10 +34,10 @@ commands/
 
 ## Key Conventions
 
-- Topic directory: `docs/workflow/{topic}/`
-- Research: `docs/workflow/{topic}/research.md`
-- Discussion: `docs/workflow/{topic}/discussion.md`
-- Specification: `docs/workflow/{topic}/specification.md`
-- Plan: `docs/workflow/{topic}/plan.md`
-- Commit docs frequently (natural breaks, before context refresh)
-- Skills capture context, don't implement
+Phase-first directory structure:
+- Research: `docs/workflow/research/` (flat, semantically named files)
+- Discussion: `docs/workflow/discussion/{topic}.md`
+- Specification: `docs/workflow/specification/{topic}.md`
+- Planning: `docs/workflow/planning/{topic}.md`
+
+Commit docs frequently (natural breaks, before context refresh). Skills capture context, don't implement.
