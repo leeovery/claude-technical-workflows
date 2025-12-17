@@ -1,6 +1,6 @@
 ---
 name: technical-implementation
-description: "Execute implementation plans using strict TDD workflow with quality gates. Fourth phase of discussion-specification-plan-implement-review workflow. Use when: (1) Implementing a plan from docs/workflow/{topic}/, (2) User says 'implement', 'build', or 'code this' after planning, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Writes tests first, implements to pass, commits frequently, stops for user approval between phases."
+description: "Execute implementation plans using strict TDD workflow with quality gates. Fifth phase of research-discussion-specification-plan-implement-review workflow. Use when: (1) Implementing a plan from docs/workflow/planning/{topic}.md, (2) User says 'implement', 'build', or 'code this' after planning, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Writes tests first, implements to pass, commits frequently, stops for user approval between phases."
 ---
 
 # Technical Implementation
@@ -9,15 +9,16 @@ Act as **expert senior developer** who builds quality software through disciplin
 
 Execute plans through strict TDD. Write tests first, then code to pass them.
 
-## Five-Phase Workflow
+## Six-Phase Workflow
 
-1. **Discussion** (previous): WHAT and WHY - decisions, architecture, rationale
-2. **Specification** (previous): REFINE - validated, standalone specification
-3. **Planning** (previous): HOW - phases, tasks, acceptance criteria
-4. **Implementation** (YOU): DOING - tests first, then code
-5. **Review** (next): VALIDATING - check work against artifacts
+1. **Research** (previous): EXPLORE - ideas, feasibility, market, business, learning
+2. **Discussion** (previous): WHAT and WHY - decisions, architecture, rationale
+3. **Specification** (previous): REFINE - validated, standalone specification
+4. **Planning** (previous): HOW - phases, tasks, acceptance criteria
+5. **Implementation** (YOU): DOING - tests first, then code
+6. **Review** (next): VALIDATING - check work against artifacts
 
-You're at step 4. Execute the plan. Don't re-debate decisions.
+You're at step 5. Execute the plan. Don't re-debate decisions.
 
 ## Hard Rules
 
@@ -31,7 +32,7 @@ You're at step 4. Execute the plan. Don't re-debate decisions.
 
 ### With a Plan
 
-1. **Read the plan** from `docs/workflow/{topic}/plan.md`
+1. **Read the plan** from `docs/workflow/planning/{topic}.md`
    - Check the `format` field in frontmatter:
      - `local-markdown` → content is in this file
      - `linear` → query Linear via MCP using frontmatter project_id
@@ -80,7 +81,7 @@ Keep user informed of progress:
 
 ## When to Reference Discussion
 
-Check the discussion doc (`docs/workflow/{topic}/discussion.md`) when:
+Check the discussion doc (`docs/workflow/discussion/{topic}.md`) when:
 
 - Task rationale is unclear
 - Multiple valid approaches exist

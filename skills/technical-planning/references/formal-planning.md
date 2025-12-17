@@ -19,7 +19,7 @@ If you don't know which format, ask.
 
 ### 1. Read Specification
 
-From the specification (`docs/workflow/{topic}/specification.md`), extract:
+From the specification (`docs/workflow/specification/{topic}.md`), extract:
 - Key decisions and rationale
 - Architectural choices
 - Edge cases identified
@@ -121,6 +121,6 @@ Context refresh = memory loss. Uncommitted work = lost work.
 ## Output
 
 Load the appropriate output adapter for format-specific structure:
-- [output-local-markdown.md](output-local-markdown.md) - Single plan.md file
+- [output-local-markdown.md](output-local-markdown.md) - Single `{topic}.md` file
 - [output-linear.md](output-linear.md) - Linear project
 - [output-backlog-md.md](output-backlog-md.md) - Backlog.md tasks

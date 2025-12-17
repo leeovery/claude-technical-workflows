@@ -1,0 +1,34 @@
+---
+description: Start a research exploration using the technical-research skill. For early-stage ideas, feasibility checks, and broad exploration before formal discussion.
+---
+
+Invoke the **technical-research** skill for this conversation.
+
+Before beginning, ask the user these questions to get the exploration started:
+
+## Essential Information
+
+1. **What's on your mind?**
+   - What idea or topic do you want to explore?
+   - What prompted this - a problem, opportunity, curiosity?
+
+2. **What do you already know?**
+   - Any initial thoughts or research you've done?
+   - Constraints or context I should be aware of?
+
+3. **Where should we start?**
+   - Technical feasibility? Market landscape? Business model?
+   - Or just talk it through and see where it goes?
+
+## After Gathering Information
+
+Once I have this information:
+- Ensure research directory exists: `docs/workflow/research/`
+- Start exploring using the technical-research skill
+- Prompt before documenting: "Shall I capture that?"
+- Create semantically named files in `docs/workflow/research/` when ready to document
+- Commit frequently at natural breaks
+
+This is early-stage exploration. It may lead to building something, or it may not. Both outcomes are valid.
+
+Ask these questions clearly and wait for responses before proceeding.

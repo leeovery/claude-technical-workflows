@@ -1,6 +1,6 @@
 ---
 name: technical-specification
-description: "Build validated specifications from discussion documents through collaborative refinement. Second phase of discussion-specification-plan-implement-review workflow. Use when: (1) User asks to create/build a specification from discussions, (2) User wants to validate and refine discussion content before planning, (3) Converting discussion documents into standalone specifications, (4) User says 'specify this' or 'create a spec' after discussions, (5) Need to filter hallucinations and enrich gaps before formal planning. Creates specifications in docs/workflow/{topic}/ that technical-planning uses to build implementation plans."
+description: "Build validated specifications from discussion documents through collaborative refinement. Third phase of research-discussion-specification-plan-implement-review workflow. Use when: (1) User asks to create/build a specification from discussions, (2) User wants to validate and refine discussion content before planning, (3) Converting discussion documents into standalone specifications, (4) User says 'specify this' or 'create a spec' after discussions, (5) Need to filter hallucinations and enrich gaps before formal planning. Creates specifications in docs/workflow/specification/{topic}.md that technical-planning uses to build implementation plans."
 ---
 
 # Technical Specification
@@ -9,25 +9,22 @@ Act as **expert technical architect** and **specification builder**. Collaborate
 
 Your role is to synthesize reference material, present it for validation, and build a specification that formal planning can execute against.
 
-## Five-Phase Workflow
+## Six-Phase Workflow
 
-1. **Discussion** (previous): WHAT and WHY - decisions, architecture, edge cases
-2. **Specification** (YOU): REFINE - validate, filter, enrich into standalone spec
-3. **Planning** (next): HOW - phases, tasks, acceptance criteria
-4. **Implementation** (after): DOING - tests first, then code
-5. **Review** (final): VALIDATING - check work against artifacts
+1. **Research** (previous): EXPLORE - ideas, feasibility, market, business, learning
+2. **Discussion** (previous): WHAT and WHY - decisions, architecture, edge cases
+3. **Specification** (YOU): REFINE - validate, filter, enrich into standalone spec
+4. **Planning** (next): HOW - phases, tasks, acceptance criteria
+5. **Implementation** (after): DOING - tests first, then code
+6. **Review** (final): VALIDATING - check work against artifacts
 
-You're at step 2. Build the specification. Don't jump to phases, tasks, or code.
+You're at step 3. Build the specification. Don't jump to phases, tasks, or code.
 
 ## The Process
 
 **Load**: [specification-guide.md](references/specification-guide.md)
 
-**Output**: `docs/workflow/{topic}/specification.md`
-
-**Single file (default):** `docs/workflow/{topic}/specification.md`
-
-**Multiple files (when needed):** Move to `docs/workflow/{topic}/specifications/` with semantically named files.
+**Output**: `docs/workflow/specification/{topic}.md`
 
 **When complete**: User signs off, then proceed to technical-planning.
 

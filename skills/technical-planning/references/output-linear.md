@@ -72,7 +72,7 @@ For each task, create an issue and apply the appropriate phase label:
 - [Specific edge cases for this task]
 
 ## Context
-Topic: `docs/workflow/{topic}/`
+Specification: `docs/workflow/specification/{topic}.md`
 [Optional: link to specific decision if relevant]
 ```
 
@@ -97,7 +97,7 @@ This allows iterative refinement. Create all issues, identify gaps, circle back 
 
 ### 4. Create Local Plan File
 
-Create `docs/workflow/{topic}/plan.md`:
+Create `docs/workflow/planning/{topic}.md`:
 
 ```markdown
 ---
@@ -109,7 +109,7 @@ team: {TEAM_NAME}
 
 # Plan Reference: {Topic Name}
 
-**Topic**: `docs/workflow/{topic}/`
+**Specification**: `docs/workflow/specification/{topic}.md`
 **Created**: {DATE}
 
 ## About This Plan
@@ -157,7 +157,7 @@ Issues should be **self-contained for execution**:
 - Any code examples for complex patterns
 
 **Link to (don't copy)**:
-- Discussion document in same topic directory (for "why" context)
+- Discussion document at `docs/workflow/discussion/{topic}.md` (for "why" context)
 - Specific decision sections if particularly relevant
 
 The goal: anyone (Claude or human) could pick up the issue and execute it.
@@ -175,10 +175,9 @@ After planning:
 
 ```
 docs/workflow/
-└── {topic}/
-    ├── discussion.md      # Phase 1 output
-    ├── specification.md   # Phase 2 output
-    └── plan.md            # Phase 3 output (format: linear - pointer)
+├── discussion/{topic}.md      # Phase 2 output
+├── specification/{topic}.md   # Phase 3 output
+└── planning/{topic}.md        # Phase 4 output (format: linear - pointer)
 
 Linear:
 └── Project: {topic}
@@ -187,7 +186,7 @@ Linear:
     └── Issue: Task 3 [label: phase-2]
 ```
 
-Implementation will read `plan.md`, see `format: linear`, and query Linear via MCP.
+Implementation will read `planning/{topic}.md`, see `format: linear`, and query Linear via MCP.
 
 ## Fallback Handling
 

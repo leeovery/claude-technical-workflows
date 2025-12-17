@@ -6,33 +6,38 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Claude Code skills package for structured technical discussion and planning workflows. Distributed via Composer as `leeovery/claude-technical-workflows`.
 
-## Five-Phase Workflow
+## Six-Phase Workflow
 
-1. **Discussion** (`technical-discussion` skill): Capture WHAT and WHY - decisions, architecture, edge cases, debates
-2. **Specification** (`technical-specification` skill): Validate and refine into standalone spec
-3. **Planning** (`technical-planning` skill): Define HOW - phases, tasks, acceptance criteria
-4. **Implementation** (`technical-implementation` skill): Execute plan via strict TDD
-5. **Review** (`technical-review` skill): Validate work against discussion, specification, and plan
+1. **Research** (`technical-research` skill): EXPLORE - feasibility, market, viability, early ideas
+2. **Discussion** (`technical-discussion` skill): Capture WHAT and WHY - decisions, architecture, edge cases, debates
+3. **Specification** (`technical-specification` skill): Validate and refine into standalone spec
+4. **Planning** (`technical-planning` skill): Define HOW - phases, tasks, acceptance criteria
+5. **Implementation** (`technical-implementation` skill): Execute plan via strict TDD
+6. **Review** (`technical-review` skill): Validate work against discussion, specification, and plan
 
 ## Structure
 
 ```
 skills/
-  technical-discussion/      # Phase 1: Document discussions
-  technical-specification/   # Phase 2: Build validated specifications
-  technical-planning/        # Phase 3: Create implementation plans
-  technical-implementation/  # Phase 4: Execute via TDD
-  technical-review/          # Phase 5: Validate against artifacts
+  technical-research/        # Phase 1: Explore and validate ideas
+  technical-discussion/      # Phase 2: Document discussions
+  technical-specification/   # Phase 3: Build validated specifications
+  technical-planning/        # Phase 4: Create implementation plans
+  technical-implementation/  # Phase 5: Execute via TDD
+  technical-review/          # Phase 6: Validate against artifacts
 commands/
+  start-research.md          # Slash command to begin research
   start-discussion.md        # Slash command to begin discussions
+  start-specification.md     # Slash command to begin specifications
+  start-planning.md          # Slash command to begin planning
 ```
 
 ## Key Conventions
 
-- Topic directory: `docs/workflow/{topic}/`
-- Discussion: `docs/workflow/{topic}/discussion.md`
-- Specification: `docs/workflow/{topic}/specification.md`
-- Plan: `docs/workflow/{topic}/plan.md`
-- Multiple files: Use pluralized subdirectory (e.g., `discussions/`, `specifications/`, `plans/`)
-- Commit docs frequently (natural breaks, before context refresh)
-- Skills capture context, don't implement
+Phase-first directory structure:
+- Research: `docs/workflow/research/` (flat, semantically named files)
+- Discussion: `docs/workflow/discussion/{topic}.md`
+- Specification: `docs/workflow/specification/{topic}.md`
+- Planning: `docs/workflow/planning/{topic}.md`
+
+Commit docs frequently (natural breaks, before context refresh). Skills capture context, don't implement.

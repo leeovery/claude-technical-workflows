@@ -4,11 +4,11 @@
 
 ---
 
-Plans are always stored in `docs/workflow/{topic}/plan.md`. The file's frontmatter declares the format.
+Plans are always stored in `docs/workflow/planning/{topic}.md`. The file's frontmatter declares the format.
 
 ## Detecting Plan Format
 
-Always read `plan.md` first and check the `format` field in frontmatter:
+Always read the plan file first and check the `format` field in frontmatter:
 
 | Format | Meaning | How to Proceed |
 |--------|---------|----------------|
@@ -25,7 +25,7 @@ For full format details, see the planning skill's output adapters:
 
 ### Local Markdown
 
-1. Read `plan.md` - all content is inline
+1. Read the plan file - all content is inline
 2. Phases and tasks are in the document
 3. Follow phase order as written
 

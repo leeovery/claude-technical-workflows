@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="#installation">Installation</a> •
-  <a href="#the-five-phase-workflow">Workflow</a> •
+  <a href="#the-six-phase-workflow">Workflow</a> •
   <a href="#skills">Skills</a> •
   <a href="#commands">Commands</a> •
   <a href="#how-it-works">How It Works</a> •
@@ -17,7 +17,7 @@
 
 ## About
 
-A structured approach to technical discussions and implementation planning with Claude Code. These skills enforce a deliberate **discuss-then-specify-then-plan-then-implement-then-review** workflow that captures context, decisions, and rationale before any code is written—then validates the work against those artifacts.
+A structured approach to technical discussions and implementation planning with Claude Code. These skills enforce a deliberate **research-then-discuss-then-specify-then-plan-then-implement-then-review** workflow that captures context, decisions, and rationale before any code is written—then validates the work against those artifacts.
 
 **Why this matters:** Complex features benefit from thorough discussion before implementation. These skills help you document the *what* and *why* before diving into the *how*—preserving architectural decisions, edge cases, and the reasoning behind choices that would otherwise be lost.
 
@@ -31,37 +31,38 @@ composer require --dev leeovery/claude-technical-workflows
 
 That's it. The [Claude Manager](https://github.com/leeovery/claude-manager) handles everything else automatically.
 
-## The Five-Phase Workflow
+## The Six-Phase Workflow
 
-This package enforces a deliberate progression through five distinct phases:
+This package enforces a deliberate progression through six distinct phases:
 
 ```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   Discussion    │ ──▶ │  Specification  │ ──▶ │    Planning     │ ──▶ │ Implementation  │ ──▶ │     Review      │
-│   (Phase 1)     │     │    (Phase 2)    │     │    (Phase 3)    │     │    (Phase 4)    │     │    (Phase 5)    │
-├─────────────────┤     ├─────────────────┤     ├─────────────────┤     ├─────────────────┤     ├─────────────────┤
-│ WHAT and WHY    │     │ REFINING        │     │ HOW             │     │ DOING           │     │ VALIDATING      │
-│                 │     │                 │     │                 │     │                 │     │                 │
-│ • Architecture  │     │ • Validate      │     │ • Phases        │     │ • Tests first   │     │ • Plan check    │
-│ • Decisions     │     │ • Filter        │     │ • Tasks         │     │ • Then code     │     │ • Decision check│
-│ • Edge cases    │     │ • Enrich        │     │ • Acceptance    │     │ • Commit often  │     │ • Test quality  │
-│ • Debates       │     │ • Standalone    │     │   criteria      │     │ • Phase gates   │     │ • Code quality  │
-│ • Rationale     │     │   spec          │     │ • Output format │     │                 │     │                 │
-└─────────────────┘     └─────────────────┘     └─────────────────┘     └─────────────────┘     └─────────────────┘
-         ▲                       ▲                       ▲                       ▲                       ▲
-         │                       │                       │                       │                       │
-  technical-discussion   technical-specification  technical-planning   technical-implementation  technical-review
+┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
+│   Research    │──▶│  Discussion   │──▶│ Specification │──▶│   Planning    │──▶│Implementation │──▶│    Review     │
+│   (Phase 1)   │   │   (Phase 2)   │   │   (Phase 3)   │   │   (Phase 4)   │   │   (Phase 5)   │   │   (Phase 6)   │
+├───────────────┤   ├───────────────┤   ├───────────────┤   ├───────────────┤   ├───────────────┤   ├───────────────┤
+│ EXPLORING     │   │ WHAT & WHY    │   │ REFINING      │   │ HOW           │   │ DOING         │   │ VALIDATING    │
+│               │   │               │   │               │   │               │   │               │   │               │
+│ • Ideas       │   │ • Architecture│   │ • Validate    │   │ • Phases      │   │ • Tests first │   │ • Plan check  │
+│ • Market      │   │ • Decisions   │   │ • Filter      │   │ • Tasks       │   │ • Then code   │   │ • Specs check │
+│ • Viability   │   │ • Edge cases  │   │ • Enrich      │   │ • Criteria    │   │ • Commit often│   │ • Test quality│
+│               │   │ • Rationale   │   │ • Standalone  │   │ • Outputs     │   │ • Phase gates │   │ • Code quality│
+└───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘
+        ▲                   ▲                   ▲                   ▲                   ▲                   ▲
+        │                   │                   │                   │                   │                   │
+ technical-research  technical-discussion  technical-spec  technical-planning  technical-impl  technical-review
 ```
 
-**Phase 1 - Discussion:** Captures the back-and-forth exploration of a problem. Documents competing solutions, why certain approaches won or lost, edge cases discovered, and the journey to decisions—not just the decisions themselves.
+**Phase 1 - Research:** Explore ideas from their earliest seed. Investigate market fit, technical feasibility, business viability. Free-flowing exploration that may or may not lead to building something.
 
-**Phase 2 - Specification:** Transforms discussion documentation into a validated, standalone specification. Filters hallucinations and inaccuracies, enriches gaps through discussion, and builds a document that planning can execute against without referencing other sources.
+**Phase 2 - Discussion:** Captures the back-and-forth exploration of a problem. Documents competing solutions, why certain approaches won or lost, edge cases discovered, and the journey to decisions—not just the decisions themselves.
 
-**Phase 3 - Planning:** Converts specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (local markdown, Linear, Backlog.md).
+**Phase 3 - Specification:** Transforms discussion documentation into a validated, standalone specification. Filters hallucinations and inaccuracies, enriches gaps through discussion, and builds a document that planning can execute against without referencing other sources.
 
-**Phase 4 - Implementation:** Executes the plan using strict TDD. Writes tests first, implements to pass, commits frequently, and stops for user approval between phases.
+**Phase 4 - Planning:** Converts specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (local markdown, Linear, Backlog.md).
 
-**Phase 5 - Review:** Validates completed work against discussion decisions, specification requirements, and plan acceptance criteria. Provides structured feedback without fixing code directly.
+**Phase 5 - Implementation:** Executes the plan using strict TDD. Writes tests first, implements to pass, commits frequently, and stops for user approval between phases.
+
+**Phase 6 - Review:** Validates completed work against discussion decisions, specification requirements, and plan acceptance criteria. Provides structured feedback without fixing code directly.
 
 ## How It Works
 
@@ -76,37 +77,50 @@ You don't need to configure anything—just install and start discussing.
 
 ### Output Structure
 
-Discussion, specification, and planning documents are stored in your project using a **topic-first** organization:
+Documents are stored using a **phase-first** organization:
 
 ```
 docs/workflow/
-└── {topic}/
-    ├── discussion.md      # Phase 1 output
-    ├── specification.md   # Phase 2 output
-    └── plan.md            # Phase 3 output
+├── research/              # Phase 1 - flat, semantically named files
+│   ├── competitor-analysis.md
+│   └── pricing-models.md
+├── discussion/            # Phase 2 - one file per topic
+│   └── {topic}.md
+├── specification/         # Phase 3 - one file per topic
+│   └── {topic}.md
+└── planning/              # Phase 4 - one file per topic
+    └── {topic}.md
 ```
 
-Each topic gets a single directory containing all its workflow artifacts. This keeps related documents together and makes it easy to see the complete picture for any feature.
-
-**Multiple files:** If any phase needs multiple files (e.g., multiple discussion threads), they move to a pluralized subdirectory:
-```
-docs/workflow/{topic}/
-├── discussions/           # plural = directory with multiple files
-│   ├── api-design.md
-│   └── data-model.md
-├── specification.md
-└── plan.md
-```
+Research is a flat directory of semantically named files (topics emerge later). From discussion onwards, each topic gets its own file per phase.
 
 ## Skills
 
 | Skill | Phase | Description |
 |-------|-------|-------------|
-| [**technical-discussion**](skills/technical-discussion/) | 1 | Document technical discussions as expert architect and meeting assistant. Captures context, decisions, edge cases, competing solutions, debates, and rationale. |
-| [**technical-specification**](skills/technical-specification/) | 2 | Build validated specifications from discussion documents through collaborative refinement. Filters hallucinations, enriches gaps, produces standalone spec. |
-| [**technical-planning**](skills/technical-planning/) | 3 | Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats. |
-| [**technical-implementation**](skills/technical-implementation/) | 4 | Execute implementation plans using strict TDD workflow. Writes tests first, implements to pass, commits frequently, and gates phases on user approval. |
-| [**technical-review**](skills/technical-review/) | 5 | Review completed implementation against discussion decisions, specification, and plan acceptance criteria. Produces structured feedback without fixing code. |
+| [**technical-research**](skills/technical-research/) | 1 | Explore ideas from their earliest seed. Investigate market fit, technical feasibility, business viability. Free-flowing exploration across technical, business, and market domains. |
+| [**technical-discussion**](skills/technical-discussion/) | 2 | Document technical discussions as expert architect and meeting assistant. Captures context, decisions, edge cases, competing solutions, debates, and rationale. |
+| [**technical-specification**](skills/technical-specification/) | 3 | Build validated specifications from discussion documents through collaborative refinement. Filters hallucinations, enriches gaps, produces standalone spec. |
+| [**technical-planning**](skills/technical-planning/) | 4 | Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats. |
+| [**technical-implementation**](skills/technical-implementation/) | 5 | Execute implementation plans using strict TDD workflow. Writes tests first, implements to pass, commits frequently, and gates phases on user approval. |
+| [**technical-review**](skills/technical-review/) | 6 | Review completed implementation against discussion decisions, specification, and plan acceptance criteria. Produces structured feedback without fixing code. |
+
+### technical-research
+
+Acts as **research partner** with broad expertise spanning technical, product, business, and market domains.
+
+**Use when:**
+- Exploring a new idea from its earliest seed
+- Investigating market fit, competitors, or positioning
+- Validating technical feasibility before committing to build
+- Learning and exploration without necessarily building anything
+- Brain dumping early thoughts before formal discussion
+
+**What it does:**
+- Explores ideas freely across technical, business, and market domains
+- Prompts before documenting: "Shall I capture that?"
+- Creates research documents that may seed the discussion phase
+- Follows tangents and goes broad when useful
 
 ### technical-discussion
 
@@ -159,7 +173,7 @@ Converts specifications into structured implementation plans.
 Executes plans through strict TDD. Acts as an expert senior developer who builds quality software through disciplined test-driven development.
 
 **Use when:**
-- Implementing a plan from `docs/workflow/{topic}/plan.md`
+- Implementing a plan from `docs/workflow/planning/{topic}.md`
 - Ad hoc coding that should follow TDD and quality standards
 - Bug fixes or features benefiting from structured implementation
 
@@ -191,6 +205,7 @@ Slash commands to quickly invoke the workflow.
 
 | Command | Description |
 |---------|-------------|
+| [**/start-research**](commands/start-research.md) | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion. |
 | [**/start-discussion**](commands/start-discussion.md) | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation. |
 | [**/start-specification**](commands/start-specification.md) | Start a specification session from an existing discussion. Validates and refines discussion content into a standalone specification. |
 | [**/start-planning**](commands/start-planning.md) | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md). |

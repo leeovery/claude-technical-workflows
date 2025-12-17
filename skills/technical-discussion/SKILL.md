@@ -1,21 +1,22 @@
 ---
 name: technical-discussion
-description: "Document technical discussions as expert architect and meeting assistant. Capture context, decisions, edge cases, debates, and rationale without jumping to specification or implementation. First phase of discussion-specification-plan-implement-review workflow. Use when: (1) Users discuss/explore/debate architecture or design, (2) Working through edge cases before specification, (3) Need to document technical decisions and their rationale, (4) Capturing competing solutions and why choices were made. Creates documentation in docs/workflow/{topic}/ that technical-specification uses to build validated specifications."
+description: "Document technical discussions as expert architect and meeting assistant. Capture context, decisions, edge cases, debates, and rationale without jumping to specification or implementation. Second phase of research-discussion-specification-plan-implement-review workflow. Use when: (1) Users discuss/explore/debate architecture or design, (2) Working through edge cases before specification, (3) Need to document technical decisions and their rationale, (4) Capturing competing solutions and why choices were made. Creates documentation in docs/workflow/discussion/{topic}.md that technical-specification uses to build validated specifications."
 ---
 
 # Technical Discussion
 
 Act as **expert software architect** participating in discussions AND **documentation assistant** capturing them. Do both simultaneously. Engage deeply while documenting for planning teams.
 
-## Five-Phase Workflow
+## Six-Phase Workflow
 
-1. **Discussion** (YOU): WHAT and WHY - decisions, architecture, edge cases
-2. **Specification** (next): REFINE - validate and build standalone spec
-3. **Planning** (after): HOW - phases, tasks, acceptance criteria
-4. **Implementation** (after): DOING - tests first, then code
-5. **Review** (final): VALIDATING - check work against artifacts
+1. **Research** (previous): EXPLORE - ideas, feasibility, market, business, learning
+2. **Discussion** (YOU): WHAT and WHY - decisions, architecture, edge cases
+3. **Specification** (next): REFINE - validate and build standalone spec
+4. **Planning** (after): HOW - phases, tasks, acceptance criteria
+5. **Implementation** (after): DOING - tests first, then code
+6. **Review** (final): VALIDATING - check work against artifacts
 
-You stop at step 1. Capture context. Don't jump to specs, plans, or code.
+You're at step 2. Capture context. Don't jump to specs, plans, or code.
 
 ## What to Capture
 
@@ -31,11 +32,7 @@ See **[meeting-assistant.md](references/meeting-assistant.md)** for detailed app
 
 ## Structure
 
-Discussions are stored in `docs/workflow/{topic}/discussion.md`. Each topic gets its own directory containing all workflow artifacts (discussion, specification, plan).
-
-**Single file (default):** `docs/workflow/{topic}/discussion.md`
-
-**Multiple files (when needed):** If a discussion needs to be split across multiple files, move them to a pluralized subdirectory: `docs/workflow/{topic}/discussions/` with semantically named files (e.g., `api-design.md`, `data-model.md`).
+**Output**: `docs/workflow/discussion/{topic}.md`
 
 Use **[template.md](references/template.md)** for structure:
 
@@ -55,13 +52,12 @@ See **[guidelines.md](references/guidelines.md)** for best practices and anti-ha
 
 ## Commit Frequently
 
-**Commit discussion docs often** to `docs/workflow/{topic}/`:
+**Commit discussion docs often**:
 
 - At natural breaks in discussion
 - When solutions to problems are identified
 - When discussion branches/forks to new topics
 - Before context refresh (prevents hallucination/memory loss)
-- When creating new files in the discussion directory
 
 **Why**: You lose memory on context refresh. Commits help you track, backtrack, and fill gaps. Critical for avoiding hallucination.
 

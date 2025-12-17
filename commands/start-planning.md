@@ -18,22 +18,23 @@ Use simple, individual commands. Never combine multiple operations into bash loo
 
 Scan the codebase for specifications and plans:
 
-1. **Find topic directories**: Look in `docs/workflow/*/`
-   - First, run `ls docs/workflow/` to list topic directories
-   - Then, for each topic, check for `specification.md` and `plan.md`
+1. **Find specifications**: Look in `docs/workflow/specification/`
+   - Run `ls docs/workflow/specification/` to list specification files
+   - Each file is named `{topic}.md`
 
-2. **Check specification status**: For each topic with a specification
-   - Run `head -20 docs/workflow/{topic}/specification.md` to read the frontmatter and extract the `status:` field
+2. **Check specification status**: For each specification file
+   - Run `head -20 docs/workflow/specification/{topic}.md` to read the frontmatter and extract the `status:` field
    - Do NOT use bash loops - run separate `head` commands for each topic
 
-3. **Identify gaps**: Topics with specifications but no plans
+3. **Check for existing plans**: Look in `docs/workflow/planning/`
+   - Identify specifications that don't have corresponding plans
 
 ## Step 2: Check Prerequisites
 
 **If no specifications exist:**
 
 ```
-⚠️ No specifications found in docs/workflow/
+⚠️ No specifications found in docs/workflow/specification/
 
 The planning phase requires a completed specification. Please run /start-specification first to validate and refine the discussion content into a standalone specification before creating a plan.
 ```
@@ -61,7 +62,7 @@ Ask: **Which specification would you like to plan?**
 
 Ask: **Where should this plan live?**
 
-1. **Local Markdown** - Simple `plan.md` file in `docs/workflow/{topic}/`
+1. **Local Markdown** - Simple `{topic}.md` file in `docs/workflow/planning/`
    - Best for: Small features, solo work, quick iterations
    - Everything in one version-controlled file
 
@@ -90,19 +91,17 @@ Ask: **Where should this plan live?**
 ## Step 6: Invoke Planning Skill
 
 Pass to the technical-planning skill:
-- Topic directory: `docs/workflow/{topic}/`
-- Specification: `docs/workflow/{topic}/specification.md`
-- Output: `docs/workflow/{topic}/plan.md`
+- Specification: `docs/workflow/specification/{topic}.md`
+- Output: `docs/workflow/planning/{topic}.md`
 - Output destination: (local-markdown | linear | backlog-md)
 - Additional context gathered
 
 **Example handoff:**
 ```
 Planning session for: {topic}
-Topic directory: docs/workflow/{topic}/
-Specification: docs/workflow/{topic}/specification.md
+Specification: docs/workflow/specification/{topic}.md
 Output destination: Local Markdown
-Output path: docs/workflow/{topic}/plan.md
+Output path: docs/workflow/planning/{topic}.md
 
 Begin planning using the technical-planning skill.
 Reference: formal-planning.md, then output-local-markdown.md
@@ -111,8 +110,7 @@ Reference: formal-planning.md, then output-local-markdown.md
 **Example handoff for Linear:**
 ```
 Planning session for: {topic}
-Topic directory: docs/workflow/{topic}/
-Specification: docs/workflow/{topic}/specification.md
+Specification: docs/workflow/specification/{topic}.md
 Output destination: Linear
 Team: Engineering
 

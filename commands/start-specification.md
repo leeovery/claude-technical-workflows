@@ -18,22 +18,23 @@ Use simple, individual commands. Never combine multiple operations into bash loo
 
 Scan the codebase for discussions and specifications:
 
-1. **Find topic directories**: Look in `docs/workflow/*/`
-   - First, run `ls docs/workflow/` to list topic directories
-   - Then, for each topic, check for `discussion.md` and `specification.md`
+1. **Find discussions**: Look in `docs/workflow/discussion/`
+   - Run `ls docs/workflow/discussion/` to list discussion files
+   - Each file is named `{topic}.md`
 
-2. **Check discussion status**: For each topic with a discussion
-   - Run `head -20 docs/workflow/{topic}/discussion.md` to read the frontmatter and extract the `status:` field
+2. **Check discussion status**: For each discussion file
+   - Run `head -20 docs/workflow/discussion/{topic}.md` to read the frontmatter and extract the `status:` field
    - Do NOT use bash loops - run separate `head` commands for each topic
 
-3. **Identify gaps**: Topics with discussions but no specifications
+3. **Check for existing specifications**: Look in `docs/workflow/specification/`
+   - Identify discussions that don't have corresponding specifications
 
 ## Step 2: Check Prerequisites
 
 **If no discussions exist:**
 
 ```
-⚠️ No discussions found in docs/workflow/
+⚠️ No discussions found in docs/workflow/discussion/
 
 The specification phase requires a completed discussion. Please run /start-discussion first to document the technical decisions, edge cases, and rationale before creating a specification.
 ```
@@ -67,17 +68,15 @@ Ask:
 ## Step 5: Invoke Specification Skill
 
 Pass to the technical-specification skill:
-- Topic directory: `docs/workflow/{topic}/`
-- Discussion: `docs/workflow/{topic}/discussion.md`
-- Output: `docs/workflow/{topic}/specification.md`
+- Discussion: `docs/workflow/discussion/{topic}.md`
+- Output: `docs/workflow/specification/{topic}.md`
 - Additional context gathered
 
 **Example handoff:**
 ```
 Specification session for: {topic}
-Topic directory: docs/workflow/{topic}/
-Discussion: docs/workflow/{topic}/discussion.md
-Output: docs/workflow/{topic}/specification.md
+Discussion: docs/workflow/discussion/{topic}.md
+Output: docs/workflow/specification/{topic}.md
 
 Begin specification using the technical-specification skill.
 Reference: specification-guide.md
