@@ -30,6 +30,8 @@ commands/
   start-discussion.md        # Slash command to begin discussions
   start-specification.md     # Slash command to begin specifications
   start-planning.md          # Slash command to begin planning
+agents/
+  chain-verifier.md          # Parallel chain verification for review phase
 ```
 
 ## Key Conventions

@@ -30,6 +30,8 @@ Discussion → Specification → Plan → Implementation
               You validate every link in this chain
 ```
 
+**Use parallel `chain-verifier` subagents** to trace multiple decisions simultaneously. Each verifier traces one decision through the entire chain and reports findings. This dramatically speeds up verification while maintaining thoroughness.
+
 **Discussion → Specification**: Did the spec capture all discussed decisions, edge cases, and rationale? Or did things get lost or changed?
 
 **Specification → Plan**: Did the plan cover all specification requirements? Were any spec items not planned?
@@ -91,11 +93,12 @@ Flag anything that:
 1. **Read the discussion doc** - Understand what was decided and why
 2. **Read the specification** - The validated requirements that were approved
 3. **Read the plan** - The tasks and acceptance criteria
-4. **Map the chain** - Trace key decisions through each document
-5. **Read the implementation** - Code changes and tests
-6. **Verify chain integrity** - Did everything flow through correctly?
-7. **Check project skills** - Framework/language conventions
-8. **Produce review** - Structured feedback with chain verification findings
+4. **Identify key decisions** - Pick 3-5 critical decisions to trace
+5. **Spawn chain-verifiers in parallel** - One subagent per decision, all running simultaneously
+6. **Read the implementation** - Code changes and tests (while verifiers run)
+7. **Aggregate verifier findings** - Collect and synthesize reports from all chain-verifiers
+8. **Check project skills** - Framework/language conventions
+9. **Produce review** - Structured feedback incorporating chain verification findings
 
 See **[review-checklist.md](references/review-checklist.md)** for detailed checklist.
 

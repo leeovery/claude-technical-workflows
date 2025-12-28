@@ -70,8 +70,9 @@ This package depends on [`leeovery/claude-manager`](https://github.com/leeovery/
 
 1. **Symlinks skills** into your project's `.claude/skills/` directory
 2. **Symlinks commands** into your project's `.claude/commands/` directory
-3. **Manages your `.gitignore`** with a deterministic list of linked skills and commands
-4. **Handles installation/removal** automatically via Composer hooks
+3. **Symlinks agents** into your project's `.claude/agents/` directory
+4. **Manages your `.gitignore`** with a deterministic list of linked skills, commands, and agents
+5. **Handles installation/removal** automatically via Composer hooks
 
 You don't need to configure anything—just install and start discussing.
 
@@ -209,6 +210,14 @@ Slash commands to quickly invoke the workflow.
 | [**/start-discussion**](commands/start-discussion.md) | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation. |
 | [**/start-specification**](commands/start-specification.md) | Start a specification session from an existing discussion. Validates and refines discussion content into a standalone specification. |
 | [**/start-planning**](commands/start-planning.md) | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md). |
+
+## Agents
+
+Subagents that skills can spawn for parallel task execution.
+
+| Agent | Used By | Description |
+|-------|---------|-------------|
+| [**chain-verifier**](agents/chain-verifier.md) | technical-review | Traces a single decision through the discussion → specification → plan → implementation chain. Multiple chain-verifiers run in parallel to verify chain integrity efficiently. |
 
 ## Requirements
 

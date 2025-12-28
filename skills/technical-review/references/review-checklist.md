@@ -41,14 +41,32 @@ For each planned task:
 - Does the implementation match the task description?
 - Were acceptance criteria actually met?
 
-### Full Chain Trace
+### Full Chain Trace (Parallel Verification)
 
-Pick 3-5 key decisions from the discussion and trace each one:
-1. Find it in the discussion doc
-2. Verify it's in the specification
-3. Verify it has plan task(s)
-4. Verify it's implemented
-5. Verify it's tested
+Pick 3-5 key decisions from the discussion, then spawn `chain-verifier` subagents **in parallel** to trace each one simultaneously:
+
+```
+Decision 1 ──▶ [chain-verifier] ──▶ Findings
+Decision 2 ──▶ [chain-verifier] ──▶ Findings  (all running in parallel)
+Decision 3 ──▶ [chain-verifier] ──▶ Findings
+```
+
+**How to invoke:**
+
+For each decision, spawn a chain-verifier with:
+- The specific decision to trace
+- Paths to discussion, specification, and plan documents
+- The implementation scope (files/directories changed)
+
+Each chain-verifier traces one decision through:
+1. Discussion doc → 2. Specification → 3. Plan → 4. Implementation → 5. Tests
+
+**Aggregate the findings:**
+
+Once all chain-verifiers complete, synthesize their reports:
+- Collect all "Broken" chains as blocking issues
+- Collect all "Drifted" items for review
+- Include specific file:line references in your review output
 
 Flag any breaks in the chain.
 
