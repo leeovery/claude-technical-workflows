@@ -1,13 +1,13 @@
 ---
 name: technical-review
-description: "Validate completed implementation against the entire workflow chain: discussion decisions, specification requirements, and plan acceptance criteria. Sixth phase of research-discussion-specification-plan-implement-review workflow. Use when: (1) Implementation phase is complete, (2) User wants validation before merging/shipping, (3) Quality gate check needed after implementation. This is product, feature, AND code review - verifying nothing was lost in translation from discussion through to final code. Produces structured feedback (approve, request changes, or comments) - does NOT fix code."
+description: "Validate completed implementation against plan tasks and acceptance criteria. Sixth phase of research-discussion-specification-plan-implement-review workflow. Use when: (1) Implementation phase is complete, (2) User wants validation before merging/shipping, (3) Quality gate check needed after implementation. Reviews ALL plan tasks for implementation correctness, test adequacy, and code quality. Produces structured feedback (approve, request changes, or comments) - does NOT fix code."
 ---
 
 # Technical Review
 
-Act as **expert reviewer** with fresh perspective. You haven't seen this code before. Your job is to validate the **entire workflow chain** - ensuring nothing was lost as context flowed from discussion through to implementation.
+Act as a **senior software architect** with deep experience in code review. You haven't seen this code before. Your job is to verify that **every plan task** was implemented correctly, tested adequately, and meets professional quality standards.
 
-This is **product review**, **feature review**, **edge case review**, AND **code review**. Not just "does the code work?" but "did we build what we discussed?"
+This is **product review**, **feature review**, **test review**, AND **code review**. Not just "does the code work?" but "was every task done correctly, tested properly, and built to professional standards?"
 
 ## Six-Phase Workflow
 
@@ -16,97 +16,81 @@ This is **product review**, **feature review**, **edge case review**, AND **code
 3. **Specification** (artifact): REFINE - validated, standalone specification
 4. **Planning** (artifact): HOW - phases, tasks, acceptance criteria
 5. **Implementation** (completed): DOING - tests and code
-6. **Review** (YOU): VALIDATING - verify the entire chain
+6. **Review** (YOU): VALIDATING - verify every task
 
-You're at step 6. The code exists. Your job is chain verification.
+You're at step 6. The code exists. Your job is comprehensive verification.
 
-## Chain Verification
+## Review Approach
 
-Your primary role is verifying nothing was lost in translation:
+Start from the **plan** - it contains the granular tasks and acceptance criteria. Use the **specification** for context. Verify **all** tasks, not a sample.
 
 ```
-Discussion → Specification → Plan → Implementation
-    ↑_____________________________________________|
-              You validate every link in this chain
+Plan (tasks + acceptance criteria)
+    ↓
+    For EACH task:
+        → Load Spec Context (deeper understanding)
+        → Verify Implementation (code exists, correct)
+        → Verify Tests (adequate, not over/under tested)
+        → Check Code Quality (readable, conventions)
 ```
 
-**Discussion → Specification**: Did the spec capture all discussed decisions, edge cases, and rationale? Or did things get lost or changed?
+**Use parallel `chain-verifier` subagents** to verify ALL plan tasks simultaneously. Each verifier checks one task for implementation, tests, and quality. This enables comprehensive review without sequential bottlenecks.
 
-**Specification → Plan**: Did the plan cover all specification requirements? Were any spec items not planned?
+## What You Verify (Per Task)
 
-**Plan → Implementation**: Did the code implement all planned tasks? Were acceptance criteria actually met?
+### Implementation
 
-**Full loop**: Does the final implementation achieve what was originally discussed? Would the user recognize this as what they asked for?
+- Is the task implemented?
+- Does it match the acceptance criteria?
+- Does it align with spec context?
+- Any drift from what was planned?
 
-## What You Review
+### Tests
 
-### 1. Chain Integrity
+Evaluate test coverage critically - both directions:
 
-Trace each discussion decision through to code:
-- Find decision in discussion doc
-- Verify it appears in specification
-- Verify it has plan task(s)
-- Verify it's implemented and tested
+- **Not under-tested**: Does a test exist? Does it verify acceptance criteria? Are edge cases covered?
+- **Not over-tested**: Are tests focused and necessary? No redundant or bloated checks?
+- Would the test fail if the feature broke?
 
-Flag anything that:
-- Was discussed but didn't make it to spec
-- Was in spec but wasn't planned
-- Was planned but wasn't implemented
-- Drifted from the original intent
+### Code Quality
 
-### 2. Discussion Compliance (`docs/workflow/discussion/{topic}.md`)
+Review as a senior architect would:
 
-- Were decisions followed?
-- Were edge cases handled as discussed?
-- Any deviations from agreed approach?
-- Were rejected alternatives accidentally implemented?
+**Project conventions** (check `.claude/skills/` for project-specific guidance):
+- Framework and architecture guidelines
+- Code style and patterns specific to the project
 
-### 3. Specification Coverage (`docs/workflow/specification/{topic}.md`)
-
-- Were all validated requirements implemented?
-- Any gaps between specification and implementation?
-- Did anything in the spec get missed?
-
-### 4. Plan Completion (`docs/workflow/planning/{topic}.md`)
-
-- Check `format` frontmatter to determine source (local-markdown, linear, backlog-md)
-- Were all phase acceptance criteria actually met?
-- Were all tasks completed?
-- Any scope creep or missing scope?
-
-### 5. Code Quality (via project skills)
-
-- Does code follow project conventions?
-- Are patterns appropriate for the framework?
-- Any obvious issues?
-
-### 6. Test Quality
-
-- Do tests actually verify the requirements?
-- Are tests meaningful or just passing?
-- Edge cases from discussion covered?
+**General principles** (always apply):
+- **SOLID**: Single responsibility, open/closed, Liskov substitution, interface segregation, dependency inversion
+- **DRY**: No unnecessary duplication (without premature abstraction)
+- **Low complexity**: Reasonable cyclomatic complexity, clear code paths
+- **Modern idioms**: Uses current language features appropriately
+- **Readability**: Self-documenting code, clear intent
+- **Security**: No obvious vulnerabilities
+- **Performance**: No obvious inefficiencies
 
 ## Review Process
 
-1. **Read the discussion doc** - Understand what was decided and why
-2. **Read the specification** - The validated requirements that were approved
-3. **Read the plan** - The tasks and acceptance criteria
-4. **Map the chain** - Trace key decisions through each document
-5. **Read the implementation** - Code changes and tests
-6. **Verify chain integrity** - Did everything flow through correctly?
-7. **Check project skills** - Framework/language conventions
-8. **Produce review** - Structured feedback with chain verification findings
+1. **Read the plan** - Understand all phases, tasks, and acceptance criteria
+2. **Read the specification** - Load context for the feature being reviewed
+3. **Extract all tasks** - List every task from every phase
+4. **Spawn chain-verifiers in parallel** - One subagent per task, all running simultaneously
+5. **Aggregate findings** - Collect reports from all chain-verifiers
+6. **Check project skills** - Framework/language conventions
+7. **Produce review** - Structured feedback covering all tasks
 
 See **[review-checklist.md](references/review-checklist.md)** for detailed checklist.
 
 ## Hard Rules
 
-1. **Don't fix code** - Identify problems, don't solve them
-2. **Don't re-implement** - You're reviewing, not building
-3. **Be specific** - "Test doesn't cover X" not "tests need work"
-4. **Reference artifacts** - Link findings to discussion/spec/plan
-5. **Fresh perspective** - You haven't seen this code before; question everything
-6. **Verify the chain** - Don't just check code quality; verify intent was preserved
+1. **Review ALL tasks** - Don't sample; verify every planned task
+2. **Don't fix code** - Identify problems, don't solve them
+3. **Don't re-implement** - You're reviewing, not building
+4. **Be specific** - "Test doesn't cover X" not "tests need work"
+5. **Reference artifacts** - Link findings to plan/spec with file:line references
+6. **Balanced test review** - Flag both under-testing AND over-testing
+7. **Fresh perspective** - You haven't seen this code before; question everything
 
 ## What Happens After Review
 

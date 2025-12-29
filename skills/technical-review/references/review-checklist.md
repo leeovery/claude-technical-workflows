@@ -6,151 +6,131 @@
 
 ## Before Starting
 
-1. Read discussion: `docs/workflow/discussion/{topic}.md`
-2. Read specification: `docs/workflow/specification/{topic}.md`
-3. Read plan: `docs/workflow/planning/{topic}.md`
-4. Identify what code/files were changed
-5. Check for project-specific skills in `.claude/skills/`
+1. Read plan: `docs/workflow/planning/{topic}.md`
+2. Read specification: `docs/workflow/specification/{topic}.md` (for context)
+3. Identify what code/files were changed
+4. Check for project-specific skills in `.claude/skills/`
 
-## Chain Verification
+## Task-Based Review (Primary Approach)
 
-This is the primary review task - verifying nothing was lost in translation.
+Review **every task** in the plan. Don't sample - verify all of them.
 
-### Discussion → Specification
+### Extract All Tasks
 
-For each key decision in the discussion:
-- Does it appear in the specification?
-- Was it accurately captured or did meaning change?
-- Were any decisions dropped without justification?
+From the plan, list every task across all phases:
+- Note each task's description
+- Note each task's acceptance criteria
+- Note expected micro acceptance (test name)
 
-For each edge case discussed:
-- Is it documented in the specification?
-- Was any nuance lost?
+### Parallel Verification
 
-### Specification → Plan
+Spawn `chain-verifier` subagents **in parallel** for ALL tasks:
 
-For each requirement in the specification:
-- Is there a corresponding plan task?
-- Does the task fully address the requirement?
-- Were any spec items not planned?
+```
+Task 1 ──▶ [chain-verifier] ──▶ Findings
+Task 2 ──▶ [chain-verifier] ──▶ Findings
+Task 3 ──▶ [chain-verifier] ──▶ Findings  (all running in parallel)
+Task 4 ──▶ [chain-verifier] ──▶ Findings
+  ...
+Task N ──▶ [chain-verifier] ──▶ Findings
+```
 
-### Plan → Implementation
+**How to invoke each chain-verifier:**
 
-For each planned task:
-- Was it implemented?
-- Does the implementation match the task description?
-- Were acceptance criteria actually met?
+Provide:
+- The specific task (with acceptance criteria)
+- Path to specification (for context)
+- Path to plan (for phase context)
+- Implementation scope (files/directories changed)
 
-### Full Chain Trace
+**Each chain-verifier checks:**
+1. Implementation exists and matches acceptance criteria
+2. Tests are adequate (not under-tested, not over-tested)
+3. Code quality is acceptable
 
-Pick 3-5 key decisions from the discussion and trace each one:
-1. Find it in the discussion doc
-2. Verify it's in the specification
-3. Verify it has plan task(s)
-4. Verify it's implemented
-5. Verify it's tested
+**Aggregate the findings:**
 
-Flag any breaks in the chain.
+Once all chain-verifiers complete, synthesize their reports:
+- Collect all incomplete/failed tasks as blocking issues
+- Collect all test issues (under/over-tested)
+- Collect all code quality concerns
+- Include specific file:line references
 
-## Discussion Compliance
+## Per-Task Verification Details
 
-For each decision documented in the discussion:
+For each task, the chain-verifier checks:
 
-- Was it followed in implementation?
-- If deviated, was there documented justification?
-- Were the "why" reasons preserved in the approach?
+### Implementation
 
-For each edge case discussed:
+- Is the task implemented?
+- Does the implementation match the acceptance criteria?
+- Does it align with spec context (load relevant spec section)?
+- Any drift from what was planned?
 
-- Is it handled in the code?
-- Is it tested?
-- Does the handling match what was agreed?
+### Test Adequacy
 
-For competing solutions that were rejected:
+**Not under-tested:**
+- Does a test exist for this task?
+- Does the test verify the acceptance criteria?
+- Are edge cases from the spec covered?
+- Would the test fail if the feature broke?
 
-- Did implementation accidentally use a rejected approach?
-- Are there traces of discarded ideas?
+**Not over-tested:**
+- Are tests focused on what matters?
+- No redundant assertions testing the same thing?
+- No unnecessary mocking or setup?
+- Tests aren't testing implementation details instead of behavior?
 
-## Specification Coverage
+### Code Quality
 
-For each validated requirement:
+Review as a senior architect would:
 
-- Is it implemented?
-- Is it tested?
-- Does the implementation match the spec exactly?
+**Project conventions** (check `.claude/skills/` for project-specific guidance):
+- Framework and architecture guidelines defined for the project
+- Code style and patterns specific to the codebase
 
-Look for gaps:
+**General principles** (always apply):
+- **SOLID**: Single responsibility, open/closed, Liskov substitution, interface segregation, dependency inversion
+- **DRY**: No unnecessary duplication (without premature abstraction)
+- **Low complexity**: Reasonable cyclomatic complexity, clear code paths
+- **Modern idioms**: Uses current language features appropriately
+- **Readability**: Self-documenting code, clear intent
+- **Security**: No obvious vulnerabilities (injection, exposure, etc.)
+- **Performance**: No obvious inefficiencies (N+1 queries, unnecessary loops, etc.)
 
-- Requirements in spec but not in code
-- Code that doesn't trace back to a spec requirement
+## Plan Completion Check
 
-## Plan Completion
+After task-level verification, check overall plan completion:
+
+### Phase Acceptance Criteria
 
 For each phase:
+- Are all phase-level acceptance criteria met?
+- Were all tasks in the phase completed?
 
-- Are all acceptance criteria actually met (not just claimed)?
-- Verify each criterion independently
-
-For each task:
-
-- Was a test written for the micro acceptance?
-- Does the test actually verify the requirement?
-- Is there a commit for the task?
-
-Scope check:
+### Scope
 
 - Was anything built that wasn't in the plan? (scope creep)
 - Was anything in the plan not built? (missing scope)
-
-## Test Quality
-
-Tests exist vs tests are meaningful:
-
-- Does the test name match what it actually tests?
-- Would the test fail if the feature broke?
-- Are assertions specific or overly broad?
-
-Coverage of requirements:
-
-- Each plan task should have corresponding test(s)
-- Edge cases from discussion should have tests
-
-Test isolation:
-
-- Do tests depend on each other?
-- Are tests repeatable?
-
-## Code Quality
-
-Check against project-specific skills for:
-
-- Framework patterns and conventions
-- Code style requirements
-- Architecture guidelines
-
-General checks:
-
-- Obvious bugs or logic errors
-- Error handling present where needed
-- No hardcoded values that should be configurable
+- Any unplanned files or features added?
 
 ## Common Issues
 
-**Chain breaks**: Decision discussed but never made it to code
+**Incomplete task**: Task marked done but not fully implemented
 
-**Partial implementation**: Task marked done but only happy path implemented
+**Under-tested**: Missing tests, or tests don't verify acceptance criteria
 
-**Test theater**: Tests pass but don't actually verify requirements
+**Over-tested**: Redundant tests, testing implementation details, excessive mocking
 
-**Decision drift**: Started with agreed approach, drifted to something else
+**Requirement drift**: Implementation doesn't match what was planned
 
-**Missing edge cases**: Discussed but not implemented or tested
+**Missing edge cases**: Spec mentions edge cases not implemented or tested
 
 **Scope creep**: Extra features not in plan
 
 **Orphaned code**: Code added but not used or tested
 
-**Lost nuance**: Requirement simplified in a way that loses important detail
+**Poor readability**: Code works but is hard to understand
 
 ## Writing Feedback
 
@@ -159,12 +139,17 @@ Be specific and actionable:
 - **Bad**: "Tests need improvement"
 - **Good**: "Test `test_cache_expiry` doesn't verify TTL, only that value is returned"
 
-Reference the artifact and chain position:
+Reference the plan task:
 
-- **Bad**: "This wasn't the agreed approach"
-- **Good**: "Discussion doc section 'Caching Strategy' decided on Redis → Spec requirement 3.2 confirms Redis → Plan task 2.1 says 'implement Redis cache' → but implementation uses file cache. Chain broke at implementation."
+- **Bad**: "This wasn't done correctly"
+- **Good**: "Plan Phase 2, Task 3 says 'implement Redis cache' with acceptance 'cache stores values for configured TTL' → implementation uses file cache with no TTL. Task incomplete."
+
+Flag test balance issues:
+
+- **Under-tested**: "Task 2.1 has no test for the error case mentioned in spec section 3.2"
+- **Over-tested**: "Task 2.1 has 5 tests that all verify the same happy path with slight variations"
 
 Distinguish blocking vs non-blocking:
 
-- Blocking: Required changes before shipping (chain breaks, missing requirements)
-- Non-blocking: Recommendations for improvement (code style, minor optimizations)
+- **Blocking**: Incomplete tasks, missing tests, broken functionality
+- **Non-blocking**: Code style suggestions, minor readability improvements

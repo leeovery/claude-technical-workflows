@@ -62,7 +62,7 @@ This package enforces a deliberate progression through six distinct phases:
 
 **Phase 5 - Implementation:** Executes the plan using strict TDD. Writes tests first, implements to pass, commits frequently, and stops for user approval between phases.
 
-**Phase 6 - Review:** Validates completed work against discussion decisions, specification requirements, and plan acceptance criteria. Provides structured feedback without fixing code directly.
+**Phase 6 - Review:** Validates completed work against specification requirements and plan acceptance criteria. The specification is the validated source of truth—earlier phases may contain rejected ideas that were intentionally filtered out. Provides structured feedback without fixing code directly.
 
 ## How It Works
 
@@ -70,8 +70,9 @@ This package depends on [`leeovery/claude-manager`](https://github.com/leeovery/
 
 1. **Symlinks skills** into your project's `.claude/skills/` directory
 2. **Symlinks commands** into your project's `.claude/commands/` directory
-3. **Manages your `.gitignore`** with a deterministic list of linked skills and commands
-4. **Handles installation/removal** automatically via Composer hooks
+3. **Symlinks agents** into your project's `.claude/agents/` directory
+4. **Manages your `.gitignore`** with a deterministic list of linked skills, commands, and agents
+5. **Handles installation/removal** automatically via Composer hooks
 
 You don't need to configure anything—just install and start discussing.
 
@@ -103,7 +104,7 @@ Research is a flat directory of semantically named files (topics emerge later). 
 | [**technical-specification**](skills/technical-specification/) | 3 | Build validated specifications from discussion documents through collaborative refinement. Filters hallucinations, enriches gaps, produces standalone spec. |
 | [**technical-planning**](skills/technical-planning/) | 4 | Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats. |
 | [**technical-implementation**](skills/technical-implementation/) | 5 | Execute implementation plans using strict TDD workflow. Writes tests first, implements to pass, commits frequently, and gates phases on user approval. |
-| [**technical-review**](skills/technical-review/) | 6 | Review completed implementation against discussion decisions, specification, and plan acceptance criteria. Produces structured feedback without fixing code. |
+| [**technical-review**](skills/technical-review/) | 6 | Review completed implementation against specification requirements and plan acceptance criteria. Uses parallel subagents for efficient chain verification. Produces structured feedback without fixing code. |
 
 ### technical-research
 
@@ -193,7 +194,6 @@ Reviews completed work with fresh perspective. Validates implementation against 
 - Quality gate check needed after implementation
 
 **What it checks:**
-- Were discussion decisions followed?
 - Were specification requirements implemented?
 - Were all plan acceptance criteria met?
 - Do tests actually verify requirements?
@@ -209,6 +209,14 @@ Slash commands to quickly invoke the workflow.
 | [**/start-discussion**](commands/start-discussion.md) | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation. |
 | [**/start-specification**](commands/start-specification.md) | Start a specification session from an existing discussion. Validates and refines discussion content into a standalone specification. |
 | [**/start-planning**](commands/start-planning.md) | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md). |
+
+## Agents
+
+Subagents that skills can spawn for parallel task execution.
+
+| Agent | Used By | Description |
+|-------|---------|-------------|
+| [**chain-verifier**](agents/chain-verifier.md) | technical-review | Verifies a single plan task was implemented correctly. Checks implementation, tests (not under/over-tested), and code quality. Multiple chain-verifiers run in parallel to verify ALL tasks efficiently. |
 
 ## Requirements
 
