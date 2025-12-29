@@ -216,7 +216,7 @@ Subagents that skills can spawn for parallel task execution.
 
 | Agent | Used By | Description |
 |-------|---------|-------------|
-| [**chain-verifier**](agents/chain-verifier.md) | technical-review | Traces a single requirement through the specification → plan → implementation → tests chain. Multiple chain-verifiers run in parallel to verify chain integrity efficiently. |
+| [**chain-verifier**](agents/chain-verifier.md) | technical-review | Verifies a single plan task was implemented correctly. Checks implementation, tests (not under/over-tested), and code quality. Multiple chain-verifiers run in parallel to verify ALL tasks efficiently. |
 
 ## Requirements
 
