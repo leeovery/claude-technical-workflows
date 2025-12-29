@@ -62,7 +62,7 @@ This package enforces a deliberate progression through six distinct phases:
 
 **Phase 5 - Implementation:** Executes the plan using strict TDD. Writes tests first, implements to pass, commits frequently, and stops for user approval between phases.
 
-**Phase 6 - Review:** Validates completed work against discussion decisions, specification requirements, and plan acceptance criteria. Provides structured feedback without fixing code directly.
+**Phase 6 - Review:** Validates completed work against specification requirements and plan acceptance criteria. The specification is the validated source of truth—earlier phases may contain rejected ideas that were intentionally filtered out. Provides structured feedback without fixing code directly.
 
 ## How It Works
 
@@ -104,7 +104,7 @@ Research is a flat directory of semantically named files (topics emerge later). 
 | [**technical-specification**](skills/technical-specification/) | 3 | Build validated specifications from discussion documents through collaborative refinement. Filters hallucinations, enriches gaps, produces standalone spec. |
 | [**technical-planning**](skills/technical-planning/) | 4 | Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats. |
 | [**technical-implementation**](skills/technical-implementation/) | 5 | Execute implementation plans using strict TDD workflow. Writes tests first, implements to pass, commits frequently, and gates phases on user approval. |
-| [**technical-review**](skills/technical-review/) | 6 | Review completed implementation against discussion decisions, specification, and plan acceptance criteria. Produces structured feedback without fixing code. |
+| [**technical-review**](skills/technical-review/) | 6 | Review completed implementation against specification requirements and plan acceptance criteria. Uses parallel subagents for efficient chain verification. Produces structured feedback without fixing code. |
 
 ### technical-research
 
@@ -194,7 +194,6 @@ Reviews completed work with fresh perspective. Validates implementation against 
 - Quality gate check needed after implementation
 
 **What it checks:**
-- Were discussion decisions followed?
 - Were specification requirements implemented?
 - Were all plan acceptance criteria met?
 - Do tests actually verify requirements?
@@ -217,7 +216,7 @@ Subagents that skills can spawn for parallel task execution.
 
 | Agent | Used By | Description |
 |-------|---------|-------------|
-| [**chain-verifier**](agents/chain-verifier.md) | technical-review | Traces a single decision through the discussion → specification → plan → implementation chain. Multiple chain-verifiers run in parallel to verify chain integrity efficiently. |
+| [**chain-verifier**](agents/chain-verifier.md) | technical-review | Traces a single requirement through the specification → plan → implementation → tests chain. Multiple chain-verifiers run in parallel to verify chain integrity efficiently. |
 
 ## Requirements
 

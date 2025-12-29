@@ -43,23 +43,27 @@ For each planned task:
 
 ### Full Chain Trace (Parallel Verification)
 
-Pick 3-5 key decisions from the discussion, then spawn `chain-verifier` subagents **in parallel** to trace each one simultaneously:
+Pick 3-5 key requirements from the **specification**, then spawn `chain-verifier` subagents **in parallel** to trace each one simultaneously:
 
 ```
-Decision 1 ──▶ [chain-verifier] ──▶ Findings
-Decision 2 ──▶ [chain-verifier] ──▶ Findings  (all running in parallel)
-Decision 3 ──▶ [chain-verifier] ──▶ Findings
+Requirement 1 ──▶ [chain-verifier] ──▶ Findings
+Requirement 2 ──▶ [chain-verifier] ──▶ Findings  (all running in parallel)
+Requirement 3 ──▶ [chain-verifier] ──▶ Findings
 ```
+
+**Why start from specification?**
+
+The specification is the **validated source of truth**. It has already filtered, enriched, and validated content from research and discussion phases. Earlier phases may contain rejected ideas or rough thoughts that were intentionally filtered out. Starting from spec avoids false positives.
 
 **How to invoke:**
 
-For each decision, spawn a chain-verifier with:
-- The specific decision to trace
-- Paths to discussion, specification, and plan documents
+For each requirement, spawn a chain-verifier with:
+- The specific requirement to trace (from specification)
+- Paths to specification and plan documents
 - The implementation scope (files/directories changed)
 
-Each chain-verifier traces one decision through:
-1. Discussion doc → 2. Specification → 3. Plan → 4. Implementation → 5. Tests
+Each chain-verifier traces one requirement through:
+1. Specification → 2. Plan → 3. Implementation → 4. Tests
 
 **Aggregate the findings:**
 
@@ -131,7 +135,7 @@ Tests exist vs tests are meaningful:
 Coverage of requirements:
 
 - Each plan task should have corresponding test(s)
-- Edge cases from discussion should have tests
+- Edge cases from specification should have tests
 
 Test isolation:
 
@@ -154,15 +158,15 @@ General checks:
 
 ## Common Issues
 
-**Chain breaks**: Decision discussed but never made it to code
+**Chain breaks**: Requirement in spec but never made it to code
 
 **Partial implementation**: Task marked done but only happy path implemented
 
 **Test theater**: Tests pass but don't actually verify requirements
 
-**Decision drift**: Started with agreed approach, drifted to something else
+**Requirement drift**: Started with specified approach, drifted to something else
 
-**Missing edge cases**: Discussed but not implemented or tested
+**Missing edge cases**: In specification but not implemented or tested
 
 **Scope creep**: Extra features not in plan
 
@@ -180,7 +184,7 @@ Be specific and actionable:
 Reference the artifact and chain position:
 
 - **Bad**: "This wasn't the agreed approach"
-- **Good**: "Discussion doc section 'Caching Strategy' decided on Redis → Spec requirement 3.2 confirms Redis → Plan task 2.1 says 'implement Redis cache' → but implementation uses file cache. Chain broke at implementation."
+- **Good**: "Spec requirement 3.2 specifies Redis cache → Plan task 2.1 says 'implement Redis cache' → but implementation uses file cache. Chain broke at implementation."
 
 Distinguish blocking vs non-blocking:
 
