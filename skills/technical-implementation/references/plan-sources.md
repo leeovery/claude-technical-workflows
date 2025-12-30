@@ -15,11 +15,13 @@ Always read the plan file first and check the `format` field in frontmatter:
 | `local-markdown` | Full plan is in this file | Read content directly |
 | `linear` | Plan managed in Linear | Query Linear via MCP |
 | `backlog-md` | Tasks in Backlog.md | Query via MCP or read `backlog/` |
+| `beads` | Graph tracker for agents | Use `bd` CLI commands |
 
 For full format details, see the planning skill's output adapters:
 - [output-local-markdown.md](../../technical-planning/references/output-local-markdown.md)
 - [output-linear.md](../../technical-planning/references/output-linear.md)
 - [output-backlog-md.md](../../technical-planning/references/output-backlog-md.md)
+- [output-beads.md](../../technical-planning/references/output-beads.md)
 
 ## Reading Plans
 
@@ -47,6 +49,16 @@ For full format details, see the planning skill's output adapters:
 
 **Fallback**: Can read `backlog/` files directly if MCP unavailable.
 
+### Beads
+
+1. Extract `epic` ID from frontmatter
+2. Run `bd ready` to get unblocked tasks
+3. View task details with `bd show bd-{id}`
+4. Process by priority (P0 → P1 → P2 → P3)
+5. Respect dependency graph - only work on ready tasks
+
+**Fallback**: If `bd` CLI unavailable, inform user to install beads.
+
 ## Updating Progress
 
 ### Local Markdown
@@ -62,6 +74,12 @@ For full format details, see the planning skill's output adapters:
 - Check off acceptance criteria items in task file
 - Update status to "Done" when complete
 - Backlog.md CLI auto-moves to completed folder
+
+### Beads
+- Close tasks with `bd close bd-{id} "reason"` when complete
+- Include task ID in commit messages: `git commit -m "message (bd-{id})"`
+- **Critical**: Run `bd sync` at session end to persist changes
+- Use `bd ready` to identify next unblocked task
 
 ## Execution Workflow
 

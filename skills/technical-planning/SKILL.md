@@ -35,6 +35,7 @@ The specification is the **sole source of truth**. It contains validated, approv
 - [output-local-markdown.md](references/output-local-markdown.md) - Single `{topic}.md` file (default)
 - [output-linear.md](references/output-linear.md) - Linear project
 - [output-backlog-md.md](references/output-backlog-md.md) - Backlog.md tasks
+- [output-beads.md](references/output-beads.md) - Beads graph tracker (agent-optimized)
 
 **Output**: Implementation plan in chosen format
 
