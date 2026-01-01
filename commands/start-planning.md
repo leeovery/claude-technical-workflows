@@ -85,7 +85,40 @@ Ask: **Where should this plan live?**
 
 **If Linear or Backlog.md selected**: Check if MCP is available. If not, inform the user and suggest alternatives.
 
-**If Beads selected**: Check if `bd` command is available. If not, inform the user to install it (`npm install -g @anthropic-ai/beads`).
+**If Beads selected**: Check if `bd` command is available. If not:
+- For local Claude Code: Inform the user to install it (`npm install -g @beads/bd`)
+- For Claude Code on the web: Offer to set up a session start hook that auto-installs beads
+
+### Setting Up Beads for Claude Code on the Web
+
+If the user is on Claude Code for the web and `bd` is not available, offer to install a session start hook:
+
+1. Create the hooks directory if it doesn't exist:
+   ```bash
+   mkdir -p .claude/hooks
+   ```
+
+2. Copy the install script:
+   ```bash
+   cp hooks/install-beads.sh .claude/hooks/install-beads.sh
+   chmod +x .claude/hooks/install-beads.sh
+   ```
+
+3. Add the hook to `.claude/settings.json`:
+   ```json
+   {
+     "hooks": {
+       "SessionStart": [
+         {
+           "type": "command",
+           "command": ".claude/hooks/install-beads.sh"
+         }
+       ]
+     }
+   }
+   ```
+
+This ensures `bd` is available at the start of each Claude Code session.
 
 ## Step 5: Gather Additional Context
 

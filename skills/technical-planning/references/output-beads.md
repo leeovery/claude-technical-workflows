@@ -21,8 +21,39 @@ See: https://github.com/steveyegge/beads
 
 ## Prerequisites
 
-- Beads CLI installed (`npm install -g @anthropic-ai/beads` or via Homebrew/Go)
+- Beads CLI installed (`npm install -g @beads/bd` or via Homebrew/Go)
 - Repository initialized with `bd init` (human setup step)
+
+### Claude Code on the Web
+
+For Claude Code on the web where `bd` isn't pre-installed, set up a session start hook:
+
+1. Create the hooks directory:
+   ```bash
+   mkdir -p .claude/hooks
+   ```
+
+2. Copy the install script from this package:
+   ```bash
+   cp hooks/install-beads.sh .claude/hooks/install-beads.sh
+   chmod +x .claude/hooks/install-beads.sh
+   ```
+
+3. Add to `.claude/settings.json`:
+   ```json
+   {
+     "hooks": {
+       "SessionStart": [
+         {
+           "type": "command",
+           "command": ".claude/hooks/install-beads.sh"
+         }
+       ]
+     }
+   }
+   ```
+
+The hook script is available at `hooks/install-beads.sh` in this package. It automatically downloads and installs the correct beads binary for the platform.
 
 ## When to Use
 
