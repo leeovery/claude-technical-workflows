@@ -71,9 +71,8 @@ This package depends on [`leeovery/claude-manager`](https://github.com/leeovery/
 1. **Symlinks skills** into your project's `.claude/skills/` directory
 2. **Symlinks commands** into your project's `.claude/commands/` directory
 3. **Symlinks agents** into your project's `.claude/agents/` directory
-4. **Provides hooks** that can be copied to `.claude/hooks/` for session setup
-5. **Manages your `.gitignore`** with a deterministic list of linked skills, commands, and agents
-6. **Handles installation/removal** automatically via Composer hooks
+4. **Manages your `.gitignore`** with a deterministic list of linked skills, commands, and agents
+5. **Handles installation/removal** automatically via Composer hooks
 
 You don't need to configure anything—just install and start discussing.
 
@@ -118,9 +117,6 @@ commands/
 
 agents/
 └── chain-verifier.md          # Parallel task verification for review
-
-hooks/
-└── install-beads.sh           # Auto-install Beads CLI for web sessions
 ```
 
 ## Skills
@@ -246,37 +242,6 @@ Subagents that skills can spawn for parallel task execution.
 | Agent | Used By | Description |
 |-------|---------|-------------|
 | [**chain-verifier**](agents/chain-verifier.md) | technical-review | Verifies a single plan task was implemented correctly. Checks implementation, tests (not under/over-tested), and code quality. Multiple chain-verifiers run in parallel to verify ALL tasks efficiently. |
-
-## Hooks
-
-Session start hooks for environment setup, particularly useful for Claude Code on the web.
-
-| Hook | Description |
-|------|-------------|
-| [**install-beads.sh**](hooks/install-beads.sh) | Auto-installs the Beads CLI (`bd`) if not present. Detects platform (linux/darwin, amd64/arm64) and downloads the correct binary from GitHub releases. Essential for Claude Code on the web where `bd` isn't pre-installed. |
-
-### Using Hooks
-
-To use a hook in your project, copy it to `.claude/hooks/` and configure in `.claude/settings.json`:
-
-```bash
-mkdir -p .claude/hooks
-cp vendor/leeovery/claude-technical-workflows/hooks/install-beads.sh .claude/hooks/
-chmod +x .claude/hooks/install-beads.sh
-```
-
-```json
-{
-  "hooks": {
-    "SessionStart": [
-      {
-        "type": "command",
-        "command": ".claude/hooks/install-beads.sh"
-      }
-    ]
-  }
-}
-```
 
 ## Requirements
 
