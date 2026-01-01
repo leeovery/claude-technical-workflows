@@ -77,7 +77,48 @@ Ask: **Where should this plan live?**
    - Terminal and web Kanban views
    - Git-native with auto-commit support
 
+4. **Beads** - Git-backed graph issue tracker for AI agents
+   - Best for: Complex dependency graphs, multi-session implementations
+   - Native dependency tracking with `bd ready` for unblocked work
+   - Hierarchical: epics → phases → tasks
+   - Requires: Beads CLI installed (`bd`)
+
 **If Linear or Backlog.md selected**: Check if MCP is available. If not, inform the user and suggest alternatives.
+
+**If Beads selected**: Check if `bd` command is available. If not:
+- For local Claude Code: Inform the user to install it (`npm install -g @beads/bd`)
+- For Claude Code on the web: Offer to set up a session start hook that auto-installs beads
+
+### Setting Up Beads for Claude Code on the Web
+
+If the user is on Claude Code for the web and `bd` is not available, offer to install a session start hook:
+
+1. Create the hooks directory if it doesn't exist:
+   ```bash
+   mkdir -p .claude/hooks
+   ```
+
+2. Copy the install script:
+   ```bash
+   cp hooks/install-beads.sh .claude/hooks/install-beads.sh
+   chmod +x .claude/hooks/install-beads.sh
+   ```
+
+3. Add the hook to `.claude/settings.json`:
+   ```json
+   {
+     "hooks": {
+       "SessionStart": [
+         {
+           "type": "command",
+           "command": ".claude/hooks/install-beads.sh"
+         }
+       ]
+     }
+   }
+   ```
+
+This ensures `bd` is available at the start of each Claude Code session.
 
 ## Step 5: Gather Additional Context
 
@@ -93,7 +134,7 @@ Ask: **Where should this plan live?**
 Pass to the technical-planning skill:
 - Specification: `docs/workflow/specification/{topic}.md`
 - Output: `docs/workflow/planning/{topic}.md`
-- Output destination: (local-markdown | linear | backlog-md)
+- Output destination: (local-markdown | linear | backlog-md | beads)
 - Additional context gathered
 
 **Example handoff:**
@@ -116,6 +157,17 @@ Team: Engineering
 
 Begin planning using the technical-planning skill.
 Reference: formal-planning.md, then output-linear.md
+```
+
+**Example handoff for Beads:**
+```
+Planning session for: {topic}
+Specification: docs/workflow/specification/{topic}.md
+Output destination: Beads
+Output path: docs/workflow/planning/{topic}.md
+
+Begin planning using the technical-planning skill.
+Reference: formal-planning.md, then output-beads.md
 ```
 
 ## Notes

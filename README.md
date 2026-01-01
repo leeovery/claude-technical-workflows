@@ -71,8 +71,9 @@ This package depends on [`leeovery/claude-manager`](https://github.com/leeovery/
 1. **Symlinks skills** into your project's `.claude/skills/` directory
 2. **Symlinks commands** into your project's `.claude/commands/` directory
 3. **Symlinks agents** into your project's `.claude/agents/` directory
-4. **Manages your `.gitignore`** with a deterministic list of linked skills, commands, and agents
-5. **Handles installation/removal** automatically via Composer hooks
+4. **Provides hooks** that can be copied to `.claude/hooks/` for session setup
+5. **Manages your `.gitignore`** with a deterministic list of linked skills, commands, and agents
+6. **Handles installation/removal** automatically via Composer hooks
 
 You don't need to configure anything—just install and start discussing.
 
@@ -94,6 +95,33 @@ docs/workflow/
 ```
 
 Research is a flat directory of semantically named files (topics emerge later). From discussion onwards, each topic gets its own file per phase.
+
+### Package Structure
+
+This package provides:
+
+```
+skills/
+├── technical-research/        # Phase 1: Explore and validate ideas
+├── technical-discussion/      # Phase 2: Document discussions
+├── technical-specification/   # Phase 3: Build validated specifications
+├── technical-planning/        # Phase 4: Create implementation plans
+├── technical-implementation/  # Phase 5: Execute via TDD
+└── technical-review/          # Phase 6: Validate against artifacts
+
+commands/
+├── start-research.md          # Begin research exploration
+├── start-discussion.md        # Begin technical discussions
+├── start-specification.md     # Begin specification building
+├── start-planning.md          # Begin implementation planning
+└── interview.md               # Focused questioning mode
+
+agents/
+└── chain-verifier.md          # Parallel task verification for review
+
+hooks/
+└── install-beads.sh           # Auto-install Beads CLI for web sessions
+```
 
 ## Skills
 
@@ -167,7 +195,7 @@ Converts specifications into structured implementation plans.
 **What it produces:**
 - Phased implementation plans with specific tasks
 - Acceptance criteria at phase and task levels
-- Multiple output formats: local markdown, Linear, or Backlog.md
+- Multiple output formats: local markdown, Linear, Backlog.md, or Beads
 
 ### technical-implementation
 
@@ -208,7 +236,7 @@ Slash commands to quickly invoke the workflow.
 | [**/start-research**](commands/start-research.md) | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion. |
 | [**/start-discussion**](commands/start-discussion.md) | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation. |
 | [**/start-specification**](commands/start-specification.md) | Start a specification session from an existing discussion. Validates and refines discussion content into a standalone specification. |
-| [**/start-planning**](commands/start-planning.md) | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md). |
+| [**/start-planning**](commands/start-planning.md) | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md, Beads). |
 | [**/interview**](commands/interview.md) | Shift into focused questioning mode during research or discussion. Probes ideas with non-obvious questions, challenges assumptions, and surfaces concerns. |
 
 ## Agents
@@ -218,6 +246,37 @@ Subagents that skills can spawn for parallel task execution.
 | Agent | Used By | Description |
 |-------|---------|-------------|
 | [**chain-verifier**](agents/chain-verifier.md) | technical-review | Verifies a single plan task was implemented correctly. Checks implementation, tests (not under/over-tested), and code quality. Multiple chain-verifiers run in parallel to verify ALL tasks efficiently. |
+
+## Hooks
+
+Session start hooks for environment setup, particularly useful for Claude Code on the web.
+
+| Hook | Description |
+|------|-------------|
+| [**install-beads.sh**](hooks/install-beads.sh) | Auto-installs the Beads CLI (`bd`) if not present. Detects platform (linux/darwin, amd64/arm64) and downloads the correct binary from GitHub releases. Essential for Claude Code on the web where `bd` isn't pre-installed. |
+
+### Using Hooks
+
+To use a hook in your project, copy it to `.claude/hooks/` and configure in `.claude/settings.json`:
+
+```bash
+mkdir -p .claude/hooks
+cp vendor/leeovery/claude-technical-workflows/hooks/install-beads.sh .claude/hooks/
+chmod +x .claude/hooks/install-beads.sh
+```
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": ".claude/hooks/install-beads.sh"
+      }
+    ]
+  }
+}
+```
 
 ## Requirements
 
