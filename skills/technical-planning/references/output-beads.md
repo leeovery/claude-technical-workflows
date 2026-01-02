@@ -37,20 +37,22 @@ bd init
 
 ### Database Mode
 
-Check if database mode is already configured:
+Check if database mode is configured in `.beads/config.yaml`:
 
-```bash
-bd config get no_db
+```yaml
+# .beads/config.yaml
+no_db: false  # or true for no-database mode
 ```
 
-If not set, ask the user and set it explicitly (even for default):
+If not set, ask the user and add it explicitly (even for default):
 
 > "Beads can run with or without a local database. Database mode buffers changes and requires `bd sync` to persist. No-database mode writes directly to JSONL (simpler, no sync needed). Which do you prefer? (default: database)"
 
-```bash
-# Set explicitly so future sessions know the mode
-bd config set no_db false  # database mode (default)
-bd config set no_db true   # no-database mode
+Add to `.beads/config.yaml`:
+```yaml
+no_db: false  # database mode (default) - requires bd sync
+# or
+no_db: true   # no-database mode - writes directly to JSONL
 ```
 
 ## When to Use
@@ -148,7 +150,6 @@ Create `docs/workflow/planning/{topic}.md`:
 ---
 format: beads
 epic: bd-{EPIC_ID}
-no_db: false  # true if using no-database mode
 ---
 
 # Plan Reference: {Topic Name}
@@ -167,11 +168,12 @@ This plan is managed via Beads. Tasks are stored in `.beads/` and tracked as a d
 **View specific task**: Run `bd show bd-{id}`
 
 **Implementation will**:
-1. Read this file to identify the epic and db mode
-2. Query `bd ready` for unblocked tasks
-3. Work through tasks respecting dependencies
-4. Close tasks with `bd close bd-{id} "reason"`
-5. If using database mode: sync with `bd sync` at session end
+1. Read this file to identify the epic
+2. Check `.beads/config.yaml` for database mode
+3. Query `bd ready` for unblocked tasks
+4. Work through tasks respecting dependencies
+5. Close tasks with `bd close bd-{id} "reason"`
+6. If using database mode: sync with `bd sync` at session end
 
 ## Key Decisions
 
@@ -193,11 +195,10 @@ The `format: beads` frontmatter tells implementation to use beads CLI:
 ---
 format: beads
 epic: bd-a3f8
-no_db: false  # or true if not using database
 ---
 ```
 
-The `no_db` field indicates whether sync is required (see Implementation section).
+Database mode is stored in `.beads/config.yaml`, not in frontmatter.
 
 ## Flagging Incomplete Tasks
 
@@ -219,17 +220,18 @@ In the task body:
 ### Reading Plans
 
 1. Extract `epic` ID from frontmatter
-2. Run `bd ready` to get unblocked tasks
-3. View task details with `bd show bd-{id}`
-4. Process by priority (P0 → P1 → P2 → P3)
-5. Respect dependency graph - only work on ready tasks
+2. Check `.beads/config.yaml` for `no_db` setting (determines if sync needed)
+3. Run `bd ready` to get unblocked tasks
+4. View task details with `bd show bd-{id}`
+5. Process by priority (P0 → P1 → P2 → P3)
+6. Respect dependency graph - only work on ready tasks
 
 ### Updating Progress
 
 - Close tasks with `bd close bd-{id} "reason"` when complete
 - Include task ID in commit messages: `git commit -m "message (bd-{id})"`
-- **If `no_db: false`** (database mode): Run `bd sync` at session end to persist changes
-- **If `no_db: true`**: No sync needed - changes write directly to JSONL
+- **If `no_db: false` in config** (database mode): Run `bd sync` at session end to persist changes
+- **If `no_db: true` in config**: No sync needed - changes write directly to JSONL
 - Use `bd ready` to identify next unblocked task
 
 ### Fallback
@@ -254,14 +256,14 @@ On local systems, beads may already be installed via Homebrew - always check fir
 
 ## Sync Protocol (Database Mode Only)
 
-When using database mode (`no_db: false`), implementation must run `bd sync` at session end to:
+When using database mode (`no_db: false` in `.beads/config.yaml`), implementation must run `bd sync` at session end to:
 - Export pending changes to JSONL
 - Commit to git
 - Push to remote
 
 Without sync, changes stay in a 30-second debounce window and may not persist.
 
-**Skip this section entirely if `no_db: true`** - changes write directly to JSONL.
+**Skip this section entirely if `no_db: true` in config** - changes write directly to JSONL.
 
 ## Commit Message Convention
 
