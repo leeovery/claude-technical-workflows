@@ -30,25 +30,19 @@ You're at step 5. Execute the plan. Don't re-debate decisions.
 
 ## Workflow
 
-### With a Plan
-
-0. **Check environment setup** (if not already done)
+1. **Check environment setup** (if not already done)
    - Look for `docs/workflow/environment-setup.md`
    - If exists, follow the setup instructions before proceeding
    - If missing, ask: "Are there any environment setup instructions I should follow?"
 
    See **[environment-setup.md](references/environment-setup.md)** for details.
 
-1. **Read the plan** from `docs/workflow/planning/{topic}.md`
-   - Check the `format` field in frontmatter:
-     - `local-markdown` → content is in this file
-     - `linear` → query Linear via MCP using frontmatter project_id
-     - `backlog-md` → query Backlog.md via MCP or read `backlog/` directory
-     - `beads` → use `bd` CLI for dependency-aware task tracking
+2. **Read the plan** from `docs/workflow/planning/{topic}.md`
+   - Check the `format` field in frontmatter to determine how to read tasks
 
    See **[plan-sources.md](references/plan-sources.md)** for details on each format.
 
-2. **For each phase**:
+3. **For each phase**:
    - Announce phase start
    - Review phase acceptance criteria
    - For each task:
@@ -59,21 +53,8 @@ You're at step 5. Execute the plan. Don't re-debate decisions.
      - Commit
    - Verify all phase acceptance criteria met
    - **Ask user before proceeding to next phase**
-3. **Reference specification** when rationale unclear
 
-### Without a Plan (Ad Hoc)
-
-When implementing without a formal plan:
-
-1. Clarify the requirement (ask if unclear)
-2. Identify what tests should pass when done
-3. Write failing test
-4. Implement to pass
-5. Refactor when green
-6. Commit with descriptive message
-7. Repeat for next requirement
-
-Apply quality guidelines from [code-quality.md](references/code-quality.md).
+4. **Reference specification** when rationale unclear
 
 ## Progress Announcements
 
