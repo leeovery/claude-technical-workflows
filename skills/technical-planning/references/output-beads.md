@@ -35,6 +35,20 @@ Initialize in your project:
 bd init
 ```
 
+### Database Mode
+
+Beads defaults to **database mode** which buffers changes before writing to JSONL. Ask the user:
+
+> "Beads can run with or without a local database. Database mode buffers changes and requires `bd sync` to persist. No-database mode writes directly to JSONL (simpler, no sync needed). Which do you prefer? (default: database)"
+
+If user chooses **no database**, update the config:
+
+```bash
+bd config set no_db true
+```
+
+Track the mode in the plan frontmatter (see below).
+
 ## When to Use
 
 Choose beads when:
@@ -130,6 +144,7 @@ Create `docs/workflow/planning/{topic}.md`:
 ---
 format: beads
 epic: bd-{EPIC_ID}
+no_db: false  # true if using no-database mode
 ---
 
 # Plan Reference: {Topic Name}
@@ -148,11 +163,11 @@ This plan is managed via Beads. Tasks are stored in `.beads/` and tracked as a d
 **View specific task**: Run `bd show bd-{id}`
 
 **Implementation will**:
-1. Read this file to identify the epic
+1. Read this file to identify the epic and db mode
 2. Query `bd ready` for unblocked tasks
 3. Work through tasks respecting dependencies
 4. Close tasks with `bd close bd-{id} "reason"`
-5. Sync with `bd sync` at session end
+5. If using database mode: sync with `bd sync` at session end
 
 ## Key Decisions
 
@@ -174,8 +189,11 @@ The `format: beads` frontmatter tells implementation to use beads CLI:
 ---
 format: beads
 epic: bd-a3f8
+no_db: false  # or true if not using database
 ---
 ```
+
+The `no_db` field indicates whether sync is required (see Implementation section).
 
 ## Flagging Incomplete Tasks
 
@@ -206,7 +224,8 @@ In the task body:
 
 - Close tasks with `bd close bd-{id} "reason"` when complete
 - Include task ID in commit messages: `git commit -m "message (bd-{id})"`
-- **Critical**: Run `bd sync` at session end to persist changes
+- **If `no_db: false`** (database mode): Run `bd sync` at session end to persist changes
+- **If `no_db: true`**: No sync needed - changes write directly to JSONL
 - Use `bd ready` to identify next unblocked task
 
 ### Fallback
@@ -227,16 +246,18 @@ On local systems, beads may already be installed via Homebrew - always check fir
 | `bd show bd-{id}` | View task details |
 | `bd close bd-{id} "reason"` | Complete a task |
 | `bd dep add child parent` | Add dependency |
-| `bd sync` | Commit and push changes |
+| `bd sync` | Commit and push changes (database mode only) |
 
-## Sync Protocol
+## Sync Protocol (Database Mode Only)
 
-**Critical**: Implementation must run `bd sync` at session end to:
+When using database mode (`no_db: false`), implementation must run `bd sync` at session end to:
 - Export pending changes to JSONL
 - Commit to git
 - Push to remote
 
 Without sync, changes stay in a 30-second debounce window and may not persist.
+
+**Skip this section entirely if `no_db: true`** - changes write directly to JSONL.
 
 ## Commit Message Convention
 
