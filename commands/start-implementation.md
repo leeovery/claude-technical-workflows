@@ -54,59 +54,15 @@ Which plan would you like to implement?
 
 ## Step 4: Check Environment Setup
 
-After the user selects a plan, check for environment setup:
+After the user selects a plan, handle environment setup.
 
-1. **Look for setup document**: Check if `docs/workflow/environment-setup.md` exists
-   - Run `ls docs/workflow/environment-setup.md` or similar
+**Read the environment setup reference**: Load `skills/technical-implementation/references/environment-setup.md` and follow its instructions for:
 
-2. **If setup document exists**:
-   - Read it and follow the instructions before proceeding
-   - These are natural language instructions for setting up the implementation environment
-   - Common tasks: installing dependencies, copying `.env` files, running migrations, etc.
+1. Checking for `docs/workflow/environment-setup.md` (project-specific setup)
+2. Prompting the user if no setup document exists
+3. Setting up format-specific requirements (the reference links to the appropriate planning output file for each format)
 
-3. **If setup document does NOT exist**:
-   - Ask the user:
-   ```
-   No environment setup document found.
-
-   Are there any setup instructions I should follow before implementing?
-   Examples:
-   - Install specific tools or extensions (e.g., PHP SQLite extension)
-   - Copy environment files (e.g., cp .env.example .env)
-   - Generate keys (e.g., php artisan key:generate)
-   - Set up test database
-   - Install CLI tools needed for the plan format
-
-   If none needed, just say "no" and we'll proceed.
-   ```
-
-4. **Save setup instructions** (if provided):
-   - If the user provides instructions, offer to save them to `docs/workflow/environment-setup.md` for future sessions
-
-## Step 5: Check Plan Format Requirements
-
-Based on the plan's `format:` field, ensure prerequisites are met:
-
-**For `beads` format**:
-- Check if `bd` command exists: `which bd`
-- If not available (common in ephemeral environments like Claude Code on the web):
-  ```bash
-  curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
-  ```
-  Note: On local systems, beads may already be installed via Homebrew - always check first.
-- Initialize if needed: `bd init` (only if `.beads/` doesn't exist)
-
-**For `linear` format**:
-- Check if Linear MCP is available
-- If not, inform user and suggest alternatives
-
-**For `backlog-md` format**:
-- Check if Backlog.md MCP is available, or if `backlog/` directory exists
-
-**For `local-markdown` format**:
-- No additional setup needed
-
-## Step 6: Ask About Scope
+## Step 5: Ask About Scope
 
 Ask the user about implementation scope:
 
@@ -122,7 +78,7 @@ Which approach?
 
 If they choose a specific phase or task, ask them to specify which one.
 
-## Step 7: Invoke Implementation Skill
+## Step 6: Invoke Implementation Skill
 
 Pass to the technical-implementation skill:
 - Plan: `docs/workflow/planning/{topic}.md`
@@ -152,8 +108,6 @@ Epic: bd-{epic_id}
 Scope: Phase 1 only
 
 Environment setup: Completed
-- Installed beads CLI
-- Ran bd init
 
 Begin implementation using the technical-implementation skill.
 Reference: plan-sources.md for reading beads tasks, tdd-workflow.md for execution.

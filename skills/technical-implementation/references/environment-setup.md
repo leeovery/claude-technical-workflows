@@ -17,7 +17,6 @@ This file contains natural language instructions for setting up the implementati
 Read and follow the instructions. Common setup tasks include:
 
 - Installing language extensions (e.g., PHP SQLite extension)
-- Installing CLI tools required by the plan format
 - Copying environment files (e.g., `cp .env.example .env`)
 - Generating application keys
 - Running database migrations
@@ -38,36 +37,16 @@ If they provide instructions, offer to save them:
 
 ## Plan Format Setup
 
-Some plan formats require specific tools:
+Some plan formats require specific tools. Refer to the planning skill's output references for installation and usage details:
 
-### Beads Format
+| Format | Reference |
+|--------|-----------|
+| `beads` | [output-beads.md](../../technical-planning/references/output-beads.md) |
+| `linear` | [output-linear.md](../../technical-planning/references/output-linear.md) |
+| `backlog-md` | [output-backlog-md.md](../../technical-planning/references/output-backlog-md.md) |
+| `local-markdown` | No additional setup needed |
 
-If the plan uses `format: beads`, ensure the `bd` CLI is available:
-
-```bash
-# Check if installed
-which bd
-```
-
-If not installed (common in ephemeral environments like Claude Code on the web):
-```bash
-curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
-```
-
-On local systems, beads may already be installed via Homebrew - always check first.
-
-```bash
-# Initialize if .beads/ doesn't exist
-bd init
-```
-
-### Linear Format
-
-Requires Linear MCP server. If unavailable, inform the user.
-
-### Backlog.md Format
-
-Works with Backlog.md MCP or by reading files from `backlog/` directory directly.
+These references contain prerequisites, installation instructions, and usage details for each format.
 
 ## Example Setup Document
 
@@ -101,11 +80,6 @@ Additional setup for web-based Claude Code sessions:
 1. Install PHP SQLite extension:
    ```bash
    sudo apt-get update && sudo apt-get install -y php-sqlite3
-   ```
-
-2. If using Beads format:
-   ```bash
-   curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
    ```
 
 ## Verification
