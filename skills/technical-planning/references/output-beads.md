@@ -23,29 +23,39 @@ See: https://github.com/steveyegge/beads
 
 ### 1. Check Installation
 
-First, check if beads is already installed:
+Check if beads is installed (required every session in ephemeral environments):
 
 ```bash
 bd --version
 ```
 
 - **Local systems**: May already be installed via Homebrew
-- **Ephemeral environments** (Claude Code on web): Likely needs installation
+- **Ephemeral environments** (Claude Code on web): Needs installation each session
 
 If not installed:
 ```bash
 curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
 ```
 
-The script auto-detects the platform and installs the correct binary.
+### 2. Check If Project Initialized
 
-### 2. Choose Database Mode
+Check if beads is already set up in this project:
+
+```bash
+ls .beads/config.yaml
+```
+
+**If `.beads/` exists**: Project is already initialized - skip to using beads.
+
+**If not initialized**: Continue with steps 3 and 4.
+
+### 3. Choose Database Mode
 
 Beads supports two modes. Ask the user:
 
 > "Beads can run with or without a local database. Database mode buffers changes and requires `bd sync` to persist. No-database mode writes directly to JSONL (simpler, no sync needed). Which do you prefer? (default: database)"
 
-### 3. Initialize
+### 4. Initialize
 
 Based on the user's choice:
 
@@ -55,8 +65,6 @@ bd init --no-db  # no-database mode - writes directly to JSONL
 ```
 
 This creates `.beads/config.yaml` with the appropriate `no-db` setting.
-
-Note: `no-db` is a YAML-only config key - it's read at startup before the database opens.
 
 ## When to Use
 
