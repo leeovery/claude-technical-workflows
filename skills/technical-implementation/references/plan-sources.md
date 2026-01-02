@@ -8,20 +8,13 @@ Plans are always stored in `docs/workflow/planning/{topic}.md`. The file's front
 
 ## Detecting Plan Format
 
-Always read the plan file first and check the `format` field in frontmatter:
+Read the plan file and check the `format` field in frontmatter. This tells you how to read and update tasks.
 
-| Format | Meaning | How to Proceed |
-|--------|---------|----------------|
-| `local-markdown` | Full plan is in this file | Read content directly |
-| `linear` | Plan managed in Linear | Query Linear via MCP |
-| `backlog-md` | Tasks in Backlog.md | Query via MCP or read `backlog/` |
-| `beads` | Graph tracker for agents | Use `bd` CLI commands |
+For format-specific details (setup, commands, structure), load the corresponding output adapter from the planning skill:
 
-For full format details, see the planning skill's output adapters:
-- [output-local-markdown.md](../../technical-planning/references/output-local-markdown.md)
-- [output-linear.md](../../technical-planning/references/output-linear.md)
-- [output-backlog-md.md](../../technical-planning/references/output-backlog-md.md)
-- [output-beads.md](../../technical-planning/references/output-beads.md)
+```
+skills/technical-planning/references/output-{format}.md
+```
 
 ## Reading Plans
 

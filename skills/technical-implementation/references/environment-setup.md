@@ -37,16 +37,13 @@ If they provide instructions, offer to save them:
 
 ## Plan Format Setup
 
-Some plan formats require specific tools. Refer to the planning skill's output references for installation and usage details:
+Some plan formats require specific tools. Check the plan's `format` field and load the corresponding output adapter from the planning skill for setup instructions:
 
-| Format | Reference |
-|--------|-----------|
-| `beads` | [output-beads.md](../../technical-planning/references/output-beads.md) |
-| `linear` | [output-linear.md](../../technical-planning/references/output-linear.md) |
-| `backlog-md` | [output-backlog-md.md](../../technical-planning/references/output-backlog-md.md) |
-| `local-markdown` | No additional setup needed |
+```
+skills/technical-planning/references/output-{format}.md
+```
 
-These references contain prerequisites, installation instructions, and usage details for each format.
+Each output adapter contains prerequisites and installation instructions for that format.
 
 ## Example Setup Document
 
