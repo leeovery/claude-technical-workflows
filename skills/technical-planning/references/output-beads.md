@@ -37,17 +37,21 @@ bd init
 
 ### Database Mode
 
-Beads defaults to **database mode** which buffers changes before writing to JSONL. Ask the user:
+Check if database mode is already configured:
+
+```bash
+bd config get no_db
+```
+
+If not set, ask the user and set it explicitly (even for default):
 
 > "Beads can run with or without a local database. Database mode buffers changes and requires `bd sync` to persist. No-database mode writes directly to JSONL (simpler, no sync needed). Which do you prefer? (default: database)"
 
-If user chooses **no database**, update the config:
-
 ```bash
-bd config set no_db true
+# Set explicitly so future sessions know the mode
+bd config set no_db false  # database mode (default)
+bd config set no_db true   # no-database mode
 ```
-
-Track the mode in the plan frontmatter (see below).
 
 ## When to Use
 
