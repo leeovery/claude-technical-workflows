@@ -6,96 +6,53 @@ Invoke the **technical-implementation** skill for this conversation.
 
 ## Instructions
 
-Follow these steps EXACTLY as written. Do not skip steps or combine them.
+Follow these steps to gather information, then hand off to the skill.
 
-Before beginning, discover existing work and gather necessary information.
-
-## Important
-
-Use simple, individual commands. Never combine multiple operations into bash loops or one-liners. Execute commands one at a time.
+Use simple, individual commands. Never combine multiple operations into bash loops or one-liners.
 
 ## Step 1: Discover Existing Plans
 
-Scan the codebase for plans:
+1. **Find plans**: Run `ls docs/workflow/planning/` to list plan files
 
-1. **Find plans**: Look in `docs/workflow/planning/`
-   - Run `ls docs/workflow/planning/` to list plan files
-   - Each file is named `{topic}.md`
+2. **Check plan format**: For each plan file, run `head -10 docs/workflow/planning/{topic}.md` to read the frontmatter
 
-2. **Check plan format**: For each plan file
-   - Run `head -10 docs/workflow/planning/{topic}.md` to read the frontmatter
-   - Note the `format:` field
-   - Do NOT use bash loops - run separate `head` commands for each topic
+**If no plans exist**, inform the user and suggest running `/start-planning` first.
 
-## Step 2: Check Prerequisites
+## Step 2: Present Options
 
-**If no plans exist:**
+Show what you found and ask which plan to implement.
 
-```
-No plans found in docs/workflow/planning/
+## Step 3: Check Environment Setup
 
-The implementation phase requires a completed plan. Please run /start-planning first to create an implementation plan from your specification.
-```
+After the user selects a plan:
 
-Stop here and wait for the user to acknowledge.
+1. Check if `docs/workflow/environment-setup.md` exists
+2. If it exists, follow the setup instructions
+3. If missing, ask: "Are there any environment setup instructions I should follow?"
 
-## Step 3: Present Options to User
+## Step 4: Ask About Scope
 
-Show what you found:
-
-```
-Plans found:
-  {topic-1}
-  {topic-2}
-
-Which plan would you like to implement?
-```
-
-## Step 4: Check Environment Setup
-
-After the user selects a plan, handle environment setup.
-
-**Read the environment setup reference**: Load `skills/technical-implementation/references/environment-setup.md` and follow its instructions.
-
-## Step 5: Ask About Scope
-
-Ask the user about implementation scope:
+Ask the user:
 
 ```
 How would you like to proceed?
 
 1. **Implement all phases** - Work through the entire plan sequentially
-2. **Implement specific phase** - Focus on one phase (e.g., "Phase 1")
+2. **Implement specific phase** - Focus on one phase
 3. **Implement specific task** - Focus on a single task
-
-Which approach?
 ```
 
-If they choose a specific phase or task, ask them to specify which one.
+## Step 5: Invoke Implementation Skill
 
-## Step 6: Invoke Implementation Skill
+Hand off to the technical-implementation skill with:
+- Plan path
+- Scope chosen
 
-Pass to the technical-implementation skill:
-- Plan: `docs/workflow/planning/{topic}.md`
-- Format: (from frontmatter)
-- Scope: (all phases | specific phase | specific task)
-- Environment setup: (completed | not needed)
-
-**Example handoff:**
+**Example:**
 ```
 Implementation session for: {topic}
 Plan: docs/workflow/planning/{topic}.md
-Format: {format}
 Scope: All phases
 
-Environment setup: Completed (or: Not needed)
-
 Begin implementation using the technical-implementation skill.
-Reference: plan-sources.md for reading the plan, tdd-workflow.md for execution.
 ```
-
-## Notes
-
-- Ask questions clearly and wait for responses before proceeding
-- Execute environment setup before starting implementation
-- Commit frequently after each passing test
