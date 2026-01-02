@@ -38,9 +38,9 @@ You're at step 5. Execute the plan. Don't re-debate decisions.
    See **[environment-setup.md](references/environment-setup.md)** for details.
 
 2. **Read the plan** from `docs/workflow/planning/{topic}.md`
-   - Check the `format` field in frontmatter to determine how to read tasks
-
-   See **[plan-sources.md](references/plan-sources.md)** for details on each format.
+   - Check the `format` field in frontmatter
+   - Load the output adapter: `skills/technical-planning/references/output-{format}.md`
+   - Follow the **Implementation** section for how to read tasks and update progress
 
 3. **For each phase**:
    - Announce phase start
@@ -150,7 +150,6 @@ Task: Phase 2, Task 1
 ## References
 
 - **[environment-setup.md](references/environment-setup.md)** - Environment setup before implementation
-- **[plan-sources.md](references/plan-sources.md)** - Reading plans from different formats (markdown, Linear, Backlog.md, Beads)
 - **[plan-execution.md](references/plan-execution.md)** - Following plans, phase verification, hierarchy
 - **[tdd-workflow.md](references/tdd-workflow.md)** - TDD cycle, test derivation, when tests can change
 - **[code-quality.md](references/code-quality.md)** - DRY, SOLID, complexity, YAGNI
