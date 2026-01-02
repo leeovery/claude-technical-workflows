@@ -17,6 +17,22 @@ Backlog.md is a CLI + web Kanban tool that:
 
 See: https://github.com/MrLesk/Backlog.md
 
+## Setup
+
+Install via npm:
+
+```bash
+npm install -g backlog-md
+```
+
+Initialize in your project:
+
+```bash
+backlog init "Project Name"
+```
+
+For MCP integration, configure the Backlog.md MCP server in Claude Code settings.
+
 ## Output Location
 
 For Backlog.md integration, use the project's `backlog/` directory:

@@ -6,10 +6,11 @@
 
 Use this output format when you want **Linear as the source of truth** for plan management. The user can update tasks directly in Linear's UI, and implementation will query Linear for the current state.
 
-## Prerequisites
+## Setup
 
-- Linear MCP server must be configured
-- User must specify which Linear team to use
+Requires the Linear MCP server to be configured in Claude Code.
+
+Check if Linear MCP is available by looking for Linear tools. If not configured, inform the user that Linear MCP is required for this format.
 
 ## Linear Structure Mapping
 

@@ -6,6 +6,10 @@
 
 Use this format for simple features or when you want everything in a single version-controlled file.
 
+## Setup
+
+No external tools required. This format uses plain markdown files stored in the repository.
+
 ## Output Location
 
 ```

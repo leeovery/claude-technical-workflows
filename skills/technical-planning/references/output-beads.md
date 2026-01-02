@@ -19,12 +19,7 @@ Beads (`bd`) is an issue tracker built specifically for AI agents:
 
 See: https://github.com/steveyegge/beads
 
-## Prerequisites
-
-- Beads CLI installed
-- Repository initialized with `bd init` (human setup step)
-
-### Installing Beads
+## Setup
 
 Install beads using the official install script:
 
@@ -33,6 +28,12 @@ curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/instal
 ```
 
 This works on local machines and Claude Code on the web. The script automatically detects the platform and installs the correct binary.
+
+Initialize in your project:
+
+```bash
+bd init
+```
 
 ## When to Use
 
