@@ -186,14 +186,25 @@ project/
 │   └── planning/{topic}.md        # Phase 4 output (format: backlog-md - pointer)
 ```
 
-## Implementation Reading
+## Implementation
 
-Implementation will:
-1. Read `planning/{topic}.md`, see `format: backlog-md`
-2. Query backlog via MCP or read `backlog/` directory
-3. Filter tasks by label (e.g., `phase-1`)
+### Reading Plans
+
+1. If Backlog.md MCP is available, query tasks via MCP
+2. Otherwise, read task files from `backlog/` directory
+3. Filter tasks by label (e.g., `phase-1`) or naming convention
 4. Process in priority order (high → medium → low)
-5. Update task status to "Done" when complete
+
+### Updating Progress
+
+- Update task status to "In Progress" when starting
+- Check off acceptance criteria items in task file
+- Update status to "Done" when complete
+- Backlog.md CLI auto-moves to completed folder
+
+### Fallback
+
+Can read `backlog/` files directly if MCP unavailable.
 
 ## CLI Commands Reference
 

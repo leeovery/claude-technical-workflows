@@ -187,23 +187,23 @@ Linear:
     └── Issue: Task 3 [label: phase-2]
 ```
 
-Implementation will read `planning/{topic}.md`, see `format: linear`, and query Linear via MCP.
+## Implementation
 
-## Fallback Handling
+### Reading Plans
 
-If Linear MCP is unavailable during implementation:
-- Implementation should inform the user
+1. Extract `project_id` from frontmatter
+2. Query Linear MCP for project issues
+3. Filter issues by phase label (e.g., `phase-1`, `phase-2`)
+4. Process in phase order
+
+### Updating Progress
+
+- Update issue status in Linear via MCP after each task
+- User sees real-time progress in Linear UI
+
+### Fallback
+
+If Linear MCP is unavailable:
+- Inform the user
 - Cannot proceed without MCP access
 - Suggest checking MCP configuration or switching to local markdown
-
-## MCP Tools Used
-
-Planning uses these Linear MCP capabilities:
-- Create project
-- Create issue
-- Create/assign labels
-
-Implementation uses:
-- Query project issues
-- Filter issues by label
-- Update issue status

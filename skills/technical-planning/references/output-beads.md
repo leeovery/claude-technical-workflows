@@ -192,16 +192,31 @@ In the task body:
 - Per-user or per-IP?
 ```
 
-## Implementation Reading
+## Implementation
 
-Implementation will:
-1. Read `planning/{topic}.md`, see `format: beads`
+### Reading Plans
+
+1. Extract `epic` ID from frontmatter
 2. Run `bd ready` to get unblocked tasks
-3. Pick highest priority ready task
-4. Execute task (TDD cycle)
-5. Close task: `bd close bd-{id} "Implemented with tests"`
-6. Repeat until `bd ready` returns empty
-7. **Critical**: Run `bd sync` before session end
+3. View task details with `bd show bd-{id}`
+4. Process by priority (P0 → P1 → P2 → P3)
+5. Respect dependency graph - only work on ready tasks
+
+### Updating Progress
+
+- Close tasks with `bd close bd-{id} "reason"` when complete
+- Include task ID in commit messages: `git commit -m "message (bd-{id})"`
+- **Critical**: Run `bd sync` at session end to persist changes
+- Use `bd ready` to identify next unblocked task
+
+### Fallback
+
+If `bd` CLI is unavailable (common in ephemeral environments like Claude Code on the web):
+```bash
+curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
+```
+
+On local systems, beads may already be installed via Homebrew - always check first.
 
 ## Beads Workflow Commands
 
@@ -246,18 +261,6 @@ project/
 │   ├── specification/{topic}.md   # Phase 3 output
 │   └── planning/{topic}.md        # Phase 4 output (format: beads)
 ```
-
-## Fallback Handling
-
-If beads CLI is unavailable during implementation:
-1. Check if `bd` command exists: `which bd`
-2. If not installed (common in ephemeral environments like Claude Code on the web):
-   ```bash
-   curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
-   ```
-3. If installation fails, suggest switching to local markdown format as alternative
-
-**Note**: On local systems, beads may already be installed via Homebrew. Always check before installing.
 
 ## Priority Mapping
 

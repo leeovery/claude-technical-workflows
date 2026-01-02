@@ -163,4 +163,15 @@ docs/workflow/
 └── planning/{topic}.md        # Phase 4 output (format: local-markdown)
 ```
 
-Implementation reads `planning/{topic}.md`, sees `format: local-markdown`, and executes directly from file content.
+## Implementation
+
+### Reading Plans
+
+1. Read the plan file - all content is inline
+2. Phases and tasks are in the document
+3. Follow phase order as written
+
+### Updating Progress
+
+- Check off acceptance criteria in the plan file
+- Update phase status as phases complete
