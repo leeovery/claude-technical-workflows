@@ -31,11 +31,7 @@ The specification is the **sole source of truth**. It contains validated, approv
 
 **Load**: [formal-planning.md](references/formal-planning.md)
 
-**Then load output adapter** (ask user which format):
-- [output-local-markdown.md](references/output-local-markdown.md) - Single `{topic}.md` file (default)
-- [output-linear.md](references/output-linear.md) - Linear project
-- [output-backlog-md.md](references/output-backlog-md.md) - Backlog.md tasks
-- [output-beads.md](references/output-beads.md) - Beads graph tracker (agent-optimized)
+**Choose output format**: Ask user which format, then load the appropriate output adapter. See **[output-formats.md](references/output-formats.md)** for available formats.
 
 **Output**: Implementation plan in chosen format
 

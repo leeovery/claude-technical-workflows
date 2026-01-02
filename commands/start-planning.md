@@ -62,85 +62,27 @@ Ask: **Which specification would you like to plan?**
 
 Ask: **Where should this plan live?**
 
-1. **Local Markdown** - Simple `{topic}.md` file in `docs/workflow/planning/`
-   - Best for: Small features, solo work, quick iterations
-   - Everything in one version-controlled file
-
-2. **Linear** - Project with labeled issues (requires MCP)
-   - Best for: Team collaboration, visual tracking, larger features
-   - Update tasks directly in Linear's UI
-   - Phases denoted via labels (e.g., `phase-1`, `phase-2`)
-   - Requires: Linear MCP server configured
-
-3. **Backlog.md** - Task files in `backlog/` directory with Kanban UI
-   - Best for: Local visual tracking with AI/MCP support
-   - Terminal and web Kanban views
-   - Git-native with auto-commit support
-
-4. **Beads** - Git-backed graph issue tracker for AI agents
-   - Best for: Complex dependency graphs, multi-session implementations
-   - Native dependency tracking with `bd ready` for unblocked work
-   - Hierarchical: epics → phases → tasks
-   - Requires: Beads CLI installed (`bd`)
-
-**If Linear or Backlog.md selected**: Check if MCP is available. If not, inform the user and suggest alternatives.
-
-**If Beads selected**: Check if `bd` command is available. If not, offer to install it:
-
-```bash
-curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
-```
-
-This works on both local Claude Code and Claude Code on the web.
+Load **[output-formats.md](skills/technical-planning/references/output-formats.md)** and present the available formats to help the user choose. Then load the corresponding output adapter for that format's setup requirements.
 
 ## Step 5: Gather Additional Context
 
-**For Linear destination**:
-- Which team should own this project?
-
-**For all destinations**:
 - Any additional context or priorities to consider?
 - Any constraints since the specification was completed?
 
 ## Step 6: Invoke Planning Skill
 
-Pass to the technical-planning skill:
-- Specification: `docs/workflow/specification/{topic}.md`
-- Output: `docs/workflow/planning/{topic}.md`
-- Output destination: (local-markdown | linear | backlog-md | beads)
+Pass to the technical-planning skill with:
+- Specification path
+- Output format chosen
 - Additional context gathered
 
 **Example handoff:**
 ```
 Planning session for: {topic}
 Specification: docs/workflow/specification/{topic}.md
-Output destination: Local Markdown
-Output path: docs/workflow/planning/{topic}.md
+Output format: {format}
 
 Begin planning using the technical-planning skill.
-Reference: formal-planning.md, then output-local-markdown.md
-```
-
-**Example handoff for Linear:**
-```
-Planning session for: {topic}
-Specification: docs/workflow/specification/{topic}.md
-Output destination: Linear
-Team: Engineering
-
-Begin planning using the technical-planning skill.
-Reference: formal-planning.md, then output-linear.md
-```
-
-**Example handoff for Beads:**
-```
-Planning session for: {topic}
-Specification: docs/workflow/specification/{topic}.md
-Output destination: Beads
-Output path: docs/workflow/planning/{topic}.md
-
-Begin planning using the technical-planning skill.
-Reference: formal-planning.md, then output-beads.md
 ```
 
 ## Notes

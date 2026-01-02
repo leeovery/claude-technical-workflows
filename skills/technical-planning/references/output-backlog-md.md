@@ -17,6 +17,22 @@ Backlog.md is a CLI + web Kanban tool that:
 
 See: https://github.com/MrLesk/Backlog.md
 
+## Setup
+
+Install via npm:
+
+```bash
+npm install -g backlog-md
+```
+
+Initialize in your project:
+
+```bash
+backlog init "Project Name"
+```
+
+For MCP integration, configure the Backlog.md MCP server in Claude Code settings.
+
 ## Output Location
 
 For Backlog.md integration, use the project's `backlog/` directory:
@@ -69,12 +85,14 @@ Tasks are organized with labels/priorities:
 
 ## Key Decisions
 
-[Summary of key decisions from discussion]
+[Summary of key decisions from specification]
 ```
 
 ### Task File Format
 
 Each task is a separate file: `backlog/task-{id} - {title}.md`
+
+Tasks should be **fully self-contained** - include all context so humans and agents can execute without referencing other files.
 
 ```markdown
 ---
@@ -85,9 +103,11 @@ labels: [phase-1, api]
 
 # {Task Title}
 
-{Brief description of what this task accomplishes}
+## Goal
 
-## Plan
+{What this task accomplishes and why - include rationale from specification}
+
+## Implementation
 
 {The "Do" - specific files, methods, approach}
 
@@ -99,10 +119,15 @@ labels: [phase-1, api]
 4. [ ] Tests passing
 5. [ ] Committed
 
-## Notes
+## Edge Cases
 
-- Specification: `docs/workflow/specification/{topic}.md`
-- Related decisions: [link if applicable]
+{Specific edge cases for this task}
+
+## Context
+
+{Relevant decisions and constraints from specification}
+
+Specification reference: `docs/workflow/specification/{topic}.md` (for ambiguity resolution)
 ```
 
 ### Frontmatter Fields
@@ -124,7 +149,7 @@ When creating tasks with incomplete information:
 3. **Note what's missing** in task body - be specific
 4. **Continue planning** - circle back later
 
-This allows iterative refinement. Create all tasks, identify gaps, circle back to discussion if needed, then update tasks with missing detail.
+This allows iterative refinement. Create all tasks, identify gaps, circle back to specification if needed, then update tasks with missing detail.
 
 ## Phase Representation
 
@@ -134,13 +159,13 @@ Since Backlog.md doesn't have native milestones, represent phases via:
 2. **Task naming**: Prefix with phase number `task-X - [P1] Task name.md`
 3. **Priority**: Foundation tasks = high, refinement = low
 
-## When to Use
+## Benefits
 
-- When you want visual Kanban tracking with MCP support
-- Solo or small team development
-- Everything stays local and version-controlled
-- AI-native workflow (Claude Code integration)
-- Projects already using Backlog.md
+- Visual Kanban board in terminal or web UI
+- Local and fully version-controlled
+- MCP integration for Claude Code
+- Auto-commit on task changes
+- Individual task files for easy editing
 
 ## MCP Integration
 
@@ -170,14 +195,25 @@ project/
 │   └── planning/{topic}.md        # Phase 4 output (format: backlog-md - pointer)
 ```
 
-## Implementation Reading
+## Implementation
 
-Implementation will:
-1. Read `planning/{topic}.md`, see `format: backlog-md`
-2. Query backlog via MCP or read `backlog/` directory
-3. Filter tasks by label (e.g., `phase-1`)
+### Reading Plans
+
+1. If Backlog.md MCP is available, query tasks via MCP
+2. Otherwise, read task files from `backlog/` directory
+3. Filter tasks by label (e.g., `phase-1`) or naming convention
 4. Process in priority order (high → medium → low)
-5. Update task status to "Done" when complete
+
+### Updating Progress
+
+- Update task status to "In Progress" when starting
+- Check off acceptance criteria items in task file
+- Update status to "Done" when complete
+- Backlog.md CLI auto-moves to completed folder
+
+### Fallback
+
+Can read `backlog/` files directly if MCP unavailable.
 
 ## CLI Commands Reference
 

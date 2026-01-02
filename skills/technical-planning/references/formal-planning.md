@@ -8,12 +8,7 @@ You are creating the formal implementation plan from the specification.
 
 ## Before You Begin
 
-**Confirm output format with user.** Plans can be stored as:
-- **Local Markdown** → See [output-local-markdown.md](output-local-markdown.md)
-- **Linear** → See [output-linear.md](output-linear.md)
-- **Backlog.md** → See [output-backlog-md.md](output-backlog-md.md)
-
-If you don't know which format, ask.
+**Confirm output format with user.** Ask which format they want, then load the appropriate output adapter from the main skill file. If you don't know which format, ask.
 
 ## The Planning Process
 
@@ -120,7 +115,4 @@ Context refresh = memory loss. Uncommitted work = lost work.
 
 ## Output
 
-Load the appropriate output adapter for format-specific structure:
-- [output-local-markdown.md](output-local-markdown.md) - Single `{topic}.md` file
-- [output-linear.md](output-linear.md) - Linear project
-- [output-backlog-md.md](output-backlog-md.md) - Backlog.md tasks
+Load the appropriate output adapter (linked from the main skill file) for format-specific structure and templates.

@@ -14,10 +14,8 @@
 ## Summary
 [One paragraph overall assessment]
 
-## Discussion Compliance
-- [ ] Decision 1 followed: [yes/no + note]
-- [ ] Decision 2 followed: [yes/no + note]
-- [ ] Edge cases handled: [yes/no + note]
+## Specification Compliance
+[Implementation aligns with specification / Note any deviations]
 
 ## Plan Completion
 - [ ] Phase 1 acceptance criteria met

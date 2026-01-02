@@ -19,56 +19,60 @@ Beads (`bd`) is an issue tracker built specifically for AI agents:
 
 See: https://github.com/steveyegge/beads
 
-## Prerequisites
+## Setup
 
-- Beads CLI installed (`npm install -g @beads/bd` or via Homebrew/Go)
-- Repository initialized with `bd init` (human setup step)
+### 1. Check Installation
 
-### Claude Code on the Web
+Check if beads is installed (required every session in ephemeral environments):
 
-For Claude Code on the web where `bd` isn't pre-installed, set up a session start hook:
+```bash
+which bd
+```
 
-1. Create the hooks directory:
-   ```bash
-   mkdir -p .claude/hooks
-   ```
+- **Local systems**: May already be installed via Homebrew
+- **Ephemeral environments** (Claude Code on web): Needs installation each session
 
-2. Copy the install script from this package:
-   ```bash
-   cp hooks/install-beads.sh .claude/hooks/install-beads.sh
-   chmod +x .claude/hooks/install-beads.sh
-   ```
+If not installed:
+```bash
+curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
+```
 
-3. Add to `.claude/settings.json`:
-   ```json
-   {
-     "hooks": {
-       "SessionStart": [
-         {
-           "type": "command",
-           "command": ".claude/hooks/install-beads.sh"
-         }
-       ]
-     }
-   }
-   ```
+### 2. Check If Project Initialized
 
-The hook script is available at `hooks/install-beads.sh` in this package. It automatically downloads and installs the correct beads binary for the platform.
+Check if beads is already set up in this project:
 
-## When to Use
+```bash
+ls .beads/config.yaml
+```
 
-Choose beads when:
-- Complex dependency graphs between tasks
-- Multi-session implementations needing context preservation
-- Multiple agents may work on the project
-- You need `bd ready` to identify actionable work
-- Long-horizon task management
+**If `.beads/` exists**: Project is already initialized - skip to using beads.
 
-Avoid beads when:
-- Simple linear features (use local markdown)
-- Team collaboration with non-AI members (use Linear)
-- Human readability is paramount (JSONL is less readable)
-- Single-session implementations
+**If not initialized**: Continue with steps 3 and 4.
+
+### 3. Choose Database Mode
+
+Beads supports two modes. Ask the user:
+
+> "Beads can run with or without a local database. Database mode uses a daemon that auto-syncs to JSONL. No-database mode writes directly to JSONL. Which do you prefer? (default: database)"
+
+### 4. Initialize
+
+Based on the user's choice:
+
+```bash
+bd init --quiet          # database mode (default)
+bd init --quiet --no-db  # no-database mode
+```
+
+This creates `.beads/config.yaml` with the appropriate `no-db` setting.
+
+## Benefits
+
+- Complex dependency graphs with native blocking relationships
+- Multi-session context preservation via semantic summarization
+- Multi-agent coordination support
+- `bd ready` identifies actionable unblocked work
+- Git-backed and version-controlled
 
 ## Beads Structure Mapping
 
@@ -118,10 +122,12 @@ For each task, create under the appropriate phase:
 bd create "{Task Name}" -p 1 --parent bd-a3f8.1
 ```
 
+Tasks should be **fully self-contained** - include all context so humans and agents can execute without referencing other files.
+
 Task body should include:
 ```
 ## Goal
-{What this task accomplishes}
+{What this task accomplishes and why - include rationale from specification}
 
 ## Implementation
 {Specific files, methods, approach}
@@ -130,8 +136,13 @@ Task body should include:
 - `it does expected behavior`
 - `it handles edge case`
 
-## Specification
-docs/workflow/specification/{topic}.md
+## Edge Cases
+{Specific edge cases for this task}
+
+## Context
+{Relevant decisions and constraints from specification}
+
+Specification reference: docs/workflow/specification/{topic}.md (for ambiguity resolution)
 ```
 
 ### 4. Add Dependencies
@@ -172,7 +183,6 @@ This plan is managed via Beads. Tasks are stored in `.beads/` and tracked as a d
 2. Query `bd ready` for unblocked tasks
 3. Work through tasks respecting dependencies
 4. Close tasks with `bd close bd-{id} "reason"`
-5. Sync with `bd sync` at session end
 
 ## Key Decisions
 
@@ -212,16 +222,28 @@ In the task body:
 - Per-user or per-IP?
 ```
 
-## Implementation Reading
+## Implementation
 
-Implementation will:
-1. Read `planning/{topic}.md`, see `format: beads`
-2. Run `bd ready` to get unblocked tasks
-3. Pick highest priority ready task
-4. Execute task (TDD cycle)
-5. Close task: `bd close bd-{id} "Implemented with tests"`
-6. Repeat until `bd ready` returns empty
-7. **Critical**: Run `bd sync` before session end
+### Reading Plans
+
+1. Extract `epic` ID from frontmatter
+2. Check `.beads/config.yaml` for `no-db` setting
+3. Run `bd ready` to get unblocked tasks
+4. View task details with `bd show bd-{id}`
+5. Process by priority (P0 → P1 → P2 → P3)
+6. Respect dependency graph - only work on ready tasks
+
+### Updating Progress
+
+- Close tasks with `bd close bd-{id} "reason"` when complete
+- Include task ID in commit messages: `git commit -m "message (bd-{id})"`
+- **Database mode**: Run `bd sync` before committing or ending session to ensure changes are persisted
+- **No-db mode**: No sync needed - changes write directly to JSONL
+- Use `bd ready` to identify next unblocked task
+
+### Fallback
+
+If `bd` CLI is unavailable, follow the installation steps in the **Setup** section above.
 
 ## Beads Workflow Commands
 
@@ -232,16 +254,17 @@ Implementation will:
 | `bd show bd-{id}` | View task details |
 | `bd close bd-{id} "reason"` | Complete a task |
 | `bd dep add child parent` | Add dependency |
-| `bd sync` | Commit and push changes |
+| `bd sync` | Force immediate sync to JSONL (database mode only) |
 
-## Sync Protocol
+## Sync Protocol (Database Mode Only)
 
-**Critical**: Implementation must run `bd sync` at session end to:
-- Export pending changes to JSONL
-- Commit to git
-- Push to remote
+In database mode, a daemon auto-syncs changes to JSONL with a ~5 second debounce. Run `bd sync` before committing or ending a session to ensure all pending changes are persisted:
 
-Without sync, changes stay in a 30-second debounce window and may not persist.
+```bash
+bd sync
+```
+
+**Skip this entirely if `no-db: true`** - changes write directly to JSONL, no sync needed.
 
 ## Commit Message Convention
 
@@ -266,13 +289,6 @@ project/
 │   ├── specification/{topic}.md   # Phase 3 output
 │   └── planning/{topic}.md        # Phase 4 output (format: beads)
 ```
-
-## Fallback Handling
-
-If beads CLI is unavailable during implementation:
-- Check if `bd` command exists
-- If not, inform user to install beads
-- Suggest switching to local markdown format as alternative
 
 ## Priority Mapping
 

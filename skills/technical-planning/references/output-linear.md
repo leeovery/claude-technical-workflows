@@ -6,10 +6,13 @@
 
 Use this output format when you want **Linear as the source of truth** for plan management. The user can update tasks directly in Linear's UI, and implementation will query Linear for the current state.
 
-## Prerequisites
+## Setup
 
-- Linear MCP server must be configured
-- User must specify which Linear team to use
+Requires the Linear MCP server to be configured in Claude Code.
+
+Check if Linear MCP is available by looking for Linear tools. If not configured, inform the user that Linear MCP is required for this format.
+
+Ask the user: **Which team should own this project?**
 
 ## Linear Structure Mapping
 
@@ -25,8 +28,8 @@ Use this output format when you want **Linear as the source of truth** for plan 
 
 Via MCP, create a project with:
 
-- **Name**: Match the discussion topic name
-- **Description**: Brief summary + link to discussion file
+- **Name**: Match the specification topic name
+- **Description**: Brief summary + link to specification file
 - **Team**: As specified by user
 
 ### 2. Create Labels for Phases
@@ -86,14 +89,14 @@ Specification: `docs/workflow/specification/{topic}.md`
 
 ### Using `needs-info` Label
 
-When creating issues, if something is unclear or missing from the discussion:
+When creating issues, if something is unclear or missing from the specification:
 
 1. **Create the issue anyway** - don't block planning
 2. **Apply `needs-info` label** - makes gaps visible
 3. **Note what's missing** in description - be specific about what needs clarifying
 4. **Continue planning** - don't stop and circle back
 
-This allows iterative refinement. Create all issues, identify gaps, circle back to discussion if needed, then update issues with missing detail. Plans don't have to be perfect on first pass.
+This allows iterative refinement. Create all issues, identify gaps, circle back to specification if needed, then update issues with missing detail. Plans don't have to be perfect on first pass.
 
 ### 4. Create Local Plan File
 
@@ -130,7 +133,7 @@ This plan is managed in Linear. The source of truth for tasks and progress is th
 
 ## Key Decisions
 
-[Summary of key decisions from discussion - for quick reference]
+[Summary of key decisions from specification - for quick reference]
 ```
 
 ## Frontmatter
@@ -148,26 +151,26 @@ team: Engineering
 
 ## Issue Content Guidelines
 
-Issues should be **self-contained for execution**:
+Issues should be **fully self-contained**. Include all context directly so humans and agents can execute without referencing other files.
 
-**Include directly**:
+**Include in each issue**:
+- Goal and rationale (the "why" from the specification)
 - What to implement (specific files/methods)
 - Test names (micro acceptance)
 - Edge cases for this specific task
+- Relevant decisions and constraints
 - Any code examples for complex patterns
 
-**Link to (don't copy)**:
-- Discussion document at `docs/workflow/discussion/{topic}.md` (for "why" context)
-- Specific decision sections if particularly relevant
+**Specification reference**: The specification at `docs/workflow/specification/{topic}.md` remains available for resolving ambiguity or getting additional context, but issues should contain all information needed for execution.
 
-The goal: anyone (Claude or human) could pick up the issue and execute it.
+The goal: anyone (Claude or human) could pick up the issue and execute it without opening another document.
 
-## When to Use
+## Benefits
 
-- Larger features needing visual tracking
-- Team collaboration
-- When you want to update plans without editing markdown
-- Projects already using Linear for issue tracking
+- Visual tracking with real-time progress updates
+- Team collaboration with shared visibility
+- Update tasks directly in Linear UI without editing markdown
+- Integrates with existing Linear workflows
 
 ## Resulting Structure
 
@@ -186,23 +189,23 @@ Linear:
     └── Issue: Task 3 [label: phase-2]
 ```
 
-Implementation will read `planning/{topic}.md`, see `format: linear`, and query Linear via MCP.
+## Implementation
 
-## Fallback Handling
+### Reading Plans
 
-If Linear MCP is unavailable during implementation:
-- Implementation should inform the user
+1. Extract `project_id` from frontmatter
+2. Query Linear MCP for project issues
+3. Filter issues by phase label (e.g., `phase-1`, `phase-2`)
+4. Process in phase order
+
+### Updating Progress
+
+- Update issue status in Linear via MCP after each task
+- User sees real-time progress in Linear UI
+
+### Fallback
+
+If Linear MCP is unavailable:
+- Inform the user
 - Cannot proceed without MCP access
 - Suggest checking MCP configuration or switching to local markdown
-
-## MCP Tools Used
-
-Planning uses these Linear MCP capabilities:
-- Create project
-- Create issue
-- Create/assign labels
-
-Implementation uses:
-- Query project issues
-- Filter issues by label
-- Update issue status

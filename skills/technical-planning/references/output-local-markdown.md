@@ -6,6 +6,18 @@
 
 Use this format for simple features or when you want everything in a single version-controlled file.
 
+## Benefits
+
+- No external tools or dependencies required
+- Everything in a single version-controlled file
+- Human-readable and easy to edit
+- Works offline with any text editor
+- Simplest setup - just create a markdown file
+
+## Setup
+
+No external tools required. This format uses plain markdown files stored in the repository.
+
 ## Output Location
 
 ```
@@ -38,7 +50,7 @@ format: local-markdown
 - Measurable outcome 1
 - Measurable outcome 2
 
-**Key Decisions** (from discussion):
+**Key Decisions** (from specification):
 - Decision 1: Rationale
 - Decision 2: Rationale
 
@@ -96,11 +108,11 @@ Each task is a single TDD cycle: write test → implement → commit.
 
 ## Edge Cases
 
-Map edge cases from discussion to specific tasks:
+Map edge cases from specification to specific tasks:
 
 | Edge Case | Solution | Phase.Task | Test |
 |-----------|----------|------------|------|
-| {From discussion} | How handled | 1.2 | `"it handles X"` |
+| {From specification} | How handled | 1.2 | `"it handles X"` |
 
 ## Testing Strategy
 
@@ -126,7 +138,7 @@ Triggers and steps
 
 | Date | Change |
 |------|--------|
-| YYYY-MM-DD | Created from discussion |
+| YYYY-MM-DD | Created from specification |
 ```
 
 ## Frontmatter
@@ -159,4 +171,15 @@ docs/workflow/
 └── planning/{topic}.md        # Phase 4 output (format: local-markdown)
 ```
 
-Implementation reads `planning/{topic}.md`, sees `format: local-markdown`, and executes directly from file content.
+## Implementation
+
+### Reading Plans
+
+1. Read the plan file - all content is inline
+2. Phases and tasks are in the document
+3. Follow phase order as written
+
+### Updating Progress
+
+- Check off acceptance criteria in the plan file
+- Update phase status as phases complete

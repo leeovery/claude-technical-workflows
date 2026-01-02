@@ -25,22 +25,24 @@ You're at step 5. Execute the plan. Don't re-debate decisions.
 1. **No code before tests** - Write the failing test first. Always.
 2. **No test changes to pass** - If code doesn't pass, fix the code. Tests can only be fixed if genuinely broken or poorly designed, never to accommodate broken code.
 3. **No scope expansion** - If it's not in the plan, don't build it.
-4. **No assumptions** - Uncertain? Check discussion doc. Still uncertain? Ask.
+4. **No assumptions** - Uncertain? Check specification. Still uncertain? Stop and ask.
 5. **Commit after green** - Every passing test = commit point.
 
 ## Workflow
 
-### With a Plan
+1. **Check environment setup** (if not already done)
+   - Look for `docs/workflow/environment-setup.md`
+   - If exists, follow the setup instructions before proceeding
+   - If missing, ask: "Are there any environment setup instructions I should follow?"
 
-1. **Read the plan** from `docs/workflow/planning/{topic}.md`
-   - Check the `format` field in frontmatter:
-     - `local-markdown` → content is in this file
-     - `linear` → query Linear via MCP using frontmatter project_id
-     - `backlog-md` → query Backlog.md via MCP or read `backlog/` directory
+   See **[environment-setup.md](references/environment-setup.md)** for details.
 
-   See **[plan-sources.md](references/plan-sources.md)** for details on each format.
+2. **Read the plan** from `docs/workflow/planning/{topic}.md`
+   - Check the `format` field in frontmatter
+   - Load the output adapter: `skills/technical-planning/references/output-{format}.md`
+   - Follow the **Implementation** section for how to read tasks and update progress
 
-2. **For each phase**:
+3. **For each phase**:
    - Announce phase start
    - Review phase acceptance criteria
    - For each task:
@@ -51,21 +53,8 @@ You're at step 5. Execute the plan. Don't re-debate decisions.
      - Commit
    - Verify all phase acceptance criteria met
    - **Ask user before proceeding to next phase**
-3. **Reference discussion** when rationale unclear
 
-### Without a Plan (Ad Hoc)
-
-When implementing without a formal plan:
-
-1. Clarify the requirement (ask if unclear)
-2. Identify what tests should pass when done
-3. Write failing test
-4. Implement to pass
-5. Refactor when green
-6. Commit with descriptive message
-7. Repeat for next requirement
-
-Apply quality guidelines from [code-quality.md](references/code-quality.md).
+4. **Reference specification** when rationale unclear
 
 ## Progress Announcements
 
@@ -79,16 +68,16 @@ Keep user informed of progress:
 ✅ Phase 2 complete. Ready for Phase 3?
 ```
 
-## When to Reference Discussion
+## When to Reference Specification
 
-Check the discussion doc (`docs/workflow/discussion/{topic}.md`) when:
+Check the specification (`docs/workflow/specification/{topic}.md`) when:
 
 - Task rationale is unclear
 - Multiple valid approaches exist
 - Edge case handling not specified in plan
 - You need the "why" behind a decision
 
-Don't re-debate. The discussion captured the decision. Follow it.
+The specification is the source of truth. Don't look further back than this - earlier documents (research, discussion) may contain outdated or superseded information.
 
 ## Project-Specific Conventions
 
@@ -160,7 +149,7 @@ Task: Phase 2, Task 1
 
 ## References
 
-- **[plan-sources.md](references/plan-sources.md)** - Reading plans from different formats (markdown, Linear, Backlog.md)
+- **[environment-setup.md](references/environment-setup.md)** - Environment setup before implementation
 - **[plan-execution.md](references/plan-execution.md)** - Following plans, phase verification, hierarchy
 - **[tdd-workflow.md](references/tdd-workflow.md)** - TDD cycle, test derivation, when tests can change
 - **[code-quality.md](references/code-quality.md)** - DRY, SOLID, complexity, YAGNI
