@@ -64,8 +64,6 @@ bd init --quiet          # database mode (default) - requires bd sync
 bd init --quiet --no-db  # no-database mode - writes directly to JSONL
 ```
 
-The `--quiet` flag skips interactive prompts.
-
 This creates `.beads/config.yaml` with the appropriate `no-db` setting.
 
 ## When to Use
