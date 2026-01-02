@@ -28,8 +28,8 @@ Ask the user: **Which team should own this project?**
 
 Via MCP, create a project with:
 
-- **Name**: Match the discussion topic name
-- **Description**: Brief summary + link to discussion file
+- **Name**: Match the specification topic name
+- **Description**: Brief summary + link to specification file
 - **Team**: As specified by user
 
 ### 2. Create Labels for Phases
@@ -89,14 +89,14 @@ Specification: `docs/workflow/specification/{topic}.md`
 
 ### Using `needs-info` Label
 
-When creating issues, if something is unclear or missing from the discussion:
+When creating issues, if something is unclear or missing from the specification:
 
 1. **Create the issue anyway** - don't block planning
 2. **Apply `needs-info` label** - makes gaps visible
 3. **Note what's missing** in description - be specific about what needs clarifying
 4. **Continue planning** - don't stop and circle back
 
-This allows iterative refinement. Create all issues, identify gaps, circle back to discussion if needed, then update issues with missing detail. Plans don't have to be perfect on first pass.
+This allows iterative refinement. Create all issues, identify gaps, circle back to specification if needed, then update issues with missing detail. Plans don't have to be perfect on first pass.
 
 ### 4. Create Local Plan File
 
@@ -133,7 +133,7 @@ This plan is managed in Linear. The source of truth for tasks and progress is th
 
 ## Key Decisions
 
-[Summary of key decisions from discussion - for quick reference]
+[Summary of key decisions from specification - for quick reference]
 ```
 
 ## Frontmatter
@@ -160,7 +160,7 @@ Issues should be **self-contained for execution**:
 - Any code examples for complex patterns
 
 **Link to (don't copy)**:
-- Discussion document at `docs/workflow/discussion/{topic}.md` (for "why" context)
+- Specification document at `docs/workflow/specification/{topic}.md` (for "why" context)
 - Specific decision sections if particularly relevant
 
 The goal: anyone (Claude or human) could pick up the issue and execute it.

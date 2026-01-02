@@ -50,7 +50,7 @@ format: local-markdown
 - Measurable outcome 1
 - Measurable outcome 2
 
-**Key Decisions** (from discussion):
+**Key Decisions** (from specification):
 - Decision 1: Rationale
 - Decision 2: Rationale
 
@@ -108,11 +108,11 @@ Each task is a single TDD cycle: write test → implement → commit.
 
 ## Edge Cases
 
-Map edge cases from discussion to specific tasks:
+Map edge cases from specification to specific tasks:
 
 | Edge Case | Solution | Phase.Task | Test |
 |-----------|----------|------------|------|
-| {From discussion} | How handled | 1.2 | `"it handles X"` |
+| {From specification} | How handled | 1.2 | `"it handles X"` |
 
 ## Testing Strategy
 
@@ -138,7 +138,7 @@ Triggers and steps
 
 | Date | Change |
 |------|--------|
-| YYYY-MM-DD | Created from discussion |
+| YYYY-MM-DD | Created from specification |
 ```
 
 ## Frontmatter
