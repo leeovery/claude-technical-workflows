@@ -26,7 +26,7 @@ See: https://github.com/steveyegge/beads
 Check if beads is installed (required every session in ephemeral environments):
 
 ```bash
-bd --version
+which bd
 ```
 
 - **Local systems**: May already be installed via Homebrew
