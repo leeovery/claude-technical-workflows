@@ -53,15 +53,15 @@ ls .beads/config.yaml
 
 Beads supports two modes. Ask the user:
 
-> "Beads can run with or without a local database. Database mode buffers changes and requires `bd sync` to persist. No-database mode writes directly to JSONL (simpler, no sync needed). Which do you prefer? (default: database)"
+> "Beads can run with or without a local database. Database mode uses a daemon that auto-syncs to JSONL. No-database mode writes directly to JSONL. Which do you prefer? (default: database)"
 
 ### 4. Initialize
 
 Based on the user's choice:
 
 ```bash
-bd init --quiet          # database mode (default) - requires bd sync
-bd init --quiet --no-db  # no-database mode - writes directly to JSONL
+bd init --quiet          # database mode (default)
+bd init --quiet --no-db  # no-database mode
 ```
 
 This creates `.beads/config.yaml` with the appropriate `no-db` setting.
@@ -180,11 +180,9 @@ This plan is managed via Beads. Tasks are stored in `.beads/` and tracked as a d
 
 **Implementation will**:
 1. Read this file to identify the epic
-2. Check `.beads/config.yaml` for database mode
-3. Query `bd ready` for unblocked tasks
-4. Work through tasks respecting dependencies
-5. Close tasks with `bd close bd-{id} "reason"`
-6. If using database mode: sync with `bd sync` at session end
+2. Query `bd ready` for unblocked tasks
+3. Work through tasks respecting dependencies
+4. Close tasks with `bd close bd-{id} "reason"`
 
 ## Key Decisions
 
@@ -231,7 +229,7 @@ In the task body:
 ### Reading Plans
 
 1. Extract `epic` ID from frontmatter
-2. Check `.beads/config.yaml` for `no-db` setting (determines if sync needed)
+2. Check `.beads/config.yaml` for `no-db` setting
 3. Run `bd ready` to get unblocked tasks
 4. View task details with `bd show bd-{id}`
 5. Process by priority (P0 → P1 → P2 → P3)
@@ -241,8 +239,8 @@ In the task body:
 
 - Close tasks with `bd close bd-{id} "reason"` when complete
 - Include task ID in commit messages: `git commit -m "message (bd-{id})"`
-- **If `no-db: false` or not set** (database mode): Run `bd sync` at session end to persist changes
-- **If `no-db: true`**: No sync needed - changes write directly to JSONL
+- **Database mode**: Run `bd sync` before committing or ending session to ensure changes are persisted
+- **No-db mode**: No sync needed - changes write directly to JSONL
 - Use `bd ready` to identify next unblocked task
 
 ### Fallback
@@ -258,18 +256,17 @@ If `bd` CLI is unavailable, follow the installation steps in the **Setup** secti
 | `bd show bd-{id}` | View task details |
 | `bd close bd-{id} "reason"` | Complete a task |
 | `bd dep add child parent` | Add dependency |
-| `bd sync` | Commit and push changes (database mode only) |
+| `bd sync` | Force immediate sync to JSONL (database mode only) |
 
 ## Sync Protocol (Database Mode Only)
 
-When using database mode (`no-db: false` or not set in `.beads/config.yaml`), implementation must run `bd sync` at session end to:
-- Export pending changes to JSONL
-- Commit to git
-- Push to remote
+In database mode, a daemon auto-syncs changes to JSONL with a ~5 second debounce. Run `bd sync` before committing or ending a session to ensure all pending changes are persisted:
 
-Without sync, changes stay in a 30-second debounce window and may not persist.
+```bash
+bd sync
+```
 
-**Skip this section entirely if `no-db: true`** - changes write directly to JSONL.
+**Skip this entirely if `no-db: true`** - changes write directly to JSONL, no sync needed.
 
 ## Commit Message Convention
 
