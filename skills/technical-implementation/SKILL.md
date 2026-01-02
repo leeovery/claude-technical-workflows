@@ -32,11 +32,10 @@ You're at step 5. Execute the plan. Don't re-debate decisions.
 
 ### With a Plan
 
-0. **Check environment setup** (first session only)
+0. **Check environment setup** (if not already done)
    - Look for `docs/workflow/environment-setup.md`
    - If exists, follow the setup instructions before proceeding
    - If missing, ask: "Are there any environment setup instructions I should follow?"
-   - Common setup: dependencies, `.env` files, database setup, CLI tools for plan format
 
    See **[environment-setup.md](references/environment-setup.md)** for details.
 
