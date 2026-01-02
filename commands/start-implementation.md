@@ -89,10 +89,11 @@ Based on the plan's `format:` field, ensure prerequisites are met:
 
 **For `beads` format**:
 - Check if `bd` command exists: `which bd`
-- If not available, install it:
+- If not available (common in ephemeral environments like Claude Code on the web):
   ```bash
   curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
   ```
+  Note: On local systems, beads may already be installed via Homebrew - always check first.
 - Initialize if needed: `bd init` (only if `.beads/` doesn't exist)
 
 **For `linear` format**:

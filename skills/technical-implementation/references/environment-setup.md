@@ -47,10 +47,16 @@ If the plan uses `format: beads`, ensure the `bd` CLI is available:
 ```bash
 # Check if installed
 which bd
+```
 
-# Install if missing
+If not installed (common in ephemeral environments like Claude Code on the web):
+```bash
 curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
+```
 
+On local systems, beads may already be installed via Homebrew - always check first.
+
+```bash
 # Initialize if .beads/ doesn't exist
 bd init
 ```

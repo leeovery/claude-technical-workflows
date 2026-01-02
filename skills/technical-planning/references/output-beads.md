@@ -249,12 +249,14 @@ project/
 ## Fallback Handling
 
 If beads CLI is unavailable during implementation:
-1. Check if `bd` command exists
-2. If not, install it:
+1. Check if `bd` command exists: `which bd`
+2. If not installed (common in ephemeral environments like Claude Code on the web):
    ```bash
    curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
    ```
 3. If installation fails, suggest switching to local markdown format as alternative
+
+**Note**: On local systems, beads may already be installed via Homebrew. Always check before installing.
 
 ## Priority Mapping
 
