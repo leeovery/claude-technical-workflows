@@ -59,7 +59,7 @@ You're at step 5. Execute the plan. Don't re-debate decisions.
      - Commit
    - Verify all phase acceptance criteria met
    - **Ask user before proceeding to next phase**
-3. **Reference discussion** when rationale unclear
+3. **Reference specification** when rationale unclear
 
 ### Without a Plan (Ad Hoc)
 
@@ -87,16 +87,16 @@ Keep user informed of progress:
 ✅ Phase 2 complete. Ready for Phase 3?
 ```
 
-## When to Reference Discussion
+## When to Reference Specification
 
-Check the discussion doc (`docs/workflow/discussion/{topic}.md`) when:
+Check the specification (`docs/workflow/specification/{topic}.md`) when:
 
 - Task rationale is unclear
 - Multiple valid approaches exist
 - Edge case handling not specified in plan
 - You need the "why" behind a decision
 
-Don't re-debate. The discussion captured the decision. Follow it.
+The specification is the source of truth. Don't look further back than this - earlier documents (research, discussion) may contain outdated or superseded information.
 
 ## Project-Specific Conventions
 
