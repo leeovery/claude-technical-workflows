@@ -200,8 +200,6 @@ epic: bd-a3f8
 ---
 ```
 
-Database mode is stored in `.beads/config.yaml`, not in frontmatter.
-
 ## Flagging Incomplete Tasks
 
 When information is missing, note it in the task body:
