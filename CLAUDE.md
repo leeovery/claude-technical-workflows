@@ -51,4 +51,3 @@ To add a new planning output format:
 1. Create `skills/technical-planning/references/output-{format}.md`
 2. Include sections: About, Setup, Benefits, Output Process, Implementation (Reading/Updating)
 3. Add to the list in `skills/technical-planning/references/output-formats.md`
-4. Update `commands/start-planning.md` if needed
