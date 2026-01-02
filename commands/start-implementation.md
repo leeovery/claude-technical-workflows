@@ -99,4 +99,3 @@ Begin implementation using the technical-implementation skill.
 
 - Ask questions clearly and wait for responses before proceeding
 - Execute environment setup before starting implementation
-- Commit frequently after each passing test
