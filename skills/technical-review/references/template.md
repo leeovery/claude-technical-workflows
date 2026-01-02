@@ -14,7 +14,7 @@
 ## Summary
 [One paragraph overall assessment]
 
-## Discussion Compliance
+## Specification Compliance
 - [ ] Decision 1 followed: [yes/no + note]
 - [ ] Decision 2 followed: [yes/no + note]
 - [ ] Edge cases handled: [yes/no + note]

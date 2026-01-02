@@ -14,7 +14,7 @@ Plans live in `docs/workflow/planning/{topic}.md` with phases and tasks.
 ## Before Starting
 
 1. Read entire plan
-2. Read linked discussion doc
+2. Read specification for context
 3. Check dependencies and blockers
 
 ## Execution Flow
@@ -25,14 +25,14 @@ For each phase:
 3. Verify all acceptance criteria met
 4. **Wait for user confirmation before next phase**
 
-## Referencing Discussion
+## Referencing Specification
 
-Check `docs/workflow/discussion/{topic}.md` when:
+Check `docs/workflow/specification/{topic}.md` when:
 - Task rationale unclear
 - Multiple valid approaches
 - Edge case handling not specified
 
-**Don't re-debate.** Discussion captured the decision. Follow it.
+The specification is the source of truth. Don't look further back than this.
 
 ## Handling Problems
 
