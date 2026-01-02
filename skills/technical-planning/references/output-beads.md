@@ -60,9 +60,11 @@ Beads supports two modes. Ask the user:
 Based on the user's choice:
 
 ```bash
-bd init          # database mode (default) - requires bd sync
-bd init --no-db  # no-database mode - writes directly to JSONL
+bd init -q          # database mode (default) - requires bd sync
+bd init -q --no-db  # no-database mode - writes directly to JSONL
 ```
+
+The `-q` (quiet) flag skips interactive prompts.
 
 This creates `.beads/config.yaml` with the appropriate `no-db` setting.
 
