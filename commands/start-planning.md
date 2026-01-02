@@ -66,10 +66,6 @@ Load **[output-formats.md](skills/technical-planning/references/output-formats.m
 
 ## Step 5: Gather Additional Context
 
-**For Linear destination**:
-- Which team should own this project?
-
-**For all destinations**:
 - Any additional context or priorities to consider?
 - Any constraints since the specification was completed?
 

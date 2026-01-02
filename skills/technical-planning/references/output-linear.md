@@ -12,6 +12,8 @@ Requires the Linear MCP server to be configured in Claude Code.
 
 Check if Linear MCP is available by looking for Linear tools. If not configured, inform the user that Linear MCP is required for this format.
 
+Ask the user: **Which team should own this project?**
+
 ## Linear Structure Mapping
 
 | Planning Concept | Linear Entity |
