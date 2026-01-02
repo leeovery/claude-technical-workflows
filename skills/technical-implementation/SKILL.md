@@ -25,7 +25,7 @@ You're at step 5. Execute the plan. Don't re-debate decisions.
 1. **No code before tests** - Write the failing test first. Always.
 2. **No test changes to pass** - If code doesn't pass, fix the code. Tests can only be fixed if genuinely broken or poorly designed, never to accommodate broken code.
 3. **No scope expansion** - If it's not in the plan, don't build it.
-4. **No assumptions** - Uncertain? Check discussion doc. Still uncertain? Ask.
+4. **No assumptions** - Uncertain? Check specification. Still uncertain? Stop and ask.
 5. **Commit after green** - Every passing test = commit point.
 
 ## Workflow
