@@ -21,39 +21,18 @@ See: https://github.com/steveyegge/beads
 
 ## Prerequisites
 
-- Beads CLI installed (`npm install -g @beads/bd` or via Homebrew/Go)
+- Beads CLI installed
 - Repository initialized with `bd init` (human setup step)
 
-### Claude Code on the Web
+### Installing Beads
 
-For Claude Code on the web where `bd` isn't pre-installed, set up a session start hook:
+Install beads using the official install script:
 
-1. Create the hooks directory:
-   ```bash
-   mkdir -p .claude/hooks
-   ```
+```bash
+curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
+```
 
-2. Copy the install script from this package:
-   ```bash
-   cp hooks/install-beads.sh .claude/hooks/install-beads.sh
-   chmod +x .claude/hooks/install-beads.sh
-   ```
-
-3. Add to `.claude/settings.json`:
-   ```json
-   {
-     "hooks": {
-       "SessionStart": [
-         {
-           "type": "command",
-           "command": ".claude/hooks/install-beads.sh"
-         }
-       ]
-     }
-   }
-   ```
-
-The hook script is available at `hooks/install-beads.sh` in this package. It automatically downloads and installs the correct beads binary for the platform.
+This works on local machines and Claude Code on the web. The script automatically detects the platform and installs the correct binary.
 
 ## When to Use
 
@@ -270,9 +249,12 @@ project/
 ## Fallback Handling
 
 If beads CLI is unavailable during implementation:
-- Check if `bd` command exists
-- If not, inform user to install beads
-- Suggest switching to local markdown format as alternative
+1. Check if `bd` command exists
+2. If not, install it:
+   ```bash
+   curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
+   ```
+3. If installation fails, suggest switching to local markdown format as alternative
 
 ## Priority Mapping
 

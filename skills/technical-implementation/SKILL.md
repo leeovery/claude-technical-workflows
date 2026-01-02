@@ -32,6 +32,14 @@ You're at step 5. Execute the plan. Don't re-debate decisions.
 
 ### With a Plan
 
+0. **Check environment setup** (first session only)
+   - Look for `docs/workflow/environment-setup.md`
+   - If exists, follow the setup instructions before proceeding
+   - If missing, ask: "Are there any environment setup instructions I should follow?"
+   - Common setup: dependencies, `.env` files, database setup, CLI tools for plan format
+
+   See **[environment-setup.md](references/environment-setup.md)** for details.
+
 1. **Read the plan** from `docs/workflow/planning/{topic}.md`
    - Check the `format` field in frontmatter:
      - `local-markdown` → content is in this file
@@ -161,7 +169,8 @@ Task: Phase 2, Task 1
 
 ## References
 
-- **[plan-sources.md](references/plan-sources.md)** - Reading plans from different formats (markdown, Linear, Backlog.md)
+- **[environment-setup.md](references/environment-setup.md)** - Environment setup before implementation
+- **[plan-sources.md](references/plan-sources.md)** - Reading plans from different formats (markdown, Linear, Backlog.md, Beads)
 - **[plan-execution.md](references/plan-execution.md)** - Following plans, phase verification, hierarchy
 - **[tdd-workflow.md](references/tdd-workflow.md)** - TDD cycle, test derivation, when tests can change
 - **[code-quality.md](references/code-quality.md)** - DRY, SOLID, complexity, YAGNI
