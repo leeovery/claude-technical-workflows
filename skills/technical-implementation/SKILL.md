@@ -37,6 +37,7 @@ You're at step 5. Execute the plan. Don't re-debate decisions.
      - `local-markdown` → content is in this file
      - `linear` → query Linear via MCP using frontmatter project_id
      - `backlog-md` → query Backlog.md via MCP or read `backlog/` directory
+     - `beads` → use `bd` CLI for dependency-aware task tracking
 
    See **[plan-sources.md](references/plan-sources.md)** for details on each format.
 
