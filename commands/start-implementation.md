@@ -6,7 +6,7 @@ Invoke the **technical-implementation** skill for this conversation.
 
 ## Instructions
 
-Follow these steps EXACTLY as written. Do not skip steps or combine them. Present output using the EXACT format shown in examples.
+Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 Before beginning, discover existing work and gather necessary information.
 
@@ -24,7 +24,7 @@ Scan the codebase for plans:
 
 2. **Check plan format**: For each plan file
    - Run `head -10 docs/workflow/planning/{topic}.md` to read the frontmatter
-   - Extract the `format:` field (local-markdown, linear, backlog-md, beads)
+   - Note the `format:` field
    - Do NOT use bash loops - run separate `head` commands for each topic
 
 ## Step 2: Check Prerequisites
@@ -45,9 +45,8 @@ Show what you found:
 
 ```
 Plans found:
-  {topic-1} (format: local-markdown)
-  {topic-2} (format: beads)
-  {topic-3} (format: linear)
+  {topic-1}
+  {topic-2}
 
 Which plan would you like to implement?
 ```
@@ -56,11 +55,7 @@ Which plan would you like to implement?
 
 After the user selects a plan, handle environment setup.
 
-**Read the environment setup reference**: Load `skills/technical-implementation/references/environment-setup.md` and follow its instructions for:
-
-1. Checking for `docs/workflow/environment-setup.md` (project-specific setup)
-2. Prompting the user if no setup document exists
-3. Setting up format-specific requirements (the reference links to the appropriate planning output file for each format)
+**Read the environment setup reference**: Load `skills/technical-implementation/references/environment-setup.md` and follow its instructions.
 
 ## Step 5: Ask About Scope
 
@@ -90,7 +85,7 @@ Pass to the technical-implementation skill:
 ```
 Implementation session for: {topic}
 Plan: docs/workflow/planning/{topic}.md
-Format: local-markdown
+Format: {format}
 Scope: All phases
 
 Environment setup: Completed (or: Not needed)
@@ -99,24 +94,8 @@ Begin implementation using the technical-implementation skill.
 Reference: plan-sources.md for reading the plan, tdd-workflow.md for execution.
 ```
 
-**Example handoff for beads:**
-```
-Implementation session for: {topic}
-Plan: docs/workflow/planning/{topic}.md
-Format: beads
-Epic: bd-{epic_id}
-Scope: Phase 1 only
-
-Environment setup: Completed
-
-Begin implementation using the technical-implementation skill.
-Reference: plan-sources.md for reading beads tasks, tdd-workflow.md for execution.
-Use `bd ready` to identify unblocked tasks. Close tasks with `bd close bd-{id} "reason"`.
-```
-
 ## Notes
 
 - Ask questions clearly and wait for responses before proceeding
 - Execute environment setup before starting implementation
-- For beads format, remember to run `bd sync` at session end
 - Commit frequently after each passing test
