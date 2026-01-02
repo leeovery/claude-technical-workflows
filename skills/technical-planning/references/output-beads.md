@@ -122,10 +122,12 @@ For each task, create under the appropriate phase:
 bd create "{Task Name}" -p 1 --parent bd-a3f8.1
 ```
 
+Tasks should be **fully self-contained** - include all context so humans and agents can execute without referencing other files.
+
 Task body should include:
 ```
 ## Goal
-{What this task accomplishes}
+{What this task accomplishes and why - include rationale from specification}
 
 ## Implementation
 {Specific files, methods, approach}
@@ -134,8 +136,13 @@ Task body should include:
 - `it does expected behavior`
 - `it handles edge case`
 
-## Specification
-docs/workflow/specification/{topic}.md
+## Edge Cases
+{Specific edge cases for this task}
+
+## Context
+{Relevant decisions and constraints from specification}
+
+Specification reference: docs/workflow/specification/{topic}.md (for ambiguity resolution)
 ```
 
 ### 4. Add Dependencies

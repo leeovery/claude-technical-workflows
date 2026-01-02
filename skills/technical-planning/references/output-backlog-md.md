@@ -85,12 +85,14 @@ Tasks are organized with labels/priorities:
 
 ## Key Decisions
 
-[Summary of key decisions from discussion]
+[Summary of key decisions from specification]
 ```
 
 ### Task File Format
 
 Each task is a separate file: `backlog/task-{id} - {title}.md`
+
+Tasks should be **fully self-contained** - include all context so humans and agents can execute without referencing other files.
 
 ```markdown
 ---
@@ -101,9 +103,11 @@ labels: [phase-1, api]
 
 # {Task Title}
 
-{Brief description of what this task accomplishes}
+## Goal
 
-## Plan
+{What this task accomplishes and why - include rationale from specification}
+
+## Implementation
 
 {The "Do" - specific files, methods, approach}
 
@@ -115,10 +119,15 @@ labels: [phase-1, api]
 4. [ ] Tests passing
 5. [ ] Committed
 
-## Notes
+## Edge Cases
 
-- Specification: `docs/workflow/specification/{topic}.md`
-- Related decisions: [link if applicable]
+{Specific edge cases for this task}
+
+## Context
+
+{Relevant decisions and constraints from specification}
+
+Specification reference: `docs/workflow/specification/{topic}.md` (for ambiguity resolution)
 ```
 
 ### Frontmatter Fields
@@ -140,7 +149,7 @@ When creating tasks with incomplete information:
 3. **Note what's missing** in task body - be specific
 4. **Continue planning** - circle back later
 
-This allows iterative refinement. Create all tasks, identify gaps, circle back to discussion if needed, then update tasks with missing detail.
+This allows iterative refinement. Create all tasks, identify gaps, circle back to specification if needed, then update tasks with missing detail.
 
 ## Phase Representation
 
