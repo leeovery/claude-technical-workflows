@@ -151,19 +151,19 @@ team: Engineering
 
 ## Issue Content Guidelines
 
-Issues should be **self-contained for execution**:
+Issues should be **fully self-contained**. Include all context directly so humans and agents can execute without referencing other files.
 
-**Include directly**:
+**Include in each issue**:
+- Goal and rationale (the "why" from the specification)
 - What to implement (specific files/methods)
 - Test names (micro acceptance)
 - Edge cases for this specific task
+- Relevant decisions and constraints
 - Any code examples for complex patterns
 
-**Link to (don't copy)**:
-- Specification document at `docs/workflow/specification/{topic}.md` (for "why" context)
-- Specific decision sections if particularly relevant
+**Specification reference**: The specification at `docs/workflow/specification/{topic}.md` remains available for resolving ambiguity or getting additional context, but issues should contain all information needed for execution.
 
-The goal: anyone (Claude or human) could pick up the issue and execute it.
+The goal: anyone (Claude or human) could pick up the issue and execute it without opening another document.
 
 ## Benefits
 
