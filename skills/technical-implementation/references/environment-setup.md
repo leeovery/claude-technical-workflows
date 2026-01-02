@@ -10,7 +10,7 @@ Before starting implementation, ensure the environment is ready. This step runs 
 
 Look for: `docs/workflow/environment-setup.md`
 
-This file contains natural language instructions for setting up the implementation environment. It's project-specific and maintained by the team.
+This file contains natural language instructions for setting up the implementation environment. It's project-specific.
 
 ## If Setup Document Exists
 
