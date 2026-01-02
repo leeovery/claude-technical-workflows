@@ -6,6 +6,14 @@
 
 Use this format for simple features or when you want everything in a single version-controlled file.
 
+## Benefits
+
+- No external tools or dependencies required
+- Everything in a single version-controlled file
+- Human-readable and easy to edit
+- Works offline with any text editor
+- Simplest setup - just create a markdown file
+
 ## Setup
 
 No external tools required. This format uses plain markdown files stored in the repository.

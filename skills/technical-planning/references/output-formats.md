@@ -4,7 +4,9 @@
 
 ---
 
-Plans can be stored in different formats. Ask the user which format they want, then load the corresponding output adapter.
+Plans can be stored in different formats. **Ask the user which format they prefer** - this is their choice based on their workflow and preferences.
+
+Present the options below and let the user decide. Each format's full benefits are documented in its output adapter file.
 
 ## Available Formats
 
@@ -12,11 +14,11 @@ Plans can be stored in different formats. Ask the user which format they want, t
 
 Single `{topic}.md` file in `docs/workflow/planning/`
 
-- **Best for**: Small features, solo work, quick iterations
-- **Pros**: Everything in one version-controlled file, no external tools
-- **Cons**: No visual tracking, manual progress updates
+- No external tools required
+- Everything in one version-controlled file
+- Human-readable and easy to edit
 
-**Reference**: [output-local-markdown.md](output-local-markdown.md)
+**Details**: [output-local-markdown.md](output-local-markdown.md)
 
 ---
 
@@ -24,11 +26,11 @@ Single `{topic}.md` file in `docs/workflow/planning/`
 
 Project with labeled issues (requires Linear MCP)
 
-- **Best for**: Team collaboration, visual tracking, larger features
-- **Pros**: Update tasks directly in Linear's UI, real-time progress visibility
-- **Cons**: Requires MCP configuration, external dependency
+- Visual tracking with real-time updates
+- Team collaboration with shared visibility
+- Update tasks directly in Linear UI
 
-**Reference**: [output-linear.md](output-linear.md)
+**Details**: [output-linear.md](output-linear.md)
 
 ---
 
@@ -36,11 +38,11 @@ Project with labeled issues (requires Linear MCP)
 
 Task files in `backlog/` directory with Kanban UI
 
-- **Best for**: Local visual tracking with AI/MCP support
-- **Pros**: Terminal and web Kanban views, git-native with auto-commit
-- **Cons**: Requires npm install
+- Visual Kanban board (terminal or web)
+- Local and fully version-controlled
+- MCP integration for Claude Code
 
-**Reference**: [output-backlog-md.md](output-backlog-md.md)
+**Details**: [output-backlog-md.md](output-backlog-md.md)
 
 ---
 
@@ -48,23 +50,13 @@ Task files in `backlog/` directory with Kanban UI
 
 Git-backed graph issue tracker for AI agents
 
-- **Best for**: Complex dependency graphs, multi-session implementations
-- **Pros**: Native dependency tracking with `bd ready`, hierarchical (epics → phases → tasks)
-- **Cons**: Requires CLI install, JSONL less human-readable
+- Native dependency tracking with `bd ready`
+- Multi-session context preservation
+- Multi-agent coordination support
 
-**Reference**: [output-beads.md](output-beads.md)
+**Details**: [output-beads.md](output-beads.md)
 
 ---
-
-## Choosing a Format
-
-| Need | Recommended |
-|------|-------------|
-| Simple, quick | Local Markdown |
-| Team visibility | Linear |
-| Local Kanban | Backlog.md |
-| Complex dependencies | Beads |
-| Multi-agent work | Beads |
 
 ## Adding New Formats
 

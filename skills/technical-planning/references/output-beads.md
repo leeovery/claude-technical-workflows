@@ -66,20 +66,13 @@ bd init --quiet --no-db  # no-database mode
 
 This creates `.beads/config.yaml` with the appropriate `no-db` setting.
 
-## When to Use
+## Benefits
 
-Choose beads when:
-- Complex dependency graphs between tasks
-- Multi-session implementations needing context preservation
-- Multiple agents may work on the project
-- You need `bd ready` to identify actionable work
-- Long-horizon task management
-
-Avoid beads when:
-- Simple linear features (use local markdown)
-- Team collaboration with non-AI members (use Linear)
-- Human readability is paramount (JSONL is less readable)
-- Single-session implementations
+- Complex dependency graphs with native blocking relationships
+- Multi-session context preservation via semantic summarization
+- Multi-agent coordination support
+- `bd ready` identifies actionable unblocked work
+- Git-backed and version-controlled
 
 ## Beads Structure Mapping
 

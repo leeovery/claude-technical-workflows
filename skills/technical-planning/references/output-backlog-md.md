@@ -150,13 +150,13 @@ Since Backlog.md doesn't have native milestones, represent phases via:
 2. **Task naming**: Prefix with phase number `task-X - [P1] Task name.md`
 3. **Priority**: Foundation tasks = high, refinement = low
 
-## When to Use
+## Benefits
 
-- When you want visual Kanban tracking with MCP support
-- Solo or small team development
-- Everything stays local and version-controlled
-- AI-native workflow (Claude Code integration)
-- Projects already using Backlog.md
+- Visual Kanban board in terminal or web UI
+- Local and fully version-controlled
+- MCP integration for Claude Code
+- Auto-commit on task changes
+- Individual task files for easy editing
 
 ## MCP Integration
 

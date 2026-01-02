@@ -163,12 +163,12 @@ Issues should be **self-contained for execution**:
 
 The goal: anyone (Claude or human) could pick up the issue and execute it.
 
-## When to Use
+## Benefits
 
-- Larger features needing visual tracking
-- Team collaboration
-- When you want to update plans without editing markdown
-- Projects already using Linear for issue tracking
+- Visual tracking with real-time progress updates
+- Team collaboration with shared visibility
+- Update tasks directly in Linear UI without editing markdown
+- Integrates with existing Linear workflows
 
 ## Resulting Structure
 
