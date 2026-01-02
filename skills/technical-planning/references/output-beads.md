@@ -21,39 +21,40 @@ See: https://github.com/steveyegge/beads
 
 ## Setup
 
-Install beads using the official install script:
+### 1. Check Installation
 
+First, check if beads is already installed:
+
+```bash
+bd --version
+```
+
+- **Local systems**: May already be installed via Homebrew
+- **Ephemeral environments** (Claude Code on web): Likely needs installation
+
+If not installed:
 ```bash
 curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
 ```
 
-This works on local machines and Claude Code on the web. The script automatically detects the platform and installs the correct binary.
+The script auto-detects the platform and installs the correct binary.
 
-Initialize in your project:
+### 2. Choose Database Mode
 
-```bash
-bd init          # database mode (default)
-bd init --no-db  # no-database mode
-```
-
-### Database Mode
-
-Check if database mode is configured in `.beads/config.yaml`:
-
-```yaml
-# .beads/config.yaml
-no-db: true  # or false/omitted for database mode
-```
-
-If not set (new project), ask the user:
+Beads supports two modes. Ask the user:
 
 > "Beads can run with or without a local database. Database mode buffers changes and requires `bd sync` to persist. No-database mode writes directly to JSONL (simpler, no sync needed). Which do you prefer? (default: database)"
 
-Then initialize accordingly:
+### 3. Initialize
+
+Based on the user's choice:
+
 ```bash
-bd init          # database mode - requires bd sync
+bd init          # database mode (default) - requires bd sync
 bd init --no-db  # no-database mode - writes directly to JSONL
 ```
+
+This creates `.beads/config.yaml` with the appropriate `no-db` setting.
 
 Note: `no-db` is a YAML-only config key - it's read at startup before the database opens.
 
@@ -238,12 +239,7 @@ In the task body:
 
 ### Fallback
 
-If `bd` CLI is unavailable (common in ephemeral environments like Claude Code on the web):
-```bash
-curl -sSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
-```
-
-On local systems, beads may already be installed via Homebrew - always check first.
+If `bd` CLI is unavailable, follow the installation steps in the **Setup** section above.
 
 ## Beads Workflow Commands
 
