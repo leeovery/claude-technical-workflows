@@ -2,8 +2,6 @@
 description: Start an implementation session from an existing plan. Discovers available plans, checks environment setup, and invokes the technical-implementation skill.
 ---
 
-Invoke the **technical-implementation** skill for this conversation.
-
 ## IMPORTANT: Follow these steps EXACTLY. Do not skip steps.
 
 - Ask each question and WAIT for a response before proceeding
@@ -84,6 +82,8 @@ Which approach?
 If they choose a specific phase or task, ask them to specify which one.
 
 ## Step 6: Invoke Implementation Skill
+
+Invoke the **technical-implementation** skill for this conversation.
 
 Pass to the technical-implementation skill:
 - Plan: `docs/workflow/planning/{topic}.md`
