@@ -5,7 +5,7 @@ description: Start an implementation session from an existing plan. Discovers av
 ## IMPORTANT: Follow these steps EXACTLY. Do not skip steps.
 
 - Ask each question and WAIT for a response before proceeding
-- Do NOT install anything or invoke tools until Step 6
+- Do NOT install anything or invoke tools until Step 5
 - Even if the user's initial prompt seems to answer a question, still confirm with them at the appropriate step
 - Do NOT make assumptions about what the user wants
 - Complete each step fully before moving to the next
@@ -33,21 +33,11 @@ Scan the codebase for plans:
    - Note the `format:` field
    - Do NOT use bash loops - run separate `head` commands for each topic
 
-## Step 2: Check Prerequisites
+## Step 2: Present Options to User
 
-**If no plans exist:**
+Show what you found.
 
-```
-No plans found in docs/workflow/planning/
-
-The implementation phase requires a completed plan. Please run /start-planning first to create an implementation plan from your specification.
-```
-
-Stop here and wait for the user to acknowledge.
-
-## Step 3: Present Options to User
-
-Show what you found:
+> **Note:** If no plans exist, inform the user that this workflow is designed to be executed in sequence. They need to create plans from specifications prior to implementation using `/start-planning`.
 
 ```
 Plans found:
@@ -57,7 +47,7 @@ Plans found:
 Which plan would you like to implement?
 ```
 
-## Step 4: Check Environment Setup
+## Step 3: Check Environment Setup
 
 After the user selects a plan:
 
@@ -65,7 +55,7 @@ After the user selects a plan:
 2. If it exists, follow the setup instructions
 3. If missing, ask: "Are there any environment setup instructions I should follow?"
 
-## Step 5: Ask About Scope
+## Step 4: Ask About Scope
 
 Ask the user about implementation scope:
 
@@ -81,7 +71,7 @@ Which approach?
 
 If they choose a specific phase or task, ask them to specify which one.
 
-## Step 6: Invoke Implementation Skill
+## Step 5: Invoke Implementation Skill
 
 Invoke the **technical-implementation** skill for this conversation.
 
