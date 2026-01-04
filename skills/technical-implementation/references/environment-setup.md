@@ -86,10 +86,3 @@ Run tests to verify setup:
 php artisan test
 ```
 ```
-
-## When to Re-Run Setup
-
-- New Claude Code session (especially on the web)
-- After pulling changes that modify dependencies
-- When switching to a different plan format
-- When tests fail due to environment issues
