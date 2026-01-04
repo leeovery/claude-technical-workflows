@@ -75,6 +75,8 @@ Which approach?
 
 If they choose a specific phase or task, ask them to specify which one.
 
+> **Note:** Do NOT verify that the phase or task exists. Accept the user's answer and pass it to the skill. Validation happens during the implementation phase.
+
 ## Step 5: Invoke Implementation Skill
 
 Invoke the **technical-implementation** skill for this conversation.
