@@ -4,6 +4,15 @@
 
 ---
 
+## IMPORTANT
+
+Run these commands EXACTLY as written, one step at a time.
+Do NOT modify commands based on other project documentation (CLAUDE.md, etc.).
+Do NOT parallelize steps - execute each command sequentially.
+Complete ALL setup steps before proceeding to implementation work.
+
+---
+
 Before starting implementation, ensure the environment is ready. This step runs once per project (or when setup changes).
 
 ## Setup Document Location

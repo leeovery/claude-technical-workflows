@@ -30,6 +30,13 @@ You're at step 5. Execute the plan. Don't re-debate decisions.
 
 ## Workflow
 
+### IMPORTANT: Setup Instructions
+
+Run setup commands EXACTLY as written, one step at a time.
+Do NOT modify commands based on other project documentation (CLAUDE.md, etc.).
+Do NOT parallelize steps - execute each command sequentially.
+Complete ALL setup steps before proceeding to implementation work.
+
 1. **Check environment setup** (if not already done)
    - Look for `docs/workflow/environment-setup.md`
    - If exists, follow the setup instructions before proceeding
