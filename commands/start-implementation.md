@@ -49,11 +49,15 @@ Which plan would you like to implement?
 
 ## Step 3: Check Environment Setup
 
+> **IMPORTANT**: This step is for **information gathering only**. Do NOT execute any setup commands at this stage. The technical-implementation skill will handle execution when invoked.
+
 After the user selects a plan:
 
 1. Check if `docs/workflow/environment-setup.md` exists
-2. If it exists, follow the setup instructions
+2. If it exists, note the file location for the skill handoff
 3. If missing, ask: "Are there any environment setup instructions I should follow?"
+   - If the user provides instructions, save them to `docs/workflow/environment-setup.md`, commit and push to Git
+   - See `skills/technical-implementation/references/environment-setup.md` for format guidance
 
 ## Step 4: Ask About Scope
 
