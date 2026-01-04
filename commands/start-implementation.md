@@ -39,6 +39,8 @@ Show what you found.
 
 > **Note:** If no plans exist, inform the user that this workflow is designed to be executed in sequence. They need to create plans from specifications prior to implementation using `/start-planning`.
 
+> **Auto-select:** If exactly one plan exists, automatically select it and proceed to Step 3. Inform the user which plan was selected. Do not ask for confirmation.
+
 ```
 Plans found:
   {topic-1}
