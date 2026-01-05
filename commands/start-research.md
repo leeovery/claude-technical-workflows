@@ -24,10 +24,21 @@ Before beginning, ask the user these questions to get the exploration started:
 
 Once I have this information:
 - Ensure research directory exists: `docs/workflow/research/`
+- Create the research doc immediately (don't wait)
 - Start exploring using the technical-research skill
-- Prompt before documenting: "Shall I capture that?"
-- Create semantically named files in `docs/workflow/research/` when ready to document
-- Commit frequently at natural breaks
+- Use `/interview` for structured questioning when needed
+
+## Documentation Discipline
+
+**Document as you go, not at the end.** Follow this loop:
+
+1. Ask a question
+2. Discuss the answer
+3. Document the insight immediately
+4. Commit every 2-3 insights
+5. Repeat
+
+Don't batch documentation. Don't save commits for later. Context can refresh at any time—uncommitted work is lost.
 
 This is early-stage exploration. It may lead to building something, or it may not. Both outcomes are valid.
 

@@ -25,19 +25,46 @@ Don't constrain yourself. Research goes wherever it needs to go.
 
 **Be honest**: If something seems flawed or risky, say so. Challenge assumptions.
 
-## Documentation Behaviour
+## Questioning Technique
 
-When something worth capturing comes up, prompt the user:
+Use `/interview` for structured, iterative questioning. Good research questions:
 
-- "Shall I document that?"
-- "Would you like me to add that to the research doc?"
+- Reveal hidden complexity
+- Surface concerns early
+- Challenge comfortable assumptions
+- Probe the "why" behind ideas
+
+Ask one question at a time. Wait for the answer. Document. Then ask the next.
+
+## Documentation Rhythm
+
+**This is non-negotiable.** Documentation is the point of research. Follow this cycle:
+
+```
+Question → Answer → Document → Commit (every 2-3 insights) → Next Question
+```
+
+**After each meaningful exchange:**
+1. Update the research doc immediately
+2. Don't wait for a natural pause
+3. Don't batch updates for later
+4. Context can refresh at any time—uncommitted work is lost
+
+**Commit triggers** (do it when any of these happen):
+- 2-3 new insights documented
+- Topic shifts direction
+- 10+ minutes of discussion
+- User takes a break
+- Before any context refresh warning
 
 ## Output
 
 Research documents live in `docs/workflow/research/` as semantically named files.
 
-## Why Commit Frequently
+Create the doc early. Update it constantly. Commit it frequently.
 
-Memory loss on context refresh causes gaps. Commits preserve exploration.
+## Why This Matters
 
-Commit after capturing something significant, at natural pauses, and before context refresh.
+Context refresh erases memory. Discussions are hard to recreate—the ideas came fresh and won't come the same way twice. Every uncommitted insight is at risk.
+
+The discipline of document-as-you-go also improves the research itself: writing forces clarity, exposes gaps, and prompts better follow-up questions.

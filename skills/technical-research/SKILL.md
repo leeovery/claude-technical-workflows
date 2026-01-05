@@ -24,12 +24,26 @@ You're at step 1. Explore freely.
 
 **Output**: `docs/workflow/research/` (flat directory, semantically named files)
 
+## Documentation Loop
+
+Research without documentation is wasted. Follow this loop **religiously**:
+
+1. **Ask** a question (use `/interview` for structured questioning)
+2. **Discuss** the answer
+3. **Document** the insight immediately
+4. **Commit** after every 2-3 documented insights
+5. **Repeat**
+
+**Don't batch documentation**. Don't save it for later. Don't wait for a "good stopping point." Document as you go. If context refreshes before you commit, that discussion is lost.
+
 ## Critical Rules
+
+**Document immediately**: After each meaningful exchange, update the research doc. No exceptions.
+
+**Commit constantly**: Every 2-3 documented insights. Every topic shift. Every natural pause. Before any context refresh.
 
 **Don't hallucinate**: Only document what was actually discussed.
 
 **Don't expand**: Capture what was said, don't embellish.
 
-**Ask before documenting**: Prompt the user about whether and where to capture.
-
-**Commit frequently**: At natural breaks and before context refresh.
+**Verify before refreshing**: If context is running low, commit everything first.
