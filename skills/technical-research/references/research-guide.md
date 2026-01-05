@@ -57,11 +57,25 @@ Question → Answer → Document → Commit (every 2-3 insights) → Next Questi
 - User takes a break
 - Before any context refresh warning
 
-## Output
+## File Strategy
 
-Research documents live in `docs/workflow/research/` as semantically named files.
+**Start with one file**: `docs/workflow/research/exploration.md`
 
-Create the doc early. Update it constantly. Commit it frequently.
+Early research is messy. Topics aren't clear. You're following tangents, circling back, exploring broadly. Don't fight this by forcing structure too early.
+
+**Create `exploration.md` immediately** when research begins. Write everything there.
+
+**Let structure emerge**: Over multiple sessions, themes may become distinct. When they do, split into semantic files:
+- `market-landscape.md`
+- `technical-feasibility.md`
+- `pricing-models.md`
+
+**Periodic organization**: Every few sessions, review `exploration.md`:
+- Are clear themes emerging? → Split them out
+- Still fuzzy? → Keep exploring in single file
+- Ready for deeper discussion? → Move themes to `docs/workflow/discussion/`
+
+The discussion phase is where structure happens. Research is for discovery.
 
 ## Why This Matters
 

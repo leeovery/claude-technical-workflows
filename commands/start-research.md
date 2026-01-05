@@ -24,7 +24,7 @@ Before beginning, ask the user these questions to get the exploration started:
 
 Once I have this information:
 - Ensure research directory exists: `docs/workflow/research/`
-- Create the research doc immediately (don't wait)
+- Create `exploration.md` immediately (single file for early research)
 - Start exploring using the technical-research skill
 - Use `/interview` for structured questioning when needed
 

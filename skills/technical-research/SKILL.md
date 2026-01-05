@@ -22,7 +22,17 @@ You're at step 1. Explore freely.
 
 **Load**: [research-guide.md](references/research-guide.md) for detailed approach.
 
-**Output**: `docs/workflow/research/` (flat directory, semantically named files)
+**Output**: `docs/workflow/research/exploration.md` (single file to start)
+
+## File Strategy
+
+**Start simple**: Begin with `exploration.md`. Don't overthink structure during early exploration.
+
+**Let themes emerge**: As research continues across sessions, topics may become clear. When they do, split into semantic files (e.g., `market-landscape.md`, `technical-feasibility.md`).
+
+**Periodic review**: Every few sessions, assess: are distinct themes emerging? If yes, reorganize. If not, keep exploring in the single file.
+
+Research is inherently messy. Structure comes later, in the discussion phase.
 
 ## Documentation Loop
 
