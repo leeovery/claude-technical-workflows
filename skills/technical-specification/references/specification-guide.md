@@ -111,6 +111,55 @@ Read the specification. It contains validated, approved content. Trust it - you 
 
 If working notes exist, they show where you left off.
 
+## Dependencies Section
+
+At the end of every specification, add a **Dependencies** section that identifies what other parts of the system need to exist before implementation.
+
+The same workflow applies: present the dependencies section for approval, then log verbatim when approved.
+
+### How to Identify Dependencies
+
+Review the specification for references to:
+- Other systems or features (e.g., "triggers when order is placed" → Order system dependency)
+- Data models from other domains (e.g., "FK to users" → User model must exist)
+- UI or configuration in other systems (e.g., "configured in admin dashboard" → Dashboard dependency)
+- Events or state from other systems (e.g., "listens for payment.completed" → Payment system dependency)
+
+### Categorization
+
+**Required**: Cannot proceed without this. Core functionality depends on it.
+
+**Partial Requirement**: Only specific elements are needed, not the full system. Note the minimum scope.
+
+### Format
+
+## Dependencies
+
+Systems referenced in this specification that need to exist before implementation:
+
+### Required
+
+| Dependency | Why Needed | Blocking Elements |
+|------------|------------|-------------------|
+| **[System Name]** | [Brief explanation of why] | [What parts of this spec are blocked] |
+
+### Partial Requirement
+
+| Dependency | Why Needed | Minimum Scope |
+|------------|------------|---------------|
+| **[System Name]** | [Brief explanation] | [What subset is actually needed] |
+
+### Notes
+
+- [Any clarifications about what can be built independently]
+- [Workarounds or alternatives if dependencies don't exist yet]
+
+### Purpose
+
+This section feeds into the planning phase, where dependencies become blocking relationships between epics/phases. It helps sequence implementation correctly.
+
+Analyze the specification in isolation - identify what it references that must exist, not what you know exists elsewhere in the project.
+
 ## Transitioning to Formal Planning
 
 Specification is complete when:
