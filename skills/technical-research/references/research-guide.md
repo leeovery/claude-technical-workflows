@@ -41,21 +41,15 @@ Ask one question at a time. Wait for the answer. Document. Then ask the next.
 **This is non-negotiable.** Documentation is the point of research. Follow this cycle:
 
 ```
-Question → Answer → Document → Commit (every 2-3 insights) → Next Question
+Question → Answer → Document → Commit and Push → Next Question
 ```
 
 **After each meaningful exchange:**
-1. Update the research doc immediately
-2. Don't wait for a natural pause
-3. Don't batch updates for later
-4. Context can refresh at any time—uncommitted work is lost
+1. Update the research doc
+2. Commit and push immediately
+3. Then ask the next question
 
-**Commit triggers** (do it when any of these happen):
-- 2-3 new insights documented
-- Topic shifts direction
-- 10+ minutes of discussion
-- User takes a break
-- Before any context refresh warning
+Don't batch. Don't wait. Every insight gets pushed before moving on. Context can refresh at any time—unpushed work is lost.
 
 ## File Strategy
 
@@ -79,6 +73,6 @@ The discussion phase is where structure happens. Research is for discovery.
 
 ## Why This Matters
 
-Context refresh erases memory. Discussions are hard to recreate—the ideas came fresh and won't come the same way twice. Every uncommitted insight is at risk.
+Context refresh erases memory. Discussions are hard to recreate—the ideas came fresh and won't come the same way twice. Every unpushed insight is at risk.
 
 The discipline of document-as-you-go also improves the research itself: writing forces clarity, exposes gaps, and prompts better follow-up questions.

@@ -40,20 +40,20 @@ Research without documentation is wasted. Follow this loop **religiously**:
 
 1. **Ask** a question (use `/interview` for structured questioning)
 2. **Discuss** the answer
-3. **Document** the insight immediately
-4. **Commit** after every 2-3 documented insights
+3. **Document** the insight
+4. **Commit and push** immediately
 5. **Repeat**
 
-**Don't batch documentation**. Don't save it for later. Don't wait for a "good stopping point." Document as you go. If context refreshes before you commit, that discussion is lost.
+**Don't batch**. Every insight gets documented, committed, and pushed before the next question. If context refreshes before you push, that discussion is lost.
 
 ## Critical Rules
 
 **Document immediately**: After each meaningful exchange, update the research doc. No exceptions.
 
-**Commit constantly**: Every 2-3 documented insights. Every topic shift. Every natural pause. Before any context refresh.
+**Commit and push constantly**: After each documented insight. Don't batch commits. Push every time.
 
 **Don't hallucinate**: Only document what was actually discussed.
 
 **Don't expand**: Capture what was said, don't embellish.
 
-**Verify before refreshing**: If context is running low, commit everything first.
+**Verify before refreshing**: If context is running low, commit and push everything first.

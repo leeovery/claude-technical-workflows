@@ -34,11 +34,11 @@ Once I have this information:
 
 1. Ask a question
 2. Discuss the answer
-3. Document the insight immediately
-4. Commit every 2-3 insights
+3. Document the insight
+4. Commit and push immediately
 5. Repeat
 
-Don't batch documentation. Don't save commits for later. Context can refresh at any time—uncommitted work is lost.
+Don't batch. Every insight gets pushed before the next question. Context can refresh at any time—unpushed work is lost.
 
 This is early-stage exploration. It may lead to building something, or it may not. Both outcomes are valid.
 
