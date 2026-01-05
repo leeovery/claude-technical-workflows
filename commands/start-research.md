@@ -4,9 +4,7 @@ description: Start a research exploration using the technical-research skill. Fo
 
 Invoke the **technical-research** skill for this conversation.
 
-Before beginning, ask the user these questions to get the exploration started:
-
-## Essential Information
+Then ask these questions to kickstart the exploration:
 
 1. **What's on your mind?**
    - What idea or topic do you want to explore?
@@ -20,15 +18,4 @@ Before beginning, ask the user these questions to get the exploration started:
    - Technical feasibility? Market landscape? Business model?
    - Or just talk it through and see where it goes?
 
-## After Gathering Information
-
-Once I have this information:
-- Ensure research directory exists: `docs/workflow/research/`
-- Start exploring using the technical-research skill
-- Prompt before documenting: "Shall I capture that?"
-- Create semantically named files in `docs/workflow/research/` when ready to document
-- Commit frequently at natural breaks
-
-This is early-stage exploration. It may lead to building something, or it may not. Both outcomes are valid.
-
-Ask these questions clearly and wait for responses before proceeding.
+Ask these questions clearly and wait for responses before proceeding. The skill handles everything else.
