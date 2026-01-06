@@ -15,6 +15,10 @@
 
 ---
 
+> **Version 1.x is deprecated.** This version uses Composer/PHP.
+>
+> **Version 2.x plugins use npm.** Update to the v2 version: `npm install @leeovery/claude-technical-workflows`
+
 ## About
 
 A structured approach to technical discussions and implementation planning with Claude Code. These skills enforce a deliberate **research-then-discuss-then-specify-then-plan-then-implement-then-review** workflow that captures context, decisions, and rationale before any code is written—then validates the work against those artifacts.
