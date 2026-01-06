@@ -1,0 +1,24 @@
+{
+  "name": "@leeovery/claude-technical-workflows",
+  "version": "0.0.0-development",
+  "description": "Technical workflow skills & commands for Claude Code",
+  "license": "MIT",
+  "author": "Lee Overy <me@leeovery.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leeovery/claude-technical-workflows.git"
+  },
+  "type": "module",
+  "scripts": {
+    "postinstall": "claude-plugins add"
+  },
+  "dependencies": {
+    "@leeovery/claude-manager": "^2.0.0"
+  },
+  "files": [
+    "skills",
+    "commands",
+    "agents",
+    "hooks"
+  ]
+}

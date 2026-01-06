@@ -1,9 +1,7 @@
-/vendor/
-composer.lock
+node_modules/
 .DS_Store
 .idea/
 .vscode/
-dist/
 
 # Python
 __pycache__/
