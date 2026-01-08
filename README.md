@@ -17,7 +17,7 @@
 
 > **Version 1.x is deprecated.** This version uses Composer/PHP.
 >
-> **Version 2.x plugins use npm.** Update to the v2 version: `npm install @leeovery/claude-technical-workflows`
+> **Version 2 uses native Claude Code plugins.** Update with: `/plugin install leeovery/claude-technical-workflows`
 
 ## About
 
