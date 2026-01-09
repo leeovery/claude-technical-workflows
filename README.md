@@ -48,10 +48,12 @@ pnpm approve-builds  # approve when prompted
 pnpm install         # triggers postinstall
 ```
 
-**Removal (pnpm):**
+### Removal
+
+Due to bugs in npm 7+ ([issue #3042](https://github.com/npm/cli/issues/3042)) and pnpm ([issue #3276](https://github.com/pnpm/pnpm/issues/3276)), preuninstall hooks don't run reliably. Remove files manually first:
 
 ```bash
-npx --yes @leeovery/claude-manager claude-manager remove @leeovery/claude-technical-workflows && pnpm remove @leeovery/claude-technical-workflows
+npx claude-manager remove @leeovery/claude-technical-workflows && npm rm @leeovery/claude-technical-workflows
 ```
 
 The [Claude Manager](https://github.com/leeovery/claude-manager) copies skills to `.claude/` automatically.
