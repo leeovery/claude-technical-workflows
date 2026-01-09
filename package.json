@@ -11,7 +11,7 @@
   "type": "module",
   "scripts": {
     "postinstall": "claude-manager add",
-    "preuninstall": "npx --package=@leeovery/claude-manager claude-manager remove"
+    "preuninstall": "npx --yes --package=@leeovery/claude-manager claude-manager remove"
   },
   "dependencies": {
     "@leeovery/claude-manager": "^2.0.0"
