@@ -51,7 +51,7 @@ pnpm install         # triggers postinstall
 **Removal (pnpm):**
 
 ```bash
-npx claude-plugins remove @leeovery/claude-technical-workflows && pnpm remove @leeovery/claude-technical-workflows
+npx claude-manager remove @leeovery/claude-technical-workflows && pnpm remove @leeovery/claude-technical-workflows
 ```
 
 The [Claude Manager](https://github.com/leeovery/claude-manager) copies skills to `.claude/` automatically.
