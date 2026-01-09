@@ -32,11 +32,25 @@ A structured approach to technical discussions and implementation planning with 
 
 ## Installation
 
+### npm / yarn
+
 ```bash
 npm install @leeovery/claude-technical-workflows
 ```
 
-That's it. The [Claude Manager](https://github.com/leeovery/claude-manager) handles everything else automatically.
+### pnpm
+
+```bash
+pnpm add --allow-build=@leeovery/claude-technical-workflows @leeovery/claude-technical-workflows
+```
+
+### Removal (pnpm only)
+
+```bash
+npx claude-plugins remove @leeovery/claude-technical-workflows && pnpm remove @leeovery/claude-technical-workflows
+```
+
+The [Claude Manager](https://github.com/leeovery/claude-manager) copies skills to `.claude/` automatically.
 
 ## The Six-Phase Workflow
 
