@@ -10,8 +10,8 @@
   },
   "type": "module",
   "scripts": {
-    "postinstall": "node -e \"require('@leeovery/claude-manager').add()\"",
-    "preuninstall": "node -e \"require('@leeovery/claude-manager').remove()\""
+    "postinstall": "claude-plugins add",
+    "preuninstall": "claude-plugins remove"
   },
   "dependencies": {
     "@leeovery/claude-manager": "^2.0.0"

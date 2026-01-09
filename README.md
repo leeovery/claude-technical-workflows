@@ -40,11 +40,15 @@ npm install -D @leeovery/claude-technical-workflows
 
 ### pnpm
 
+pnpm doesn't expose binaries from transitive dependencies, so install the manager directly:
+
 ```bash
-pnpm add -D --allow-build=@leeovery/claude-technical-workflows @leeovery/claude-technical-workflows
+pnpm add -D @leeovery/claude-manager @leeovery/claude-technical-workflows
+pnpm approve-builds  # approve when prompted
+pnpm install         # triggers postinstall
 ```
 
-### Removal (pnpm only)
+**Removal (pnpm):**
 
 ```bash
 npx claude-plugins remove @leeovery/claude-technical-workflows && pnpm remove @leeovery/claude-technical-workflows
