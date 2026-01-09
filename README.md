@@ -17,10 +17,10 @@
 
 ## Versions
 
-| Version | Package Manager | Status | Branch |
-|---------|----------------|--------|--------|
-| 2.x | npm | **Active** | `main` |
-| 1.x | Composer | Deprecated | [`v1`](https://github.com/leeovery/claude-technical-workflows/tree/v1) |
+| Version | Package Manager | Status     | Branch                                                                 |
+|---------|-----------------|------------|------------------------------------------------------------------------|
+| 2.x     | npm             | **Active** | `main`                                                                 |
+| 1.x     | Composer        | Deprecated | [`v1`](https://github.com/leeovery/claude-technical-workflows/tree/v1) |
 
 ## About
 
@@ -32,16 +32,16 @@ A structured approach to technical discussions and implementation planning with 
 
 ## Installation
 
-### npm / yarn
+### npm
 
 ```bash
-npm install @leeovery/claude-technical-workflows
+npm install -D @leeovery/claude-technical-workflows
 ```
 
 ### pnpm
 
 ```bash
-pnpm add --allow-build=@leeovery/claude-technical-workflows @leeovery/claude-technical-workflows
+pnpm add -D --allow-build=@leeovery/claude-technical-workflows @leeovery/claude-technical-workflows
 ```
 
 ### Removal (pnpm only)
