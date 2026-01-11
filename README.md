@@ -104,7 +104,7 @@ Due to bugs in npm 7+ ([issue #3042](https://github.com/npm/cli/issues/3042)) an
 npx claude-manager remove @leeovery/claude-technical-workflows && npm rm @leeovery/claude-technical-workflows
 ```
 
-The [Claude Manager](https://github.com/leeovery/claude-manager) copies skills to `.claude/` automatically.
+The [Claude Manager](https://github.com/leeovery/claude-manager) copies skills, commands, and agents to `.claude/` automatically.
 
 ## The Six-Phase Workflow
 
