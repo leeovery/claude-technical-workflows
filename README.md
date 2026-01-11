@@ -1,7 +1,7 @@
 <h1 align="center">Claude Technical Workflows</h1>
 
 <p align="center">
-  <strong>From Idea to Implementation – Structured Workflows for Claude Code</strong>
+  <strong>From Idea to Implementation: Software Engineering Workflows for Claude Code</strong>
 </p>
 
 <p align="center">
@@ -25,7 +25,7 @@
 
 ## About
 
-A six-phase workflow for Claude Code that captures context, decisions, and rationale before any code is written—then executes and validates the work against those artifacts.
+A six-phase workflow for Claude Code that captures context, decisions, and rationale before any code is written, then implements and validates the work against those artifacts.
 
 ```
 Research       → Explore ideas
@@ -41,7 +41,7 @@ Implementation → Build via TDD
 Review         → Validate against spec
 ```
 
-**Why this matters:** Complex features benefit from thorough discussion before implementation. These skills help you document the *what* and *why* before diving into the *how*—preserving architectural decisions, edge cases, and the reasoning behind choices that would otherwise be lost.
+**Why this matters:** Complex features benefit from thorough discussion before implementation. These skills help you document the *what* and *why* before diving into the *how*, preserving architectural decisions, edge cases, and the reasoning behind choices that would otherwise be lost.
 
 **This is a work in progress.** The workflow is being refined through real-world usage. Expect updates as patterns evolve.
 
@@ -51,10 +51,10 @@ You have two entry points:
 
 | Start here... | When... | Command |
 |---------------|---------|---------|
-| **Research** | You have a fresh idea to explore—feasibility, market, viability, early thoughts | `/start-research` |
+| **Research** | You have a fresh idea to explore: feasibility, market, viability, early thoughts | `/start-research` |
 | **Discussion** | You already know what you're building and need to iron out the details | `/start-discussion` |
 
-**Research** is a free-for-all. Explore broadly, follow tangents, challenge assumptions. Not everything researched gets built—and that's fine. Use this for ideas that need validating before you commit.
+**Research** is a free-for-all. Explore broadly, follow tangents, challenge assumptions. Not everything researched gets built, and that's fine. Use this for ideas that need validating before you commit.
 
 **Discussion** is where you work through the challenging parts: core architecture, edge cases, non-obvious decisions. The key value is that it captures *how* you arrived at decisions, not just the decisions themselves. When you explore four approaches and pick one, the document explains why you rejected the others. This context is invaluable later.
 
