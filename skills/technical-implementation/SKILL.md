@@ -39,7 +39,8 @@ Complete ALL setup steps before proceeding to implementation work.
 
 1. **Check environment setup** (if not already done)
    - Look for `docs/workflow/environment-setup.md`
-   - If exists, follow the setup instructions before proceeding
+   - If exists and states "No special setup required", skip to step 2
+   - If exists with instructions, follow the setup before proceeding
    - If missing, ask: "Are there any environment setup instructions I should follow?"
 
    See **[environment-setup.md](references/environment-setup.md)** for details.

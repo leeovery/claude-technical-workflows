@@ -1,10 +1,11 @@
 <h1 align="center">Claude Technical Workflows</h1>
 
 <p align="center">
-  <strong>Structured Discussion & Planning Skills for Claude Code</strong>
+  <strong>From Idea to Implementation: Software Engineering Workflows for Claude Code</strong>
 </p>
 
 <p align="center">
+  <a href="#how-do-i-use-this">How to Use</a> •
   <a href="#installation">Installation</a> •
   <a href="#the-six-phase-workflow">Workflow</a> •
   <a href="#skills">Skills</a> •
@@ -24,11 +25,60 @@
 
 ## About
 
-A structured approach to technical discussions and implementation planning with Claude Code. These skills enforce a deliberate **research-then-discuss-then-specify-then-plan-then-implement-then-review** workflow that captures context, decisions, and rationale before any code is written—then validates the work against those artifacts.
+A six-phase workflow for Claude Code that captures context, decisions, and rationale before any code is written, then implements and validates the work against those artifacts.
 
-**Why this matters:** Complex features benefit from thorough discussion before implementation. These skills help you document the *what* and *why* before diving into the *how*—preserving architectural decisions, edge cases, and the reasoning behind choices that would otherwise be lost.
+```
+Research       → Explore ideas
+     ↓
+Discussion     → Debate and decide
+     ↓
+Specification  → Validate and refine
+     ↓
+Planning       → Structure the work
+     ↓
+Implementation → Build via TDD
+     ↓
+Review         → Validate against spec
+```
+
+**Why this matters:** Complex features benefit from thorough discussion before implementation. These skills help you document the *what* and *why* before diving into the *how*, preserving architectural decisions, edge cases, and the reasoning behind choices that would otherwise be lost.
 
 **This is a work in progress.** The workflow is being refined through real-world usage. Expect updates as patterns evolve.
+
+## How do I use this?
+
+You have two entry points:
+
+| Start here... | When... | Command |
+|---------------|---------|---------|
+| **Research** | You have a fresh idea to explore: feasibility, market, viability, early thoughts | `/start-research` |
+| **Discussion** | You already know what you're building and need to iron out the details | `/start-discussion` |
+
+**Research** is a free-for-all. Explore broadly, follow tangents, challenge assumptions. Not everything researched gets built, and that's fine. Use this for ideas that need validating before you commit.
+
+**Discussion** is where you work through the challenging parts: core architecture, edge cases, non-obvious decisions. The key value is that it captures *how* you arrived at decisions, not just the decisions themselves. When you explore four approaches and pick one, the document explains why you rejected the others. This context is invaluable later.
+
+Then follow the flow:
+
+```
+Research → Discussion → Specification → Planning → Implementation → Review
+```
+
+Each phase builds on the previous. Specification validates your discussions into a standalone doc. Planning breaks that into tasks. Implementation executes via TDD. Review validates against the spec.
+
+### Commands
+
+Each phase has a command designed as its entry point:
+
+| Phase | Command |
+|-------|---------|
+| Research | `/start-research` |
+| Discussion | `/start-discussion` |
+| Specification | `/start-specification` |
+| Planning | `/start-planning` |
+| Implementation | `/start-implementation` |
+
+Run the command directly or ask Claude to run it. Each command gathers the context it needs, asking what you're researching, discussing, or planning. Where relevant, it looks at outputs from the previous phase and offers you a choice from the list.
 
 ## Installation
 
@@ -56,7 +106,7 @@ Due to bugs in npm 7+ ([issue #3042](https://github.com/npm/cli/issues/3042)) an
 npx claude-manager remove @leeovery/claude-technical-workflows && npm rm @leeovery/claude-technical-workflows
 ```
 
-The [Claude Manager](https://github.com/leeovery/claude-manager) copies skills to `.claude/` automatically.
+The [Claude Manager](https://github.com/leeovery/claude-manager) copies skills, commands, and agents to `.claude/` automatically.
 
 ## The Six-Phase Workflow
 
@@ -110,6 +160,7 @@ Documents are stored using a **phase-first** organization:
 ```
 docs/workflow/
 ├── research/              # Phase 1 - flat, semantically named files
+│   ├── exploration.md
 │   ├── competitor-analysis.md
 │   └── pricing-models.md
 ├── discussion/            # Phase 2 - one file per topic
@@ -120,7 +171,7 @@ docs/workflow/
     └── {topic}.md
 ```
 
-Research is a flat directory of semantically named files (topics emerge later). From discussion onwards, each topic gets its own file per phase.
+Research starts with `exploration.md` and splits into topic files as themes emerge. From discussion onwards, each topic gets its own file per phase.
 
 ### Package Structure
 
@@ -260,6 +311,7 @@ Slash commands to quickly invoke the workflow.
 | [**/start-discussion**](commands/start-discussion.md) | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation. |
 | [**/start-specification**](commands/start-specification.md) | Start a specification session from an existing discussion. Validates and refines discussion content into a standalone specification. |
 | [**/start-planning**](commands/start-planning.md) | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md, Beads). |
+| [**/start-implementation**](commands/start-implementation.md) | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test. |
 | [**/interview**](commands/interview.md) | Shift into focused questioning mode during research or discussion. Probes ideas with non-obvious questions, challenges assumptions, and surfaces concerns. |
 
 ## Agents
