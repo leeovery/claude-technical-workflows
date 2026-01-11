@@ -78,6 +78,8 @@ Each phase has a command designed as its entry point:
 | Planning | `/start-planning` |
 | Implementation | `/start-implementation` |
 
+Run the command directly or ask Claude to run it. Each command gathers the context it needs, asking what you're researching, discussing, or planning. Where relevant, it looks at outputs from the previous phase and offers you a choice from the list.
+
 ## Installation
 
 ### npm
