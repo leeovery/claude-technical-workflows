@@ -5,6 +5,7 @@
 </p>
 
 <p align="center">
+  <a href="#how-do-i-use-this">How to Use</a> •
   <a href="#installation">Installation</a> •
   <a href="#the-six-phase-workflow">Workflow</a> •
   <a href="#skills">Skills</a> •
@@ -29,6 +30,39 @@ A structured approach to technical discussions and implementation planning with 
 **Why this matters:** Complex features benefit from thorough discussion before implementation. These skills help you document the *what* and *why* before diving into the *how*—preserving architectural decisions, edge cases, and the reasoning behind choices that would otherwise be lost.
 
 **This is a work in progress.** The workflow is being refined through real-world usage. Expect updates as patterns evolve.
+
+## How do I use this?
+
+You have two entry points:
+
+| Start here... | When... | Command |
+|---------------|---------|---------|
+| **Research** | You have a fresh idea to explore—feasibility, market, viability, early thoughts | `/start-research` |
+| **Discussion** | You already know what you're building and need to iron out the details | `/start-discussion` |
+
+**Research** is a free-for-all. Explore broadly, follow tangents, challenge assumptions. Not everything researched gets built—and that's fine. Use this for ideas that need validating before you commit.
+
+**Discussion** is where you work through the challenging parts: core architecture, edge cases, non-obvious decisions. The key value is that it captures *how* you arrived at decisions, not just the decisions themselves. When you explore four approaches and pick one, the document explains why you rejected the others. This context is invaluable later.
+
+Then follow the flow:
+
+```
+Research → Discussion → Specification → Planning → Implementation → Review
+```
+
+Each phase builds on the previous. Specification validates your discussions into a standalone doc. Planning breaks that into tasks. Implementation executes via TDD. Review validates against the spec.
+
+### Commands
+
+Each phase has a command designed as its entry point:
+
+| Phase | Command |
+|-------|---------|
+| Research | `/start-research` |
+| Discussion | `/start-discussion` |
+| Specification | `/start-specification` |
+| Planning | `/start-planning` |
+| Implementation | `/start-implementation` |
 
 ## Installation
 
