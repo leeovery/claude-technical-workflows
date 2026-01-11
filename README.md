@@ -158,6 +158,7 @@ Documents are stored using a **phase-first** organization:
 ```
 docs/workflow/
 ├── research/              # Phase 1 - flat, semantically named files
+│   ├── exploration.md
 │   ├── competitor-analysis.md
 │   └── pricing-models.md
 ├── discussion/            # Phase 2 - one file per topic
@@ -168,7 +169,7 @@ docs/workflow/
     └── {topic}.md
 ```
 
-Research is a flat directory of semantically named files (topics emerge later). From discussion onwards, each topic gets its own file per phase.
+Research starts with `exploration.md` and splits into topic files as themes emerge. From discussion onwards, each topic gets its own file per phase.
 
 ### Package Structure
 
