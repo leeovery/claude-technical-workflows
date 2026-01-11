@@ -44,6 +44,12 @@ If they provide instructions, offer to save them:
 
 > "Would you like me to save these instructions to `docs/workflow/environment-setup.md` for future sessions?"
 
+If they say no setup is needed, create `docs/workflow/environment-setup.md` with "No special setup required." and commit. This prevents asking the same question in future sessions.
+
+## No Setup Required
+
+If the environment setup document contains only "No special setup required" (or similar), skip environment setup and proceed directly to reading the plan.
+
 ## Plan Format Setup
 
 Some plan formats require specific tools. Check the plan's `format` field and load the corresponding output adapter from the planning skill for setup instructions:

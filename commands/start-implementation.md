@@ -59,6 +59,7 @@ After the user selects a plan:
 2. If it exists, note the file location for the skill handoff
 3. If missing, ask: "Are there any environment setup instructions I should follow?"
    - If the user provides instructions, save them to `docs/workflow/environment-setup.md`, commit and push to Git
+   - If the user says no, create `docs/workflow/environment-setup.md` with "No special setup required." and commit. This prevents asking again in future sessions.
    - See `skills/technical-implementation/references/environment-setup.md` for format guidance
 
 ## Step 4: Ask About Scope
