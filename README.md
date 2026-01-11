@@ -1,7 +1,7 @@
 <h1 align="center">Claude Technical Workflows</h1>
 
 <p align="center">
-  <strong>Structured Discussion & Planning Skills for Claude Code</strong>
+  <strong>From Idea to Implementation – Structured Workflows for Claude Code</strong>
 </p>
 
 <p align="center">
@@ -25,7 +25,21 @@
 
 ## About
 
-A structured approach to technical discussions and implementation planning with Claude Code. These skills enforce a deliberate **research-then-discuss-then-specify-then-plan-then-implement-then-review** workflow that captures context, decisions, and rationale before any code is written—then validates the work against those artifacts.
+A six-phase workflow for Claude Code that captures context, decisions, and rationale before any code is written—then executes and validates the work against those artifacts.
+
+```
+Research       → Explore ideas
+     ↓
+Discussion     → Debate and decide
+     ↓
+Specification  → Validate and refine
+     ↓
+Planning       → Structure the work
+     ↓
+Implementation → Build via TDD
+     ↓
+Review         → Validate against spec
+```
 
 **Why this matters:** Complex features benefit from thorough discussion before implementation. These skills help you document the *what* and *why* before diving into the *how*—preserving architectural decisions, edge cases, and the reasoning behind choices that would otherwise be lost.
 
