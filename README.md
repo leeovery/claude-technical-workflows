@@ -45,6 +45,8 @@ Review         → Validate against spec
 
 **This is a work in progress.** The workflow is being refined through real-world usage. Expect updates as patterns evolve.
 
+**Model compatibility:** These skills have been developed and refined for Claude Code running on **Opus 4.5**. Different models may exhibit different edge cases, and future model releases may require adjustments to the prompts and workflows.
+
 ## How do I use this?
 
 You have two entry points:
