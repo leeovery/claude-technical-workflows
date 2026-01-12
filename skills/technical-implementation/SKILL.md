@@ -24,21 +24,15 @@ You're at step 5. Execute the plan. Don't re-debate decisions.
 
 **MANDATORY. No exceptions. Violating these rules invalidates the work.**
 
-1. **No code before tests** - Write the failing test first. Always. If you catch yourself writing implementation code without a failing test, STOP immediately, delete the code, and write the test first.
-2. **No test changes to pass** - If code doesn't pass, fix the code. Tests can only be fixed if genuinely broken or poorly designed, never to accommodate broken code.
+1. **No code before tests** - Write the failing test first. Always.
+2. **No test changes to pass** - Fix the code, not the test.
 3. **No scope expansion** - If it's not in the plan, don't build it.
 4. **No assumptions** - Uncertain? Check specification. Still uncertain? Stop and ask.
 5. **Commit after green** - Every passing test = commit point.
 
-### Before Writing ANY Implementation Code
+**Pragmatic TDD**: The discipline is test-first sequencing, not artificial minimalism. Write complete, functional implementations - don't fake it with hardcoded returns. "Minimal" means no gold-plating beyond what the test requires.
 
-Ask yourself these questions. If any answer is "no", STOP.
-
-- [ ] Do I have a failing test for this behavior?
-- [ ] Did I run the test and confirm it fails?
-- [ ] Does it fail for the RIGHT reason (not a syntax error or missing import)?
-
-Only after all three: write the minimum code to pass.
+See **[tdd-workflow.md](references/tdd-workflow.md)** for the full TDD cycle, violation recovery, and guidance on when tests can change.
 
 ## Workflow
 
@@ -68,20 +62,10 @@ Complete ALL setup steps before proceeding to implementation work.
    - Wait for the user to either correct the scope or ask you to stop
 
 4. **For each phase**:
-   - Announce phase start
-   - Review phase acceptance criteria
-   - For each task:
-     - Derive test from task's micro acceptance criteria
-     - Write the test (**no implementation code yet**)
-     - Run test - confirm it **fails** (for the right reason)
-     - Write minimal code to pass
-     - Run test - confirm it **passes**
-     - Refactor if needed (only when green)
-     - Commit immediately
+   - Announce phase start and review acceptance criteria
+   - For each task: follow the TDD cycle in **[tdd-workflow.md](references/tdd-workflow.md)**
    - Verify all phase acceptance criteria met
    - **Ask user before proceeding to next phase**
-
-   **If you write implementation before a failing test: STOP, delete the code, write the test first.**
 
 5. **Reference specification** when rationale unclear
 

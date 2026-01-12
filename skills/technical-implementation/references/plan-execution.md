@@ -21,17 +21,9 @@ Plans live in `docs/workflow/planning/{topic}.md` with phases and tasks.
 
 For each phase:
 1. Announce phase start with acceptance criteria
-2. For each task:
-   - Derive test from micro acceptance criteria
-   - Write the test (no implementation code yet)
-   - Run test - confirm it FAILS
-   - Write minimal code to pass
-   - Run test - confirm it PASSES
-   - Commit immediately
+2. For each task: follow the TDD cycle in **[tdd-workflow.md](tdd-workflow.md)**
 3. Verify all acceptance criteria met
 4. **Wait for user confirmation before next phase**
-
-**The test-first sequence is mandatory.** If you find yourself writing implementation before a failing test exists, STOP, delete the code, and start over with the test.
 
 ## Referencing Specification
 

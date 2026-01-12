@@ -10,6 +10,15 @@ RED → GREEN → REFACTOR → COMMIT
 
 Repeat for each task. **Never skip steps. Never reorder.**
 
+### Pragmatic TDD
+
+This is pragmatic TDD, not purist. The mandatory discipline is **test-first sequencing**:
+- You MUST write a failing test before implementation
+- You MUST see it fail for the right reason
+- You MUST NOT change tests to make broken code pass
+
+But write **complete, functional implementations** - don't artificially minimize with hardcoded returns or fake values that you'll "fix later". "Minimal" means no gold-plating beyond what the test requires, not "return 42 and triangulate".
+
 ## TDD Violation Recovery
 
 **If you catch yourself violating TDD, stop immediately and recover:**
@@ -37,10 +46,10 @@ Repeat for each task. **Never skip steps. Never reorder.**
 
 **No implementation code exists yet.** If you're tempted to "just sketch out the class first" - don't. The test comes first. Always.
 
-## GREEN: Minimal Implementation
+## GREEN: Implementation
 
-Write the simplest code that passes:
-- No extra features
+Write complete, functional code that passes:
+- No extra features beyond what the test requires
 - No "while I'm here" improvements
 - No edge cases not yet tested
 
