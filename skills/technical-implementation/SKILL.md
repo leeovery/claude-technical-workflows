@@ -56,18 +56,20 @@ Complete ALL setup steps before proceeding to implementation work.
    - Load the output adapter: `skills/technical-planning/references/output-{format}.md`
    - Follow the **Implementation** section for how to read tasks and update progress
 
-3. **Validate scope** (if specific phase or task was requested)
+3. **Read the TDD workflow** - Load **[tdd-workflow.md](references/tdd-workflow.md)** before writing any code. This is mandatory.
+
+4. **Validate scope** (if specific phase or task was requested)
    - If the requested phase or task doesn't exist in the plan, STOP immediately
    - Ask the user for clarification - don't assume or proceed with a different scope
    - Wait for the user to either correct the scope or ask you to stop
 
-4. **For each phase**:
+5. **For each phase**:
    - Announce phase start and review acceptance criteria
-   - For each task: follow the TDD cycle in **[tdd-workflow.md](references/tdd-workflow.md)**
+   - For each task: follow the TDD cycle loaded in step 3
    - Verify all phase acceptance criteria met
    - **Ask user before proceeding to next phase**
 
-5. **Reference specification** when rationale unclear
+6. **Reference specification** when rationale unclear
 
 ## Progress Announcements
 
