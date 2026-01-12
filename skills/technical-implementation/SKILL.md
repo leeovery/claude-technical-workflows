@@ -22,11 +22,23 @@ You're at step 5. Execute the plan. Don't re-debate decisions.
 
 ## Hard Rules
 
-1. **No code before tests** - Write the failing test first. Always.
+**MANDATORY. No exceptions. Violating these rules invalidates the work.**
+
+1. **No code before tests** - Write the failing test first. Always. If you catch yourself writing implementation code without a failing test, STOP immediately, delete the code, and write the test first.
 2. **No test changes to pass** - If code doesn't pass, fix the code. Tests can only be fixed if genuinely broken or poorly designed, never to accommodate broken code.
 3. **No scope expansion** - If it's not in the plan, don't build it.
 4. **No assumptions** - Uncertain? Check specification. Still uncertain? Stop and ask.
 5. **Commit after green** - Every passing test = commit point.
+
+### Before Writing ANY Implementation Code
+
+Ask yourself these questions. If any answer is "no", STOP.
+
+- [ ] Do I have a failing test for this behavior?
+- [ ] Did I run the test and confirm it fails?
+- [ ] Does it fail for the RIGHT reason (not a syntax error or missing import)?
+
+Only after all three: write the minimum code to pass.
 
 ## Workflow
 
@@ -60,12 +72,16 @@ Complete ALL setup steps before proceeding to implementation work.
    - Review phase acceptance criteria
    - For each task:
      - Derive test from task's micro acceptance criteria
-     - Write failing test
-     - Implement minimal code to pass
+     - Write the test (**no implementation code yet**)
+     - Run test - confirm it **fails** (for the right reason)
+     - Write minimal code to pass
+     - Run test - confirm it **passes**
      - Refactor if needed (only when green)
-     - Commit
+     - Commit immediately
    - Verify all phase acceptance criteria met
    - **Ask user before proceeding to next phase**
+
+   **If you write implementation before a failing test: STOP, delete the code, write the test first.**
 
 5. **Reference specification** when rationale unclear
 
