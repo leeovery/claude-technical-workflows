@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-  <a href="#about">About</a> •
-  <a href="#how-do-i-use-this">How to Use</a> •
+  <a href="#what-is-this">What is this?</a> •
+  <a href="#and-how-do-i-use-it">How to Use</a> •
   <a href="#installation">Installation</a> •
   <a href="#skills">Skills</a> •
   <a href="#contributing">Contributing</a>
@@ -14,24 +14,7 @@
 
 ---
 
-### Quick Install
-
-**Marketplace** (cached globally):
-```
-/plugin marketplace add leeovery/claude-plugins-marketplace
-/plugin install claude-technical-workflows@claude-plugins-marketplace
-```
-
-**npm** (copied to your repo):
-```bash
-npm install -D @leeovery/claude-technical-workflows
-```
-
-See [Installation](#installation) for details and trade-offs.
-
----
-
-## About
+## What is this?
 
 A six-phase workflow for Claude Code that captures context, decisions, and rationale before any code is written, then implements and validates the work against those artifacts.
 
@@ -55,7 +38,22 @@ Review         → Validate against spec
 
 **Model compatibility:** These skills have been developed and refined for Claude Code running on **Opus 4.5**. Different models may exhibit different edge cases, and future model releases may require adjustments to the prompts and workflows.
 
-## How do I use this?
+### Quick Install
+
+**Marketplace** (cached globally):
+```
+/plugin marketplace add leeovery/claude-plugins-marketplace
+/plugin install claude-technical-workflows@claude-plugins-marketplace
+```
+
+**npm** (copied to your repo):
+```bash
+npm install -D @leeovery/claude-technical-workflows
+```
+
+See [Installation](#installation) for details and trade-offs.
+
+## ...and how do I use it?
 
 You have two entry points:
 
