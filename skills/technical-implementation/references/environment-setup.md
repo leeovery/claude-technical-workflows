@@ -62,7 +62,7 @@ Each output adapter contains prerequisites and installation instructions for tha
 
 ## Example Setup Document
 
-```markdown
+````markdown
 # Environment Setup
 
 Instructions for setting up the implementation environment.
@@ -100,4 +100,4 @@ Run tests to verify setup:
 ```bash
 php artisan test
 ```
-```
+````
