@@ -72,12 +72,12 @@ Each phase builds on the previous. Specification validates your discussions into
 
 Each phase has a command designed as its entry point:
 
-| Phase | Command |
-|-------|---------|
-| Research | `/start-research` |
-| Discussion | `/start-discussion` |
-| Specification | `/start-specification` |
-| Planning | `/start-planning` |
+| Phase          | Command                 |
+|----------------|-------------------------|
+| Research       | `/start-research`       |
+| Discussion     | `/start-discussion`     |
+| Specification  | `/start-specification`  |
+| Planning       | `/start-planning`       |
 | Implementation | `/start-implementation` |
 
 Run the command directly or ask Claude to run it. Each command gathers the context it needs, asking what you're researching, discussing, or planning. Where relevant, it looks at outputs from the previous phase and offers you a choice from the list.
@@ -201,14 +201,14 @@ agents/
 
 ## Skills
 
-| Skill | Phase | Description |
-|-------|-------|-------------|
-| [**technical-research**](skills/technical-research/) | 1 | Explore ideas from their earliest seed. Investigate market fit, technical feasibility, business viability. Free-flowing exploration across technical, business, and market domains. |
-| [**technical-discussion**](skills/technical-discussion/) | 2 | Document technical discussions as expert architect and meeting assistant. Captures context, decisions, edge cases, competing solutions, debates, and rationale. |
-| [**technical-specification**](skills/technical-specification/) | 3 | Build validated specifications from discussion documents through collaborative refinement. Filters hallucinations, enriches gaps, produces standalone spec. |
-| [**technical-planning**](skills/technical-planning/) | 4 | Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats. |
-| [**technical-implementation**](skills/technical-implementation/) | 5 | Execute implementation plans using strict TDD workflow. Writes tests first, implements to pass, commits frequently, and gates phases on user approval. |
-| [**technical-review**](skills/technical-review/) | 6 | Review completed implementation against specification requirements and plan acceptance criteria. Uses parallel subagents for efficient chain verification. Produces structured feedback without fixing code. |
+| Skill                                                            | Phase | Description                                                                                                                                                                                                  |
+|------------------------------------------------------------------|-------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [**technical-research**](skills/technical-research/)             | 1     | Explore ideas from their earliest seed. Investigate market fit, technical feasibility, business viability. Free-flowing exploration across technical, business, and market domains.                          |
+| [**technical-discussion**](skills/technical-discussion/)         | 2     | Document technical discussions as expert architect and meeting assistant. Captures context, decisions, edge cases, competing solutions, debates, and rationale.                                              |
+| [**technical-specification**](skills/technical-specification/)   | 3     | Build validated specifications from discussion documents through collaborative refinement. Filters hallucinations, enriches gaps, produces standalone spec.                                                  |
+| [**technical-planning**](skills/technical-planning/)             | 4     | Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats.                                                                 |
+| [**technical-implementation**](skills/technical-implementation/) | 5     | Execute implementation plans using strict TDD workflow. Writes tests first, implements to pass, commits frequently, and gates phases on user approval.                                                       |
+| [**technical-review**](skills/technical-review/)                 | 6     | Review completed implementation against specification requirements and plan acceptance criteria. Uses parallel subagents for efficient chain verification. Produces structured feedback without fixing code. |
 
 ### technical-research
 
@@ -307,21 +307,21 @@ Reviews completed work with fresh perspective. Validates implementation against 
 
 Slash commands to quickly invoke the workflow.
 
-| Command | Description |
-|---------|-------------|
-| [**/start-research**](commands/start-research.md) | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion. |
-| [**/start-discussion**](commands/start-discussion.md) | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation. |
-| [**/start-specification**](commands/start-specification.md) | Start a specification session from an existing discussion. Validates and refines discussion content into a standalone specification. |
-| [**/start-planning**](commands/start-planning.md) | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md, Beads). |
-| [**/start-implementation**](commands/start-implementation.md) | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test. |
-| [**/interview**](commands/interview.md) | Shift into focused questioning mode during research or discussion. Probes ideas with non-obvious questions, challenges assumptions, and surfaces concerns. |
+| Command                                                       | Description                                                                                                                                                                                                |
+|---------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [**/start-research**](commands/start-research.md)             | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion.                                                                                     |
+| [**/start-discussion**](commands/start-discussion.md)         | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation.                                                               |
+| [**/start-specification**](commands/start-specification.md)   | Start a specification session from an existing discussion. Validates and refines discussion content into a standalone specification.                                                                       |
+| [**/start-planning**](commands/start-planning.md)             | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md, Beads). |
+| [**/start-implementation**](commands/start-implementation.md) | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
+| [**/interview**](commands/interview.md)                       | Shift into focused questioning mode during research or discussion. Probes ideas with non-obvious questions, challenges assumptions, and surfaces concerns.                                                 |
 
 ## Agents
 
 Subagents that skills can spawn for parallel task execution.
 
-| Agent | Used By | Description |
-|-------|---------|-------------|
+| Agent                                          | Used By          | Description                                                                                                                                                                                              |
+|------------------------------------------------|------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [**chain-verifier**](agents/chain-verifier.md) | technical-review | Verifies a single plan task was implemented correctly. Checks implementation, tests (not under/over-tested), and code quality. Multiple chain-verifiers run in parallel to verify ALL tasks efficiently. |
 
 ## Requirements

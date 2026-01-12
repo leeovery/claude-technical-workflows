@@ -62,7 +62,7 @@ Ask: **Which specification would you like to plan?**
 
 Ask: **Where should this plan live?**
 
-Load **[output-formats.md](skills/technical-planning/references/output-formats.md)** and present the available formats to help the user choose. Then load the corresponding output adapter for that format's setup requirements.
+Load **[output-formats.md](../skills/technical-planning/references/output-formats.md)** and present the available formats to help the user choose. Then load the corresponding output adapter for that format's setup requirements.
 
 ## Step 5: Gather Additional Context
 
