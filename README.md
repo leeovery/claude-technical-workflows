@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="#what-is-this">What is this?</a> •
-  <a href="#and-how-do-i-use-it">How to Use</a> •
+  <a href="#how-do-i-use-it">How to Use</a> •
   <a href="#installation">Installation</a> •
   <a href="#skills">Skills</a> •
   <a href="#contributing">Contributing</a>
@@ -53,7 +53,7 @@ npm install -D @leeovery/claude-technical-workflows
 
 See [Installation](#installation) for details and trade-offs.
 
-## ...and how do I use it?
+## How do I use it?
 
 You have two entry points:
 
