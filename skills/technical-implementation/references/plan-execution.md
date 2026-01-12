@@ -21,7 +21,7 @@ Plans live in `docs/workflow/planning/{topic}.md` with phases and tasks.
 
 For each phase:
 1. Announce phase start with acceptance criteria
-2. For each task: derive test → write failing test → implement → commit
+2. For each task: follow the TDD cycle in **[tdd-workflow.md](tdd-workflow.md)**
 3. Verify all acceptance criteria met
 4. **Wait for user confirmation before next phase**
 
