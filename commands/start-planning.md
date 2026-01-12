@@ -56,6 +56,8 @@ Which specification would you like to create a plan for?
 
 **Important:** Only completed specifications should proceed to planning. If a specification is still being built, advise the user to complete the specification phase first.
 
+**Auto-select:** If exactly one specification exists, automatically select it and proceed to Step 4. Inform the user which specification was selected. Do not ask for confirmation.
+
 Ask: **Which specification would you like to plan?**
 
 ## Step 4: Choose Output Destination
