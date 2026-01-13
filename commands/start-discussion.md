@@ -81,7 +81,9 @@ Wait for the user to choose before proceeding.
 
 ## Step 3A: "From research" Path
 
-Read each research file and analyze the content to extract key themes and potential discussion topics. Summarize what each theme is about in 1-2 sentences.
+Read each research file and analyze the content to extract key themes and potential discussion topics. For each theme:
+- Note the source file and relevant line numbers
+- Summarize what the theme is about in 1-2 sentences
 
 Cross-reference with existing discussions to identify what has and hasn't been discussed.
 
@@ -92,15 +94,15 @@ Cross-reference with existing discussions to identify what has and hasn't been d
 💡 Topics identified:
 
   ✨ {Theme name}
-     Source: {filename}.md
+     Source: {filename}.md (lines {start}-{end})
      "{Brief 1-2 sentence summary of the theme and what needs deciding}"
 
   ✨ {Another theme}
-     Source: {filename}.md
+     Source: {filename}.md (lines {start}-{end})
      "{Brief summary}"
 
   ✅ {Already discussed theme} → discussed in {topic}.md
-     Source: {filename}.md
+     Source: {filename}.md (lines {start}-{end})
      "{Brief summary}"
 
 Which topic would you like to discuss? (Or describe something else)
@@ -109,6 +111,8 @@ Which topic would you like to discuss? (Or describe something else)
 **Key:**
 - ✨ = Undiscussed topic (potential new discussion)
 - ✅ = Already has a corresponding discussion
+
+**Important:** Keep track of the source file and line numbers for the chosen topic - this will be passed to the skill.
 
 Wait for the user to choose before proceeding to Step 4.
 
@@ -177,11 +181,24 @@ Wait for response before proceeding.
 
 ## Step 5: Invoke Discussion Skill
 
-Begin the discussion session:
+Begin the discussion session with appropriate context based on the path taken.
 
+**If from research:**
 ```
 Discussion session for: {topic}
-Source: {research file | existing discussion | fresh}
+Output: docs/workflow/discussion/{topic}.md
+
+## Research Reference
+Source: docs/workflow/research/{filename}.md (lines {start}-{end})
+Summary: {the 1-2 sentence summary from Step 3A}
+
+Begin discussion using the technical-discussion skill.
+```
+
+**If continuing or fresh:**
+```
+Discussion session for: {topic}
+Source: {existing discussion | fresh}
 Output: docs/workflow/discussion/{topic}.md
 
 Begin discussion using the technical-discussion skill.
