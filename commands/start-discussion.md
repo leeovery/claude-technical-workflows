@@ -36,8 +36,9 @@ Scan the codebase for research and discussions:
    - If it exists, read it to get the stored checksum from the frontmatter
 
 5. **Compute current research checksum** (if research files exist):
-   - Run: `cat $(ls docs/workflow/research/*.md | sort) 2>/dev/null | md5sum | cut -d' ' -f1`
-   - This creates a combined checksum of all research files (sorted alphabetically)
+   - Run exactly: `cat docs/workflow/research/*.md 2>/dev/null | md5sum | cut -d' ' -f1`
+   - IMPORTANT: Use this exact command - glob expansion is alphabetically sorted by default
+   - Do NOT modify or "simplify" this command - checksum must be deterministic
    - Store this value to compare with the cached checksum
 
 ## Step 2: Present Workflow State and Options
