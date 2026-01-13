@@ -9,3 +9,6 @@ __pycache__/
 *$py.class
 *.so
 .Python
+
+# Workflow cache
+docs/workflow/.cache/
