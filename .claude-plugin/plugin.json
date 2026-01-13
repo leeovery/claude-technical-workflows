@@ -1,12 +1,9 @@
 {
-  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
   "name": "claude-technical-workflows",
   "description": "Six-phase workflow: research, discuss, specify, plan, implement, review",
   "version": "2.0.0",
   "author": {
     "name": "Lee Overy",
     "email": "me@leeovery.com"
-  },
-  "category": "development",
-  "homepage": "https://github.com/leeovery/claude-technical-workflows"
+  }
 }
