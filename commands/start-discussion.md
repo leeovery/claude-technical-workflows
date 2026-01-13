@@ -31,6 +31,15 @@ Scan the codebase for research and discussions:
    - Status values: `Exploring`, `Deciding`, or `Concluded`
    - Do NOT use bash loops - run separate commands for each file
 
+4. **Check for cached analysis** (if research files exist):
+   - Check if `docs/workflow/.cache/research-analysis.md` exists
+   - If it exists, read it to get the stored checksum from the frontmatter
+
+5. **Compute current research checksum** (if research files exist):
+   - Run: `cat $(ls docs/workflow/research/*.md | sort) 2>/dev/null | md5sum | cut -d' ' -f1`
+   - This creates a combined checksum of all research files (sorted alphabetically)
+   - Store this value to compare with the cached checksum
+
 ## Step 2: Present Workflow State and Options
 
 Present the workflow state and available options based on what was discovered.
@@ -81,23 +90,110 @@ Wait for the user to choose before proceeding.
 
 ## Step 3A: "From research" Path
 
+This step uses caching to avoid re-analyzing unchanged research documents.
+
+### Step 3A.1: Check Cache Validity
+
+Compare the current research checksum (computed in Step 1.5) with the cached checksum:
+
+**If cache exists AND checksums match:**
+```
+📋 Using cached analysis
+
+Research documents unchanged since last analysis ({date from cache}).
+Loading {count} previously identified topics...
+
+💡 To force a fresh analysis, enter: refresh
+```
+
+Then load the topics from the cache file and skip to Step 3A.3 (Cross-reference).
+
+**If cache missing OR checksums differ:**
+```
+🔍 Analyzing research documents...
+```
+
+Proceed to Step 3A.2 (Full Analysis).
+
+### Step 3A.2: Full Analysis (when cache invalid)
+
 Read each research file and analyze the content to extract key themes and potential discussion topics. For each theme:
 - Note the source file and relevant line numbers
 - Summarize what the theme is about in 1-2 sentences
+- Identify key questions or decisions that need discussion
 
-Cross-reference with existing discussions to identify what has and hasn't been discussed.
+**Be thorough**: This analysis will be cached, so take time to identify ALL potential topics including:
+- Major architectural decisions
+- Technical trade-offs mentioned
+- Open questions or concerns raised
+- Implementation approaches discussed
+- Integration points with external systems
+- Security or performance considerations
+- Edge cases or error handling mentioned
 
-**Present findings:**
+**Save to cache:**
+After analysis, create/update `docs/workflow/.cache/research-analysis.md`:
+
+```markdown
+---
+checksum: {computed_checksum}
+generated: {ISO date}
+research_files:
+  - {filename1}.md
+  - {filename2}.md
+---
+
+# Research Analysis Cache
+
+## Topics
+
+### {Theme name}
+- **Source**: {filename}.md (lines {start}-{end})
+- **Summary**: {1-2 sentence summary}
+- **Key questions**: {what needs deciding}
+
+### {Another theme}
+- **Source**: {filename}.md (lines {start}-{end})
+- **Summary**: {1-2 sentence summary}
+- **Key questions**: {what needs deciding}
+
+[... more topics ...]
 ```
-🔍 Analyzing research documents...
+
+Ensure the `.cache` directory exists: `mkdir -p docs/workflow/.cache`
+
+### Step 3A.3: Cross-reference with Discussions
+
+**Always performed** (whether using cache or fresh analysis):
+
+For each identified topic, check if a corresponding discussion already exists in `docs/workflow/discussion/`.
+
+### Step 3A.4: Present Findings
+
+**If using cached analysis:**
+```
+📋 Cached analysis (research unchanged since {date})
 
 💡 Topics identified:
 
   ✨ {Theme name}
      Source: {filename}.md (lines {start}-{end})
-     "{Brief 1-2 sentence summary of the theme and what needs deciding}"
+     "{Brief summary}"
 
-  ✨ {Another theme}
+  ✅ {Already discussed theme} → discussed in {topic}.md
+     Source: {filename}.md (lines {start}-{end})
+     "{Brief summary}"
+
+Which topic would you like to discuss? (Or enter 'refresh' for fresh analysis)
+```
+
+**If fresh analysis:**
+```
+🔍 Analysis complete (cached for future sessions)
+
+💡 Topics identified:
+
+  ✨ {Theme name}
      Source: {filename}.md (lines {start}-{end})
      "{Brief summary}"
 
@@ -111,6 +207,13 @@ Which topic would you like to discuss? (Or describe something else)
 **Key:**
 - ✨ = Undiscussed topic (potential new discussion)
 - ✅ = Already has a corresponding discussion
+
+### Step 3A.5: Handle "refresh" Request
+
+If user enters `refresh`:
+- Delete the cache file: `rm docs/workflow/.cache/research-analysis.md`
+- Return to Step 3A.2 (Full Analysis)
+- Inform user: "Refreshing analysis..."
 
 **Important:** Keep track of the source file and line numbers for the chosen topic - this will be passed to the skill.
 
