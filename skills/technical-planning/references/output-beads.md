@@ -78,10 +78,13 @@ This creates `.beads/config.yaml` with the appropriate `no-db` setting.
 
 | Planning Concept | Beads Entity |
 |------------------|--------------|
-| Plan | Epic issue |
+| Specification/Topic | Epic issue |
 | Phase | Sub-issue under epic |
 | Task | Sub-task under phase |
-| Dependency | `bd dep add` relationship |
+| Internal dependency | `bd dep add` within same epic |
+| Cross-topic dependency | `bd dep add` across epics |
+
+Each specification topic becomes its own epic. All epics live in one beads database, enabling cross-topic dependencies.
 
 Example hierarchy:
 ```
@@ -91,7 +94,84 @@ bd-a3f8        (Epic: User Authentication)
 │   └── bd-a3f8.1.2  (Task: Session management)
 └── bd-a3f8.2  (Phase 2: OAuth)
     └── bd-a3f8.2.1  (Task: Google provider)
+
+bd-b7c2        (Epic: Billing System)  ← Different topic, same database
+├── bd-b7c2.1  (Phase 1: Invoicing)
+│   └── bd-b7c2.1.1  (Task: Invoice generation)
 ```
+
+## Cross-Epic Dependencies
+
+Cross-topic dependencies link tasks between different epics (different specifications/topics). This is how you express "billing depends on authentication being complete."
+
+### Creating Cross-Epic Dependencies
+
+Use the same `bd dep add` command - it works across epics:
+
+```bash
+# Invoice generation (in billing epic) depends on user authentication (in auth epic)
+bd dep add bd-b7c2.1.1 bd-a3f8.1.1
+```
+
+After adding, `bd ready` will not show `bd-b7c2.1.1` until `bd-a3f8.1.1` is closed.
+
+### Viewing Cross-Epic Dependencies
+
+```bash
+# Show what a task depends on
+bd show bd-b7c2.1.1
+
+# Show what depends on a task
+bd show bd-a3f8.1.1 --deps
+```
+
+## Querying Dependencies
+
+Use these queries to understand the dependency graph for implementation blocking and `/link-dependencies`.
+
+### Find Ready Tasks (No Open Blockers)
+
+```bash
+bd ready
+```
+
+Returns tasks with no incomplete dependencies - these are safe to implement.
+
+### Find All Tasks Blocked By a Specific Task
+
+```bash
+bd show bd-a3f8.1.1 --deps
+```
+
+Shows what will be unblocked when this task completes.
+
+### Find What a Task Depends On
+
+```bash
+bd show bd-b7c2.1.1
+```
+
+The output includes a "Blocked by" section listing dependencies.
+
+### Query Via JSONL (Advanced)
+
+For programmatic queries, read `.beads/issues.jsonl` directly:
+
+```bash
+# Find all dependencies (grep for blocked_by field)
+grep -o '"blocked_by":\[[^]]*\]' .beads/issues.jsonl
+
+# Find tasks depending on a specific ID
+grep '"bd-a3f8.1.1"' .beads/issues.jsonl | grep blocked_by
+```
+
+### Check if a Task is Complete
+
+```bash
+bd show bd-a3f8.1.1
+```
+
+Look for `status: closed` in the output. A dependency is "met" when the task is closed.
 
 ## Output Process
 
@@ -180,9 +260,10 @@ This plan is managed via Beads. Tasks are stored in `.beads/` and tracked as a d
 
 **Implementation will**:
 1. Read this file to identify the epic
-2. Query `bd ready` for unblocked tasks
-3. Work through tasks respecting dependencies
-4. Close tasks with `bd close bd-{id} "reason"`
+2. Check External Dependencies below
+3. Query `bd ready` for unblocked tasks
+4. Work through tasks respecting dependencies
+5. Close tasks with `bd close bd-{id} "reason"`
 
 ## Key Decisions
 
@@ -194,7 +275,16 @@ This plan is managed via Beads. Tasks are stored in `.beads/` and tracked as a d
 |-------|------|---------|
 | Phase 1 | {Goal} | bd-{id}.1 |
 | Phase 2 | {Goal} | bd-{id}.2 |
+
+## External Dependencies
+
+[Dependencies on other topics - copy from specification's Dependencies section]
+
+- {topic}: {description}
+- {topic}: {description} → {task-id} (resolved)
 ```
+
+The External Dependencies section tracks what this plan needs from other topics. See `formal-planning.md` for the format and states (unresolved, resolved, satisfied externally).
 
 ## Frontmatter
 

@@ -71,9 +71,10 @@ This plan is managed via Backlog.md. Tasks are stored in the `backlog/` director
 
 **Implementation will**:
 1. Read this file to identify the plan
-2. Query backlog via MCP or read task files directly
-3. Work through tasks by status/priority
-4. Update task status as work completes
+2. Check External Dependencies below
+3. Query backlog via MCP or read task files directly
+4. Work through tasks by status/priority
+5. Update task status as work completes
 
 **To add tasks**: Run `backlog add "Task title"` or create task files directly.
 
@@ -86,7 +87,16 @@ Tasks are organized with labels/priorities:
 ## Key Decisions
 
 [Summary of key decisions from specification]
+
+## External Dependencies
+
+[Dependencies on other topics - copy from specification's Dependencies section]
+
+- {topic}: {description}
+- {topic}: {description} → {task-id} (resolved)
 ```
+
+The External Dependencies section tracks what this plan needs from other topics. See `formal-planning.md` for the format and states (unresolved, resolved, satisfied externally).
 
 ### Task File Format
 
@@ -138,7 +148,68 @@ Specification reference: `docs/workflow/specification/{topic}.md` (for ambiguity
 | `priority` | Importance | high, medium, low |
 | `labels` | Categories | `[phase-1, api, edge-case, needs-info]` |
 | `assignee` | Who's working on it | (optional) |
-| `dependencies` | Blocking tasks | `[task-1, task-3]` |
+| `dependencies` | Blocking tasks (internal) | `[task-1, task-3]` |
+| `external_deps` | Cross-topic dependencies | `[billing-system#task-5]` |
+
+## Cross-Topic Dependencies
+
+Cross-topic dependencies link tasks between different plan topics. This is how you express "this task depends on the billing system being implemented."
+
+### In Task Frontmatter
+
+Use the `external_deps` field with the format `{topic}#{task-id}`:
+
+```yaml
+---
+status: To Do
+priority: high
+labels: [phase-1]
+external_deps: [billing-system#task-5, authentication#task-3]
+---
+```
+
+### In Plan Reference File
+
+The plan reference file at `docs/workflow/planning/{topic}.md` tracks external dependencies in a dedicated section (see template below).
+
+## Querying Dependencies
+
+Use these queries to understand the dependency graph for implementation blocking and `/link-dependencies`.
+
+### Find Tasks With External Dependencies
+
+```bash
+# Find all tasks with external dependencies
+grep -l "external_deps:" backlog/*.md
+
+# Find tasks depending on a specific topic
+grep -l "billing-system#" backlog/*.md
+```
+
+### Check Internal Dependencies
+
+```bash
+# Find tasks with dependencies
+grep -l "dependencies:" backlog/*.md
+
+# Show dependency values
+grep "dependencies:" backlog/*.md
+```
+
+### Check if a Dependency is Complete
+
+Read the task file and check the frontmatter:
+- `status: Done` means the dependency is met
+- Any other status means it's still blocking
+
+### Parse Frontmatter Programmatically
+
+For more complex queries, parse the YAML frontmatter:
+
+```bash
+# Extract frontmatter from a task file
+sed -n '/^---$/,/^---$/p' backlog/task-5*.md
+```
 
 ### Using `needs-info` Label
 

@@ -124,11 +124,18 @@ Map edge cases from specification to specific tasks:
 
 Tables, schemas, API contracts
 
-## Dependencies
+## Internal Dependencies
 
 - Prerequisites for Phase 1
-- Phase dependencies
-- External blockers
+- Phase dependencies (Phase 2 depends on Phase 1, etc.)
+
+## External Dependencies
+
+[Dependencies on other topics - copy from specification's Dependencies section]
+
+- {topic}: {description}
+- {topic}: {description} → {task-reference} (resolved)
+- ~~{topic}: {description}~~ → satisfied externally
 
 ## Rollback (if applicable)
 
@@ -139,6 +146,67 @@ Triggers and steps
 | Date | Change |
 |------|--------|
 | YYYY-MM-DD | Created from specification |
+```
+
+## Cross-Topic Dependencies
+
+Cross-topic dependencies link tasks between different plan files. This is how you express "this feature depends on the billing system being implemented."
+
+### In the External Dependencies Section
+
+Use the format `{topic}: {description} → {task-reference}` where task-reference points to a specific task in another plan file:
+
+```markdown
+## External Dependencies
+
+- billing-system: Invoice generation → billing-system.md#phase-1-task-2 (resolved)
+- authentication: User context → authentication.md#phase-2-task-1 (resolved)
+- payment-gateway: Payment processing (unresolved - not yet planned)
+```
+
+### Task References
+
+For local markdown plans, reference tasks using:
+- `{topic}.md#phase-{n}-task-{m}` - references a specific task by phase and number
+- Consider adding nano IDs to task headers for more stable references
+
+## Querying Dependencies
+
+Use these queries to understand the dependency graph for implementation blocking and `/link-dependencies`.
+
+### Find Plans With External Dependencies
+
+```bash
+# Find all plans with external dependencies
+grep -l "## External Dependencies" docs/workflow/planning/*.md
+
+# Find unresolved dependencies (no arrow →)
+grep -A 10 "## External Dependencies" docs/workflow/planning/*.md | grep "^- " | grep -v "→"
+```
+
+### Find Dependencies on a Specific Topic
+
+```bash
+# Find plans that depend on billing-system
+grep -l "billing-system:" docs/workflow/planning/*.md
+```
+
+### Check if a Dependency Task Exists
+
+Read the referenced plan file and verify the task exists:
+
+```bash
+# Check if a task exists in another plan
+grep "Phase 1.*Task 2" docs/workflow/planning/billing-system.md
+```
+
+### Check if a Dependency is Complete
+
+For local markdown, check if the task's acceptance criteria are checked off:
+
+```bash
+# Look for completed acceptance criteria
+grep -A 5 "### Phase 1" docs/workflow/planning/billing-system.md | grep "\[x\]"
 ```
 
 ## Frontmatter

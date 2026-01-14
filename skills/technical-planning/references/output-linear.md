@@ -18,9 +18,52 @@ Ask the user: **Which team should own this project?**
 
 | Planning Concept | Linear Entity |
 |------------------|---------------|
-| Plan | Project |
+| Specification/Topic | Project |
 | Phase | Label (e.g., `phase-1`, `phase-2`) |
 | Task | Issue |
+| Internal dependency | Issue blocking relationship (within project) |
+| Cross-topic dependency | Issue blocking relationship (across projects) |
+
+Each specification topic becomes its own Linear project. Cross-topic dependencies link issues between projects.
+
+## Cross-Project Dependencies
+
+Cross-topic dependencies link issues between different Linear projects (different specifications/topics). This is how you express "billing depends on authentication being complete."
+
+### Creating Cross-Project Dependencies
+
+Linear supports blocking relationships between issues, even across projects. Via MCP or the Linear UI:
+
+1. Open the dependent issue (the one that's blocked)
+2. Add a "Blocked by" relationship to the issue in the other project
+3. Linear will show this issue as blocked until the dependency is complete
+
+## Querying Dependencies
+
+Use these queries to understand the dependency graph for implementation blocking and `/link-dependencies`.
+
+### Via MCP
+
+Query Linear for issues with blocking relationships:
+
+```
+# Get all issues in a project
+linear_getIssues(projectId: "{project_id}")
+
+# Check if an issue has blockers
+linear_getIssue(issueId: "{issue_id}")
+# Look for blockedByIssues in the response
+```
+
+### Check if a Dependency is Complete
+
+Query the blocking issue and check its state:
+- `state.type === "completed"` means the dependency is met
+- Any other state means it's still blocking
+
+### Find Issues Blocked by a Specific Issue
+
+Via the Linear API or MCP, query for issues where `blockedByIssues` contains the issue ID.
 
 ## Output Process
 
@@ -125,16 +168,26 @@ This plan is managed in Linear. The source of truth for tasks and progress is th
 
 **Implementation will**:
 1. Read this file to find the Linear project
-2. Query Linear for project issues
-3. Work through tasks in phase order (by label)
-4. Update issue status as tasks complete
+2. Check External Dependencies below
+3. Query Linear for project issues
+4. Work through tasks in phase order (by label)
+5. Update issue status as tasks complete
 
 **To add tasks**: Create issues in the Linear project. They'll be picked up automatically.
 
 ## Key Decisions
 
 [Summary of key decisions from specification - for quick reference]
+
+## External Dependencies
+
+[Dependencies on other topics - copy from specification's Dependencies section]
+
+- {topic}: {description}
+- {topic}: {description} → {issue-id} (resolved)
 ```
+
+The External Dependencies section tracks what this plan needs from other topics. See `formal-planning.md` for the format and states (unresolved, resolved, satisfied externally).
 
 ## Frontmatter
 
