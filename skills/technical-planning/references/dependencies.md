@@ -4,6 +4,14 @@
 
 ---
 
+## Internal Dependencies
+
+Internal dependencies are dependencies within a single topic/epic - where one task depends on another task in the same plan. These are handled by the planning output format's native dependency system.
+
+During planning, structure tasks in the correct order with appropriate dependencies so work proceeds logically. The output format (beads, linear, etc.) manages these relationships and ensures tasks are worked in the right sequence.
+
+See the relevant output format reference for how to create and query internal dependencies.
+
 ## External Dependencies
 
 External dependencies are things a feature needs from other topics or systems that are outside the current plan's scope. They come from the specification's Dependencies section.
