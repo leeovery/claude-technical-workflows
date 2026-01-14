@@ -168,11 +168,3 @@ Link cross-topic dependencies
 
 - {summary of what was linked}
 ```
-
-## Notes
-
-- This command is best run after creating multiple plans
-- It's a "best effort" process - not all dependencies may be resolvable
-- Dependencies without matching plans stay unresolved until those topics are planned
-- All plans must use the same output format for dependency linking to work
-- The `/start-implementation` command will block on unresolved dependencies
