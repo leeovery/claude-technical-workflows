@@ -85,6 +85,7 @@ Each phase has a command designed as its entry point. Commands are prefixed with
 | Specification  | `/workflow:start-specification`  |
 | Planning       | `/workflow:start-planning`       |
 | Implementation | `/workflow:start-implementation` |
+| Review         | `/workflow:start-review`         |
 
 Run the command directly or ask Claude to run it. Each command gathers the context it needs, asking what you're researching, discussing, or planning. Where relevant, it looks at outputs from the previous phase and offers you a choice from the list.
 
@@ -218,7 +219,8 @@ commands/
 ├── workflow:start-specification.md  # Begin specification building
 ├── workflow:start-planning.md       # Begin implementation planning
 ├── workflow:start-implementation.md # Begin implementing a plan
-├── workflow:link-dependencies.md    # Link dependencies across topics
+├── workflow:start-review.md         # Begin reviewing completed work
+├── link-dependencies.md             # Link dependencies across topics
 ├── start-feature.md                 # Create spec directly from inline context
 └── interview.md                     # Focused questioning mode (general purpose)
 
@@ -343,7 +345,7 @@ Sequential workflow commands are prefixed with `workflow:` and expect files from
 | [**/workflow:start-specification**](commands/workflow:start-specification.md)        | Start a specification session from an existing discussion. Validates and refines discussion content into a standalone specification.                                                                       |
 | [**/workflow:start-planning**](commands/workflow:start-planning.md)                  | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md, Beads). |
 | [**/workflow:start-implementation**](commands/workflow:start-implementation.md)      | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
-| [**/workflow:link-dependencies**](commands/workflow:link-dependencies.md)            | Link external dependencies across topics. Scans plans and wires up unresolved cross-topic dependencies.                                                                                                    |
+| [**/workflow:start-review**](commands/workflow:start-review.md)                      | Start reviewing completed work. Validates implementation against plan tasks and acceptance criteria.                                                                                                        |
 
 ### Standalone Commands
 
@@ -353,6 +355,7 @@ These commands can be used independently, without the full workflow.
 |---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
 | [**/start-feature**](commands/start-feature.md)         | Create a specification directly from inline context. For adding features to existing projects when you already know what you're building.  |
 | [**/interview**](commands/interview.md)                 | Shift into focused questioning mode. Probes ideas with non-obvious questions, challenges assumptions, and surfaces concerns.               |
+| [**/link-dependencies**](commands/link-dependencies.md) | Link external dependencies across topics. Scans plans and wires up unresolved cross-topic dependencies.                                    |
 
 ## Agents
 

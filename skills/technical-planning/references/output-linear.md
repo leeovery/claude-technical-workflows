@@ -40,7 +40,7 @@ Linear supports blocking relationships between issues, even across projects. Via
 
 ## Querying Dependencies
 
-Use these queries to understand the dependency graph for implementation blocking and `/workflow:link-dependencies`.
+Use these queries to understand the dependency graph for implementation blocking and `/link-dependencies`.
 
 ### Via MCP
 

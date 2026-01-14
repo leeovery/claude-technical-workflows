@@ -100,7 +100,7 @@ These dependencies must be completed before this plan can be implemented.
 OPTIONS:
 1. Implement the blocking dependencies first
 2. Mark a dependency as "satisfied externally" if it was implemented outside this workflow
-3. Run /workflow:link-dependencies to wire up any recently completed plans
+3. Run /link-dependencies to wire up any recently completed plans
 ```
 
 ### Escape Hatch

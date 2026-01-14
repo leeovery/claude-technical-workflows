@@ -54,14 +54,14 @@ SPECIFICATION                    PLANNING
 Dependencies section    →    Copied to plan index as unresolved
 (natural language)                      ↓
                              Resolved when linked to specific task ID
-                             (via planning or /workflow:link-dependencies)
+                             (via planning or /link-dependencies)
 ```
 
 ## Resolution
 
 Dependencies move from unresolved → resolved when:
 - The dependency topic is planned and you identify the specific task
-- The `/workflow:link-dependencies` command finds and wires the match
+- The `/link-dependencies` command finds and wires the match
 
 Dependencies become "satisfied externally" when:
 - The user confirms it was implemented outside the workflow

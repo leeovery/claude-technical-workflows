@@ -117,7 +117,6 @@ The skill just does its job with whatever it's given.
 | `/workflow:start-planning` | Expects specification docs → passes to skill |
 | `/workflow:start-implementation` | Expects plan docs → passes to skill |
 | `/workflow:start-review` | Expects plan + spec docs → passes to skill |
-| `/workflow:link-dependencies` | Links dependencies across topics |
 
 These commands locate previous phase files, read them, and pass content to skills.
 
@@ -128,6 +127,7 @@ These commands locate previous phase files, read them, and pass content to skill
 | `/start-feature` (NEW) | Gathers inline feature context → passes to specification skill |
 | `/implement` (NEW, optional) | Accepts inline plan context → passes to implementation skill |
 | `/review` (NEW, optional) | Accepts inline context → passes to review skill |
+| `/link-dependencies` | Links dependencies across topics (utility, not a workflow phase) |
 
 ### Deprecation Strategy
 
@@ -208,14 +208,14 @@ Skills don't care where content came from - could be database, API, etc.
 The recently implemented cross-topic dependency system already follows the command-driven pattern we're proposing:
 
 **How it works:**
-- `/workflow:link-dependencies` command scans filesystem for plans
+- `/link-dependencies` command scans filesystem for plans
 - Reads External Dependencies sections from specifications
 - Delegates to output format references for querying/creating links
 - Commands do orchestration, skills do processing
 
 **Key files:**
 - `skills/technical-planning/references/dependencies.md` - Central reference for dependency states
-- `commands/workflow:link-dependencies.md` - Command that wires up dependencies
+- `commands/link-dependencies.md` - Command that wires up dependencies
 - All `output-*.md` files now have "Cross-Epic Dependencies" sections
 
 **Why this validates our approach:**
@@ -224,7 +224,7 @@ The dependency system proves the command-as-orchestrator pattern works. Implemen
 **Implications for contract model:**
 - Dependency checking becomes a pre-flight step in commands
 - Skills assume dependencies are satisfied when invoked
-- `/workflow:link-dependencies` could accept inline plan context (not just files) in Phase 2
+- `/link-dependencies` could accept inline plan context (not just files) in Phase 2
 
 ## Recommendation
 
@@ -554,7 +554,9 @@ These files are already position-agnostic or stay unchanged:
 - `commands/workflow:start-planning.md` - Reads spec files, passes to skill
 - `commands/workflow:start-implementation.md` - Reads plan files, passes to skill
 - `commands/workflow:start-review.md` - Reads plan + spec files, passes to skill
-- `commands/workflow:link-dependencies.md` - Already follows contract model
+
+**Standalone commands (not workflow-prefixed):**
+- `commands/link-dependencies.md` - Utility command, wires up plan dependencies
 
 **Deprecation aliases (to be created, then eventually removed):**
 - `commands/start-research.md` → forwards to `workflow:start-research`
@@ -562,7 +564,6 @@ These files are already position-agnostic or stay unchanged:
 - `commands/start-specification.md` → forwards to `workflow:start-specification`
 - `commands/start-planning.md` → forwards to `workflow:start-planning`
 - `commands/start-implementation.md` → forwards to `workflow:start-implementation`
-- `commands/link-dependencies.md` → forwards to `workflow:link-dependencies`
 
 ---
 
@@ -612,7 +613,7 @@ After implementation:
 - [ ] `/workflow:start-planning` accepts spec from `/start-feature` without issues
 - [ ] `/workflow:start-implementation` works with plans regardless of origin
 - [ ] `/workflow:start-review` works with or without specification
-- [ ] `/workflow:link-dependencies` still works (already command-driven)
+- [ ] `/link-dependencies` still works (standalone utility command)
 - [ ] Deprecation aliases show warning and forward correctly
 - [ ] Existing sequential workflow still works unchanged
 - [ ] All TDD and quality guidance preserved

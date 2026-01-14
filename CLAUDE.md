@@ -34,11 +34,11 @@ commands/
   workflow:start-planning.md       # Begin implementation planning
   workflow:start-implementation.md # Begin implementing a plan
   workflow:start-review.md         # Begin review
-  workflow:link-dependencies.md    # Link dependencies across topics
 
   # Standalone commands (flexible input)
   start-feature.md                 # Create spec directly from inline context
   interview.md                     # Focused questioning mode (general purpose)
+  link-dependencies.md             # Link dependencies across topics
 
 agents/
   chain-verifier.md          # Parallel chain verification for review phase
