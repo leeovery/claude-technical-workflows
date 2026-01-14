@@ -68,12 +68,11 @@ After the user selects a plan:
 
 ### For Resolved Dependencies
 
-Query the output format to check if the dependency task is complete:
+To check if a dependency task is complete:
 
-**Beads**: Run `bd show {task-id}` - look for `status: closed`
-**Linear**: Query issue via MCP - check if state is "completed"
-**Backlog.md**: Read task file - check if `status: Done`
-**Local Markdown**: Check if acceptance criteria are checked off
+1. Read the plan's `format:` from frontmatter
+2. Load the corresponding output format reference from `skills/technical-planning/references/output-{format}.md`
+3. Follow the "Querying Dependencies" section in that file to check task completion status
 
 ### Blocking Behavior
 
