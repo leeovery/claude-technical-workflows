@@ -105,24 +105,23 @@ Skills receive inputs and process them. They don't know or care where the inputs
 
 The skill just does its job with whatever it's given.
 
-### Existing Commands: Unchanged
+### Command Naming Convention
 
-The existing sequential workflow commands stay exactly as they are:
+**Workflow commands** (prefixed with `workflow:`) are part of the sequential workflow system:
 
-| Command | Behavior (unchanged) |
-|---------|---------------------|
-| `/start-research` | Entry point - creates research docs |
-| `/start-discussion` | Entry point OR follows research - creates discussion docs |
-| `/start-specification` | Expects discussion docs → passes to skill |
-| `/start-planning` | Expects specification docs → passes to skill |
-| `/start-implementation` | Expects plan docs → passes to skill |
-| `/start-review` | Expects plan + spec docs → passes to skill |
+| Command | Behavior |
+|---------|----------|
+| `/workflow:start-research` | Entry point - creates research docs |
+| `/workflow:start-discussion` | Entry point OR follows research - creates discussion docs |
+| `/workflow:start-specification` | Expects discussion docs → passes to skill |
+| `/workflow:start-planning` | Expects specification docs → passes to skill |
+| `/workflow:start-implementation` | Expects plan docs → passes to skill |
+| `/workflow:start-review` | Expects plan + spec docs → passes to skill |
+| `/workflow:link-dependencies` | Links dependencies across topics |
 
-These commands are designed for the full sequential workflow. They locate the previous phase files, read them, and pass the content to the skills.
+These commands locate previous phase files, read them, and pass content to skills.
 
-### New Commands: Alternative Entry Points
-
-New commands can provide different ways to gather inputs:
+**Standalone commands** (no prefix) work outside the workflow:
 
 | Command | Purpose |
 |---------|---------|
@@ -130,12 +129,27 @@ New commands can provide different ways to gather inputs:
 | `/implement` (NEW, optional) | Accepts inline plan context → passes to implementation skill |
 | `/review` (NEW, optional) | Accepts inline context → passes to review skill |
 
-These enable standalone skill usage without the full workflow.
+### Deprecation Strategy
+
+Old command names become aliases with deprecation warnings:
+
+```
+User runs: /start-planning
+
+Output:
+⚠️ /start-planning is deprecated. Use /workflow:start-planning instead.
+   (Forwarding to /workflow:start-planning...)
+```
+
+**Timeline:**
+1. **Now**: Rename commands to `workflow:` prefix
+2. **Transition**: Old names show deprecation message, forward to new names
+3. **Eventually**: Remove old aliases
 
 ### The Key Insight
 
 **Same skills, different commands.** The implementation skill doesn't know if it's being invoked by:
-- `/start-implementation` (which read from `docs/workflow/planning/{topic}.md`)
+- `/workflow:start-implementation` (which read from `docs/workflow/planning/{topic}.md`)
 - `/implement` (which gathered an inline plan from the user)
 
 It just receives plan content and executes TDD. The command is responsible for input gathering; the skill is responsible for processing.
@@ -194,14 +208,14 @@ Skills don't care where content came from - could be database, API, etc.
 The recently implemented cross-topic dependency system already follows the command-driven pattern we're proposing:
 
 **How it works:**
-- `/link-dependencies` command scans filesystem for plans
+- `/workflow:link-dependencies` command scans filesystem for plans
 - Reads External Dependencies sections from specifications
 - Delegates to output format references for querying/creating links
 - Commands do orchestration, skills do processing
 
 **Key files:**
 - `skills/technical-planning/references/dependencies.md` - Central reference for dependency states
-- `commands/link-dependencies.md` - Command that wires up dependencies
+- `commands/workflow:link-dependencies.md` - Command that wires up dependencies
 - All `output-*.md` files now have "Cross-Epic Dependencies" sections
 
 **Why this validates our approach:**
@@ -210,7 +224,7 @@ The dependency system proves the command-as-orchestrator pattern works. Implemen
 **Implications for contract model:**
 - Dependency checking becomes a pre-flight step in commands
 - Skills assume dependencies are satisfied when invoked
-- `/link-dependencies` could accept inline plan context (not just files) in Phase 2
+- `/workflow:link-dependencies` could accept inline plan context (not just files) in Phase 2
 
 ## Recommendation
 
@@ -533,13 +547,22 @@ These files are already position-agnostic or stay unchanged:
 - `skills/technical-planning/references/output-*.md` - Format specs, not workflow position
 - `skills/technical-planning/references/dependencies.md` - Already command-driven pattern
 
-**Existing commands (unchanged - they define the sequential workflow):**
-- `commands/start-research.md` - Entry point, no changes
-- `commands/start-discussion.md` - Entry point, no changes
-- `commands/start-specification.md` - Reads discussion files, passes to skill
-- `commands/start-planning.md` - Reads spec files, passes to skill
-- `commands/start-implementation.md` - Reads plan files, passes to skill
-- `commands/link-dependencies.md` - Already follows contract model
+**Existing commands (renamed to `workflow:` prefix):**
+- `commands/workflow:start-research.md` - Entry point
+- `commands/workflow:start-discussion.md` - Entry point
+- `commands/workflow:start-specification.md` - Reads discussion files, passes to skill
+- `commands/workflow:start-planning.md` - Reads spec files, passes to skill
+- `commands/workflow:start-implementation.md` - Reads plan files, passes to skill
+- `commands/workflow:start-review.md` - Reads plan + spec files, passes to skill
+- `commands/workflow:link-dependencies.md` - Already follows contract model
+
+**Deprecation aliases (to be created, then eventually removed):**
+- `commands/start-research.md` → forwards to `workflow:start-research`
+- `commands/start-discussion.md` → forwards to `workflow:start-discussion`
+- `commands/start-specification.md` → forwards to `workflow:start-specification`
+- `commands/start-planning.md` → forwards to `workflow:start-planning`
+- `commands/start-implementation.md` → forwards to `workflow:start-implementation`
+- `commands/link-dependencies.md` → forwards to `workflow:link-dependencies`
 
 ---
 
@@ -586,10 +609,11 @@ Standard specification file at `docs/workflow/specification/{topic}.md`
 After implementation:
 
 - [ ] `/start-feature` produces valid spec in `docs/workflow/specification/`
-- [ ] `/start-planning` accepts spec from `/start-feature` without issues
-- [ ] `/start-implementation` works with plans regardless of origin
-- [ ] `/start-review` works with or without specification
-- [ ] `/link-dependencies` still works (already command-driven)
+- [ ] `/workflow:start-planning` accepts spec from `/start-feature` without issues
+- [ ] `/workflow:start-implementation` works with plans regardless of origin
+- [ ] `/workflow:start-review` works with or without specification
+- [ ] `/workflow:link-dependencies` still works (already command-driven)
+- [ ] Deprecation aliases show warning and forward correctly
 - [ ] Existing sequential workflow still works unchanged
 - [ ] All TDD and quality guidance preserved
 - [ ] Documentation updated (README.md, CLAUDE.md)
