@@ -104,6 +104,8 @@ Check the specification when:
 
 The specification (if available) is the source of truth for design decisions. If no specification exists, the plan is the authority.
 
+**Important:** If research or discussion documents exist from earlier workflow phases, ignore them during implementation. They may contain outdated ideas, rejected approaches, or superseded decisions. The specification filtered and validated that content - refer only to the specification and plan.
+
 ## Project-Specific Conventions
 
 Follow project-specific coding skills in `.claude/skills/` for:
