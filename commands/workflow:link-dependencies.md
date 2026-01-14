@@ -29,7 +29,7 @@ Scan the codebase for existing plans:
 ```
 ⚠️ No plans found in docs/workflow/planning/
 
-There are no plans to link. Create plans using /start-planning first.
+There are no plans to link. Create plans using /workflow:start-planning first.
 ```
 
 Stop here.
@@ -39,7 +39,7 @@ Stop here.
 ```
 ⚠️ Only one plan found: {topic}
 
-Cross-topic dependency linking requires at least two plans. Create more plans using /start-planning first.
+Cross-topic dependency linking requires at least two plans. Create more plans using /workflow:start-planning first.
 ```
 
 Stop here.
@@ -146,7 +146,7 @@ UNRESOLVED (no matching plan exists):
   - notifications → email-service: Email delivery
 
   ⚠️ These dependencies have no corresponding plan. Either:
-  - Create a plan for the topic using /start-planning
+  - Create a plan for the topic using /workflow:start-planning
   - Mark as "satisfied externally" if already implemented
 
 UPDATED FILES:

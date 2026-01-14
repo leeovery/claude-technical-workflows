@@ -31,7 +31,7 @@ Copy these into the plan index file (see "External Dependencies Section" below).
 
 1. **Check for existing plans**: For each dependency, search `docs/workflow/planning/` for a matching topic
 2. **If plan exists**: Try to identify specific tasks that satisfy the dependency. Query the output format to find relevant tasks. If ambiguous, ask the user which tasks apply.
-3. **If no plan exists**: Record the dependency in natural language - it will be linked later via `/link-dependencies` or when that topic is planned.
+3. **If no plan exists**: Record the dependency in natural language - it will be linked later via `/workflow:link-dependencies` or when that topic is planned.
 
 **Optional reverse check**: Ask the user: "Would you like me to check if any existing plans depend on this topic?"
 
@@ -40,7 +40,7 @@ If yes:
 2. For each match, identify which task(s) in the current plan satisfy that dependency
 3. Update the other plan's dependency entry with the task ID (unresolved → resolved)
 
-Alternatively, the user can run `/link-dependencies` later to resolve dependencies across all plans in bulk.
+Alternatively, the user can run `/workflow:link-dependencies` later to resolve dependencies across all plans in bulk.
 
 ### 2. Define Phases
 

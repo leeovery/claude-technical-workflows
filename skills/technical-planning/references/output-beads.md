@@ -127,7 +127,7 @@ bd show bd-a3f8.1.1 --deps
 
 ## Querying Dependencies
 
-Use these queries to understand the dependency graph for implementation blocking and `/link-dependencies`.
+Use these queries to understand the dependency graph for implementation blocking and `/workflow:link-dependencies`.
 
 ### Find Ready Tasks (No Open Blockers)
 

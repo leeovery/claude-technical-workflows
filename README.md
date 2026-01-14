@@ -59,8 +59,8 @@ You have two entry points:
 
 | Start here... | When... | Command |
 |---------------|---------|---------|
-| **Research** | You have a fresh idea to explore: feasibility, market, viability, early thoughts | `/start-research` |
-| **Discussion** | You already know what you're building and need to iron out the details | `/start-discussion` |
+| **Research** | You have a fresh idea to explore: feasibility, market, viability, early thoughts | `/workflow:start-research` |
+| **Discussion** | You already know what you're building and need to iron out the details | `/workflow:start-discussion` |
 
 **Research** is a free-for-all. Explore broadly, follow tangents, challenge assumptions. Not everything researched gets built, and that's fine. Use this for ideas that need validating before you commit.
 
@@ -76,15 +76,15 @@ Each phase builds on the previous. Specification validates your discussions into
 
 ### Commands
 
-Each phase has a command designed as its entry point:
+Each phase has a command designed as its entry point. Commands are prefixed with `workflow:` to indicate they're part of the sequential workflow system:
 
-| Phase          | Command                 |
-|----------------|-------------------------|
-| Research       | `/start-research`       |
-| Discussion     | `/start-discussion`     |
-| Specification  | `/start-specification`  |
-| Planning       | `/start-planning`       |
-| Implementation | `/start-implementation` |
+| Phase          | Command                          |
+|----------------|----------------------------------|
+| Research       | `/workflow:start-research`       |
+| Discussion     | `/workflow:start-discussion`     |
+| Specification  | `/workflow:start-specification`  |
+| Planning       | `/workflow:start-planning`       |
+| Implementation | `/workflow:start-implementation` |
 
 Run the command directly or ask Claude to run it. Each command gathers the context it needs, asking what you're researching, discussing, or planning. Where relevant, it looks at outputs from the previous phase and offers you a choice from the list.
 
@@ -213,11 +213,13 @@ skills/
 └── technical-review/          # Phase 6: Validate against artifacts
 
 commands/
-├── start-research.md          # Begin research exploration
-├── start-discussion.md        # Begin technical discussions
-├── start-specification.md     # Begin specification building
-├── start-planning.md          # Begin implementation planning
-└── interview.md               # Focused questioning mode
+├── workflow:start-research.md       # Begin research exploration
+├── workflow:start-discussion.md     # Begin technical discussions
+├── workflow:start-specification.md  # Begin specification building
+├── workflow:start-planning.md       # Begin implementation planning
+├── workflow:start-implementation.md # Begin implementing a plan
+├── workflow:link-dependencies.md    # Link dependencies across topics
+└── workflow:interview.md            # Focused questioning mode
 
 agents/
 └── chain-verifier.md          # Parallel task verification for review
@@ -329,16 +331,17 @@ Reviews completed work with fresh perspective. Validates implementation against 
 
 ## Commands
 
-Slash commands to quickly invoke the workflow.
+Slash commands to quickly invoke the workflow. Commands are prefixed with `workflow:` to indicate they're part of the sequential workflow system.
 
-| Command                                                       | Description                                                                                                                                                                                                |
-|---------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [**/start-research**](commands/start-research.md)             | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion.                                                                                     |
-| [**/start-discussion**](commands/start-discussion.md)         | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation.                                                               |
-| [**/start-specification**](commands/start-specification.md)   | Start a specification session from an existing discussion. Validates and refines discussion content into a standalone specification.                                                                       |
-| [**/start-planning**](commands/start-planning.md)             | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md, Beads). |
-| [**/start-implementation**](commands/start-implementation.md) | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
-| [**/interview**](commands/interview.md)                       | Shift into focused questioning mode during research or discussion. Probes ideas with non-obvious questions, challenges assumptions, and surfaces concerns.                                                 |
+| Command                                                                              | Description                                                                                                                                                                                                |
+|--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [**/workflow:start-research**](commands/workflow:start-research.md)                  | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion.                                                                                     |
+| [**/workflow:start-discussion**](commands/workflow:start-discussion.md)              | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation.                                                               |
+| [**/workflow:start-specification**](commands/workflow:start-specification.md)        | Start a specification session from an existing discussion. Validates and refines discussion content into a standalone specification.                                                                       |
+| [**/workflow:start-planning**](commands/workflow:start-planning.md)                  | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md, Beads). |
+| [**/workflow:start-implementation**](commands/workflow:start-implementation.md)      | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
+| [**/workflow:link-dependencies**](commands/workflow:link-dependencies.md)            | Link external dependencies across topics. Scans plans and wires up unresolved cross-topic dependencies.                                                                                                    |
+| [**/workflow:interview**](commands/workflow:interview.md)                            | Shift into focused questioning mode during research or discussion. Probes ideas with non-obvious questions, challenges assumptions, and surfaces concerns.                                                 |
 
 ## Agents
 

@@ -36,7 +36,7 @@ Scan the codebase for discussions and specifications:
 ```
 ⚠️ No discussions found in docs/workflow/discussion/
 
-The specification phase requires a completed discussion. Please run /start-discussion first to document the technical decisions, edge cases, and rationale before creating a specification.
+The specification phase requires a completed discussion. Please run /workflow:start-discussion first to document the technical decisions, edge cases, and rationale before creating a specification.
 ```
 
 Stop here and wait for the user to acknowledge.
