@@ -45,7 +45,7 @@ Don't constrain yourself. Research goes wherever it needs to go.
 
 ## Questioning
 
-Use `/workflow:interview` for structured questioning. Good research questions:
+Use `/interview` for structured questioning. Good research questions:
 
 - Reveal hidden complexity
 - Surface concerns early
