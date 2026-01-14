@@ -6,7 +6,7 @@
 
 ## External Dependencies
 
-External dependencies are things a feature needs from other topics or systems that are outside the current plan's scope. They come from the specification's Dependencies section and must be satisfied before implementation can proceed.
+External dependencies are things a feature needs from other topics or systems that are outside the current plan's scope. They come from the specification's Dependencies section.
 
 ## Format
 
@@ -31,13 +31,12 @@ In plan index files, external dependencies appear in a dedicated section:
 ## Lifecycle
 
 ```
-SPECIFICATION                    PLANNING                         IMPLEMENTATION
-─────────────────────────────────────────────────────────────────────────────────
-Dependencies section    →    Copied to plan index         →    Gate checks status
-(natural language)           (unresolved initially)            (blocks if not satisfied)
-                                    ↓
-                             Resolved when linked
-                             to specific task ID
+SPECIFICATION                    PLANNING
+───────────────────────────────────────────────────────────────────
+Dependencies section    →    Copied to plan index as unresolved
+(natural language)                      ↓
+                             Resolved when linked to specific task ID
+                             (via planning or /link-dependencies)
 ```
 
 ## Resolution
@@ -50,14 +49,3 @@ Dependencies become "satisfied externally" when:
 - The user confirms it was implemented outside the workflow
 - It already exists in the codebase
 - It's a third-party system that's already available
-
-## Implementation Blocking
-
-The `start-implementation` command checks external dependencies before allowing implementation to proceed:
-
-- **Unresolved**: Blocks - no plan exists for this dependency
-- **Resolved but incomplete**: Blocks - the linked task isn't finished yet
-- **Resolved and complete**: Proceeds
-- **Satisfied externally**: Proceeds
-
-Unresolved or incomplete dependencies block implementation - like trying to put a roof on a house before the walls are built.
