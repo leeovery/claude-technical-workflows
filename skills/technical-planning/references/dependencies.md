@@ -28,6 +28,16 @@ In plan index files, external dependencies appear in a dedicated section:
 - ~~payment-gateway: Payment processing~~ → satisfied externally
 ```
 
+If there are no external dependencies, still include the section:
+
+```markdown
+## External Dependencies
+
+No external dependencies.
+```
+
+This makes it explicit for downstream stages that dependencies were considered and none exist.
+
 ## States
 
 | State | Format | Meaning |
