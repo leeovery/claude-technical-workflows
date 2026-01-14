@@ -69,3 +69,18 @@ To add a new planning output format:
 1. Create `skills/technical-planning/references/output-{format}.md`
 2. Include sections: About, Setup, Benefits, Output Process, Implementation (Reading/Updating)
 3. Add to the list in `skills/technical-planning/references/output-formats.md`
+
+## Output Format References (IMPORTANT)
+
+**NEVER list output format names (beads, linear, local-markdown, etc.) anywhere except:**
+- `skills/technical-planning/references/output-formats.md` - the authoritative list
+- `skills/technical-planning/references/output-{format}.md` - individual format definitions
+
+**Why this matters:** Listing formats elsewhere creates maintenance dependencies. If a format is added or removed, we should only need to update the planning references - not hunt through skills, commands, or documentation.
+
+**How other phases reference formats:**
+- Plans include a `format:` field in their frontmatter
+- Implementation/review skills read the format from the plan
+- They then load the appropriate `output-{format}.md` reference file
+
+This keeps format knowledge centralized in the planning phase where it belongs.

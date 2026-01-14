@@ -20,7 +20,7 @@ Either way: Execute via strict TDD - tests first, implementation second.
 ### What This Skill Needs
 
 - **Plan content** (required) - Phases, tasks, and acceptance criteria to execute
-- **Plan format** (required) - How to parse tasks (local-markdown, beads, linear, etc.)
+- **Plan format** (required) - How to parse tasks (from plan frontmatter)
 - **Specification content** (optional) - For context when task rationale is unclear
 - **Environment setup** (optional) - First-time setup instructions
 - **Scope** (optional) - Specific phase/task to work on
