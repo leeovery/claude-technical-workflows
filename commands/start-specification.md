@@ -85,14 +85,14 @@ Ask:
 ## Step 5: Invoke Specification Skill
 
 Pass to the technical-specification skill:
-- Discussion: `docs/workflow/discussion/{topic}.md`
+- Source: `docs/workflow/discussion/{topic}.md`
 - Output: `docs/workflow/specification/{topic}.md`
 - Additional context gathered
 
 **Example handoff:**
 ```
 Specification session for: {topic}
-Discussion: docs/workflow/discussion/{topic}.md
+Source: docs/workflow/discussion/{topic}.md
 Output: docs/workflow/specification/{topic}.md
 
 Begin specification using the technical-specification skill.
