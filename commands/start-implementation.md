@@ -5,7 +5,7 @@ description: Start an implementation session from an existing plan. Discovers av
 ## IMPORTANT: Follow these steps EXACTLY. Do not skip steps.
 
 - Ask each question and WAIT for a response before proceeding
-- Do NOT install anything or invoke tools until Step 5
+- Do NOT install anything or invoke tools until Step 6
 - Even if the user's initial prompt seems to answer a question, still confirm with them at the appropriate step
 - Do NOT make assumptions about what the user wants
 - Complete each step fully before moving to the next
@@ -49,7 +49,78 @@ Plans found:
 Which plan would you like to implement?
 ```
 
-## Step 3: Check Environment Setup
+## Step 3: Check External Dependencies
+
+**This step is a gate.** Implementation cannot proceed if dependencies are not satisfied.
+
+After the user selects a plan:
+
+1. **Read the External Dependencies section** from the plan index file
+2. **Check each dependency**:
+
+### Dependency States
+
+| State | Format | Action |
+|-------|--------|--------|
+| Unresolved | `- {topic}: {description}` | **BLOCK** |
+| Resolved | `- {topic}: {description} → {task-id}` | Check if task is complete |
+| Satisfied externally | `- ~~{topic}~~` | OK - proceed |
+
+### For Resolved Dependencies
+
+Query the output format to check if the dependency task is complete:
+
+**Beads**: Run `bd show {task-id}` - look for `status: closed`
+**Linear**: Query issue via MCP - check if state is "completed"
+**Backlog.md**: Read task file - check if `status: Done`
+**Local Markdown**: Check if acceptance criteria are checked off
+
+### Blocking Behavior
+
+If ANY dependency is unresolved or incomplete, **stop and present**:
+
+```
+⚠️ Implementation blocked. Missing dependencies:
+
+UNRESOLVED (not yet planned):
+- billing-system: Invoice generation for order completion
+  → No plan exists for this topic. Create with /start-planning or mark as satisfied externally.
+
+INCOMPLETE (planned but not implemented):
+- beads-7x2k (authentication): User context retrieval
+  → Status: in_progress. This task must be completed first.
+
+These dependencies must be completed before this plan can be implemented.
+
+OPTIONS:
+1. Implement the blocking dependencies first
+2. Mark a dependency as "satisfied externally" if it was implemented outside this workflow
+3. Run /link-dependencies to wire up any recently completed plans
+```
+
+### Escape Hatch
+
+If the user says a dependency has been implemented outside the workflow:
+
+1. Ask which dependency to mark as satisfied
+2. Update the plan index file:
+   - Change `- {topic}: {description}` to `- ~~{topic}: {description}~~ → satisfied externally`
+3. Commit the change
+4. Re-check dependencies
+
+### All Dependencies Satisfied
+
+If all dependencies are resolved and complete (or satisfied externally), proceed to Step 4.
+
+```
+✅ External dependencies satisfied:
+- billing-system: Invoice generation → beads-b7c2.1.1 (complete)
+- authentication: User context → beads-a3f8.1.2 (complete)
+
+Proceeding with environment setup...
+```
+
+## Step 4: Check Environment Setup
 
 > **IMPORTANT**: This step is for **information gathering only**. Do NOT execute any setup commands at this stage. The technical-implementation skill will handle execution when invoked.
 
@@ -62,7 +133,7 @@ After the user selects a plan:
    - If the user says no, create `docs/workflow/environment-setup.md` with "No special setup required." and commit. This prevents asking again in future sessions.
    - See `skills/technical-implementation/references/environment-setup.md` for format guidance
 
-## Step 4: Ask About Scope
+## Step 5: Ask About Scope
 
 Ask the user about implementation scope:
 
@@ -80,7 +151,7 @@ If they choose a specific phase or task, ask them to specify which one.
 
 > **Note:** Do NOT verify that the phase or task exists. Accept the user's answer and pass it to the skill. Validation happens during the implementation phase.
 
-## Step 5: Invoke Implementation Skill
+## Step 6: Invoke Implementation Skill
 
 Invoke the **technical-implementation** skill for this conversation.
 
@@ -88,6 +159,7 @@ Pass to the technical-implementation skill:
 - Plan: `docs/workflow/planning/{topic}.md`
 - Format: (from frontmatter)
 - Scope: (all phases | specific phase | specific task)
+- Dependencies: (all satisfied - verified in Step 3)
 - Environment setup: (completed | not needed)
 
 **Example handoff:**
@@ -97,6 +169,7 @@ Plan: docs/workflow/planning/{topic}.md
 Format: {format}
 Scope: All phases
 
+Dependencies: All satisfied ✓
 Environment setup: Completed (or: Not needed)
 
 Begin implementation using the technical-implementation skill.

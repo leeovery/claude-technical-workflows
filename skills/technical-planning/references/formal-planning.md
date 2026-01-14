@@ -19,8 +19,21 @@ From the specification (`docs/workflow/specification/{topic}.md`), extract:
 - Architectural choices
 - Edge cases identified
 - Constraints and requirements
+- **External dependencies** (from the Dependencies section)
 
 **The specification is your sole input.** Discussion documents and other source materials have already been validated, filtered, and enriched during the specification phase. Everything you need is in the specification - do not reference other documents.
+
+#### Extract External Dependencies
+
+The specification's Dependencies section lists things this feature needs from other topics/systems. These are **external dependencies** - things outside this plan's scope that must exist for implementation to proceed.
+
+Copy these into the plan index file (see "External Dependencies Section" below). During planning:
+
+1. **Check for existing plans**: For each dependency, search `docs/workflow/planning/` for a matching topic
+2. **If plan exists**: Try to identify specific tasks that satisfy the dependency. Query the output format to find relevant tasks. If ambiguous, ask the user which tasks apply.
+3. **If no plan exists**: Record the dependency in natural language - it will be linked later via `/link-dependencies` or when that topic is planned.
+
+**Optional reverse check**: Ask the user: "Would you like me to check if any existing plans depend on this topic?" If yes, scan other plan indexes for dependencies that reference this topic and offer to wire them up.
 
 ### 2. Define Phases
 
@@ -106,6 +119,44 @@ Before handing off to implementation:
 - [ ] Each task has micro acceptance (test name)
 - [ ] All edge cases mapped to tasks
 - [ ] Gaps flagged with `[needs-info]`
+- [ ] External dependencies documented in plan index
+
+## External Dependencies Section
+
+The plan index file must include an External Dependencies section. This tracks dependencies on other topics that must be satisfied before implementation can proceed.
+
+### Format
+
+```markdown
+## External Dependencies
+
+- billing-system: Invoice generation for order completion
+- user-authentication: User context for permissions → beads-9m3p (resolved)
+- ~~payment-gateway: Payment processing~~ → satisfied externally
+```
+
+### States
+
+| State | Format | Meaning |
+|-------|--------|---------|
+| Unresolved | `- {topic}: {description}` | Dependency exists but not yet linked to a task |
+| Resolved | `- {topic}: {description} → {task-id}` | Linked to specific task in another plan |
+| Satisfied externally | `- ~~{topic}: {description}~~ → satisfied externally` | Implemented outside workflow |
+
+### Resolution
+
+Dependencies move from unresolved → resolved when:
+- The dependency topic is planned and you identify the specific task
+- The `/link-dependencies` command finds and wires the match
+
+Dependencies become "satisfied externally" when:
+- The user confirms it was implemented outside the workflow
+- It already exists in the codebase
+- It's a third-party system that's already available
+
+### Why This Matters
+
+The `start-implementation` command checks this section before allowing implementation to proceed. Unresolved or incomplete dependencies **block implementation** - like trying to put a roof on a house before the walls are built.
 
 ## Commit Frequently
 
