@@ -151,15 +151,19 @@ Format:
 
 **Shared Reference**: Consider creating `skills/technical-planning/references/dependency-linking.md` that both the planning skill and this command can use for consistency.
 
-### 4. Update Implementation Skill
+### 4. Update Start Implementation Command (Dependency Gate)
 
-**File**: `skills/technical-implementation/SKILL.md` and related references
+**File**: `commands/start-implementation.md`
+
+**Rationale**: Dependency gating belongs in the command, not the skill. The command acts as a gate - if dependencies aren't met, the skill never runs. The implementation skill assumes the gate passed and focuses purely on *how* to implement, not *whether* to implement.
 
 **Changes**:
 
+Add dependency gate step between "discover plans" and "invoke implementation skill":
+
 #### Pre-Implementation Dependency Check
 
-Before starting implementation on any plan:
+Before invoking the implementation skill:
 
 1. Read plan index's External Dependencies section
 2. For each dependency:
@@ -182,13 +186,15 @@ Before starting implementation on any plan:
    These must be completed before this plan can be implemented.
    ```
 
+4. If blocked, offer escape hatch: "If any of these have been implemented outside this workflow, let me know and I can mark them as satisfied."
+
 #### Escape Hatch: Marking Dependencies Satisfied Externally
 
-Add ability for user to mark a dependency as satisfied outside the workflow:
+User can mark a dependency as satisfied outside the workflow:
 
 - User says: "The billing system dependency has been implemented outside this workflow"
-- Agent updates plan index: `- ~~billing-system: Invoice generation~~ → satisfied externally`
-- Implementation can proceed
+- Command updates plan index: `- ~~billing-system: Invoice generation~~ → satisfied externally`
+- Gate passes, implementation skill can proceed
 
 This handles:
 - Dependencies implemented by human directly
@@ -196,48 +202,24 @@ This handles:
 - Third-party systems that already exist
 - Features already in the codebase
 
-### 5. Update Start Implementation Command
-
-**File**: `commands/start-implementation.md`
-
-**Changes**:
-
-Add step between "discover plans" and "start implementation":
-
-```markdown
-## Step X: Check Dependencies
-
-Before starting implementation:
-
-1. Read the plan index's External Dependencies section
-2. Check each dependency:
-   - Unresolved? → Block and explain
-   - Resolved but incomplete? → Block and explain
-   - Resolved and complete? → OK
-   - Satisfied externally? → OK
-3. If any blocking dependencies, present clear message and stop
-4. Offer escape hatch: "If any of these have been implemented outside this workflow, let me know and I can mark them as satisfied."
-```
+**Note**: The implementation skill itself does not need modification. It assumes dependencies are satisfied (the command already checked) and focuses on execution.
 
 ## Implementation Order
 
 ### Phase 1: Foundation
 1. Update `formal-planning.md` with external dependencies handling
-2. Update plan index template with External Dependencies section
-3. Update `output-beads.md` with dependency querying section
+2. Update `output-beads.md` with dependency querying section
 
 ### Phase 2: Other Output Formats
-4. Update `output-linear.md` with dependency querying
-5. Update `output-backlog-md.md` with dependency querying
-6. Update `output-local-markdown.md` with dependency querying
+3. Update `output-linear.md` with dependency querying
+4. Update `output-backlog-md.md` with dependency querying
+5. Update `output-local-markdown.md` with dependency querying
 
 ### Phase 3: Link Dependencies Command
-7. Create `commands/link-dependencies.md`
-8. Optionally create shared `references/dependency-linking.md`
+6. Create `commands/link-dependencies.md`
 
-### Phase 4: Implementation Blocking
-9. Update implementation skill with dependency checking
-10. Update `start-implementation.md` with dependency gate
+### Phase 4: Implementation Gate
+7. Update `start-implementation.md` with dependency gate
 
 ## Edge Cases
 
@@ -275,25 +257,22 @@ After implementation, verify:
 - [ ] `/link-dependencies` finds unresolved dependencies across plans
 - [ ] `/link-dependencies` wires up matches in output format
 - [ ] `/link-dependencies` updates plan index with task IDs
-- [ ] Implementation blocks on unresolved dependencies
-- [ ] Implementation blocks on incomplete dependencies
-- [ ] Implementation proceeds when dependencies complete
-- [ ] "Satisfied externally" escape hatch works
+- [ ] Start implementation command blocks on unresolved dependencies
+- [ ] Start implementation command blocks on incomplete dependencies
+- [ ] Start implementation command proceeds when dependencies complete
+- [ ] "Satisfied externally" escape hatch works in start implementation command
 
 ## Files to Create/Modify
 
 ### Create
 - `commands/link-dependencies.md`
-- Optionally: `skills/technical-planning/references/dependency-linking.md`
 
 ### Modify
-- `skills/technical-planning/SKILL.md` - add dependency handling mention
-- `skills/technical-planning/references/formal-planning.md` - add dependency extraction step
-- `skills/technical-planning/references/output-beads.md` - add querying section
-- `skills/technical-planning/references/output-linear.md` - add querying section
-- `skills/technical-planning/references/output-backlog-md.md` - add querying section
-- `skills/technical-planning/references/output-local-markdown.md` - add querying section
-- `skills/technical-implementation/SKILL.md` - add dependency checking
+- `skills/technical-planning/references/formal-planning.md` - add dependency extraction step and external dependencies section format
+- `skills/technical-planning/references/output-beads.md` - add dependency querying and cross-epic sections
+- `skills/technical-planning/references/output-linear.md` - add dependency querying section
+- `skills/technical-planning/references/output-backlog-md.md` - add dependency querying section
+- `skills/technical-planning/references/output-local-markdown.md` - add dependency querying section
 - `commands/start-implementation.md` - add dependency gate step
 
 ## Open Questions (Resolved)
