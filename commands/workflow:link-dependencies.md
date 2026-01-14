@@ -4,6 +4,24 @@ description: Scan all plans and wire up cross-topic dependencies. Finds unresolv
 
 Link cross-topic dependencies across all existing plans.
 
+## Workflow Context
+
+This is a **utility command** that operates between Planning (Phase 4) and Implementation (Phase 5):
+
+| Phase | Focus | You |
+|-------|-------|-----|
+| 1. Research | EXPLORE - ideas, feasibility, market, business | |
+| 2. Discussion | WHAT and WHY - decisions, architecture, edge cases | |
+| 3. Specification | REFINE - validate into standalone spec | |
+| 4. Planning | HOW - phases, tasks, acceptance criteria | |
+| **→ Link** | Wire up cross-topic dependencies | ◀ HERE |
+| 5. Implementation | DOING - tests first, then code | |
+| 6. Review | VALIDATING - check work against artifacts | |
+
+**Purpose**: After multiple plans exist, this command wires up dependencies between them. Implementation blocks on unresolved dependencies, so this step ensures the dependency graph is connected before work begins.
+
+---
+
 ## Instructions
 
 Follow these steps EXACTLY as written. Do not skip steps or combine them.

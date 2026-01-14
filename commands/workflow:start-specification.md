@@ -4,6 +4,23 @@ description: Start a specification session from an existing discussion. Discover
 
 Invoke the **technical-specification** skill for this conversation.
 
+## Workflow Context
+
+This is **Phase 3** of the six-phase workflow:
+
+| Phase | Focus | You |
+|-------|-------|-----|
+| 1. Research | EXPLORE - ideas, feasibility, market, business | |
+| 2. Discussion | WHAT and WHY - decisions, architecture, edge cases | |
+| **3. Specification** | REFINE - validate into standalone spec | ◀ HERE |
+| 4. Planning | HOW - phases, tasks, acceptance criteria | |
+| 5. Implementation | DOING - tests first, then code | |
+| 6. Review | VALIDATING - check work against artifacts | |
+
+**Stay in your lane**: Validate and refine discussion content into a standalone specification. Don't jump to planning, phases, tasks, or code. The specification is the "line in the sand" - everything after this has hard dependencies on it.
+
+---
+
 ## Instructions
 
 Follow these steps EXACTLY as written. Do not skip steps or combine them. Present output using the EXACT format shown in examples - do not simplify or alter the formatting.

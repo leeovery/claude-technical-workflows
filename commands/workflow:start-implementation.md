@@ -2,6 +2,23 @@
 description: Start an implementation session from an existing plan. Discovers available plans, checks environment setup, and invokes the technical-implementation skill.
 ---
 
+## Workflow Context
+
+This is **Phase 5** of the six-phase workflow:
+
+| Phase | Focus | You |
+|-------|-------|-----|
+| 1. Research | EXPLORE - ideas, feasibility, market, business | |
+| 2. Discussion | WHAT and WHY - decisions, architecture, edge cases | |
+| 3. Specification | REFINE - validate into standalone spec | |
+| 4. Planning | HOW - phases, tasks, acceptance criteria | |
+| **5. Implementation** | DOING - tests first, then code | ◀ HERE |
+| 6. Review | VALIDATING - check work against artifacts | |
+
+**Stay in your lane**: Execute the plan via strict TDD - tests first, then code. Don't re-debate decisions from the specification or expand scope beyond the plan. The plan is your authority.
+
+---
+
 ## IMPORTANT: Follow these steps EXACTLY. Do not skip steps.
 
 - Ask each question and WAIT for a response before proceeding
