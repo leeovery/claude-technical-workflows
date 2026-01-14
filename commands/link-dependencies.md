@@ -58,16 +58,10 @@ Compare the `format:` field across all discovered plans.
 - notifications: beads
 
 Cross-topic dependencies can only be wired within the same output format.
-Dependencies between plans using different formats cannot be linked in the output system.
-
-Options:
-1. Consolidate plans to use a single output format
-2. Proceed anyway - plan index files will be updated but output format linking will be skipped for cross-format dependencies
-
-How would you like to proceed?
+Please consolidate your plans to use a single output format before linking dependencies.
 ```
 
-If the user chooses to proceed, note which dependencies are cross-format and skip output format linking for those (only update plan index files).
+Stop here.
 
 ## Step 3: Extract External Dependencies
 
@@ -123,7 +117,6 @@ For each resolved match:
 2. **Create dependency in output format**:
    - Load `skills/technical-planning/references/output-{format}.md`
    - Follow the "Cross-Epic Dependencies" or equivalent section to create the blocking relationship
-   - Skip this step for cross-format dependencies (different formats cannot be linked)
 
 ## Step 6: Bidirectional Check
 
@@ -181,5 +174,5 @@ Link cross-topic dependencies
 - This command is best run after creating multiple plans
 - It's a "best effort" process - not all dependencies may be resolvable
 - Dependencies without matching plans stay unresolved until those topics are planned
-- Cross-format dependencies update plan index only, not output format linking
+- All plans must use the same output format for dependency linking to work
 - The `/start-implementation` command will block on unresolved dependencies
