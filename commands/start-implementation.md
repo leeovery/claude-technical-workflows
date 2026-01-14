@@ -72,6 +72,7 @@ How would you like to proceed?
 1. **Implement all phases** - Work through the entire plan sequentially
 2. **Implement specific phase** - Focus on one phase (e.g., "Phase 1")
 3. **Implement specific task** - Focus on a single task
+4. **Next available task** - Auto-discover the next unblocked task
 
 Which approach?
 ```
@@ -87,7 +88,7 @@ Invoke the **technical-implementation** skill for this conversation.
 Pass to the technical-implementation skill:
 - Plan: `docs/workflow/planning/{topic}.md`
 - Format: (from frontmatter)
-- Scope: (all phases | specific phase | specific task)
+- Scope: (all phases | specific phase | specific task | next-available)
 - Environment setup: (completed | not needed)
 
 **Example handoff:**
