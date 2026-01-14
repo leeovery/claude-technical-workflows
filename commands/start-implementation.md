@@ -53,26 +53,15 @@ Which plan would you like to implement?
 
 **This step is a gate.** Implementation cannot proceed if dependencies are not satisfied.
 
+See **[dependencies.md](../skills/technical-planning/references/dependencies.md)** for dependency format and states.
+
 After the user selects a plan:
 
 1. **Read the External Dependencies section** from the plan index file
-2. **Check each dependency**:
-
-### Dependency States
-
-| State | Format | Action |
-|-------|--------|--------|
-| Unresolved | `- {topic}: {description}` | **BLOCK** |
-| Resolved | `- {topic}: {description} → {task-id}` | Check if task is complete |
-| Satisfied externally | `- ~~{topic}~~` | OK - proceed |
-
-### For Resolved Dependencies
-
-To check if a dependency task is complete:
-
-1. Read the plan's `format:` from frontmatter
-2. Load the corresponding output format reference from `skills/technical-planning/references/output-{format}.md`
-3. Follow the "Querying Dependencies" section in that file to check task completion status
+2. **Check each dependency** according to its state:
+   - **Unresolved**: Block
+   - **Resolved**: Check if task is complete (load output format reference, follow "Querying Dependencies" section)
+   - **Satisfied externally**: Proceed
 
 ### Blocking Behavior
 

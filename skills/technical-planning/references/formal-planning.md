@@ -123,40 +123,7 @@ Before handing off to implementation:
 
 ## External Dependencies Section
 
-The plan index file must include an External Dependencies section. This tracks dependencies on other topics that must be satisfied before implementation can proceed.
-
-### Format
-
-```markdown
-## External Dependencies
-
-- billing-system: Invoice generation for order completion
-- user-authentication: User context for permissions → beads-9m3p (resolved)
-- ~~payment-gateway: Payment processing~~ → satisfied externally
-```
-
-### States
-
-| State | Format | Meaning |
-|-------|--------|---------|
-| Unresolved | `- {topic}: {description}` | Dependency exists but not yet linked to a task |
-| Resolved | `- {topic}: {description} → {task-id}` | Linked to specific task in another plan |
-| Satisfied externally | `- ~~{topic}: {description}~~ → satisfied externally` | Implemented outside workflow |
-
-### Resolution
-
-Dependencies move from unresolved → resolved when:
-- The dependency topic is planned and you identify the specific task
-- The `/link-dependencies` command finds and wires the match
-
-Dependencies become "satisfied externally" when:
-- The user confirms it was implemented outside the workflow
-- It already exists in the codebase
-- It's a third-party system that's already available
-
-### Why This Matters
-
-The `start-implementation` command checks this section before allowing implementation to proceed. Unresolved or incomplete dependencies **block implementation** - like trying to put a roof on a house before the walls are built.
+The plan index file must include an External Dependencies section. See **[dependencies.md](dependencies.md)** for the format, states, and how they affect implementation.
 
 ## Commit Frequently
 
