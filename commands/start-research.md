@@ -1,15 +1,38 @@
 ---
-description: "[DEPRECATED] Use /workflow:start-research instead"
+description: Start a research exploration using the technical-research skill. For early-stage ideas, feasibility checks, and broad exploration before formal discussion.
 ---
 
-# Deprecated Command
+Invoke the **technical-research** skill for this conversation.
 
-⚠️ **`/start-research` is deprecated.** Use `/workflow:start-research` instead.
+## Workflow Context
 
-The command has been renamed to use the `workflow:` prefix to distinguish workflow commands from standalone commands.
+This is **Phase 1** of the six-phase workflow:
+
+| Phase | Focus | You |
+|-------|-------|-----|
+| **1. Research** | EXPLORE - ideas, feasibility, market, business | ◀ HERE |
+| 2. Discussion | WHAT and WHY - decisions, architecture, edge cases | |
+| 3. Specification | REFINE - validate into standalone spec | |
+| 4. Planning | HOW - phases, tasks, acceptance criteria | |
+| 5. Implementation | DOING - tests first, then code | |
+| 6. Review | VALIDATING - check work against artifacts | |
+
+**Stay in your lane**: Explore freely. This is the time for broad thinking, feasibility checks, and learning. Don't jump to formal discussions or specifications yet.
 
 ---
 
-**Forwarding to `/workflow:start-research`...**
+Then ask these questions to kickstart the exploration:
 
-Run the `/workflow:start-research` command now.
+1. **What's on your mind?**
+   - What idea or topic do you want to explore?
+   - What prompted this - a problem, opportunity, curiosity?
+
+2. **What do you already know?**
+   - Any initial thoughts or research you've done?
+   - Constraints or context I should be aware of?
+
+3. **Where should we start?**
+   - Technical feasibility? Market landscape? Business model?
+   - Or just talk it through and see where it goes?
+
+Ask these questions clearly and wait for responses before proceeding. The skill handles everything else.
