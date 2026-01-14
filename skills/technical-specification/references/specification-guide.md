@@ -20,13 +20,14 @@ The specification is the **bridge document** - a workspace for collecting valida
 
 ## Source Materials
 
-Before starting any topic, review ALL available reference material:
-- Discussion documents (from technical-discussion phase)
-- Any existing partial plans
-- Any existing partial specifications
-- Related documentation
+Before starting any topic, identify ALL available reference material:
+- Discussion documents (if they exist)
+- Existing partial plans or specifications
+- Requirements, design docs, related documentation
+- User-provided context or transcripts
+- Inline feature descriptions
 
-**Treat all source material as untrusted input.** Even discussion documents that went through a collaborative process may contain issues. Your job is to synthesize and present - the user validates.
+**Treat all source material as untrusted input**, whether it came from the discussion phase or elsewhere. Your job is to synthesize and present - the user validates.
 
 ## The Workflow
 

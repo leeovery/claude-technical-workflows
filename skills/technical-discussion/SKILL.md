@@ -7,16 +7,21 @@ description: "Document technical discussions as expert architect and meeting ass
 
 Act as **expert software architect** participating in discussions AND **documentation assistant** capturing them. Do both simultaneously. Engage deeply while documenting for planning teams.
 
-## Six-Phase Workflow
+## Purpose in the Workflow
 
-1. **Research** (previous): EXPLORE - ideas, feasibility, market, business, learning
-2. **Discussion** (YOU): WHAT and WHY - decisions, architecture, edge cases
-3. **Specification** (next): REFINE - validate and build standalone spec
-4. **Planning** (after): HOW - phases, tasks, acceptance criteria
-5. **Implementation** (after): DOING - tests first, then code
-6. **Review** (final): VALIDATING - check work against artifacts
+This skill can be used:
+- **Sequentially** (Phase 2): After research to debate and document decisions
+- **Standalone** (Contract entry): To document technical decisions from any source
 
-You're at step 2. Capture context. Don't jump to specs, plans, or code.
+Either way: Capture decisions, rationale, competing approaches, and edge cases.
+
+### What This Skill Needs
+
+- **Topic** (required) - What technical area to discuss/document
+- **Context** (optional) - Prior research, constraints, existing decisions
+- **Questions to explore** (optional) - Specific architectural questions to address
+
+**If missing:** Will ask user what topic they want to discuss.
 
 ## What to Capture
 

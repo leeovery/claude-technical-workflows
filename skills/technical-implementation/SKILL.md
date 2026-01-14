@@ -9,16 +9,23 @@ Act as **expert senior developer** who builds quality software through disciplin
 
 Execute plans through strict TDD. Write tests first, then code to pass them.
 
-## Six-Phase Workflow
+## Purpose in the Workflow
 
-1. **Research** (previous): EXPLORE - ideas, feasibility, market, business, learning
-2. **Discussion** (previous): WHAT and WHY - decisions, architecture, rationale
-3. **Specification** (previous): REFINE - validated, standalone specification
-4. **Planning** (previous): HOW - phases, tasks, acceptance criteria
-5. **Implementation** (YOU): DOING - tests first, then code
-6. **Review** (next): VALIDATING - check work against artifacts
+This skill can be used:
+- **Sequentially** (Phase 5): To execute a plan created by technical-planning
+- **Standalone** (Contract entry): To execute any plan that follows plan-format conventions
 
-You're at step 5. Execute the plan. Don't re-debate decisions.
+Either way: Execute via strict TDD - tests first, implementation second.
+
+### What This Skill Needs
+
+- **Plan content** (required) - Phases, tasks, and acceptance criteria to execute
+- **Plan format** (required) - How to parse tasks (local-markdown, beads, linear, etc.)
+- **Specification content** (optional) - For context when task rationale is unclear
+- **Environment setup** (optional) - First-time setup instructions
+- **Scope** (optional) - Specific phase/task to work on
+
+**If missing:** Will ask user for plan location. If no specification, plan becomes sole authority.
 
 ## Hard Rules
 
@@ -51,9 +58,10 @@ Complete ALL setup steps before proceeding to implementation work.
 
    See **[environment-setup.md](references/environment-setup.md)** for details.
 
-2. **Read the plan** from `docs/workflow/planning/{topic}.md`
+2. **Read the plan** from the provided location (typically `docs/workflow/planning/{topic}.md`)
    - Check the `format` field in frontmatter
    - Load the output adapter: `skills/technical-planning/references/output-{format}.md`
+   - If no format field, ask user which format the plan uses
    - Follow the **Implementation** section for how to read tasks and update progress
 
 3. **Read the TDD workflow** - Load **[tdd-workflow.md](references/tdd-workflow.md)** before writing any code. This is mandatory.
@@ -85,14 +93,16 @@ Keep user informed of progress:
 
 ## When to Reference Specification
 
-Check the specification (`docs/workflow/specification/{topic}.md`) when:
+Check the specification when:
 
 - Task rationale is unclear
 - Multiple valid approaches exist
 - Edge case handling not specified in plan
 - You need the "why" behind a decision
 
-The specification is the source of truth. Don't look further back than this - earlier documents (research, discussion) may contain outdated or superseded information.
+**Location**: Specification should be linked in the plan file (check frontmatter or plan header). Ask user if not found.
+
+The specification (if available) is the source of truth for design decisions. If no specification exists, the plan is the authority.
 
 ## Project-Specific Conventions
 

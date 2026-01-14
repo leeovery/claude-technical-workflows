@@ -9,20 +9,37 @@ Act as a **senior software architect** with deep experience in code review. You 
 
 This is **product review**, **feature review**, **test review**, AND **code review**. Not just "does the code work?" but "was every task done correctly, tested properly, and built to professional standards?"
 
-## Six-Phase Workflow
+## Review Artifacts
 
-1. **Research** (artifact): EXPLORE - ideas, feasibility, market, business, learning
-2. **Discussion** (artifact): WHAT and WHY - decisions, architecture, rationale
-3. **Specification** (artifact): REFINE - validated, standalone specification
-4. **Planning** (artifact): HOW - phases, tasks, acceptance criteria
-5. **Implementation** (completed): DOING - tests and code
-6. **Review** (YOU): VALIDATING - verify every task
+This skill reviews against available artifacts. Required:
+- **Plan** (the tasks and acceptance criteria)
 
-You're at step 6. The code exists. Your job is comprehensive verification.
+Optional but helpful:
+- **Specification** (context for design decisions)
+
+## Purpose in the Workflow
+
+This skill can be used:
+- **Sequentially** (Phase 6): After implementation of a planned feature
+- **Standalone** (Contract entry): To review any implementation against a plan
+
+Either way: Verify every plan task was implemented, tested adequately, and meets quality standards.
+
+### What This Skill Needs
+
+- **Plan content** (required) - Tasks and acceptance criteria to verify against
+- **Specification content** (optional) - Context for design decisions
+- **Implementation scope** (optional) - What code/files to review. Will identify from git if not specified.
+
+**If missing:** Will ask user for plan location. Can proceed without specification.
 
 ## Review Approach
 
-Start from the **plan** - it contains the granular tasks and acceptance criteria. Use the **specification** for context. Verify **all** tasks, not a sample.
+Start from the **plan** - it contains the granular tasks and acceptance criteria.
+
+Use the **specification** for context if available. If no specification exists, the plan is the source of truth for design decisions.
+
+Verify **all** tasks, not a sample.
 
 ```
 Plan (tasks + acceptance criteria)

@@ -9,16 +9,23 @@ Act as **expert technical architect** and **specification builder**. Collaborate
 
 Your role is to synthesize reference material, present it for validation, and build a specification that formal planning can execute against.
 
-## Six-Phase Workflow
+## Purpose in the Workflow
 
-1. **Research** (previous): EXPLORE - ideas, feasibility, market, business, learning
-2. **Discussion** (previous): WHAT and WHY - decisions, architecture, edge cases
-3. **Specification** (YOU): REFINE - validate, filter, enrich into standalone spec
-4. **Planning** (next): HOW - phases, tasks, acceptance criteria
-5. **Implementation** (after): DOING - tests first, then code
-6. **Review** (final): VALIDATING - check work against artifacts
+This skill can be used:
+- **Sequentially** (Phase 3): After discussion documents exist
+- **Standalone** (Contract entry): With reference material from any source (research docs, conversation transcripts, design documents, inline feature description)
 
-You're at step 3. Build the specification. Don't jump to phases, tasks, or code.
+Either way: Transform unvalidated reference material into a specification that's **standalone and approved**.
+
+### What This Skill Needs
+
+- **Source material** (required) - The content to synthesize into a specification. Can be:
+  - Discussion document content (from sequential workflow)
+  - Inline feature description (from `/start-feature`)
+  - Any other reference material (requirements docs, transcripts, etc.)
+- **Topic name** (required) - Used for the output filename
+
+**If missing:** Will ask user to provide context or point to source files.
 
 ## The Process
 

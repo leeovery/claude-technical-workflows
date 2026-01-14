@@ -6,8 +6,10 @@
 
 ## Before Starting
 
-1. Read plan: `docs/workflow/planning/{topic}.md`
-2. Read specification: `docs/workflow/specification/{topic}.md` (for context)
+1. Read plan (from the location provided)
+   - If not found at expected path, ask user where the plan is
+2. Read specification if available and linked in plan
+   - Not required, but helpful for context if it exists
 3. Identify what code/files were changed
 4. Check for project-specific skills in `.claude/skills/`
 
