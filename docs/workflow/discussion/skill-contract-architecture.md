@@ -94,26 +94,51 @@ Each skill's "Purpose in the Workflow" section includes a "What This Skill Needs
 
 ---
 
-## How Commands Change
+## How This Works
 
-Commands become "input gatherers" with flexibility:
+### Skills: Input-Agnostic
 
-| Command | Current Behavior | New Behavior |
-|---------|-----------------|--------------|
-| `/start-specification` | Reads `discussion/{topic}.md` | Asks for topic → Reads file OR accepts "no discussion" |
-| `/start-planning` | Reads `specification/{topic}.md` | Asks for topic → Reads file |
-| `/start-implementation` | Reads `planning/{topic}.md` | Asks for topic → Reads file OR accepts inline plan |
-| `/start-review` | Reads plan + spec files | Asks for topic OR accepts inline context |
-| `/start-feature` (NEW) | N/A | Gathers inline context → Invokes spec skill |
+Skills receive inputs and process them. They don't know or care where the inputs came from:
+- Could be from workflow files (sequential workflow)
+- Could be inline content (ad-hoc usage)
+- Could be from external files (imported specs/plans)
 
-### New Standalone Commands (Optional)
+The skill just does its job with whatever it's given.
 
-```
-/implement          # Invoke implementation skill with inline plan
-/review             # Invoke review skill with inline context
-```
+### Existing Commands: Unchanged
 
-These would prompt for the contract inputs directly, enabling standalone use.
+The existing sequential workflow commands stay exactly as they are:
+
+| Command | Behavior (unchanged) |
+|---------|---------------------|
+| `/start-research` | Entry point - creates research docs |
+| `/start-discussion` | Entry point OR follows research - creates discussion docs |
+| `/start-specification` | Expects discussion docs → passes to skill |
+| `/start-planning` | Expects specification docs → passes to skill |
+| `/start-implementation` | Expects plan docs → passes to skill |
+| `/start-review` | Expects plan + spec docs → passes to skill |
+
+These commands are designed for the full sequential workflow. They locate the previous phase files, read them, and pass the content to the skills.
+
+### New Commands: Alternative Entry Points
+
+New commands can provide different ways to gather inputs:
+
+| Command | Purpose |
+|---------|---------|
+| `/start-feature` (NEW) | Gathers inline feature context → passes to specification skill |
+| `/implement` (NEW, optional) | Accepts inline plan context → passes to implementation skill |
+| `/review` (NEW, optional) | Accepts inline context → passes to review skill |
+
+These enable standalone skill usage without the full workflow.
+
+### The Key Insight
+
+**Same skills, different commands.** The implementation skill doesn't know if it's being invoked by:
+- `/start-implementation` (which read from `docs/workflow/planning/{topic}.md`)
+- `/implement` (which gathered an inline plan from the user)
+
+It just receives plan content and executes TDD. The command is responsible for input gathering; the skill is responsible for processing.
 
 ## What This Enables
 
@@ -161,6 +186,31 @@ Skills don't care where content came from - could be database, API, etc.
 | Skills reusable standalone | Contract definitions to maintain |
 | Clean separation of concerns | Migration effort |
 | Future-proof architecture | Current system works fine |
+
+---
+
+## Existing Pattern: Cross-Topic Dependencies
+
+The recently implemented cross-topic dependency system already follows the command-driven pattern we're proposing:
+
+**How it works:**
+- `/link-dependencies` command scans filesystem for plans
+- Reads External Dependencies sections from specifications
+- Delegates to output format references for querying/creating links
+- Commands do orchestration, skills do processing
+
+**Key files:**
+- `skills/technical-planning/references/dependencies.md` - Central reference for dependency states
+- `commands/link-dependencies.md` - Command that wires up dependencies
+- All `output-*.md` files now have "Cross-Epic Dependencies" sections
+
+**Why this validates our approach:**
+The dependency system proves the command-as-orchestrator pattern works. Implementation gating (blocking on unresolved dependencies) happens at the command level, not in the skill. This is exactly the separation of concerns we're proposing for all skills.
+
+**Implications for contract model:**
+- Dependency checking becomes a pre-flight step in commands
+- Skills assume dependencies are satisfied when invoked
+- `/link-dependencies` could accept inline plan context (not just files) in Phase 2
 
 ## Recommendation
 
@@ -474,13 +524,22 @@ Either way: Verify every plan task was implemented, tested adequately, and meets
 
 ### Files: NO CHANGES NEEDED
 
-These files are already position-agnostic:
+These files are already position-agnostic or stay unchanged:
 
+**Reference files (already position-agnostic):**
 - `skills/technical-implementation/references/tdd-workflow.md` - Pure TDD discipline
 - `skills/technical-implementation/references/code-quality.md` - Pure quality standards
 - `skills/technical-implementation/references/plan-execution.md` - Already about how to read plans
 - `skills/technical-planning/references/output-*.md` - Format specs, not workflow position
-- All command files (changes happen in commands, not to these docs)
+- `skills/technical-planning/references/dependencies.md` - Already command-driven pattern
+
+**Existing commands (unchanged - they define the sequential workflow):**
+- `commands/start-research.md` - Entry point, no changes
+- `commands/start-discussion.md` - Entry point, no changes
+- `commands/start-specification.md` - Reads discussion files, passes to skill
+- `commands/start-planning.md` - Reads spec files, passes to skill
+- `commands/start-implementation.md` - Reads plan files, passes to skill
+- `commands/link-dependencies.md` - Already follows contract model
 
 ---
 
@@ -530,6 +589,7 @@ After implementation:
 - [ ] `/start-planning` accepts spec from `/start-feature` without issues
 - [ ] `/start-implementation` works with plans regardless of origin
 - [ ] `/start-review` works with or without specification
+- [ ] `/link-dependencies` still works (already command-driven)
 - [ ] Existing sequential workflow still works unchanged
 - [ ] All TDD and quality guidance preserved
 - [ ] Documentation updated (README.md, CLAUDE.md)
