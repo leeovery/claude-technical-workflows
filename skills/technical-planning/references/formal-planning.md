@@ -12,7 +12,7 @@ You are creating the formal implementation plan from the specification.
 
 ## Planning is Collaborative
 
-Planning is an iterative process between you and the user. The research, discussion, and specification phases have done the heavy lifting - planning translates that work into actionable structure. But translation still requires judgment, and the user should guide that judgment.
+Planning is an iterative process between you and the user. The specification contains validated, considered decisions - planning translates that work into actionable structure. But translation still requires judgment, and the user should guide that judgment.
 
 **Stop, reflect, and ask** when:
 - The specification is ambiguous about implementation approach
