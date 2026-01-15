@@ -4,6 +4,23 @@ description: Start a planning session from an existing specification. Discovers 
 
 Invoke the **technical-planning** skill for this conversation.
 
+## Workflow Context
+
+This is **Phase 4** of the six-phase workflow:
+
+| Phase | Focus | You |
+|-------|-------|-----|
+| 1. Research | EXPLORE - ideas, feasibility, market, business | |
+| 2. Discussion | WHAT and WHY - decisions, architecture, edge cases | |
+| 3. Specification | REFINE - validate into standalone spec | |
+| **4. Planning** | HOW - phases, tasks, acceptance criteria | ◀ HERE |
+| 5. Implementation | DOING - tests first, then code | |
+| 6. Review | VALIDATING - check work against artifacts | |
+
+**Stay in your lane**: Create the plan - phases, tasks, and acceptance criteria. Don't jump to implementation or write code. The specification is your sole input; transform it into actionable work items.
+
+---
+
 ## Instructions
 
 Follow these steps EXACTLY as written. Do not skip steps or combine them. Present output using the EXACT format shown in examples - do not simplify or alter the formatting.
@@ -36,7 +53,7 @@ Scan the codebase for specifications and plans:
 ```
 ⚠️ No specifications found in docs/workflow/specification/
 
-The planning phase requires a completed specification. Please run /start-specification first to validate and refine the discussion content into a standalone specification before creating a plan.
+The planning phase requires a completed specification. Please run /workflow:start-specification first to validate and refine the discussion content into a standalone specification before creating a plan.
 ```
 
 Stop here and wait for the user to acknowledge.

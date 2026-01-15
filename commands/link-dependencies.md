@@ -27,9 +27,9 @@ Scan the codebase for existing plans:
 **If no plans exist:**
 
 ```
-⚠️ No plans found in docs/workflow/planning/
+No plans found in docs/workflow/planning/
 
-There are no plans to link. Create plans using /start-planning first.
+There are no plans to link. Create plans first.
 ```
 
 Stop here.
@@ -37,9 +37,9 @@ Stop here.
 **If only one plan exists:**
 
 ```
-⚠️ Only one plan found: {topic}
+Only one plan found: {topic}
 
-Cross-topic dependency linking requires at least two plans. Create more plans using /start-planning first.
+Cross-topic dependency linking requires at least two plans.
 ```
 
 Stop here.
@@ -51,7 +51,7 @@ Compare the `format:` field across all discovered plans.
 **If plans use different output formats:**
 
 ```
-⚠️ Mixed output formats detected:
+Mixed output formats detected:
 
 - authentication: beads
 - billing-system: linear
@@ -76,7 +76,7 @@ For each plan, find the External Dependencies section:
 3. **Build a summary**:
 
 ```
-📋 Dependency Summary
+Dependency Summary
 
 Plan: authentication (format: beads)
   - billing-system: Invoice generation (unresolved)
@@ -130,7 +130,7 @@ For each plan that was a dependency target (i.e., other plans depend on it):
 Present a summary:
 
 ```
-✅ Dependency Linking Complete
+Dependency Linking Complete
 
 RESOLVED (newly linked):
   - authentication → billing-system: beads-b7c2.1.1 (Invoice generation)
@@ -145,8 +145,8 @@ SATISFIED EXTERNALLY (no action needed):
 UNRESOLVED (no matching plan exists):
   - notifications → email-service: Email delivery
 
-  ⚠️ These dependencies have no corresponding plan. Either:
-  - Create a plan for the topic using /start-planning
+  These dependencies have no corresponding plan. Either:
+  - Create a plan for the topic
   - Mark as "satisfied externally" if already implemented
 
 UPDATED FILES:

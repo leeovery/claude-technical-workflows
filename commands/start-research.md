@@ -4,6 +4,23 @@ description: Start a research exploration using the technical-research skill. Fo
 
 Invoke the **technical-research** skill for this conversation.
 
+## Workflow Context
+
+This is **Phase 1** of the six-phase workflow:
+
+| Phase | Focus | You |
+|-------|-------|-----|
+| **1. Research** | EXPLORE - ideas, feasibility, market, business | ◀ HERE |
+| 2. Discussion | WHAT and WHY - decisions, architecture, edge cases | |
+| 3. Specification | REFINE - validate into standalone spec | |
+| 4. Planning | HOW - phases, tasks, acceptance criteria | |
+| 5. Implementation | DOING - tests first, then code | |
+| 6. Review | VALIDATING - check work against artifacts | |
+
+**Stay in your lane**: Explore freely. This is the time for broad thinking, feasibility checks, and learning. Don't jump to formal discussions or specifications yet.
+
+---
+
 Then ask these questions to kickstart the exploration:
 
 1. **What's on your mind?**

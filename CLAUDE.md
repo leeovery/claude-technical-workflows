@@ -25,14 +25,32 @@ skills/
   technical-planning/        # Phase 4: Create implementation plans
   technical-implementation/  # Phase 5: Execute via TDD
   technical-review/          # Phase 6: Validate against artifacts
+
 commands/
-  start-research.md          # Slash command to begin research
-  start-discussion.md        # Slash command to begin discussions
-  start-specification.md     # Slash command to begin specifications
-  start-planning.md          # Slash command to begin planning
+  # Workflow commands (sequential, expect previous phase files)
+  workflow:start-research.md       # Begin research exploration
+  workflow:start-discussion.md     # Begin technical discussions
+  workflow:start-specification.md  # Begin specification building
+  workflow:start-planning.md       # Begin implementation planning
+  workflow:start-implementation.md # Begin implementing a plan
+  workflow:start-review.md         # Begin review
+
+  # Standalone commands (flexible input)
+  start-feature.md                 # Create spec directly from inline context
+  interview.md                     # Focused questioning mode (general purpose)
+  link-dependencies.md             # Link dependencies across topics
+
 agents/
   chain-verifier.md          # Parallel chain verification for review phase
 ```
+
+## Command Architecture
+
+**Workflow commands** (`workflow:*`) are part of the sequential workflow system. They expect files from previous phases and pass content to skills.
+
+**Standalone commands** (no prefix) can be used independently. They gather inputs flexibly (inline, files, or prompts) and pass to skills.
+
+**Skills are input-agnostic** - they receive inputs and process them without knowing where the inputs came from. Commands are responsible for gathering inputs.
 
 ## Key Conventions
 
@@ -51,3 +69,18 @@ To add a new planning output format:
 1. Create `skills/technical-planning/references/output-{format}.md`
 2. Include sections: About, Setup, Benefits, Output Process, Implementation (Reading/Updating)
 3. Add to the list in `skills/technical-planning/references/output-formats.md`
+
+## Output Format References (IMPORTANT)
+
+**NEVER list output format names (beads, linear, local-markdown, etc.) anywhere except:**
+- `skills/technical-planning/references/output-formats.md` - the authoritative list
+- `skills/technical-planning/references/output-{format}.md` - individual format definitions
+
+**Why this matters:** Listing formats elsewhere creates maintenance dependencies. If a format is added or removed, we should only need to update the planning references - not hunt through skills, commands, or documentation.
+
+**How other phases reference formats:**
+- Plans include a `format:` field in their frontmatter
+- Implementation/review skills read the format from the plan
+- They then load the appropriate `output-{format}.md` reference file
+
+This keeps format knowledge centralized in the planning phase where it belongs.

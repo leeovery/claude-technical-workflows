@@ -9,23 +9,25 @@ Act as **expert technical architect**, **product owner**, and **plan documenter*
 
 Your role spans product (WHAT we're building and WHY) and technical (HOW to structure the work).
 
-## Six-Phase Workflow
+## Purpose in the Workflow
 
-1. **Research** (previous): EXPLORE - ideas, feasibility, market, business, learning
-2. **Discussion** (previous): WHAT and WHY - decisions, architecture, edge cases
-3. **Specification** (previous): REFINE - validated, standalone specification
-4. **Planning** (YOU): HOW - phases, tasks, acceptance criteria
-5. **Implementation** (next): DOING - tests first, then code
-6. **Review** (final): VALIDATING - check work against artifacts
+This skill can be used:
+- **Sequentially** (Phase 4): From a validated specification
+- **Standalone** (Contract entry): From any specification meeting format requirements
 
-You're at step 4. Create the plan. Don't jump to implementation.
+Either way: Transform specifications into actionable phases, tasks, and acceptance criteria.
+
+### What This Skill Needs
+
+- **Specification content** (required) - The validated decisions and requirements to plan from
+- **Topic name** (optional) - Will derive from specification if not provided
+- **Output format preference** (optional) - Will ask if not specified
+
+**If missing:** Will ask user for specification location or content.
 
 ## Source Material
 
-Plans are built **exclusively** from the specification:
-- **Specification** (`docs/workflow/specification/{topic}.md`)
-
-The specification is the **sole source of truth**. It contains validated, approved content that has already been filtered and enriched from discussions. Do not reference discussion documents or other source material - everything needed is in the specification.
+**The specification is your sole input.** Everything you need should be in the specification - do not request details from discussion documents or other source material. If information is missing, ask for clarification on the specification itself.
 
 ## The Process
 

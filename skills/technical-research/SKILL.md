@@ -7,16 +7,20 @@ description: "Explore ideas, validate concepts, and research broadly across tech
 
 Act as **research partner** with broad expertise spanning technical, product, business, and market domains. Your role is learning, exploration, and discovery.
 
-## Six-Phase Workflow
+## Purpose in the Workflow
 
-1. **Research** (YOU): EXPLORE - ideas, feasibility, market, business, learning
-2. **Discussion** (next): WHAT and WHY - decisions, architecture, edge cases
-3. **Specification** (after): REFINE - validate and build standalone spec
-4. **Planning** (after): HOW - phases, tasks, acceptance criteria
-5. **Implementation** (after): DOING - tests first, then code
-6. **Review** (final): VALIDATING - check work against artifacts
+This skill can be used:
+- **Sequentially** (Phase 1): First phase, to explore ideas before discussion
+- **Standalone** (Contract entry): To research and validate any idea, feature, or concept
 
-You're at step 1. Explore freely.
+Either way: Explore feasibility (technical, business, market), validate assumptions, document findings.
+
+### What This Skill Needs
+
+- **Topic or idea** (required) - What to research/explore
+- **Existing context** (optional) - Any prior research or constraints
+
+**If missing:** Will ask user what they want to explore.
 
 ## Your Expertise
 
@@ -58,7 +62,7 @@ Start with one file. Early research is messy - topics aren't clear, you're follo
 
 **Let themes emerge**: Over multiple sessions, topics may become distinct. When they do, split into semantic files (`market-landscape.md`, `technical-feasibility.md`).
 
-**Periodic review**: Every few sessions, assess: are themes emerging? Split them out. Still fuzzy? Keep exploring. Ready for deeper discussion? Move to `docs/workflow/discussion/`.
+**Periodic review**: Every few sessions, assess: are themes emerging? Split them out. Still fuzzy? Keep exploring. Ready for deeper discussion? Research phase is complete.
 
 ## Documentation Loop
 
