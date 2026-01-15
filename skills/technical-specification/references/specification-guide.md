@@ -161,11 +161,9 @@ This section feeds into the planning phase, where dependencies become blocking r
 
 Analyze the specification in isolation - identify what it references that must exist, not what you know exists elsewhere in the project.
 
-## Transitioning to Formal Planning
+## Completion
 
 Specification is complete when:
 - All topics/phases have validated content
 - User confirms the specification is complete
 - No blocking gaps remain
-
-Then proceed to formal planning with the **technical-planning** skill.

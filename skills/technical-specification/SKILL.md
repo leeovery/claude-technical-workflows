@@ -33,7 +33,7 @@ Either way: Transform unvalidated reference material into a specification that's
 
 **Output**: `docs/workflow/specification/{topic}.md`
 
-**When complete**: User signs off, then proceed to technical-planning.
+**When complete**: User signs off on the specification.
 
 ## What You Do
 

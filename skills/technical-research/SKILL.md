@@ -62,7 +62,7 @@ Start with one file. Early research is messy - topics aren't clear, you're follo
 
 **Let themes emerge**: Over multiple sessions, topics may become distinct. When they do, split into semantic files (`market-landscape.md`, `technical-feasibility.md`).
 
-**Periodic review**: Every few sessions, assess: are themes emerging? Split them out. Still fuzzy? Keep exploring. Ready for deeper discussion? Move to `docs/workflow/discussion/`.
+**Periodic review**: Every few sessions, assess: are themes emerging? Split them out. Still fuzzy? Keep exploring. Ready for deeper discussion? Research phase is complete.
 
 ## Documentation Loop
 
