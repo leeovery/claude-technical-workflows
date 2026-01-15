@@ -181,7 +181,7 @@ Task 4: Handle rate limiting
 
 Each task delivers a complete slice of functionality that can be tested in isolation.
 
-Within a bounded feature (e.g., "sync engine"), vertical slicing means each task completes a coherent unit of that feature's functionality - not that it must touch UI/API/database layers. The test is: *can this task be verified independently?*
+Within a bounded feature, vertical slicing means each task completes a coherent unit of that feature's functionality - not that it must touch UI/API/database layers. The test is: *can this task be verified independently?*
 
 TDD naturally encourages vertical slicing - when you think "what test can I write?", you frame work as complete, verifiable behavior rather than technical layers
 
