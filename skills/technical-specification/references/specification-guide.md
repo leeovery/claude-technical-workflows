@@ -39,7 +39,7 @@ Work through the specification **topic by topic**:
 
 For each topic or subtopic, perform exhaustive extraction:
 
-1. **Re-scan ALL source material** - Don't rely on memory. Go back to the documents and systematically review them for the current topic.
+1. **Re-scan ALL source material** - Don't rely on memory. Go back to the source material and systematically review it for the current topic.
 
 2. **Search for keywords** - Topics are rarely contained in one section. Search for:
    - The topic name and synonyms
