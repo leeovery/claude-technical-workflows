@@ -1,8 +1,8 @@
 ---
-description: Shift into focused questioning mode to probe an idea more deeply during research or discussion phases.
+description: Shift into focused questioning mode during research or discussion to probe an idea more deeply.
 ---
 
-Shift into focused questioning mode to probe an idea more deeply.
+Shift into focused questioning mode during an active research or discussion session to probe an idea more deeply.
 
 ## Setup
 

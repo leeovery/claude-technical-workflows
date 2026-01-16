@@ -66,7 +66,6 @@ Start with `/workflow:start-research` or `/workflow:start-discussion` and follow
 | Command | What it does |
 |---------|-------------|
 | `/start-feature` | Create a spec directly from inline context (skip research/discussion) |
-| `/interview` | Focused questioning mode for any phase |
 
 *More standalone commands coming soon.*
 
@@ -244,8 +243,8 @@ commands/                            # Input layer (gather context → invoke sk
 ├── workflow:start-planning.md       # Sequential: begin planning
 ├── workflow:start-implementation.md # Sequential: begin implementation
 ├── workflow:start-review.md         # Sequential: begin review
+├── workflow:interview.md            # Utility: focused questioning for research/discussion
 ├── start-feature.md                 # Standalone: spec from inline context
-├── interview.md                     # Standalone: focused questioning
 └── link-dependencies.md             # Standalone: wire cross-topic deps
 
 agents/
@@ -374,6 +373,7 @@ Sequential commands prefixed with `workflow:`. They expect files from previous p
 | [**/workflow:start-planning**](commands/workflow:start-planning.md)                  | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md, Beads). |
 | [**/workflow:start-implementation**](commands/workflow:start-implementation.md)      | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
 | [**/workflow:start-review**](commands/workflow:start-review.md)                      | Start reviewing completed work. Validates implementation against plan tasks and acceptance criteria.                                                                                                        |
+| [**/workflow:interview**](commands/workflow:interview.md)                            | Shift into focused questioning mode during research or discussion. Probes ideas, challenges assumptions, and surfaces concerns.                                                                                           |
 
 ### Standalone Commands
 
@@ -382,7 +382,6 @@ Independent commands that gather inputs flexibly (inline context, files, or prom
 | Command                                                 | Description                                                                                                                                 |
 |---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
 | [**/start-feature**](commands/start-feature.md)         | Create a specification directly from inline context. Invokes the specification skill without requiring a discussion document.              |
-| [**/interview**](commands/interview.md)                 | Shift into focused questioning mode. Probes ideas with non-obvious questions, challenges assumptions, and surfaces concerns.               |
 | [**/link-dependencies**](commands/link-dependencies.md) | Link external dependencies across topics. Scans plans and wires up unresolved cross-topic dependencies.                                    |
 
 ### Creating Custom Commands
