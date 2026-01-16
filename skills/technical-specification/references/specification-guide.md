@@ -46,7 +46,7 @@ For each topic or subtopic, perform exhaustive extraction:
    - Related concepts and terms
    - Names of systems, fields, or behaviors mentioned in context
 
-3. **Collect scattered information** - Research and discussion documents are non-linear. Information about a single topic may be scattered across:
+3. **Collect scattered information** - Source material (research, discussions, requirements) is often non-linear. Information about a single topic may be scattered across:
    - Multiple sections of the same document
    - Different documents entirely
    - Tangential discussions that revealed important details
