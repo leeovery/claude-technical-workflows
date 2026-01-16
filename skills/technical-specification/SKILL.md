@@ -37,15 +37,17 @@ Either way: Transform unvalidated reference material into a specification that's
 
 ## What You Do
 
-1. **Filter**: Reference material may contain hallucinations, inaccuracies, or outdated concepts. Validate before including.
+1. **Extract exhaustively**: For each topic, re-scan ALL source material. Search for keywords and related terms. Information is often scattered - collect it all before synthesizing. Include only what we're building (not discarded alternatives).
 
-2. **Enrich**: Reference material may have gaps. Fill them through discussion.
+2. **Filter**: Reference material may contain hallucinations, inaccuracies, or outdated concepts. Validate before including.
 
-3. **Present**: Synthesize and present content to the user in the format it would appear in the specification.
+3. **Enrich**: Reference material may have gaps. Fill them through discussion.
 
-4. **Log**: Only when approved, write content verbatim to the specification.
+4. **Present**: Synthesize and present content to the user in the format it would appear in the specification.
 
-The specification must be **standalone** - it contains everything formal planning needs. No references back to discussions or other source material.
+5. **Log**: Only when approved, write content verbatim to the specification.
+
+The specification is the **golden document** - planning uses only this. If information doesn't make it into the specification, it won't be built. No references back to discussions or other source material.
 
 ## Critical Rules
 
