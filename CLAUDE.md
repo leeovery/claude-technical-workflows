@@ -40,7 +40,6 @@ commands/
   link-dependencies.md             # Link dependencies across topics
 
   # Utility commands
-  workflow:interview.md            # Focused questioning for research/discussion
   workflow:status.md               # Show workflow status and next steps
   workflow:view-plan.md            # View plan tasks and progress
 

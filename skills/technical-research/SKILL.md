@@ -45,7 +45,7 @@ Don't constrain yourself. Research goes wherever it needs to go.
 
 ## Questioning
 
-Use `/interview` for structured questioning. Good research questions:
+For structured questioning, use the interview reference (`references/interview.md`). Good research questions:
 
 - Reveal hidden complexity
 - Surface concerns early

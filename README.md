@@ -160,7 +160,7 @@ npx claude-manager remove @leeovery/claude-technical-workflows && npm rm @leeove
 
 ## The Six-Phase Workflow
 
-This package enforces a deliberate progression through six distinct phases:
+When using the full workflow, it progresses through six distinct phases:
 
 ```
 ┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
@@ -243,7 +243,6 @@ commands/                            # Input layer (gather context → invoke sk
 ├── workflow:start-planning.md       # Sequential: begin planning
 ├── workflow:start-implementation.md # Sequential: begin implementation
 ├── workflow:start-review.md         # Sequential: begin review
-├── workflow:interview.md            # Utility: focused questioning for research/discussion
 ├── workflow:status.md               # Utility: show workflow status and next steps
 ├── workflow:view-plan.md            # Utility: view plan tasks and progress
 ├── start-feature.md                 # Standalone: spec from inline context
@@ -384,7 +383,6 @@ Helpers for navigating and understanding the workflow.
 |--------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
 | [**/workflow:status**](commands/workflow:status.md)                                  | Show workflow status - what topics exist at each phase, and suggested next steps.                                                           |
 | [**/workflow:view-plan**](commands/workflow:view-plan.md)                            | View a plan's tasks and progress, regardless of output format.                                                                              |
-| [**/workflow:interview**](commands/workflow:interview.md)                            | Shift into focused questioning mode during research or discussion. Probes ideas, challenges assumptions, and surfaces concerns.             |
 
 ### Standalone Commands
 
