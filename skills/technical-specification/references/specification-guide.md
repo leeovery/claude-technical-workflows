@@ -33,8 +33,31 @@ Before starting any topic, identify ALL available reference material:
 
 Work through the specification **topic by topic**:
 
-### 1. Review
-Read all reference material for the current topic. Understand what exists.
+### 1. Review (Exhaustive Extraction)
+
+**This step is critical. The specification is the golden document - if information doesn't make it here, it won't be built.**
+
+For each topic or subtopic, perform exhaustive extraction:
+
+1. **Re-scan ALL source material** - Don't rely on memory. Go back to the documents and systematically review them for the current topic.
+
+2. **Search for keywords** - Topics are rarely contained in one section. Search for:
+   - The topic name and synonyms
+   - Related concepts and terms
+   - Names of systems, fields, or behaviors mentioned in context
+
+3. **Collect scattered information** - Research and discussion documents are non-linear. Information about a single topic may be scattered across:
+   - Multiple sections of the same document
+   - Different documents entirely
+   - Tangential discussions that revealed important details
+
+4. **Filter for what we're building** - Include only validated decisions:
+   - Exclude discarded alternatives
+   - Exclude ideas that were explored but rejected
+   - Exclude "maybes" that weren't confirmed
+   - Include only what the user has decided to build
+
+**Why this matters:** The specification is the single source of truth for planning. Planning will not reference discussions or research - only this document. Missing a detail here means that detail doesn't get implemented.
 
 ### 2. Synthesize and Present
 Present your understanding to the user **in the format it would appear in the specification**:
@@ -97,6 +120,8 @@ Suggested skeleton:
 ```
 
 ## Critical Rules
+
+**Exhaustive extraction is non-negotiable**: Before presenting any topic, re-scan source material. Search for keywords. Collect scattered information. The specification is the golden document - planning uses only this. If you miss something, it doesn't get built.
 
 **Present before logging**: Never write content to the specification until the user has seen and approved it.
 
