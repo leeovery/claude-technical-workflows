@@ -191,9 +191,9 @@ When using the full workflow, it progresses through six distinct phases:
 
 **Phase 6 - Review:** Validates completed work against specification requirements and plan acceptance criteria. The specification is the validated source of truth; earlier phases may contain rejected ideas that were intentionally filtered out. Provides structured feedback without fixing code directly.
 
-## How It Works
+## Project Structure
 
-### Output Structure
+### Output Files
 
 Documents are stored in your project using a **phase-first** organisation:
 
