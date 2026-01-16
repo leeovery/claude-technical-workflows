@@ -193,18 +193,6 @@ When using the full workflow, it progresses through six distinct phases:
 
 ## How It Works
 
-### Installation
-
-This package depends on [`@leeovery/claude-manager`](https://github.com/leeovery/claude-manager), which:
-
-1. **Copies skills** into your project's `.claude/skills/` directory
-2. **Copies commands** into your project's `.claude/commands/` directory
-3. **Copies agents** into your project's `.claude/agents/` directory
-4. **Tracks installed plugins** via a manifest file
-5. **Handles installation/removal** automatically via npm hooks
-
-You don't need to configure anything. Just install and start using the commands.
-
 ### Output Structure
 
 Documents are stored in your project using a **phase-first** organisation:
