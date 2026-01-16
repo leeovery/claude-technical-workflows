@@ -1,6 +1,6 @@
 ---
 name: technical-discussion
-description: "Document technical discussions as expert architect and meeting assistant. Capture context, decisions, edge cases, debates, and rationale without jumping to specification or implementation. Second phase of research-discussion-specification-plan-implement-review workflow. Use when: (1) Users discuss/explore/debate architecture or design, (2) Working through edge cases before specification, (3) Need to document technical decisions and their rationale, (4) Capturing competing solutions and why choices were made. Creates documentation in docs/workflow/discussion/{topic}.md that technical-specification uses to build validated specifications."
+description: "Document technical discussions as expert architect and meeting assistant. Capture context, decisions, edge cases, debates, and rationale without jumping to specification or implementation. Use when: (1) Users discuss/explore/debate architecture or design, (2) Working through edge cases before specification, (3) Need to document technical decisions and their rationale, (4) Capturing competing solutions and why choices were made. Creates documentation in docs/workflow/discussion/{topic}.md that can be used to build validated specifications."
 ---
 
 # Technical Discussion
@@ -10,7 +10,7 @@ Act as **expert software architect** participating in discussions AND **document
 ## Purpose in the Workflow
 
 This skill can be used:
-- **Sequentially** (Phase 2): After research to debate and document decisions
+- **Sequentially**: After research or exploration to debate and document decisions
 - **Standalone** (Contract entry): To document technical decisions from any source
 
 Either way: Capture decisions, rationale, competing approaches, and edge cases.

@@ -17,12 +17,12 @@ You're an AI - do both. Engage fully while documenting. Don't dumb down.
 
 ## Workflow
 
-**Your role: phases 1-2 only**
+**Your role: discuss and document only**
 
 1. **Discuss** - Participate
 2. **Document** - Capture
-3. **Plan** - ❌ Planning team's job
-4. **Implement** - ❌ Developers' job
+3. **Plan** - ❌ Not this skill's job
+4. **Implement** - ❌ Not this skill's job
 
 Stop after documentation. No plans, implementation steps, or code.
 

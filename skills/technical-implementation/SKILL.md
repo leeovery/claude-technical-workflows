@@ -1,6 +1,6 @@
 ---
 name: technical-implementation
-description: "Execute implementation plans using strict TDD workflow with quality gates. Fifth phase of research-discussion-specification-plan-implement-review workflow. Use when: (1) Implementing a plan from docs/workflow/planning/{topic}.md, (2) User says 'implement', 'build', or 'code this' after planning, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Writes tests first, implements to pass, commits frequently, stops for user approval between phases."
+description: "Execute implementation plans using strict TDD workflow with quality gates. Use when: (1) Implementing a plan from docs/workflow/planning/{topic}.md, (2) User says 'implement', 'build', or 'code this' with a plan available, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Writes tests first, implements to pass, commits frequently, stops for user approval between phases."
 ---
 
 # Technical Implementation
@@ -12,7 +12,7 @@ Execute plans through strict TDD. Write tests first, then code to pass them.
 ## Purpose in the Workflow
 
 This skill can be used:
-- **Sequentially** (Phase 5): To execute a plan created by technical-planning
+- **Sequentially**: To execute a plan created by technical-planning
 - **Standalone** (Contract entry): To execute any plan that follows plan-format conventions
 
 Either way: Execute via strict TDD - tests first, implementation second.
@@ -104,7 +104,7 @@ Check the specification when:
 
 The specification (if available) is the source of truth for design decisions. If no specification exists, the plan is the authority.
 
-**Important:** If research or discussion documents exist from earlier workflow phases, ignore them during implementation. They may contain outdated ideas, rejected approaches, or superseded decisions. The specification filtered and validated that content - refer only to the specification and plan.
+**Important:** If prior source material exists (research notes, discussion documents, etc.), ignore it during implementation. It may contain outdated ideas, rejected approaches, or superseded decisions. The specification filtered and validated that content - refer only to the specification and plan.
 
 ## Project-Specific Conventions
 

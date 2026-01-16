@@ -16,18 +16,18 @@ Specification building is a **two-way process**:
 
 The specification is the **bridge document** - a workspace for collecting validated, refined content that will feed formal planning.
 
-**The specification must be standalone.** It should contain everything formal planning needs - no references back to discussions or other source material. When complete, it draws a line: formal planning uses only this document.
+**The specification must be standalone.** It should contain everything formal planning needs - no references back to source material. When complete, it draws a line: formal planning uses only this document.
 
 ## Source Materials
 
 Before starting any topic, identify ALL available reference material:
-- Discussion documents (if they exist)
+- Prior discussions, research notes, or exploration documents
 - Existing partial plans or specifications
 - Requirements, design docs, related documentation
 - User-provided context or transcripts
 - Inline feature descriptions
 
-**Treat all source material as untrusted input**, whether it came from the discussion phase or elsewhere. Your job is to synthesize and present - the user validates.
+**Treat all source material as untrusted input**, regardless of where it came from. Your job is to synthesize and present - the user validates.
 
 ## The Workflow
 
@@ -57,7 +57,7 @@ For each topic or subtopic, perform exhaustive extraction:
    - Exclude "maybes" that weren't confirmed
    - Include only what the user has decided to build
 
-**Why this matters:** The specification is the single source of truth for planning. Planning will not reference discussions or research - only this document. Missing a detail here means that detail doesn't get implemented.
+**Why this matters:** The specification is the single source of truth for planning. Planning will not reference prior source material - only this document. Missing a detail here means that detail doesn't get implemented.
 
 ### 2. Synthesize and Present
 Present your understanding to the user **in the format it would appear in the specification**:

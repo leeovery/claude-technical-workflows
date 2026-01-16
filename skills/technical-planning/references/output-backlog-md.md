@@ -261,9 +261,9 @@ project/
 │   ├── task-2 - [P1] Add login endpoint.md
 │   └── task-3 - [P2] Session management.md
 ├── docs/workflow/
-│   ├── discussion/{topic}.md      # Phase 2 output
-│   ├── specification/{topic}.md   # Phase 3 output
-│   └── planning/{topic}.md        # Phase 4 output (format: backlog-md - pointer)
+│   ├── discussion/{topic}.md      # Discussion output
+│   ├── specification/{topic}.md   # Specification output
+│   └── planning/{topic}.md        # Planning output (format: backlog-md - pointer)
 ```
 
 ## Implementation

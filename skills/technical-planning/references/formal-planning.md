@@ -35,7 +35,7 @@ From the specification (`docs/workflow/specification/{topic}.md`), extract:
 - Constraints and requirements
 - **External dependencies** (from the Dependencies section)
 
-**The specification is your sole input.** Discussion documents and other source materials have already been validated, filtered, and enriched during the specification phase. Everything you need is in the specification - do not reference other documents.
+**The specification is your sole input.** Prior source materials have already been validated, filtered, and enriched into the specification. Everything you need is in the specification - do not reference other documents.
 
 #### Extract External Dependencies
 
