@@ -10,6 +10,20 @@ You are creating the formal implementation plan from the specification.
 
 **Confirm output format with user.** Ask which format they want, then load the appropriate output adapter from the main skill file. If you don't know which format, ask.
 
+## Planning is Collaborative
+
+Planning is an iterative process between you and the user. The specification contains validated, considered decisions - planning translates that work into actionable structure. But translation still requires judgment, and the user should guide that judgment.
+
+**Stop, reflect, and ask** when:
+- The specification is ambiguous about implementation approach
+- Multiple valid ways to structure phases or tasks exist
+- You're uncertain whether a task is appropriately scoped
+- Edge cases aren't fully addressed in the specification
+
+**Never invent to fill gaps.** If the specification doesn't address something, use `[needs-info]` and ask the user. The specification is the golden document - everything in the plan must trace back to it.
+
+**The user expects collaboration.** Planning doesn't have to be done by the agent alone. It's normal and encouraged to pause for guidance rather than guess.
+
 ## The Planning Process
 
 ### 1. Read Specification
@@ -86,12 +100,90 @@ Verify:
 
 ## Task Design
 
-**Each task should**:
-- Be a single TDD cycle
-- Have micro acceptance (specific test name)
-- Do one clear thing
-
 **One task = One TDD cycle**: write test → implement → pass → commit
+
+### Task Structure
+
+Every task should follow this structure:
+
+```markdown
+### Task N: [Clear action statement]
+
+**Problem**: Why this task exists - what issue or gap it addresses.
+
+**Solution**: What we're building - the high-level approach.
+
+**Outcome**: What success looks like - the verifiable end state.
+
+**Do**:
+- Specific implementation steps
+- File locations and method names where helpful
+- Concrete guidance, not vague directions
+
+**Acceptance Criteria**:
+- [ ] First verifiable criterion
+- [ ] Second verifiable criterion
+- [ ] Edge case handling criterion
+
+**Tests**:
+- `"it does the primary expected behavior"`
+- `"it handles edge case correctly"`
+- `"it fails appropriately for invalid input"`
+
+**Context**: (when relevant)
+> Relevant details from specification: code examples, architectural decisions,
+> data models, or constraints that inform implementation.
+```
+
+### Field Requirements
+
+| Field | Required | Notes |
+|-------|----------|-------|
+| Problem | Yes | One sentence minimum - why this task exists |
+| Solution | Yes | One sentence minimum - what we're building |
+| Outcome | Yes | One sentence minimum - what success looks like |
+| Do | Yes | At least one concrete action |
+| Acceptance Criteria | Yes | At least one pass/fail criterion |
+| Tests | Yes | At least one test name; include edge cases, not just happy path |
+| Context | When relevant | Only include when spec has details worth pulling forward |
+
+### The Template as Quality Gate
+
+If you struggle to articulate a clear Problem for a task, this signals the task may be:
+
+- **Too granular**: Merge with a related task
+- **Mechanical housekeeping**: Include as a step within another task
+- **Poorly understood**: Revisit the specification
+
+Every standalone task should have a reason to exist that can be stated simply. The template enforces this - difficulty completing it is diagnostic information, not a problem to work around.
+
+### Vertical Slicing
+
+Prefer **vertical slices** that deliver complete, testable functionality over horizontal slices that separate by technical layer.
+
+**Horizontal (avoid)**:
+```
+Task 1: Create all database models
+Task 2: Create all service classes
+Task 3: Wire up integrations
+Task 4: Add error handling
+```
+
+Nothing works until Task 4. No task is independently verifiable.
+
+**Vertical (prefer)**:
+```
+Task 1: Fetch and store events from provider (happy path)
+Task 2: Handle pagination for large result sets
+Task 3: Handle authentication token refresh
+Task 4: Handle rate limiting
+```
+
+Each task delivers a complete slice of functionality that can be tested in isolation.
+
+Within a bounded feature, vertical slicing means each task completes a coherent unit of that feature's functionality - not that it must touch UI/API/database layers. The test is: *can this task be verified independently?*
+
+TDD naturally encourages vertical slicing - when you think "what test can I write?", you frame work as complete, verifiable behavior rather than technical layers
 
 ## Plan as Source of Truth
 

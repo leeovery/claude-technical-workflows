@@ -52,6 +52,22 @@ agents/
 
 **Skills are input-agnostic** - they receive inputs and process them without knowing where the inputs came from. Commands are responsible for gathering inputs.
 
+### Keeping Skills Workflow-Agnostic (IMPORTANT)
+
+Skills should **never hardcode references** to specific workflow phases (e.g., "the research phase", "after discussion"). This allows skills to be invoked from different entry points - whether via the six-phase workflow commands or standalone commands like `/start-feature`.
+
+**In skills, avoid:**
+- "The research, discussion, and specification phases..."
+- "After completing discussion, you should..."
+- "Proceed to the planning phase..."
+
+**In skills, prefer:**
+- "The specification contains validated decisions..."
+- "Planning is complete when..."
+- Reference inputs generically (specification, plan) not how they were created
+
+**Commands set context; skills process inputs.** If workflow-specific language is needed, it belongs in the command that invokes the skill, not in the skill itself.
+
 ## Key Conventions
 
 Phase-first directory structure:
