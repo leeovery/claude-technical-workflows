@@ -16,27 +16,23 @@
 
 ## What is this?
 
-A six-phase workflow for Claude Code that captures context, decisions, and rationale before any code is written, then implements and validates the work against those artifacts.
+A complete development workflow for Claude Code: explore ideas, capture decisions, build actionable plans, implement via strict TDD, and validate the result.
+
+Use it as a **six-phase workflow** or pick individual capabilities as needed:
 
 ```
-Research       → Explore ideas
-     ↓
-Discussion     → Debate and decide
-     ↓
-Specification  → Validate and refine
-     ↓
-Planning       → Structure the work
-     ↓
-Implementation → Build via TDD
-     ↓
-Review         → Validate against spec
+Research → Discussion → Specification → Planning → Implementation → Review
 ```
 
-**Why this matters:** Complex features benefit from thorough discussion before implementation. These skills help you document the *what* and *why* before diving into the *how*, preserving architectural decisions, edge cases, and the reasoning behind choices that would otherwise be lost.
+**Why this matters:** Complex features benefit from thorough discussion before implementation. This toolkit documents the *what* and *why* before diving into the *how*, preserving architectural decisions, edge cases, and the reasoning behind choices that would otherwise be lost.
 
-**This is a work in progress.** The workflow is being refined through real-world usage. Expect updates as patterns evolve.
+**Flexible entry points:** Need the full workflow? Start at Research or Discussion and progress through each phase. Already know what you're building? Jump straight to Specification with `/start-feature`. Skills are input-agnostic - commands gather context and feed it to them.
 
-**Model compatibility:** These skills have been developed and refined for Claude Code running on **Opus 4.5**. Different models may exhibit different edge cases, and future model releases may require adjustments to the prompts and workflows.
+> [!NOTE]
+> **Work in progress.** The workflow is being refined through real-world usage. Expect updates as patterns evolve.
+
+> [!IMPORTANT]
+> **Model compatibility:** These skills have been developed and refined for Claude Code running on **Opus 4.5**. Different models may exhibit different edge cases, and future model releases may require adjustments to the prompts and workflows.
 
 ### Quick Install
 
@@ -55,28 +51,56 @@ See [Installation](#installation) for details and trade-offs.
 
 ## How do I use it?
 
-You have two entry points:
+### Two Ways to Use the Skills
 
-| Start here... | When... | Command |
-|---------------|---------|---------|
-| **Research** | You have a fresh idea to explore: feasibility, market, viability, early thoughts | `/workflow:start-research` |
-| **Discussion** | You already know what you're building and need to iron out the details | `/workflow:start-discussion` |
-
-**Research** is a free-for-all. Explore broadly, follow tangents, challenge assumptions. Not everything researched gets built, and that's fine. Use this for ideas that need validating before you commit.
-
-**Discussion** is where you work through the challenging parts: core architecture, edge cases, non-obvious decisions. The key value is that it captures *how* you arrived at decisions, not just the decisions themselves. When you explore four approaches and pick one, the document explains why you rejected the others. This context is invaluable later.
-
-Then follow the flow:
+**1. Full Workflow** - Sequential phases that build on each other:
 
 ```
 Research → Discussion → Specification → Planning → Implementation → Review
 ```
 
-Each phase builds on the previous. Specification validates your discussions into a standalone doc. Planning breaks that into tasks. Implementation executes via TDD. Review validates against the spec.
+Start with `/workflow:start-research` or `/workflow:start-discussion` and follow the flow. Each phase outputs files that the next phase consumes.
 
-### Commands
+**2. Standalone Commands** - Jump directly to a skill with flexible inputs:
 
-Each phase has a command designed as its entry point. Commands are prefixed with `workflow:` to indicate they're part of the sequential workflow system:
+| Command | What it does |
+|---------|-------------|
+| `/start-feature` | Create a spec directly from inline context (skip research/discussion) |
+| `/interview` | Focused questioning mode for any phase |
+
+*More standalone commands coming soon.*
+
+### The Command/Skill Architecture
+
+**Skills are input-agnostic.** They don't know or care where their inputs came from: a discussion document, inline context, or external sources. They just process what they receive.
+
+**Commands are the input layer.** They gather context (from files, prompts, or inline) and pass it to skills. This separation means:
+
+- The same skill can be invoked from different entry points
+- You can create custom commands that feed skills in new ways
+- Skills remain reusable without coupling to specific workflows
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        COMMANDS                             │
+│  (gather inputs from files, prompts, inline context)        │
+├─────────────────────────────────────────────────────────────┤
+│  /workflow:start-spec     /start-feature    (your custom)   │
+│         │                       │                 │         │
+│         └───────────┬───────────┘                 │         │
+│                     ▼                             ▼         │
+├─────────────────────────────────────────────────────────────┤
+│                         SKILLS                              │
+│  (process inputs without knowing their source)              │
+├─────────────────────────────────────────────────────────────┤
+│           technical-specification skill                     │
+│           technical-planning skill                          │
+│           technical-implementation skill                    │
+│           etc.                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Workflow Commands
 
 | Phase          | Command                          |
 |----------------|----------------------------------|
@@ -87,7 +111,7 @@ Each phase has a command designed as its entry point. Commands are prefixed with
 | Implementation | `/workflow:start-implementation` |
 | Review         | `/workflow:start-review`         |
 
-Run the command directly or ask Claude to run it. Each command gathers the context it needs, asking what you're researching, discussing, or planning. Where relevant, it looks at outputs from the previous phase and offers you a choice from the list.
+Run the command directly or ask Claude to run it. Each gathers context from previous phase outputs and passes it to the skill.
 
 ## Installation
 
@@ -111,7 +135,7 @@ Skills are cached globally. They won't be available in Claude Code for Web since
 npm install -D @leeovery/claude-technical-workflows
 ```
 
-Skills are copied to `.claude/` and can be committed—giving you ownership and making them available everywhere including Claude Code for Web.
+Skills are copied to `.claude/` and can be committed, giving you ownership and making them available everywhere including Claude Code for Web.
 
 <details>
 <summary>pnpm users</summary>
@@ -158,7 +182,7 @@ This package enforces a deliberate progression through six distinct phases:
 
 **Phase 1 - Research:** Explore ideas from their earliest seed. Investigate market fit, technical feasibility, business viability. Free-flowing exploration that may or may not lead to building something.
 
-**Phase 2 - Discussion:** Captures the back-and-forth exploration of a problem. Documents competing solutions, why certain approaches won or lost, edge cases discovered, and the journey to decisions—not just the decisions themselves.
+**Phase 2 - Discussion:** Captures the back-and-forth exploration of a problem. Documents competing solutions, why certain approaches won or lost, edge cases discovered, and the journey to decisions, not just the decisions themselves.
 
 **Phase 3 - Specification:** Transforms discussion documentation into a validated, standalone specification. Filters hallucinations and inaccuracies, enriches gaps through discussion, and builds a document that planning can execute against without referencing other sources.
 
@@ -166,9 +190,11 @@ This package enforces a deliberate progression through six distinct phases:
 
 **Phase 5 - Implementation:** Executes the plan using strict TDD. Writes tests first, implements to pass, commits frequently, and stops for user approval between phases.
 
-**Phase 6 - Review:** Validates completed work against specification requirements and plan acceptance criteria. The specification is the validated source of truth—earlier phases may contain rejected ideas that were intentionally filtered out. Provides structured feedback without fixing code directly.
+**Phase 6 - Review:** Validates completed work against specification requirements and plan acceptance criteria. The specification is the validated source of truth; earlier phases may contain rejected ideas that were intentionally filtered out. Provides structured feedback without fixing code directly.
 
 ## How It Works
+
+### Installation
 
 This package depends on [`@leeovery/claude-manager`](https://github.com/leeovery/claude-manager), which:
 
@@ -178,11 +204,11 @@ This package depends on [`@leeovery/claude-manager`](https://github.com/leeovery
 4. **Tracks installed plugins** via a manifest file
 5. **Handles installation/removal** automatically via npm hooks
 
-You don't need to configure anything—just install and start discussing.
+You don't need to configure anything. Just install and start using the commands.
 
 ### Output Structure
 
-Documents are stored using a **phase-first** organization:
+Documents are stored in your project using a **phase-first** organisation:
 
 ```
 docs/workflow/
@@ -202,42 +228,42 @@ Research starts with `exploration.md` and splits into topic files as themes emer
 
 ### Package Structure
 
-This package provides:
-
 ```
-skills/
-├── technical-research/        # Phase 1: Explore and validate ideas
-├── technical-discussion/      # Phase 2: Document discussions
-├── technical-specification/   # Phase 3: Build validated specifications
-├── technical-planning/        # Phase 4: Create implementation plans
-├── technical-implementation/  # Phase 5: Execute via TDD
-└── technical-review/          # Phase 6: Validate against artifacts
+skills/                              # Input-agnostic processors
+├── technical-research/              # Explore and validate ideas
+├── technical-discussion/            # Document discussions
+├── technical-specification/         # Build validated specifications
+├── technical-planning/              # Create implementation plans
+├── technical-implementation/        # Execute via TDD
+└── technical-review/                # Validate against artefacts
 
-commands/
-├── workflow:start-research.md       # Begin research exploration
-├── workflow:start-discussion.md     # Begin technical discussions
-├── workflow:start-specification.md  # Begin specification building
-├── workflow:start-planning.md       # Begin implementation planning
-├── workflow:start-implementation.md # Begin implementing a plan
-├── workflow:start-review.md         # Begin reviewing completed work
-├── link-dependencies.md             # Link dependencies across topics
-├── start-feature.md                 # Create spec directly from inline context
-└── interview.md                     # Focused questioning mode (general purpose)
+commands/                            # Input layer (gather context → invoke skills)
+├── workflow:start-research.md       # Sequential: begin research
+├── workflow:start-discussion.md     # Sequential: begin discussions
+├── workflow:start-specification.md  # Sequential: begin specification
+├── workflow:start-planning.md       # Sequential: begin planning
+├── workflow:start-implementation.md # Sequential: begin implementation
+├── workflow:start-review.md         # Sequential: begin review
+├── start-feature.md                 # Standalone: spec from inline context
+├── interview.md                     # Standalone: focused questioning
+└── link-dependencies.md             # Standalone: wire cross-topic deps
 
 agents/
-└── chain-verifier.md          # Parallel task verification for review
+└── chain-verifier.md                # Parallel task verification for review
 ```
 
 ## Skills
 
-| Skill                                                            | Phase | Description                                                                                                                                                                                                  |
-|------------------------------------------------------------------|-------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [**technical-research**](skills/technical-research/)             | 1     | Explore ideas from their earliest seed. Investigate market fit, technical feasibility, business viability. Free-flowing exploration across technical, business, and market domains.                          |
-| [**technical-discussion**](skills/technical-discussion/)         | 2     | Document technical discussions as expert architect and meeting assistant. Captures context, decisions, edge cases, competing solutions, debates, and rationale.                                              |
-| [**technical-specification**](skills/technical-specification/)   | 3     | Build validated specifications from discussion documents through collaborative refinement. Filters hallucinations, enriches gaps, produces standalone spec.                                                  |
-| [**technical-planning**](skills/technical-planning/)             | 4     | Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats.                                                                 |
-| [**technical-implementation**](skills/technical-implementation/) | 5     | Execute implementation plans using strict TDD workflow. Writes tests first, implements to pass, commits frequently, and gates phases on user approval.                                                       |
-| [**technical-review**](skills/technical-review/)                 | 6     | Review completed implementation against specification requirements and plan acceptance criteria. Uses parallel subagents for efficient chain verification. Produces structured feedback without fixing code. |
+Skills are **input-agnostic processors**: they receive inputs and process them without knowing where the inputs came from. This makes them reusable across different commands and workflows.
+
+| Skill                                                            | Description                                                                                                                                                                                                  |
+|------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [**technical-research**](skills/technical-research/)             | Explore ideas from their earliest seed. Investigate market fit, technical feasibility, business viability. Free-flowing exploration across technical, business, and market domains.                          |
+| [**technical-discussion**](skills/technical-discussion/)         | Document technical discussions as expert architect and meeting assistant. Captures context, decisions, edge cases, competing solutions, debates, and rationale.                                              |
+| [**technical-specification**](skills/technical-specification/)   | Build validated specifications from source material through collaborative refinement. Filters hallucinations, enriches gaps, produces standalone spec.                                                       |
+| [**technical-planning**](skills/technical-planning/)             | Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats.                                                                 |
+| [**technical-implementation**](skills/technical-implementation/) | Execute implementation plans using strict TDD workflow. Writes tests first, implements to pass, commits frequently, and gates phases on user approval.                                                       |
+| [**technical-review**](skills/technical-review/)                 | Review completed implementation against specification requirements and plan acceptance criteria. Uses parallel subagents for efficient chain verification. Produces structured feedback without fixing code. |
 
 ### technical-research
 
@@ -270,17 +296,17 @@ Acts as both **expert software architect** (participating in discussions) and **
 - Back-and-forth debates showing how decisions were reached
 - Small details and edge cases that were discussed
 - Competing solutions and why some won over others
-- The journey—false paths, "aha" moments, course corrections
+- The journey: false paths, "aha" moments, course corrections
 
 ### technical-specification
 
-Acts as **expert technical architect** and **specification builder**. Transforms discussion documents into validated, standalone specifications.
+Acts as **expert technical architect** and **specification builder**. Transforms source material into validated, standalone specifications.
 
 **Use when:**
-- Ready to validate and refine discussion content
-- Need to filter potential hallucinations or inaccuracies from source material
+- Ready to validate and refine source material into a spec
+- Need to filter potential hallucinations or inaccuracies
 - Building a standalone document that planning can execute against
-- Converting discussions into verified requirements
+- Converting discussions, feature descriptions, or other inputs into verified requirements
 
 **What it produces:**
 - Validated, standalone specification document
@@ -312,14 +338,14 @@ Executes plans through strict TDD. Acts as an expert senior developer who builds
 - Bug fixes or features benefiting from structured implementation
 
 **Hard rules:**
-- No code before tests—write the failing test first
-- No test changes to pass—fix the code, not the tests
-- No scope expansion—if it's not in the plan, don't build it
-- Commit after green—every passing test is a commit point
+- No code before tests: write the failing test first
+- No test changes to pass: fix the code, not the tests
+- No scope expansion: if it's not in the plan, don't build it
+- Commit after green: every passing test is a commit point
 
 ### technical-review
 
-Reviews completed work with fresh perspective. Validates implementation against prior workflow artifacts without fixing code directly.
+Reviews completed work with fresh perspective. Validates implementation against prior workflow artefacts without fixing code directly.
 
 **Use when:**
 - Implementation phase is complete
@@ -334,9 +360,11 @@ Reviews completed work with fresh perspective. Validates implementation against 
 
 ## Commands
 
+Commands are the input layer: they gather context and pass it to skills. Two types:
+
 ### Workflow Commands
 
-Sequential workflow commands are prefixed with `workflow:` and expect files from previous phases.
+Sequential commands prefixed with `workflow:`. They expect files from previous phases and pass content to skills.
 
 | Command                                                                              | Description                                                                                                                                                                                                |
 |--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -349,13 +377,22 @@ Sequential workflow commands are prefixed with `workflow:` and expect files from
 
 ### Standalone Commands
 
-These commands can be used independently, without the full workflow.
+Independent commands that gather inputs flexibly (inline context, files, or prompts) and invoke skills directly. Use these when you want skill capabilities without the full workflow structure.
 
 | Command                                                 | Description                                                                                                                                 |
 |---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| [**/start-feature**](commands/start-feature.md)         | Create a specification directly from inline context. For adding features to existing projects when you already know what you're building.  |
+| [**/start-feature**](commands/start-feature.md)         | Create a specification directly from inline context. Invokes the specification skill without requiring a discussion document.              |
 | [**/interview**](commands/interview.md)                 | Shift into focused questioning mode. Probes ideas with non-obvious questions, challenges assumptions, and surfaces concerns.               |
 | [**/link-dependencies**](commands/link-dependencies.md) | Link external dependencies across topics. Scans plans and wires up unresolved cross-topic dependencies.                                    |
+
+### Creating Custom Commands
+
+Since skills are input-agnostic, you can create your own commands that feed them in new ways. A command just needs to:
+
+1. Gather the inputs the skill expects
+2. Invoke the skill with those inputs
+
+See `/start-feature` as an example: it provides inline context to the specification skill instead of a discussion document.
 
 ## Agents
 
@@ -383,9 +420,9 @@ Please open an issue first to discuss significant changes.
 
 ## Related Packages
 
-- [**@leeovery/claude-manager**](https://github.com/leeovery/claude-manager) — The plugin manager that powers skill installation
-- [**@leeovery/claude-laravel**](https://github.com/leeovery/claude-laravel) — Laravel development skills for Claude Code
-- [**@leeovery/claude-nuxt**](https://github.com/leeovery/claude-nuxt) — Nuxt.js development skills for Claude Code
+- [**@leeovery/claude-manager**](https://github.com/leeovery/claude-manager) - The plugin manager that powers skill installation
+- [**@leeovery/claude-laravel**](https://github.com/leeovery/claude-laravel) - Laravel development skills for Claude Code
+- [**@leeovery/claude-nuxt**](https://github.com/leeovery/claude-nuxt) - Nuxt.js development skills for Claude Code
 
 ## License
 
