@@ -41,6 +41,8 @@ commands/
 
   # Utility commands
   workflow:interview.md            # Focused questioning for research/discussion
+  workflow:status.md               # Show workflow status and next steps
+  workflow:view-plan.md            # View plan tasks and progress
 
 agents/
   chain-verifier.md          # Parallel chain verification for review phase
