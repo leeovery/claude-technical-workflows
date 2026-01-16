@@ -1,6 +1,6 @@
 ---
 name: technical-review
-description: "Validate completed implementation against plan tasks and acceptance criteria. Sixth phase of research-discussion-specification-plan-implement-review workflow. Use when: (1) Implementation phase is complete, (2) User wants validation before merging/shipping, (3) Quality gate check needed after implementation. Reviews ALL plan tasks for implementation correctness, test adequacy, and code quality. Produces structured feedback (approve, request changes, or comments) - does NOT fix code."
+description: "Validate completed implementation against plan tasks and acceptance criteria. Use when: (1) Implementation is complete, (2) User wants validation before merging/shipping, (3) Quality gate check needed after implementation. Reviews ALL plan tasks for implementation correctness, test adequacy, and code quality. Produces structured feedback (approve, request changes, or comments) - does NOT fix code."
 ---
 
 # Technical Review
@@ -20,7 +20,7 @@ Optional but helpful:
 ## Purpose in the Workflow
 
 This skill can be used:
-- **Sequentially** (Phase 6): After implementation of a planned feature
+- **Sequentially**: After implementation of a planned feature
 - **Standalone** (Contract entry): To review any implementation against a plan
 
 Either way: Verify every plan task was implemented, tested adequately, and meets quality standards.

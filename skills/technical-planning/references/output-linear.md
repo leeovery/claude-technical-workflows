@@ -231,9 +231,9 @@ After planning:
 
 ```
 docs/workflow/
-├── discussion/{topic}.md      # Phase 2 output
-├── specification/{topic}.md   # Phase 3 output
-└── planning/{topic}.md        # Phase 4 output (format: linear - pointer)
+├── discussion/{topic}.md      # Discussion output
+├── specification/{topic}.md   # Specification output
+└── planning/{topic}.md        # Planning output (format: linear - pointer)
 
 Linear:
 └── Project: {topic}

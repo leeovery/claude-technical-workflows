@@ -375,9 +375,9 @@ project/
 ├── .beads/
 │   └── issues.jsonl          # Beads database
 ├── docs/workflow/
-│   ├── discussion/{topic}.md      # Phase 2 output
-│   ├── specification/{topic}.md   # Phase 3 output
-│   └── planning/{topic}.md        # Phase 4 output (format: beads)
+│   ├── discussion/{topic}.md      # Discussion output
+│   ├── specification/{topic}.md   # Specification output
+│   └── planning/{topic}.md        # Planning output (format: beads)
 ```
 
 ## Priority Mapping

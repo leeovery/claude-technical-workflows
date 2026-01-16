@@ -1,28 +1,29 @@
 ---
 name: technical-specification
-description: "Build validated specifications from discussion documents through collaborative refinement. Third phase of research-discussion-specification-plan-implement-review workflow. Use when: (1) User asks to create/build a specification from discussions, (2) User wants to validate and refine discussion content before planning, (3) Converting discussion documents into standalone specifications, (4) User says 'specify this' or 'create a spec' after discussions, (5) Need to filter hallucinations and enrich gaps before formal planning. Creates specifications in docs/workflow/specification/{topic}.md that technical-planning uses to build implementation plans."
+description: "Build validated specifications from source material through collaborative refinement. Use when: (1) User asks to create/build a specification from source material, (2) User wants to validate and refine content before planning, (3) Converting source material (discussions, research, requirements) into standalone specifications, (4) User says 'specify this' or 'create a spec', (5) Need to filter hallucinations and enrich gaps before formal planning. Creates specifications in docs/workflow/specification/{topic}.md that can be used to build implementation plans."
 ---
 
 # Technical Specification
 
-Act as **expert technical architect** and **specification builder**. Collaborate with the user to transform discussion documents into validated, standalone specifications.
+Act as **expert technical architect** and **specification builder**. Collaborate with the user to transform source material into validated, standalone specifications.
 
 Your role is to synthesize reference material, present it for validation, and build a specification that formal planning can execute against.
 
 ## Purpose in the Workflow
 
 This skill can be used:
-- **Sequentially** (Phase 3): After discussion documents exist
-- **Standalone** (Contract entry): With reference material from any source (research docs, conversation transcripts, design documents, inline feature description)
+- **Sequentially**: After source material has been captured (discussions, research, etc.)
+- **Standalone**: With reference material from any source (research docs, conversation transcripts, design documents, inline feature description)
 
 Either way: Transform unvalidated reference material into a specification that's **standalone and approved**.
 
 ### What This Skill Needs
 
 - **Source material** (required) - The content to synthesize into a specification. Can be:
-  - Discussion document content (from sequential workflow)
-  - Inline feature description (from `/start-feature`)
-  - Any other reference material (requirements docs, transcripts, etc.)
+  - Discussion documents or research notes
+  - Inline feature descriptions
+  - Requirements docs, design documents, or transcripts
+  - Any other reference material
 - **Topic name** (required) - Used for the output filename
 
 **If missing:** Will ask user to provide context or point to source files.
@@ -47,7 +48,7 @@ Either way: Transform unvalidated reference material into a specification that's
 
 5. **Log**: Only when approved, write content verbatim to the specification.
 
-The specification is the **golden document** - planning uses only this. If information doesn't make it into the specification, it won't be built. No references back to discussions or other source material.
+The specification is the **golden document** - planning uses only this. If information doesn't make it into the specification, it won't be built. No references back to source material.
 
 ## Critical Rules
 

@@ -1,6 +1,6 @@
 ---
 name: technical-planning
-description: "Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Fourth phase of research-discussion-specification-plan-implement-review workflow. Use when: (1) User asks to create/write an implementation plan, (2) User asks to plan implementation after specification is complete, (3) Converting specifications from docs/workflow/specification/{topic}.md into implementation plans, (4) User says 'plan this' or 'create a plan' after specification, (5) Need to structure how to build something with phases and concrete steps. Creates plans in docs/workflow/planning/{topic}.md that implementation phase executes via strict TDD."
+description: "Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Use when: (1) User asks to create/write an implementation plan, (2) User asks to plan implementation from a specification, (3) Converting specifications from docs/workflow/specification/{topic}.md into implementation plans, (4) User says 'plan this' or 'create a plan', (5) Need to structure how to build something with phases and concrete steps. Creates plans in docs/workflow/planning/{topic}.md that can be executed via strict TDD."
 ---
 
 # Technical Planning
@@ -12,7 +12,7 @@ Your role spans product (WHAT we're building and WHY) and technical (HOW to stru
 ## Purpose in the Workflow
 
 This skill can be used:
-- **Sequentially** (Phase 4): From a validated specification
+- **Sequentially**: From a validated specification
 - **Standalone** (Contract entry): From any specification meeting format requirements
 
 Either way: Transform specifications into actionable phases, tasks, and acceptance criteria.
@@ -27,7 +27,7 @@ Either way: Transform specifications into actionable phases, tasks, and acceptan
 
 ## Source Material
 
-**The specification is your sole input.** Everything you need should be in the specification - do not request details from discussion documents or other source material. If information is missing, ask for clarification on the specification itself.
+**The specification is your sole input.** Everything you need should be in the specification - do not request details from prior source material. If information is missing, ask for clarification on the specification itself.
 
 ## The Process
 
