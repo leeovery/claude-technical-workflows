@@ -258,18 +258,31 @@ After documenting dependencies, perform a **final comprehensive review** of the 
 
 6. **User confirms before inclusion** - Standard workflow applies: present proposed additions, get approval, then log verbatim.
 
+7. **Surface potential gaps** - After reviewing source material, consider whether the specification has gaps that the sources simply didn't address. These might be:
+   - Edge cases that weren't discussed
+   - Error scenarios not covered
+   - Integration points that seem implicit but aren't specified
+   - Behaviors that are ambiguous without clarification
+
+   Frame these as questions, not requirements:
+
+   > "The specification doesn't address [scenario], and I didn't find it in the source material either. Is this something we need to specify, or is it intentionally out of scope?"
+
+   This should be infrequent - most gaps will be caught from source material. But occasionally the sources themselves have blind spots worth surfacing.
+
 ### What You're NOT Doing
 
-- **Not generating new ideas** - Only surfacing what's already in the source material
-- **Not assuming gaps** - If something isn't in the sources, it may have been intentionally omitted
+- **Not inventing requirements** - When surfacing gaps not in sources, you're asking questions, not proposing answers
+- **Not assuming gaps need filling** - If something isn't in the sources, it may have been intentionally omitted
 - **Not padding the spec** - Only add what's genuinely missing and relevant
 - **Not re-litigating decisions** - If something was discussed and rejected, it stays rejected
 
 ### Completing the Review
 
-When you've systematically reviewed all source material and either:
-- Found nothing missing, or
-- Addressed all discovered gaps with the user
+When you've:
+- Systematically reviewed all source material for missed content
+- Addressed any discovered gaps with the user
+- Surfaced any potential gaps not covered by sources (and resolved them)
 
 ...then inform the user the final review is complete and proceed to getting sign-off on the specification.
 
