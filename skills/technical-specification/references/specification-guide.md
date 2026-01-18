@@ -104,7 +104,7 @@ Suggested skeleton:
 # Specification: [Topic Name]
 
 **Status**: Building specification
-**Last Updated**: [timestamp]
+**Last Updated**: YYYY-MM-DD *(use today's actual date)*
 
 ---
 

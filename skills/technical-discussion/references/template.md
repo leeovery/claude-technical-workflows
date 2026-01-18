@@ -15,7 +15,7 @@ This is a single file per topic.
 ```markdown
 # Discussion: {Topic}
 
-**Date**: YYYY-MM-DD
+**Date**: YYYY-MM-DD *(use today's actual date)*
 **Status**: Exploring | Deciding | Concluded
 
 ## Context
