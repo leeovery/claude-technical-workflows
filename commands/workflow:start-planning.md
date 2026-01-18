@@ -101,7 +101,7 @@ Specification: docs/workflow/specification/{topic}.md
 Output format: {format}
 Additional context: {summary of user's answers from Step 5}
 
-Begin using the technical-planning skill.
+Invoke the technical-planning skill.
 ```
 
 ## Notes

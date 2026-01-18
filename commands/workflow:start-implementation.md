@@ -173,7 +173,7 @@ Scope: {all phases | specific phase | specific task | next-available}
 Dependencies: All satisfied ✓
 Environment setup: {completed | not needed}
 
-Begin using the technical-implementation skill.
+Invoke the technical-implementation skill.
 ```
 
 ## Notes

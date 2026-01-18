@@ -100,7 +100,7 @@ Format: {format}
 Specification: docs/workflow/specification/{topic}.md (or: Not available)
 Scope: {implementation scope}
 
-Begin using the technical-review skill.
+Invoke the technical-review skill.
 ```
 
 ## Notes

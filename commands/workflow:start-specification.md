@@ -95,7 +95,7 @@ Source: docs/workflow/discussion/{topic}.md
 Output: docs/workflow/specification/{topic}.md
 Additional context: {summary of user's answers from Step 4}
 
-Begin using the technical-specification skill.
+Invoke the technical-specification skill.
 ```
 
 ## Notes

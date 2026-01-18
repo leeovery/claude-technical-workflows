@@ -315,7 +315,7 @@ Research reference:
 Source: docs/workflow/research/{filename}.md (lines {start}-{end})
 Summary: {the 1-2 sentence summary from Step 3A}
 
-Begin using the technical-discussion skill.
+Invoke the technical-discussion skill.
 ```
 
 **Example handoff (continuing or fresh):**
@@ -324,7 +324,7 @@ Discussion session for: {topic}
 Source: {existing discussion | fresh}
 Output: docs/workflow/discussion/{topic}.md
 
-Begin using the technical-discussion skill.
+Invoke the technical-discussion skill.
 ```
 
 ## Notes
