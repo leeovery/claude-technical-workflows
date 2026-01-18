@@ -157,31 +157,27 @@ If they choose a specific phase or task, ask them to specify which one.
 
 > **Note:** Do NOT verify that the phase or task exists. Accept the user's answer and pass it to the skill. Validation happens during the implementation phase.
 
-## Step 6: Invoke Implementation Skill
+## Step 6: Invoke the Skill
 
-Invoke the **technical-implementation** skill for this conversation.
+**Your work at this stage is complete.** You have gathered the inputs needed.
 
-Pass to the technical-implementation skill:
-- Plan: `docs/workflow/planning/{topic}.md`
-- Format: (from frontmatter)
-- Scope: (all phases | specific phase | specific task | next-available)
-- Dependencies: (all satisfied - verified in Step 3)
-- Environment setup: (completed | not needed)
+Now invoke the [technical-implementation](../skills/technical-implementation/SKILL.md) skill. The skill will provide the instructions for what to do next.
 
 **Example handoff:**
 ```
 Implementation session for: {topic}
 Plan: docs/workflow/planning/{topic}.md
 Format: {format}
-Scope: All phases
+Scope: {all phases | specific phase | specific task | next-available}
 
 Dependencies: All satisfied ✓
-Environment setup: Completed (or: Not needed)
+Environment setup: {completed | not needed}
 
-Begin implementation using the technical-implementation skill.
+Begin using the technical-implementation skill.
 ```
+
+⛔ **Do not proceed without invoking the skill.** The skill contains the workflow rules for this phase.
 
 ## Notes
 
 - Ask questions clearly and wait for responses before proceeding
-- Execute environment setup before starting implementation

@@ -88,24 +88,25 @@ Load **[output-formats.md](../skills/technical-planning/references/output-format
 - Any additional context or priorities to consider?
 - Any constraints since the specification was completed?
 
-## Step 6: Invoke Planning Skill
+## Step 6: Invoke the Skill
 
-Pass to the technical-planning skill with:
-- Specification path
-- Output format chosen
-- Additional context gathered
+**Your work at this stage is complete.** You have gathered the inputs needed.
+
+Now invoke the [technical-planning](../skills/technical-planning/SKILL.md) skill. The skill will provide the instructions for what to do next.
 
 **Example handoff:**
 ```
 Planning session for: {topic}
 Specification: docs/workflow/specification/{topic}.md
 Output format: {format}
+Additional context: {summary of user's answers from Step 5}
 
-Begin planning using the technical-planning skill.
+Begin using the technical-planning skill.
 ```
+
+⛔ **Do not proceed without invoking the skill.** The skill contains the workflow rules for this phase.
 
 ## Notes
 
 - Ask questions clearly and wait for responses before proceeding
 - The specification is the sole source of truth for planning - do not reference discussions
-- Commit the plan files when complete

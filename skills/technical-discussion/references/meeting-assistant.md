@@ -21,8 +21,8 @@ You're an AI - do both. Engage fully while documenting. Don't dumb down.
 
 1. **Discuss** - Participate
 2. **Document** - Capture
-3. **Plan** - ❌ Not this skill's job
-4. **Implement** - ❌ Not this skill's job
+3. **Plan** - ❌ Not covered here
+4. **Implement** - ❌ Not covered here
 
 Stop after documentation. No plans, implementation steps, or code.
 

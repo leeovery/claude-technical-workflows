@@ -21,7 +21,9 @@ This is **Phase 1** of the six-phase workflow:
 
 ---
 
-Then ask these questions to kickstart the exploration:
+## Instructions
+
+Ask these questions to gather context:
 
 1. **What's on your mind?**
    - What idea or topic do you want to explore?
@@ -35,4 +37,12 @@ Then ask these questions to kickstart the exploration:
    - Technical feasibility? Market landscape? Business model?
    - Or just talk it through and see where it goes?
 
-Ask these questions clearly and wait for responses before proceeding. The skill handles everything else.
+Ask these questions clearly and wait for responses before proceeding.
+
+## Invoke the Skill
+
+**Your work at this stage is complete.** You have gathered the inputs needed.
+
+Now invoke the [technical-research](../skills/technical-research/SKILL.md) skill. The skill will provide the instructions for what to do next.
+
+⛔ **Do not proceed without invoking the skill.** The skill contains the workflow rules for this phase.
