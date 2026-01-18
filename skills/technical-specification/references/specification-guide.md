@@ -35,7 +35,7 @@ Before starting any topic, identify ALL available reference material:
 
 This is a collaborative dialogue, not an autonomous task. The user validates every piece before it's logged.
 
-> ⛔ **CHECKPOINT**: If you are about to write to the specification file and haven't received explicit approval (e.g., "yes", "log it", "approved") for this specific content, **STOP**. You are violating the workflow. Go back and ask for approval first.
+> **CHECKPOINT**: If you are about to write to the specification file and haven't received explicit approval (e.g., "Log it") for this specific content, **STOP**. You are violating the workflow. Go back and present the choices first.
 
 ---
 
@@ -72,13 +72,19 @@ For each topic or subtopic, perform exhaustive extraction:
 ### 2. Synthesize and Present
 Present your understanding to the user **in the format it would appear in the specification**:
 
-> "Here's what I understand about [topic] based on the reference material. This is how I'd write it into the specification:
+> "Here's what I understand about [topic] based on the reference material. This is exactly what I'll write into the specification:
 >
 > [content as it would appear]
->
-> Does this capture it? Anything to adjust, remove, or add?"
 
-> ⛔ **CHECKPOINT**: After presenting, you MUST STOP and wait for the user's response. Do NOT proceed to logging. Do NOT present the next topic. WAIT.
+Then present two explicit choices:
+
+> **To proceed, choose one:**
+> - **"Log it"** - I'll add the above to the specification **verbatim** (exactly as shown, no modifications)
+> - **"Adjust"** - Tell me which part to change and what you want it to say instead
+
+**Do not paraphrase these choices.** Present them exactly as written so users always know what to expect.
+
+> **CHECKPOINT**: After presenting, you MUST STOP and wait for the user's response. Do NOT proceed to logging. Do NOT present the next topic. WAIT.
 
 ### 3. Discuss and Refine
 Work through the content together:
@@ -90,29 +96,25 @@ Work through the content together:
 
 This is a **human-level conversation**, not form-filling. The user brings context from across the project that may not be in the reference material - decisions from other topics, implications from later work, or knowledge that can't all fit in context.
 
-### 4. ⛔ STOP - Wait for Explicit Approval
+### 4. STOP - Wait for Explicit Approval
 
 **DO NOT PROCEED TO LOGGING WITHOUT EXPLICIT USER APPROVAL.**
 
 **What counts as approval:**
-- "Yes"
-- "Log it"
-- "That's good"
-- "Approved"
-- "Add it to the spec"
-- Other explicit confirmation
+- **"Log it"** - the standard confirmation you present as a choice
+- Or equivalent explicit confirmation: "Yes", "Approved", "Add it", "That's good"
 
 **What does NOT count as approval:**
 - Silence
-- You asking "Does this capture it?" (that's you asking, not them approving)
+- You presenting choices (that's you asking, not them approving)
 - The user asking a follow-up question
 - The user saying "What's next?" or "Continue"
 - The user making a minor comment without explicit approval
 - ANY response that isn't explicit confirmation
 
-**If you are uncertain, ASK:** "Would you like me to log this to the specification now?"
+**If you are uncertain, ASK:** "Would you like me to log it, or do you want to adjust something?"
 
-> ⛔ **CHECKPOINT**: If you are about to write to the specification and the user's last message was not explicit approval, **STOP**. You are violating the workflow. Ask for approval first.
+> **CHECKPOINT**: If you are about to write to the specification and the user's last message was not explicit approval, **STOP**. You are violating the workflow. Present the choices again.
 
 ### 5. Log When Approved
 Only after receiving explicit approval do you write to the specification - **verbatim** as presented and approved. No silent modifications.
@@ -126,13 +128,13 @@ When you discover information that affects **already-logged topics**, resurface 
 
 If it does: summarize what's changing in the chat, then re-present the full updated topic. The summary is for discussion only - the specification just gets the clean replacement. **Standard workflow applies: user approves before you update.**
 
-> ⛔ **CHECKPOINT**: Even when resurfacing content, you MUST NOT update the specification until the user explicitly approves the change. Present the updated version, wait for approval, then update.
+> **CHECKPOINT**: Even when resurfacing content, you MUST NOT update the specification until the user explicitly approves the change. Present the updated version, wait for approval, then update.
 
 This is encouraged. Better to resurface and confirm "already covered" than let something slip past.
 
 ## The Specification Document
 
-> ⛔ **CHECKPOINT**: You should NOT be creating or writing to this file unless you have explicit user approval for specific content. If you're about to create this file with content you haven't presented and had approved, **STOP**. That violates the workflow.
+> **CHECKPOINT**: You should NOT be creating or writing to this file unless you have explicit user approval for specific content. If you're about to create this file with content you haven't presented and had approved, **STOP**. That violates the workflow.
 
 Create `docs/workflow/specification/{topic}.md`
 
@@ -161,9 +163,9 @@ Suggested skeleton:
 
 ## Critical Rules
 
-**⛔ EXPLICIT APPROVAL REQUIRED FOR EVERY WRITE**: You MUST NOT write to the specification until the user has explicitly approved. "Presenting" is not approval. "Asking a question" is not approval. You need explicit confirmation. If uncertain, ASK. This rule is non-negotiable.
+**EXPLICIT APPROVAL REQUIRED FOR EVERY WRITE**: You MUST NOT write to the specification until the user has explicitly approved. "Presenting" is not approval. "Asking a question" is not approval. You need explicit confirmation. If uncertain, ASK. This rule is non-negotiable.
 
-> ⛔ **CHECKPOINT**: Before ANY write operation, ask yourself: "Did the user explicitly approve this specific content?" If the answer is no or uncertain, STOP and ask.
+> **CHECKPOINT**: Before ANY write operation, ask yourself: "Did the user explicitly approve this specific content?" If the answer is no or uncertain, STOP and ask.
 
 **Exhaustive extraction is non-negotiable**: Before presenting any topic, re-scan source material. Search for keywords. Collect scattered information. The specification is the golden document - planning uses only this. If you miss something, it doesn't get built.
 
@@ -276,7 +278,7 @@ After documenting dependencies, perform a **final comprehensive review** of the 
 
 4. **Flag what you find** - When you discover potentially missed content, present it to the user. **Do NOT add it to the specification without explicit approval.**
 
-   > ⛔ **CHECKPOINT**: If you found missed content and are about to add it to the specification without presenting it first and receiving explicit approval, **STOP**. Every addition requires the present → approve → log cycle, even during final review.
+   > **CHECKPOINT**: If you found missed content and are about to add it to the specification without presenting it first and receiving explicit approval, **STOP**. Every addition requires the present → approve → log cycle, even during final review.
 
    There are two cases:
 
@@ -355,8 +357,8 @@ Before ANY write operation to the specification file, verify:
 
 | Question | If No... |
 |----------|----------|
-| Did I present this specific content to the user? | ⛔ STOP. Present it first. |
-| Did the user explicitly approve? (e.g., "yes", "log it") | ⛔ STOP. Wait for approval or ask. |
-| Am I writing exactly what was approved, with no additions? | ⛔ STOP. Present any changes first. |
+| Did I present this specific content to the user? | **STOP**. Present it first. |
+| Did the user explicitly approve? (e.g., "Log it") | **STOP**. Wait for approval or ask. |
+| Am I writing exactly what was approved, with no additions? | **STOP**. Present any changes first. |
 
-> ⛔ **FINAL CHECK**: If you have written to the specification file and cannot answer "yes" to all three questions above for that content, you have violated the workflow. Every piece of content requires explicit user approval before logging.
+> **FINAL CHECK**: If you have written to the specification file and cannot answer "yes" to all three questions above for that content, you have violated the workflow. Every piece of content requires explicit user approval before logging.

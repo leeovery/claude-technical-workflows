@@ -115,7 +115,7 @@ Follow project-specific coding skills in `.claude/skills/` for:
 - Architecture conventions
 - Testing conventions
 
-This skill provides the implementation **process**. Project skills provide the **style**.
+This skill contains the implementation **process**. Project skills contain the **style**.
 
 ## Handling Problems
 

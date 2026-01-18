@@ -82,25 +82,23 @@ Ask:
 - Any constraints or changes since the discussion concluded?
 - Are there any existing partial plans or related documentation I should review?
 
-## Step 5: Invoke Specification Skill
+## Step 5: Invoke the Skill
 
-Pass to the technical-specification skill:
-- Source: `docs/workflow/discussion/{topic}.md`
-- Output: `docs/workflow/specification/{topic}.md`
-- Additional context gathered
+After completing the steps above, this command's purpose is fulfilled.
+
+Invoke the [technical-specification](../skills/technical-specification/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
 **Example handoff:**
 ```
 Specification session for: {topic}
 Source: docs/workflow/discussion/{topic}.md
 Output: docs/workflow/specification/{topic}.md
+Additional context: {summary of user's answers from Step 4}
 
-Begin specification using the technical-specification skill.
-Reference: specification-guide.md
+Invoke the technical-specification skill.
 ```
 
 ## Notes
 
 - Ask questions clearly and wait for responses before proceeding
 - The specification phase validates and refines discussion content into a standalone document
-- Commit the specification files frequently during the session

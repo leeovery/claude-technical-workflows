@@ -300,40 +300,34 @@ What would you like to focus on in this session?
 
 Wait for response before proceeding.
 
-## Step 5: Invoke Discussion Skill
+## Step 5: Invoke the Skill
 
-Begin the discussion session with appropriate context based on the path taken.
+After completing the steps above, this command's purpose is fulfilled.
 
-**If from research:**
+Invoke the [technical-discussion](../skills/technical-discussion/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
+
+**Example handoff (from research):**
 ```
 Discussion session for: {topic}
 Output: docs/workflow/discussion/{topic}.md
 
-## Research Reference
+Research reference:
 Source: docs/workflow/research/{filename}.md (lines {start}-{end})
 Summary: {the 1-2 sentence summary from Step 3A}
 
-Begin discussion using the technical-discussion skill.
+Invoke the technical-discussion skill.
 ```
 
-**If continuing or fresh:**
+**Example handoff (continuing or fresh):**
 ```
 Discussion session for: {topic}
 Source: {existing discussion | fresh}
 Output: docs/workflow/discussion/{topic}.md
 
-Begin discussion using the technical-discussion skill.
+Invoke the technical-discussion skill.
 ```
-
-**Setup:**
-- Ensure discussion directory exists: `docs/workflow/discussion/`
-- If new: Create file using the template structure
-- If continuing: Work with existing file
-- Commit frequently at natural discussion breaks
 
 ## Notes
 
 - Ask questions clearly and wait for responses before proceeding
 - Discussion captures WHAT and WHY - don't jump to specifications or implementation
-- The goal is to work through edge cases, debates, and decisions before planning
-- Commit the discussion document frequently during the session

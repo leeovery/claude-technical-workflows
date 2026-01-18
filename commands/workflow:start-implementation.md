@@ -127,7 +127,7 @@ Proceeding with environment setup...
 
 ## Step 4: Check Environment Setup
 
-> **IMPORTANT**: This step is for **information gathering only**. Do NOT execute any setup commands at this stage. The technical-implementation skill will handle execution when invoked.
+> **IMPORTANT**: This step is for **information gathering only**. Do NOT execute any setup commands at this stage. Execution instructions are in the technical-implementation skill.
 
 After the user selects a plan:
 
@@ -157,31 +157,25 @@ If they choose a specific phase or task, ask them to specify which one.
 
 > **Note:** Do NOT verify that the phase or task exists. Accept the user's answer and pass it to the skill. Validation happens during the implementation phase.
 
-## Step 6: Invoke Implementation Skill
+## Step 6: Invoke the Skill
 
-Invoke the **technical-implementation** skill for this conversation.
+After completing the steps above, this command's purpose is fulfilled.
 
-Pass to the technical-implementation skill:
-- Plan: `docs/workflow/planning/{topic}.md`
-- Format: (from frontmatter)
-- Scope: (all phases | specific phase | specific task | next-available)
-- Dependencies: (all satisfied - verified in Step 3)
-- Environment setup: (completed | not needed)
+Invoke the [technical-implementation](../skills/technical-implementation/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
 **Example handoff:**
 ```
 Implementation session for: {topic}
 Plan: docs/workflow/planning/{topic}.md
 Format: {format}
-Scope: All phases
+Scope: {all phases | specific phase | specific task | next-available}
 
 Dependencies: All satisfied ✓
-Environment setup: Completed (or: Not needed)
+Environment setup: {completed | not needed}
 
-Begin implementation using the technical-implementation skill.
+Invoke the technical-implementation skill.
 ```
 
 ## Notes
 
 - Ask questions clearly and wait for responses before proceeding
-- Execute environment setup before starting implementation

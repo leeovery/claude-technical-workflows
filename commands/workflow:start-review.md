@@ -86,13 +86,11 @@ Check if a specification exists:
 2. **If exists**: Note the path for context
 3. **If missing**: Proceed without - the plan is the primary review artifact
 
-## Step 6: Invoke Review Skill
+## Step 6: Invoke the Skill
 
-Pass to the technical-review skill:
-- Plan: `docs/workflow/planning/{topic}.md`
-- Format: (from frontmatter)
-- Specification: `docs/workflow/specification/{topic}.md` (if exists)
-- Implementation scope: (files/directories to review)
+After completing the steps above, this command's purpose is fulfilled.
+
+Invoke the [technical-review](../skills/technical-review/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
 **Example handoff:**
 ```
@@ -102,11 +100,10 @@ Format: {format}
 Specification: docs/workflow/specification/{topic}.md (or: Not available)
 Scope: {implementation scope}
 
-Begin review using the technical-review skill.
+Invoke the technical-review skill.
 ```
 
 ## Notes
 
 - Ask questions clearly and wait for responses before proceeding
 - Review produces feedback (approve, request changes, or comments) - it does NOT fix code
-- Verify ALL plan tasks, don't sample
