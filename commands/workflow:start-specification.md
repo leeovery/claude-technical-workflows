@@ -21,6 +21,21 @@ This is **Phase 3** of the six-phase workflow:
 
 ---
 
+## Stage Boundaries
+
+These instructions cover **input gathering only** (Steps 1-4).
+
+The specification workflow rules - how to present content, obtain approval, and log to the document - are contained in the **technical-specification skill**. You must invoke that skill to load those instructions.
+
+**At this stage:**
+- Discover existing discussions
+- Help the user choose which to specify
+- Gather additional context
+
+**Do not proceed to specification work** (creating/updating the specification document) until you have invoked the skill. The skill contains essential rules that are not available here.
+
+---
+
 ## Instructions
 
 Follow these steps EXACTLY as written. Do not skip steps or combine them. Present output using the EXACT format shown in examples - do not simplify or alter the formatting.
@@ -82,25 +97,23 @@ Ask:
 - Any constraints or changes since the discussion concluded?
 - Are there any existing partial plans or related documentation I should review?
 
-## Step 5: Invoke Specification Skill
+## Step 5: Invoke the Skill
 
-Pass to the technical-specification skill:
+**Your work at this stage is complete.** You have gathered the inputs needed. Now invoke the technical-specification skill to load the instructions for the next phase.
+
+The skill will provide:
+- How to present content for user approval
+- The approval workflow (explicit confirmation required before logging)
+- Rules for writing content verbatim when approved
+
+**Invoke the skill with:**
 - Source: `docs/workflow/discussion/{topic}.md`
 - Output: `docs/workflow/specification/{topic}.md`
-- Additional context gathered
+- Additional context gathered from the user
 
-**Example handoff:**
-```
-Specification session for: {topic}
-Source: docs/workflow/discussion/{topic}.md
-Output: docs/workflow/specification/{topic}.md
-
-Begin specification using the technical-specification skill.
-Reference: specification-guide.md
-```
+⛔ **Do not proceed to create or update the specification document yourself.** The skill contains the workflow rules. Invoke it now.
 
 ## Notes
 
 - Ask questions clearly and wait for responses before proceeding
 - The specification phase validates and refines discussion content into a standalone document
-- Commit the specification files frequently during the session
