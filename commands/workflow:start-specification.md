@@ -21,21 +21,6 @@ This is **Phase 3** of the six-phase workflow:
 
 ---
 
-## Stage Boundaries
-
-These instructions cover **input gathering only** (Steps 1-4).
-
-The specification workflow rules - how to present content, obtain approval, and log to the document - are contained in the **technical-specification skill**. You must invoke that skill to load those instructions.
-
-**At this stage:**
-- Discover existing discussions
-- Help the user choose which to specify
-- Gather additional context
-
-**Do not proceed to specification work** (creating/updating the specification document) until you have invoked the skill. The skill contains essential rules that are not available here.
-
----
-
 ## Instructions
 
 Follow these steps EXACTLY as written. Do not skip steps or combine them. Present output using the EXACT format shown in examples - do not simplify or alter the formatting.
