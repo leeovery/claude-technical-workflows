@@ -304,7 +304,7 @@ Wait for response before proceeding.
 
 **Your work at this stage is complete.** You have gathered the inputs needed.
 
-Now invoke the [technical-discussion](../skills/technical-discussion/SKILL.md) skill. The skill will provide the instructions for what to do next.
+Now invoke the [technical-discussion](../skills/technical-discussion/SKILL.md) skill. The skill contains the instructions for what to do next.
 
 **Example handoff (from research):**
 ```

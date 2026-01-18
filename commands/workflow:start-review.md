@@ -90,7 +90,7 @@ Check if a specification exists:
 
 **Your work at this stage is complete.** You have gathered the inputs needed.
 
-Now invoke the [technical-review](../skills/technical-review/SKILL.md) skill. The skill will provide the instructions for what to do next.
+Now invoke the [technical-review](../skills/technical-review/SKILL.md) skill. The skill contains the instructions for what to do next.
 
 **Example handoff:**
 ```

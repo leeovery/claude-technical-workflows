@@ -43,6 +43,6 @@ Ask these questions clearly and wait for responses before proceeding.
 
 **Your work at this stage is complete.** You have gathered the inputs needed.
 
-Now invoke the [technical-research](../skills/technical-research/SKILL.md) skill. The skill will provide the instructions for what to do next.
+Now invoke the [technical-research](../skills/technical-research/SKILL.md) skill. The skill contains the instructions for what to do next.
 
 **STOP: Do not proceed without invoking the skill.** The skill contains the workflow rules for this phase.

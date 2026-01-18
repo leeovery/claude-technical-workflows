@@ -127,7 +127,7 @@ Proceeding with environment setup...
 
 ## Step 4: Check Environment Setup
 
-> **IMPORTANT**: This step is for **information gathering only**. Do NOT execute any setup commands at this stage. The technical-implementation skill will handle execution when invoked.
+> **IMPORTANT**: This step is for **information gathering only**. Do NOT execute any setup commands at this stage. Execution instructions are in the technical-implementation skill.
 
 After the user selects a plan:
 
@@ -161,7 +161,7 @@ If they choose a specific phase or task, ask them to specify which one.
 
 **Your work at this stage is complete.** You have gathered the inputs needed.
 
-Now invoke the [technical-implementation](../skills/technical-implementation/SKILL.md) skill. The skill will provide the instructions for what to do next.
+Now invoke the [technical-implementation](../skills/technical-implementation/SKILL.md) skill. The skill contains the instructions for what to do next.
 
 **Example handoff:**
 ```

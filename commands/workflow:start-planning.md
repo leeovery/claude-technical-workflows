@@ -92,7 +92,7 @@ Load **[output-formats.md](../skills/technical-planning/references/output-format
 
 **Your work at this stage is complete.** You have gathered the inputs needed.
 
-Now invoke the [technical-planning](../skills/technical-planning/SKILL.md) skill. The skill will provide the instructions for what to do next.
+Now invoke the [technical-planning](../skills/technical-planning/SKILL.md) skill. The skill contains the instructions for what to do next.
 
 **Example handoff:**
 ```
