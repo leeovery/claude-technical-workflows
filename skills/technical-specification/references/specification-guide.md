@@ -240,7 +240,9 @@ After documenting dependencies, perform a **final comprehensive review** of the 
    >
    > [quote or summary from source material]
    >
-   > I'd add this to the [section name] section. Should I include it?"
+   > I'd add this to the [section name] section. Would you like me to include it, or show you the full section with this addition first?"
+
+   If the user wants to see context, present the entire section with the new content clearly marked (e.g., with a comment like `<!-- NEW -->` or by calling it out before the block).
 
    **An entirely missed topic** - Something that warrants its own section but was glossed over:
 
