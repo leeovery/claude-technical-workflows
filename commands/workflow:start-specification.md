@@ -84,19 +84,21 @@ Ask:
 
 ## Step 5: Invoke the Skill
 
-**Your work at this stage is complete.** You have gathered the inputs needed. Now invoke the technical-specification skill to load the instructions for the next phase.
+**Your work at this stage is complete.** You have gathered the inputs needed.
 
-The skill will provide:
-- How to present content for user approval
-- The approval workflow (explicit confirmation required before logging)
-- Rules for writing content verbatim when approved
+Now invoke the [technical-specification](../skills/technical-specification/SKILL.md) skill. The skill will provide the instructions for what to do next.
 
-**Invoke the skill with:**
-- Source: `docs/workflow/discussion/{topic}.md`
-- Output: `docs/workflow/specification/{topic}.md`
-- Additional context gathered from the user
+**Example handoff:**
+```
+Specification session for: {topic}
+Source: docs/workflow/discussion/{topic}.md
+Output: docs/workflow/specification/{topic}.md
+Additional context: {summary of user's answers from Step 4}
 
-⛔ **Do not proceed to create or update the specification document yourself.** The skill contains the workflow rules. Invoke it now.
+Begin using the technical-specification skill.
+```
+
+⛔ **Do not proceed without invoking the skill.** The skill contains the workflow rules for this phase.
 
 ## Notes
 
