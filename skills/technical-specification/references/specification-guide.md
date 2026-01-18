@@ -232,13 +232,25 @@ After documenting dependencies, perform a **final comprehensive review** of the 
    - Error handling, validation rules, or boundary conditions
    - Integration points or data flows mentioned but not elaborated
 
-4. **Flag what you find** - When you discover potentially missed content, present it to the user:
+4. **Flag what you find** - When you discover potentially missed content, present it to the user. There are two cases:
 
-   > "During my final review of the source material, I found [X] that doesn't appear to be captured in the specification. From [source], I see:
+   **Enhancing an existing topic** - Details that belong in an already-documented section:
+
+   > "During my final review, I found additional detail about [existing topic] that isn't captured. From [source]:
    >
    > [quote or summary from source material]
    >
-   > Should this be added to the specification? If so, which section?"
+   > I'd add this to the [section name] section. Should I include it?"
+
+   **An entirely missed topic** - Something that warrants its own section but was glossed over:
+
+   > "During my final review, I found [topic] discussed in [source] that doesn't have coverage in the specification:
+   >
+   > [quote or summary from source material]
+   >
+   > This would be a new section. Should I add it?"
+
+   In both cases, you know where the content belongs - existing topics get enhanced in place, new topics get added at the end.
 
 5. **Never fabricate** - Every item you flag must trace back to specific source material. If you can't point to where it came from, don't suggest it. The goal is to catch missed content, not invent new requirements.
 
