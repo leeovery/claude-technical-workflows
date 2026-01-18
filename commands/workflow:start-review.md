@@ -88,9 +88,9 @@ Check if a specification exists:
 
 ## Step 6: Invoke the Skill
 
-**Your work at this stage is complete.** You have gathered the inputs needed.
+After completing the steps above, this command's purpose is fulfilled.
 
-Now invoke the [technical-review](../skills/technical-review/SKILL.md) skill. The skill contains the instructions for what to do next.
+Invoke the [technical-review](../skills/technical-review/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
 **Example handoff:**
 ```
@@ -102,8 +102,6 @@ Scope: {implementation scope}
 
 Begin using the technical-review skill.
 ```
-
-**STOP: Do not proceed without invoking the skill.** The skill contains the workflow rules for this phase.
 
 ## Notes
 

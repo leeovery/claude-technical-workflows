@@ -159,9 +159,9 @@ If they choose a specific phase or task, ask them to specify which one.
 
 ## Step 6: Invoke the Skill
 
-**Your work at this stage is complete.** You have gathered the inputs needed.
+After completing the steps above, this command's purpose is fulfilled.
 
-Now invoke the [technical-implementation](../skills/technical-implementation/SKILL.md) skill. The skill contains the instructions for what to do next.
+Invoke the [technical-implementation](../skills/technical-implementation/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
 **Example handoff:**
 ```
@@ -175,8 +175,6 @@ Environment setup: {completed | not needed}
 
 Begin using the technical-implementation skill.
 ```
-
-**STOP: Do not proceed without invoking the skill.** The skill contains the workflow rules for this phase.
 
 ## Notes
 

@@ -84,9 +84,9 @@ Ask:
 
 ## Step 5: Invoke the Skill
 
-**Your work at this stage is complete.** You have gathered the inputs needed.
+After completing the steps above, this command's purpose is fulfilled.
 
-Now invoke the [technical-specification](../skills/technical-specification/SKILL.md) skill. The skill contains the instructions for what to do next.
+Invoke the [technical-specification](../skills/technical-specification/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
 **Example handoff:**
 ```
@@ -97,8 +97,6 @@ Additional context: {summary of user's answers from Step 4}
 
 Begin using the technical-specification skill.
 ```
-
-**STOP: Do not proceed without invoking the skill.** The skill contains the workflow rules for this phase.
 
 ## Notes
 

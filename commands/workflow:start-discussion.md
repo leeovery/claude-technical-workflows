@@ -302,9 +302,9 @@ Wait for response before proceeding.
 
 ## Step 5: Invoke the Skill
 
-**Your work at this stage is complete.** You have gathered the inputs needed.
+After completing the steps above, this command's purpose is fulfilled.
 
-Now invoke the [technical-discussion](../skills/technical-discussion/SKILL.md) skill. The skill contains the instructions for what to do next.
+Invoke the [technical-discussion](../skills/technical-discussion/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
 **Example handoff (from research):**
 ```
@@ -326,8 +326,6 @@ Output: docs/workflow/discussion/{topic}.md
 
 Begin using the technical-discussion skill.
 ```
-
-**STOP: Do not proceed without invoking the skill.** The skill contains the workflow rules for this phase.
 
 ## Notes
 
