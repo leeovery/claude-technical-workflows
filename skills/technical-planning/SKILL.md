@@ -22,8 +22,19 @@ Either way: Transform specifications into actionable phases, tasks, and acceptan
 - **Specification content** (required) - The validated decisions and requirements to plan from
 - **Topic name** (optional) - Will derive from specification if not provided
 - **Output format preference** (optional) - Will ask if not specified
+- **Cross-cutting references** (optional) - List of cross-cutting specifications that inform this plan
 
 **If missing:** Will ask user for specification location or content.
+
+### Cross-Cutting References
+
+If cross-cutting specifications are provided (e.g., caching strategy, rate limiting policy), incorporate their decisions into the plan:
+
+1. **Include a "Cross-Cutting References" section** in the plan linking to these specifications
+2. **Apply their patterns** when designing phases and tasks (e.g., if caching strategy says "cache API responses for 5 minutes", include that in relevant tasks)
+3. **Note where patterns apply** - when a task implements a cross-cutting pattern, reference it
+
+Cross-cutting specifications are architectural decisions that inform HOW features are built. They don't have their own implementation plans - instead, their patterns are applied within feature plans.
 
 ## Source Material
 

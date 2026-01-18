@@ -39,12 +39,18 @@ Scan the codebase for specifications and plans:
    - Run `ls docs/workflow/specification/` to list specification files
    - Each file is named `{topic}.md`
 
-2. **Check specification status**: For each specification file
-   - Run `head -20 docs/workflow/specification/{topic}.md` to read the frontmatter and extract the `status:` field
+2. **Check specification metadata**: For each specification file
+   - Run `head -20 docs/workflow/specification/{topic}.md` to read the frontmatter
+   - Extract the `status:` field (Building specification | Complete)
+   - Extract the `type:` field (feature | cross-cutting) - if not present, default to `feature`
    - Do NOT use bash loops - run separate `head` commands for each topic
 
-3. **Check for existing plans**: Look in `docs/workflow/planning/`
-   - Identify specifications that don't have corresponding plans
+3. **Categorize specifications**:
+   - **Feature specifications** (`type: feature` or unspecified): Candidates for planning
+   - **Cross-cutting specifications** (`type: cross-cutting`): Reference context only - do NOT offer for planning
+
+4. **Check for existing plans**: Look in `docs/workflow/planning/`
+   - Identify feature specifications that don't have corresponding plans
 
 ## Step 2: Check Prerequisites
 
@@ -60,22 +66,29 @@ Stop here and wait for the user to acknowledge.
 
 ## Step 3: Present Options to User
 
-Show what you found using a list like below:
+Show what you found, separating feature specs (planning targets) from cross-cutting specs (reference context):
 
 ```
-📂 Specifications found:
+📂 Feature Specifications (planning targets):
   ⚠️ {topic-1} - Building specification - not ready for planning
   ✅ {topic-2} - Complete - ready for planning
   ✅ {topic-3} - Complete - plan exists
 
-Which specification would you like to create a plan for?
+📚 Cross-Cutting Specifications (reference context):
+  ✅ {caching-strategy} - Complete - will inform planning
+  ✅ {rate-limiting} - Complete - will inform planning
+
+Which feature specification would you like to create a plan for?
 ```
 
-**Important:** Only completed specifications should proceed to planning. If a specification is still being built, advise the user to complete the specification phase first.
+**Important:**
+- Only completed **feature** specifications should proceed to planning
+- **Cross-cutting** specifications are NOT planning targets - they inform feature plans
+- If a specification is still being built, advise the user to complete the specification phase first
 
-**Auto-select:** If exactly one specification exists, automatically select it and proceed to Step 4. Inform the user which specification was selected. Do not ask for confirmation.
+**Auto-select:** If exactly one completed feature specification exists, automatically select it and proceed to Step 4. Inform the user which specification was selected. Do not ask for confirmation.
 
-Ask: **Which specification would you like to plan?**
+Ask: **Which feature specification would you like to plan?**
 
 ## Step 4: Choose Output Destination
 
@@ -87,6 +100,26 @@ Load **[output-formats.md](../skills/technical-planning/references/output-format
 
 - Any additional context or priorities to consider?
 - Any constraints since the specification was completed?
+
+## Step 5b: Surface Cross-Cutting Context
+
+If any **completed cross-cutting specifications** exist, surface them as reference context for planning:
+
+1. **List applicable cross-cutting specs**:
+   - Read each cross-cutting specification
+   - Identify which ones are relevant to the feature being planned
+   - Relevance is determined by topic overlap (e.g., caching strategy applies if the feature involves data retrieval or API calls)
+
+2. **Summarize for handoff**:
+   ```
+   Cross-cutting specifications to reference:
+   - caching-strategy.md: [brief summary of key decisions]
+   - rate-limiting.md: [brief summary of key decisions]
+   ```
+
+These specifications contain validated architectural decisions that should inform the plan. The planning skill will incorporate these as a "Cross-Cutting References" section in the plan.
+
+**If no cross-cutting specifications exist**: Skip this step.
 
 ## Step 6: Invoke the Skill
 
@@ -100,6 +133,7 @@ Planning session for: {topic}
 Specification: docs/workflow/specification/{topic}.md
 Output format: {format}
 Additional context: {summary of user's answers from Step 5}
+Cross-cutting references: {list of applicable cross-cutting specs with brief summaries, or "none"}
 
 Invoke the technical-planning skill.
 ```
@@ -107,4 +141,6 @@ Invoke the technical-planning skill.
 ## Notes
 
 - Ask questions clearly and wait for responses before proceeding
-- The specification is the sole source of truth for planning - do not reference discussions
+- The feature specification is the primary source of truth for planning
+- Cross-cutting specifications provide supplementary context for architectural decisions
+- Do not reference discussions - only specifications
