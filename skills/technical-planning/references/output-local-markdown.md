@@ -38,7 +38,7 @@ format: local-markdown
 
 # Implementation Plan: {Feature/Project Name}
 
-**Date**: YYYY-MM-DD
+**Date**: YYYY-MM-DD *(use today's actual date)*
 **Status**: Draft | Ready | In Progress | Completed
 **Specification**: `docs/workflow/specification/{topic}.md`
 
@@ -145,7 +145,7 @@ Triggers and steps
 
 | Date | Change |
 |------|--------|
-| YYYY-MM-DD | Created from specification |
+| YYYY-MM-DD *(use today's actual date)* | Created from specification |
 ```
 
 ## Cross-Topic Dependencies

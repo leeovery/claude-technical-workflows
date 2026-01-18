@@ -59,7 +59,7 @@ project: {TOPIC_NAME}
 # Plan Reference: {Topic Name}
 
 **Specification**: `docs/workflow/specification/{topic}.md`
-**Created**: {DATE}
+**Created**: YYYY-MM-DD *(use today's actual date)*
 
 ## About This Plan
 
