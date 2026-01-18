@@ -74,7 +74,7 @@ Work from the inline context provided above.
 
 ## Notes
 
-- The specification skill will synthesize the inline context, present it for validation, and build the specification
+- The specification skill contains instructions for synthesizing the inline context, presenting it for validation, and building the specification
 - Output is a standard specification file at `docs/workflow/specification/{topic}.md`
 - From there, the user can proceed to `/workflow:start-planning` as normal
 - This path skips formal discussion documentation - use the full workflow for complex features that need debate captured
