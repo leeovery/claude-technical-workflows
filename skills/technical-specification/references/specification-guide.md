@@ -35,7 +35,7 @@ Before starting any topic, identify ALL available reference material:
 
 This is a collaborative dialogue, not an autonomous task. The user validates every piece before it's logged.
 
-> ⛔ **CHECKPOINT**: If you are about to write to the specification file and haven't received explicit approval (e.g., "yes", "log it", "approved") for this specific content, **STOP**. You are violating the workflow. Go back and ask for approval first.
+> ⛔ **CHECKPOINT**: If you are about to write to the specification file and haven't received explicit approval (e.g., "Log it") for this specific content, **STOP**. You are violating the workflow. Go back and present the choices first.
 
 ---
 
@@ -72,11 +72,17 @@ For each topic or subtopic, perform exhaustive extraction:
 ### 2. Synthesize and Present
 Present your understanding to the user **in the format it would appear in the specification**:
 
-> "Here's what I understand about [topic] based on the reference material. This is how I'd write it into the specification:
+> "Here's what I understand about [topic] based on the reference material. This is exactly what I'll write into the specification:
 >
 > [content as it would appear]
->
-> Does this capture it? Anything to adjust, remove, or add?"
+
+Then present two explicit choices:
+
+> **To proceed, choose one:**
+> - **"Log it"** - I'll add the above to the specification **verbatim** (exactly as shown, no modifications)
+> - **"Adjust"** - Tell me which part to change and what you want it to say instead
+
+**Do not paraphrase these choices.** Present them exactly as written so users always know what to expect.
 
 > ⛔ **CHECKPOINT**: After presenting, you MUST STOP and wait for the user's response. Do NOT proceed to logging. Do NOT present the next topic. WAIT.
 
@@ -95,24 +101,20 @@ This is a **human-level conversation**, not form-filling. The user brings contex
 **DO NOT PROCEED TO LOGGING WITHOUT EXPLICIT USER APPROVAL.**
 
 **What counts as approval:**
-- "Yes"
-- "Log it"
-- "That's good"
-- "Approved"
-- "Add it to the spec"
-- Other explicit confirmation
+- **"Log it"** - the standard confirmation you present as a choice
+- Or equivalent explicit confirmation: "Yes", "Approved", "Add it", "That's good"
 
 **What does NOT count as approval:**
 - Silence
-- You asking "Does this capture it?" (that's you asking, not them approving)
+- You presenting choices (that's you asking, not them approving)
 - The user asking a follow-up question
 - The user saying "What's next?" or "Continue"
 - The user making a minor comment without explicit approval
 - ANY response that isn't explicit confirmation
 
-**If you are uncertain, ASK:** "Would you like me to log this to the specification now?"
+**If you are uncertain, ASK:** "Would you like me to log it, or do you want to adjust something?"
 
-> ⛔ **CHECKPOINT**: If you are about to write to the specification and the user's last message was not explicit approval, **STOP**. You are violating the workflow. Ask for approval first.
+> ⛔ **CHECKPOINT**: If you are about to write to the specification and the user's last message was not explicit approval, **STOP**. You are violating the workflow. Present the choices again.
 
 ### 5. Log When Approved
 Only after receiving explicit approval do you write to the specification - **verbatim** as presented and approved. No silent modifications.
@@ -356,7 +358,7 @@ Before ANY write operation to the specification file, verify:
 | Question | If No... |
 |----------|----------|
 | Did I present this specific content to the user? | ⛔ STOP. Present it first. |
-| Did the user explicitly approve? (e.g., "yes", "log it") | ⛔ STOP. Wait for approval or ask. |
+| Did the user explicitly approve? (e.g., "Log it") | ⛔ STOP. Wait for approval or ask. |
 | Am I writing exactly what was approved, with no additions? | ⛔ STOP. Present any changes first. |
 
 > ⛔ **FINAL CHECK**: If you have written to the specification file and cannot answer "yes" to all three questions above for that content, you have violated the workflow. Every piece of content requires explicit user approval before logging.

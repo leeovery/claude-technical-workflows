@@ -52,11 +52,11 @@ Either way: Transform unvalidated reference material into a specification that's
 - **STOP and WAIT** for the user to explicitly approve before writing
 - Treat each write operation as requiring its own explicit approval
 
-**What counts as approval:** "Yes", "Log it", "That's good", "Approved", "Add it", or similar explicit confirmation.
+**What counts as approval:** "Log it" (the standard choice you present) or equivalent: "Yes", "Approved", "Add it", "That's good".
 
-**What does NOT count as approval:** Silence, you asking "Does this capture it?", the user asking a follow-up question, the user saying "What's next?", or any response that isn't explicit confirmation.
+**What does NOT count as approval:** Silence, you presenting choices, the user asking a follow-up question, the user saying "What's next?", or any response that isn't explicit confirmation.
 
-If you are uncertain whether the user approved, **ASK**: "Would you like me to log this to the specification now, or do you have changes?"
+If you are uncertain whether the user approved, **ASK**: "Would you like me to log it, or do you want to adjust something?"
 
 ---
 
@@ -80,7 +80,7 @@ The specification is the **golden document** - planning uses only this. If infor
 
 ## Critical Rules
 
-**⛔ STOP AND WAIT FOR APPROVAL**: You MUST NOT write to the specification until the user has explicitly approved. Presenting content is NOT approval. Asking "Does this capture it?" is NOT approval. You must receive explicit confirmation ("yes", "log it", "approved", etc.) before ANY write operation. If uncertain, ASK.
+**⛔ STOP AND WAIT FOR APPROVAL**: You MUST NOT write to the specification until the user has explicitly approved. Presenting content is NOT approval. Presenting choices is NOT approval. You must receive explicit confirmation (e.g., "Log it") before ANY write operation. If uncertain, ASK.
 
 **Log verbatim**: When approved, write exactly what was presented - no silent modifications.
 
