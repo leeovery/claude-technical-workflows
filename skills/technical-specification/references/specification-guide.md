@@ -264,9 +264,17 @@ After documenting dependencies, perform a **final comprehensive review** of the 
    - Integration points that seem implicit but aren't specified
    - Behaviors that are ambiguous without clarification
 
-   Frame these as questions, not requirements:
+   Present these as a batch for the user to triage:
 
-   > "The specification doesn't address [scenario], and I didn't find it in the source material either. Is this something we need to specify, or is it intentionally out of scope?"
+   > "I've identified some potential gaps that aren't covered in the source material:
+   >
+   > 1. **[Gap A]** - [brief description of what's unclear/missing]
+   > 2. **[Gap B]** - [brief description]
+   > 3. **[Gap C]** - [brief description]
+   >
+   > Are any of these areas you'd like to discuss, or are they intentionally out of scope?"
+
+   The user can then pick which gaps (if any) need addressing. For those they want to discuss, work through them and add to the specification with standard approval workflow.
 
    This should be infrequent - most gaps will be caught from source material. But occasionally the sources themselves have blind spots worth surfacing.
 
