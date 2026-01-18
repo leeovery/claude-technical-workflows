@@ -103,7 +103,7 @@ Scope: {implementation scope}
 Begin using the technical-review skill.
 ```
 
-⛔ **Do not proceed without invoking the skill.** The skill contains the workflow rules for this phase.
+**STOP: Do not proceed without invoking the skill.** The skill contains the workflow rules for this phase.
 
 ## Notes
 

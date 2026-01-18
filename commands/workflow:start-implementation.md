@@ -176,7 +176,7 @@ Environment setup: {completed | not needed}
 Begin using the technical-implementation skill.
 ```
 
-⛔ **Do not proceed without invoking the skill.** The skill contains the workflow rules for this phase.
+**STOP: Do not proceed without invoking the skill.** The skill contains the workflow rules for this phase.
 
 ## Notes
 

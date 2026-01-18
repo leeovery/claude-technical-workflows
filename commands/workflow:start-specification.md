@@ -98,7 +98,7 @@ Additional context: {summary of user's answers from Step 4}
 Begin using the technical-specification skill.
 ```
 
-⛔ **Do not proceed without invoking the skill.** The skill contains the workflow rules for this phase.
+**STOP: Do not proceed without invoking the skill.** The skill contains the workflow rules for this phase.
 
 ## Notes
 

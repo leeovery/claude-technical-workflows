@@ -45,4 +45,4 @@ Ask these questions clearly and wait for responses before proceeding.
 
 Now invoke the [technical-research](../skills/technical-research/SKILL.md) skill. The skill will provide the instructions for what to do next.
 
-⛔ **Do not proceed without invoking the skill.** The skill contains the workflow rules for this phase.
+**STOP: Do not proceed without invoking the skill.** The skill contains the workflow rules for this phase.
