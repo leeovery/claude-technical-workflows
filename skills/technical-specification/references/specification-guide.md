@@ -209,6 +209,91 @@ This section feeds into the planning phase, where dependencies become blocking r
 
 **Key distinction**: This is about sequencing what must come first, not mapping out what works together. A feature may integrate with many systems - only list the ones that block you from starting.
 
+## Final Specification Review
+
+After documenting dependencies, perform a **final comprehensive review** of the entire specification against all source material. This is your last chance to catch anything that was missed.
+
+**Why this matters**: The specification is the golden document. Plans are built from it. If a detail isn't in the specification, it won't be built - regardless of whether it was in the source material.
+
+### The Review Process
+
+1. **Re-read ALL source material** - Go back to every source document, discussion, research note, and reference. Don't rely on memory.
+
+2. **Compare systematically** - For each piece of source material:
+   - What topics does it cover?
+   - Are those topics fully captured in the specification?
+   - Are there details, edge cases, or decisions that didn't make it?
+
+3. **Search for the forgotten** - Look specifically for:
+   - Edge cases mentioned in passing
+   - Constraints or requirements buried in tangential discussions
+   - Technical details that seemed minor at the time
+   - Decisions made early that may have been overshadowed
+   - Error handling, validation rules, or boundary conditions
+   - Integration points or data flows mentioned but not elaborated
+
+4. **Flag what you find** - When you discover potentially missed content, present it to the user. There are two cases:
+
+   **Enhancing an existing topic** - Details that belong in an already-documented section:
+
+   > "During my final review, I found additional detail about [existing topic] that isn't captured. From [source]:
+   >
+   > [quote or summary from source material]
+   >
+   > I'd add this to the [section name] section. Would you like me to include it, or show you the full section with this addition first?"
+
+   If the user wants to see context, present the entire section with the new content clearly marked (e.g., with a comment like `<!-- NEW -->` or by calling it out before the block).
+
+   **An entirely missed topic** - Something that warrants its own section but was glossed over:
+
+   > "During my final review, I found [topic] discussed in [source] that doesn't have coverage in the specification:
+   >
+   > [quote or summary from source material]
+   >
+   > This would be a new section. Should I add it?"
+
+   In both cases, you know where the content belongs - existing topics get enhanced in place, new topics get added at the end.
+
+5. **Never fabricate** - Every item you flag must trace back to specific source material. If you can't point to where it came from, don't suggest it. The goal is to catch missed content, not invent new requirements.
+
+6. **User confirms before inclusion** - Standard workflow applies: present proposed additions, get approval, then log verbatim.
+
+7. **Surface potential gaps** - After reviewing source material, consider whether the specification has gaps that the sources simply didn't address. These might be:
+   - Edge cases that weren't discussed
+   - Error scenarios not covered
+   - Integration points that seem implicit but aren't specified
+   - Behaviors that are ambiguous without clarification
+
+   Present these as a batch for the user to triage:
+
+   > "I've identified some potential gaps that aren't covered in the source material:
+   >
+   > 1. **[Gap A]** - [brief description of what's unclear/missing]
+   > 2. **[Gap B]** - [brief description]
+   > 3. **[Gap C]** - [brief description]
+   >
+   > Are any of these areas you'd like to discuss, or are they intentionally out of scope?"
+
+   The user can then pick which gaps (if any) need addressing. For those they want to discuss, work through them and add to the specification with standard approval workflow.
+
+   This should be infrequent - most gaps will be caught from source material. But occasionally the sources themselves have blind spots worth surfacing.
+
+### What You're NOT Doing
+
+- **Not inventing requirements** - When surfacing gaps not in sources, you're asking questions, not proposing answers
+- **Not assuming gaps need filling** - If something isn't in the sources, it may have been intentionally omitted
+- **Not padding the spec** - Only add what's genuinely missing and relevant
+- **Not re-litigating decisions** - If something was discussed and rejected, it stays rejected
+
+### Completing the Review
+
+When you've:
+- Systematically reviewed all source material for missed content
+- Addressed any discovered gaps with the user
+- Surfaced any potential gaps not covered by sources (and resolved them)
+
+...then inform the user the final review is complete and proceed to getting sign-off on the specification.
+
 ## Completion
 
 Specification is complete when:
