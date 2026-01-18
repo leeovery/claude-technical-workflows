@@ -209,6 +209,56 @@ This section feeds into the planning phase, where dependencies become blocking r
 
 **Key distinction**: This is about sequencing what must come first, not mapping out what works together. A feature may integrate with many systems - only list the ones that block you from starting.
 
+## Final Specification Review
+
+After documenting dependencies, perform a **final comprehensive review** of the entire specification against all source material. This is your last chance to catch anything that was missed.
+
+**Why this matters**: The specification is the golden document. Plans are built from it. If a detail isn't in the specification, it won't be built - regardless of whether it was in the source material.
+
+### The Review Process
+
+1. **Re-read ALL source material** - Go back to every source document, discussion, research note, and reference. Don't rely on memory.
+
+2. **Compare systematically** - For each piece of source material:
+   - What topics does it cover?
+   - Are those topics fully captured in the specification?
+   - Are there details, edge cases, or decisions that didn't make it?
+
+3. **Search for the forgotten** - Look specifically for:
+   - Edge cases mentioned in passing
+   - Constraints or requirements buried in tangential discussions
+   - Technical details that seemed minor at the time
+   - Decisions made early that may have been overshadowed
+   - Error handling, validation rules, or boundary conditions
+   - Integration points or data flows mentioned but not elaborated
+
+4. **Flag what you find** - When you discover potentially missed content, present it to the user:
+
+   > "During my final review of the source material, I found [X] that doesn't appear to be captured in the specification. From [source], I see:
+   >
+   > [quote or summary from source material]
+   >
+   > Should this be added to the specification? If so, which section?"
+
+5. **Never fabricate** - Every item you flag must trace back to specific source material. If you can't point to where it came from, don't suggest it. The goal is to catch missed content, not invent new requirements.
+
+6. **User confirms before inclusion** - Standard workflow applies: present proposed additions, get approval, then log verbatim.
+
+### What You're NOT Doing
+
+- **Not generating new ideas** - Only surfacing what's already in the source material
+- **Not assuming gaps** - If something isn't in the sources, it may have been intentionally omitted
+- **Not padding the spec** - Only add what's genuinely missing and relevant
+- **Not re-litigating decisions** - If something was discussed and rejected, it stays rejected
+
+### Completing the Review
+
+When you've systematically reviewed all source material and either:
+- Found nothing missing, or
+- Addressed all discovered gaps with the user
+
+...then inform the user the final review is complete and proceed to getting sign-off on the specification.
+
 ## Completion
 
 Specification is complete when:

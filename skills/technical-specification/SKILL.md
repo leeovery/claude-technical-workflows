@@ -48,6 +48,8 @@ Either way: Transform unvalidated reference material into a specification that's
 
 5. **Log**: Only when approved, write content verbatim to the specification.
 
+6. **Final review**: After all topics and dependencies are documented, perform a comprehensive review of ALL source material against the specification. Flag any potentially missed content to the user - but only from the sources, never fabricated. User confirms before any additions.
+
 The specification is the **golden document** - planning uses only this. If information doesn't make it into the specification, it won't be built. No references back to source material.
 
 ## Critical Rules
