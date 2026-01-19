@@ -447,8 +447,8 @@ Once the type is confirmed, ask for final sign-off:
 > - **Type**: [feature/cross-cutting]
 > - **Status**: Complete
 >
-> [If feature]: This will be available for planning via `/workflow:start-planning`
-> [If cross-cutting]: This will be surfaced as reference context when planning features
+> [If feature]: This specification can proceed to planning
+> [If cross-cutting]: This specification will be surfaced as reference context when planning features
 >
 > Ready to mark as complete?"
 
