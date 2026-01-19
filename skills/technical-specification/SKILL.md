@@ -19,14 +19,16 @@ Either way: Transform unvalidated reference material into a specification that's
 
 ### What This Skill Needs
 
-- **Source material** (required) - The content to synthesize into a specification. Can be:
-  - Discussion documents or research notes
+- **Source material** (required) - One or more sources to synthesize into a specification. Can be:
+  - Discussion documents or research notes (single or multiple)
   - Inline feature descriptions
   - Requirements docs, design documents, or transcripts
   - Any other reference material
 - **Topic name** (required) - Used for the output filename
 
 **If missing:** Will ask user to provide context or point to source files.
+
+**Multiple sources:** When multiple sources are provided, extract exhaustively from ALL of them. Content may be scattered across sources - a decision in one may have constraints or details in another. The specification consolidates everything into a single standalone document.
 
 ## The Process
 
@@ -62,7 +64,7 @@ If you are uncertain whether the user approved, **ASK**: "Would you like me to l
 
 ## What You Do
 
-1. **Extract exhaustively**: For each topic, re-scan ALL source material. Search for keywords and related terms. Information is often scattered - collect it all before synthesizing. Include only what we're building (not discarded alternatives).
+1. **Extract exhaustively**: For each topic, re-scan ALL source materials. When working with multiple sources, search each one - information about a single topic may be scattered across documents. Search for keywords and related terms. Collect everything before synthesizing. Include only what we're building (not discarded alternatives).
 
 2. **Filter**: Reference material may contain hallucinations, inaccuracies, or outdated concepts. Validate before including.
 
@@ -87,6 +89,8 @@ The specification is the **golden document** - planning uses only this. If infor
 **Commit frequently**: Commit at natural breaks, after significant exchanges, and before any context refresh. Context refresh = lost work.
 
 **Trust nothing without validation**: Synthesize and present, but never assume source material is correct.
+
+**Surface conflicts**: When sources contain conflicting decisions, flag the conflict to the user during the discussion. Don't silently pick one - let the user decide what makes it into the specification.
 
 ---
 
