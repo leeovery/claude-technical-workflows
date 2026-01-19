@@ -146,6 +146,7 @@ Suggested skeleton:
 # Specification: [Topic Name]
 
 **Status**: Building specification
+**Type**: feature | cross-cutting
 **Last Updated**: YYYY-MM-DD *(use today's actual date)*
 
 ---
@@ -160,6 +161,73 @@ Suggested skeleton:
 
 [Optional - capture in-progress discussion if needed]
 ```
+
+## Specification Types
+
+The `Type` field distinguishes between specifications that result in standalone implementation work versus those that inform how other work is done.
+
+### Feature Specifications (`type: feature`)
+
+Feature specifications describe something to **build** - a concrete piece of functionality with its own implementation plan.
+
+**Examples:**
+- User authentication system
+- Order processing pipeline
+- Notification service
+- Dashboard analytics
+
+**Characteristics:**
+- Results in a dedicated implementation plan
+- Has concrete deliverables (code, APIs, UI)
+- Can be planned with phases, tasks, and acceptance criteria
+- Progress is measurable ("the feature is done")
+
+**This is the default type.** If not specified, assume `feature`.
+
+### Cross-Cutting Specifications (`type: cross-cutting`)
+
+Cross-cutting specifications describe **patterns, policies, or architectural decisions** that inform how features are built. They don't result in standalone implementation - instead, they're referenced by feature specifications and plans.
+
+**Examples:**
+- Caching strategy
+- Rate limiting policy
+- Error handling conventions
+- Logging and observability standards
+- API versioning approach
+- Security patterns
+
+**Characteristics:**
+- Does NOT result in a dedicated implementation plan
+- Defines "how to do things" rather than "what to build"
+- Referenced by multiple feature specifications
+- Implementation happens within features that apply these patterns
+- No standalone "done" state - the patterns are applied across features
+
+### Why This Matters
+
+Cross-cutting specifications go through the same Research → Discussion → Specification phases. The decisions are just as important to validate and document. The difference is what happens after:
+
+- **Feature specs** → Planning → Implementation → Review
+- **Cross-cutting specs** → Referenced by feature plans → Applied during feature implementation
+
+When planning a feature, the planning process surfaces relevant cross-cutting specifications as context. This ensures that a "user authentication" plan incorporates the validated caching strategy and error handling conventions.
+
+### Determining the Type
+
+Ask: **"Is there a standalone thing to build, or does this inform how we build other things?"**
+
+| Question | Feature | Cross-Cutting |
+|----------|---------|---------------|
+| Can you demo it when done? | Yes - "here's the login page" | No - it's invisible infrastructure |
+| Does it have its own UI/API/data? | Yes | No - lives within other features |
+| Can you plan phases and tasks for it? | Yes | Tasks would be "apply X to feature Y" |
+| Is it used by one feature or many? | Usually one | By definition, multiple |
+
+**Edge cases:**
+- A "caching service" that provides shared caching infrastructure → **Feature** (you're building something)
+- "How we use caching across the app" → **Cross-cutting** (policy/pattern)
+- Authentication system → **Feature**
+- Authentication patterns and security requirements → **Cross-cutting**
 
 ## Critical Rules
 
@@ -344,8 +412,61 @@ When you've:
 
 ## Completion
 
+### Step 1: Determine Specification Type
+
+Before asking for sign-off, assess whether this is a **feature** or **cross-cutting** specification:
+
+**Feature specification** - Something to build:
+- Has concrete deliverables (code, APIs, UI)
+- Can be planned with phases, tasks, acceptance criteria
+- Results in a standalone implementation
+
+**Cross-cutting specification** - Patterns/policies that inform other work:
+- Defines "how to do things" rather than "what to build"
+- Will be referenced by multiple feature specifications
+- Implementation happens within features that apply these patterns
+
+Present your assessment to the user:
+
+> "This specification appears to be a **[feature/cross-cutting]** specification.
+>
+> [Brief rationale - e.g., "It defines a caching strategy that will inform how multiple features handle data retrieval, rather than being a standalone piece of functionality to build."]
+>
+> - **Feature specs** proceed to planning and implementation
+> - **Cross-cutting specs** are referenced by feature plans but don't have their own implementation plan
+>
+> Does this assessment seem correct?"
+
+Wait for user confirmation before proceeding.
+
+### Step 2: Sign-Off
+
+Once the type is confirmed, ask for final sign-off:
+
+> "The specification is ready for sign-off:
+> - **Type**: [feature/cross-cutting]
+> - **Status**: Complete
+>
+> [If feature]: This specification can proceed to planning
+> [If cross-cutting]: This specification will be surfaced as reference context when planning features
+>
+> Ready to mark as complete?"
+
+### Step 3: Update Frontmatter
+
+After user confirms, update the specification frontmatter:
+
+```markdown
+# Specification: [Topic Name]
+
+**Status**: Complete
+**Type**: [feature/cross-cutting]
+**Last Updated**: YYYY-MM-DD
+```
+
 Specification is complete when:
 - All topics/phases have validated content
+- Type has been determined and confirmed
 - User confirms the specification is complete
 - No blocking gaps remain
 

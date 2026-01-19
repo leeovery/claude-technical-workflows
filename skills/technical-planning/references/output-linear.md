@@ -179,6 +179,17 @@ This plan is managed in Linear. The source of truth for tasks and progress is th
 
 [Summary of key decisions from specification - for quick reference]
 
+## Cross-Cutting References
+
+Architectural decisions from cross-cutting specifications that inform this plan:
+
+| Specification | Key Decisions | Applies To |
+|---------------|---------------|------------|
+| [Caching Strategy](../specification/caching-strategy.md) | Cache API responses for 5 min | Tasks involving API calls |
+| [Rate Limiting](../specification/rate-limiting.md) | 100 req/min per user | User-facing endpoints |
+
+*Remove this section if no cross-cutting specifications apply.*
+
 ## External Dependencies
 
 [Dependencies on other topics - copy from specification's Dependencies section]

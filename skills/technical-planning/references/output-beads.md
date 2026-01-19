@@ -269,6 +269,17 @@ This plan is managed via Beads. Tasks are stored in `.beads/` and tracked as a d
 
 [Summary of key decisions from specification]
 
+## Cross-Cutting References
+
+Architectural decisions from cross-cutting specifications that inform this plan:
+
+| Specification | Key Decisions | Applies To |
+|---------------|---------------|------------|
+| [Caching Strategy](../specification/caching-strategy.md) | Cache API responses for 5 min | Tasks involving API calls |
+| [Rate Limiting](../specification/rate-limiting.md) | 100 req/min per user | User-facing endpoints |
+
+*Remove this section if no cross-cutting specifications apply.*
+
 ## Phase Overview
 
 | Phase | Goal | Epic ID |
