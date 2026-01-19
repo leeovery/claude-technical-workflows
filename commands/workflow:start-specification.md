@@ -112,11 +112,9 @@ Before analyzing, ask:
 
 ```
 Before I analyze the discussions, is there anything about your project structure or how these topics relate that would help me group them appropriately?
-
-(This is optional - just press enter to skip)
 ```
 
-Wait for response (or skip).
+Wait for response.
 
 ### Step 3A.2: Check Cache Validity
 
@@ -244,7 +242,7 @@ Wait for user to choose.
 - Proceed to Step 4 with user-specified sources
 
 **If "Single specification":**
-- Ask for a name for the unified specification
+- Use "unified" as the specification name (output: `docs/workflow/specification/unified.md`)
 - Proceed to Step 4 with all discussions as sources
 
 **If "Individual specifications":**
