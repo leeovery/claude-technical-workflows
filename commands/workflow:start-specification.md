@@ -196,18 +196,22 @@ discussion_files:
 
 ### Step 3A.4: Present Options
 
-Present the analysis and options:
+Present the analysis and options.
+
+**First, check for existing specifications:**
+For each grouping in the analysis, check if `docs/workflow/specification/{grouping-name}.md` exists. When displaying groupings, annotate any that have existing specifications.
 
 **If using cached analysis:**
 ```
 Cached analysis (discussions unchanged since {date})
 
 {Display the Recommended Groupings section from cache}
+{For each grouping with an existing spec, show "(specification exists)" after the name}
 
 How would you like to proceed?
 
-1. **Combine as recommended** - Create specifications per the groupings above
-2. **Combine differently** - Tell me your preferred groupings
+1. **Combine as recommended** - I'll ask which grouping to start with
+2. **Combine differently** - Tell me your preferred groupings, then pick one
 3. **Single specification** - Consolidate all discussions into one spec
 4. **Individual specifications** - Create 1:1 (I'll ask which to start with)
 
@@ -219,11 +223,12 @@ How would you like to proceed?
 Analysis complete (cached for future sessions)
 
 {Display the Recommended Groupings section}
+{For each grouping with an existing spec, show "(specification exists)" after the name}
 
 How would you like to proceed?
 
-1. **Combine as recommended** - Create specifications per the groupings above
-2. **Combine differently** - Tell me your preferred groupings
+1. **Combine as recommended** - I'll ask which grouping to start with
+2. **Combine differently** - Tell me your preferred groupings, then pick one
 3. **Single specification** - Consolidate all discussions into one spec
 4. **Individual specifications** - Create 1:1 (I'll ask which to start with)
 ```
@@ -233,16 +238,30 @@ Wait for user to choose.
 ### Step 3A.5: Handle Choices
 
 **If "Combine as recommended":**
-- Confirm the first specification to create
-- Proceed to Step 4 with the grouped sources
+- Present the groupings as a numbered list:
+  ```
+  Which grouping would you like to start with?
+
+  1. {Grouping Name A} - {N} discussions
+  2. {Grouping Name B} - {N} discussions (specification exists)
+  3. {Grouping Name C} - {N} discussions
+  ```
+- For groupings with existing specs, show "(specification exists)" - user can continue/review
+- Wait for user to pick a number
+- Proceed to Step 4 with that grouping's sources
 
 **If "Combine differently":**
 - Ask user to describe their preferred groupings
-- Confirm understanding
+- Confirm understanding and present as a numbered list
+- Check if any of the user's grouping names match existing specifications
+- For groupings with existing specs, show "(specification exists)"
+- Ask: "Which grouping would you like to start with?"
 - Proceed to Step 4 with user-specified sources
 
 **If "Single specification":**
 - Use "unified" as the specification name (output: `docs/workflow/specification/unified.md`)
+- Check if `docs/workflow/specification/unified.md` already exists
+- If exists, inform user: "A unified specification already exists. Proceeding will continue/refine it."
 - Proceed to Step 4 with all discussions as sources
 
 **If "Individual specifications":**
