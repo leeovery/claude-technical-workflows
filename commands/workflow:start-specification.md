@@ -116,7 +116,17 @@ Specifications:
 → Skip to **Step 10: Confirm Selection** with that discussion as the source.
 
 **If only concluded discussions that already have specs:**
-→ Ask if user wants to continue/refine an existing spec, then skip to **Step 10**.
+
+```
+All concluded discussions already have specifications.
+
+Would you like to continue/refine an existing specification?
+
+1. {spec-1} - sources: {topics}
+2. {spec-2} - sources: {topics}
+```
+
+**STOP.** Wait for user to pick, then skip to **Step 10**.
 
 **If MORE THAN ONE concluded discussion exists (with or without specs):**
 → Proceed to **Step 4: Offer Assessment**.
@@ -170,8 +180,6 @@ Using cached analysis
 
 Discussion documents unchanged since last analysis ({cached_date}).
 Loading previously identified groupings...
-
-(Enter 'refresh' to force a fresh analysis)
 ```
 
 Load groupings from cache and → Skip to **Step 8: Present Options**.
@@ -279,7 +287,7 @@ Recommended Groupings:
 | Discussion | Status |
 |------------|--------|
 | {topic-a} | discussion only |
-| {topic-b} | ✓ has individual spec |
+| {topic-b} | has individual spec |
 | {topic-c} | discussion only |
 
 Coupling: {explanation}
@@ -328,9 +336,20 @@ Which grouping would you like to start with?
 
 **If "Combine differently":**
 
-Ask user to describe their preferred groupings. Confirm understanding and present as a numbered list. Check if any grouping names match existing specifications.
+```
+Please describe your preferred groupings. Which discussions should be combined together?
+```
+
+**STOP.** Wait for user to describe their groupings.
+
+Confirm understanding and present as a numbered list. Check if any grouping names match existing specifications.
 
 ```
+Based on your description, here are the groupings:
+
+1. {User's Grouping A} - {topics}
+2. {User's Grouping B} - {topics}
+
 Which grouping would you like to start with?
 ```
 
@@ -341,12 +360,15 @@ Which grouping would you like to start with?
 Use "unified" as the specification name.
 Check if `docs/workflow/specification/unified.md` already exists.
 
-If exists:
 ```
-A unified specification already exists. Proceeding will continue/refine it.
+{If exists: "A unified specification already exists. Proceeding will continue/refine it."}
+
+This will consolidate ALL {N} concluded discussions into a single specification.
+
+Proceed with unified specification? (y/n)
 ```
 
-→ Proceed to **Step 10** with all discussions as sources.
+**STOP.** Wait for user to confirm, then proceed to **Step 10** with all discussions as sources.
 
 **If "Individual specifications":**
 
@@ -440,6 +462,9 @@ Proceed? (y/n)
 ```
 
 **STOP.** Wait for user confirmation.
+
+**If user confirms (y):** → Proceed to **Step 11**.
+**If user declines (n):** → Return to **Step 9** to select a different grouping or discussion.
 
 ---
 
