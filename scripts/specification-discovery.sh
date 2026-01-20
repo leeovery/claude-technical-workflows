@@ -15,15 +15,31 @@ SPEC_DIR="docs/workflow/specification"
 CACHE_FILE="docs/workflow/.cache/discussion-consolidation-analysis.md"
 
 # Helper: Extract a frontmatter field value from a file
+# Supports both YAML frontmatter and markdown format (**Field**: Value)
 # Usage: extract_field <file> <field_name>
 extract_field() {
     local file="$1"
     local field="$2"
-    # Read until --- (end of frontmatter), find field, extract value
-    # Use grep -m1 and || true to handle no match gracefully
-    sed -n '/^---$/,/^---$/p' "$file" 2>/dev/null | \
-        grep -m1 "^${field}:" | \
-        sed "s/^${field}:[[:space:]]*//" || true
+    local value=""
+
+    # Try YAML frontmatter first (only if file starts with ---)
+    if head -1 "$file" 2>/dev/null | grep -q "^---$"; then
+        value=$(sed -n '2,/^---$/p' "$file" 2>/dev/null | \
+            grep -m1 "^${field}:" | \
+            sed "s/^${field}:[[:space:]]*//" || true)
+    fi
+
+    # If empty, try markdown format: **Field**: Value
+    # Only search the header (before first ## heading) to avoid body matches
+    if [ -z "$value" ]; then
+        value=$(awk '/^## /{exit} {print}' "$file" 2>/dev/null | \
+            grep -i -m1 "^\*\*${field}\*\*:" | \
+            sed -E "s/^\*\*[^*]+\*\*:[[:space:]]*//" || true)
+        # Normalize to lowercase for consistency
+        value=$(echo "$value" | tr '[:upper:]' '[:lower:]')
+    fi
+
+    echo "$value"
 }
 
 # Helper: Extract array field from frontmatter (returns space-separated values)
