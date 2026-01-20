@@ -183,7 +183,7 @@ When using the full workflow, it progresses through six distinct phases:
 
 **Phase 2 - Discussion:** Captures the back-and-forth exploration of a problem. Documents competing solutions, why certain approaches won or lost, edge cases discovered, and the journey to decisions, not just the decisions themselves.
 
-**Phase 3 - Specification:** Transforms discussion documentation into a validated, standalone specification. Filters hallucinations and inaccuracies, enriches gaps through discussion, and builds a document that planning can execute against without referencing other sources.
+**Phase 3 - Specification:** Transforms discussion(s) into validated, standalone specifications. Automatically analyses multiple discussions for natural groupings, filters hallucinations and inaccuracies, enriches gaps, and builds documents that planning can execute against without referencing other sources.
 
 **Phase 4 - Planning:** Converts specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (local markdown, Linear, Backlog.md).
 
@@ -238,6 +238,9 @@ commands/                            # Input layer (gather context → invoke sk
 
 agents/
 └── chain-verifier.md                # Parallel task verification for review
+
+scripts/                             # Helper scripts for commands
+└── specification-discovery.sh       # Discovery for specification command
 ```
 
 ## Skills
@@ -265,7 +268,7 @@ Sequential commands prefixed with `workflow:`. They expect files from previous p
 |--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [**/workflow:start-research**](commands/workflow:start-research.md)                  | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion.                                                                                     |
 | [**/workflow:start-discussion**](commands/workflow:start-discussion.md)              | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation.                                                               |
-| [**/workflow:start-specification**](commands/workflow:start-specification.md)        | Start a specification session from an existing discussion. Validates and refines discussion content into a standalone specification.                                                                       |
+| [**/workflow:start-specification**](commands/workflow:start-specification.md)        | Start a specification session from existing discussion(s). Automatically analyses multiple discussions for natural groupings and consolidates them into unified specifications.                            |
 | [**/workflow:start-planning**](commands/workflow:start-planning.md)                  | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md, Beads). |
 | [**/workflow:start-implementation**](commands/workflow:start-implementation.md)      | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
 | [**/workflow:start-review**](commands/workflow:start-review.md)                      | Start reviewing completed work. Validates implementation against plan tasks and acceptance criteria.                                                                                                        |
