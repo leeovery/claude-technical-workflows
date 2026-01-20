@@ -176,7 +176,12 @@ When using the full workflow, it progresses through six distinct phases:
 └───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘
         ▲                   ▲                   ▲                   ▲                   ▲                   ▲
         │                   │                   │                   │                   │                   │
- technical-research  technical-discussion  technical-specification  technical-planning  technical-implementation  technical-review
+technical-research          │                   │                   │                   │                   │
+              technical-discussion              │                   │                   │                   │
+                            technical-specification                 │                   │                   │
+                                          technical-planning        │                   │                   │
+                                                      technical-implementation          │                   │
+                                                                              technical-review
 ```
 
 **Phase 1 - Research:** Explore ideas from their earliest seed. Investigate market fit, technical feasibility, business viability. Free-flowing exploration that may or may not lead to building something.
