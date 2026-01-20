@@ -193,12 +193,12 @@ Research Topics:
   1. {Theme name}
      Source: {filename}.md (lines {start}-{end})
      "{Brief summary}"
-     {✓ has discussion | ✗ undiscussed}
+     {✓ discussed in {topic}.md | ✗ undiscussed}
 
   2. {Another theme}
      Source: {filename}.md (lines {start}-{end})
      "{Brief summary}"
-     {✓ has discussion | ✗ undiscussed}
+     {✓ discussed in {topic}.md | ✗ undiscussed}
 
 {If discussions exist:}
 Existing Discussions:
@@ -213,7 +213,7 @@ Existing Discussions:
 ```
 
 **Legend:**
-- `✓ has discussion` = A discussion already exists for this research topic
+- `✓ discussed in {topic}.md` = A discussion already exists for this research topic
 - `✗ undiscussed` = No discussion yet (potential new discussion)
 
 #### Present Options Based on State
@@ -270,7 +270,9 @@ Which approach?
 
 **If user specified a topic inline:**
 
-Identify the selected topic from Step 5's numbered list. Note the source file and line numbers.
+Identify the selected topic from Step 5's numbered list.
+
+**Important:** Keep track of the source file and line numbers for the chosen topic - this will be passed to the skill.
 
 → Proceed to **Step 7: Gather Context** with research path.
 
