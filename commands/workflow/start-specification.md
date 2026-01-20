@@ -333,7 +333,7 @@ Coupling: {explanation}
 
 How would you like to proceed?
 
-1. **Combine as recommended** - I'll ask which grouping to start with
+1. **Proceed as recommended** - I'll ask which to start with
 2. **Combine differently** - Tell me your preferred groupings
 3. **Single specification** - Consolidate ALL into one unified spec
 4. **Individual specifications** - Create 1:1 specs (I'll ask which to start)
@@ -351,15 +351,22 @@ How would you like to proceed?
 
 Based on user's choice from Step 7:
 
-#### If "Combine as recommended"
+#### If "Proceed as recommended"
 
 ```
-Which grouping would you like to start with?
+Which would you like to start with?
 
+Grouped:
 1. {Grouping Name A} - {N} discussions
 2. {Grouping Name B} - {N} discussions (specification exists)
 3. {Grouping Name C} - {N} discussions
+
+Independent:
+4. {topic-f} - standalone
+5. {topic-g} - standalone
 ```
+
+List ALL items from the analysis: grouped specifications first, then independent discussions. Number them consecutively.
 
 **STOP.** Wait for user to pick a number, then proceed to **Step 9**.
 
@@ -506,7 +513,7 @@ Before invoking the specification skill:
 2. Any constraints or changes since the discussion(s) concluded?
 3. Are there existing partial implementations or related documentation I should review?
 
-(Press enter to skip if none)
+(Say 'none' or 'continue' if nothing to add)
 ```
 
 **STOP.** Wait for user response.
