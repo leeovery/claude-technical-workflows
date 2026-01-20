@@ -38,6 +38,18 @@ Either way: Transform unvalidated reference material into a specification that's
 
 **When complete**: User signs off on the specification.
 
+### Post-Completion: Handle Source Specifications
+
+If any of your sources were **existing specifications** (as opposed to discussions, research, or other reference material), these have now been consolidated into the new specification.
+
+After user signs off:
+1. Mark each source specification as superseded by updating its frontmatter:
+   ```yaml
+   status: superseded
+   superseded_by: {new-specification-name}
+   ```
+2. Inform the user which files were updated
+
 ## CRITICAL: You Do NOT Create or Update the Specification Autonomously
 
 **This is a collaborative, interactive process. You MUST wait for explicit user approval before writing ANYTHING to the specification file.**
