@@ -20,6 +20,7 @@
     "skills",
     "commands",
     "agents",
-    "hooks"
+    "hooks",
+    "scripts"
   ]
 }
