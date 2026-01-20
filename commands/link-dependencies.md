@@ -32,7 +32,7 @@ Scan the codebase for existing plans:
 ```
 No plans found in docs/workflow/planning/
 
-There are no plans to link. Create plans first with /workflow:start-planning.
+There are no plans to link. Create plans first.
 ```
 
 **STOP.** Wait for user acknowledgment. Do not proceed.
