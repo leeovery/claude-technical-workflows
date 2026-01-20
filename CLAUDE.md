@@ -27,21 +27,20 @@ skills/
   technical-review/          # Phase 6: Validate against artifacts
 
 commands/
-  # Workflow commands (sequential, expect previous phase files)
-  workflow:start-research.md       # Begin research exploration
-  workflow:start-discussion.md     # Begin technical discussions
-  workflow:start-specification.md  # Begin specification building
-  workflow:start-planning.md       # Begin implementation planning
-  workflow:start-implementation.md # Begin implementing a plan
-  workflow:start-review.md         # Begin review
-
   # Standalone commands (flexible input)
   start-feature.md                 # Create spec directly from inline context
   link-dependencies.md             # Link dependencies across topics
 
-  # Utility commands
-  workflow:status.md               # Show workflow status and next steps
-  workflow:view-plan.md            # View plan tasks and progress
+  # Workflow commands (sequential, expect previous phase files)
+  workflow/
+    start-research.md              # Begin research exploration
+    start-discussion.md            # Begin technical discussions
+    start-specification.md         # Begin specification building
+    start-planning.md              # Begin implementation planning
+    start-implementation.md        # Begin implementing a plan
+    start-review.md                # Begin review
+    status.md                      # Show workflow status and next steps
+    view-plan.md                   # View plan tasks and progress
 
 agents/
   chain-verifier.md          # Parallel chain verification for review phase

@@ -70,7 +70,7 @@ Which plan would you like to implement?
 
 **This step is a gate.** Implementation cannot proceed if dependencies are not satisfied.
 
-See **[dependencies.md](../skills/technical-planning/references/dependencies.md)** for dependency format and states.
+See **[dependencies.md](../../skills/technical-planning/references/dependencies.md)** for dependency format and states.
 
 After the user selects a plan:
 
@@ -161,7 +161,7 @@ If they choose a specific phase or task, ask them to specify which one.
 
 After completing the steps above, this command's purpose is fulfilled.
 
-Invoke the [technical-implementation](../skills/technical-implementation/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
+Invoke the [technical-implementation](../../skills/technical-implementation/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
 **Example handoff:**
 ```

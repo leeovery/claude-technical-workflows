@@ -547,23 +547,16 @@ These files are already position-agnostic or stay unchanged:
 - `skills/technical-planning/references/output-*.md` - Format specs, not workflow position
 - `skills/technical-planning/references/dependencies.md` - Already command-driven pattern
 
-**Existing commands (renamed to `workflow:` prefix):**
-- `commands/workflow:start-research.md` - Entry point
-- `commands/workflow:start-discussion.md` - Entry point
-- `commands/workflow:start-specification.md` - Reads discussion files, passes to skill
-- `commands/workflow:start-planning.md` - Reads spec files, passes to skill
-- `commands/workflow:start-implementation.md` - Reads plan files, passes to skill
-- `commands/workflow:start-review.md` - Reads plan + spec files, passes to skill
+**Existing commands (in `workflow/` subdirectory):**
+- `commands/workflow/start-research.md` - Entry point
+- `commands/workflow/start-discussion.md` - Entry point
+- `commands/workflow/start-specification.md` - Reads discussion files, passes to skill
+- `commands/workflow/start-planning.md` - Reads spec files, passes to skill
+- `commands/workflow/start-implementation.md` - Reads plan files, passes to skill
+- `commands/workflow/start-review.md` - Reads plan + spec files, passes to skill
 
-**Standalone commands (not workflow-prefixed):**
+**Standalone commands (not in workflow/ subdirectory):**
 - `commands/link-dependencies.md` - Utility command, wires up plan dependencies
-
-**Deprecation aliases (to be created, then eventually removed):**
-- `commands/start-research.md` → forwards to `workflow:start-research`
-- `commands/start-discussion.md` → forwards to `workflow:start-discussion`
-- `commands/start-specification.md` → forwards to `workflow:start-specification`
-- `commands/start-planning.md` → forwards to `workflow:start-planning`
-- `commands/start-implementation.md` → forwards to `workflow:start-implementation`
 
 ---
 

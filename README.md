@@ -225,16 +225,17 @@ skills/                              # Input-agnostic processors
 └── technical-review/                # Validate against artefacts
 
 commands/                            # Input layer (gather context → invoke skills)
-├── workflow:start-research.md       # Sequential: begin research
-├── workflow:start-discussion.md     # Sequential: begin discussions
-├── workflow:start-specification.md  # Sequential: begin specification
-├── workflow:start-planning.md       # Sequential: begin planning
-├── workflow:start-implementation.md # Sequential: begin implementation
-├── workflow:start-review.md         # Sequential: begin review
-├── workflow:status.md               # Utility: show workflow status and next steps
-├── workflow:view-plan.md            # Utility: view plan tasks and progress
 ├── start-feature.md                 # Standalone: spec from inline context
-└── link-dependencies.md             # Standalone: wire cross-topic deps
+├── link-dependencies.md             # Standalone: wire cross-topic deps
+└── workflow/                        # Sequential workflow commands
+    ├── start-research.md            # Begin research
+    ├── start-discussion.md          # Begin discussions
+    ├── start-specification.md       # Begin specification
+    ├── start-planning.md            # Begin planning
+    ├── start-implementation.md      # Begin implementation
+    ├── start-review.md              # Begin review
+    ├── status.md                    # Show workflow status
+    └── view-plan.md                 # View plan tasks
 
 agents/
 └── chain-verifier.md                # Parallel task verification for review
@@ -266,12 +267,12 @@ Sequential commands prefixed with `workflow:`. They expect files from previous p
 
 | Command                                                                              | Description                                                                                                                                                                                                |
 |--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [**/workflow:start-research**](commands/workflow:start-research.md)                  | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion.                                                                                     |
-| [**/workflow:start-discussion**](commands/workflow:start-discussion.md)              | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation.                                                               |
-| [**/workflow:start-specification**](commands/workflow:start-specification.md)        | Start a specification session from existing discussion(s). Automatically analyses multiple discussions for natural groupings and consolidates them into unified specifications.                            |
-| [**/workflow:start-planning**](commands/workflow:start-planning.md)                  | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md, Beads). |
-| [**/workflow:start-implementation**](commands/workflow:start-implementation.md)      | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
-| [**/workflow:start-review**](commands/workflow:start-review.md)                      | Start reviewing completed work. Validates implementation against plan tasks and acceptance criteria.                                                                                                        |
+| [**/workflow:start-research**](commands/workflow/start-research.md)                  | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion.                                                                                     |
+| [**/workflow:start-discussion**](commands/workflow/start-discussion.md)              | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation.                                                               |
+| [**/workflow:start-specification**](commands/workflow/start-specification.md)        | Start a specification session from existing discussion(s). Automatically analyses multiple discussions for natural groupings and consolidates them into unified specifications.                            |
+| [**/workflow:start-planning**](commands/workflow/start-planning.md)                  | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md, Beads). |
+| [**/workflow:start-implementation**](commands/workflow/start-implementation.md)      | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
+| [**/workflow:start-review**](commands/workflow/start-review.md)                      | Start reviewing completed work. Validates implementation against plan tasks and acceptance criteria.                                                                                                        |
 
 ### Utility Commands
 
@@ -279,8 +280,8 @@ Helpers for navigating and understanding the workflow.
 
 | Command                                                                              | Description                                                                                                                                 |
 |--------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| [**/workflow:status**](commands/workflow:status.md)                                  | Show workflow status - what topics exist at each phase, and suggested next steps.                                                           |
-| [**/workflow:view-plan**](commands/workflow:view-plan.md)                            | View a plan's tasks and progress, regardless of output format.                                                                              |
+| [**/workflow:status**](commands/workflow/status.md)                                  | Show workflow status - what topics exist at each phase, and suggested next steps.                                                           |
+| [**/workflow:view-plan**](commands/workflow/view-plan.md)                            | View a plan's tasks and progress, regardless of output format.                                                                              |
 
 ### Standalone Commands
 
