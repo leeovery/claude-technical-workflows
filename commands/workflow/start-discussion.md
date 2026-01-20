@@ -77,15 +77,17 @@ What topic would you like to discuss?
 
 **STOP.** Wait for user to provide a topic, then skip to **Step 7: Gather Context** with the fresh topic path.
 
-#### Otherwise (research and/or discussions exist)
+#### If no research files exist (but discussions exist)
+
+→ Skip to **Step 5: Present Status & Options**.
+
+#### Otherwise (research files exist)
 
 → Proceed to **Step 3**.
 
 ---
 
 ## Step 3: Check Cache Validity
-
-Skip this step if no research files exist (proceed directly to **Step 5**).
 
 Check the `cache_validity.is_valid` value from the discovery state.
 
