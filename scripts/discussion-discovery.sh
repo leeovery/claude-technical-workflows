@@ -103,16 +103,7 @@ if [ -f "$CACHE_FILE" ]; then
         # Clean the topic name
         clean_name=$(echo "$topic_name" | sed 's/^### //')
         if [ -n "$clean_name" ]; then
-            echo "    - name: \"$clean_name\""
-
-            # Check if a discussion already exists for this topic
-            # Convert topic name to slug format for comparison
-            slug=$(echo "$clean_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | sed 's/[^a-z0-9-]//g')
-            has_discussion="false"
-            if [ -f "$DISCUSSION_DIR/${slug}.md" ]; then
-                has_discussion="true"
-            fi
-            echo "      has_discussion: $has_discussion"
+            echo "    - \"$clean_name\""
             topics_found=true
         fi
     done < <(grep "^### " "$CACHE_FILE" 2>/dev/null || true)

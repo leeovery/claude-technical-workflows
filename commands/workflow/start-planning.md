@@ -114,11 +114,16 @@ Cross-Cutting Specifications (reference context):
 - `✓` = Complete, ready for planning (no plan yet)
 - `○` = Complete, plan already exists
 
+**Important:**
+- Only completed **feature** specifications should proceed to planning
+- **Cross-cutting** specifications are NOT planning targets - they inform feature plans
+- If a specification is still being built, advise the user to complete the specification phase first
+
 #### Routing Based on State
 
 #### If exactly ONE complete feature specification exists (ready for planning)
 
-This is the simple path - no choices needed.
+Auto-select and proceed. Do not ask for confirmation.
 
 ```
 Single specification ready for planning: {topic}
@@ -135,7 +140,7 @@ Which feature specification would you like to plan?
 
 1. {topic-1} - ready for planning
 2. {topic-2} - ready for planning
-3. {topic-3} - plan exists (will create new plan)
+3. {topic-3} - plan exists
 ```
 
 **STOP.** Wait for user to pick a number, then proceed to **Step 4**.

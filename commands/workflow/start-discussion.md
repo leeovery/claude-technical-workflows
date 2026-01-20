@@ -177,6 +177,12 @@ research_files:
 
 Present everything discovered to help the user make an informed choice.
 
+#### Cross-reference with Discussions
+
+For each identified topic, check if a corresponding discussion already exists. Compare topics against the `discussions` array from the discovery state, using semantic/thematic matching rather than exact name matching.
+
+#### Present Current State
+
 Show the current state clearly. Use this EXACT format:
 
 ```
