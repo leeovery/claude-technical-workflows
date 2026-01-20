@@ -240,7 +240,7 @@ agents/
 └── chain-verifier.md                # Parallel task verification for review
 
 scripts/                             # Helper scripts for commands
-└── discover-spec-state.sh           # Discovery for specification command
+└── specification-discovery.sh       # Discovery for specification command
 ```
 
 ## Skills
