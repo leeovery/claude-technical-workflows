@@ -516,10 +516,9 @@ Output: docs/workflow/specification/{specification-name}.md
 Context: This consolidates multiple sources. The existing {topic-3}.md specification should be incorporated - extract and adapt its content alongside the discussion material. The result should be a unified specification, not a simple merge.
 
 After the {specification-name} specification is complete, mark the incorporated specs as superseded by updating their frontmatter:
-```yaml
-status: superseded
-superseded_by: {specification-name}
-```
+
+    status: superseded
+    superseded_by: {specification-name}
 
 Additional context: {summary of user's answers from Step 11}
 
