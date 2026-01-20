@@ -1,6 +1,6 @@
 ---
 description: Start a specification session from existing discussions. Discovers available discussions, offers consolidation assessment for multiple discussions, and invokes the technical-specification skill.
-allowed-tools: Bash(./scripts/specification-discovery.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/discussion-consolidation-analysis.md)
+allowed-tools: Bash(../../scripts/specification-discovery.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/discussion-consolidation-analysis.md)
 ---
 
 Invoke the **technical-specification** skill for this conversation.
@@ -35,7 +35,7 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 Run the discovery script to gather current state:
 
 ```bash
-./scripts/specification-discovery.sh
+../../scripts/specification-discovery.sh
 ```
 
 This outputs structured YAML. Parse it to understand:
