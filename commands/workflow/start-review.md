@@ -51,7 +51,7 @@ Scan the codebase for plans:
 ```
 No plans found in docs/workflow/planning/
 
-The review phase requires a completed implementation based on a plan. Please run /workflow:start-planning first to create a plan, then /workflow:start-implementation to build it.
+The review phase requires a completed implementation based on a plan. Please run /start-planning first to create a plan, then /start-implementation to build it.
 ```
 
 Stop here and wait for the user to acknowledge.

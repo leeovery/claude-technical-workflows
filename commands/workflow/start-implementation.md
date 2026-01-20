@@ -54,7 +54,7 @@ Scan the codebase for plans:
 
 Show what you found.
 
-> **Note:** If no plans exist, inform the user that this workflow is designed to be executed in sequence. They need to create plans from specifications prior to implementation using `/workflow:start-planning`.
+> **Note:** If no plans exist, inform the user that this workflow is designed to be executed in sequence. They need to create plans from specifications prior to implementation using `/start-planning`.
 
 > **Auto-select:** If exactly one plan exists, automatically select it and proceed to Step 3. Inform the user which plan was selected. Do not ask for confirmation.
 
@@ -89,7 +89,7 @@ If ANY dependency is unresolved or incomplete, **stop and present**:
 
 UNRESOLVED (not yet planned):
 - billing-system: Invoice generation for order completion
-  → No plan exists for this topic. Create with /workflow:start-planning or mark as satisfied externally.
+  → No plan exists for this topic. Create with /start-planning or mark as satisfied externally.
 
 INCOMPLETE (planned but not implemented):
 - beads-7x2k (authentication): User context retrieval

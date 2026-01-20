@@ -3,7 +3,7 @@
 # discover-spec-state.sh
 #
 # Discovers the current state of discussions, specifications, and cache
-# for the workflow:start-specification command.
+# for the /start-specification command.
 #
 # Outputs structured YAML that the command can consume directly.
 #

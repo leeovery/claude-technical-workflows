@@ -59,7 +59,7 @@ Scan the codebase for specifications and plans:
 ```
 ⚠️ No specifications found in docs/workflow/specification/
 
-The planning phase requires a completed specification. Please run /workflow:start-specification first to validate and refine the discussion content into a standalone specification before creating a plan.
+The planning phase requires a completed specification. Please run /start-specification first to validate and refine the discussion content into a standalone specification before creating a plan.
 ```
 
 Stop here and wait for the user to acknowledge.

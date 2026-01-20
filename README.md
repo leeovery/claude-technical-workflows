@@ -59,7 +59,7 @@ See [Installation](#installation) for details and trade-offs.
 Research → Discussion → Specification → Planning → Implementation → Review
 ```
 
-Start with `/workflow:start-research` or `/workflow:start-discussion` and follow the flow. Each phase outputs files that the next phase consumes.
+Start with `/start-research` or `/start-discussion` and follow the flow. Each phase outputs files that the next phase consumes.
 
 **2. Standalone Commands** - Jump directly to a skill with flexible inputs:
 
@@ -84,7 +84,7 @@ Start with `/workflow:start-research` or `/workflow:start-discussion` and follow
 │                        COMMANDS                             │
 │  (gather inputs from files, prompts, inline context)        │
 ├─────────────────────────────────────────────────────────────┤
-│  /workflow:start-spec     /start-feature    (your custom)   │
+│  /start-specification   /start-feature   (your custom)  │
 │         │                       │                 │         │
 │         └───────────┬───────────┘                 │         │
 │                     ▼                             ▼         │
@@ -101,23 +101,23 @@ Start with `/workflow:start-research` or `/workflow:start-discussion` and follow
 
 ### Workflow Commands
 
-| Phase          | Command                          |
-|----------------|----------------------------------|
-| Research       | `/workflow:start-research`       |
-| Discussion     | `/workflow:start-discussion`     |
-| Specification  | `/workflow:start-specification`  |
-| Planning       | `/workflow:start-planning`       |
-| Implementation | `/workflow:start-implementation` |
-| Review         | `/workflow:start-review`         |
+| Phase          | Command                 |
+|----------------|-------------------------|
+| Research       | `/start-research`       |
+| Discussion     | `/start-discussion`     |
+| Specification  | `/start-specification`  |
+| Planning       | `/start-planning`       |
+| Implementation | `/start-implementation` |
+| Review         | `/start-review`         |
 
 Run the command directly or ask Claude to run it. Each gathers context from previous phase outputs and passes it to the skill.
 
 ## Installation
 
-| Method | Where files live | Best for |
-|--------|------------------|----------|
-| **Marketplace** | `~/.claude/plugins/` (global cache) | Quick setup, don't need files in repo |
-| **npm** | `.claude/` in your project | Ownership, version control, Claude Code for Web |
+| Method          | Where files live                    | Best for                                        |
+|-----------------|-------------------------------------|-------------------------------------------------|
+| **Marketplace** | `~/.claude/plugins/` (global cache) | Quick setup, don't need files in repo           |
+| **npm**         | `.claude/` in your project          | Ownership, version control, Claude Code for Web |
 
 ### Option 1: Claude Marketplace
 
@@ -163,20 +163,30 @@ npx claude-manager remove @leeovery/claude-technical-workflows && npm rm @leeove
 When using the full workflow, it progresses through six distinct phases:
 
 ```
-┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
-│   Research    │──▶│  Discussion   │──▶│ Specification │──▶│   Planning    │──▶│Implementation │──▶│    Review     │
-│   (Phase 1)   │   │   (Phase 2)   │   │   (Phase 3)   │   │   (Phase 4)   │   │   (Phase 5)   │   │   (Phase 6)   │
-├───────────────┤   ├───────────────┤   ├───────────────┤   ├───────────────┤   ├───────────────┤   ├───────────────┤
-│ EXPLORING     │   │ WHAT & WHY    │   │ REFINING      │   │ HOW           │   │ DOING         │   │ VALIDATING    │
-│               │   │               │   │               │   │               │   │               │   │               │
-│ • Ideas       │   │ • Architecture│   │ • Validate    │   │ • Phases      │   │ • Tests first │   │ • Plan check  │
-│ • Market      │   │ • Decisions   │   │ • Filter      │   │ • Tasks       │   │ • Then code   │   │ • Specs check │
-│ • Viability   │   │ • Edge cases  │   │ • Enrich      │   │ • Criteria    │   │ • Commit often│   │ • Test quality│
-│               │   │ • Rationale   │   │ • Standalone  │   │ • Outputs     │   │ • Phase gates │   │ • Code quality│
-└───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘
-        ▲                   ▲                   ▲                   ▲                   ▲                   ▲
-        │                   │                   │                   │                   │                   │
- technical-research  technical-discussion  technical-spec  technical-planning  technical-impl  technical-review
+┌───────────────┐   ┌───────────────┐   ┌───────────────┐
+│   Research    │──▶│  Discussion   │──▶│ Specification │
+│   (Phase 1)   │   │   (Phase 2)   │   │   (Phase 3)   │
+├───────────────┤   ├───────────────┤   ├───────────────┤
+│ EXPLORING     │   │ WHAT & WHY    │   │ REFINING      │
+│               │   │               │   │               │
+│ • Ideas       │   │ • Architecture│   │ • Validate    │
+│ • Market      │   │ • Decisions   │   │ • Filter      │
+│ • Viability   │   │ • Edge cases  │   │ • Enrich      │
+│               │   │ • Rationale   │   │ • Standalone  │
+└───────────────┘   └───────────────┘   └───────────────┘
+                                                │
+                                                ▼
+┌───────────────┐   ┌───────────────┐   ┌───────────────┐
+│    Review     │◀──│Implementation │◀──│   Planning    │
+│   (Phase 6)   │   │   (Phase 5)   │   │   (Phase 4)   │
+├───────────────┤   ├───────────────┤   ├───────────────┤
+│ VALIDATING    │   │ DOING         │   │ HOW           │
+│               │   │               │   │               │
+│ • Plan check  │   │ • Tests first │   │ • Phases      │
+│ • Specs check │   │ • Then code   │   │ • Tasks       │
+│ • Test quality│   │ • Commit often│   │ • Criteria    │
+│ • Code quality│   │ • Phase gates │   │ • Outputs     │
+└───────────────┘   └───────────────┘   └───────────────┘
 ```
 
 **Phase 1 - Research:** Explore ideas from their earliest seed. Investigate market fit, technical feasibility, business viability. Free-flowing exploration that may or may not lead to building something.
@@ -263,16 +273,16 @@ Commands are the input layer: they gather context and pass it to skills. Two typ
 
 ### Workflow Commands
 
-Sequential commands prefixed with `workflow:`. They expect files from previous phases and pass content to skills.
+Sequential commands in `commands/workflow/`. They expect files from previous phases and pass content to skills.
 
 | Command                                                                              | Description                                                                                                                                                                                                |
 |--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [**/workflow:start-research**](commands/workflow/start-research.md)                  | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion.                                                                                     |
-| [**/workflow:start-discussion**](commands/workflow/start-discussion.md)              | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation.                                                               |
-| [**/workflow:start-specification**](commands/workflow/start-specification.md)        | Start a specification session from existing discussion(s). Automatically analyses multiple discussions for natural groupings and consolidates them into unified specifications.                            |
-| [**/workflow:start-planning**](commands/workflow/start-planning.md)                  | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md, Beads). |
-| [**/workflow:start-implementation**](commands/workflow/start-implementation.md)      | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
-| [**/workflow:start-review**](commands/workflow/start-review.md)                      | Start reviewing completed work. Validates implementation against plan tasks and acceptance criteria.                                                                                                        |
+| [**/start-research**](commands/workflow/start-research.md)                  | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion.                                                                                     |
+| [**/start-discussion**](commands/workflow/start-discussion.md)              | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation.                                                               |
+| [**/start-specification**](commands/workflow/start-specification.md)        | Start a specification session from existing discussion(s). Automatically analyses multiple discussions for natural groupings and consolidates them into unified specifications.                            |
+| [**/start-planning**](commands/workflow/start-planning.md)                  | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md, Beads). |
+| [**/start-implementation**](commands/workflow/start-implementation.md)      | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
+| [**/start-review**](commands/workflow/start-review.md)                      | Start reviewing completed work. Validates implementation against plan tasks and acceptance criteria.                                                                                                        |
 
 ### Utility Commands
 
@@ -280,8 +290,8 @@ Helpers for navigating and understanding the workflow.
 
 | Command                                                                              | Description                                                                                                                                 |
 |--------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| [**/workflow:status**](commands/workflow/status.md)                                  | Show workflow status - what topics exist at each phase, and suggested next steps.                                                           |
-| [**/workflow:view-plan**](commands/workflow/view-plan.md)                            | View a plan's tasks and progress, regardless of output format.                                                                              |
+| [**/status**](commands/workflow/status.md)                                  | Show workflow status - what topics exist at each phase, and suggested next steps.                                                           |
+| [**/view-plan**](commands/workflow/view-plan.md)                            | View a plan's tasks and progress, regardless of output format.                                                                              |
 
 ### Standalone Commands
 
