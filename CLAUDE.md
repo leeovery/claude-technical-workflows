@@ -51,7 +51,7 @@ scripts/
 
 ## Command Architecture
 
-**Workflow commands** (`workflow:*`) are part of the sequential workflow system. They expect files from previous phases and pass content to skills.
+**Workflow commands** (in `commands/workflow/`) are part of the sequential workflow system. They expect files from previous phases and pass content to skills.
 
 **Standalone commands** (no prefix) can be used independently. They gather inputs flexibly (inline, files, or prompts) and pass to skills.
 

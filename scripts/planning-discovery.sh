@@ -3,7 +3,7 @@
 # planning-discovery.sh
 #
 # Discovers the current state of specifications and plans
-# for the workflow:start-planning command.
+# for the /start-planning command.
 #
 # Outputs structured YAML that the command can consume directly.
 #

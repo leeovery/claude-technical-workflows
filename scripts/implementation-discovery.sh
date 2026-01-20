@@ -3,7 +3,7 @@
 # implementation-discovery.sh
 #
 # Discovers the current state of plans and environment setup
-# for the workflow:start-implementation command.
+# for the /start-implementation command.
 #
 # Outputs structured YAML that the command can consume directly.
 #

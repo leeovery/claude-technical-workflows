@@ -3,7 +3,7 @@
 # review-discovery.sh
 #
 # Discovers the current state of plans and specifications
-# for the workflow:start-review command.
+# for the /start-review command.
 #
 # Outputs structured YAML that the command can consume directly.
 #

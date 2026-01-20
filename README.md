@@ -263,7 +263,7 @@ Commands are the input layer: they gather context and pass it to skills. Two typ
 
 ### Workflow Commands
 
-Sequential commands prefixed with `workflow:`. They expect files from previous phases and pass content to skills.
+Sequential commands in `commands/workflow/`. They expect files from previous phases and pass content to skills.
 
 | Command                                                                              | Description                                                                                                                                                                                                |
 |--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

@@ -3,7 +3,7 @@
 # discussion-discovery.sh
 #
 # Discovers the current state of research, discussions, and cache
-# for the workflow:start-discussion command.
+# for the /start-discussion command.
 #
 # Outputs structured YAML that the command can consume directly.
 #
