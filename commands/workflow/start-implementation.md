@@ -1,9 +1,6 @@
 ---
 description: Start an implementation session from an existing plan. Discovers available plans, checks environment setup, and invokes the technical-implementation skill.
-allowed-tools: Bash(./scripts/implementation-discovery.sh), Bash(mkdir -p docs/workflow)
 ---
-
-Invoke the **technical-implementation** skill for this conversation.
 
 ## Workflow Context
 
@@ -30,65 +27,36 @@ This is **Phase 5** of the six-phase workflow:
 - Do NOT make assumptions about what the user wants
 - Complete each step fully before moving to the next
 
----
-
 ## Instructions
 
 Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
-**CRITICAL**: After each user interaction, STOP and wait for their response before proceeding. Never assume or anticipate user choices.
+Before beginning, discover existing work and gather necessary information.
 
----
+## Important
 
-## Step 1: Run Discovery Script
+Use simple, individual commands. Never combine multiple operations into bash loops or one-liners. Execute commands one at a time.
 
-Run the discovery script to gather current state:
+## Step 1: Discover Existing Plans
 
-```bash
-./scripts/implementation-discovery.sh
-```
+Scan the codebase for plans:
 
-This outputs structured YAML. Parse it to understand:
+1. **Find plans**: Look in `docs/workflow/planning/`
+   - Run `ls docs/workflow/planning/` to list plan files
+   - Each file is named `{topic}.md`
 
-**From `plans` array:**
-- Each plan's name and format
-- Each plan's dependencies (with state: unresolved/resolved/satisfied_externally)
-
-**From `environment` section:**
-- Whether environment setup file exists
-
-**From `summary` section:**
-- Total plan count
-
-**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
-
-→ Proceed to **Step 2**.
-
----
+2. **Check plan format**: For each plan file
+   - Run `head -10 docs/workflow/planning/{topic}.md` to read the frontmatter
+   - Note the `format:` field
+   - Do NOT use bash loops - run separate `head` commands for each topic
 
 ## Step 2: Present Options to User
 
 Show what you found.
 
-#### If no plans exist
+> **Note:** If no plans exist, inform the user that this workflow is designed to be executed in sequence. They need to create plans from specifications prior to implementation using `/start-planning`.
 
-Inform the user that this workflow is designed to be executed in sequence. They need to create plans from specifications prior to implementation using `/start-planning`.
-
-**STOP.** Wait for user acknowledgment. Do not proceed.
-
-#### If exactly ONE plan exists
-
-Auto-select and proceed. Do not ask for confirmation.
-
-```
-Single plan found: {topic}
-
-Proceeding with this plan.
-```
-
-→ Proceed to **Step 3: Check External Dependencies**.
-
-#### If MULTIPLE plans exist
+> **Auto-select:** If exactly one plan exists, automatically select it and proceed to Step 3. Inform the user which plan was selected. Do not ask for confirmation.
 
 ```
 Plans found:
@@ -98,10 +66,6 @@ Plans found:
 Which plan would you like to implement?
 ```
 
-**STOP.** Wait for user to select a plan, then proceed to **Step 3**.
-
----
-
 ## Step 3: Check External Dependencies
 
 **This step is a gate.** Implementation cannot proceed if dependencies are not satisfied.
@@ -110,7 +74,7 @@ See **[dependencies.md](../../skills/technical-planning/references/dependencies.
 
 After the user selects a plan:
 
-1. **Read the External Dependencies section** from the plan index file (use discovery state)
+1. **Read the External Dependencies section** from the plan index file
 2. **Check each dependency** according to its state:
    - **Unresolved**: Block
    - **Resolved**: Check if task is complete (load output format reference, follow "Querying Dependencies" section)
@@ -121,7 +85,7 @@ After the user selects a plan:
 If ANY dependency is unresolved or incomplete, **stop and present**:
 
 ```
-Implementation blocked. Missing dependencies:
+⚠️ Implementation blocked. Missing dependencies:
 
 UNRESOLVED (not yet planned):
 - billing-system: Invoice generation for order completion
@@ -139,8 +103,6 @@ OPTIONS:
 3. Run /link-dependencies to wire up any recently completed plans
 ```
 
-**STOP.** Wait for user response.
-
 ### Escape Hatch
 
 If the user says a dependency has been implemented outside the workflow:
@@ -153,57 +115,28 @@ If the user says a dependency has been implemented outside the workflow:
 
 ### All Dependencies Satisfied
 
-If all dependencies are resolved and complete (or satisfied externally):
+If all dependencies are resolved and complete (or satisfied externally), proceed to Step 4.
 
 ```
-External dependencies satisfied:
+✅ External dependencies satisfied:
 - billing-system: Invoice generation → beads-b7c2.1.1 (complete)
 - authentication: User context → beads-a3f8.1.2 (complete)
 
 Proceeding with environment setup...
 ```
 
-→ Proceed to **Step 4**.
-
----
-
 ## Step 4: Check Environment Setup
 
 > **IMPORTANT**: This step is for **information gathering only**. Do NOT execute any setup commands at this stage. Execution instructions are in the technical-implementation skill.
 
-Check the `environment.setup_exists` value from the discovery state.
+After the user selects a plan:
 
-#### If environment setup file exists
-
-Note the file location for the skill handoff.
-
-→ Proceed to **Step 5**.
-
-#### If environment setup file does NOT exist
-
-Ask: "Are there any environment setup instructions I should follow?"
-
-**STOP.** Wait for user response.
-
-#### If user provides instructions
-
-Save them to `docs/workflow/environment-setup.md`:
-
-```bash
-mkdir -p docs/workflow
-```
-
-Write the file with the user's instructions. Commit and push to Git. See `skills/technical-implementation/references/environment-setup.md` for format guidance.
-
-→ Proceed to **Step 5**.
-
-#### If user says no
-
-Create `docs/workflow/environment-setup.md` with "No special setup required." and commit. This prevents asking again in future sessions.
-
-→ Proceed to **Step 5**.
-
----
+1. Check if `docs/workflow/environment-setup.md` exists
+2. If it exists, note the file location for the skill handoff
+3. If missing, ask: "Are there any environment setup instructions I should follow?"
+   - If the user provides instructions, save them to `docs/workflow/environment-setup.md`, commit and push to Git
+   - If the user says no, create `docs/workflow/environment-setup.md` with "No special setup required." and commit. This prevents asking again in future sessions.
+   - See `skills/technical-implementation/references/environment-setup.md` for format guidance
 
 ## Step 5: Ask About Scope
 
@@ -220,21 +153,9 @@ How would you like to proceed?
 Which approach?
 ```
 
-**STOP.** Wait for user response.
-
-#### If user chooses specific phase or task
-
-Ask them to specify which one.
-
-**STOP.** Wait for user to specify, then proceed to **Step 6**.
+If they choose a specific phase or task, ask them to specify which one.
 
 > **Note:** Do NOT verify that the phase or task exists. Accept the user's answer and pass it to the skill. Validation happens during the implementation phase.
-
-#### If user chooses all phases or next available
-
-→ Proceed to **Step 6**.
-
----
 
 ## Step 6: Invoke the Skill
 
@@ -242,8 +163,7 @@ After completing the steps above, this command's purpose is fulfilled.
 
 Invoke the [technical-implementation](../../skills/technical-implementation/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
-#### Handoff Format
-
+**Example handoff:**
 ```
 Implementation session for: {topic}
 Plan: docs/workflow/planning/{topic}.md
@@ -253,13 +173,9 @@ Scope: {all phases | specific phase | specific task | next-available}
 Dependencies: All satisfied ✓
 Environment setup: {completed | not needed}
 
----
 Invoke the technical-implementation skill.
 ```
 
----
-
 ## Notes
 
-- Ask questions clearly and STOP after each to wait for responses
-- Dependencies are a hard gate - do not proceed if any are unresolved
+- Ask questions clearly and wait for responses before proceeding

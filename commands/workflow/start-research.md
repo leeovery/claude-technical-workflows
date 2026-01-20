@@ -23,8 +23,6 @@ This is **Phase 1** of the six-phase workflow:
 
 ## Instructions
 
-**CRITICAL**: After each user interaction, STOP and wait for their response before proceeding. Never assume or anticipate user choices.
-
 Ask these questions to gather context:
 
 1. **What's on your mind?**
@@ -39,20 +37,10 @@ Ask these questions to gather context:
    - Technical feasibility? Market landscape? Business model?
    - Or just talk it through and see where it goes?
 
-**STOP.** Ask these questions clearly and wait for responses before proceeding.
-
----
+Ask these questions clearly and wait for responses before proceeding.
 
 ## Invoke the Skill
 
 After completing the steps above, this command's purpose is fulfilled.
 
 Invoke the [technical-research](../../skills/technical-research/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
-
----
-
-## Notes
-
-- Research is exploratory - there's no wrong direction
-- Output goes to `docs/workflow/research/` with semantic file names
-- This phase naturally leads to Discussion when ready to make decisions
