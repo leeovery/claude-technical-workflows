@@ -43,4 +43,4 @@ Ask these questions clearly and wait for responses before proceeding.
 
 After completing the steps above, this command's purpose is fulfilled.
 
-Invoke the [technical-research](../skills/technical-research/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
+Invoke the [technical-research](../../skills/technical-research/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.

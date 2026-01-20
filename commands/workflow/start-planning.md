@@ -94,7 +94,7 @@ Ask: **Which feature specification would you like to plan?**
 
 Ask: **Where should this plan live?**
 
-Load **[output-formats.md](../skills/technical-planning/references/output-formats.md)** and present the available formats to help the user choose. Then load the corresponding output adapter for that format's setup requirements.
+Load **[output-formats.md](../../skills/technical-planning/references/output-formats.md)** and present the available formats to help the user choose. Then load the corresponding output adapter for that format's setup requirements.
 
 ## Step 5: Gather Additional Context
 
@@ -125,7 +125,7 @@ These specifications contain validated architectural decisions that should infor
 
 After completing the steps above, this command's purpose is fulfilled.
 
-Invoke the [technical-planning](../skills/technical-planning/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
+Invoke the [technical-planning](../../skills/technical-planning/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
 **Example handoff:**
 ```

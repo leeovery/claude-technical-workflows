@@ -519,7 +519,7 @@ Before invoking the specification skill:
 
 After completing all steps above, this command's purpose is fulfilled.
 
-Invoke the [technical-specification](../skills/technical-specification/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
+Invoke the [technical-specification](../../skills/technical-specification/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
 #### Handoff Format
 
