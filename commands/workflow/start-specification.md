@@ -68,7 +68,7 @@ This outputs structured YAML. Parse it to understand:
 ```
 No discussions found in docs/workflow/discussion/
 
-The specification phase requires a completed discussion. Please run /workflow:start-discussion first to document the technical decisions, edge cases, and rationale before creating a specification.
+The specification phase requires a completed discussion. Please run /start-discussion first to document the technical decisions, edge cases, and rationale before creating a specification.
 ```
 
 **STOP.** Wait for user acknowledgment. Do not proceed.
@@ -82,7 +82,7 @@ The following discussions are still exploring:
   - {topic-1} (exploring)
   - {topic-2} (exploring)
 
-Please complete the discussion phase before creating specifications. Run /workflow:start-discussion to continue a discussion.
+Please complete the discussion phase before creating specifications. Run /start-discussion to continue a discussion.
 ```
 
 **STOP.** Wait for user acknowledgment. Do not proceed.

@@ -65,7 +65,7 @@ This outputs structured YAML. Parse it to understand:
 ```
 No specifications found in docs/workflow/specification/
 
-The planning phase requires a completed specification. Please run /workflow:start-specification first to validate and refine the discussion content into a standalone specification before creating a plan.
+The planning phase requires a completed specification. Please run /start-specification first to validate and refine the discussion content into a standalone specification before creating a plan.
 ```
 
 **STOP.** Wait for user acknowledgment. Do not proceed.
@@ -79,7 +79,7 @@ The following specifications are not ready for planning:
   - {topic-1} (building) - still in progress
   - {topic-2} (cross-cutting) - reference only, not a planning target
 
-Please complete the specification phase before creating a plan. Run /workflow:start-specification to continue a specification.
+Please complete the specification phase before creating a plan. Run /start-specification to continue a specification.
 ```
 
 **STOP.** Wait for user acknowledgment. Do not proceed.

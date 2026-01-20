@@ -67,7 +67,7 @@ This outputs structured YAML. Parse it to understand:
 ```
 No plans found in docs/workflow/planning/
 
-The review phase requires a completed implementation based on a plan. Please run /workflow:start-planning first to create a plan, then /workflow:start-implementation to build it.
+The review phase requires a completed implementation based on a plan. Please run /start-planning first to create a plan, then /start-implementation to build it.
 ```
 
 **STOP.** Wait for user acknowledgment. Do not proceed.

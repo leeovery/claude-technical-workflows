@@ -67,7 +67,7 @@ This outputs structured YAML. Parse it to understand:
 ```
 No plans found in docs/workflow/planning/
 
-The implementation phase requires a completed plan. Please run /workflow:start-planning first to create a plan from a specification.
+The implementation phase requires a completed plan. Please run /start-planning first to create a plan from a specification.
 ```
 
 **STOP.** Wait for user acknowledgment. Do not proceed.
@@ -148,7 +148,7 @@ Implementation blocked. Missing dependencies:
 
 UNRESOLVED (not yet planned):
   - {topic}: {description}
-    → No plan exists for this topic. Create with /workflow:start-planning or mark as satisfied externally.
+    → No plan exists for this topic. Create with /start-planning or mark as satisfied externally.
 
 INCOMPLETE (planned but not implemented):
   - {task-id} ({topic}): {description}

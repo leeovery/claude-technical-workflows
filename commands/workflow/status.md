@@ -45,7 +45,7 @@ Adapt based on what exists:
 Based on what exists, offer relevant options. Don't assume linear progression - topics may have dependencies on each other.
 
 **If nothing exists:**
-- "Start with `/workflow:start-research` to explore ideas, or `/workflow:start-discussion` if you already know what you're building."
+- "Start with `/start-research` to explore ideas, or `/start-discussion` if you already know what you're building."
 
 **If topics exist at various stages**, summarise options without being prescriptive:
 - Topics in discussion can move to specification
@@ -62,7 +62,7 @@ Keep suggestions brief - the user knows their project's dependencies better than
 If planning files exist, let the user know they can view plan details:
 
 ```
-To view a plan's tasks and progress, use /workflow:view-plan
+To view a plan's tasks and progress, use /view-plan
 ```
 
 ## Notes
