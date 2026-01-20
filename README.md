@@ -84,7 +84,7 @@ Start with `/start-research` or `/start-discussion` and follow the flow. Each ph
 │                        COMMANDS                             │
 │  (gather inputs from files, prompts, inline context)        │
 ├─────────────────────────────────────────────────────────────┤
-│  /start-spec     /start-feature    (your custom)   │
+│  /start-specification   /start-feature   (your custom)  │
 │         │                       │                 │         │
 │         └───────────┬───────────┘                 │         │
 │                     ▼                             ▼         │
@@ -176,7 +176,7 @@ When using the full workflow, it progresses through six distinct phases:
 └───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘
         ▲                   ▲                   ▲                   ▲                   ▲                   ▲
         │                   │                   │                   │                   │                   │
- technical-research  technical-discussion  technical-spec  technical-planning  technical-impl  technical-review
+ technical-research  technical-discussion  technical-specification  technical-planning  technical-implementation  technical-review
 ```
 
 **Phase 1 - Research:** Explore ideas from their earliest seed. Investigate market fit, technical feasibility, business viability. Free-flowing exploration that may or may not lead to building something.
