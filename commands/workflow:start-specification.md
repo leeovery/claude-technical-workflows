@@ -1,6 +1,6 @@
 ---
 description: Start a specification session from existing discussions. Discovers available discussions, offers consolidation assessment for multiple discussions, and invokes the technical-specification skill.
-allowed-tools: Bash(./scripts/discover-spec-state.sh), Bash(mkdir:*), Bash(rm:*)
+allowed-tools: Bash(./scripts/discover-spec-state.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/discussion-consolidation-analysis.md)
 ---
 
 Invoke the **technical-specification** skill for this conversation.
