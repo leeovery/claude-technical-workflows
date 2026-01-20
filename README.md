@@ -163,17 +163,30 @@ npx claude-manager remove @leeovery/claude-technical-workflows && npm rm @leeove
 When using the full workflow, it progresses through six distinct phases:
 
 ```
-┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
-│   Research    │──▶│  Discussion   │──▶│ Specification │──▶│   Planning    │──▶│Implementation │──▶│    Review     │
-│   (Phase 1)   │   │   (Phase 2)   │   │   (Phase 3)   │   │   (Phase 4)   │   │   (Phase 5)   │   │   (Phase 6)   │
-├───────────────┤   ├───────────────┤   ├───────────────┤   ├───────────────┤   ├───────────────┤   ├───────────────┤
-│ EXPLORING     │   │ WHAT & WHY    │   │ REFINING      │   │ HOW           │   │ DOING         │   │ VALIDATING    │
-│               │   │               │   │               │   │               │   │               │   │               │
-│ • Ideas       │   │ • Architecture│   │ • Validate    │   │ • Phases      │   │ • Tests first │   │ • Plan check  │
-│ • Market      │   │ • Decisions   │   │ • Filter      │   │ • Tasks       │   │ • Then code   │   │ • Specs check │
-│ • Viability   │   │ • Edge cases  │   │ • Enrich      │   │ • Criteria    │   │ • Commit often│   │ • Test quality│
-│               │   │ • Rationale   │   │ • Standalone  │   │ • Outputs     │   │ • Phase gates │   │ • Code quality│
-└───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘
+          ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
+          │   Research    │──▶│  Discussion   │──▶│ Specification │
+          │   (Phase 1)   │   │   (Phase 2)   │   │   (Phase 3)   │
+          ├───────────────┤   ├───────────────┤   ├───────────────┤
+          │ EXPLORING     │   │ WHAT & WHY    │   │ REFINING      │
+          │               │   │               │   │               │
+          │ • Ideas       │   │ • Architecture│   │ • Validate    │
+          │ • Market      │   │ • Decisions   │   │ • Filter      │
+          │ • Viability   │   │ • Edge cases  │   │ • Enrich      │
+          │               │   │ • Rationale   │   │ • Standalone  │
+          └───────────────┘   └───────────────┘   └───────────────┘
+                                                          │
+                                                          ▼
+          ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
+          │    Review     │◀──│Implementation │◀──│   Planning    │
+          │   (Phase 6)   │   │   (Phase 5)   │   │   (Phase 4)   │
+          ├───────────────┤   ├───────────────┤   ├───────────────┤
+          │ VALIDATING    │   │ DOING         │   │ HOW           │
+          │               │   │               │   │               │
+          │ • Plan check  │   │ • Tests first │   │ • Phases      │
+          │ • Specs check │   │ • Then code   │   │ • Tasks       │
+          │ • Test quality│   │ • Commit often│   │ • Criteria    │
+          │ • Code quality│   │ • Phase gates │   │ • Outputs     │
+          └───────────────┘   └───────────────┘   └───────────────┘
 ```
 
 **Phase 1 - Research:** Explore ideas from their earliest seed. Investigate market fit, technical feasibility, business viability. Free-flowing exploration that may or may not lead to building something.
