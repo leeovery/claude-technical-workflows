@@ -30,20 +30,6 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 ---
 
-## Flow Summary
-
-```
-Step 1: Run Discovery → Step 2: Prerequisites → Step 3: Present Status →
-[If single discussion: Skip to Step 10]
-[If multiple discussions: Step 4: Offer Assessment]
-  → Step 5: Gather Analysis Context → Step 6: Check Cache
-  → Step 7: Analyze (if needed) → Step 8: Present Options
-  → Step 9: Select Grouping
-→ Step 10: Confirm Selection → Step 11: Gather Context → Step 12: Invoke Skill
-```
-
----
-
 ## Step 1: Run Discovery Script
 
 Run the discovery script to gather current state:
