@@ -506,7 +506,7 @@ Before invoking the specification skill:
 2. Any constraints or changes since the discussion(s) concluded?
 3. Are there existing partial implementations or related documentation I should review?
 
-(Press enter to skip if none)
+(Say 'none' or 'continue' if nothing to add)
 ```
 
 **STOP.** Wait for user response.
