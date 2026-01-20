@@ -165,8 +165,8 @@ Which approach?
 ```
 Which specification would you like to continue?
 
-1. {spec-1} (draft) - sources: {topics}
-2. {spec-2} (concluded) - sources: {topics}
+1. {spec-1} ({status}) - sources: {topics}
+2. {spec-2} ({status}) - sources: {topics}
 ```
 
 **STOP.** Wait for user to pick, then skip to **Step 9**.
