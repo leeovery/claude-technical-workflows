@@ -1,7 +1,5 @@
 ---
 description: Start a specification session from existing discussions. Discovers available discussions, offers consolidation assessment for multiple discussions, and invokes the technical-specification skill.
-hooks:
-  pre: ./scripts/discover-spec-state.sh
 ---
 
 Invoke the **technical-specification** skill for this conversation.
@@ -34,7 +32,7 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 ## Flow Summary
 
 ```
-Step 1: Read State → Step 2: Prerequisites → Step 3: Present Status →
+Step 1: Run Discovery → Step 2: Prerequisites → Step 3: Present Status →
 [If single discussion: Skip to Step 10]
 [If multiple discussions: Step 4: Offer Assessment]
   → Step 5: Gather Analysis Context → Step 6: Check Cache
@@ -45,9 +43,15 @@ Step 1: Read State → Step 2: Prerequisites → Step 3: Present Status →
 
 ---
 
-## Step 1: Read Discovery State
+## Step 1: Run Discovery Script
 
-The pre-command hook has provided structured state. Parse the YAML output to understand:
+Run the discovery script to gather current state:
+
+```bash
+./scripts/discover-spec-state.sh
+```
+
+This outputs structured YAML. Parse it to understand:
 
 **From `discussions` array:**
 - Each discussion's name, status, and whether it has an individual specification
@@ -64,7 +68,7 @@ The pre-command hook has provided structured state. Parse the YAML output to und
 - Whether the cache is still valid (`is_valid: true/false`)
 - The reason if invalid
 
-**IMPORTANT**: Do NOT run bash commands for discovery. All state is provided in the hook output.
+**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
 
 ---
 
