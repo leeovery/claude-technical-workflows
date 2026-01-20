@@ -40,9 +40,7 @@ What's on your mind?
 2. What prompted this - a problem, opportunity, curiosity?
 ```
 
-**STOP.** Wait for user response. Do not proceed until they answer.
-
-→ Proceed to **Step 2**.
+**STOP.** Wait for user response, then proceed to **Step 2**.
 
 ---
 
@@ -57,9 +55,7 @@ What do you already know?
 2. Constraints or context I should be aware of?
 ```
 
-**STOP.** Wait for user response. Do not proceed until they answer.
-
-→ Proceed to **Step 3**.
+**STOP.** Wait for user response, then proceed to **Step 3**.
 
 ---
 
@@ -76,9 +72,7 @@ Where should we start?
 4. Or just talk it through and see where it goes?
 ```
 
-**STOP.** Wait for user response. Do not proceed until they answer.
-
-→ Proceed to **Step 4**.
+**STOP.** Wait for user response, then proceed to **Step 4**.
 
 ---
 

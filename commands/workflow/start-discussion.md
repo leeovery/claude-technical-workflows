@@ -75,9 +75,7 @@ Starting fresh - no prior research or discussions found.
 What topic would you like to discuss?
 ```
 
-**STOP.** Wait for user to provide a topic.
-
-→ Skip to **Step 7: Gather Context** with the fresh topic path.
+**STOP.** Wait for user to provide a topic, then skip to **Step 7: Gather Context** with the fresh topic path.
 
 #### Otherwise (research and/or discussions exist)
 
@@ -263,9 +261,10 @@ Which approach?
 #### If user chose "From research" (e.g., "1", "research 1", topic name)
 
 **If user specified a topic inline:**
-- Identify the selected topic from Step 5's numbered list
-- Note the source file and line numbers
-- → Proceed to **Step 7: Gather Context** with research path
+
+Identify the selected topic from Step 5's numbered list. Note the source file and line numbers.
+
+→ Proceed to **Step 7: Gather Context** with research path.
 
 **If user just said "from research" without specifying:**
 
@@ -273,13 +272,15 @@ Which approach?
 Which research topic would you like to discuss? (Enter a number or topic name)
 ```
 
-**STOP.** Wait for response, then → Proceed to **Step 7: Gather Context** with research path.
+**STOP.** Wait for response, then proceed to **Step 7: Gather Context** with research path.
 
 #### If user chose "Continue discussion" (e.g., "continue auth-flow")
 
 **If user specified a discussion inline:**
-- Identify the selected discussion from Step 5's list
-- → Proceed to **Step 7: Gather Context** with continue path
+
+Identify the selected discussion from Step 5's list.
+
+→ Proceed to **Step 7: Gather Context** with continue path.
 
 **If user just said "continue discussion" without specifying:**
 
@@ -287,7 +288,7 @@ Which research topic would you like to discuss? (Enter a number or topic name)
 Which discussion would you like to continue?
 ```
 
-**STOP.** Wait for response, then → Proceed to **Step 7: Gather Context** with continue path.
+**STOP.** Wait for response, then proceed to **Step 7: Gather Context** with continue path.
 
 #### If user chose "Fresh topic"
 
@@ -322,9 +323,7 @@ Before we begin:
 3. Are there specific files in the codebase I should review first?
 ```
 
-**STOP.** Wait for user response.
-
-→ Proceed to **Step 8**.
+**STOP.** Wait for user response, then proceed to **Step 8**.
 
 #### If CONTINUING existing discussion
 
@@ -338,9 +337,7 @@ I've read the existing discussion (status: {status}).
 What would you like to focus on in this session?
 ```
 
-**STOP.** Wait for user response.
-
-→ Proceed to **Step 8**.
+**STOP.** Wait for user response, then proceed to **Step 8**.
 
 ---
 

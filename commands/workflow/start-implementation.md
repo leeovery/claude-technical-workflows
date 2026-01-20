@@ -119,9 +119,7 @@ Which plan would you like to implement?
 2. {topic-2} - blocked (2 unresolved dependencies)
 ```
 
-**STOP.** Wait for user to pick a number.
-
-→ Proceed to **Step 4: Check External Dependencies**.
+**STOP.** Wait for user to pick a number, then proceed to **Step 4**.
 
 ---
 
@@ -258,11 +256,9 @@ Which approach?
 Which phase/task would you like to implement?
 ```
 
-**STOP.** Wait for user to specify.
+**STOP.** Wait for user to specify, then proceed to **Step 7**.
 
 Note: Do NOT validate that the phase or task exists. Accept the user's answer and pass it to the skill. Validation happens during implementation.
-
-→ Proceed to **Step 7**.
 
 #### If user chooses all phases or next available
 

@@ -150,9 +150,9 @@ Multiple tasks could satisfy dependency "{topic}: {description}":
 Which task(s) should this dependency link to?
 ```
 
-**STOP.** Wait for user to choose.
+**STOP.** Wait for user to choose, then continue processing remaining dependencies.
 
-→ After processing all dependencies, proceed to **Step 5**.
+After all dependencies are processed, proceed to **Step 5**.
 
 ---
 
@@ -183,9 +183,9 @@ For each plan that was a dependency target (i.e., other plans depend on it):
 Plan {topic-X} depends on tasks you just linked. Update its External Dependencies section? (y/n)
 ```
 
-**STOP.** Wait for user response for each.
+**STOP.** Wait for user response for each plan.
 
-→ Proceed to **Step 7**.
+After all plans are checked, proceed to **Step 7**.
 
 ---
 

@@ -120,9 +120,7 @@ Which plan would you like to review the implementation for?
 2. {topic-2} - no specification
 ```
 
-**STOP.** Wait for user to pick a number.
-
-→ Proceed to **Step 4: Identify Implementation Scope**.
+**STOP.** Wait for user to pick a number, then proceed to **Step 4**.
 
 ---
 
@@ -148,15 +146,17 @@ Which approach?
 
 **STOP.** Wait for user response.
 
+#### If user chooses "Review all changes"
+
+→ Proceed to **Step 5**.
+
 #### If user chooses specific directories or files
 
 ```
 Which directories/files should I review?
 ```
 
-**STOP.** Wait for user to specify.
-
-→ Proceed to **Step 5**.
+**STOP.** Wait for user to specify, then proceed to **Step 5**.
 
 #### If git has NO changes
 
@@ -180,7 +180,7 @@ Which approach?
 Which directories/files should I review?
 ```
 
-**STOP.** Wait for user to specify.
+**STOP.** Wait for user to specify, then proceed to **Step 5**.
 
 #### If user chooses recent commits
 
@@ -188,9 +188,7 @@ Which directories/files should I review?
 How many recent commits should I review?
 ```
 
-**STOP.** Wait for user to specify.
-
-→ Proceed to **Step 5**.
+**STOP.** Wait for user to specify, then proceed to **Step 5**.
 
 ---
 

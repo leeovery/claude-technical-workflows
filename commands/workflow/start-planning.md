@@ -138,9 +138,7 @@ Which feature specification would you like to plan?
 3. {topic-3} - plan exists (will create new plan)
 ```
 
-**STOP.** Wait for user to pick a number.
-
-→ Proceed to **Step 4: Choose Output Format**.
+**STOP.** Wait for user to pick a number, then proceed to **Step 4**.
 
 ---
 
@@ -154,11 +152,9 @@ Where should this plan live?
 
 Load **[output-formats.md](../../skills/technical-planning/references/output-formats.md)** and present the available formats with brief descriptions to help the user choose.
 
-**STOP.** Wait for user to choose a format.
+**STOP.** Wait for user to choose a format, then proceed to **Step 5**.
 
-Once chosen, load the corresponding output adapter (`output-{format}.md`) to understand the setup requirements.
-
-→ Proceed to **Step 5**.
+Note: After user chooses, load the corresponding output adapter (`output-{format}.md`) to understand the setup requirements before proceeding.
 
 ---
 
@@ -173,9 +169,7 @@ Before creating the plan:
 (Press enter to skip if none)
 ```
 
-**STOP.** Wait for user response.
-
-→ Proceed to **Step 6**.
+**STOP.** Wait for user response, then proceed to **Step 6**.
 
 ---
 
