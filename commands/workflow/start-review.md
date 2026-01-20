@@ -24,7 +24,7 @@ This is **Phase 6** of the six-phase workflow:
 
 ## Instructions
 
-Follow these steps EXACTLY as written. Do not skip steps or combine them. Present output using the EXACT format shown in examples - do not simplify or alter the formatting.
+Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 **CRITICAL**: After each user interaction, STOP and wait for their response before proceeding. Never assume or anticipate user choices.
 
@@ -43,12 +43,9 @@ This outputs structured YAML. Parse it to understand:
 **From `plans` array:**
 - Each plan's name, format, and whether it has a corresponding specification
 
-**From `specifications` array:**
-- Each specification's name, status, and type
-
 **From `git_status` section:**
 - Whether there are uncommitted changes
-- List of changed files and directories
+- List of changed files
 
 **From `summary` section:**
 - Total plan count
@@ -78,49 +75,27 @@ The review phase requires a completed implementation based on a plan. Please run
 
 ---
 
-## Step 3: Present Status & Select Plan
+## Step 3: Present Options to User
 
-Show the current state clearly. Use this EXACT format:
+Show what you found:
 
 ```
-Workflow Status: Review Phase
+Plans found:
+  {topic-1} (format: {format})
+  {topic-2} (format: {format})
 
-Plans:
-  • {topic-1} (format: {format}) - has specification
-  • {topic-2} (format: {format}) - no specification
-
-{If git has changes:}
-Recent Changes:
-  {directory-1}/: {N} files
-  {directory-2}/: {N} files
-
-{N} plans available for review
+Which plan would you like to review the implementation for?
 ```
-
-#### Routing Based on State
 
 #### If exactly ONE plan exists
 
 Auto-select and proceed. Do not ask for confirmation.
 
-```
-Single plan found: {topic}
-
-Proceeding with this plan.
-```
-
-→ Proceed to **Step 4: Identify Implementation Scope**.
+→ Proceed to **Step 4**.
 
 #### If MULTIPLE plans exist
 
-```
-Which plan would you like to review the implementation for?
-
-1. {topic-1} - has specification
-2. {topic-2} - no specification
-```
-
-**STOP.** Wait for user to pick a number, then proceed to **Step 4**.
+**STOP.** Wait for user to select a plan, then proceed to **Step 4**.
 
 ---
 
@@ -130,7 +105,7 @@ Determine what code to review:
 
 1. **Check git status** - Use the `git_status` section from the discovery state to see what files have changed
 
-2. **Ask user** if scope is unclear:
+2. **Ask user** if unclear:
 
 ```
 What code should I review? (all changes, specific directories, or specific files)
@@ -142,7 +117,7 @@ What code should I review? (all changes, specific directories, or specific files
 
 ## Step 5: Locate Specification (Optional)
 
-Check if a specification exists for the selected plan:
+Check if a specification exists:
 
 1. **Look for specification**: Check if `docs/workflow/specification/{topic}.md` exists (use `has_specification` from discovery state)
 
@@ -167,7 +142,7 @@ Review session for: {topic}
 Plan: docs/workflow/planning/{topic}.md
 Format: {format}
 Specification: {docs/workflow/specification/{topic}.md | not available}
-Scope: {all changes | directories: X, Y | files: A, B | last N commits}
+Scope: {implementation scope}
 
 ---
 Invoke the technical-review skill.

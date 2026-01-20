@@ -22,11 +22,21 @@ This is **Phase 5** of the six-phase workflow:
 
 ---
 
+## IMPORTANT: Follow these steps EXACTLY. Do not skip steps.
+
+- Ask each question and WAIT for a response before proceeding
+- Do NOT install anything or invoke tools until Step 6
+- Even if the user's initial prompt seems to answer a question, still confirm with them at the appropriate step
+- Do NOT make assumptions about what the user wants
+- Complete each step fully before moving to the next
+
+---
+
 ## Instructions
 
-Follow these steps EXACTLY as written. Do not skip steps or combine them. Present output using the EXACT format shown in examples - do not simplify or alter the formatting.
+Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
-**CRITICAL**: After each user interaction, STOP and wait for their response before proceeding. Never assume or anticipate user choices. Do NOT install anything or invoke tools until the final step.
+**CRITICAL**: After each user interaction, STOP and wait for their response before proceeding. Never assume or anticipate user choices.
 
 ---
 
@@ -43,16 +53,12 @@ This outputs structured YAML. Parse it to understand:
 **From `plans` array:**
 - Each plan's name and format
 - Each plan's dependencies (with state: unresolved/resolved/satisfied_externally)
-- Dependency summary counts
 
 **From `environment` section:**
 - Whether environment setup file exists
-- Whether it has actual setup steps
 
 **From `summary` section:**
 - Total plan count
-- Plans ready for implementation
-- Plans with unresolved dependencies
 
 **IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
 
@@ -60,47 +66,19 @@ This outputs structured YAML. Parse it to understand:
 
 ---
 
-## Step 2: Check Prerequisites
+## Step 2: Present Options to User
+
+Show what you found.
 
 #### If no plans exist
 
-```
-No plans found in docs/workflow/planning/
-
-The implementation phase requires a completed plan. Please run /start-planning first to create a plan from a specification.
-```
+Inform the user that this workflow is designed to be executed in sequence. They need to create plans from specifications prior to implementation using `/start-planning`.
 
 **STOP.** Wait for user acknowledgment. Do not proceed.
 
-#### Otherwise (at least one plan exists)
-
-→ Proceed to **Step 3**.
-
----
-
-## Step 3: Present Status & Select Plan
-
-Show the current state clearly. Use this EXACT format:
-
-```
-Workflow Status: Implementation Phase
-
-Plans:
-  ✓ {topic-1} (format: {format}) - ready
-  ✗ {topic-2} (format: {format}) - blocked ({N} unresolved dependencies)
-
-{N} plans, {M} ready for implementation
-```
-
-**Legend:**
-- `✓` = Ready for implementation (no blocking dependencies)
-- `✗` = Blocked (has unresolved dependencies)
-
-#### Routing Based on State
-
 #### If exactly ONE plan exists
 
-This is the simple path - auto-select.
+Auto-select and proceed. Do not ask for confirmation.
 
 ```
 Single plan found: {topic}
@@ -108,105 +86,102 @@ Single plan found: {topic}
 Proceeding with this plan.
 ```
 
-→ Proceed to **Step 4: Check External Dependencies**.
+→ Proceed to **Step 3: Check External Dependencies**.
 
 #### If MULTIPLE plans exist
 
 ```
-Which plan would you like to implement?
+Plans found:
+  {topic-1}
+  {topic-2}
 
-1. {topic-1} - ready
-2. {topic-2} - blocked (2 unresolved dependencies)
+Which plan would you like to implement?
 ```
 
-**STOP.** Wait for user to pick a number, then proceed to **Step 4**.
+**STOP.** Wait for user to select a plan, then proceed to **Step 3**.
 
 ---
 
-## Step 4: Check External Dependencies
+## Step 3: Check External Dependencies
 
 **This step is a gate.** Implementation cannot proceed if dependencies are not satisfied.
 
-Check the selected plan's dependencies from the discovery state.
+See **[dependencies.md](../../skills/technical-planning/references/dependencies.md)** for dependency format and states.
 
-#### If ALL dependencies are resolved or satisfied
+After the user selects a plan:
 
-```
-External dependencies satisfied:
-  ✓ {topic-1}: {description} → {task-id} (complete)
-  ✓ {topic-2}: {description} → satisfied externally
+1. **Read the External Dependencies section** from the plan index file (use discovery state)
+2. **Check each dependency** according to its state:
+   - **Unresolved**: Block
+   - **Resolved**: Check if task is complete (load output format reference, follow "Querying Dependencies" section)
+   - **Satisfied externally**: Proceed
 
-Proceeding with environment check...
-```
+### Blocking Behavior
 
-→ Proceed to **Step 5: Check Environment Setup**.
-
-#### If ANY dependencies are unresolved or incomplete
+If ANY dependency is unresolved or incomplete, **stop and present**:
 
 ```
 Implementation blocked. Missing dependencies:
 
 UNRESOLVED (not yet planned):
-  - {topic}: {description}
-    → No plan exists for this topic. Create with /start-planning or mark as satisfied externally.
+- billing-system: Invoice generation for order completion
+  → No plan exists for this topic. Create with /start-planning or mark as satisfied externally.
 
 INCOMPLETE (planned but not implemented):
-  - {task-id} ({topic}): {description}
-    → Status: in_progress. This task must be completed first.
+- beads-7x2k (authentication): User context retrieval
+  → Status: in_progress. This task must be completed first.
+
+These dependencies must be completed before this plan can be implemented.
 
 OPTIONS:
 1. Implement the blocking dependencies first
 2. Mark a dependency as "satisfied externally" if it was implemented outside this workflow
 3. Run /link-dependencies to wire up any recently completed plans
-
-Which option?
 ```
 
 **STOP.** Wait for user response.
 
-#### If user chooses to mark as satisfied externally
+### Escape Hatch
+
+If the user says a dependency has been implemented outside the workflow:
+
+1. Ask which dependency to mark as satisfied
+2. Update the plan index file:
+   - Change `- {topic}: {description}` to `- ~~{topic}: {description}~~ → satisfied externally`
+3. Commit the change
+4. Re-check dependencies
+
+### All Dependencies Satisfied
+
+If all dependencies are resolved and complete (or satisfied externally):
 
 ```
-Which dependency should be marked as satisfied externally?
+External dependencies satisfied:
+- billing-system: Invoice generation → beads-b7c2.1.1 (complete)
+- authentication: User context → beads-a3f8.1.2 (complete)
+
+Proceeding with environment setup...
 ```
 
-**STOP.** Wait for user to specify.
-
-Update the plan index file:
-- Change `- {topic}: {description}` to `- ~~{topic}: {description}~~ → satisfied externally`
-
-Commit the change, then re-check dependencies by returning to the start of **Step 4**.
-
-#### If user chooses another option
-
-Acknowledge their choice and **STOP.** Do not proceed with implementation.
+→ Proceed to **Step 4**.
 
 ---
 
-## Step 5: Check Environment Setup
+## Step 4: Check Environment Setup
+
+> **IMPORTANT**: This step is for **information gathering only**. Do NOT execute any setup commands at this stage. Execution instructions are in the technical-implementation skill.
 
 Check the `environment.setup_exists` value from the discovery state.
 
 #### If environment setup file exists
 
-```
-Environment setup: docs/workflow/environment-setup.md exists
-```
-
 Note the file location for the skill handoff.
 
-→ Proceed to **Step 6**.
+→ Proceed to **Step 5**.
 
 #### If environment setup file does NOT exist
 
-```
-No environment setup file found.
-
-Are there any environment setup instructions I should follow?
-(e.g., install dependencies, configure services, set environment variables)
-
-Enter instructions or press enter to skip:
-```
+Ask: "Are there any environment setup instructions I should follow?"
 
 **STOP.** Wait for user response.
 
@@ -218,24 +193,21 @@ Save them to `docs/workflow/environment-setup.md`:
 mkdir -p docs/workflow
 ```
 
-Write the file with the user's instructions. Commit and push to Git.
+Write the file with the user's instructions. Commit and push to Git. See `skills/technical-implementation/references/environment-setup.md` for format guidance.
 
-→ Proceed to **Step 6**.
+→ Proceed to **Step 5**.
 
-#### If user skips (presses enter)
+#### If user says no
 
-Create `docs/workflow/environment-setup.md` with content:
-```
-No special setup required.
-```
+Create `docs/workflow/environment-setup.md` with "No special setup required." and commit. This prevents asking again in future sessions.
 
-Commit and push to Git. This prevents asking again in future sessions.
-
-→ Proceed to **Step 6**.
+→ Proceed to **Step 5**.
 
 ---
 
-## Step 6: Ask About Scope
+## Step 5: Ask About Scope
+
+Ask the user about implementation scope:
 
 ```
 How would you like to proceed?
@@ -252,21 +224,19 @@ Which approach?
 
 #### If user chooses specific phase or task
 
-```
-Which phase/task would you like to implement?
-```
+Ask them to specify which one.
 
-**STOP.** Wait for user to specify, then proceed to **Step 7**.
+**STOP.** Wait for user to specify, then proceed to **Step 6**.
 
-Note: Do NOT validate that the phase or task exists. Accept the user's answer and pass it to the skill. Validation happens during implementation.
+> **Note:** Do NOT verify that the phase or task exists. Accept the user's answer and pass it to the skill. Validation happens during the implementation phase.
 
 #### If user chooses all phases or next available
 
-→ Proceed to **Step 7**.
+→ Proceed to **Step 6**.
 
 ---
 
-## Step 7: Invoke the Skill
+## Step 6: Invoke the Skill
 
 After completing the steps above, this command's purpose is fulfilled.
 
@@ -278,10 +248,10 @@ Invoke the [technical-implementation](../../skills/technical-implementation/SKIL
 Implementation session for: {topic}
 Plan: docs/workflow/planning/{topic}.md
 Format: {format}
-Scope: {all phases | phase N | task X | next-available}
+Scope: {all phases | specific phase | specific task | next-available}
 
 Dependencies: All satisfied ✓
-Environment setup: {docs/workflow/environment-setup.md | not needed}
+Environment setup: {completed | not needed}
 
 ---
 Invoke the technical-implementation skill.
@@ -293,4 +263,3 @@ Invoke the technical-implementation skill.
 
 - Ask questions clearly and STOP after each to wait for responses
 - Dependencies are a hard gate - do not proceed if any are unresolved
-- Environment setup is gathered for information only - execution happens in the skill

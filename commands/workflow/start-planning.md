@@ -40,7 +40,7 @@ Run the discovery script to gather current state:
 
 This outputs structured YAML. Parse it to understand:
 
-**From `specifications` array:**
+**From `specifications` section:**
 - Each specification's name, status, type (feature/cross-cutting), and whether it has a plan
 
 **From `plans` array:**
@@ -50,7 +50,6 @@ This outputs structured YAML. Parse it to understand:
 - Counts of feature specs (total, complete, building)
 - Counts of cross-cutting specs
 - Number of existing plans
-- Number of specs ready for planning
 
 **IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
 
@@ -70,143 +69,95 @@ The planning phase requires a completed specification. Please run /start-specifi
 
 **STOP.** Wait for user acknowledgment. Do not proceed.
 
-#### If no complete feature specifications exist
-
-```
-No complete feature specifications found.
-
-The following specifications are not ready for planning:
-  - {topic-1} (building) - still in progress
-  - {topic-2} (cross-cutting) - reference only, not a planning target
-
-Please complete the specification phase before creating a plan. Run /start-specification to continue a specification.
-```
-
-**STOP.** Wait for user acknowledgment. Do not proceed.
-
-#### Otherwise (at least one complete feature specification exists)
+#### Otherwise (specifications exist)
 
 → Proceed to **Step 3**.
 
 ---
 
-## Step 3: Present Status & Route
+## Step 3: Present Options to User
 
-Show the current state clearly. Use this EXACT format:
+Show what you found, separating feature specs (planning targets) from cross-cutting specs (reference context):
 
 ```
-Workflow Status: Planning Phase
-
 Feature Specifications (planning targets):
-  ✗ {topic-1} - building - not ready for planning
-  ✓ {topic-2} - complete - ready for planning
-  ○ {topic-3} - complete - plan exists
+  {topic-1} - Building specification - not ready for planning
+  {topic-2} - Complete - ready for planning
+  {topic-3} - Complete - plan exists
 
 Cross-Cutting Specifications (reference context):
-  • {caching-strategy} - complete - will inform planning
-  • {rate-limiting} - complete - will inform planning
+  {caching-strategy} - Complete - will inform planning
+  {rate-limiting} - Complete - will inform planning
 
-{N} feature specifications, {M} ready for planning
+Which feature specification would you like to create a plan for?
 ```
-
-**Legend:**
-- `✗` = Building, not ready
-- `✓` = Complete, ready for planning (no plan yet)
-- `○` = Complete, plan already exists
 
 **Important:**
 - Only completed **feature** specifications should proceed to planning
 - **Cross-cutting** specifications are NOT planning targets - they inform feature plans
 - If a specification is still being built, advise the user to complete the specification phase first
 
-#### Routing Based on State
-
-#### If exactly ONE complete feature specification exists (ready for planning)
+#### If exactly ONE completed feature specification exists
 
 Auto-select and proceed. Do not ask for confirmation.
 
-```
-Single specification ready for planning: {topic}
+→ Proceed to **Step 4**.
 
-Proceeding with this specification.
-```
+#### If MULTIPLE completed feature specifications exist
 
-→ Skip to **Step 4: Choose Output Format**.
+Ask: **Which feature specification would you like to plan?**
 
-#### If MULTIPLE complete feature specifications exist
-
-```
-Which feature specification would you like to plan?
-
-1. {topic-1} - ready for planning
-2. {topic-2} - ready for planning
-3. {topic-3} - plan exists
-```
-
-**STOP.** Wait for user to pick a number, then proceed to **Step 4**.
+**STOP.** Wait for user to select, then proceed to **Step 4**.
 
 ---
 
-## Step 4: Choose Output Format
+## Step 4: Choose Output Destination
 
-Ask where the plan should live:
+Ask: **Where should this plan live?**
 
-```
-Where should this plan live?
-```
-
-Load **[output-formats.md](../../skills/technical-planning/references/output-formats.md)** and present the available formats with brief descriptions to help the user choose.
+Load **[output-formats.md](../../skills/technical-planning/references/output-formats.md)** and present the available formats to help the user choose. Then load the corresponding output adapter for that format's setup requirements.
 
 **STOP.** Wait for user to choose a format, then proceed to **Step 5**.
-
-Note: After user chooses, load the corresponding output adapter (`output-{format}.md`) to understand the setup requirements before proceeding.
 
 ---
 
 ## Step 5: Gather Additional Context
 
-```
-Before creating the plan:
+Ask:
+- Any additional context or priorities to consider?
+- Any constraints since the specification was completed?
 
-1. Any additional context or priorities to consider?
-2. Any constraints since the specification was completed?
-
-(Press enter to skip if none)
-```
-
-**STOP.** Wait for user response, then proceed to **Step 6**.
+**STOP.** Wait for user response, then proceed to **Step 5b**.
 
 ---
 
-## Step 6: Surface Cross-Cutting Context
+## Step 5b: Surface Cross-Cutting Context
 
-Check if any **completed cross-cutting specifications** exist from the discovery state.
+If any **completed cross-cutting specifications** exist, surface them as reference context for planning:
 
-#### If cross-cutting specifications exist
+1. **List applicable cross-cutting specs**:
+   - Read each cross-cutting specification
+   - Identify which ones are relevant to the feature being planned
+   - Relevance is determined by topic overlap (e.g., caching strategy applies if the feature involves data retrieval or API calls)
 
-Read each cross-cutting specification and identify which ones are relevant to the feature being planned.
+2. **Summarize for handoff**:
+   ```
+   Cross-cutting specifications to reference:
+   - caching-strategy.md: [brief summary of key decisions]
+   - rate-limiting.md: [brief summary of key decisions]
+   ```
 
-Relevance is determined by topic overlap (e.g., caching strategy applies if the feature involves data retrieval or API calls).
-
-Summarize for handoff:
-
-```
-Cross-cutting specifications to reference:
-- caching-strategy.md: {brief summary of key decisions}
-- rate-limiting.md: {brief summary of key decisions}
-
-These contain validated architectural decisions that will inform the plan.
-```
-
-→ Proceed to **Step 7**.
+These specifications contain validated architectural decisions that should inform the plan. The planning skill will incorporate these as a "Cross-Cutting References" section in the plan.
 
 #### If no cross-cutting specifications exist
 
-→ Proceed to **Step 7**.
+Skip this step.
+
+→ Proceed to **Step 6**.
 
 ---
 
-## Step 7: Invoke the Skill
+## Step 6: Invoke the Skill
 
 After completing the steps above, this command's purpose is fulfilled.
 
@@ -218,9 +169,7 @@ Invoke the [technical-planning](../../skills/technical-planning/SKILL.md) skill 
 Planning session for: {topic}
 Specification: docs/workflow/specification/{topic}.md
 Output format: {format}
-
-Additional context: {summary of user's answers from Step 5, or "none"}
-
+Additional context: {summary of user's answers from Step 5}
 Cross-cutting references: {list of applicable cross-cutting specs with brief summaries, or "none"}
 
 ---

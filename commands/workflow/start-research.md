@@ -23,80 +23,36 @@ This is **Phase 1** of the six-phase workflow:
 
 ## Instructions
 
-Follow these steps EXACTLY as written. Do not skip steps or combine them.
-
 **CRITICAL**: After each user interaction, STOP and wait for their response before proceeding. Never assume or anticipate user choices.
 
----
+Ask these questions to gather context:
 
-## Step 1: Gather Initial Context
+1. **What's on your mind?**
+   - What idea or topic do you want to explore?
+   - What prompted this - a problem, opportunity, curiosity?
 
-Ask the user about their exploration:
+2. **What do you already know?**
+   - Any initial thoughts or research you've done?
+   - Constraints or context I should be aware of?
 
-```
-What's on your mind?
+3. **Where should we start?**
+   - Technical feasibility? Market landscape? Business model?
+   - Or just talk it through and see where it goes?
 
-1. What idea or topic do you want to explore?
-2. What prompted this - a problem, opportunity, curiosity?
-```
-
-**STOP.** Wait for user response, then proceed to **Step 2**.
-
----
-
-## Step 2: Understand Existing Knowledge
-
-Ask about their current understanding:
-
-```
-What do you already know?
-
-1. Any initial thoughts or research you've done?
-2. Constraints or context I should be aware of?
-```
-
-**STOP.** Wait for user response, then proceed to **Step 3**.
+**STOP.** Ask these questions clearly and wait for responses before proceeding.
 
 ---
 
-## Step 3: Determine Starting Point
-
-Ask where to focus:
-
-```
-Where should we start?
-
-1. Technical feasibility?
-2. Market landscape?
-3. Business model?
-4. Or just talk it through and see where it goes?
-```
-
-**STOP.** Wait for user response, then proceed to **Step 4**.
-
----
-
-## Step 4: Invoke the Skill
+## Invoke the Skill
 
 After completing the steps above, this command's purpose is fulfilled.
 
 Invoke the [technical-research](../../skills/technical-research/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
-#### Handoff Format
-
-```
-Research session for: {topic from Step 1}
-
-Initial context: {summary of user's answers from Steps 1-3}
-
----
-Invoke the technical-research skill.
-```
-
 ---
 
 ## Notes
 
-- Ask questions clearly and STOP after each to wait for responses
-- Research is exploratory - let the conversation flow naturally
-- This phase captures early thinking before formal discussion begins
+- Research is exploratory - there's no wrong direction
+- Output goes to `docs/workflow/research/` with semantic file names
+- This phase naturally leads to Discussion when ready to make decisions
