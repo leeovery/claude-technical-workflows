@@ -57,6 +57,8 @@ This outputs structured YAML. Parse it to understand:
 
 **IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
 
+→ Proceed to **Step 2**.
+
 ---
 
 ## Step 2: Check Prerequisites
@@ -69,7 +71,7 @@ No discussions found in docs/workflow/discussion/
 The specification phase requires a completed discussion. Please run /workflow:start-discussion first to document the technical decisions, edge cases, and rationale before creating a specification.
 ```
 
-**STOP.** Wait for user acknowledgment.
+**STOP.** Wait for user acknowledgment. Do not proceed.
 
 **If discussions exist but none are concluded:**
 
@@ -83,11 +85,14 @@ The following discussions are still exploring:
 Please complete the discussion phase before creating specifications. Run /workflow:start-discussion to continue a discussion.
 ```
 
-**STOP.** Wait for user acknowledgment.
+**STOP.** Wait for user acknowledgment. Do not proceed.
+
+**Otherwise (at least one concluded discussion exists):**
+→ Proceed to **Step 3**.
 
 ---
 
-## Step 3: Present Status
+## Step 3: Present Status & Route
 
 Show the current state clearly. Use this EXACT format:
 
@@ -104,7 +109,7 @@ Specifications:
   • {spec-1} (active) - sources: {topic-1}
   • {spec-2} (superseded → {other-spec}) - sources: {topic-x}
 
-{N} concluded discussions ready for specification.
+{N} concluded discussions available.
 ```
 
 **Legend:**
@@ -112,49 +117,93 @@ Specifications:
 - `○` = concluded, has individual spec (can be combined or continued)
 - `·` = not concluded (not ready)
 
-**If only ONE concluded discussion is ready (no individual spec):**
-→ Skip to **Step 10: Confirm Selection** with that discussion as the source.
+---
 
-**If only concluded discussions that already have specs:**
+### Routing Based on State
+
+**If only ONE concluded discussion exists:**
+
+This is the simple path - no choices needed.
 
 ```
-All concluded discussions already have specifications.
+Single concluded discussion found: {topic}
+{If has spec: "An existing specification will be continued/refined."}
 
-Would you like to continue/refine an existing specification?
-
-1. {spec-1} - sources: {topics}
-2. {spec-2} - sources: {topics}
+Proceeding with this discussion.
 ```
 
-**STOP.** Wait for user to pick, then skip to **Step 10**.
-
-**If MORE THAN ONE concluded discussion exists (with or without specs):**
-→ Proceed to **Step 4: Offer Assessment**.
+→ Skip to **Step 9: Confirm Selection** with that discussion as the source.
 
 ---
 
-## Step 4: Offer Assessment
+**If MULTIPLE concluded discussions exist:**
+
+Show all available options in a single menu. Only show options that apply to the current state.
 
 ```
-You have {N} concluded discussions available.
+What would you like to do?
 
-Would you like me to assess how these might be combined into specifications?
+{If any specifications exist, show this option:}
+1. **Continue/refine an existing specification** - Pick one to work on
 
-1. **Yes, assess them** - I'll analyze all discussions for natural groupings
-2. **No, proceed individually** - Create specifications 1:1 with discussions
+{Always show these options:}
+2. **Assess for groupings** - Analyze discussions for natural combinations
+3. **Individual specifications** - Create specs 1:1 with discussions
+4. **Single unified specification** - Combine everything into one spec
 
 Which approach?
 ```
 
 **STOP.** Wait for user response.
 
-**If user chooses "individual":** → Skip to **Step 9: Select Grouping** (ask which discussion to specify).
+---
 
-**If user chooses "assessment":** → Proceed to **Step 5**.
+### Handle User Choice
+
+**If "Continue/refine an existing specification":**
+
+```
+Which specification would you like to continue?
+
+1. {spec-1} - sources: {topics}
+2. {spec-2} - sources: {topics}
+```
+
+**STOP.** Wait for user to pick, then skip to **Step 9**.
+
+**If "Assess for groupings":**
+→ Proceed to **Step 4: Gather Analysis Context**.
+
+**If "Individual specifications":**
+
+```
+Which discussion would you like to specify?
+
+1. {topic-1}
+2. {topic-2} (has individual spec - will continue/refine)
+3. {topic-3}
+```
+
+**STOP.** Wait for user to pick, then skip to **Step 9**.
+
+**If "Single unified specification":**
+
+Use "unified" as the specification name.
+Check if `docs/workflow/specification/unified.md` already exists.
+
+```
+{If exists: "A unified specification already exists. Proceeding will continue/refine it."}
+
+This will consolidate ALL {N} concluded discussions into a single specification.
+
+Proceed with unified specification? (y/n)
+```
+
+**STOP.** Wait for user to confirm, then skip to **Step 9** with all discussions as sources.
 
 ---
 
-## Step 5: Gather Analysis Context
+## Step 4: Gather Analysis Context
 
 ```
 Before I analyze the discussions, is there anything about your project structure or how these topics relate that would help me group them appropriately?
@@ -167,9 +216,11 @@ For example:
 
 **STOP.** Wait for user response. Note their input for the analysis.
 
+→ Proceed to **Step 5**.
+
 ---
 
-## Step 6: Check Cache Validity
+## Step 5: Check Cache Validity
 
 Check the `cache_validity.is_valid` value from the discovery state.
 
@@ -182,7 +233,7 @@ Discussion documents unchanged since last analysis ({cached_date}).
 Loading previously identified groupings...
 ```
 
-Load groupings from cache and → Skip to **Step 8: Present Options**.
+Load groupings from cache and → Skip to **Step 7: Present Grouping Options**.
 
 **If cache is invalid or missing:**
 
@@ -192,11 +243,11 @@ Load groupings from cache and → Skip to **Step 8: Present Options**.
 Analyzing discussions...
 ```
 
-→ Proceed to **Step 7: Analyze**.
+→ Proceed to **Step 6: Analyze Discussions**.
 
 ---
 
-## Step 7: Analyze Discussions
+## Step 6: Analyze Discussions
 
 **This step is critical. You MUST read every concluded discussion document thoroughly.**
 
@@ -265,9 +316,11 @@ discussion_files:
 {Note any naming conflicts with anchored specs here}
 ```
 
+→ Proceed to **Step 7**.
+
 ---
 
-## Step 8: Present Options
+## Step 7: Present Grouping Options
 
 Present the groupings with FULL status information.
 
@@ -311,16 +364,18 @@ How would you like to proceed?
 3. **Single specification** - Consolidate ALL into one unified spec
 4. **Individual specifications** - Create 1:1 specs (I'll ask which to start)
 
-{If using cache: "(Enter 'refresh' to re-analyze)"}
+(Enter 'refresh' to re-analyze)
 ```
 
 **STOP.** Wait for user to choose.
 
+→ Based on choice, proceed to **Step 8**.
+
 ---
 
-## Step 9: Select Grouping
+## Step 8: Select Grouping
 
-Based on user's choice from Step 8:
+Based on user's choice from Step 7:
 
 **If "Combine as recommended":**
 
@@ -332,7 +387,7 @@ Which grouping would you like to start with?
 3. {Grouping Name C} - {N} discussions
 ```
 
-**STOP.** Wait for user to pick a number.
+**STOP.** Wait for user to pick a number, then proceed to **Step 9**.
 
 **If "Combine differently":**
 
@@ -353,7 +408,7 @@ Based on your description, here are the groupings:
 Which grouping would you like to start with?
 ```
 
-**STOP.** Wait for user to pick.
+**STOP.** Wait for user to pick, then proceed to **Step 9**.
 
 **If "Single specification":**
 
@@ -368,7 +423,7 @@ This will consolidate ALL {N} concluded discussions into a single specification.
 Proceed with unified specification? (y/n)
 ```
 
-**STOP.** Wait for user to confirm, then proceed to **Step 10** with all discussions as sources.
+**STOP.** Wait for user to confirm, then proceed to **Step 9** with all discussions as sources.
 
 **If "Individual specifications":**
 
@@ -380,7 +435,7 @@ Which discussion would you like to specify?
 3. {topic-3}
 ```
 
-**STOP.** Wait for user to pick.
+**STOP.** Wait for user to pick, then proceed to **Step 9**.
 
 **If "refresh":**
 
@@ -393,11 +448,11 @@ Delete the cache file:
 rm docs/workflow/.cache/discussion-consolidation-analysis.md
 ```
 
-→ Return to **Step 7: Analyze**.
+→ Return to **Step 6: Analyze Discussions**.
 
 ---
 
-## Step 10: Confirm Selection
+## Step 9: Confirm Selection
 
 Present what will happen based on the selection:
 
@@ -463,12 +518,12 @@ Proceed? (y/n)
 
 **STOP.** Wait for user confirmation.
 
-**If user confirms (y):** → Proceed to **Step 11**.
-**If user declines (n):** → Return to **Step 9** to select a different grouping or discussion.
+**If user confirms (y):** → Proceed to **Step 10**.
+**If user declines (n):** → Return to **Step 8** to select a different grouping or discussion.
 
 ---
 
-## Step 11: Gather Additional Context
+## Step 10: Gather Additional Context
 
 ```
 Before invoking the specification skill:
@@ -482,9 +537,11 @@ Before invoking the specification skill:
 
 **STOP.** Wait for user response.
 
+→ Proceed to **Step 11**.
+
 ---
 
-## Step 12: Invoke the Skill
+## Step 11: Invoke the Skill
 
 After completing all steps above, this command's purpose is fulfilled.
 
@@ -500,7 +557,7 @@ Specification session for: {topic}
 Source: docs/workflow/discussion/{topic}.md
 Output: docs/workflow/specification/{topic}.md
 
-Additional context: {summary of user's answers from Step 11}
+Additional context: {summary of user's answers from Step 10}
 
 ---
 Invoke the technical-specification skill.
@@ -518,7 +575,7 @@ Sources:
 
 Output: docs/workflow/specification/{specification-name}.md
 
-Additional context: {summary of user's answers from Step 11}
+Additional context: {summary of user's answers from Step 10}
 
 ---
 Invoke the technical-specification skill.
@@ -545,7 +602,7 @@ After the {specification-name} specification is complete, mark the incorporated 
     status: superseded
     superseded_by: {specification-name}
 
-Additional context: {summary of user's answers from Step 11}
+Additional context: {summary of user's answers from Step 10}
 
 ---
 Invoke the technical-specification skill.
@@ -564,7 +621,7 @@ Sources for reference:
 
 Context: This specification already exists. Review and refine it based on the source discussions and any new context provided.
 
-Additional context: {summary of user's answers from Step 11}
+Additional context: {summary of user's answers from Step 10}
 
 ---
 Invoke the technical-specification skill.
