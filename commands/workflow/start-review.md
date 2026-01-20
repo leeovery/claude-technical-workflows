@@ -101,7 +101,7 @@ Recent Changes:
 
 #### If exactly ONE plan exists
 
-This is the simple path - auto-select.
+Auto-select and proceed. Do not ask for confirmation.
 
 ```
 Single plan found: {topic}
@@ -126,73 +126,35 @@ Which plan would you like to review the implementation for?
 
 ## Step 4: Identify Implementation Scope
 
-Determine what code to review based on the discovery state.
+Determine what code to review:
 
-#### If git has changes
+1. **Check git status** - Use the `git_status` section from the discovery state to see what files have changed
 
-```
-I see the following changes in the repository:
-
-{List changed directories with file counts}
-
-Would you like me to:
-
-1. **Review all changes** - All modified files
-2. **Review specific directories** - Tell me which directories
-3. **Review specific files** - Tell me which files
-
-Which approach?
-```
-
-**STOP.** Wait for user response.
-
-#### If user chooses "Review all changes"
-
-→ Proceed to **Step 5**.
-
-#### If user chooses specific directories or files
+2. **Ask user** if scope is unclear:
 
 ```
-Which directories/files should I review?
+What code should I review? (all changes, specific directories, or specific files)
 ```
 
-**STOP.** Wait for user to specify, then proceed to **Step 5**.
-
-#### If git has NO changes
-
-```
-No uncommitted changes detected.
-
-What code should I review?
-
-1. **Specific directories** - Tell me which directories
-2. **Specific files** - Tell me which files
-3. **Recent commits** - Review changes from recent commits
-
-Which approach?
-```
-
-**STOP.** Wait for user response.
-
-#### If user chooses specific directories or files
-
-```
-Which directories/files should I review?
-```
-
-**STOP.** Wait for user to specify, then proceed to **Step 5**.
-
-#### If user chooses recent commits
-
-```
-How many recent commits should I review?
-```
-
-**STOP.** Wait for user to specify, then proceed to **Step 5**.
+**STOP.** Wait for user response, then proceed to **Step 5**.
 
 ---
 
-## Step 5: Invoke the Skill
+## Step 5: Locate Specification (Optional)
+
+Check if a specification exists for the selected plan:
+
+1. **Look for specification**: Check if `docs/workflow/specification/{topic}.md` exists (use `has_specification` from discovery state)
+
+2. **If exists**: Note the path for context
+
+3. **If missing**: Proceed without - the plan is the primary review artifact
+
+→ Proceed to **Step 6**.
+
+---
+
+## Step 6: Invoke the Skill
 
 After completing the steps above, this command's purpose is fulfilled.
 
