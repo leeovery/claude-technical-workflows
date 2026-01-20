@@ -45,6 +45,9 @@ commands/
 
 agents/
   chain-verifier.md          # Parallel chain verification for review phase
+
+scripts/
+  discover-spec-state.sh     # Discovery script for specification command
 ```
 
 ## Command Architecture

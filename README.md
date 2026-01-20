@@ -238,6 +238,9 @@ commands/                            # Input layer (gather context → invoke sk
 
 agents/
 └── chain-verifier.md                # Parallel task verification for review
+
+scripts/                             # Helper scripts for commands
+└── discover-spec-state.sh           # Discovery for specification command
 ```
 
 ## Skills
