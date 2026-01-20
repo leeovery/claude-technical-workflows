@@ -63,7 +63,7 @@ This outputs structured YAML. Parse it to understand:
 
 ## Step 2: Check Prerequisites
 
-**If no discussions exist (empty `discussions` array):**
+#### If no discussions exist
 
 ```
 No discussions found in docs/workflow/discussion/
@@ -73,7 +73,7 @@ The specification phase requires a completed discussion. Please run /workflow:st
 
 **STOP.** Wait for user acknowledgment. Do not proceed.
 
-**If discussions exist but none are concluded:**
+#### If discussions exist but none are concluded
 
 ```
 No concluded discussions found.
@@ -87,7 +87,10 @@ Please complete the discussion phase before creating specifications. Run /workfl
 
 **STOP.** Wait for user acknowledgment. Do not proceed.
 
-**Otherwise (at least one concluded discussion exists):**
+#### Otherwise
+
+At least one concluded discussion exists.
+
 → Proceed to **Step 3**.
 
 ---
@@ -117,11 +120,9 @@ Specifications:
 - `○` = concluded, has individual spec (can be combined or continued)
 - `·` = not concluded (not ready)
 
----
+#### Routing Based on State
 
-### Routing Based on State
-
-**If only ONE concluded discussion exists:**
+#### If only ONE concluded discussion exists
 
 This is the simple path - no choices needed.
 
@@ -134,9 +135,7 @@ Proceeding with this discussion.
 
 → Skip to **Step 9: Confirm Selection** with that discussion as the source.
 
----
-
-**If MULTIPLE concluded discussions exist:**
+#### If MULTIPLE concluded discussions exist
 
 Show all available options in a single menu. Only show options that apply to the current state.
 
@@ -156,11 +155,9 @@ Which approach?
 
 **STOP.** Wait for user response.
 
----
+#### Handle User Choice
 
-### Handle User Choice
-
-**If "Continue/refine an existing specification":**
+#### If "Continue/refine an existing specification"
 
 ```
 Which specification would you like to continue?
@@ -171,10 +168,11 @@ Which specification would you like to continue?
 
 **STOP.** Wait for user to pick, then skip to **Step 9**.
 
-**If "Assess for groupings":**
+#### If "Assess for groupings"
+
 → Proceed to **Step 4: Gather Analysis Context**.
 
-**If "Individual specifications":**
+#### If "Individual specifications"
 
 ```
 Which discussion would you like to specify?
@@ -186,7 +184,7 @@ Which discussion would you like to specify?
 
 **STOP.** Wait for user to pick, then skip to **Step 9**.
 
-**If "Single unified specification":**
+#### If "Single unified specification"
 
 Use "unified" as the specification name.
 Check if `docs/workflow/specification/unified.md` already exists.
@@ -224,7 +222,7 @@ For example:
 
 Check the `cache_validity.is_valid` value from the discovery state.
 
-**If cache is valid (`is_valid: true`):**
+#### If cache is valid
 
 ```
 Using cached analysis
@@ -235,7 +233,7 @@ Loading previously identified groupings...
 
 Load groupings from cache and → Skip to **Step 7: Present Grouping Options**.
 
-**If cache is invalid or missing:**
+#### If cache is invalid or missing
 
 ```
 {Reason from cache_validity.reason}
@@ -264,7 +262,7 @@ Then analyze coupling between discussions:
 
 Group discussions that are tightly coupled - they should become a single specification because their decisions are inseparable.
 
-### Preserve Anchored Names
+#### Preserve Anchored Names
 
 **CRITICAL**: Check the `cache.anchored_names` from discovery state. These are grouping names that have existing specifications.
 
@@ -273,7 +271,7 @@ When forming groupings:
 - Only create new names for genuinely new groupings with no overlap
 - If an anchored spec's discussions are now scattered across multiple new groupings, note this as a **naming conflict** to present to the user
 
-### Save to Cache
+#### Save to Cache
 
 After analysis, create the cache directory if needed:
 ```bash
@@ -377,7 +375,7 @@ How would you like to proceed?
 
 Based on user's choice from Step 7:
 
-**If "Combine as recommended":**
+#### If "Combine as recommended"
 
 ```
 Which grouping would you like to start with?
@@ -389,7 +387,7 @@ Which grouping would you like to start with?
 
 **STOP.** Wait for user to pick a number, then proceed to **Step 9**.
 
-**If "Combine differently":**
+#### If "Combine differently"
 
 ```
 Please describe your preferred groupings. Which discussions should be combined together?
@@ -410,7 +408,7 @@ Which grouping would you like to start with?
 
 **STOP.** Wait for user to pick, then proceed to **Step 9**.
 
-**If "Single specification":**
+#### If "Single specification"
 
 Use "unified" as the specification name.
 Check if `docs/workflow/specification/unified.md` already exists.
@@ -425,7 +423,7 @@ Proceed with unified specification? (y/n)
 
 **STOP.** Wait for user to confirm, then proceed to **Step 9** with all discussions as sources.
 
-**If "Individual specifications":**
+#### If "Individual specifications"
 
 ```
 Which discussion would you like to specify?
@@ -437,7 +435,7 @@ Which discussion would you like to specify?
 
 **STOP.** Wait for user to pick, then proceed to **Step 9**.
 
-**If "refresh":**
+#### If "refresh"
 
 ```
 Refreshing analysis...
@@ -456,7 +454,7 @@ rm docs/workflow/.cache/discussion-consolidation-analysis.md
 
 Present what will happen based on the selection:
 
-**If creating a NEW grouped specification (no existing spec, some discussions have individual specs):**
+#### If creating a NEW grouped specification (with individual specs to incorporate)
 
 ```
 Creating specification: {grouping-name}
@@ -476,7 +474,7 @@ After completion:
 Proceed? (y/n)
 ```
 
-**If creating a NEW grouped specification (no existing specs to incorporate):**
+#### If creating a NEW grouped specification (no existing specs)
 
 ```
 Creating specification: {grouping-name}
@@ -491,7 +489,7 @@ Output: docs/workflow/specification/{grouping-name}.md
 Proceed? (y/n)
 ```
 
-**If CONTINUING an existing grouped specification:**
+#### If CONTINUING an existing grouped specification
 
 ```
 Continuing specification: {grouping-name}
@@ -505,7 +503,7 @@ Sources:
 Proceed? (y/n)
 ```
 
-**If creating/continuing an INDIVIDUAL specification:**
+#### If creating/continuing an INDIVIDUAL specification
 
 ```
 {Creating / Continuing} specification: {topic}
@@ -547,7 +545,7 @@ After completing all steps above, this command's purpose is fulfilled.
 
 Invoke the [technical-specification](../skills/technical-specification/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
-### Handoff Format
+#### Handoff Format
 
 **Single source (individual specification):**
 
