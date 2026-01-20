@@ -101,8 +101,8 @@ Start with `/start-research` or `/start-discussion` and follow the flow. Each ph
 
 ### Workflow Commands
 
-| Phase          | Command                          |
-|----------------|----------------------------------|
+| Phase          | Command                 |
+|----------------|-------------------------|
 | Research       | `/start-research`       |
 | Discussion     | `/start-discussion`     |
 | Specification  | `/start-specification`  |
@@ -114,10 +114,10 @@ Run the command directly or ask Claude to run it. Each gathers context from prev
 
 ## Installation
 
-| Method | Where files live | Best for |
-|--------|------------------|----------|
-| **Marketplace** | `~/.claude/plugins/` (global cache) | Quick setup, don't need files in repo |
-| **npm** | `.claude/` in your project | Ownership, version control, Claude Code for Web |
+| Method          | Where files live                    | Best for                                        |
+|-----------------|-------------------------------------|-------------------------------------------------|
+| **Marketplace** | `~/.claude/plugins/` (global cache) | Quick setup, don't need files in repo           |
+| **npm**         | `.claude/` in your project          | Ownership, version control, Claude Code for Web |
 
 ### Option 1: Claude Marketplace
 
@@ -174,14 +174,6 @@ When using the full workflow, it progresses through six distinct phases:
 │ • Viability   │   │ • Edge cases  │   │ • Enrich      │   │ • Criteria    │   │ • Commit often│   │ • Test quality│
 │               │   │ • Rationale   │   │ • Standalone  │   │ • Outputs     │   │ • Phase gates │   │ • Code quality│
 └───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘
-        ▲                   ▲                   ▲                   ▲                   ▲                   ▲
-        │                   │                   │                   │                   │                   │
-technical-research          │                   │                   │                   │                   │
-              technical-discussion              │                   │                   │                   │
-                            technical-specification                 │                   │                   │
-                                          technical-planning        │                   │                   │
-                                                      technical-implementation          │                   │
-                                                                              technical-review
 ```
 
 **Phase 1 - Research:** Explore ideas from their earliest seed. Investigate market fit, technical feasibility, business viability. Free-flowing exploration that may or may not lead to building something.
