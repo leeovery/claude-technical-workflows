@@ -135,29 +135,32 @@ Proceeding with this discussion.
 
 → Skip to **Step 9: Confirm Selection** with that discussion as the source.
 
-#### If MULTIPLE concluded discussions exist
+#### If MULTIPLE concluded discussions exist with NO existing specifications
 
-Show all available options in a single menu. Only show options that apply to the current state.
+No existing specs to continue - proceed directly to analysis.
+
+```
+{N} concluded discussions found.
+
+Analyzing discussions for natural groupings...
+```
+
+→ Proceed to **Step 4: Gather Analysis Context**.
+
+#### If MULTIPLE concluded discussions exist WITH existing specifications
 
 ```
 What would you like to do?
 
-{If any specifications exist, show this option:}
-1. **Continue/refine an existing specification** - Pick one to work on
-
-{Always show these options:}
-2. **Assess for groupings** - Analyze discussions for natural combinations
-3. **Individual specifications** - Create specs 1:1 with discussions
-4. **Single unified specification** - Combine everything into one spec
+1. **Continue an existing specification** - Resume work on a spec in progress
+2. **Assess for groupings** - Analyze discussions for combinations
 
 Which approach?
 ```
 
 **STOP.** Wait for user response.
 
-#### Handle User Choice
-
-#### If "Continue/refine an existing specification"
+#### If "Continue an existing specification"
 
 ```
 Which specification would you like to continue?
@@ -171,33 +174,6 @@ Which specification would you like to continue?
 #### If "Assess for groupings"
 
 → Proceed to **Step 4: Gather Analysis Context**.
-
-#### If "Individual specifications"
-
-```
-Which discussion would you like to specify?
-
-1. {topic-1}
-2. {topic-2} (has individual spec - will continue/refine)
-3. {topic-3}
-```
-
-**STOP.** Wait for user to pick, then skip to **Step 9**.
-
-#### If "Single unified specification"
-
-Use "unified" as the specification name.
-Check if `docs/workflow/specification/unified.md` already exists.
-
-```
-{If exists: "A unified specification already exists. Proceeding will continue/refine it."}
-
-This will consolidate ALL {N} concluded discussions into a single specification.
-
-Proceed with unified specification? (y/n)
-```
-
-**STOP.** Wait for user to confirm, then skip to **Step 9** with all discussions as sources.
 
 ---
 
