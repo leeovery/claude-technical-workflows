@@ -13,10 +13,13 @@ This is a single file per topic.
 ## Template
 
 ```markdown
-# Discussion: {Topic}
+---
+topic: {topic-name}
+status: in-progress
+date: YYYY-MM-DD  # Use today's actual date
+---
 
-**Date**: YYYY-MM-DD *(use today's actual date)*
-**Status**: Exploring | Deciding | Concluded
+# Discussion: {Topic}
 
 ## Context
 
@@ -97,7 +100,7 @@ What we chose, why, the deciding factor, trade-offs accepted, confidence level.
 **When creating**:
 1. Ensure discussion directory exists: `docs/workflow/discussion/`
 2. Create file: `{topic}.md`
-3. Fill header: date, status
+3. Fill frontmatter: topic, status, date
 4. Start with context: why discussing?
 5. List questions: what needs deciding?
 
@@ -125,3 +128,5 @@ What we chose, why, the deciding factor, trade-offs accepted, confidence level.
 - Major questions concluded with rationale
 - Trade-offs understood
 - Path forward clear
+
+**When complete**: Update frontmatter `status: concluded` to signal ready for specification.

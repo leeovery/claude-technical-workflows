@@ -25,8 +25,8 @@ extract_field() {
     # Try YAML frontmatter first (only if file starts with ---)
     if head -1 "$file" 2>/dev/null | grep -q "^---$"; then
         value=$(sed -n '2,/^---$/p' "$file" 2>/dev/null | \
-            grep -m1 "^${field}:" | \
-            sed "s/^${field}:[[:space:]]*//" || true)
+            grep -i -m1 "^${field}:" | \
+            sed -E "s/^${field}:[[:space:]]*//i" || true)
     fi
 
     # If empty, try markdown format: **Field**: Value
@@ -75,6 +75,10 @@ if [ -d "$DISCUSSION_DIR" ] && [ -n "$(ls -A "$DISCUSSION_DIR" 2>/dev/null)" ]; 
 
         name=$(basename "$file" .md)
         status=$(extract_field "$file" "status")
+        # Normalize legacy status values
+        case "$status" in
+            exploring|deciding) status="in-progress" ;;
+        esac
         status=${status:-"unknown"}
 
         # Check if this discussion has a corresponding individual spec
@@ -186,6 +190,10 @@ if [ -d "$DISCUSSION_DIR" ] && [ -n "$(ls -A "$DISCUSSION_DIR" 2>/dev/null)" ]; 
     for file in "$DISCUSSION_DIR"/*.md; do
         [ -f "$file" ] || continue
         status=$(extract_field "$file" "status")
+        # Normalize legacy status values
+        case "$status" in
+            exploring|deciding) status="in-progress" ;;
+        esac
         if [ "$status" = "concluded" ]; then
             concluded_count=$((concluded_count + 1))
         fi

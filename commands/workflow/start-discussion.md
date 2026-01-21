@@ -44,8 +44,10 @@ Scan the codebase for research and discussions:
    - Each file is named `{topic}.md`
 
 3. **Check discussion status**: For each discussion file
-   - Run `head -10 docs/workflow/discussion/{topic}.md` to extract the `Status:` field
-   - Status values: `Exploring`, `Deciding`, or `Concluded`
+   - Run `head -15 docs/workflow/discussion/{topic}.md` to read the header
+   - Look for status in two possible formats:
+     - **YAML frontmatter** (preferred): `status: in-progress` or `status: concluded` between `---` delimiters
+     - **Legacy markdown**: `**Status**: Exploring/Deciding` (treat as in-progress) or `**Status**: Concluded`
    - Do NOT use bash loops - run separate commands for each file
 
 4. **Check for cached analysis** (if research files exist):
@@ -182,8 +184,8 @@ Then skip to Step 5 (Gather Context) with the fresh topic path.
 ```
 
 **Key:**
-- Exploring/Deciding = In progress
-- Concluded = Complete (can still be reopened)
+- in-progress (or legacy Exploring/Deciding) = Active discussion
+- concluded = Complete (can still be reopened)
 
 **Then present the options based on what exists:**
 
