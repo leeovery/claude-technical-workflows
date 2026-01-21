@@ -31,6 +31,14 @@ Before beginning, discover existing work and gather necessary information.
 
 Use simple, individual commands. Never combine multiple operations into bash loops or one-liners. Execute commands one at a time.
 
+## Step 0: Run Migrations
+
+**This step is mandatory. You must complete it before proceeding.**
+
+Run `/migrate-documents` and assess its output before proceeding to Step 1.
+
+---
+
 ## Step 1: Discover Existing Work
 
 Scan the codebase for specifications and plans:

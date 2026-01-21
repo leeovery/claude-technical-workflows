@@ -30,6 +30,14 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 ---
 
+## Step 0: Run Migrations
+
+**This step is mandatory. You must complete it before proceeding.**
+
+Run `/migrate-documents` and assess its output before proceeding to Step 1.
+
+---
+
 ## Step 1: Run Discovery Script
 
 Run the discovery script to gather current state:

@@ -31,6 +31,14 @@ Before beginning, discover existing work and determine the best entry path.
 
 Use simple, individual commands. Never combine multiple operations into bash loops or one-liners. Execute commands one at a time.
 
+## Step 0: Run Migrations
+
+**This step is mandatory. You must complete it before proceeding.**
+
+Run `/migrate-documents` and assess its output before proceeding to Step 1.
+
+---
+
 ## Step 1: Discover Existing Work
 
 Scan the codebase for research and discussions:
@@ -44,10 +52,8 @@ Scan the codebase for research and discussions:
    - Each file is named `{topic}.md`
 
 3. **Check discussion status**: For each discussion file
-   - Run `head -15 docs/workflow/discussion/{topic}.md` to read the header
-   - Look for status in two possible formats:
-     - **YAML frontmatter** (preferred): `status: in-progress` or `status: concluded` between `---` delimiters
-     - **Legacy markdown**: `**Status**: Exploring/Deciding` (treat as in-progress) or `**Status**: Concluded`
+   - Run `head -10 docs/workflow/discussion/{topic}.md` to read the frontmatter
+   - Extract the `status:` field from YAML frontmatter: `in-progress` or `concluded`
    - Do NOT use bash loops - run separate commands for each file
 
 4. **Check for cached analysis** (if research files exist):
@@ -184,7 +190,7 @@ Then skip to Step 5 (Gather Context) with the fresh topic path.
 ```
 
 **Key:**
-- in-progress (or legacy Exploring/Deciding) = Active discussion
+- in-progress = Active discussion
 - concluded = Complete (can still be reopened)
 
 **Then present the options based on what exists:**

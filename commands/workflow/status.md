@@ -4,6 +4,14 @@ description: Show workflow status - what exists, where you are, and what to do n
 
 Show the current state of the workflow for this project.
 
+## Step 0: Run Migrations
+
+**This step is mandatory. You must complete it before proceeding.**
+
+Run `/migrate-documents` and assess its output before proceeding to Step 1.
+
+---
+
 ## Step 1: Scan Directories
 
 Check for files in each workflow directory:

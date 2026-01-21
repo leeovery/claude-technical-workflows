@@ -15,28 +15,17 @@ SPEC_DIR="docs/workflow/specification"
 CACHE_FILE="docs/workflow/.cache/discussion-consolidation-analysis.md"
 
 # Helper: Extract a frontmatter field value from a file
-# Supports both YAML frontmatter and markdown format (**Field**: Value)
 # Usage: extract_field <file> <field_name>
 extract_field() {
     local file="$1"
     local field="$2"
     local value=""
 
-    # Try YAML frontmatter first (only if file starts with ---)
+    # Extract from YAML frontmatter (file must start with ---)
     if head -1 "$file" 2>/dev/null | grep -q "^---$"; then
         value=$(sed -n '2,/^---$/p' "$file" 2>/dev/null | \
             grep -i -m1 "^${field}:" | \
             sed -E "s/^${field}:[[:space:]]*//i" || true)
-    fi
-
-    # If empty, try markdown format: **Field**: Value
-    # Only search the header (before first ## heading) to avoid body matches
-    if [ -z "$value" ]; then
-        value=$(awk '/^## /{exit} {print}' "$file" 2>/dev/null | \
-            grep -i -m1 "^\*\*${field}\*\*:" | \
-            sed -E "s/^\*\*[^*]+\*\*:[[:space:]]*//" || true)
-        # Normalize to lowercase for consistency
-        value=$(echo "$value" | tr '[:upper:]' '[:lower:]')
     fi
 
     echo "$value"
@@ -75,10 +64,6 @@ if [ -d "$DISCUSSION_DIR" ] && [ -n "$(ls -A "$DISCUSSION_DIR" 2>/dev/null)" ]; 
 
         name=$(basename "$file" .md)
         status=$(extract_field "$file" "status")
-        # Normalize legacy status values
-        case "$status" in
-            exploring|deciding) status="in-progress" ;;
-        esac
         status=${status:-"unknown"}
 
         # Check if this discussion has a corresponding individual spec
@@ -190,10 +175,6 @@ if [ -d "$DISCUSSION_DIR" ] && [ -n "$(ls -A "$DISCUSSION_DIR" 2>/dev/null)" ]; 
     for file in "$DISCUSSION_DIR"/*.md; do
         [ -f "$file" ] || continue
         status=$(extract_field "$file" "status")
-        # Normalize legacy status values
-        case "$status" in
-            exploring|deciding) status="in-progress" ;;
-        esac
         if [ "$status" = "concluded" ]; then
             concluded_count=$((concluded_count + 1))
         fi
