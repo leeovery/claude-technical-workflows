@@ -1,18 +1,18 @@
 ---
-description: Run document migrations to ensure all workflow documents are in the current format. This command is mandatory before running any workflow command.
-allowed-tools: Bash(.claude/scripts/migrate-documents.sh)
+description: Run migrations to keep workflow files in sync with the current system design. This command is mandatory before running any workflow command.
+allowed-tools: Bash(.claude/scripts/migrate.sh)
 ---
 
-# Migrate Documents
+# Migrate
 
-This command runs all pending document migrations to ensure workflow documents are in the current format.
+Keeps your workflow files up to date with how the system is designed to work. Runs all pending migrations automatically.
 
 ## Instructions
 
 Run the migration script:
 
 ```bash
-.claude/scripts/migrate-documents.sh
+.claude/scripts/migrate.sh
 ```
 
 ### If files were updated
@@ -20,7 +20,6 @@ Run the migration script:
 The script will list which files were updated. Present this to the user:
 
 ```
-Documents updated:
 {list from script output}
 
 Review changes with `git diff`, then proceed when ready.

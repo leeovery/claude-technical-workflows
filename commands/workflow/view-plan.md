@@ -8,7 +8,7 @@ Display a readable summary of a plan's phases, tasks, and status.
 
 **This step is mandatory. You must complete it before proceeding.**
 
-Run `/migrate-documents` and assess its output before proceeding to Step 1.
+Run `/migrate` and assess its output before proceeding to Step 1.
 
 ---
 

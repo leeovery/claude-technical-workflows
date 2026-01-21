@@ -8,7 +8,7 @@ Show the current state of the workflow for this project.
 
 **This step is mandatory. You must complete it before proceeding.**
 
-Run `/migrate-documents` and assess its output before proceeding to Step 1.
+Run `/migrate` and assess its output before proceeding to Step 1.
 
 ---
 

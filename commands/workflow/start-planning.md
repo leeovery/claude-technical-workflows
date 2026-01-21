@@ -35,7 +35,7 @@ Use simple, individual commands. Never combine multiple operations into bash loo
 
 **This step is mandatory. You must complete it before proceeding.**
 
-Run `/migrate-documents` and assess its output before proceeding to Step 1.
+Run `/migrate` and assess its output before proceeding to Step 1.
 
 ---
 

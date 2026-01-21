@@ -27,6 +27,8 @@ skills/
   technical-review/          # Phase 6: Validate against artifacts
 
 commands/
+  migrate.md                       # Keep workflow files in sync with system design
+
   # Standalone commands (flexible input)
   start-feature.md                 # Create spec directly from inline context
   link-dependencies.md             # Link dependencies across topics
@@ -46,7 +48,9 @@ agents/
   chain-verifier.md          # Parallel chain verification for review phase
 
 scripts/
+  migrate.sh                 # Migration orchestrator
   specification-discovery.sh # Discovery script for specification command
+  migrations/                # Individual migration scripts (numbered)
 ```
 
 ## Command Architecture
@@ -105,3 +109,18 @@ To add a new planning output format:
 - They then load the appropriate `output-{format}.md` reference file
 
 This keeps format knowledge centralized in the planning phase where it belongs.
+
+## Migrations
+
+The `/migrate` command keeps workflow files in sync with the current system design. It runs automatically at the start of every workflow command (Step 0).
+
+**How it works:**
+- `scripts/migrate.sh` runs all migration scripts in `scripts/migrations/` in numeric order
+- Each migration is idempotent - safe to run multiple times
+- Progress is tracked in `docs/workflow/.cache/migrations.log`
+- Delete the log file to force re-running all migrations
+
+**Adding new migrations:**
+1. Create `scripts/migrations/NNN-description.sh` (e.g., `002-spec-frontmatter.sh`)
+2. The script will be run automatically in numeric order
+3. Use helper functions: `is_migrated`, `record_migration`, `report_update`, `report_skip`

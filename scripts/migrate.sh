@@ -1,12 +1,12 @@
 #!/bin/bash
 #
-# migrate-documents.sh
+# migrate.sh
 #
-# Orchestrator for document migrations. Runs all migration scripts in order,
-# tracking which files have been migrated to avoid redundant processing.
+# Keeps workflow files in sync with the current system design.
+# Runs all migration scripts in order, tracking progress to avoid redundant processing.
 #
 # Usage:
-#   ./scripts/migrate-documents.sh
+#   ./scripts/migrate.sh
 #
 # Tracking:
 #   Migrations are tracked in docs/workflow/.cache/migrations.log
