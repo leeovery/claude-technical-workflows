@@ -27,7 +27,7 @@ This is **Phase 1** of the six-phase workflow:
 
 **This step is mandatory. You must complete it before proceeding.**
 
-Run `/migrate` and assess its output before proceeding.
+Invoke the [/migrate](../migrate.md) command and assess its output before proceeding.
 
 ---
 
