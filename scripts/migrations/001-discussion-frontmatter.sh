@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # 001-discussion-frontmatter.sh
 #
@@ -8,7 +8,8 @@
 #   # Discussion: {Topic}
 #
 #   **Date**: YYYY-MM-DD
-#   **Status**: Exploring | Deciding | Concluded
+#   **Status**: Exploring | Deciding | Concluded | Complete | ✅ Complete
+#   **Status:** Concluded  (alternate: colon outside bold)
 #
 # New format:
 #   ---
@@ -21,7 +22,7 @@
 #
 # Status mapping:
 #   Exploring, Deciding → in-progress
-#   Concluded → concluded
+#   Concluded, Complete, ✅ Complete → concluded
 #
 # This script is sourced by migrate-documents.sh and has access to:
 #   - is_migrated "filepath" "migration_id"
@@ -57,8 +58,8 @@ for file in "$DISCUSSION_DIR"/*.md; do
         continue
     fi
 
-    # Check if file has legacy format (look for **Status**: or **Date**:)
-    if ! grep -q '^\*\*Status\*\*:\|^\*\*Date\*\*:' "$file" 2>/dev/null; then
+    # Check if file has legacy format (look for **Status**: or **Status:** or **Date**: or **Started:**)
+    if ! grep -q '^\*\*Status\*\*:\|^\*\*Status:\*\*\|^\*\*Date\*\*:\|^\*\*Started:\*\*' "$file" 2>/dev/null; then
         # No legacy format found - might be malformed, skip
         record_migration "$file" "$MIGRATION_ID"
         report_skip "$file"
@@ -69,23 +70,24 @@ for file in "$DISCUSSION_DIR"/*.md; do
     # Extract values from legacy format
     #
 
-    # Extract topic from "# Discussion: {Topic}" heading
-    topic=$(grep -m1 "^# Discussion:" "$file" | sed 's/^# Discussion:[[:space:]]*//')
-    # Convert to kebab-case for frontmatter (lowercase, spaces to hyphens)
-    topic_kebab=$(echo "$topic" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | sed 's/[^a-z0-9-]//g')
+    # Use filename as topic (canonical identifier throughout the workflow)
+    topic_kebab=$(basename "$file" .md)
 
-    # Extract date from **Date**: YYYY-MM-DD
-    date_value=$(grep -m1 '^\*\*Date\*\*:' "$file" | sed 's/^\*\*Date\*\*:[[:space:]]*//' | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' || echo "")
+    # Extract date from **Date**: YYYY-MM-DD or **Started:** YYYY-MM-DD
+    date_value=$(grep -m1 '^\*\*Date\*\*:\|^\*\*Started:\*\*' "$file" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' || echo "")
 
-    # Extract status from **Status**: Value
-    status_raw=$(grep -m1 '^\*\*Status\*\*:' "$file" | sed 's/^\*\*Status\*\*:[[:space:]]*//' | tr '[:upper:]' '[:lower:]')
+    # Extract status from **Status**: Value or **Status:** Value (colon inside or outside bold)
+    # First extract the line, then remove all variations of the prefix
+    status_raw=$(grep -m1 '^\*\*Status' "$file" | sed 's/^\*\*Status\*\*:[[:space:]]*//' | sed 's/^\*\*Status:\*\*[[:space:]]*//' | tr '[:upper:]' '[:lower:]')
+    # Remove any emoji characters (like ✅) and trim whitespace
+    status_raw=$(echo "$status_raw" | sed 's/✅//g' | xargs)
 
     # Map legacy status to new values
     case "$status_raw" in
         exploring|deciding)
             status_new="in-progress"
             ;;
-        concluded)
+        concluded|complete)
             status_new="concluded"
             ;;
         *)
@@ -96,11 +98,6 @@ for file in "$DISCUSSION_DIR"/*.md; do
     # Use today's date if none found
     if [ -z "$date_value" ]; then
         date_value=$(date +%Y-%m-%d)
-    fi
-
-    # Use filename as topic if none found
-    if [ -z "$topic_kebab" ]; then
-        topic_kebab=$(basename "$file" .md)
     fi
 
     #
@@ -114,29 +111,26 @@ status: $status_new
 date: $date_value
 ---"
 
-    # Get file content, removing old header lines
-    # Remove: **Date**: ... and **Status**: ... lines
-    # Keep everything else
-    content=$(sed '/^\*\*Date\*\*:/d; /^\*\*Status\*\*:/d' "$file")
+    # Extract H1 heading (preserve original)
+    h1_heading=$(grep -m1 "^# " "$file")
 
-    # Collapse multiple blank lines after # Discussion: heading to single blank line
-    # (The removed **Date**/**Status** lines leave extra blank lines)
-    content=$(echo "$content" | awk '
-        /^# Discussion:/ {
-            print
-            # Skip all blank lines after heading
-            while ((getline line) > 0 && line ~ /^[[:space:]]*$/) {}
-            # Print a single blank line, then the non-blank line we found
-            print ""
-            print line
-            next
-        }
-        { print }
-    ')
+    # Find line number of first ## heading (start of real content)
+    first_section_line=$(grep -n "^## " "$file" | head -1 | cut -d: -f1)
 
-    # Write new content
+    # Get content from first ## onwards (preserves all content including **Status:** in decisions)
+    if [ -n "$first_section_line" ]; then
+        content=$(tail -n +$first_section_line "$file")
+    else
+        # No ## found - take everything after metadata block
+        # Find first blank line after H1, then take from there
+        content=""
+    fi
+
+    # Write new content: frontmatter + H1 + blank line + content
     {
         echo "$frontmatter"
+        echo ""
+        echo "$h1_heading"
         echo ""
         echo "$content"
     } > "$file"
