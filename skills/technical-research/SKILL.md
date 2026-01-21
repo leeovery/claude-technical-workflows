@@ -58,9 +58,18 @@ Ask one question at a time. Wait for the answer. Document. Then ask the next.
 
 **Output**: `docs/workflow/research/exploration.md`
 
+**Template**: Use `references/template.md` for document structure. All research documents use YAML frontmatter:
+
+```yaml
+---
+topic: exploration
+date: YYYY-MM-DD
+---
+```
+
 Start with one file. Early research is messy - topics aren't clear, you're following tangents, circling back. Don't force structure too early.
 
-**Let themes emerge**: Over multiple sessions, topics may become distinct. When they do, split into semantic files (`market-landscape.md`, `technical-feasibility.md`).
+**Let themes emerge**: Over multiple sessions, topics may become distinct. When they do, split into semantic files (`market-landscape.md`, `technical-feasibility.md`). Update the `topic` field to match the filename.
 
 **Periodic review**: Every few sessions, assess: are themes emerging? Split them out. Still fuzzy? Keep exploring. Ready for deeper discussion or specification? Research is complete.
 

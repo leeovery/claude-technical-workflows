@@ -45,7 +45,7 @@ Documents should use YAML frontmatter for metadata.
 | Discussion | ✅ | `topic`, `status`, `date` | `skills/technical-discussion/references/template.md` |
 | Specification | ✅ | `topic`, `status`, `date`, `sources`, `superseded_by` | `skills/technical-specification/references/specification-guide.md` |
 | Plan | ⬜ TODO | `topic`, `status`, `date`, `format`, `specification` | `skills/technical-planning/references/` |
-| Research | ⬜ DISCUSS | TBD - may stay freeform | `skills/technical-research/references/` |
+| Research | ✅ | `topic`, `date` | `skills/technical-research/references/template.md` |
 
 ### C. Status Values
 
@@ -76,7 +76,7 @@ Update commands to match start-specification formatting style.
 
 | Command | Formatting Updated | Notes |
 |---------|-------------------|-------|
-| `workflow/start-research.md` | ⬜ TODO | Simple command, may need minimal changes |
+| `workflow/start-research.md` | ✅ | Added step numbers, STOP point |
 | `workflow/start-discussion.md` | ⬜ TODO | Complex - has discovery, caching, routing |
 | `workflow/start-specification.md` | ✅ Reference | This is the reference implementation |
 | `workflow/start-planning.md` | ⬜ TODO | Need to review |
@@ -99,23 +99,25 @@ Cache files for avoiding redundant analysis.
 
 ## Phase-by-Phase Review
 
-### Phase 1: Research
+### Phase 1: Research ✅
 
-**Current state:**
-- No frontmatter on research files
-- No status concept (exploration is ongoing)
-- No discovery script needed (discussion does the analysis)
-- Freeform file structure (`exploration.md` → semantic files)
+**Status: Complete**
 
-**Questions to resolve:**
-- [ ] Should research files have minimal frontmatter (`date` only)?
-- [ ] Should there be a research template?
-- [ ] Any changes to the skill needed?
+**Decisions made:**
+- Research files use minimal frontmatter: `topic` and `date`
+- `topic` is `exploration` for initial file, semantic names when split
+- No status field - research is ongoing exploration
+- No discovery script needed (discussion phase analyzes research)
 
-**Files to review:**
+**Changes made:**
+- Created `skills/technical-research/references/template.md`
+- Updated `skills/technical-research/SKILL.md` to reference template
+- Updated `commands/workflow/start-research.md` formatting (step numbers, STOP point)
+
+**Files updated:**
 - `commands/workflow/start-research.md`
 - `skills/technical-research/SKILL.md`
-- `skills/technical-research/references/interview.md`
+- `skills/technical-research/references/template.md` (new)
 
 ---
 
@@ -232,7 +234,8 @@ Cache files for avoiding redundant analysis.
 
 | Date | Phase | Change | Commit |
 |------|-------|--------|--------|
-| 2026-01-21 | Setup | Created this planning document | |
+| 2026-01-21 | Setup | Created this planning document | fad6191 |
+| 2026-01-21 | Research | Added template, updated skill and command | pending |
 
 ---
 

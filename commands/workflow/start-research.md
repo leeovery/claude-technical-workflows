@@ -23,13 +23,19 @@ This is **Phase 1** of the six-phase workflow:
 
 ## Instructions
 
+Follow these steps in order.
+
+---
+
 ## Step 0: Run Migrations
 
 **This step is mandatory. You must complete it before proceeding.**
 
-Invoke the `/migrate` command and assess its output before proceeding.
+Invoke the `/migrate` command and assess its output before proceeding to Step 1.
 
 ---
+
+## Step 1: Gather Context
 
 Ask these questions to gather context:
 
@@ -45,9 +51,13 @@ Ask these questions to gather context:
    - Technical feasibility? Market landscape? Business model?
    - Or just talk it through and see where it goes?
 
-Ask these questions clearly and wait for responses before proceeding.
+**STOP.** Wait for user responses before proceeding.
 
-## Invoke the Skill
+→ Proceed to **Step 2**.
+
+---
+
+## Step 2: Invoke the Skill
 
 After completing the steps above, this command's purpose is fulfilled.
 
