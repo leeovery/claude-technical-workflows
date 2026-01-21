@@ -128,8 +128,6 @@ done
 #
 if [ "$FILES_UPDATED" -gt 0 ]; then
     echo "$FILES_UPDATED file(s) updated. Review with \`git diff\`, then proceed."
-    exit 1  # Non-zero to signal changes were made
 else
     echo "All documents up to date."
-    exit 0
 fi
