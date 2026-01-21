@@ -7,13 +7,13 @@ Use this template when creating research documents.
 ```yaml
 ---
 topic: {topic-name}
-date: YYYY-MM-DD
+date: 2026-01-21
 ---
 ```
 
 **Fields:**
 - `topic`: Use `exploration` for the initial exploration file. Use semantic names (`market-landscape`, `technical-feasibility`) when splitting into focused files.
-- `date`: Date the document was created.
+- `date`: Today's date when creating the document.
 
 ## Structure
 

@@ -63,7 +63,7 @@ Ask one question at a time. Wait for the answer. Document. Then ask the next.
 ```yaml
 ---
 topic: exploration
-date: YYYY-MM-DD
+date: 2026-01-21
 ---
 ```
 
