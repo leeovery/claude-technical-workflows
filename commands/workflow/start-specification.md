@@ -145,7 +145,19 @@ Proceeding with this discussion.
 
 #### If MULTIPLE concluded discussions exist with NO existing specifications
 
-No existing specs to continue - proceed directly to analysis.
+Check the `cache_validity.is_valid` value from discovery.
+
+##### If valid cache exists
+
+```
+{N} concluded discussions found.
+
+Previous analysis available from {cached_date}. Loading groupings...
+```
+
+→ Skip directly to **Step 7: Present Grouping Options**.
+
+##### If no valid cache exists
 
 ```
 {N} concluded discussions found.
@@ -156,6 +168,24 @@ Analyzing discussions for natural groupings...
 → Proceed to **Step 4: Gather Analysis Context**.
 
 #### If MULTIPLE concluded discussions exist WITH existing specifications
+
+Check the `cache_validity.is_valid` value from discovery to determine which options to present.
+
+##### If valid cache exists (`cache_validity.is_valid: true`)
+
+```
+What would you like to do?
+
+1. **Continue an existing specification** - Resume work on a spec in progress
+2. **Select from groupings** - Choose from previously analyzed groupings ({cached_date})
+3. **Re-analyze groupings** - Fresh analysis of discussion relationships
+
+Which approach?
+```
+
+**STOP.** Wait for user response.
+
+##### If no valid cache exists
 
 ```
 What would you like to do?
@@ -179,7 +209,22 @@ Which specification would you like to continue?
 
 **STOP.** Wait for user to pick, then skip to **Step 9**.
 
-#### If "Assess for groupings"
+#### If "Select from groupings" (valid cache path)
+
+Load groupings from cache and → Skip directly to **Step 7: Present Grouping Options**.
+
+(Context was already gathered when the analysis was created - no need to ask again.)
+
+#### If "Re-analyze groupings"
+
+Delete the existing cache to force regeneration:
+```bash
+rm docs/workflow/.cache/discussion-consolidation-analysis.md
+```
+
+→ Proceed to **Step 4: Gather Analysis Context**.
+
+#### If "Assess for groupings" (no valid cache path)
 
 → Proceed to **Step 4: Gather Analysis Context**.
 
