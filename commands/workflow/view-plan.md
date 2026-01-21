@@ -4,6 +4,14 @@ description: View a plan's tasks and progress, regardless of output format.
 
 Display a readable summary of a plan's phases, tasks, and status.
 
+## Step 0: Run Migrations
+
+**This step is mandatory. You must complete it before proceeding.**
+
+Invoke the `/migrate` command and assess its output before proceeding to Step 1.
+
+---
+
 ## Step 1: Identify the Plan
 
 If no topic is specified, list available plans:

@@ -251,7 +251,9 @@ agents/
 └── chain-verifier.md                # Parallel task verification for review
 
 scripts/                             # Helper scripts for commands
-└── specification-discovery.sh       # Discovery for specification command
+├── migrate.sh                       # Migration orchestrator
+├── specification-discovery.sh       # Discovery for specification command
+└── migrations/                      # Individual migration scripts (numbered)
 ```
 
 ## Skills
@@ -286,10 +288,11 @@ Sequential commands in `commands/workflow/`. They expect files from previous pha
 
 ### Utility Commands
 
-Helpers for navigating and understanding the workflow.
+Helpers for navigating and maintaining the workflow.
 
 | Command                                                                              | Description                                                                                                                                 |
 |--------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| [**/migrate**](commands/migrate.md)                                         | Keep workflow files in sync with the current system design. Runs automatically at the start of every workflow command.                      |
 | [**/status**](commands/workflow/status.md)                                  | Show workflow status - what topics exist at each phase, and suggested next steps.                                                           |
 | [**/view-plan**](commands/workflow/view-plan.md)                            | View a plan's tasks and progress, regardless of output format.                                                                              |
 

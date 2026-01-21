@@ -30,6 +30,14 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 ---
 
+## Step 0: Run Migrations
+
+**This step is mandatory. You must complete it before proceeding.**
+
+Invoke the `/migrate` command and assess its output before proceeding to Step 1.
+
+---
+
 ## Step 1: Run Discovery Script
 
 Run the discovery script to gather current state:
@@ -78,9 +86,9 @@ The specification phase requires a completed discussion. Please run /start-discu
 ```
 No concluded discussions found.
 
-The following discussions are still exploring:
-  - {topic-1} (exploring)
-  - {topic-2} (exploring)
+The following discussions are still in progress:
+  - {topic-1} (in-progress)
+  - {topic-2} (in-progress)
 
 Please complete the discussion phase before creating specifications. Run /start-discussion to continue a discussion.
 ```
@@ -106,7 +114,7 @@ Discussions:
   ✓ {topic-1} - concluded - ready
   ✓ {topic-2} - concluded - ready
   ○ {topic-3} - concluded - has individual spec
-  · {topic-4} - exploring - not ready
+  · {topic-4} - in-progress - not ready
 
 Specifications:
   • {spec-1} (active) - sources: {topic-1}
@@ -118,7 +126,7 @@ Specifications:
 **Legend:**
 - `✓` = concluded, no spec yet (ready to specify)
 - `○` = concluded, has individual spec (can be combined or continued)
-- `·` = not concluded (not ready)
+- `·` = in-progress (not ready)
 
 #### Routing Based on State
 

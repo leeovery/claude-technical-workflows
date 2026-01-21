@@ -23,6 +23,14 @@ This is **Phase 1** of the six-phase workflow:
 
 ## Instructions
 
+## Step 0: Run Migrations
+
+**This step is mandatory. You must complete it before proceeding.**
+
+Invoke the `/migrate` command and assess its output before proceeding.
+
+---
+
 Ask these questions to gather context:
 
 1. **What's on your mind?**
