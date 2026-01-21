@@ -35,7 +35,7 @@ Use simple, individual commands. Never combine multiple operations into bash loo
 
 **This step is mandatory. You must complete it before proceeding.**
 
-Invoke the [/migrate](../migrate.md) command and assess its output before proceeding to Step 1.
+Invoke the `/migrate` command and assess its output before proceeding to Step 1.
 
 ---
 

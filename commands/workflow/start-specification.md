@@ -34,7 +34,7 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 **This step is mandatory. You must complete it before proceeding.**
 
-Invoke the [/migrate](../migrate.md) command and assess its output before proceeding to Step 1.
+Invoke the `/migrate` command and assess its output before proceeding to Step 1.
 
 ---
 
