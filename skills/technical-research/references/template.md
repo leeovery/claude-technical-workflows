@@ -7,7 +7,7 @@ Use this template when creating research documents.
 ```yaml
 ---
 topic: {topic-name}
-date: 2026-01-21
+date: YYYY-MM-DD  # Use today's actual date
 ---
 ```
 
@@ -20,7 +20,7 @@ date: 2026-01-21
 ```markdown
 ---
 topic: exploration
-date: 2026-01-21
+date: YYYY-MM-DD  # Use today's actual date
 ---
 
 # Research: {Title}
