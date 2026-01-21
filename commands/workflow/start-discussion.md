@@ -185,7 +185,7 @@ Then skip to Step 5 (Gather Context) with the fresh topic path.
   • {topic}.md — {Status}
     "{Brief description from context section}"
 
-  • {topic}.md — Concluded
+  • {topic}.md — concluded
     "{Brief description}"
 ```
 
