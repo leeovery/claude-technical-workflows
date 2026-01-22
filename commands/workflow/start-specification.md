@@ -56,12 +56,11 @@ This outputs structured YAML. Parse it to understand:
 - Specifications with `status: superseded` should be noted but excluded from active counts
 
 **From `cache` section:**
-- Whether a consolidation analysis cache exists
-- The `anchored_names` list - these are grouping names that have existing specifications and MUST be preserved in any regeneration
-
-**From `cache_validity` section:**
-- Whether the cache is still valid (`is_valid: true/false`)
-- The reason if invalid
+- `exists` - whether a consolidation analysis cache file exists
+- `is_valid` - whether the cache is still valid (checksums match current discussions)
+- `reason` - explanation if invalid (e.g., "discussions have changed since cache was generated")
+- `generated` - when the cache was created
+- `anchored_names` - grouping names that have existing specifications and MUST be preserved in any regeneration
 
 **IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
 
@@ -145,23 +144,23 @@ Proceeding with this discussion.
 
 #### If MULTIPLE concluded discussions exist with NO existing specifications
 
-Check the `cache_validity.is_valid` value from discovery.
+Check `cache.is_valid` from discovery.
 
-##### If valid cache exists
+##### If `cache.is_valid: true`
 
 ```
 {N} concluded discussions found.
 
-Previous analysis available from {cached_date}. Loading groupings...
+Previous analysis available from {cache.generated}. Loading groupings...
 ```
 
 → Skip directly to **Step 7: Present Grouping Options**.
 
-##### If no valid cache exists
+##### If `cache.is_valid: false`
 
-Check `cache.exists` from discovery to determine which message to show.
+Check `cache.exists` to determine which message to show.
 
-**If cache exists but is invalid** (discussions have changed):
+**If `cache.exists: true`** (cache is stale - discussions have changed):
 
 ```
 {N} concluded discussions found.
@@ -171,7 +170,7 @@ Note: A previous grouping analysis exists but is now outdated - discussion docum
 Analyzing discussions for natural groupings...
 ```
 
-**If no cache exists at all:**
+**If `cache.exists: false`** (no prior analysis):
 
 ```
 {N} concluded discussions found.
@@ -183,15 +182,15 @@ Analyzing discussions for natural groupings...
 
 #### If MULTIPLE concluded discussions exist WITH existing specifications
 
-Check the `cache_validity.is_valid` value from discovery to determine which options to present.
+Check `cache.is_valid` from discovery to determine which options to present.
 
-##### If valid cache exists (`cache_validity.is_valid: true`)
+##### If `cache.is_valid: true`
 
 ```
 What would you like to do?
 
 1. **Continue an existing specification** - Resume work on a spec in progress
-2. **Select from groupings** - Choose from previously analyzed groupings ({cached_date})
+2. **Select from groupings** - Choose from previously analyzed groupings ({cache.generated})
 3. **Re-analyze groupings** - Fresh analysis of discussion relationships
 
 Which approach?
@@ -199,11 +198,11 @@ Which approach?
 
 **STOP.** Wait for user response.
 
-##### If no valid cache exists
+##### If `cache.is_valid: false`
 
-Check `cache.exists` from discovery to determine which message to show.
+Check `cache.exists` to determine which message to show.
 
-**If cache exists but is invalid** (discussions have changed):
+**If `cache.exists: true`** (cache is stale - discussions have changed):
 
 ```
 What would you like to do?
@@ -216,7 +215,7 @@ Note: A previous grouping analysis exists but is now outdated - discussion docum
 Which approach?
 ```
 
-**If no cache exists at all:**
+**If `cache.exists: false`** (no prior analysis):
 
 ```
 What would you like to do?
@@ -280,14 +279,14 @@ For example:
 
 ## Step 5: Check Cache Validity
 
-Check the `cache_validity.is_valid` value from the discovery state.
+Check `cache.is_valid` from discovery.
 
 #### If cache is valid
 
 ```
 Using cached analysis
 
-Discussion documents unchanged since last analysis ({cached_date}).
+Discussion documents unchanged since last analysis ({cache.generated}).
 Loading previously identified groupings...
 ```
 
@@ -296,7 +295,7 @@ Load groupings from cache and → Skip to **Step 7: Present Grouping Options**.
 #### If cache is invalid or missing
 
 ```
-{Reason from cache_validity.reason}
+{cache.reason}
 
 Analyzing discussions...
 ```
