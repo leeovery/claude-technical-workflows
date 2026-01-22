@@ -1,5 +1,6 @@
 ---
 description: Start a technical discussion. Discovers research and existing discussions, offers multiple entry paths, and invokes the technical-discussion skill.
+allowed-tools: Bash(.claude/scripts/discussion-discovery.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/research-analysis.md)
 ---
 
 Invoke the **technical-discussion** skill for this conversation.
@@ -8,14 +9,14 @@ Invoke the **technical-discussion** skill for this conversation.
 
 This is **Phase 2** of the six-phase workflow:
 
-| Phase | Focus | You |
-|-------|-------|-----|
-| 1. Research | EXPLORE - ideas, feasibility, market, business | |
-| **2. Discussion** | WHAT and WHY - decisions, architecture, edge cases | ◀ HERE |
-| 3. Specification | REFINE - validate into standalone spec | |
-| 4. Planning | HOW - phases, tasks, acceptance criteria | |
-| 5. Implementation | DOING - tests first, then code | |
-| 6. Review | VALIDATING - check work against artifacts | |
+| Phase              | Focus                                              | You    |
+|--------------------|----------------------------------------------------|--------|
+| 1. Research        | EXPLORE - ideas, feasibility, market, business     |        |
+| **2. Discussion**  | WHAT and WHY - decisions, architecture, edge cases | ◀ HERE |
+| 3. Specification   | REFINE - validate into standalone spec             |        |
+| 4. Planning        | HOW - phases, tasks, acceptance criteria           |        |
+| 5. Implementation  | DOING - tests first, then code                     |        |
+| 6. Review          | VALIDATING - check work against artifacts          |        |
 
 **Stay in your lane**: Capture the WHAT and WHY - decisions, rationale, competing approaches, edge cases. Don't jump to specifications, plans, or code. This is the time for debate and documentation.
 
@@ -25,11 +26,9 @@ This is **Phase 2** of the six-phase workflow:
 
 Follow these steps EXACTLY as written. Do not skip steps or combine them. Present output using the EXACT format shown in examples - do not simplify or alter the formatting.
 
-Before beginning, discover existing work and determine the best entry path.
+**CRITICAL**: After each user interaction, STOP and wait for their response before proceeding. Never assume or anticipate user choices.
 
-## Important
-
-Use simple, individual commands. Never combine multiple operations into bash loops or one-liners. Execute commands one at a time.
+---
 
 ## Step 0: Run Migrations
 
@@ -39,32 +38,41 @@ Invoke the `/migrate` command and assess its output before proceeding to Step 1.
 
 ---
 
-## Step 1: Discover Existing Work
+## Step 1: Run Discovery Script
 
-Scan the codebase for research and discussions:
+Run the discovery script to gather current state:
 
-1. **Find research**: Look in `docs/workflow/research/`
-   - Run `ls docs/workflow/research/` to list research files
-   - Note which files exist (may include `exploration.md` and semantic files like `market-landscape.md`)
+```bash
+.claude/scripts/discussion-discovery.sh
+```
 
-2. **Find discussions**: Look in `docs/workflow/discussion/`
-   - Run `ls docs/workflow/discussion/` to list discussion files
-   - Each file is named `{topic}.md`
+This outputs structured YAML. Parse it to understand:
 
-3. **Check discussion status**: For each discussion file
-   - Run `head -10 docs/workflow/discussion/{topic}.md` to read the frontmatter
-   - Extract the `status:` field from YAML frontmatter: `in-progress` or `concluded`
-   - Do NOT use bash loops - run separate commands for each file
+**From `research` section:**
+- `exists` - whether research files exist
+- `files` - each research file's name and topic
+- `checksum` - current checksum of all research files
 
-4. **Check for cached analysis** (if research files exist):
-   - Check if `docs/workflow/.cache/research-analysis.md` exists
-   - If it exists, read it to get the stored checksum from the frontmatter
+**From `discussions` section:**
+- `exists` - whether discussion files exist
+- `files` - each discussion's name, status, and date
+- `counts.in_progress` and `counts.concluded` - totals for routing
 
-5. **Compute current research checksum** (if research files exist):
-   - Run exactly: `cat docs/workflow/research/*.md 2>/dev/null | md5sum | cut -d' ' -f1`
-   - IMPORTANT: Use this exact command - glob expansion is alphabetically sorted by default
-   - Do NOT modify or "simplify" this command - checksum must be deterministic
-   - Store this value to compare with the cached checksum
+**From `cache` section:**
+- `status` - one of three values:
+  - `"valid"` - cache exists and checksums match (safe to load)
+  - `"stale"` - cache exists but research has changed (needs re-analysis)
+  - `"none"` - no cache file exists
+- `reason` - explanation of the status
+- `generated` - when the cache was created (null if none)
+- `research_files` - list of files that were analyzed
+
+**From `state` section:**
+- `scenario` - one of: `"fresh"`, `"research_only"`, `"discussions_only"`, `"research_and_discussions"`
+
+**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
+
+→ Proceed to **Step 2**.
 
 ## Step 2: Analyze Research (if exists)
 
