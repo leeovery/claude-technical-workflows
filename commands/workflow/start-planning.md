@@ -1,5 +1,6 @@
 ---
 description: Start a planning session from an existing specification. Discovers available specifications, asks where to store the plan, and invokes the technical-planning skill.
+allowed-tools: Bash(.claude/scripts/planning-discovery.sh)
 ---
 
 Invoke the **technical-planning** skill for this conversation.
@@ -25,11 +26,9 @@ This is **Phase 4** of the six-phase workflow:
 
 Follow these steps EXACTLY as written. Do not skip steps or combine them. Present output using the EXACT format shown in examples - do not simplify or alter the formatting.
 
-Before beginning, discover existing work and gather necessary information.
+**CRITICAL**: After each user interaction, STOP and wait for their response before proceeding. Never assume or anticipate user choices.
 
-## Important
-
-Use simple, individual commands. Never combine multiple operations into bash loops or one-liners. Execute commands one at a time.
+---
 
 ## Step 0: Run Migrations
 
@@ -39,64 +38,117 @@ Invoke the `/migrate` command and assess its output before proceeding to Step 1.
 
 ---
 
-## Step 1: Discover Existing Work
+## Step 1: Run Discovery Script
 
-Scan the codebase for specifications and plans:
+Run the discovery script to gather current state:
 
-1. **Find specifications**: Look in `docs/workflow/specification/`
-   - Run `ls docs/workflow/specification/` to list specification files
-   - Each file is named `{topic}.md`
-
-2. **Check specification metadata**: For each specification file
-   - Run `head -20 docs/workflow/specification/{topic}.md` to read the frontmatter
-   - Extract the `status:` field (Building specification | Complete)
-   - Extract the `type:` field (feature | cross-cutting) - if not present, default to `feature`
-   - Do NOT use bash loops - run separate `head` commands for each topic
-
-3. **Categorize specifications**:
-   - **Feature specifications** (`type: feature` or unspecified): Candidates for planning
-   - **Cross-cutting specifications** (`type: cross-cutting`): Reference context only - do NOT offer for planning
-
-4. **Check for existing plans**: Look in `docs/workflow/planning/`
-   - Identify feature specifications that don't have corresponding plans
-
-## Step 2: Check Prerequisites
-
-**If no specifications exist:**
-
-```
-⚠️ No specifications found in docs/workflow/specification/
-
-The planning phase requires a completed specification. Please run /start-specification first to validate and refine the discussion content into a standalone specification before creating a plan.
+```bash
+.claude/scripts/planning-discovery.sh
 ```
 
-Stop here and wait for the user to acknowledge.
+This outputs structured YAML. Parse it to understand:
 
-## Step 3: Present Options to User
+**From `specifications` section:**
+- `exists` - whether any specifications exist
+- `feature` - list of feature specs (name, status, has_plan)
+- `crosscutting` - list of cross-cutting specs (name, status)
+- `counts.feature` - total feature specifications
+- `counts.feature_ready` - feature specs ready for planning (Complete + no plan)
+- `counts.crosscutting` - total cross-cutting specifications
 
-Show what you found, separating feature specs (planning targets) from cross-cutting specs (reference context):
+**From `plans` section:**
+- `exists` - whether any plans exist
+- `files` - each plan's name, format, and status
+
+**From `state` section:**
+- `scenario` - one of: `"no_specs"`, `"no_ready_specs"`, `"single_ready_spec"`, `"multiple_ready_specs"`
+
+**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
+
+→ Proceed to **Step 2**.
+
+---
+
+## Step 2: Route Based on Scenario
+
+Use `state.scenario` from the discovery output to determine the path:
+
+#### If scenario is "no_specs"
+
+No specifications exist yet.
 
 ```
-📂 Feature Specifications (planning targets):
-  ⚠️ {topic-1} - Building specification - not ready for planning
-  ✅ {topic-2} - Complete - ready for planning
-  ✅ {topic-3} - Complete - plan exists
+No specifications found in docs/workflow/specification/
 
-📚 Cross-Cutting Specifications (reference context):
-  ✅ {caching-strategy} - Complete - will inform planning
-  ✅ {rate-limiting} - Complete - will inform planning
-
-Which feature specification would you like to create a plan for?
+The planning phase requires a completed specification. Please run /start-specification first to create one.
 ```
 
-**Important:**
-- Only completed **feature** specifications should proceed to planning
-- **Cross-cutting** specifications are NOT planning targets - they inform feature plans
-- If a specification is still being built, advise the user to complete the specification phase first
+**STOP.** Wait for user to acknowledge before ending.
 
-**Auto-select:** If exactly one completed feature specification exists, automatically select it and proceed to Step 4. Inform the user which specification was selected. Do not ask for confirmation.
+#### If scenario is "no_ready_specs"
 
-Ask: **Which feature specification would you like to plan?**
+Specifications exist but none are ready for planning (either still building, or already have plans).
+
+→ Proceed to **Step 3** to show the state.
+
+#### If scenario is "single_ready_spec" or "multiple_ready_specs"
+
+Specifications are ready for planning.
+
+→ Proceed to **Step 3** to present options.
+
+## Step 3: Present Workflow State and Options
+
+Present everything discovered to help the user make an informed choice.
+
+**Present the full state:**
+
+```
+Workflow Status: Planning Phase
+
+Feature specifications:
+  1. · {topic-1} (Building) - not ready
+  2. ✓ {topic-2} (Complete) - ready for planning
+  3. - {topic-3} (Complete) → plan exists
+
+Cross-cutting specifications (reference context):
+  - {caching-strategy} (Complete)
+  - {rate-limiting} (Complete)
+
+Existing plans:
+  - {topic-3}.md (In Progress, local-markdown)
+```
+
+**Legend:**
+- `·` = not ready for planning (still building)
+- `✓` = ready for planning (Complete, no plan yet)
+- `-` = already has a plan
+
+**Then present options based on what's ready:**
+
+**If multiple specs ready for planning:**
+```
+Which specification would you like to plan? (Enter a number or name)
+```
+
+**If single spec ready for planning (auto-select):**
+```
+Auto-selecting: {topic} (only ready specification)
+```
+→ Proceed directly to **Step 4**.
+
+**If no specs ready for planning:**
+```
+No specifications ready for planning.
+
+To proceed:
+- Complete any "Building" specifications with /start-specification
+- Or create a new specification first
+```
+
+**STOP.** Wait for user response before proceeding.
+
+→ Based on user choice, proceed to **Step 4**.
 
 ## Step 4: Choose Output Destination
 
