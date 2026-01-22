@@ -119,29 +119,32 @@ fi
 echo ""
 
 #
-# CACHE STATE (includes validity check)
+# CACHE STATE
+#
+# status: "valid" | "stale" | "none"
+#   - valid: cache exists and checksums match
+#   - stale: cache exists but discussions have changed
+#   - none: no cache file exists
 #
 echo "cache:"
 
 if [ -f "$CACHE_FILE" ]; then
-    echo "  exists: true"
-
     cached_checksum=$(extract_field "$CACHE_FILE" "checksum")
     cached_date=$(extract_field "$CACHE_FILE" "generated")
 
-    # Compute validity inline
+    # Determine status based on checksum comparison
     if [ -d "$DISCUSSION_DIR" ] && [ -n "$(ls -A "$DISCUSSION_DIR" 2>/dev/null)" ]; then
         current_checksum=$(cat "$DISCUSSION_DIR"/*.md 2>/dev/null | md5sum | cut -d' ' -f1)
 
         if [ "$cached_checksum" = "$current_checksum" ]; then
-            echo "  is_valid: true"
+            echo "  status: \"valid\""
             echo "  reason: \"checksums match\""
         else
-            echo "  is_valid: false"
+            echo "  status: \"stale\""
             echo "  reason: \"discussions have changed since cache was generated\""
         fi
     else
-        echo "  is_valid: false"
+        echo "  status: \"stale\""
         echo "  reason: \"no discussions to compare\""
     fi
 
@@ -168,8 +171,7 @@ if [ -f "$CACHE_FILE" ]; then
         echo "    []  # No anchored names found"
     fi
 else
-    echo "  exists: false"
-    echo "  is_valid: false"
+    echo "  status: \"none\""
     echo "  reason: \"no cache exists\""
     echo "  checksum: null"
     echo "  generated: null"

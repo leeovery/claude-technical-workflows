@@ -56,10 +56,12 @@ This outputs structured YAML. Parse it to understand:
 - Specifications with `status: superseded` should be noted but excluded from active counts
 
 **From `cache` section:**
-- `exists` - whether a consolidation analysis cache file exists
-- `is_valid` - whether the cache is still valid (checksums match current discussions)
-- `reason` - explanation if invalid (e.g., "discussions have changed since cache was generated")
-- `generated` - when the cache was created
+- `status` - one of three values:
+  - `"valid"` - cache exists and checksums match (safe to load)
+  - `"stale"` - cache exists but discussions have changed (needs re-analysis)
+  - `"none"` - no cache file exists
+- `reason` - explanation of the status
+- `generated` - when the cache was created (null if none)
 - `anchored_names` - grouping names that have existing specifications and MUST be preserved in any regeneration
 
 **IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
@@ -144,9 +146,9 @@ Proceeding with this discussion.
 
 #### If MULTIPLE concluded discussions exist with NO existing specifications
 
-Check `cache.is_valid` from discovery.
+Check `cache.status` from discovery.
 
-##### If `cache.is_valid: true`
+##### If `cache.status: "valid"`
 
 ```
 {N} concluded discussions found.
@@ -156,11 +158,7 @@ Previous analysis available from {cache.generated}. Loading groupings...
 
 → Skip directly to **Step 7: Present Grouping Options**.
 
-##### If `cache.is_valid: false`
-
-Check `cache.exists` to determine which message to show.
-
-**If `cache.exists: true`** (cache is stale - discussions have changed):
+##### If `cache.status: "stale"`
 
 ```
 {N} concluded discussions found.
@@ -170,7 +168,9 @@ Note: A previous grouping analysis exists but is now outdated - discussion docum
 Analyzing discussions for natural groupings...
 ```
 
-**If `cache.exists: false`** (no prior analysis):
+→ Proceed to **Step 4: Gather Analysis Context**.
+
+##### If `cache.status: "none"`
 
 ```
 {N} concluded discussions found.
@@ -182,9 +182,9 @@ Analyzing discussions for natural groupings...
 
 #### If MULTIPLE concluded discussions exist WITH existing specifications
 
-Check `cache.is_valid` from discovery to determine which options to present.
+Check `cache.status` from discovery to determine which options to present.
 
-##### If `cache.is_valid: true`
+##### If `cache.status: "valid"`
 
 ```
 What would you like to do?
@@ -198,11 +198,7 @@ Which approach?
 
 **STOP.** Wait for user response.
 
-##### If `cache.is_valid: false`
-
-Check `cache.exists` to determine which message to show.
-
-**If `cache.exists: true`** (cache is stale - discussions have changed):
+##### If `cache.status: "stale"`
 
 ```
 What would you like to do?
@@ -215,7 +211,9 @@ Note: A previous grouping analysis exists but is now outdated - discussion docum
 Which approach?
 ```
 
-**If `cache.exists: false`** (no prior analysis):
+**STOP.** Wait for user response.
+
+##### If `cache.status: "none"`
 
 ```
 What would you like to do?
@@ -277,11 +275,11 @@ For example:
 
 ---
 
-## Step 5: Check Cache Validity
+## Step 5: Check Cache Status
 
-Check `cache.is_valid` from discovery.
+Check `cache.status` from discovery.
 
-#### If cache is valid
+#### If `cache.status: "valid"`
 
 ```
 Using cached analysis
@@ -292,7 +290,7 @@ Loading previously identified groupings...
 
 Load groupings from cache and → Skip to **Step 7: Present Grouping Options**.
 
-#### If cache is invalid or missing
+#### If `cache.status: "stale"` or `"none"`
 
 ```
 {cache.reason}
