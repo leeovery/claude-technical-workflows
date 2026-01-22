@@ -115,59 +115,56 @@ echo ""
 #
 # CACHE STATE
 #
+# status: "valid" | "stale" | "none"
+#   - valid: cache exists and checksums match
+#   - stale: cache exists but research has changed
+#   - none: no cache file exists
+#
 echo "cache:"
 
 if [ -f "$CACHE_FILE" ]; then
-    echo "  exists: true"
-
     cached_checksum=$(extract_field "$CACHE_FILE" "checksum")
     cached_date=$(extract_field "$CACHE_FILE" "generated")
 
-    echo "  cached_checksum: \"${cached_checksum:-unknown}\""
-    echo "  cached_date: \"${cached_date:-unknown}\""
-
-    # Extract cached research files list
-    echo "  research_files:"
-    while IFS= read -r file; do
-        file=$(echo "$file" | sed 's/^[[:space:]]*-[[:space:]]*//' | tr -d ' ')
-        if [ -n "$file" ]; then
-            echo "    - \"$file\""
-        fi
-    done < <(sed -n '/^research_files:/,/^---$/p' "$CACHE_FILE" 2>/dev/null | grep "^[[:space:]]*-" || true)
-else
-    echo "  exists: false"
-    echo "  cached_checksum: null"
-    echo "  cached_date: null"
-    echo "  research_files: []"
-fi
-
-echo ""
-
-#
-# CACHE VALIDITY
-#
-echo "cache_validity:"
-
-if [ -f "$CACHE_FILE" ]; then
-    cached_checksum=$(extract_field "$CACHE_FILE" "checksum")
-
+    # Determine status based on checksum comparison
     if [ -d "$RESEARCH_DIR" ] && [ -n "$(ls -A "$RESEARCH_DIR" 2>/dev/null)" ]; then
         current_checksum=$(cat "$RESEARCH_DIR"/*.md 2>/dev/null | md5sum | cut -d' ' -f1)
 
         if [ "$cached_checksum" = "$current_checksum" ]; then
-            echo "  is_valid: true"
+            echo "  status: \"valid\""
             echo "  reason: \"checksums match\""
         else
-            echo "  is_valid: false"
+            echo "  status: \"stale\""
             echo "  reason: \"research has changed since cache was generated\""
         fi
     else
-        echo "  is_valid: false"
+        echo "  status: \"stale\""
         echo "  reason: \"no research files to compare\""
     fi
+
+    echo "  checksum: \"${cached_checksum:-unknown}\""
+    echo "  generated: \"${cached_date:-unknown}\""
+
+    # Extract cached research files list
+    echo "  research_files:"
+    files_found=false
+    while IFS= read -r file; do
+        file=$(echo "$file" | sed 's/^[[:space:]]*-[[:space:]]*//' | tr -d ' ')
+        if [ -n "$file" ]; then
+            echo "    - \"$file\""
+            files_found=true
+        fi
+    done < <(sed -n '/^research_files:/,/^---$/p' "$CACHE_FILE" 2>/dev/null | grep "^[[:space:]]*-" || true)
+
+    if [ "$files_found" = false ]; then
+        echo "    []  # No research files in cache"
+    fi
 else
-    echo "  is_valid: false"
+    echo "  status: \"none\""
     echo "  reason: \"no cache exists\""
+    echo "  checksum: null"
+    echo "  generated: null"
+    echo "  research_files: []"
 fi
 
 echo ""
