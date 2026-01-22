@@ -5,7 +5,7 @@
  * enabling automated testing of interactive commands.
  */
 
-import type { ScriptedChoice } from './schema';
+import type { ScriptedChoice } from './schema.js';
 
 /**
  * Question structure from AskUserQuestion tool

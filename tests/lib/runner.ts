@@ -2,11 +2,12 @@
  * NLP Skills Test Framework - Test Runner
  *
  * Orchestrates test execution: loads scenarios, sets up fixtures,
- * executes commands via Claude, and validates assertions.
+ * executes commands via Claude Agent SDK, and validates assertions.
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 import * as yaml from 'yaml';
 import { glob } from 'glob';
 
@@ -16,10 +17,14 @@ import type {
   TestResult,
   TestSuiteResult,
   ScriptedChoice,
-} from './schema';
-import { validateAssertion, ValidationContext } from './validators';
-import { FixtureManager } from './fixture-manager';
-import { ChoiceInterceptor } from './choice-interceptor';
+} from './schema.js';
+import { validateAssertion, type ValidationContext } from './validators.js';
+import { FixtureManager } from './fixture-manager.js';
+import { ClaudeExecutor, type ExecutorConfig } from './executor.js';
+
+// ES Module compatibility
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // =============================================================================
 // Configuration
@@ -49,6 +54,12 @@ export interface RunnerConfig {
 
   /** Dry run - don't execute, just validate scenarios */
   dryRun?: boolean;
+
+  /** Maximum budget per test in USD */
+  maxBudgetUsd?: number;
+
+  /** Maximum turns per test */
+  maxTurns?: number;
 }
 
 const DEFAULT_CONFIG: Required<RunnerConfig> = {
@@ -57,9 +68,18 @@ const DEFAULT_CONFIG: Required<RunnerConfig> = {
   file: undefined as any,
   scenario: undefined as any,
   verbose: false,
-  timeout: 120000, // 2 minutes
+  timeout: 180000, // 3 minutes
   model: 'opus',
   dryRun: false,
+  maxBudgetUsd: 2.0,
+  maxTurns: 50,
+};
+
+// Model name mapping
+const MODEL_MAP: Record<string, ExecutorConfig['model']> = {
+  opus: 'claude-opus-4-5-20251101',
+  sonnet: 'claude-sonnet-4-20250514',
+  haiku: 'claude-haiku-3-5-20241022',
 };
 
 // =============================================================================
@@ -85,6 +105,11 @@ export class TestRunner {
     const scenarioFiles = this.findScenarioFiles();
 
     this.log(`Found ${scenarioFiles.length} scenario file(s)`);
+
+    if (!this.config.dryRun) {
+      this.log(`Model: ${this.config.model}`);
+      this.log(`Max budget per test: $${this.config.maxBudgetUsd}`);
+    }
 
     for (const file of scenarioFiles) {
       const suiteResult = await this.runScenarioFile(file);
@@ -144,6 +169,7 @@ export class TestRunner {
           duration: 0,
           assertions: [],
         });
+        this.log(`  \x1b[33m○\x1b[0m ${scenario.name} (skipped)`);
         continue;
       }
 
@@ -159,6 +185,10 @@ export class TestRunner {
         for (const assertion of result.assertions.filter(a => !a.passed)) {
           console.log(`    → ${assertion.message}`);
         }
+      }
+
+      if (result.error) {
+        console.log(`    → Error: ${result.error}`);
       }
     }
 
@@ -195,6 +225,7 @@ export class TestRunner {
 
       // Dry run - just validate scenario structure
       if (this.config.dryRun) {
+        await this.fixtureManager.teardown(workDir);
         return {
           scenario: scenario.name,
           status: 'passed',
@@ -204,8 +235,8 @@ export class TestRunner {
         };
       }
 
-      // Execute command
-      const output = await this.executeCommand(
+      // Execute command via Claude Agent SDK
+      const executionResult = await this.executeCommand(
         scenario.command,
         scenario.args,
         scenario.choices || [],
@@ -217,7 +248,7 @@ export class TestRunner {
       const context: ValidationContext = {
         workDir,
         fixtureDir: path.join(this.fixtureManager.fixturesDir, scenario.fixture),
-        output,
+        output: executionResult.output,
         preTestState,
       };
 
@@ -244,7 +275,8 @@ export class TestRunner {
         status: allPassed ? 'passed' : 'failed',
         duration: Date.now() - startTime,
         assertions: assertionResults,
-        output,
+        output: executionResult.output,
+        error: executionResult.error,
       };
     } catch (error) {
       return {
@@ -258,10 +290,7 @@ export class TestRunner {
   }
 
   /**
-   * Execute a command via Claude
-   *
-   * This is the integration point with Claude Agent SDK.
-   * Currently a placeholder that needs SDK implementation.
+   * Execute a command via Claude Agent SDK
    */
   private async executeCommand(
     command: string,
@@ -269,40 +298,42 @@ export class TestRunner {
     choices: ScriptedChoice[],
     workDir: string,
     timeout: number
-  ): Promise<string> {
+  ): Promise<{ output: string; error?: string }> {
     const fullCommand = args ? `${command} ${args}` : command;
 
     this.logVerbose(`Executing: ${fullCommand}`);
     this.logVerbose(`Working directory: ${workDir}`);
     this.logVerbose(`Scripted choices: ${JSON.stringify(choices)}`);
 
-    // Placeholder for Claude Agent SDK integration
-    //
-    // The actual implementation would:
-    // 1. Create an Agent instance with skills/commands loaded
-    // 2. Set workDir as the working directory
-    // 3. Register a tool interceptor for AskUserQuestion
-    // 4. Send the command as a message
-    // 5. Capture and return the output
-    //
-    // Example with Agent SDK (conceptual):
-    //
-    // const agent = new Agent({
-    //   model: this.config.model,
-    //   workingDirectory: workDir,
-    //   tools: loadSkillsAndCommands(),
-    // });
-    //
-    // const interceptor = new ChoiceInterceptor(choices);
-    // agent.onToolCall('AskUserQuestion', interceptor.handle.bind(interceptor));
-    //
-    // const result = await agent.run(fullCommand, { timeout });
-    // return result.output;
+    const executor = new ClaudeExecutor({
+      cwd: workDir,
+      model: MODEL_MAP[this.config.model],
+      timeout,
+      maxTurns: this.config.maxTurns,
+      maxBudgetUsd: this.config.maxBudgetUsd,
+      verbose: this.config.verbose,
+      permissionMode: 'acceptEdits',
+    });
 
-    throw new Error(
-      'Command execution requires Claude Agent SDK. ' +
-      'See tests/lib/README.md for integration instructions.'
-    );
+    const result = await executor.execute(fullCommand, choices);
+
+    this.logVerbose(`Execution status: ${result.status}`);
+    this.logVerbose(`Cost: $${result.costUsd.toFixed(4)}`);
+    this.logVerbose(`Turns: ${result.turns}`);
+    this.logVerbose(`Tool calls: ${result.toolCalls.length}`);
+
+    if (result.questionsAsked.length > 0) {
+      this.logVerbose(`Questions asked: ${result.questionsAsked.length}`);
+      for (const q of result.questionsAsked) {
+        this.logVerbose(`  - ${q.questions[0]?.question}`);
+        this.logVerbose(`    Answer: ${JSON.stringify(q.answers)}`);
+      }
+    }
+
+    return {
+      output: result.output,
+      error: result.error,
+    };
   }
 
   /**
@@ -382,10 +413,23 @@ export async function runCLI(args: string[]): Promise<void> {
       case '--model':
         config.model = args[++i] as 'opus' | 'sonnet' | 'haiku';
         break;
+      case '--max-budget':
+        config.maxBudgetUsd = parseFloat(args[++i]);
+        break;
+      case '--max-turns':
+        config.maxTurns = parseInt(args[++i], 10);
+        break;
       case '--help':
         printHelp();
         process.exit(0);
     }
+  }
+
+  // Check for API key
+  if (!config.dryRun && !process.env.ANTHROPIC_API_KEY) {
+    console.error('Error: ANTHROPIC_API_KEY environment variable is required');
+    console.error('Set it with: export ANTHROPIC_API_KEY=your-key-here');
+    process.exit(1);
   }
 
   const runner = new TestRunner(config);
@@ -400,7 +444,8 @@ function printHelp(): void {
   console.log(`
 NLP Skills Test Runner
 
-Usage: npx ts-node tests/lib/runner.ts [options]
+Usage: npm test -- [options]
+       npx tsx tests/lib/runner.ts [options]
 
 Options:
   --suite <name>      Run specific suite (contracts, integration)
@@ -408,19 +453,26 @@ Options:
   --scenario <name>   Run specific scenario by name
   --verbose, -v       Enable verbose output
   --dry-run           Validate scenarios without executing
-  --timeout <ms>      Timeout per test (default: 120000)
+  --timeout <ms>      Timeout per test (default: 180000)
   --model <name>      Model for execution (opus, sonnet, haiku)
+  --max-budget <usd>  Maximum budget per test (default: 2.0)
+  --max-turns <n>     Maximum turns per test (default: 50)
   --help              Show this help
 
+Environment:
+  ANTHROPIC_API_KEY   Required for test execution (not needed for --dry-run)
+
 Examples:
-  npx ts-node tests/lib/runner.ts --suite contracts
-  npx ts-node tests/lib/runner.ts --file contracts/start-specification.yml
-  npx ts-node tests/lib/runner.ts --verbose --dry-run
+  npm test -- --suite contracts
+  npm test -- --file contracts/start-specification.yml --verbose
+  npm test -- --dry-run
+  npm test -- --model sonnet --max-budget 1.0
 `);
 }
 
 // Run if called directly
-if (require.main === module) {
+const isMain = import.meta.url === `file://${process.argv[1]}`;
+if (isMain) {
   runCLI(process.argv.slice(2)).catch(err => {
     console.error('Fatal error:', err);
     process.exit(1);

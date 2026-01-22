@@ -2,7 +2,7 @@
 #
 # NLP Skills Test Runner
 #
-# Runs test scenarios against skills and commands.
+# Runs test scenarios against skills and commands using Claude Agent SDK.
 #
 # Usage:
 #   ./run-tests.sh                    # Run all tests
@@ -29,17 +29,21 @@ log_success() { echo -e "${GREEN}[SUCCESS]${NC} $1"; }
 log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
+# Check if --dry-run is in arguments
+is_dry_run() {
+  for arg in "$@"; do
+    if [[ "$arg" == "--dry-run" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 # Check dependencies
 check_dependencies() {
   if ! command -v npx &> /dev/null; then
     log_error "npx not found. Install Node.js first."
     exit 1
-  fi
-
-  # Check if ts-node is available
-  if ! npx ts-node --version &> /dev/null; then
-    log_warn "ts-node not found. Installing..."
-    npm install --save-dev ts-node typescript @types/node
   fi
 }
 
@@ -55,17 +59,22 @@ main() {
     npm install
   fi
 
-  # Check if test dependencies are installed
-  if [[ ! -f "tests/node_modules/.bin/ts-node" ]] && [[ ! -f "node_modules/.bin/ts-node" ]]; then
-    log_info "Installing test dependencies..."
-    npm install --save-dev ts-node typescript @types/node yaml glob
+  # Check for API key (unless dry run)
+  if ! is_dry_run "$@" && [[ -z "${ANTHROPIC_API_KEY:-}" ]]; then
+    log_error "ANTHROPIC_API_KEY environment variable is required"
+    echo ""
+    echo "Set it with: export ANTHROPIC_API_KEY=your-key-here"
+    echo ""
+    echo "Or run with --dry-run to validate scenarios without executing:"
+    echo "  $0 --dry-run"
+    exit 1
   fi
 
   log_info "Running tests..."
   echo ""
 
-  # Run the TypeScript test runner
-  npx ts-node "$TESTS_DIR/lib/runner.ts" "$@"
+  # Run the TypeScript test runner with tsx (faster than ts-node, native ESM)
+  npx tsx "$TESTS_DIR/lib/runner.ts" "$@"
 }
 
 main "$@"

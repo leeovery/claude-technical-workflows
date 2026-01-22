@@ -22,7 +22,8 @@ import type {
   OutputContainsAssertion,
   FileCountAssertion,
   SemanticAssertion,
-} from './schema';
+} from './schema.js';
+import { LLMJudge } from './llm-judge.js';
 
 // =============================================================================
 // Validator Interface
@@ -385,71 +386,31 @@ async function validateSemantic(
     content = context.output;
   }
 
-  // Build judge prompt
-  const judgePrompt = buildJudgePrompt(content, criteria);
+  // Use LLM judge
+  const judge = new LLMJudge({
+    model: judge_model,
+    verbose: false,
+  });
 
-  // Call LLM judge
-  // Note: This is a placeholder - actual implementation needs Anthropic SDK
-  const judgeResult = await callLLMJudge(judge_model, judgePrompt);
+  try {
+    const result = await judge.evaluate(content, criteria, threshold);
 
-  const passedCriteria = judgeResult.filter((r) => r.passed).length;
-  const totalCriteria = criteria.length;
-  const passRate = passedCriteria / totalCriteria;
-  const passed = passRate >= threshold;
-
-  return {
-    assertion,
-    passed,
-    message: passed
-      ? `Semantic check passed (${passedCriteria}/${totalCriteria} criteria met)`
-      : `Semantic check failed (${passedCriteria}/${totalCriteria} criteria met, need ${Math.ceil(threshold * totalCriteria)})`,
-    actual: judgeResult,
-    expected: { criteria, threshold },
-  };
-}
-
-function buildJudgePrompt(content: string, criteria: string[]): string {
-  return `You are evaluating content against specific criteria. For each criterion, determine if the content satisfies it.
-
-<content>
-${content}
-</content>
-
-<criteria>
-${criteria.map((c, i) => `${i + 1}. ${c}`).join('\n')}
-</criteria>
-
-For each criterion, respond with a JSON object:
-{
-  "evaluations": [
-    {"criterion": 1, "passed": true/false, "reason": "brief explanation"},
-    {"criterion": 2, "passed": true/false, "reason": "brief explanation"},
-    ...
-  ]
-}
-
-Be strict but fair. The content must clearly satisfy the criterion to pass.`;
-}
-
-interface CriterionResult {
-  criterion: number;
-  passed: boolean;
-  reason: string;
-}
-
-async function callLLMJudge(
-  model: 'haiku' | 'sonnet' | 'opus',
-  prompt: string
-): Promise<CriterionResult[]> {
-  // Placeholder implementation
-  // In production, this would use @anthropic-ai/sdk
-
-  console.log(`[LLM Judge] Would call ${model} with prompt length: ${prompt.length}`);
-
-  // For now, return a placeholder that indicates LLM judging is needed
-  throw new Error(
-    'LLM judge not implemented. Install @anthropic-ai/sdk and set ANTHROPIC_API_KEY.'
-  );
+    return {
+      assertion,
+      passed: result.passed,
+      message: result.passed
+        ? `Semantic check passed (${Math.round(result.passRate * 100)}% criteria met, threshold ${Math.round(threshold * 100)}%)`
+        : `Semantic check failed (${Math.round(result.passRate * 100)}% criteria met, need ${Math.round(threshold * 100)}%)`,
+      actual: result.criteria,
+      expected: { criteria, threshold },
+    };
+  } catch (error) {
+    return {
+      assertion,
+      passed: false,
+      message: `LLM judge error: ${error instanceof Error ? error.message : String(error)}`,
+    };
+  }
 }
 
 // =============================================================================
