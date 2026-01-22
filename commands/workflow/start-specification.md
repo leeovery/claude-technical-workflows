@@ -159,6 +159,20 @@ Previous analysis available from {cached_date}. Loading groupings...
 
 ##### If no valid cache exists
 
+Check `cache.exists` from discovery to determine which message to show.
+
+**If cache exists but is invalid** (discussions have changed):
+
+```
+{N} concluded discussions found.
+
+Note: A previous grouping analysis exists but is now outdated - discussion documents have changed since it was created. Re-analysis is required, but existing specification names will be preserved where groupings overlap.
+
+Analyzing discussions for natural groupings...
+```
+
+**If no cache exists at all:**
+
 ```
 {N} concluded discussions found.
 
@@ -186,6 +200,23 @@ Which approach?
 **STOP.** Wait for user response.
 
 ##### If no valid cache exists
+
+Check `cache.exists` from discovery to determine which message to show.
+
+**If cache exists but is invalid** (discussions have changed):
+
+```
+What would you like to do?
+
+Note: A previous grouping analysis exists but is now outdated - discussion documents have changed since it was created. Re-analysis is required, but existing specification names will be preserved where groupings overlap.
+
+1. **Continue an existing specification** - Resume work on a spec in progress
+2. **Assess for groupings** - Re-analyze discussions for combinations
+
+Which approach?
+```
+
+**If no cache exists at all:**
 
 ```
 What would you like to do?
