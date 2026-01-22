@@ -253,3 +253,15 @@ Cache files for avoiding redundant analysis.
 - Commit after each significant change
 - Update this document as work progresses
 - Reference start-specification.md for formatting decisions
+
+## Working Process (IMPORTANT)
+
+**Break each phase into discrete stages and STOP for user approval between stages.**
+
+For phases with discovery scripts:
+1. **Stage 1**: Create discovery script + tests → commit → STOP for review
+2. **Stage 2**: Update command to use script → commit → STOP for review
+3. **Stage 3**: Update templates/frontmatter if needed → commit → STOP for review
+4. **Stage 4**: Create migration script if needed → commit → STOP for review
+
+Do NOT combine stages. Do NOT proceed to the next stage without explicit user approval.
