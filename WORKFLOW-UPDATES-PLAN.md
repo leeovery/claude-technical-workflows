@@ -65,7 +65,7 @@ Centralized bash scripts for state discovery.
 | Phase | Script | Status | Notes |
 |-------|--------|--------|-------|
 | Specification | `scripts/specification-discovery.sh` | ✅ Done | Reference implementation |
-| Discussion | None | ⬜ TODO | Currently inline in command |
+| Discussion | `scripts/discussion-discovery.sh` | ✅ Done | Tests in `scripts/tests/test-discussion-discovery.sh` |
 | Planning | None | ⬜ TODO | Need to assess |
 | Implementation | None | ⬜ TODO | Need to assess |
 | Review | None | ⬜ TODO | Need to assess |
@@ -77,7 +77,7 @@ Update commands to match start-specification formatting style.
 | Command | Formatting Updated | Notes |
 |---------|-------------------|-------|
 | `workflow/start-research.md` | ✅ | Added step numbers, STOP point |
-| `workflow/start-discussion.md` | ⬜ TODO | Complex - has discovery, caching, routing |
+| `workflow/start-discussion.md` | ✅ | Uses discovery script, flattened steps, STOP points |
 | `workflow/start-specification.md` | ✅ Reference | This is the reference implementation |
 | `workflow/start-planning.md` | ⬜ TODO | Need to review |
 | `workflow/start-implementation.md` | ⬜ TODO | Need to review |
@@ -121,27 +121,32 @@ Cache files for avoiding redundant analysis.
 
 ---
 
-### Phase 2: Discussion
+### Phase 2: Discussion ✅
 
-**Current state:**
-- ✅ YAML frontmatter (`topic`, `status`, `date`)
-- ✅ Status values: `in-progress`, `concluded`
-- ✅ Migration exists for legacy format
-- ⬜ Discovery logic is inline in command (not a script)
-- ⬜ Command formatting needs alignment with spec command
+**Status: Complete**
 
-**Work needed:**
-- [ ] Extract discovery logic to `scripts/discussion-discovery.sh`
-- [ ] Update command formatting to match start-specification
-- [ ] Flatten step numbers (remove 2.1, 2.2, 2.3 pattern)
-- [ ] Review skill for any needed updates
+**Decisions made:**
+- Discovery script outputs structured YAML (research, discussions, cache, state sections)
+- Cache status uses `"valid" | "stale" | "none"` pattern matching spec-discovery
+- Scenario-based routing: `"fresh"`, `"research_only"`, `"discussions_only"`, `"research_and_discussions"`
+- Simplified icons: `·` (undiscussed), `✓` (discussed), `-` (discussions list)
+- No special cache invalidation handling needed (loose coupling to research)
 
-**Files to update:**
+**Changes made:**
+- Created `scripts/discussion-discovery.sh` with YAML output
+- Created `scripts/tests/test-discussion-discovery.sh` (50 assertions)
+- Updated `commands/workflow/start-discussion.md`:
+  - Added `allowed-tools` header for discovery script
+  - Flattened from sub-steps to Steps 0-7
+  - Added discovery script integration in Step 1
+  - Simplified presentation icons
+  - Added explicit STOP points and navigation markers
+- Reviewed skill files (no changes needed - already aligned)
+
+**Files updated:**
 - `commands/workflow/start-discussion.md`
-- `skills/technical-discussion/SKILL.md` (review)
-- `skills/technical-discussion/references/template.md` (review)
-- `skills/technical-discussion/references/guidelines.md` (review)
-- New: `scripts/discussion-discovery.sh`
+- `scripts/discussion-discovery.sh` (new)
+- `scripts/tests/test-discussion-discovery.sh` (new)
 
 ---
 
@@ -236,6 +241,9 @@ Cache files for avoiding redundant analysis.
 |------|-------|--------|--------|
 | 2026-01-21 | Setup | Created this planning document | fad6191 |
 | 2026-01-21 | Research | Added template, updated skill and command | 244824a |
+| 2026-01-22 | Discussion | Created discovery script and tests | da4b534 |
+| 2026-01-22 | Discussion | Updated command intro, Steps 0-1 | 84a51bd |
+| 2026-01-22 | Discussion | Flattened step structure to Steps 0-7 | bf25750 |
 
 ---
 
