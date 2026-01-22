@@ -1,0 +1,109 @@
+# Integration Tests: Full Workflow
+#
+# Tests complete workflow scenarios with semantic validation.
+# These tests use LLM-as-judge for content quality checks.
+
+name: "full workflow integration"
+description: "End-to-end workflow tests with semantic validation"
+type: integration
+
+scenarios:
+  # ==========================================================================
+  # Research → Discussion Quality
+  # ==========================================================================
+  - name: "discussion captures research insights"
+    description: "Discussion should reference and build on research findings"
+    fixture: minimal/has-research
+    command: /workflow/start-discussion
+    choices:
+      - match: "topic"
+        answer: "test-feature"
+      - match: "research"
+        answer: "yes"
+    assertions:
+      # Structural checks first (fast)
+      - exists: docs/workflow/discussion/test-feature.md
+      - has_sections:
+          path: docs/workflow/discussion/test-feature.md
+          sections:
+            - "## Summary"
+            - "## Decisions"
+      # Semantic check (LLM judge)
+      - semantic:
+          judge_model: haiku
+          path: docs/workflow/discussion/test-feature.md
+          criteria:
+            - "References or acknowledges the research findings"
+            - "Contains at least one concrete decision"
+            - "Provides rationale for decisions made"
+          threshold: 0.66  # At least 2 of 3 criteria
+
+  # ==========================================================================
+  # Discussion → Specification Quality
+  # ==========================================================================
+  - name: "specification validates discussion decisions"
+    description: "Spec should validate and structure discussion decisions"
+    fixture: minimal/has-discussion
+    command: /workflow/start-specification
+    choices:
+      - match: "topic"
+        answer: "test-topic"
+    assertions:
+      - exists: docs/workflow/specification/test-topic.md
+      - has_frontmatter:
+          path: docs/workflow/specification/test-topic.md
+          required: [topic, status]
+      - semantic:
+          judge_model: haiku
+          path: docs/workflow/specification/test-topic.md
+          criteria:
+            - "Includes validated decisions from the discussion"
+            - "Provides clear requirements (functional or non-functional)"
+            - "Identifies scope boundaries or out-of-scope items"
+            - "Is written as a standalone document (understandable without discussion)"
+          threshold: 0.75
+
+  # ==========================================================================
+  # Specification → Planning Quality
+  # ==========================================================================
+  - name: "plan is actionable from specification"
+    description: "Plan should break spec into implementable tasks"
+    fixture: minimal/has-specification
+    command: /workflow/start-planning
+    choices:
+      - match: "specification"
+        answer: "test-topic"
+      - match: "format"
+        answer: "local-markdown"
+    assertions:
+      - exists: docs/workflow/planning/test-topic.md
+      - semantic:
+          judge_model: haiku
+          path: docs/workflow/planning/test-topic.md
+          criteria:
+            - "Contains clearly defined phases or milestones"
+            - "Tasks are specific and actionable (not vague)"
+            - "Tasks map to requirements from the specification"
+            - "Includes acceptance criteria or definition of done"
+          threshold: 0.75
+
+  # ==========================================================================
+  # Content Consistency
+  # ==========================================================================
+  - name: "specification consistent with discussion"
+    description: "Spec should not contradict discussion decisions"
+    fixture: minimal/has-discussion
+    command: /workflow/start-specification
+    choices:
+      - match: "topic"
+        answer: "test-topic"
+    assertions:
+      - exists: docs/workflow/specification/test-topic.md
+      - semantic:
+          judge_model: sonnet  # Use stronger model for consistency check
+          path: docs/workflow/specification/test-topic.md
+          criteria:
+            - "Does not contradict the OAuth2 with PKCE decision from discussion"
+            - "Does not contradict the httpOnly cookies decision from discussion"
+            - "Maintains consistency with the discussion's technical direction"
+          threshold: 1.0  # All criteria must pass

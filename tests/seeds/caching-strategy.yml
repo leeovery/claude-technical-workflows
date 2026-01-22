@@ -1,0 +1,34 @@
+# Fixture Seed: Caching Strategy
+#
+# A simpler feature for testing basic workflow paths
+
+name: caching-strategy
+description: "API response caching strategy"
+
+phases:
+  research:
+    command: /workflow/start-research
+    inputs:
+      topic: "API Response Caching"
+      context: |
+        Need to implement caching for API responses to reduce load.
+
+        Considerations:
+        - Cache invalidation strategies
+        - TTL vs event-based invalidation
+        - Redis vs in-memory options
+    choices:
+      - match: "focus"
+        answer: "technical feasibility"
+
+  discussion:
+    command: /workflow/start-discussion
+    choices:
+      - match: "topic"
+        answer: "caching"
+
+  specification:
+    command: /workflow/start-specification
+    choices:
+      - match: "topic"
+        answer: "caching"

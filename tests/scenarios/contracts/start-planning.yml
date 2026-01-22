@@ -1,0 +1,87 @@
+# Contract Tests: start-planning command
+#
+# Tests logic paths and structural outputs of the planning command.
+
+name: "start-planning contracts"
+description: "Verify planning command creates correct plan structure"
+type: contract
+
+scenarios:
+  # ==========================================================================
+  # Happy Path: Create plan from specification
+  # ==========================================================================
+  - name: "creates plan from specification"
+    description: "When specification exists, creates planning document"
+    fixture: minimal/has-specification
+    command: /workflow/start-planning
+    choices:
+      - match: "specification"
+        answer: "test-topic"
+      - match: "format"
+        answer: "local-markdown"
+    assertions:
+      - exists: docs/workflow/planning/test-topic.md
+      - has_frontmatter:
+          path: docs/workflow/planning/test-topic.md
+          required:
+            - topic
+            - status
+            - format
+      - has_sections:
+          path: docs/workflow/planning/test-topic.md
+          sections:
+            - "## Overview"
+    invariants:
+      - docs/workflow/specification/*
+      - docs/workflow/discussion/*
+
+  # ==========================================================================
+  # Format Selection
+  # ==========================================================================
+  - name: "records selected format in frontmatter"
+    description: "Plan frontmatter includes the output format choice"
+    fixture: minimal/has-specification
+    command: /workflow/start-planning
+    choices:
+      - match: "specification"
+        answer: "test-topic"
+      - match: "format"
+        answer: "local-markdown"
+    assertions:
+      - has_frontmatter:
+          path: docs/workflow/planning/test-topic.md
+          values:
+            format: "local-markdown"
+
+  # ==========================================================================
+  # Edge Case: No specification exists
+  # ==========================================================================
+  - name: "requires specification to create plan"
+    description: "Without specification, should not create plan"
+    fixture: minimal/has-discussion  # Has discussion but no spec
+    command: /workflow/start-planning
+    choices:
+      - match: "specification"
+        answer: ""
+    assertions:
+      - not_exists: docs/workflow/planning/*.md
+      - output_contains: "specification"
+
+  # ==========================================================================
+  # Plan Structure
+  # ==========================================================================
+  - name: "plan includes phases and tasks"
+    description: "Generated plan should have phase/task structure"
+    fixture: minimal/has-specification
+    command: /workflow/start-planning
+    choices:
+      - match: "specification"
+        answer: "test-topic"
+      - match: "format"
+        answer: "local-markdown"
+    assertions:
+      - exists: docs/workflow/planning/test-topic.md
+      - content_matches:
+          path: docs/workflow/planning/test-topic.md
+          pattern: "(Phase|Task|##)"
+          flags: "i"
