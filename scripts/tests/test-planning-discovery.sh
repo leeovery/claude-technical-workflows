@@ -105,15 +105,15 @@ test_no_specs() {
 #
 # Test: Single feature specification (Building)
 #
-test_single_spec_building() {
-    echo -e "${YELLOW}Test: Single feature specification (Building)${NC}"
+test_single_spec_in_progress() {
+    echo -e "${YELLOW}Test: Single feature specification (in-progress)${NC}"
     setup_fixture
 
     mkdir -p "$TEST_DIR/docs/workflow/specification"
     cat > "$TEST_DIR/docs/workflow/specification/auth-system.md" << 'EOF'
 ---
 topic: auth-system
-status: Building specification
+status: in-progress
 type: feature
 ---
 
@@ -124,7 +124,7 @@ EOF
 
     assert_contains "$output" 'exists: true' "Specifications exist"
     assert_contains "$output" 'name: "auth-system"' "Found auth-system spec"
-    assert_contains "$output" 'status: "Building specification"' "Status is Building"
+    assert_contains "$output" 'status: "in-progress"' "Status is in-progress"
     assert_contains "$output" 'has_plan: false' "No plan exists"
     assert_contains "$output" 'feature: 1' "Feature count is 1"
     assert_contains "$output" 'feature_ready: 0' "Feature ready count is 0"
@@ -136,15 +136,15 @@ EOF
 #
 # Test: Single feature specification (Complete, no plan)
 #
-test_single_spec_complete_no_plan() {
-    echo -e "${YELLOW}Test: Single feature specification (Complete, no plan)${NC}"
+test_single_spec_concluded_no_plan() {
+    echo -e "${YELLOW}Test: Single feature specification (concluded, no plan)${NC}"
     setup_fixture
 
     mkdir -p "$TEST_DIR/docs/workflow/specification"
     cat > "$TEST_DIR/docs/workflow/specification/auth-system.md" << 'EOF'
 ---
 topic: auth-system
-status: Complete
+status: concluded
 type: feature
 ---
 
@@ -153,7 +153,7 @@ EOF
 
     local output=$(run_discovery)
 
-    assert_contains "$output" 'status: "Complete"' "Status is Complete"
+    assert_contains "$output" 'status: "concluded"' "Status is concluded"
     assert_contains "$output" 'has_plan: false' "No plan exists"
     assert_contains "$output" 'feature_ready: 1' "Feature ready count is 1"
     assert_contains "$output" 'scenario: "single_ready_spec"' "Scenario is single_ready_spec"
@@ -164,8 +164,8 @@ EOF
 #
 # Test: Single feature specification (Complete, has plan)
 #
-test_single_spec_complete_with_plan() {
-    echo -e "${YELLOW}Test: Single feature specification (Complete, has plan)${NC}"
+test_single_spec_concluded_with_plan() {
+    echo -e "${YELLOW}Test: Single feature specification (concluded, has plan)${NC}"
     setup_fixture
 
     mkdir -p "$TEST_DIR/docs/workflow/specification"
@@ -174,7 +174,7 @@ test_single_spec_complete_with_plan() {
     cat > "$TEST_DIR/docs/workflow/specification/auth-system.md" << 'EOF'
 ---
 topic: auth-system
-status: Complete
+status: concluded
 type: feature
 ---
 
@@ -211,7 +211,7 @@ test_multiple_feature_specs() {
     cat > "$TEST_DIR/docs/workflow/specification/auth-system.md" << 'EOF'
 ---
 topic: auth-system
-status: Complete
+status: concluded
 type: feature
 ---
 
@@ -221,7 +221,7 @@ EOF
     cat > "$TEST_DIR/docs/workflow/specification/billing.md" << 'EOF'
 ---
 topic: billing
-status: Complete
+status: concluded
 type: feature
 ---
 
@@ -231,7 +231,7 @@ EOF
     cat > "$TEST_DIR/docs/workflow/specification/dashboard.md" << 'EOF'
 ---
 topic: dashboard
-status: Building specification
+status: in-progress
 type: feature
 ---
 
@@ -262,7 +262,7 @@ test_crosscutting_specs() {
     cat > "$TEST_DIR/docs/workflow/specification/caching-strategy.md" << 'EOF'
 ---
 topic: caching-strategy
-status: Complete
+status: concluded
 type: cross-cutting
 ---
 
@@ -272,7 +272,7 @@ EOF
     cat > "$TEST_DIR/docs/workflow/specification/rate-limiting.md" << 'EOF'
 ---
 topic: rate-limiting
-status: Complete
+status: concluded
 type: cross-cutting
 ---
 
@@ -303,7 +303,7 @@ test_mixed_specs() {
     cat > "$TEST_DIR/docs/workflow/specification/auth-system.md" << 'EOF'
 ---
 topic: auth-system
-status: Complete
+status: concluded
 type: feature
 ---
 
@@ -313,7 +313,7 @@ EOF
     cat > "$TEST_DIR/docs/workflow/specification/caching-strategy.md" << 'EOF'
 ---
 topic: caching-strategy
-status: Complete
+status: concluded
 type: cross-cutting
 ---
 
@@ -342,7 +342,7 @@ test_spec_default_type() {
     cat > "$TEST_DIR/docs/workflow/specification/legacy-feature.md" << 'EOF'
 ---
 topic: legacy-feature
-status: Complete
+status: concluded
 ---
 
 # Specification: Legacy Feature
@@ -434,9 +434,9 @@ echo "=========================================="
 echo ""
 
 test_no_specs
-test_single_spec_building
-test_single_spec_complete_no_plan
-test_single_spec_complete_with_plan
+test_single_spec_in_progress
+test_single_spec_concluded_no_plan
+test_single_spec_concluded_with_plan
 test_multiple_feature_specs
 test_crosscutting_specs
 test_mixed_specs

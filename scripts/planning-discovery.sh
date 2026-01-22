@@ -72,8 +72,8 @@ if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
         echo "      has_plan: $has_plan"
 
         feature_count=$((feature_count + 1))
-        # "Complete" specs without plans are ready for planning
-        if [ "$status" = "Complete" ] && [ "$has_plan" = "false" ]; then
+        # "concluded" specs without plans are ready for planning
+        if [ "$status" = "concluded" ] && [ "$has_plan" = "false" ]; then
             feature_ready_count=$((feature_ready_count + 1))
         fi
     done
