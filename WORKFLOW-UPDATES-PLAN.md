@@ -262,6 +262,18 @@ For phases with discovery scripts:
 1. **Stage 1**: Create discovery script + tests → commit → STOP for review
 2. **Stage 2**: Update command to use script → commit → STOP for review
 3. **Stage 3**: Update templates/frontmatter if needed → commit → STOP for review
-4. **Stage 4**: Create migration script if needed → commit → STOP for review
+4. **Stage 4**: Create migration script + tests if needed → commit → STOP for review
 
 Do NOT combine stages. Do NOT proceed to the next stage without explicit user approval.
+
+## Test Organization (TODO)
+
+**Move tests to project root:**
+- Current: `scripts/tests/test-*.sh`
+- Target: `tests/scripts/test-*.sh` (or similar structure)
+
+**Add migration tests:**
+- Create tests for migration scripts (001, 002, etc.)
+- Test various legacy document formats
+- Test idempotency (running migration twice)
+- Test edge cases (metadata in wrong location, missing fields, etc.)
