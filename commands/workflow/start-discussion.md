@@ -191,23 +191,22 @@ Present everything discovered to help the user make an informed choice.
 Workflow Status: Discussion Phase
 
 Research topics:
-  · {Theme name} - undiscussed
-    Source: {filename}.md (lines {start}-{end})
-    "{Brief summary}"
+  1. · {Theme name} - undiscussed
+       Source: {filename}.md (lines {start}-{end})
+       "{Brief summary}"
 
-  ✓ {Theme name} → {topic}.md
-    Source: {filename}.md (lines {start}-{end})
-    "{Brief summary}"
+  2. ✓ {Theme name} → {topic}.md
+       Source: {filename}.md (lines {start}-{end})
+       "{Brief summary}"
 
-Existing discussions:
-  • {topic}.md - in-progress
-  • {topic}.md - concluded
+Discussions:
+  - {topic}.md (in-progress)
+  - {topic}.md (concluded)
 ```
 
 **Legend:**
 - `·` = undiscussed topic (potential new discussion)
 - `✓` = already has a corresponding discussion
-- `•` = existing discussion
 
 **Then present the options based on what exists:**
 
