@@ -14,20 +14,21 @@
 # New format:
 #   ---
 #   topic: {topic-name}
-#   status: building | complete
-#   type: feature | cross-cutting
+#   status: in-progress | concluded
+#   type: feature | cross-cutting | (empty if unknown)
 #   date: YYYY-MM-DD
 #   ---
 #
 #   # Specification: {Topic}
 #
-# Status mapping:
-#   Building specification, Building, Draft → building
-#   Complete, Completed, Done → complete
+# Status mapping (normalized across all document types):
+#   Building specification, Building, Draft → in-progress
+#   Complete, Completed, Done → concluded
 #
-# Type mapping:
-#   feature (default if not specified)
-#   cross-cutting
+# Type handling:
+#   feature → feature
+#   cross-cutting → cross-cutting
+#   (not found or unrecognized) → empty (requires manual review)
 #
 # This script is sourced by migrate.sh and has access to:
 #   - is_migrated "filepath" "migration_id"
@@ -85,16 +86,16 @@ for file in "$SPEC_DIR"/*.md; do
         tr '[:upper:]' '[:lower:]' | \
         xargs)
 
-    # Map legacy status to new values
+    # Map legacy status to normalized values (consistent across all document types)
     case "$status_raw" in
-        "building specification"|"building"|"draft"|"in progress"|"in-progress")
-            status_new="building"
+        "building specification"|"building"|"draft"|"in progress"|"in-progress"|"exploring"|"deciding")
+            status_new="in-progress"
             ;;
-        "complete"|"completed"|"done"|"finished")
-            status_new="complete"
+        "complete"|"completed"|"done"|"finished"|"concluded")
+            status_new="concluded"
             ;;
         *)
-            status_new="building"  # Default for unknown
+            status_new="in-progress"  # Default for unknown
             ;;
     esac
 
@@ -105,13 +106,16 @@ for file in "$SPEC_DIR"/*.md; do
         tr '[:upper:]' '[:lower:]' | \
         xargs)
 
-    # Normalize type (default to feature if not specified or unrecognized)
+    # Normalize type (leave empty if not found or unrecognized - requires manual review)
     case "$type_raw" in
+        "feature")
+            type_new="feature"
+            ;;
         "cross-cutting"|"crosscutting"|"cross cutting")
             type_new="cross-cutting"
             ;;
         *)
-            type_new="feature"
+            type_new=""  # Empty - requires manual classification
             ;;
     esac
 
