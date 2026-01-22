@@ -115,7 +115,7 @@ Use `cache.status` from discovery to determine the approach:
 #### If cache.status is "valid"
 
 ```
-📋 Using cached research analysis (unchanged since {cache.generated})
+Using cached research analysis (unchanged since {cache.generated})
 ```
 
 Load the topics from `docs/workflow/.cache/research-analysis.md` and proceed.
@@ -125,7 +125,7 @@ Load the topics from `docs/workflow/.cache/research-analysis.md` and proceed.
 #### If cache.status is "stale" or "none"
 
 ```
-🔍 Analyzing research documents...
+Analyzing research documents...
 ```
 
 Read each research file and extract key themes and potential discussion topics. For each theme:
@@ -188,42 +188,26 @@ Present everything discovered to help the user make an informed choice.
 **Present the full state:**
 
 ```
-📂 Workflow state:
+Workflow Status: Discussion Phase
+
+Research topics:
+  · {Theme name} - undiscussed
+    Source: {filename}.md (lines {start}-{end})
+    "{Brief summary}"
+
+  ✓ {Theme name} → {topic}.md
+    Source: {filename}.md (lines {start}-{end})
+    "{Brief summary}"
+
+Existing discussions:
+  • {topic}.md - in-progress
+  • {topic}.md - concluded
 ```
 
-**If research exists, show the topics:**
-```
-📚 Research topics:
-
-  1. ✨ {Theme name}
-     Source: {filename}.md (lines {start}-{end})
-     "{Brief summary}"
-
-  2. ✅ {Theme name} → discussed in {topic}.md
-     Source: {filename}.md (lines {start}-{end})
-     "{Brief summary}"
-
-  [... more topics ...]
-```
-
-**Key:**
-- ✨ = Undiscussed topic (potential new discussion)
-- ✅ = Already has a corresponding discussion
-
-**If discussions exist, show them:**
-```
-💬 Existing discussions:
-
-  • {topic}.md — {Status}
-    "{Brief description from context section}"
-
-  • {topic}.md — concluded
-    "{Brief description}"
-```
-
-**Key:**
-- in-progress = Active discussion
-- concluded = Complete (can still be reopened)
+**Legend:**
+- `·` = undiscussed topic (potential new discussion)
+- `✓` = already has a corresponding discussion
+- `•` = existing discussion
 
 **Then present the options based on what exists:**
 
