@@ -99,20 +99,14 @@ if [ ${#MIGRATION_SCRIPTS[@]} -eq 0 ]; then
     exit 0
 fi
 
-echo "Running migrations..."
-echo ""
-
 for script in "${MIGRATION_SCRIPTS[@]}"; do
     # Extract migration ID from filename (e.g., "001" from "001-discussion-frontmatter.sh")
     migration_id=$(basename "$script" .sh | grep -oE '^[0-9]+')
-    migration_name=$(basename "$script" .sh)
 
     if [ -z "$migration_id" ]; then
         echo "Warning: Skipping $script (no numeric prefix)"
         continue
     fi
-
-    echo "$migration_name:"
 
     # Source and run the migration script
     # The script has access to: is_migrated, record_migration, report_update, report_skip
@@ -120,14 +114,10 @@ for script in "${MIGRATION_SCRIPTS[@]}"; do
     source "$script"
 
     MIGRATIONS_RUN=$((MIGRATIONS_RUN + 1))
-    echo ""
 done
 
-#
-# Final report
-#
+# Only output if files were actually updated
 if [ "$FILES_UPDATED" -gt 0 ]; then
-    echo "$FILES_UPDATED file(s) updated. Review with \`git diff\`, then proceed."
-else
-    echo "All documents up to date."
+    echo ""
+    echo "$FILES_UPDATED file(s) migrated. Review with \`git diff\`, then proceed."
 fi

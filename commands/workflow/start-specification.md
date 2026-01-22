@@ -9,14 +9,14 @@ Invoke the **technical-specification** skill for this conversation.
 
 This is **Phase 3** of the six-phase workflow:
 
-| Phase | Focus | You |
-|-------|-------|-----|
-| 1. Research | EXPLORE - ideas, feasibility, market, business | |
-| 2. Discussion | WHAT and WHY - decisions, architecture, edge cases | |
-| **3. Specification** | REFINE - validate into standalone spec | ◀ HERE |
-| 4. Planning | HOW - phases, tasks, acceptance criteria | |
-| 5. Implementation | DOING - tests first, then code | |
-| 6. Review | VALIDATING - check work against artifacts | |
+| Phase                | Focus                                              | You    |
+|----------------------|----------------------------------------------------|--------|
+| 1. Research          | EXPLORE - ideas, feasibility, market, business     |        |
+| 2. Discussion        | WHAT and WHY - decisions, architecture, edge cases |        |
+| **3. Specification** | REFINE - validate into standalone spec             | ◀ HERE |
+| 4. Planning          | HOW - phases, tasks, acceptance criteria           |        |
+| 5. Implementation    | DOING - tests first, then code                     |        |
+| 6. Review            | VALIDATING - check work against artifacts          |        |
 
 **Stay in your lane**: Validate and refine discussion content into standalone specifications. Don't jump to planning, phases, tasks, or code. The specification is the "line in the sand" - everything after this has hard dependencies on it.
 
@@ -56,12 +56,13 @@ This outputs structured YAML. Parse it to understand:
 - Specifications with `status: superseded` should be noted but excluded from active counts
 
 **From `cache` section:**
-- Whether a consolidation analysis cache exists
-- The `anchored_names` list - these are grouping names that have existing specifications and MUST be preserved in any regeneration
-
-**From `cache_validity` section:**
-- Whether the cache is still valid (`is_valid: true/false`)
-- The reason if invalid
+- `status` - one of three values:
+  - `"valid"` - cache exists and checksums match (safe to load)
+  - `"stale"` - cache exists but discussions have changed (needs re-analysis)
+  - `"none"` - no cache file exists
+- `reason` - explanation of the status
+- `generated` - when the cache was created (null if none)
+- `anchored_names` - grouping names that have existing specifications and MUST be preserved in any regeneration
 
 **IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
 
@@ -145,7 +146,31 @@ Proceeding with this discussion.
 
 #### If MULTIPLE concluded discussions exist with NO existing specifications
 
-No existing specs to continue - proceed directly to analysis.
+Check `cache.status` from discovery.
+
+##### If `cache.status: "valid"`
+
+```
+{N} concluded discussions found.
+
+Previous analysis available from {cache.generated}. Loading groupings...
+```
+
+→ Skip directly to **Step 7: Present Grouping Options**.
+
+##### If `cache.status: "stale"`
+
+```
+{N} concluded discussions found.
+
+Note: A previous grouping analysis exists but is now outdated - discussion documents have changed since it was created. Re-analysis is required, but existing specification names will be preserved where groupings overlap.
+
+Analyzing discussions for natural groupings...
+```
+
+→ Proceed to **Step 4: Gather Analysis Context**.
+
+##### If `cache.status: "none"`
 
 ```
 {N} concluded discussions found.
@@ -156,6 +181,39 @@ Analyzing discussions for natural groupings...
 → Proceed to **Step 4: Gather Analysis Context**.
 
 #### If MULTIPLE concluded discussions exist WITH existing specifications
+
+Check `cache.status` from discovery to determine which options to present.
+
+##### If `cache.status: "valid"`
+
+```
+What would you like to do?
+
+1. **Continue an existing specification** - Resume work on a spec in progress
+2. **Select from groupings** - Choose from previously analyzed groupings ({cache.generated})
+3. **Re-analyze groupings** - Fresh analysis of discussion relationships
+
+Which approach?
+```
+
+**STOP.** Wait for user response.
+
+##### If `cache.status: "stale"`
+
+```
+What would you like to do?
+
+Note: A previous grouping analysis exists but is now outdated - discussion documents have changed since it was created. Re-analysis is required, but existing specification names will be preserved where groupings overlap.
+
+1. **Continue an existing specification** - Resume work on a spec in progress
+2. **Assess for groupings** - Re-analyze discussions for combinations
+
+Which approach?
+```
+
+**STOP.** Wait for user response.
+
+##### If `cache.status: "none"`
 
 ```
 What would you like to do?
@@ -179,7 +237,22 @@ Which specification would you like to continue?
 
 **STOP.** Wait for user to pick, then skip to **Step 9**.
 
-#### If "Assess for groupings"
+#### If "Select from groupings" (valid cache path)
+
+Load groupings from cache and → Skip directly to **Step 7: Present Grouping Options**.
+
+(Context was already gathered when the analysis was created - no need to ask again.)
+
+#### If "Re-analyze groupings"
+
+Delete the existing cache to force regeneration:
+```bash
+rm docs/workflow/.cache/discussion-consolidation-analysis.md
+```
+
+→ Proceed to **Step 4: Gather Analysis Context**.
+
+#### If "Assess for groupings" (no valid cache path)
 
 → Proceed to **Step 4: Gather Analysis Context**.
 
@@ -202,25 +275,25 @@ For example:
 
 ---
 
-## Step 5: Check Cache Validity
+## Step 5: Check Cache Status
 
-Check the `cache_validity.is_valid` value from the discovery state.
+Check `cache.status` from discovery.
 
-#### If cache is valid
+#### If `cache.status: "valid"`
 
 ```
 Using cached analysis
 
-Discussion documents unchanged since last analysis ({cached_date}).
+Discussion documents unchanged since last analysis ({cache.generated}).
 Loading previously identified groupings...
 ```
 
 Load groupings from cache and → Skip to **Step 7: Present Grouping Options**.
 
-#### If cache is invalid or missing
+#### If `cache.status: "stale"` or `"none"`
 
 ```
-{Reason from cache_validity.reason}
+{cache.reason}
 
 Analyzing discussions...
 ```
@@ -386,15 +459,72 @@ Please describe your preferred groupings. Which discussions should be combined t
 
 **STOP.** Wait for user to describe their groupings.
 
-Confirm understanding and present as a numbered list. Check if any grouping names match existing specifications.
+##### Analyze Impact
+
+Determine which existing specifications are affected by the proposed groupings. A spec is "affected" if:
+- Its source discussions are being split across multiple new groupings, OR
+- It's being merged with another spec's source discussions
+
+##### Simple case (0-1 specs affected)
+
+Establish a name for each grouping:
+- If the grouping contains all sources from an existing spec → suggest that spec's name
+- Otherwise → propose a semantic name based on the combined content
 
 ```
-Based on your description, here are the groupings:
+Based on your description:
 
-1. {User's Grouping A} - {topics}
-2. {User's Grouping B} - {topics}
+1. {Proposed Name} - {topic-a}, {topic-b}, {topic-c}
+   {If expanding existing spec: "(continues {spec-name} specification)"}
+
+{If name derived from existing spec:}
+Keep the name "{spec-name}" or use a different name?
+```
+
+**STOP.** Wait for user to confirm or provide a different name.
+
+→ Proceed to **Update Cache** below.
+
+##### Complex case (2+ specs affected)
+
+```
+This reorganization affects multiple existing specifications:
+- {spec-1} (sources: {topics})
+- {spec-2} (sources: {topics})
+
+Moving discussions between established specifications requires deleting the affected specs and re-processing. The source material in your discussions is preserved.
+
+Options:
+1. **Delete affected specs and proceed** - Remove {spec-1}, {spec-2} and create fresh specs for your new groupings
+2. **Reconsider** - Adjust your groupings to affect fewer specs
+
+Which approach?
+```
+
+**STOP.** Wait for user choice.
+
+- If delete: Remove the affected spec files, then proceed to **Update Cache**
+- If reconsider: Return to grouping description prompt
+
+##### Update Cache
+
+After confirming groupings, update the cache to reflect the user's custom arrangement.
+
+Rewrite `docs/workflow/.cache/discussion-consolidation-analysis.md` with:
+- Same `checksum` value (discussions unchanged)
+- New `generated` timestamp
+- User's custom groupings in the "Recommended Groupings" section
+- Note in Analysis Notes: `Custom groupings confirmed by user.`
+
+This ensures subsequent runs present the agreed groupings rather than re-analyzing.
+
+```
+Groupings confirmed. Cache updated.
 
 Which grouping would you like to start with?
+
+1. {Grouping A} - {N} discussions {if has spec: "(specification exists)"}
+2. {Grouping B} - {N} discussions
 ```
 
 **STOP.** Wait for user to pick, then proceed to **Step 9**.

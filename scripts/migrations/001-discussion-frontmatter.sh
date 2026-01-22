@@ -36,7 +36,6 @@ DISCUSSION_DIR="docs/workflow/discussion"
 
 # Skip if no discussion directory
 if [ ! -d "$DISCUSSION_DIR" ]; then
-    echo "  No discussion directory found"
     return 0
 fi
 

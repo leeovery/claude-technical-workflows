@@ -344,31 +344,13 @@ After documenting dependencies, perform a **final comprehensive review** of the 
    - Error handling, validation rules, or boundary conditions
    - Integration points or data flows mentioned but not elaborated
 
-4. **Flag what you find** - When you discover potentially missed content, present it to the user. **Do NOT add it to the specification without explicit approval.**
+4. **Collect what you find** - When you discover potentially missed content, note it for your summary. You'll present all findings together after the review is complete (see "Presenting Review Findings" below).
 
-   > **CHECKPOINT**: If you found missed content and are about to add it to the specification without presenting it first and receiving explicit approval, **STOP**. Every addition requires the present → approve → log cycle, even during final review.
+   Categorize each finding:
 
-   There are two cases:
+   **Enhancing an existing topic** - Details that belong in an already-documented section. Note which section it would enhance.
 
-   **Enhancing an existing topic** - Details that belong in an already-documented section:
-
-   > "During my final review, I found additional detail about [existing topic] that isn't captured. From [source]:
-   >
-   > [quote or summary from source material]
-   >
-   > I'd add this to the [section name] section. Would you like me to include it, or show you the full section with this addition first?"
-
-   If the user wants to see context, present the entire section with the new content clearly marked (e.g., with a comment like `<!-- NEW -->` or by calling it out before the block).
-
-   **An entirely missed topic** - Something that warrants its own section but was glossed over:
-
-   > "During my final review, I found [topic] discussed in [source] that doesn't have coverage in the specification:
-   >
-   > [quote or summary from source material]
-   >
-   > This would be a new section. Should I add it?"
-
-   In both cases, you know where the content belongs - existing topics get enhanced in place, new topics get added at the end.
+   **An entirely missed topic** - Something that warrants its own section but was glossed over. New topics get added at the end.
 
 5. **Never fabricate** - Every item you flag must trace back to specific source material. If you can't point to where it came from, don't suggest it. The goal is to catch missed content, not invent new requirements.
 
@@ -380,19 +362,56 @@ After documenting dependencies, perform a **final comprehensive review** of the 
    - Integration points that seem implicit but aren't specified
    - Behaviors that are ambiguous without clarification
 
-   Present these as a batch for the user to triage:
-
-   > "I've identified some potential gaps that aren't covered in the source material:
-   >
-   > 1. **[Gap A]** - [brief description of what's unclear/missing]
-   > 2. **[Gap B]** - [brief description]
-   > 3. **[Gap C]** - [brief description]
-   >
-   > Are any of these areas you'd like to discuss, or are they intentionally out of scope?"
-
-   The user can then pick which gaps (if any) need addressing. For those they want to discuss, work through them and add to the specification with standard approval workflow.
+   Collect these alongside the missed content from step 4. They'll be presented together in the summary (see below).
 
    This should be infrequent - most gaps will be caught from source material. But occasionally the sources themselves have blind spots worth surfacing.
+
+### Presenting Review Findings
+
+After completing your review (steps 1-7), present findings to the user in two stages:
+
+**Stage 1: Summary of All Findings**
+
+First, present a numbered summary of everything you found:
+
+> "I've completed my final review against all source material. I found [N] items:
+>
+> 1. **[Brief title]**
+>    [2-4 line explanation: what was missed, where it came from, what it affects]
+>
+> 2. **[Brief title]**
+>    [2-4 line explanation]
+>
+> 3. **[Brief title]**
+>    [2-4 line explanation]
+>
+> Let's work through these one at a time, starting with #1."
+
+Each item should have enough context that the user understands what they're about to discuss - not just a label, but clarity on what was missed and why it matters.
+
+**Stage 2: Process One Item at a Time**
+
+For each item, follow the **same workflow as the main specification process**:
+
+1. **Present** the item in detail - what you found, where it came from (source reference), and what you propose to add
+2. **Discuss** if needed - clarify ambiguities, answer questions, refine the content
+3. **Present for approval** - show exactly what will be written to the specification:
+
+   > "Here's what I'll add to the specification:
+   >
+   > [content exactly as it would appear]
+   >
+   > **To proceed, choose one:**
+   > - **"Log it"** - I'll add the above to the specification **verbatim**
+   > - **"Adjust"** - Tell me which part to change
+
+4. **Wait for explicit approval** - same rules as always: "Log it" or equivalent before writing
+5. **Log verbatim** when approved
+6. **Move to the next item**: "Moving to #2: [Brief title]..."
+
+> **CHECKPOINT**: Each review item requires the full present → approve → log cycle. Do not batch multiple items together. Do not proceed to the next item until the current one is resolved (approved, adjusted, or explicitly skipped by the user).
+
+For potential gaps (items not in source material), you're asking questions rather than proposing content. If the user wants to address a gap, discuss it, then present what you'd add for approval.
 
 ### What You're NOT Doing
 
