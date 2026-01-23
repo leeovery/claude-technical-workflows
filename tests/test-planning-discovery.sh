@@ -9,7 +9,7 @@
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DISCOVERY_SCRIPT="$SCRIPT_DIR/../planning-discovery.sh"
+DISCOVERY_SCRIPT="$SCRIPT_DIR/../scripts/planning-discovery.sh"
 
 # Colors for output
 RED='\033[0;31m'
