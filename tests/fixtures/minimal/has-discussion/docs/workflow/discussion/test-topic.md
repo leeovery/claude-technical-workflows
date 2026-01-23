@@ -1,39 +1,70 @@
----
-topic: test-topic
-status: complete
-participants: [user, claude]
-date: 2024-01-15
+# Discussion: Test Topic
+
+**Date**: 2024-01-15
+**Status**: Concluded
+
+## Context
+
+Technical discussion about implementing test topic functionality for the API.
+
+### References
+
+- Initial research exploration
+
+## Questions
+
+- [x] How should we handle authentication?
+- [x] What's the right approach for token storage?
+
 ---
 
-# Discussion: Test Topic
+## How should we handle authentication?
+
+### Context
+
+Need secure, standard authentication for API access.
+
+### Options Considered
+
+**Option A: OAuth2 with PKCE** - Industry standard, secure, well-supported
+**Option B: Basic auth** - Simple but not secure enough
+**Option C: API keys** - Not user-specific
+
+### Decision
+
+Use OAuth2 with PKCE flow for authentication.
+
+---
+
+## What's the right approach for token storage?
+
+### Context
+
+Need to store tokens securely in browser.
+
+### Options Considered
+
+**Option A: httpOnly cookies** - Prevents XSS access
+**Option B: localStorage** - Vulnerable to XSS
+
+### Decision
+
+Use httpOnly cookies for token storage.
+
+---
 
 ## Summary
 
-Technical discussion about implementing test topic functionality.
+### Key Insights
 
-## Decisions
+1. OAuth2 with PKCE is the right choice for security
+2. httpOnly cookies prevent common attack vectors
 
-### Decision 1: Use OAuth2 for Authentication
+### Current State
 
-**Decision**: Implement OAuth2 with PKCE flow
+- Authentication approach decided
+- Token storage approach decided
 
-**Rationale**: Industry standard, secure, well-supported by mobile clients
+### Next Steps
 
-**Alternatives Considered**:
-- Basic auth (rejected: not secure enough)
-- API keys (rejected: not user-specific)
-
-### Decision 2: Store Tokens in HttpOnly Cookies
-
-**Decision**: Use httpOnly cookies for token storage
-
-**Rationale**: Prevents XSS attacks from accessing tokens
-
-## Edge Cases
-
-- Token expiration during long-running operations
-- Concurrent refresh token requests
-
-## Open Questions
-
-None - ready for specification.
+- [ ] Create specification

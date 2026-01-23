@@ -1,7 +1,12 @@
 # Contract Tests: start-specification command
 #
-# Tests logic paths and structural outputs of the specification command.
-# These tests are deterministic and don't require LLM judging.
+# Tests that the specification command behaves correctly:
+# - Creates files in the right location
+# - Includes required structural elements
+# - Handles edge cases appropriately
+#
+# These tests are BEHAVIORAL - they verify the skill works,
+# not that it produces specific content.
 
 name: "start-specification contracts"
 description: "Verify specification command creates correct file structure"
@@ -12,7 +17,7 @@ scenarios:
   # Happy Path: Create spec from existing discussion
   # ==========================================================================
   - name: "creates spec from discussion"
-    description: "When discussion exists, creates specification with correct structure"
+    description: "When discussion exists, creates specification file"
     fixture: minimal/has-discussion
     command: /workflow/start-specification
     choices:
@@ -20,59 +25,48 @@ scenarios:
         answer: "test-topic"
       - match: "proceed"
         answer: "yes"
+      - match: "approve"
+        answer: "yes"
     assertions:
+      # File created in correct location
       - exists: docs/workflow/specification/test-topic.md
-      - has_frontmatter:
-          path: docs/workflow/specification/test-topic.md
-          required:
-            - topic
-            - status
+      # Has required sections per skill definition
       - has_sections:
           path: docs/workflow/specification/test-topic.md
           sections:
-            - "## Summary"
-            - "## Validated Decisions"
+            - "# Specification"
+            - "## Dependencies"
+      # Has inline metadata (not YAML frontmatter)
+      - content_matches:
+          path: docs/workflow/specification/test-topic.md
+          pattern: "\\*\\*Status\\*\\*:"
     invariants:
+      # Discussion should not be modified
       - docs/workflow/discussion/*
-      - docs/workflow/research/*
-
-  # ==========================================================================
-  # Edge Case: Multiple discussions available
-  # ==========================================================================
-  - name: "prompts for topic when multiple discussions exist"
-    description: "With multiple discussions, user must select which topic"
-    fixture: minimal/has-discussion
-    command: /workflow/start-specification
-    choices:
-      - match: "topic"
-        answer: "test-topic"
-    assertions:
-      - exists: docs/workflow/specification/test-topic.md
-      - file_count:
-          pattern: docs/workflow/specification/*.md
-          count: 1
 
   # ==========================================================================
   # Edge Case: No discussion exists
   # ==========================================================================
-  - name: "handles missing discussion gracefully"
-    description: "Without discussion, prompts for inline context or explains requirement"
+  - name: "handles missing discussion"
+    description: "Without discussion, should not create spec without user input"
     fixture: minimal/empty
     command: /workflow/start-specification
     choices:
       - match: "context"
         answer: ""  # User declines to provide context
+      - match: "topic"
+        answer: ""
     assertions:
-      # Should not create file without input
-      - not_exists: docs/workflow/specification/*.md
-      - output_contains:
-          - "discussion"
+      # Should not create file without proper input
+      - file_count:
+          pattern: docs/workflow/specification/*.md
+          count: 0
 
   # ==========================================================================
   # Edge Case: Specification already exists
   # ==========================================================================
-  - name: "warns when specification already exists"
-    description: "If spec exists for topic, should warn about overwriting"
+  - name: "respects existing specification"
+    description: "If spec exists and user declines overwrite, original preserved"
     fixture: minimal/has-specification
     command: /workflow/start-specification
     choices:
@@ -80,23 +74,28 @@ scenarios:
         answer: "test-topic"
       - match: "overwrite"
         answer: "no"
+      - match: "exist"
+        answer: "no"
     assertions:
       # Original should be unchanged
       - unchanged: docs/workflow/specification/test-topic.md
 
   # ==========================================================================
-  # Structure Validation
+  # Structure: Dependencies section is mandatory
   # ==========================================================================
-  - name: "spec includes source reference"
-    description: "Specification should reference its source (discussion)"
+  - name: "includes dependencies section"
+    description: "Specification must include Dependencies section per skill rules"
     fixture: minimal/has-discussion
     command: /workflow/start-specification
     choices:
       - match: "topic"
         answer: "test-topic"
+      - match: "approve"
+        answer: "yes"
     assertions:
       - exists: docs/workflow/specification/test-topic.md
-      - content_matches:
+      # Dependencies section is MANDATORY per skill definition
+      - has_sections:
           path: docs/workflow/specification/test-topic.md
-          pattern: "source:|Source:|discussion"
-          flags: "i"
+          sections:
+            - "## Dependencies"

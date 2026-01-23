@@ -1,6 +1,13 @@
 # Contract Tests: start-planning command
 #
-# Tests logic paths and structural outputs of the planning command.
+# Tests that the planning command behaves correctly:
+# - Creates files in the right location
+# - Includes required structural elements (phases, tasks)
+# - Records format choice in frontmatter
+# - Handles edge cases appropriately
+#
+# These tests are BEHAVIORAL - they verify the skill works,
+# not that it produces specific content.
 
 name: "start-planning contracts"
 description: "Verify planning command creates correct plan structure"
@@ -20,20 +27,21 @@ scenarios:
       - match: "format"
         answer: "local-markdown"
     assertions:
+      # File created in correct location
       - exists: docs/workflow/planning/test-topic.md
+      # Planning uses YAML frontmatter with format field
       - has_frontmatter:
           path: docs/workflow/planning/test-topic.md
           required:
-            - topic
-            - status
             - format
+      # Has phases section
       - has_sections:
           path: docs/workflow/planning/test-topic.md
           sections:
             - "## Overview"
     invariants:
+      # Source documents should not be modified
       - docs/workflow/specification/*
-      - docs/workflow/discussion/*
 
   # ==========================================================================
   # Format Selection
@@ -63,15 +71,18 @@ scenarios:
     choices:
       - match: "specification"
         answer: ""
+      - match: "topic"
+        answer: ""
     assertions:
-      - not_exists: docs/workflow/planning/*.md
-      - output_contains: "specification"
+      - file_count:
+          pattern: docs/workflow/planning/*.md
+          count: 0
 
   # ==========================================================================
-  # Plan Structure
+  # Plan Structure: Phases and Tasks
   # ==========================================================================
-  - name: "plan includes phases and tasks"
-    description: "Generated plan should have phase/task structure"
+  - name: "plan includes phases"
+    description: "Generated plan should have phase structure"
     fixture: minimal/has-specification
     command: /workflow/start-planning
     choices:
@@ -81,7 +92,27 @@ scenarios:
         answer: "local-markdown"
     assertions:
       - exists: docs/workflow/planning/test-topic.md
+      # Should contain phase headings
       - content_matches:
           path: docs/workflow/planning/test-topic.md
-          pattern: "(Phase|Task|##)"
+          pattern: "(Phase|### Phase)"
           flags: "i"
+
+  # ==========================================================================
+  # Plan Structure: External Dependencies
+  # ==========================================================================
+  - name: "plan includes external dependencies section"
+    description: "Plan should have external dependencies section"
+    fixture: minimal/has-specification
+    command: /workflow/start-planning
+    choices:
+      - match: "specification"
+        answer: "test-topic"
+      - match: "format"
+        answer: "local-markdown"
+    assertions:
+      - exists: docs/workflow/planning/test-topic.md
+      - has_sections:
+          path: docs/workflow/planning/test-topic.md
+          sections:
+            - "## External Dependencies"

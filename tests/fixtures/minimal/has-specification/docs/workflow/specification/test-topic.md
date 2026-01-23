@@ -1,31 +1,28 @@
----
-topic: test-topic
-status: draft
-source: discussion
-date: 2024-01-16
----
-
 # Specification: Test Topic
 
-## Summary
+**Status**: Complete
+**Type**: feature
+**Last Updated**: 2024-01-16
+
+---
+
+## Specification
+
+### Overview
 
 This specification defines the implementation of test topic functionality using OAuth2 authentication.
 
-## Validated Decisions
+### Authentication
 
-### Authentication Method
+**Decision**: Use OAuth2 with PKCE flow
 
-- **Decision**: OAuth2 with PKCE flow
-- **Source**: Discussion decision #1
-- **Validation**: Confirmed as appropriate for mobile and SPA clients
+**Rationale**: Industry standard, secure, well-supported by mobile and SPA clients.
 
 ### Token Storage
 
-- **Decision**: HttpOnly cookies
-- **Source**: Discussion decision #2
-- **Validation**: Meets security requirements
+**Decision**: Use httpOnly cookies
 
-## Requirements
+**Rationale**: Prevents XSS attacks from accessing tokens.
 
 ### Functional Requirements
 
@@ -38,12 +35,21 @@ This specification defines the implementation of test topic functionality using 
 1. Token refresh must complete within 500ms
 2. Support concurrent requests during refresh
 
-## Out of Scope
+### Out of Scope
 
 - Social login providers (future phase)
 - Multi-factor authentication (future phase)
 
+---
+
 ## Dependencies
 
-- OAuth2 provider configuration
-- Cookie domain setup
+### Required
+
+| Dependency | Why Blocked | What's Unblocked When It Exists |
+|------------|-------------|--------------------------------|
+| **OAuth2 Provider** | Cannot authenticate without provider | Authentication flow |
+
+### Notes
+
+- Cookie domain must be configured before deployment

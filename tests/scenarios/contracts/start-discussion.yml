@@ -1,9 +1,15 @@
 # Contract Tests: start-discussion command
 #
-# Tests logic paths and structural outputs of the discussion command.
+# Tests that the discussion command behaves correctly:
+# - Creates files in the right location
+# - Includes required structural elements (Context, Questions, Summary)
+# - Handles edge cases appropriately
+#
+# These tests are BEHAVIORAL - they verify the skill works,
+# not that it produces specific content.
 
 name: "start-discussion contracts"
-description: "Verify discussion command captures decisions and context"
+description: "Verify discussion command creates correct file structure"
 type: contract
 
 scenarios:
@@ -17,28 +23,29 @@ scenarios:
     choices:
       - match: "topic"
         answer: "test-feature"
-      - match: "research"
-        answer: "yes"
     assertions:
+      # File created in correct location
       - exists: docs/workflow/discussion/test-feature.md
-      - has_frontmatter:
-          path: docs/workflow/discussion/test-feature.md
-          required:
-            - topic
-            - status
+      # Has required sections per skill definition
       - has_sections:
           path: docs/workflow/discussion/test-feature.md
           sections:
+            - "## Context"
+            - "## Questions"
             - "## Summary"
-            - "## Decisions"
+      # Has inline metadata (Date, Status)
+      - content_matches:
+          path: docs/workflow/discussion/test-feature.md
+          pattern: "\\*\\*Status\\*\\*:"
     invariants:
+      # Research should not be modified
       - docs/workflow/research/*
 
   # ==========================================================================
-  # Discussion Structure
+  # Discussion captures decisions
   # ==========================================================================
-  - name: "discussion includes decision structure"
-    description: "Decisions should have decision/rationale format"
+  - name: "discussion captures decisions"
+    description: "Discussion should have decision sections with rationale"
     fixture: minimal/has-research
     command: /workflow/start-discussion
     choices:
@@ -46,32 +53,32 @@ scenarios:
         answer: "test-feature"
     assertions:
       - exists: docs/workflow/discussion/test-feature.md
+      # Should contain decision-related content
       - content_matches:
           path: docs/workflow/discussion/test-feature.md
-          pattern: "(Decision|Rationale|decision|rationale)"
+          pattern: "(Decision|decision|Decided|decided)"
 
   # ==========================================================================
   # Edge Case: No research exists
   # ==========================================================================
   - name: "can start discussion without research"
-    description: "Discussion can be created with inline context when no research"
+    description: "Discussion can be created with inline context"
     fixture: minimal/empty
     command: /workflow/start-discussion
     choices:
       - match: "topic"
         answer: "new-feature"
       - match: "context"
-        answer: "Building a new authentication system"
+        answer: "Building a new authentication system for the API"
     assertions:
       - exists: docs/workflow/discussion/new-feature.md
-      - has_frontmatter:
+      - has_sections:
           path: docs/workflow/discussion/new-feature.md
-          required:
-            - topic
-            - status
+          sections:
+            - "## Context"
 
   # ==========================================================================
-  # Multiple Topics
+  # Multiple topics create separate files
   # ==========================================================================
   - name: "creates separate discussion files per topic"
     description: "Each topic gets its own discussion file"
@@ -79,10 +86,13 @@ scenarios:
     command: /workflow/start-discussion
     choices:
       - match: "topic"
-        answer: "new-topic"
+        answer: "another-topic"
     assertions:
-      - exists: docs/workflow/discussion/new-topic.md
+      # New file created
+      - exists: docs/workflow/discussion/another-topic.md
+      # Original still exists
       - exists: docs/workflow/discussion/test-topic.md
+      # Multiple files
       - file_count:
           pattern: docs/workflow/discussion/*.md
           min: 2

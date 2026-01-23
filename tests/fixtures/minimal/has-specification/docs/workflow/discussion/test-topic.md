@@ -1,19 +1,33 @@
----
-topic: test-topic
-status: complete
-participants: [user, claude]
-date: 2024-01-15
+# Discussion: Test Topic
+
+**Date**: 2024-01-15
+**Status**: Concluded
+
+## Context
+
+Technical discussion about test topic authentication approach.
+
+## Questions
+
+- [x] How should we handle authentication?
+
 ---
 
-# Discussion: Test Topic
+## How should we handle authentication?
+
+### Decision
+
+Use OAuth2 with PKCE flow.
+
+---
 
 ## Summary
 
-Technical discussion about test topic.
+### Key Insights
 
-## Decisions
+1. OAuth2 with PKCE is appropriate for this use case
 
-### Decision 1: Use OAuth2
+### Current State
 
-**Decision**: Use OAuth2 with PKCE
-**Rationale**: Secure and standard
+- Authentication approach decided
+- Ready for specification
