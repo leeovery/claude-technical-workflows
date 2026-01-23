@@ -34,14 +34,11 @@ export interface ExecutorConfig {
 
   /** Permission mode */
   permissionMode?: 'default' | 'acceptEdits' | 'bypassPermissions';
-
-  /**
-   * Authentication mode:
-   * - 'api-key': Use ANTHROPIC_API_KEY environment variable (default)
-   * - 'oauth': Use OAuth flow for Claude Max subscribers
-   */
-  authMode?: 'api-key' | 'oauth';
 }
+
+// Note: Authentication is automatic via Claude Code:
+// - ANTHROPIC_API_KEY env var if set
+// - Otherwise uses Claude Code's existing OAuth auth
 
 export interface ExecutionResult {
   /** All text output from Claude */
@@ -100,7 +97,6 @@ export class ClaudeExecutor {
       maxBudgetUsd: 1.0,
       verbose: false,
       permissionMode: 'acceptEdits',
-      authMode: 'api-key',
       ...config,
     };
   }
@@ -205,17 +201,15 @@ export class ClaudeExecutor {
       },
     };
 
-    // Add budget limit for API key auth (OAuth uses subscription)
-    if (this.config.authMode === 'api-key') {
+    // Add budget limit (applies when using API key, ignored for subscriptions)
+    if (this.config.maxBudgetUsd) {
       queryOptions.maxBudgetUsd = this.config.maxBudgetUsd;
     }
 
-    // Configure authentication mode
-    if (this.config.authMode === 'oauth') {
-      // OAuth mode uses Claude Max subscription
-      // The SDK handles the OAuth flow automatically
-      queryOptions.authMode = 'oauth';
-    }
+    // Note: Authentication is handled automatically by the SDK:
+    // - Uses ANTHROPIC_API_KEY from environment if available
+    // - Otherwise uses Claude Code's existing auth (OAuth/subscription)
+    // The SDK spawns a Claude Code process that inherits auth from the environment
 
     for await (const message of query({
       prompt: command,
