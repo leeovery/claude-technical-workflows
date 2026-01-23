@@ -10,16 +10,11 @@
   },
   "type": "module",
   "scripts": {
-    "postinstall": "claude-manager add",
-    "preuninstall": "npx --yes --package=@leeovery/claude-manager claude-manager remove",
     "test": "tsx tests/lib/runner.ts",
     "test:contracts": "tsx tests/lib/runner.ts --suite contracts",
     "test:integration": "tsx tests/lib/runner.ts --suite integration",
     "test:dry-run": "tsx tests/lib/runner.ts --dry-run",
     "generate:fixtures": "tsx tests/scripts/generate-fixtures.ts"
-  },
-  "dependencies": {
-    "@leeovery/claude-manager": "^2.0.0"
   },
   "devDependencies": {
     "@anthropic-ai/claude-agent-sdk": "^0.1.0",
