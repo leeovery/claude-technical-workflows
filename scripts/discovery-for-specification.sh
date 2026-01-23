@@ -1,7 +1,5 @@
 #!/bin/bash
 #
-# discover-spec-state.sh
-#
 # Discovers the current state of discussions, specifications, and cache
 # for the /start-specification command.
 #

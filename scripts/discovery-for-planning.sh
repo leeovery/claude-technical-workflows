@@ -1,7 +1,5 @@
 #!/bin/bash
 #
-# planning-discovery.sh
-#
 # Discovers the current state of specifications and plans
 # for the /start-planning command.
 #

@@ -1,7 +1,5 @@
 #!/bin/bash
 #
-# discussion-discovery.sh
-#
 # Discovers the current state of research, discussions, and cache
 # for the /start-discussion command.
 #
