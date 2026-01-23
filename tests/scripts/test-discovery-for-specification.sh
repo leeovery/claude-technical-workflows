@@ -1,7 +1,5 @@
 #!/bin/bash
 #
-# test-discovery-for-specification.sh
-#
 # Tests the discovery-for-specification.sh script against various workflow states.
 # Creates temporary fixtures and validates YAML output.
 #

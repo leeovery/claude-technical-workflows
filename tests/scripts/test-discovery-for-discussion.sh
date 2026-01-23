@@ -1,7 +1,5 @@
 #!/bin/bash
 #
-# test-discovery-for-discussion.sh
-#
 # Tests the discovery-for-discussion.sh script against various workflow states.
 # Creates temporary fixtures and validates YAML output.
 #

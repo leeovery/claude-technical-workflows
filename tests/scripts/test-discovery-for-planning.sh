@@ -1,7 +1,5 @@
 #!/bin/bash
 #
-# test-discovery-for-planning.sh
-#
 # Tests the discovery-for-planning.sh script against various workflow states.
 # Creates temporary fixtures and validates YAML output.
 #
