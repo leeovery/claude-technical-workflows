@@ -55,11 +55,18 @@ export interface RunnerConfig {
   /** Dry run - don't execute, just validate scenarios */
   dryRun?: boolean;
 
-  /** Maximum budget per test in USD */
+  /** Maximum budget per test in USD (only applies to API key auth) */
   maxBudgetUsd?: number;
 
   /** Maximum turns per test */
   maxTurns?: number;
+
+  /**
+   * Authentication mode:
+   * - 'api-key': Use ANTHROPIC_API_KEY environment variable (default)
+   * - 'oauth': Use OAuth flow for Claude Max subscribers
+   */
+  authMode?: 'api-key' | 'oauth';
 }
 
 const DEFAULT_CONFIG: Required<RunnerConfig> = {
@@ -73,6 +80,7 @@ const DEFAULT_CONFIG: Required<RunnerConfig> = {
   dryRun: false,
   maxBudgetUsd: 2.0,
   maxTurns: 50,
+  authMode: 'api-key',
 };
 
 // Model name mapping
@@ -313,6 +321,7 @@ export class TestRunner {
       maxBudgetUsd: this.config.maxBudgetUsd,
       verbose: this.config.verbose,
       permissionMode: 'acceptEdits',
+      authMode: this.config.authMode,
     });
 
     const result = await executor.execute(fullCommand, choices);
@@ -419,16 +428,21 @@ export async function runCLI(args: string[]): Promise<void> {
       case '--max-turns':
         config.maxTurns = parseInt(args[++i], 10);
         break;
+      case '--oauth':
+        config.authMode = 'oauth';
+        break;
       case '--help':
         printHelp();
         process.exit(0);
     }
   }
 
-  // Check for API key
-  if (!config.dryRun && !process.env.ANTHROPIC_API_KEY) {
+  // Check for API key (only required for api-key auth mode)
+  if (!config.dryRun && config.authMode !== 'oauth' && !process.env.ANTHROPIC_API_KEY) {
     console.error('Error: ANTHROPIC_API_KEY environment variable is required');
     console.error('Set it with: export ANTHROPIC_API_KEY=your-key-here');
+    console.error('');
+    console.error('Or use --oauth to authenticate with Claude Max subscription.');
     process.exit(1);
   }
 
@@ -457,16 +471,19 @@ Options:
   --model <name>      Model for execution (opus, sonnet, haiku)
   --max-budget <usd>  Maximum budget per test (default: 2.0)
   --max-turns <n>     Maximum turns per test (default: 50)
+  --oauth             Use OAuth flow (Claude Max subscription)
   --help              Show this help
 
-Environment:
-  ANTHROPIC_API_KEY   Required for test execution (not needed for --dry-run)
+Authentication:
+  By default, uses ANTHROPIC_API_KEY environment variable.
+  Use --oauth to authenticate via OAuth flow (Claude Max subscribers).
 
 Examples:
   npm test -- --suite contracts
   npm test -- --file contracts/start-specification.yml --verbose
   npm test -- --dry-run
   npm test -- --model sonnet --max-budget 1.0
+  npm test -- --oauth --suite contracts
 `);
 }
 

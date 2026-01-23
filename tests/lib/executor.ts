@@ -26,7 +26,7 @@ export interface ExecutorConfig {
   /** Maximum turns before stopping */
   maxTurns?: number;
 
-  /** Maximum budget in USD */
+  /** Maximum budget in USD (only applies to API key auth) */
   maxBudgetUsd?: number;
 
   /** Enable verbose logging */
@@ -34,6 +34,13 @@ export interface ExecutorConfig {
 
   /** Permission mode */
   permissionMode?: 'default' | 'acceptEdits' | 'bypassPermissions';
+
+  /**
+   * Authentication mode:
+   * - 'api-key': Use ANTHROPIC_API_KEY environment variable (default)
+   * - 'oauth': Use OAuth flow for Claude Max subscribers
+   */
+  authMode?: 'api-key' | 'oauth';
 }
 
 export interface ExecutionResult {
@@ -93,6 +100,7 @@ export class ClaudeExecutor {
       maxBudgetUsd: 1.0,
       verbose: false,
       permissionMode: 'acceptEdits',
+      authMode: 'api-key',
       ...config,
     };
   }
@@ -175,29 +183,43 @@ export class ClaudeExecutor {
     let turns = 0;
     let status = 'unknown';
 
+    // Build query options based on auth mode
+    const queryOptions: Record<string, unknown> = {
+      model: this.config.model,
+      cwd: this.config.cwd,
+      maxTurns: this.config.maxTurns,
+      permissionMode: this.config.permissionMode,
+
+      // Load project settings (CLAUDE.md, skills, commands)
+      settingSources: ['project'],
+
+      // Tool interception for AskUserQuestion and recording
+      canUseTool: async (toolName: string, input: unknown) => {
+        return this.handleToolCall(
+          toolName,
+          input,
+          interceptor,
+          toolCalls,
+          questionsAsked
+        );
+      },
+    };
+
+    // Add budget limit for API key auth (OAuth uses subscription)
+    if (this.config.authMode === 'api-key') {
+      queryOptions.maxBudgetUsd = this.config.maxBudgetUsd;
+    }
+
+    // Configure authentication mode
+    if (this.config.authMode === 'oauth') {
+      // OAuth mode uses Claude Max subscription
+      // The SDK handles the OAuth flow automatically
+      queryOptions.authMode = 'oauth';
+    }
+
     for await (const message of query({
       prompt: command,
-      options: {
-        model: this.config.model,
-        cwd: this.config.cwd,
-        maxTurns: this.config.maxTurns,
-        maxBudgetUsd: this.config.maxBudgetUsd,
-        permissionMode: this.config.permissionMode,
-
-        // Load project settings (CLAUDE.md, skills, commands)
-        settingSources: ['project'],
-
-        // Tool interception for AskUserQuestion and recording
-        canUseTool: async (toolName: string, input: unknown) => {
-          return this.handleToolCall(
-            toolName,
-            input,
-            interceptor,
-            toolCalls,
-            questionsAsked
-          );
-        },
-      },
+      options: queryOptions as any,
     })) {
       this.processMessage(message, outputParts);
 
