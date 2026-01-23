@@ -1,6 +1,6 @@
 ---
 description: Start a technical discussion. Discovers research and existing discussions, offers multiple entry paths, and invokes the technical-discussion skill.
-allowed-tools: Bash(.claude/scripts/discussion-discovery.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/research-analysis.md)
+allowed-tools: Bash(.claude/scripts/discovery-for-discussion.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/research-analysis.md)
 ---
 
 Invoke the **technical-discussion** skill for this conversation.
@@ -43,7 +43,7 @@ Invoke the `/migrate` command and assess its output before proceeding to Step 1.
 Run the discovery script to gather current state:
 
 ```bash
-.claude/scripts/discussion-discovery.sh
+.claude/scripts/discovery-for-discussion.sh
 ```
 
 This outputs structured YAML. Parse it to understand:

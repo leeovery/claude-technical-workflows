@@ -1,6 +1,6 @@
 ---
 description: Start a specification session from existing discussions. Discovers available discussions, offers consolidation assessment for multiple discussions, and invokes the technical-specification skill.
-allowed-tools: Bash(.claude/scripts/specification-discovery.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/discussion-consolidation-analysis.md)
+allowed-tools: Bash(.claude/scripts/discovery-for-specification.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/discussion-consolidation-analysis.md)
 ---
 
 Invoke the **technical-specification** skill for this conversation.
@@ -43,7 +43,7 @@ Invoke the `/migrate` command and assess its output before proceeding to Step 1.
 Run the discovery script to gather current state:
 
 ```bash
-.claude/scripts/specification-discovery.sh
+.claude/scripts/discovery-for-specification.sh
 ```
 
 This outputs structured YAML. Parse it to understand:

@@ -1,15 +1,15 @@
 #!/bin/bash
 #
-# test-specification-discovery.sh
+# test-discovery-for-specification.sh
 #
-# Tests the specification-discovery.sh script against various workflow states.
+# Tests the discovery-for-specification.sh script against various workflow states.
 # Creates temporary fixtures and validates YAML output.
 #
 
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DISCOVERY_SCRIPT="$SCRIPT_DIR/../../scripts/specification-discovery.sh"
+DISCOVERY_SCRIPT="$SCRIPT_DIR/../../scripts/discovery-for-specification.sh"
 
 # Colors for output
 RED='\033[0;31m'
@@ -527,7 +527,7 @@ EOF
 # Run all tests
 #
 echo "=========================================="
-echo "Running specification-discovery.sh tests"
+echo "Running discovery-for-specification.sh tests"
 echo "=========================================="
 echo ""
 

@@ -1,15 +1,15 @@
 #!/bin/bash
 #
-# test-planning-discovery.sh
+# test-discovery-for-planning.sh
 #
-# Tests the planning-discovery.sh script against various workflow states.
+# Tests the discovery-for-planning.sh script against various workflow states.
 # Creates temporary fixtures and validates YAML output.
 #
 
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DISCOVERY_SCRIPT="$SCRIPT_DIR/../../scripts/planning-discovery.sh"
+DISCOVERY_SCRIPT="$SCRIPT_DIR/../../scripts/discovery-for-planning.sh"
 
 # Colors for output
 RED='\033[0;31m'
@@ -429,7 +429,7 @@ EOF
 # Run all tests
 #
 echo "=========================================="
-echo "Running planning-discovery.sh tests"
+echo "Running discovery-for-planning.sh tests"
 echo "=========================================="
 echo ""
 

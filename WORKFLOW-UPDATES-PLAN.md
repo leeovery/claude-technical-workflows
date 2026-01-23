@@ -11,9 +11,9 @@ Each command analyzes documents from the PREVIOUS phase. Migrations are linked t
 | Phase | Command | Reads From | Discovery Script | Migration (runs here) | Migrates |
 |-------|---------|------------|------------------|----------------------|----------|
 | 1. Research | start-research.md | N/A | N/A | N/A | N/A |
-| 2. Discussion | start-discussion.md | Research docs | discussion-discovery.sh | N/A | N/A (research has no status) |
-| 3. Specification | start-specification.md | Discussion docs | specification-discovery.sh | 001-discussion-frontmatter.sh | Discussion docs |
-| 4. Planning | start-planning.md | Specification docs | planning-discovery.sh | 002-specification-frontmatter.sh | Specification docs |
+| 2. Discussion | start-discussion.md | Research docs | discovery-for-discussion.sh | N/A | N/A (research has no status) |
+| 3. Specification | start-specification.md | Discussion docs | discovery-for-specification.sh | 001-discussion-frontmatter.sh | Discussion docs |
+| 4. Planning | start-planning.md | Specification docs | discovery-for-planning.sh | 002-specification-frontmatter.sh | Specification docs |
 | 5. Implementation | start-implementation.md | Plan docs | TBD | 003-planning-frontmatter.sh (TBD) | Plan docs |
 | 6. Review | start-review.md | All docs | TBD | N/A | N/A |
 
@@ -59,7 +59,7 @@ All document types use consistent status values:
 - Discovery script pattern (bash script outputs YAML, command parses it)
 - Explicit routing based on state
 
-**`scripts/specification-discovery.sh`** is the reference for:
+**`scripts/discovery-for-specification.sh`** is the reference for:
 - Centralized discovery logic in bash
 - Structured YAML output
 - Frontmatter extraction helpers
@@ -143,8 +143,8 @@ Cache files for avoiding redundant analysis.
 - No special cache invalidation handling needed (loose coupling to research)
 
 **Changes made:**
-- Created `scripts/discussion-discovery.sh` with YAML output
-- Created `scripts/tests/test-discussion-discovery.sh` (50 assertions)
+- Created `scripts/discovery-for-discussion.sh` with YAML output
+- Created `scripts/tests/test-discovery-for-discussion.sh` (50 assertions)
 - Updated `commands/workflow/start-discussion.md`:
   - Added `allowed-tools` header for discovery script
   - Flattened from sub-steps to Steps 0-7
@@ -155,8 +155,8 @@ Cache files for avoiding redundant analysis.
 
 **Files updated:**
 - `commands/workflow/start-discussion.md`
-- `scripts/discussion-discovery.sh` (new)
-- `scripts/tests/test-discussion-discovery.sh` (new)
+- `scripts/discovery-for-discussion.sh` (new)
+- `scripts/tests/test-discovery-for-discussion.sh` (new)
 
 ---
 
@@ -174,8 +174,8 @@ Cache files for avoiding redundant analysis.
 
 **Files:**
 - `commands/workflow/start-specification.md`
-- `scripts/specification-discovery.sh`
-- `tests/scripts/test-specification-discovery.sh`
+- `scripts/discovery-for-specification.sh`
+- `tests/scripts/test-discovery-for-specification.sh`
 - `skills/technical-specification/references/specification-guide.md`
 - `scripts/migrations/001-discussion-frontmatter.sh`
 
@@ -188,8 +188,8 @@ Cache files for avoiding redundant analysis.
 **This phase runs migration 002** (migrates Specification docs to frontmatter).
 
 **Completed:**
-- ✅ Discovery script: `scripts/planning-discovery.sh`
-- ✅ Script tests: `tests/scripts/test-planning-discovery.sh` (48 assertions)
+- ✅ Discovery script: `scripts/discovery-for-planning.sh`
+- ✅ Script tests: `tests/scripts/test-discovery-for-planning.sh` (48 assertions)
 - ✅ Migration 002: `scripts/migrations/002-specification-frontmatter.sh`
 
 **Remaining:**
@@ -293,9 +293,9 @@ Do NOT combine stages. Do NOT proceed to the next stage without explicit user ap
 
 | Test File | Assertions | Status |
 |-----------|------------|--------|
-| `test-discussion-discovery.sh` | 50 | ✅ |
-| `test-specification-discovery.sh` | 38 | ✅ |
-| `test-planning-discovery.sh` | 48 | ✅ |
+| `test-discovery-for-discussion.sh` | 50 | ✅ |
+| `test-discovery-for-specification.sh` | 38 | ✅ |
+| `test-discovery-for-planning.sh` | 48 | ✅ |
 | `test-implementation-discovery.sh` | TBD | ⬜ TODO |
 | `test-review-discovery.sh` | TBD | ⬜ TODO |
 
