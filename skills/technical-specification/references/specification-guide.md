@@ -340,12 +340,14 @@ To ensure analysis isn't lost during context refresh, create tracking files that
 
 **Format**:
 ```markdown
-# Review Tracking: [Topic Name] - [Phase]
-
-**Created**: YYYY-MM-DD
-**Status**: In Progress | Complete
-
 ---
+status: in-progress | complete
+created: YYYY-MM-DD
+phase: Input Review | Gap Analysis
+topic: [Topic Name]
+---
+
+# Review Tracking: [Topic Name] - [Phase]
 
 ## Findings
 
