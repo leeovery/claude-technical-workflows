@@ -358,7 +358,7 @@ topic: [Topic Name]
 **Affects**: [Which section(s) of the specification]
 
 **Details**:
-[2-4 line explanation of what was found and why it matters]
+[Explanation of what was found and why it matters]
 
 **Proposed Addition**:
 [What you would add to the specification - leave blank until discussed]
