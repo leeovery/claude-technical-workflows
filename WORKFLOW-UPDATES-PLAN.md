@@ -2,6 +2,54 @@
 
 Tracking document for systematically updating all workflow commands and skills to align with recent improvements.
 
+---
+
+## Master Tracking Table
+
+Each command analyzes documents from the PREVIOUS phase. Migrations are linked to the phase where they RUN.
+
+| Phase | Command | Reads From | Discovery Script | Migration (runs here) | Migrates |
+|-------|---------|------------|------------------|----------------------|----------|
+| 1. Research | start-research.md | N/A | N/A | N/A | N/A |
+| 2. Discussion | start-discussion.md | Research docs | discussion-discovery.sh | N/A | N/A (research has no status) |
+| 3. Specification | start-specification.md | Discussion docs | specification-discovery.sh | 001-discussion-frontmatter.sh | Discussion docs |
+| 4. Planning | start-planning.md | Specification docs | planning-discovery.sh | 002-specification-frontmatter.sh | Specification docs |
+| 5. Implementation | start-implementation.md | Plan docs | TBD | 003-planning-frontmatter.sh (TBD) | Plan docs |
+| 6. Review | start-review.md | All docs | TBD | N/A | N/A |
+
+---
+
+## Phase Completion Status
+
+| Phase | Command Updated | Discovery Script | Script Tests | Template Updated | Migration | Migration Tests |
+|-------|-----------------|------------------|--------------|------------------|-----------|-----------------|
+| 1. Research | ✅ | N/A | N/A | ✅ | N/A | N/A |
+| 2. Discussion | ✅ | ✅ | ✅ (50) | ✅ | N/A | N/A |
+| 3. Specification | ✅ | ✅ | ✅ (38) | ✅ | ✅ 001 | ⬜ TODO |
+| 4. Planning | ⬜ TODO | ✅ | ✅ (48) | ⬜ TODO | ✅ 002 | ⬜ TODO |
+| 5. Implementation | ⬜ TODO | ⬜ TODO | ⬜ TODO | ⬜ TODO | ⬜ TODO | ⬜ TODO |
+| 6. Review | ⬜ TODO | ⬜ TODO | ⬜ TODO | N/A | N/A | N/A |
+
+---
+
+## Status Values (Normalized)
+
+All document types use consistent status values:
+
+| Status | Meaning |
+|--------|---------|
+| `in-progress` | Work ongoing |
+| `concluded` | Work complete |
+
+| Document Type | Status Values | Notes |
+|---------------|---------------|-------|
+| Research | N/A | No status - exploration is ongoing |
+| Discussion | `in-progress`, `concluded` | |
+| Specification | `in-progress`, `concluded` | |
+| Plan | `in-progress`, `concluded` | TBD - need to confirm |
+
+---
+
 ## Reference Implementation
 
 **`commands/workflow/start-specification.md`** is the reference for:
@@ -47,45 +95,7 @@ Documents should use YAML frontmatter for metadata.
 | Plan | ⬜ TODO | `topic`, `status`, `date`, `format`, `specification` | `skills/technical-planning/references/` |
 | Research | ✅ | `topic`, `date` | `skills/technical-research/references/template.md` |
 
-### C. Status Values
-
-Simplified status values across document types.
-
-| Document Type | Status Values | Notes |
-|---------------|---------------|-------|
-| Discussion | `in-progress`, `concluded` | Migrated from Exploring/Deciding/Concluded |
-| Specification | `active`, `superseded` | |
-| Plan | TBD | Need to review current approach |
-| Research | N/A | No status - exploration is ongoing |
-
-### D. Discovery Scripts
-
-Centralized bash scripts for state discovery.
-
-| Phase | Script | Status | Notes |
-|-------|--------|--------|-------|
-| Specification | `scripts/specification-discovery.sh` | ✅ Done | Reference implementation |
-| Discussion | `scripts/discussion-discovery.sh` | ✅ Done | Tests in `scripts/tests/test-discussion-discovery.sh` |
-| Planning | None | ⬜ TODO | Need to assess |
-| Implementation | None | ⬜ TODO | Need to assess |
-| Review | None | ⬜ TODO | Need to assess |
-
-### E. Command Formatting Alignment
-
-Update commands to match start-specification formatting style.
-
-| Command | Formatting Updated | Notes |
-|---------|-------------------|-------|
-| `workflow/start-research.md` | ✅ | Added step numbers, STOP point |
-| `workflow/start-discussion.md` | ✅ | Uses discovery script, flattened steps, STOP points |
-| `workflow/start-specification.md` | ✅ Reference | This is the reference implementation |
-| `workflow/start-planning.md` | ⬜ TODO | Need to review |
-| `workflow/start-implementation.md` | ⬜ TODO | Need to review |
-| `workflow/start-review.md` | ⬜ TODO | Need to review |
-| `workflow/status.md` | ⬜ TODO | Need to review |
-| `workflow/view-plan.md` | ⬜ TODO | Need to review |
-
-### F. Caching Strategy
+### C. Caching Strategy
 
 Cache files for avoiding redundant analysis.
 
@@ -150,55 +160,62 @@ Cache files for avoiding redundant analysis.
 
 ---
 
-### Phase 3: Specification
+### Phase 3: Specification ✅
 
-**Current state:**
-- ✅ Reference implementation - fully updated
-- ✅ Discovery script pattern
-- ✅ YAML frontmatter
-- ✅ Caching with checksums
-- ✅ Strict formatting
+**Status: Complete**
 
-**Work needed:**
-- None - this is the reference
+**This phase runs migration 001** (migrates Discussion docs to frontmatter).
 
-**Files (for reference):**
+**Completed:**
+- Command is reference implementation
+- Discovery script with tests (38 assertions)
+- Template uses YAML frontmatter
+- Migration 001 created and tested
+
+**Files:**
 - `commands/workflow/start-specification.md`
 - `scripts/specification-discovery.sh`
-- `skills/technical-specification/SKILL.md`
+- `tests/scripts/test-specification-discovery.sh`
 - `skills/technical-specification/references/specification-guide.md`
+- `scripts/migrations/001-discussion-frontmatter.sh`
 
 ---
 
-### Phase 4: Planning
+### Phase 4: Planning (IN PROGRESS)
 
-**Current state:**
-- ⬜ Need to review current command structure
-- ⬜ Need to review plan document format
-- ⬜ Need to assess if discovery script needed
+**Status: Partially complete**
 
-**Work needed:**
-- [ ] Review current command formatting
-- [ ] Assess plan document frontmatter needs
-- [ ] Determine if discovery script pattern applies
-- [ ] Update command formatting
+**This phase runs migration 002** (migrates Specification docs to frontmatter).
 
-**Files to review:**
+**Completed:**
+- ✅ Discovery script: `scripts/planning-discovery.sh`
+- ✅ Script tests: `tests/scripts/test-planning-discovery.sh` (48 assertions)
+- ✅ Migration 002: `scripts/migrations/002-specification-frontmatter.sh`
+
+**Remaining:**
+- [ ] Update command formatting (use discovery script, flatten steps, STOP points)
+- [ ] Update plan template to use YAML frontmatter
+- [ ] Add migration tests for 002
+
+**Files to update:**
 - `commands/workflow/start-planning.md`
-- `skills/technical-planning/SKILL.md`
-- `skills/technical-planning/references/`
+- `skills/technical-planning/references/output-local-markdown.md` (template)
 
 ---
 
 ### Phase 5: Implementation
 
-**Current state:**
-- ⬜ Need to review current command structure
+**Status: Not started**
+
+**This phase runs migration 003** (migrates Plan docs to frontmatter - if needed).
 
 **Work needed:**
 - [ ] Review current command formatting
-- [ ] Assess discovery needs
-- [ ] Update command formatting
+- [ ] Create discovery script (reads Plan docs)
+- [ ] Add script tests
+- [ ] Update command to use discovery script
+- [ ] Create migration 003 for Plan docs (if needed)
+- [ ] Add migration tests
 
 **Files to review:**
 - `commands/workflow/start-implementation.md`
@@ -209,13 +226,15 @@ Cache files for avoiding redundant analysis.
 
 ### Phase 6: Review
 
-**Current state:**
-- ⬜ Need to review current command structure
+**Status: Not started**
+
+**This phase reads ALL docs** (no migration needed - all previous phases handle their own).
 
 **Work needed:**
 - [ ] Review current command formatting
-- [ ] Assess discovery needs
-- [ ] Update command formatting
+- [ ] Assess discovery script needs (may read from multiple phases)
+- [ ] Update command to use discovery script(s)
+- [ ] Add script tests if applicable
 
 **Files to review:**
 - `commands/workflow/start-review.md`
@@ -266,14 +285,19 @@ For phases with discovery scripts:
 
 Do NOT combine stages. Do NOT proceed to the next stage without explicit user approval.
 
-## Test Organization (TODO)
+## Test Organization
 
-**Move tests to project root:**
-- Current: `scripts/tests/test-*.sh`
-- Target: `tests/scripts/test-*.sh` (or similar structure)
+**Tests location:** `tests/scripts/`
 
-**Add migration tests:**
-- Create tests for migration scripts (001, 002, etc.)
-- Test various legacy document formats
-- Test idempotency (running migration twice)
-- Test edge cases (metadata in wrong location, missing fields, etc.)
+| Test File | Assertions | Status |
+|-----------|------------|--------|
+| `test-discussion-discovery.sh` | 50 | ✅ |
+| `test-specification-discovery.sh` | 38 | ✅ |
+| `test-planning-discovery.sh` | 48 | ✅ |
+| `test-migration-001.sh` | TBD | ⬜ TODO |
+| `test-migration-002.sh` | TBD | ⬜ TODO |
+
+**Migration tests should cover:**
+- Various legacy document formats
+- Idempotency (running migration twice)
+- Edge cases (metadata in wrong location, missing fields, etc.)
