@@ -289,13 +289,23 @@ Do NOT combine stages. Do NOT proceed to the next stage without explicit user ap
 
 **Tests location:** `tests/scripts/`
 
+### Discovery Script Tests
+
 | Test File | Assertions | Status |
 |-----------|------------|--------|
 | `test-discussion-discovery.sh` | 50 | ✅ |
 | `test-specification-discovery.sh` | 38 | ✅ |
 | `test-planning-discovery.sh` | 48 | ✅ |
-| `test-migration-001.sh` | TBD | ⬜ TODO |
-| `test-migration-002.sh` | TBD | ⬜ TODO |
+| `test-implementation-discovery.sh` | TBD | ⬜ TODO |
+| `test-review-discovery.sh` | TBD | ⬜ TODO |
+
+### Migration Tests
+
+| Test File | Status | Notes |
+|-----------|--------|-------|
+| `test-migration-001.sh` | ⬜ TODO | Discussion frontmatter migration |
+| `test-migration-002.sh` | ⬜ TODO | Specification frontmatter migration |
+| `test-migration-003.sh` | ⬜ TODO | Plan frontmatter migration (if needed) |
 
 **Migration tests should cover:**
 - Various legacy document formats
