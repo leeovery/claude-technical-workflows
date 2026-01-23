@@ -504,30 +504,32 @@ Inform the user Phase 1 is complete and proceed to Phase 2: Gap Analysis.
 
 ### Phase 2: Gap Analysis
 
-At this point, you've captured everything from your source materials. Phase 2 reviews the **specification as a standalone document** - independent of where the content came from.
+At this point, you've captured everything from your source materials. Phase 2 reviews the **specification as a standalone document** - looking *inward* at what's been specified, not outward at what else the product might need.
 
-**Purpose**: Ensure the specification is robust, complete, and clear enough that an agent or human could use it to create plans, break them into tasks, and write code. If something isn't in the spec, it won't make it to the plan. If it's ambiguous, the implementation agent will have to stop and ask - or worse, hallucinate to fill the gap.
+**Purpose**: Ensure that *within the defined scope*, the specification flows correctly, has sufficient detail, and leaves nothing open to interpretation or assumption. This might be a full product spec or a single feature - the scope is whatever the inputs defined. Your job is to verify that within those boundaries, an agent or human could create plans, break them into tasks, and write code without having to guess.
+
+**Key distinction**: You're not asking "what features are missing from this product?" You're asking "within what we've decided to build, is everything clear and complete?"
 
 #### What to Look For
 
-Review the specification systematically for:
+Review the specification systematically for gaps *within what's specified*:
 
-1. **Completeness Gaps**
-   - Missing features or capabilities that seem implied but aren't specified
-   - Incomplete workflows - steps that start but don't show how they end
-   - Missing states or transitions in state machines
-   - Unspecified default values or behaviors
+1. **Internal Completeness**
+   - Workflows that start but don't show how they end
+   - States or transitions mentioned but not fully defined
+   - Behaviors referenced elsewhere but never specified
+   - Default values or fallback behaviors left unstated
 
-2. **Technical Gaps**
-   - Missing error handling - what happens when things fail?
-   - Unspecified validation rules - what's valid input?
-   - Missing boundary conditions - what are the limits?
-   - Unclear data flows - where does data come from and go?
-   - Missing integration details - how do systems connect?
+2. **Insufficient Detail**
+   - Areas where an implementer would have to guess
+   - Sections that are too high-level to act on
+   - Missing error handling for scenarios the spec introduces
+   - Validation rules implied but not defined
+   - Boundary conditions for limits the spec mentions
 
 3. **Ambiguity**
    - Vague language that could be interpreted multiple ways
-   - Terms used inconsistently
+   - Terms used inconsistently across sections
    - "It should" without defining what "it" is
    - Implicit assumptions that aren't stated
 
@@ -536,11 +538,10 @@ Review the specification systematically for:
    - Behaviors defined differently in different sections
    - Constraints that make other requirements impossible
 
-5. **Edge Cases**
-   - What happens with empty inputs?
-   - What happens at scale (1 item vs 1000)?
-   - What happens with concurrent operations?
-   - What happens when dependencies are unavailable?
+5. **Edge Cases Within Scope**
+   - For the behaviors specified, what happens at boundaries?
+   - For the inputs defined, what happens when they're empty or malformed?
+   - For the integrations described, what happens when they're unavailable?
 
 6. **Planning Readiness**
    - Could you break this into clear tasks?
@@ -553,16 +554,16 @@ Review the specification systematically for:
 1. **Read the specification end-to-end** - Not scanning, but carefully reading as if you were about to implement it
 
 2. **For each section, ask**:
-   - Is this complete? What's missing?
-   - Is this clear? What's ambiguous?
-   - Is this consistent? Does it contradict anything else?
-   - Could I build this? What would I need to ask?
+   - Is this internally complete? Does it define everything it references?
+   - Is this clear? Would an implementer know exactly what to build?
+   - Is this consistent? Does it contradict anything else in the spec?
+   - Are there areas left open to interpretation or assumption?
 
-3. **Collect findings** - Note each gap, ambiguity, or improvement opportunity
+3. **Collect findings** - Note each gap, ambiguity, or area needing clarification
 
-4. **Prioritize** - Focus on issues that would block or confuse implementation:
+4. **Prioritize** - Focus on issues that would block or confuse implementation of what's specified:
    - **Critical**: Would prevent implementation or cause incorrect behavior
-   - **Important**: Would require implementer to make unguided decisions
+   - **Important**: Would require implementer to guess or make design decisions
    - **Minor**: Polish or clarification that improves understanding
 
 5. **Create the tracking file** - Write findings to `{topic}-review-gap-analysis-tracking.md`
@@ -610,10 +611,10 @@ For each item:
 
 #### What You're NOT Doing in Phase 2
 
-- **Not gold-plating** - Only flag gaps that would actually impact implementation
-- **Not adding scope** - If the user deliberately kept something simple, respect that
-- **Not second-guessing decisions** - The spec reflects validated decisions; you're checking for gaps, not re-opening debates
-- **Not being exhaustive for its own sake** - Focus on what matters for implementation
+- **Not expanding scope** - You're looking for gaps *within* what's specified, not suggesting features the product should have. A feature spec for "user login" doesn't need you to ask about password reset if it wasn't in scope.
+- **Not gold-plating** - Only flag gaps that would actually impact implementation of what's specified
+- **Not second-guessing decisions** - The spec reflects validated decisions; you're checking for clarity and completeness, not re-opening debates
+- **Not being exhaustive for its own sake** - Focus on what matters for implementing *this* specification
 
 #### Completing Phase 2
 
