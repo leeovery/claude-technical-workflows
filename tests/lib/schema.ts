@@ -32,9 +32,6 @@ export interface TestScenario {
   /** Scripted answers to AskUserQuestion prompts */
   choices?: ScriptedChoice[];
 
-  /** Preconditions that must be true before test runs */
-  preconditions?: Assertion[];
-
   /** Postconditions that must be true after test completes */
   assertions: Assertion[];
 
@@ -63,17 +60,8 @@ export interface TestConfig {
   /** Model override for this test */
   model?: 'opus' | 'sonnet' | 'haiku';
 
-  /** Number of times to run (for flakiness detection) */
-  runs?: number;
-
-  /** Pass threshold when runs > 1 (e.g., "2/3") */
-  passThreshold?: string;
-
   /** Skip this test */
   skip?: boolean;
-
-  /** Only run this test */
-  only?: boolean;
 }
 
 // =============================================================================
@@ -156,6 +144,10 @@ export interface SemanticAssertion {
   };
 }
 
+/**
+ * Custom assertion type (NOT YET IMPLEMENTED)
+ * Reserved for future extensibility with user-defined validators.
+ */
 export interface CustomAssertion {
   custom: {
     /** Path to custom validator function */

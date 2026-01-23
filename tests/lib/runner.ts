@@ -173,7 +173,7 @@ export class TestRunner {
         continue;
       }
 
-      const result = await this.runScenario(scenario, scenarioFile.type);
+      const result = await this.runScenario(scenario);
       results.push(result);
 
       // Print result immediately
@@ -212,10 +212,7 @@ export class TestRunner {
   /**
    * Run a single scenario
    */
-  private async runScenario(
-    scenario: TestScenario,
-    type: 'contract' | 'integration'
-  ): Promise<TestResult> {
+  private async runScenario(scenario: TestScenario): Promise<TestResult> {
     const startTime = Date.now();
 
     try {

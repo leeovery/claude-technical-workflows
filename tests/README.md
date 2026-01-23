@@ -2,6 +2,23 @@
 
 A testing framework for validating Claude Code skills and commands using deterministic structural checks combined with LLM-as-judge semantic validation.
 
+## Table of Contents
+
+- [Quick Start](#quick-start)
+- [Architecture Overview](#architecture-overview)
+- [Directory Structure](#directory-structure)
+- [How Testing Works](#how-testing-works)
+- [Fixtures: World State Snapshots](#fixtures-world-state-snapshots)
+- [Scenarios: Test Definitions](#scenarios-test-definitions)
+- [Testing Complex Commands](#testing-complex-commands)
+- [Catching Regressions](#catching-regressions)
+- [Running Tests](#running-tests)
+- [CI/CD Integration](#cicd-integration)
+- [Cost Management](#cost-management)
+- [Troubleshooting](#troubleshooting)
+
+---
+
 ## Quick Start
 
 ```bash
@@ -9,12 +26,14 @@ A testing framework for validating Claude Code skills and commands using determi
 npm install
 
 # 2. Validate setup (no API key needed)
-npm test -- --dry-run
+npm run test:dry-run
 
-# 3. Run tests (requires API key)
+# 3. Run tests (requires API key or Claude Max auth)
 export ANTHROPIC_API_KEY=your-key-here
 npm test -- --suite contracts --verbose
 ```
+
+---
 
 ## Architecture Overview
 
@@ -36,6 +55,19 @@ npm test -- --suite contracts --verbose
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
+**Key Components:**
+
+| Component | Purpose |
+|-----------|---------|
+| **Runner** (`lib/runner.ts`) | Orchestrates test execution, manages lifecycle |
+| **Executor** (`lib/executor.ts`) | Runs commands via Claude Agent SDK, intercepts tools |
+| **Validators** (`lib/validators.ts`) | Implements all assertion types |
+| **FixtureManager** (`lib/fixture-manager.ts`) | Copies fixtures, captures state, cleans up |
+| **ChoiceInterceptor** (`lib/choice-interceptor.ts`) | Scripts answers to AskUserQuestion |
+| **LLMJudge** (`lib/llm-judge.ts`) | Semantic evaluation using Claude |
+
+---
+
 ## Directory Structure
 
 ```
@@ -48,10 +80,6 @@ tests/
 │   │   ├── has-discussion/    # Research + discussion exist
 │   │   └── has-specification/ # Research + discussion + spec exist
 │   └── generated/             # Auto-generated from seeds
-│       └── auth-feature/
-│           ├── post-research/
-│           ├── post-discussion/
-│           └── post-specification/
 ├── scenarios/                 # Test definitions
 │   ├── contracts/             # Deterministic structural tests
 │   └── integration/           # LLM-judged semantic tests
@@ -63,20 +91,34 @@ tests/
 
 ---
 
-## Fixtures: How They Work
+## How Testing Works
 
-Fixtures represent "world states" - snapshots of the filesystem at different points in the workflow. Tests start from a fixture, run a command, and verify the result.
+### The Test Loop
 
-### Two Types of Fixtures
+1. **Scenario defines the test**: What fixture to use, what command to run, what answers to give, what to verify
+2. **Fixture provides starting state**: Files copied to a temp directory
+3. **Command executes**: Claude Agent SDK runs the command, intercepting questions
+4. **Assertions verify results**: Structural checks first (free), semantic checks if needed (costs tokens)
+5. **Cleanup**: Temp directory deleted
 
-| Type | Location | Created By | When to Update |
-|------|----------|------------|----------------|
-| **Minimal** | `fixtures/minimal/` | Hand-crafted | Rarely (only structural changes) |
-| **Generated** | `fixtures/generated/` | `generate-fixtures.ts` | When skills/commands change |
+### Two Types of Tests
 
-### Minimal Fixtures (Manual)
+| Type | Location | Purpose | Cost |
+|------|----------|---------|------|
+| **Contract** | `scenarios/contracts/` | Verify structure, files, sections | Free (no LLM) |
+| **Integration** | `scenarios/integration/` | Verify semantic quality | LLM tokens |
 
-Small, focused fixtures for testing specific logic paths. They contain just enough to trigger the code path being tested.
+**Run contract tests first** - they catch most issues without API costs.
+
+---
+
+## Fixtures: World State Snapshots
+
+Fixtures represent the filesystem state BEFORE a command runs. They're just directories with pre-made files.
+
+### Minimal Fixtures (Hand-Crafted)
+
+Located in `fixtures/minimal/`. These are simple, focused fixtures for testing specific paths.
 
 ```
 fixtures/minimal/has-discussion/
@@ -87,79 +129,317 @@ fixtures/minimal/has-discussion/
 │       └── test-topic.md      # Minimal discussion doc
 ```
 
-**When to create minimal fixtures:**
-- Testing a specific logic branch
-- Testing error handling (e.g., missing files)
+**When to create manually:**
+- Testing a specific code path (e.g., "what happens with no discussion?")
+- Testing error handling
 - Contract tests that don't need realistic content
 
 **How to create:**
-1. Create the directory structure manually
-2. Add minimal valid files (just frontmatter + required sections)
-3. Commit to version control
+1. Create the directory structure
+2. Add minimal valid files (basic frontmatter + required sections)
+3. Keep content generic - tests should work with any topic
 
 ### Generated Fixtures (Automatic)
 
-Realistic fixtures created by actually running the workflow with canonical inputs. They capture real skill/command output.
+Located in `fixtures/generated/`. Created by actually running the workflow.
 
-**When to use generated fixtures:**
+**When to use:**
 - Integration tests that need realistic content
-- Testing semantic quality (LLM judge needs real content)
-- Regression testing after skill updates
+- Testing semantic quality
+- Regression testing
 
-**How to create/update:**
+**How to regenerate:**
 
 ```bash
-# See what would be generated (no API calls)
+# See what would be generated
 npx tsx tests/scripts/generate-fixtures.ts --dry-run
 
 # Generate all fixtures
-export ANTHROPIC_API_KEY=your-key
 npx tsx tests/scripts/generate-fixtures.ts
 
 # Generate specific seed
 npx tsx tests/scripts/generate-fixtures.ts --seed auth-feature
-
-# Use cheaper model for development
-npx tsx tests/scripts/generate-fixtures.ts --model sonnet --max-budget 1.0
 ```
 
-**Seed file format:**
+---
+
+## Scenarios: Test Definitions
+
+Scenarios are YAML files that define individual tests.
+
+### Anatomy of a Scenario
 
 ```yaml
-# seeds/auth-feature.yml
-name: auth-feature
-description: "OAuth2 authentication feature"
+name: "start-specification contracts"
+description: "Tests for the specification command"
+type: contract  # or "integration"
 
-phases:
-  research:
-    command: /workflow/start-research
-    inputs:
-      topic: "OAuth2 authentication for API"
-      context: |
-        Building a REST API that needs user authentication.
-        Requirements: secure, standard protocols, mobile-friendly.
+scenarios:
+  - name: "creates spec from discussion"
+    description: "When discussion exists, creates specification file"
+
+    # 1. START STATE: Which fixture to copy
+    fixture: minimal/has-discussion
+
+    # 2. COMMAND: What to run
+    command: /workflow/start-specification
+
+    # 3. CHOICES: Answers to questions (fuzzy match)
     choices:
-      - match: "focus area"
-        answer: "technical feasibility"
+      - match: "topic"        # If question contains "topic"
+        answer: "test-topic"  # Answer with this
+      - match: "approve"
+        answer: "yes"
 
-  discussion:
-    command: /workflow/start-discussion
-    choices:
-      - match: "topic"
-        answer: "authentication"
+    # 4. ASSERTIONS: What to verify after
+    assertions:
+      - exists: docs/workflow/specification/test-topic.md
+      - has_sections:
+          path: docs/workflow/specification/test-topic.md
+          sections:
+            - "# Specification"
+            - "## Dependencies"
 
-  specification:
+    # 5. INVARIANTS: Files that must NOT change
+    invariants:
+      - docs/workflow/discussion/*
+```
+
+### Assertion Types
+
+| Assertion | Description | Example |
+|-----------|-------------|---------|
+| `exists` | File/pattern exists | `exists: docs/spec/*.md` |
+| `not_exists` | File doesn't exist | `not_exists: docs/spec/foo.md` |
+| `unchanged` | Files unchanged from fixture | `unchanged: docs/discussion/*` |
+| `has_frontmatter` | YAML frontmatter has fields | See below |
+| `has_sections` | Markdown has headings | See below |
+| `content_matches` | Regex matches content | `pattern: "OAuth2"` |
+| `output_contains` | Claude output has text | `output_contains: "Created"` |
+| `file_count` | Number of matching files | `min: 1, max: 3` |
+| `semantic` | LLM evaluates criteria | See below |
+
+### Scripted Choices
+
+When a command asks questions (AskUserQuestion), you script the answers:
+
+```yaml
+choices:
+  - match: "which topic"     # Fuzzy match (case-insensitive)
+    answer: "authentication"
+  - match: "include all"
+    answer: "yes"
+  - match: "format"
+    answer: ["json", "yaml"]  # Multi-select
+```
+
+The `match` field is matched case-insensitively against the question text. First match wins.
+
+---
+
+## Testing Complex Commands
+
+Commands like `start-specification` have complex logic with multiple paths:
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                     start-specification Paths                        │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  ┌─────────────────┐                                                │
+│  │ No discussions? │──→ STOP: "Run /start-discussion first"        │
+│  └────────┬────────┘                                                │
+│           ↓                                                         │
+│  ┌─────────────────┐                                                │
+│  │ One discussion? │──→ Simple path: specify that one              │
+│  └────────┬────────┘                                                │
+│           ↓                                                         │
+│  ┌─────────────────┐                                                │
+│  │ Multiple?       │──→ Ask: "Continue existing?" or "Assess?"     │
+│  └────────┬────────┘                                                │
+│           ↓                                                         │
+│  ┌─────────────────┐                                                │
+│  │ Has cache?      │──→ Use cached groupings or re-analyze         │
+│  └────────┬────────┘                                                │
+│           ↓                                                         │
+│  Present grouping options → User picks → Create spec                │
+│                                                                      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Strategy: Test Each Path Separately
+
+Create a scenario for EACH path:
+
+```yaml
+scenarios:
+  # Path 1: No discussions → error
+  - name: "handles missing discussion"
+    fixture: minimal/empty
+    command: /workflow/start-specification
+    assertions:
+      - file_count:
+          pattern: docs/workflow/specification/*.md
+          count: 0
+
+  # Path 2: Single discussion → simple path
+  - name: "creates spec from single discussion"
+    fixture: minimal/has-discussion  # Only one discussion
     command: /workflow/start-specification
     choices:
       - match: "topic"
-        answer: "authentication"
+        answer: "test-topic"
+    assertions:
+      - exists: docs/workflow/specification/test-topic.md
+
+  # Path 3: Multiple discussions → grouping analysis
+  - name: "offers grouping for multiple discussions"
+    fixture: minimal/has-multiple-discussions
+    command: /workflow/start-specification
+    choices:
+      - match: "continue"
+        answer: "assess"  # Choose to analyze groupings
+      - match: "proceed"
+        answer: "1"       # Pick first grouping
+    assertions:
+      - exists: docs/workflow/specification/*.md
+
+  # Path 4: Existing spec → continue or overwrite
+  - name: "respects existing specification"
+    fixture: minimal/has-specification
+    command: /workflow/start-specification
+    choices:
+      - match: "overwrite"
+        answer: "no"
+    assertions:
+      - unchanged: docs/workflow/specification/test-topic.md
 ```
 
-**The generator:**
-1. Creates a temp workspace
-2. Runs each phase command sequentially
-3. Captures the workspace state after each phase
-4. Saves snapshots as `post-{phase}/` directories
+### Testing Logic Forks
+
+For each decision point in the command:
+
+1. **Identify the fork**: "What question does it ask?"
+2. **Create two scenarios**: One for each answer
+3. **Verify different outcomes**: Each path should produce different results
+
+```yaml
+# Fork: "Overwrite existing spec?"
+scenarios:
+  - name: "overwrites spec when user agrees"
+    choices:
+      - match: "overwrite"
+        answer: "yes"
+    assertions:
+      - content_matches:
+          path: docs/workflow/specification/test-topic.md
+          pattern: "Updated content"  # New content present
+
+  - name: "preserves spec when user declines"
+    choices:
+      - match: "overwrite"
+        answer: "no"
+    assertions:
+      - unchanged: docs/workflow/specification/test-topic.md
+```
+
+---
+
+## Catching Regressions
+
+### What Causes Regressions?
+
+1. **Logic bugs**: Command takes wrong path, skips steps, produces wrong output
+2. **Missing questions**: Command no longer asks expected questions
+3. **Changed structure**: Output files missing sections, wrong format
+4. **Broken integration**: Skill invocation fails, handoff incomplete
+
+### How Tests Catch Them
+
+| Regression Type | How Tests Catch It |
+|-----------------|-------------------|
+| Wrong file created | `exists` assertion fails |
+| Missing section | `has_sections` assertion fails |
+| Frontmatter malformed | `has_frontmatter` assertion fails |
+| Question not asked | Scripted choice unused (warning in verbose mode) |
+| Unexpected question | `[ChoiceInterceptor] No scripted answer` warning |
+| Source files modified | `invariants` or `unchanged` assertion fails |
+| Content quality dropped | `semantic` assertion fails |
+
+### The Golden Rule: Test Behavior, Not Content
+
+**WRONG** (brittle, breaks when wording changes):
+```yaml
+assertions:
+  - content_matches:
+      path: docs/workflow/specification/test-topic.md
+      pattern: "OAuth2 with PKCE flow"  # Specific content!
+```
+
+**RIGHT** (behavioral, resilient to wording changes):
+```yaml
+assertions:
+  - has_sections:
+      path: docs/workflow/specification/test-topic.md
+      sections:
+        - "# Specification"
+        - "## Dependencies"
+  - semantic:
+      criteria:
+        - "Contains validated technical decisions"
+        - "Is structured as a standalone document"
+```
+
+### Avoiding False Positives (Baking Bugs into Tests)
+
+**The danger**: If you write tests that match buggy behavior, you'll never catch the bug.
+
+**Prevention strategies:**
+
+1. **Write tests BEFORE you know the output**
+   - Define what SHOULD happen based on the skill spec
+   - Don't peek at actual output then write tests to match
+
+2. **Use semantic criteria, not exact content**
+   - "Contains decisions with rationale" ✓
+   - "Contains 'We decided to use OAuth2'" ✗
+
+3. **Test invariants explicitly**
+   - If discussion shouldn't change, add `unchanged: docs/workflow/discussion/*`
+   - If exactly one file should be created, add `file_count: 1`
+
+4. **Review fixture content carefully**
+   - Fixtures should contain VALID input, not buggy output
+   - If a fixture contains malformed data, fix the fixture
+
+5. **Regenerate fixtures periodically**
+   - When skills change, regenerate and REVIEW the diff
+   - Don't blindly commit regenerated fixtures
+
+### The Regression Testing Workflow
+
+```bash
+# 1. Make your skill/command change
+vim commands/workflow/start-specification.md
+
+# 2. Run contract tests (fast feedback)
+npm test -- --suite contracts
+
+# 3. If tests fail, decide:
+#    - Is the test wrong? → Update the test
+#    - Is the code wrong? → Fix the code
+
+# 4. Regenerate fixtures and review
+npx tsx tests/scripts/generate-fixtures.ts
+git diff tests/fixtures/generated/
+
+# 5. If fixture changes look correct, commit
+git add tests/fixtures/generated/
+git commit -m "chore: update fixtures for skill changes"
+
+# 6. Run full integration tests
+npm test -- --suite integration
+```
 
 ---
 
@@ -171,10 +451,10 @@ phases:
 # Run all tests
 npm test
 
-# Run only contract tests (fast, deterministic validation)
+# Run only contract tests (fast, free)
 npm test -- --suite contracts
 
-# Run only integration tests (slower, uses LLM judge)
+# Run only integration tests (slower, uses LLM)
 npm test -- --suite integration
 
 # Run specific scenario file
@@ -183,7 +463,7 @@ npm test -- --file contracts/start-specification.yml
 # Run specific scenario by name
 npm test -- --scenario "creates spec from discussion"
 
-# Verbose output (see Claude's responses)
+# Verbose output
 npm test -- --verbose
 
 # Dry run (validate scenarios without executing)
@@ -193,7 +473,7 @@ npm test -- --dry-run
 ### Cost Control
 
 ```bash
-# Use cheaper model (faster, less accurate)
+# Use cheaper model
 npm test -- --model haiku
 
 # Limit budget per test
@@ -203,7 +483,7 @@ npm test -- --max-budget 0.50
 npm test -- --max-turns 20
 ```
 
-### Test Output
+### Example Output
 
 ```
 Found 4 scenario file(s)
@@ -212,9 +492,9 @@ Max budget per test: $2.00
 
 Running: scenarios/contracts/start-specification.yml
   ✓ creates spec from discussion (45023ms)
-  ✓ spec has required frontmatter (38291ms)
-  ✗ handles missing discussion gracefully (52104ms)
-    → File not found: docs/workflow/specification/new-topic.md
+  ✓ spec has required sections (38291ms)
+  ✗ handles missing discussion (52104ms)
+    → File count 1 does not satisfy count=0
 
 ============================================================
 Test Summary
@@ -227,100 +507,9 @@ Total: 3 tests
 
 ---
 
-## Writing Tests
-
-### Test Scenario Format
-
-```yaml
-name: "start-specification contracts"
-description: "Tests for the specification command"
-type: contract  # or "integration"
-
-scenarios:
-  - name: "creates spec from discussion"
-    description: "When discussion exists, spec is created"
-    fixture: minimal/has-discussion
-    command: /workflow/start-specification
-    choices:
-      - match: "topic"          # Fuzzy match on question text
-        answer: "test-topic"
-    assertions:
-      - exists: docs/workflow/specification/test-topic.md
-      - has_frontmatter:
-          path: docs/workflow/specification/test-topic.md
-          required: [topic, status]
-      - has_sections:
-          path: docs/workflow/specification/test-topic.md
-          sections: ["## Summary", "## Validated Decisions"]
-    invariants:
-      - docs/workflow/discussion/*  # These files must not change
-```
-
-### Assertion Types
-
-| Assertion | Description | Example |
-|-----------|-------------|---------|
-| `exists` | File/directory exists | `exists: docs/workflow/spec/topic.md` |
-| `not_exists` | File doesn't exist | `not_exists: docs/workflow/spec/*.md` |
-| `unchanged` | Files unchanged from fixture | `unchanged: docs/workflow/discussion/*` |
-| `has_frontmatter` | YAML frontmatter has fields | See below |
-| `has_sections` | Markdown has headings | See below |
-| `content_matches` | Regex matches content | `pattern: "OAuth2"` |
-| `output_contains` | Claude output has text | `output_contains: "Created specification"` |
-| `file_count` | Number of matching files | `min: 1, max: 3` |
-| `semantic` | LLM evaluates criteria | See below |
-
-**Frontmatter assertion:**
-```yaml
-has_frontmatter:
-  path: docs/workflow/specification/topic.md
-  required: [topic, status, date]
-  values:
-    topic: "authentication"
-    status: "draft"
-```
-
-**Sections assertion:**
-```yaml
-has_sections:
-  path: docs/workflow/specification/topic.md
-  sections:
-    - "## Summary"
-    - "## Validated Decisions"
-    - "## Requirements"
-```
-
-**Semantic assertion (LLM judge):**
-```yaml
-semantic:
-  judge_model: haiku  # haiku (cheap), sonnet, or opus
-  path: docs/workflow/specification/topic.md
-  criteria:
-    - "Contains specific technical decisions"
-    - "Includes implementation requirements"
-    - "Identifies scope boundaries"
-  threshold: 0.66  # 2 of 3 criteria must pass
-```
-
-### Scripting User Choices
-
-When a command uses `AskUserQuestion`, script the responses:
-
-```yaml
-choices:
-  - match: "which topic"     # Fuzzy match (case-insensitive)
-    answer: "authentication"
-  - match: "include all"
-    answer: "yes"
-  - match: "format"
-    answer: ["json", "yaml"]  # Multi-select
-```
-
----
-
 ## CI/CD Integration
 
-### GitHub Actions Workflow
+### GitHub Actions Example
 
 ```yaml
 # .github/workflows/test-skills.yml
@@ -331,14 +520,11 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  release:
-    types: [published]
 
 env:
   ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
 jobs:
-  # Fast structural tests (every push)
   contract-tests:
     runs-on: ubuntu-latest
     steps:
@@ -350,9 +536,8 @@ jobs:
       - run: npm ci
       - run: npm test -- --suite contracts
 
-  # Slower semantic tests (PRs and releases)
   integration-tests:
-    if: github.event_name == 'pull_request' || github.event_name == 'release'
+    if: github.event_name == 'pull_request'
     needs: contract-tests
     runs-on: ubuntu-latest
     steps:
@@ -363,63 +548,26 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm test -- --suite integration --model haiku
-
-  # Full validation before release
-  release-validation:
-    if: github.event_name == 'release'
-    needs: [contract-tests, integration-tests]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      - run: npm ci
-
-      # Regenerate fixtures and check for drift
-      - name: Regenerate fixtures
-        run: npx tsx tests/scripts/generate-fixtures.ts --model sonnet
-
-      - name: Check for fixture changes
-        run: |
-          if ! git diff --quiet tests/fixtures/generated/; then
-            echo "::warning::Generated fixtures changed!"
-            echo "This may indicate skill behavior has changed."
-            git diff tests/fixtures/generated/
-          fi
-
-      # Run full test suite with opus
-      - name: Full test suite
-        run: npm test -- --model opus --verbose
 ```
 
-### Testing Strategy by Stage
-
-| Stage | Tests Run | Model | Purpose |
-|-------|-----------|-------|---------|
-| Every push | Contract tests | N/A (structural) | Catch obvious breakage |
-| Pull request | + Integration tests | Haiku | Verify semantic correctness |
-| Release | + Fixture regen | Sonnet/Opus | Full validation |
-
-### Pre-release Checklist
+### Pre-Release Checklist
 
 ```bash
-# 1. Run contract tests locally
+# 1. Run contract tests
 npm test -- --suite contracts
 
-# 2. Regenerate fixtures (detects behavior changes)
-npx tsx tests/scripts/generate-fixtures.ts --model opus
+# 2. Regenerate fixtures
+npx tsx tests/scripts/generate-fixtures.ts
 
-# 3. Review fixture changes
+# 3. Review changes
 git diff tests/fixtures/generated/
 
-# 4. Run full integration tests
-npm test -- --suite integration --model opus --verbose
+# 4. Run integration tests
+npm test -- --suite integration --model opus
 
-# 5. If all pass, commit fixtures and create release
+# 5. Commit and release
 git add tests/fixtures/generated/
-git commit -m "chore: update generated fixtures for release"
+git commit -m "chore: update fixtures for release"
 ```
 
 ---
@@ -430,28 +578,29 @@ git commit -m "chore: update generated fixtures for release"
 
 | Operation | Model | Est. Cost |
 |-----------|-------|-----------|
-| Contract test | N/A (structural only) | $0.00 |
+| Contract test | N/A | $0.00 |
 | Integration test (1 command) | Haiku | ~$0.01-0.03 |
 | Integration test (1 command) | Opus | ~$0.10-0.30 |
-| Semantic assertion (LLM judge) | Haiku | ~$0.001 |
+| Semantic assertion | Haiku | ~$0.001 |
 | Fixture generation (4 phases) | Opus | ~$0.50-1.00 |
 
-### Cost Control Tips
+### Tips
 
-1. **Run contract tests first** - They're free and catch most issues
-2. **Use Haiku for CI** - 10x cheaper than Opus, good enough for validation
-3. **Use Opus sparingly** - Only for release validation or debugging
+1. **Run contract tests first** - Free and catch most issues
+2. **Use Haiku for CI** - 10x cheaper than Opus
+3. **Use Opus sparingly** - Only for release validation
 4. **Set budget limits** - `--max-budget 1.0` prevents runaway costs
-5. **Cache fixtures** - Commit generated fixtures, only regenerate on changes
+5. **Cache fixtures** - Commit generated fixtures
 
 ---
 
 ## Troubleshooting
 
-### Test fails with "No scripted answer for..."
+### "No scripted answer for..."
 
-The command asked a question that wasn't in the `choices` list. Add it:
+The command asked a question not in your `choices` list.
 
+**Fix**: Add the choice:
 ```yaml
 choices:
   - match: "the question text"
@@ -460,20 +609,19 @@ choices:
 
 ### Test times out
 
-Increase timeout or reduce max turns:
-
+**Fix**: Increase timeout or reduce complexity:
 ```bash
 npm test -- --timeout 300000 --max-turns 30
 ```
 
 ### Semantic check fails unexpectedly
 
-1. Run with `--verbose` to see the content
+1. Run with `--verbose` to see content
 2. Check if criteria are too strict
-3. Try lowering the threshold
-4. Consider if the criteria match what the skill actually produces
+3. Lower the threshold
+4. Consider if criteria match actual skill output
 
-### Generated fixtures are different after skill update
+### Fixtures different after skill update
 
 This is expected! Review the changes:
 
@@ -481,4 +629,11 @@ This is expected! Review the changes:
 git diff tests/fixtures/generated/
 ```
 
-If the changes look correct, commit them. If not, the skill may have regressed.
+If changes look correct, commit them. If not, the skill regressed.
+
+### Tests pass but skill is broken
+
+Your tests may be too weak. Add:
+- More structural checks (`has_sections`, `has_frontmatter`)
+- Semantic criteria for quality
+- Invariants for files that shouldn't change

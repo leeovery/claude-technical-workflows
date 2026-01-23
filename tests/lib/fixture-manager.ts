@@ -160,22 +160,5 @@ export class FixtureManager {
   }
 }
 
-// Register cleanup on process exit
-const managers: FixtureManager[] = [];
-
-process.on('exit', () => {
-  for (const manager of managers) {
-    manager.cleanupAll().catch(() => {});
-  }
-});
-
-process.on('SIGINT', () => {
-  for (const manager of managers) {
-    manager.cleanupAll().catch(() => {});
-  }
-  process.exit(130);
-});
-
-export function registerManager(manager: FixtureManager): void {
-  managers.push(manager);
-}
+// Note: For multi-manager cleanup, call fixtureManager.cleanupAll() explicitly
+// in your process exit handlers.
