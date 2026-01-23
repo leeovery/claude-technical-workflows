@@ -99,12 +99,12 @@ for file in "$SPEC_DIR"/*.md; do
             ;;
     esac
 
-    # Extract type from **Type**: Value
-    type_raw=$(grep -m1 '^\*\*Type\*\*:\|^\*\*Type:\*\*' "$file" | \
+    # Extract type from **Type**: Value (may not exist in legacy files)
+    type_raw=$(grep -m1 '^\*\*Type\*\*:\|^\*\*Type:\*\*' "$file" 2>/dev/null | \
         sed 's/^\*\*Type\*\*:[[:space:]]*//' | \
         sed 's/^\*\*Type:\*\*[[:space:]]*//' | \
         tr '[:upper:]' '[:lower:]' | \
-        xargs)
+        xargs || echo "")
 
     # Normalize type (leave empty if not found or unrecognized - requires manual review)
     case "$type_raw" in
