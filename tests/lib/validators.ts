@@ -79,9 +79,6 @@ export async function validateAssertion(
     if ('semantic' in assertion) {
       return await validateSemantic(assertion, context);
     }
-    if ('custom' in assertion) {
-      return { assertion, passed: false, message: 'Custom validators not yet implemented' };
-    }
 
     return { assertion, passed: false, message: 'Unknown assertion type' };
   } catch (error) {

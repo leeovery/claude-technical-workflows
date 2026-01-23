@@ -125,22 +125,3 @@ export class ChoiceInterceptor {
   }
 }
 
-/**
- * Factory function for creating interceptors with common patterns
- */
-export function createInterceptor(choices: ScriptedChoice[]): ChoiceInterceptor {
-  return new ChoiceInterceptor(choices);
-}
-
-/**
- * Utility to generate choices from a simple map
- *
- * @example
- * const choices = choicesFromMap({
- *   'which topic': 'authentication',
- *   'include all': 'yes',
- * });
- */
-export function choicesFromMap(map: Record<string, string | string[]>): ScriptedChoice[] {
-  return Object.entries(map).map(([match, answer]) => ({ match, answer }));
-}

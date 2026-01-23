@@ -77,8 +77,7 @@ export type Assertion =
   | ContentMatchesAssertion
   | OutputContainsAssertion
   | FileCountAssertion
-  | SemanticAssertion
-  | CustomAssertion;
+  | SemanticAssertion;
 
 export interface ExistsAssertion {
   exists: string; // File path or glob pattern
@@ -141,20 +140,6 @@ export interface SemanticAssertion {
 
     /** Confidence threshold (0-1, default 0.8) */
     threshold?: number;
-  };
-}
-
-/**
- * Custom assertion type (NOT YET IMPLEMENTED)
- * Reserved for future extensibility with user-defined validators.
- */
-export interface CustomAssertion {
-  custom: {
-    /** Path to custom validator function */
-    validator: string;
-
-    /** Arguments to pass to validator */
-    args?: Record<string, unknown>;
   };
 }
 
