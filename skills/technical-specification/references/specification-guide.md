@@ -143,13 +143,14 @@ This is a single file per topic. Structure is **flexible** - organize around pha
 Suggested skeleton:
 
 ```markdown
-# Specification: [Topic Name]
-
-**Status**: Building specification
-**Type**: feature | cross-cutting
-**Last Updated**: YYYY-MM-DD *(use today's actual date)*
-
 ---
+topic: {topic-name}
+status: in-progress
+type: feature
+date: YYYY-MM-DD  # Use today's actual date
+---
+
+# Specification: [Topic Name]
 
 ## Specification
 
@@ -161,6 +162,13 @@ Suggested skeleton:
 
 [Optional - capture in-progress discussion if needed]
 ```
+
+### Frontmatter Fields
+
+- **topic**: Kebab-case identifier matching the filename
+- **status**: `in-progress` (building) or `concluded` (complete)
+- **type**: `feature` (something to build) or `cross-cutting` (patterns/policies)
+- **date**: Last updated date
 
 ## Specification Types
 
@@ -476,11 +484,12 @@ Once the type is confirmed, ask for final sign-off:
 After user confirms, update the specification frontmatter:
 
 ```markdown
-# Specification: [Topic Name]
-
-**Status**: Complete
-**Type**: [feature/cross-cutting]
-**Last Updated**: YYYY-MM-DD
+---
+topic: {topic-name}
+status: concluded
+type: feature  # or cross-cutting
+date: YYYY-MM-DD  # Use today's actual date
+---
 ```
 
 Specification is complete when:
