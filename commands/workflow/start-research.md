@@ -35,29 +35,49 @@ Invoke the `/migrate` command and assess its output before proceeding to Step 1.
 
 ---
 
-## Step 1: Gather Context
+## Step 1: Get the Seed Idea
 
-Ask these questions to gather context:
+Ask the first question:
 
-1. **What's on your mind?**
-   - What idea or topic do you want to explore?
-   - What prompted this - a problem, opportunity, curiosity?
+```
+What idea or topic would you like to explore?
+```
 
-2. **What do you already know?**
-   - Any initial thoughts or research you've done?
-   - Constraints or context I should be aware of?
-
-3. **Where should we start?**
-   - Technical feasibility? Market landscape? Business model?
-   - Or just talk it through and see where it goes?
-
-**STOP.** Wait for user responses before proceeding.
+**STOP.** Wait for user response before proceeding.
 
 → Proceed to **Step 2**.
 
 ---
 
-## Step 2: Invoke the Skill
+## Step 2: Understand the Prompt
+
+Ask what prompted this:
+
+```
+What prompted this - a problem you're facing, an opportunity you spotted, or just curiosity?
+```
+
+**STOP.** Wait for user response before proceeding.
+
+→ Proceed to **Step 3**.
+
+---
+
+## Step 3: Gather Context
+
+Ask about constraints:
+
+```
+Any constraints or context I should know about upfront? (Or "none" if we're starting fresh)
+```
+
+**STOP.** Wait for user response before proceeding.
+
+→ Proceed to **Step 4**.
+
+---
+
+## Step 4: Invoke the Skill
 
 After completing the steps above, this command's purpose is fulfilled.
 
@@ -70,7 +90,6 @@ Output: docs/workflow/research/exploration.md
 
 Context:
 - Prompted by: {problem, opportunity, or curiosity}
-- Starting point: {technical feasibility, market, business model, or open exploration}
 - Known constraints: {any constraints mentioned, or "none"}
 
 Invoke the technical-research skill.
