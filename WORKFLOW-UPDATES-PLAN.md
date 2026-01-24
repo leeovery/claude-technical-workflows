@@ -26,7 +26,7 @@ Each command analyzes documents from the PREVIOUS phase. Migrations are linked t
 | 1. Research | ✅ | N/A | N/A | ✅ | N/A | N/A |
 | 2. Discussion | ✅ | ✅ | ✅ (50) | ✅ | N/A | N/A |
 | 3. Specification | ✅ | ✅ | ✅ (38) | ✅ | ✅ 001 | ⬜ TODO |
-| 4. Planning | ⬜ TODO | ✅ | ✅ (48) | ⬜ TODO | ✅ 002 | ⬜ TODO |
+| 4. Planning | ✅ | ✅ | ✅ (48) | ⬜ TODO | ✅ 002 | ⬜ TODO |
 | 5. Implementation | ⬜ TODO | ⬜ TODO | ⬜ TODO | ⬜ TODO | ⬜ TODO | ⬜ TODO |
 | 6. Review | ⬜ TODO | ⬜ TODO | ⬜ TODO | N/A | N/A | N/A |
 
@@ -191,9 +191,11 @@ Cache files for avoiding redundant analysis.
 - ✅ Discovery script: `scripts/discovery-for-planning.sh`
 - ✅ Script tests: `tests/scripts/test-discovery-for-planning.sh` (48 assertions)
 - ✅ Migration 002: `scripts/migrations/002-specification-frontmatter.sh`
+- ✅ Command updated: `commands/workflow/start-planning.md`
+- ✅ Handoff verified: command output matches skill input
 
 **Remaining:**
-- [ ] Update command formatting (use discovery script, flatten steps, STOP points)
+- [x] Update command formatting (use discovery script, flatten steps, STOP points)
 - [ ] Update plan template to use YAML frontmatter
 - [ ] Add migration tests for 002
 
@@ -292,10 +294,10 @@ Each command must pass the correct information to its skill. Verify:
 
 | Phase | Command | Skill | Handoff Verified |
 |-------|---------|-------|------------------|
-| 1. Research | start-research.md | technical-research | ⬜ TODO |
-| 2. Discussion | start-discussion.md | technical-discussion | ⬜ TODO |
-| 3. Specification | start-specification.md | technical-specification | ⬜ TODO |
-| 4. Planning | start-planning.md | technical-planning | ⬜ TODO |
+| 1. Research | start-research.md | technical-research | ✅ |
+| 2. Discussion | start-discussion.md | technical-discussion | ✅ |
+| 3. Specification | start-specification.md | technical-specification | ✅ |
+| 4. Planning | start-planning.md | technical-planning | ✅ |
 | 5. Implementation | start-implementation.md | technical-implementation | ⬜ TODO |
 | 6. Review | start-review.md | technical-review | ⬜ TODO |
 
