@@ -11,17 +11,21 @@ import { glob } from 'glob';
 
 export class FixtureManager {
   public readonly fixturesDir: string;
+  public readonly projectDir: string;
   private tempDirs: Set<string> = new Set();
 
   constructor(fixturesDir: string) {
     this.fixturesDir = fixturesDir;
+    // Project root is two levels up from fixtures dir (tests/fixtures -> project)
+    this.projectDir = path.resolve(fixturesDir, '..', '..');
   }
 
   /**
    * Setup a fixture for testing
    *
    * Creates a temporary copy of the fixture directory that tests can modify
-   * without affecting the original fixture.
+   * without affecting the original fixture. Also symlinks the project's
+   * skills, commands, and .claude directory so commands work.
    *
    * @param fixturePath Path relative to fixtures directory
    * @returns Path to temporary working directory
@@ -40,6 +44,9 @@ export class FixtureManager {
     // Copy fixture to temp directory
     await this.copyDirectory(sourceDir, tempDir);
 
+    // Symlink project directories needed for skills/commands to work
+    await this.linkProjectAssets(tempDir);
+
     // Initialize git if needed (some commands may expect a git repo)
     const gitDir = path.join(tempDir, '.git');
     if (!fs.existsSync(gitDir)) {
@@ -48,6 +55,42 @@ export class FixtureManager {
     }
 
     return tempDir;
+  }
+
+  /**
+   * Symlink project assets (skills, commands, scripts) to temp directory
+   *
+   * This allows commands to work in the test environment while keeping
+   * the fixture isolated for file modifications.
+   */
+  private async linkProjectAssets(tempDir: string): Promise<void> {
+    const assetsToLink = [
+      'skills',
+      'commands',
+      '.claude',
+      'CLAUDE.md',
+    ];
+
+    for (const asset of assetsToLink) {
+      const sourcePath = path.join(this.projectDir, asset);
+      const destPath = path.join(tempDir, asset);
+
+      // Only link if source exists and dest doesn't already exist (from fixture)
+      if (fs.existsSync(sourcePath) && !fs.existsSync(destPath)) {
+        try {
+          fs.symlinkSync(sourcePath, destPath, fs.statSync(sourcePath).isDirectory() ? 'dir' : 'file');
+        } catch (err) {
+          // If symlinking fails (e.g., Windows without privileges), copy instead
+          console.warn(`[FixtureManager] Symlink failed for ${asset}, copying instead`);
+          if (fs.statSync(sourcePath).isDirectory()) {
+            fs.mkdirSync(destPath, { recursive: true });
+            await this.copyDirectory(sourcePath, destPath);
+          } else {
+            fs.copyFileSync(sourcePath, destPath);
+          }
+        }
+      }
+    }
   }
 
   /**
