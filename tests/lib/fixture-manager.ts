@@ -67,6 +67,8 @@ export class FixtureManager {
     const assetsToLink = [
       'skills',
       'commands',
+      'agents',
+      'scripts',
       '.claude',
       'CLAUDE.md',
     ];
