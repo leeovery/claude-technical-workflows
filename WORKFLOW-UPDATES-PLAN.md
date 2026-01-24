@@ -282,8 +282,22 @@ For phases with discovery scripts:
 2. **Stage 2**: Update command to use script → commit → STOP for review
 3. **Stage 3**: Update templates/frontmatter if needed → commit → STOP for review
 4. **Stage 4**: Create migration script + tests if needed → commit → STOP for review
+5. **Stage 5**: Verify command output matches skill input → commit → STOP for review
 
 Do NOT combine stages. Do NOT proceed to the next stage without explicit user approval.
+
+## Command-to-Skill Handoff Verification
+
+Each command must pass the correct information to its skill. Verify:
+
+| Phase | Command | Skill | Handoff Verified |
+|-------|---------|-------|------------------|
+| 1. Research | start-research.md | technical-research | ⬜ TODO |
+| 2. Discussion | start-discussion.md | technical-discussion | ⬜ TODO |
+| 3. Specification | start-specification.md | technical-specification | ⬜ TODO |
+| 4. Planning | start-planning.md | technical-planning | ⬜ TODO |
+| 5. Implementation | start-implementation.md | technical-implementation | ⬜ TODO |
+| 6. Review | start-review.md | technical-review | ⬜ TODO |
 
 ## Test Organization
 
