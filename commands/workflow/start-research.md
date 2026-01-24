@@ -62,3 +62,16 @@ Ask these questions to gather context:
 After completing the steps above, this command's purpose is fulfilled.
 
 Invoke the [technical-research](../../skills/technical-research/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
+
+**Example handoff:**
+```
+Research session for: {topic}
+Output: docs/workflow/research/exploration.md
+
+Context:
+- Prompted by: {problem, opportunity, or curiosity}
+- Starting point: {technical feasibility, market, business model, or open exploration}
+- Known constraints: {any constraints mentioned, or "none"}
+
+Invoke the technical-research skill.
+```
