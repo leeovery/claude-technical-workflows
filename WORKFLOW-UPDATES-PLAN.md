@@ -26,7 +26,7 @@ Each command analyzes documents from the PREVIOUS phase. Migrations are linked t
 | 1. Research | ✅ | N/A | N/A | ✅ | N/A | N/A |
 | 2. Discussion | ✅ | ✅ | ✅ (50) | ✅ | N/A | N/A |
 | 3. Specification | ✅ | ✅ | ✅ (38) | ✅ | ✅ 001 | ⬜ TODO |
-| 4. Planning | ✅ | ✅ | ✅ (48) | ⬜ TODO | ✅ 002 | ⬜ TODO |
+| 4. Planning | ✅ | ✅ | ✅ (48) | ✅ | ✅ 002 | ✅ (25) |
 | 5. Implementation | ⬜ TODO | ⬜ TODO | ⬜ TODO | ⬜ TODO | ⬜ TODO | ⬜ TODO |
 | 6. Review | ⬜ TODO | ⬜ TODO | ⬜ TODO | N/A | N/A | N/A |
 
@@ -181,9 +181,9 @@ Cache files for avoiding redundant analysis.
 
 ---
 
-### Phase 4: Planning (IN PROGRESS)
+### Phase 4: Planning ✅
 
-**Status: Partially complete**
+**Status: Complete**
 
 **This phase runs migration 002** (migrates Specification docs to frontmatter).
 
@@ -191,17 +191,18 @@ Cache files for avoiding redundant analysis.
 - ✅ Discovery script: `scripts/discovery-for-planning.sh`
 - ✅ Script tests: `tests/scripts/test-discovery-for-planning.sh` (48 assertions)
 - ✅ Migration 002: `scripts/migrations/002-specification-frontmatter.sh`
+- ✅ Migration tests: `tests/scripts/test-migration-002.sh` (25 assertions)
 - ✅ Command updated: `commands/workflow/start-planning.md`
+- ✅ Template updated: `skills/technical-planning/references/output-local-markdown.md`
 - ✅ Handoff verified: command output matches skill input
 
-**Remaining:**
-- [x] Update command formatting (use discovery script, flatten steps, STOP points)
-- [ ] Update plan template to use YAML frontmatter
-- [ ] Add migration tests for 002
-
-**Files to update:**
+**Files updated:**
 - `commands/workflow/start-planning.md`
-- `skills/technical-planning/references/output-local-markdown.md` (template)
+- `skills/technical-planning/references/output-local-markdown.md`
+- `scripts/discovery-for-planning.sh`
+- `scripts/migrations/002-specification-frontmatter.sh`
+- `tests/scripts/test-discovery-for-planning.sh`
+- `tests/scripts/test-migration-002.sh`
 
 ---
 
@@ -320,7 +321,7 @@ Each command must pass the correct information to its skill. Verify:
 | Test File | Status | Notes |
 |-----------|--------|-------|
 | `test-migration-001.sh` | ⬜ TODO | Discussion frontmatter migration |
-| `test-migration-002.sh` | ⬜ TODO | Specification frontmatter migration |
+| `test-migration-002.sh` | ✅ (25) | Specification frontmatter migration |
 | `test-migration-003.sh` | ⬜ TODO | Plan frontmatter migration (if needed) |
 
 **Migration tests should cover:**
