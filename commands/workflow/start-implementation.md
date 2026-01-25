@@ -1,6 +1,6 @@
 ---
 description: Start an implementation session from an existing plan. Discovers available plans, checks environment setup, and invokes the technical-implementation skill.
-allowed-tools: Bash(.claude/scripts/discovery-for-implementation.sh)
+allowed-tools: Bash(.claude/scripts/discovery-for-implementation-and-review.sh)
 ---
 
 Invoke the **technical-implementation** skill for this conversation.
@@ -43,7 +43,7 @@ Invoke the `/migrate` command and assess its output before proceeding to Step 1.
 Run the discovery script to gather current state:
 
 ```bash
-.claude/scripts/discovery-for-implementation.sh
+.claude/scripts/discovery-for-implementation-and-review.sh
 ```
 
 This outputs structured YAML. Parse it to understand:
