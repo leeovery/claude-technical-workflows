@@ -184,7 +184,7 @@ If all dependencies are resolved and complete (or satisfied externally), proceed
 
 ## Step 5: Check Environment Setup
 
-> **IMPORTANT**: This step is for **information gathering only**. Do NOT execute any setup commands at this stage. Execution happens in the skill.
+> **IMPORTANT**: This step is for **information gathering only**. Do NOT execute any setup commands at this stage. The skill contains instructions for handling environment setup.
 
 Use the `environment` section from the discovery output:
 
@@ -197,7 +197,6 @@ Environment: No special setup required.
 **If `setup_file_exists: true` and `requires_setup: true`:**
 ```
 Environment setup file found: docs/workflow/environment-setup.md
-Setup will be executed when the skill loads.
 ```
 → Proceed to **Step 6**.
 
