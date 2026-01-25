@@ -236,7 +236,7 @@ Which approach?
 
 If they choose a specific phase or task, ask them to specify which one.
 
-> **Note:** Do NOT verify that the phase or task exists at this stage. Accept the user's answer and pass it to the skill. Validation happens during implementation.
+> **Note:** Do NOT verify that the phase or task exists at this stage. Record the user's answer in the handoff context. Validation happens when the skill is invoked.
 
 → Proceed to **Step 7**.
 
