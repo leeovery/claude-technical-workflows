@@ -116,8 +116,10 @@ for script in "${MIGRATION_SCRIPTS[@]}"; do
     MIGRATIONS_RUN=$((MIGRATIONS_RUN + 1))
 done
 
-# Only output if files were actually updated
+# Report results
 if [ "$FILES_UPDATED" -gt 0 ]; then
     echo ""
     echo "$FILES_UPDATED file(s) migrated. Review with \`git diff\`, then proceed."
+else
+    echo "[SKIP] No changes needed"
 fi
