@@ -8,6 +8,9 @@
 #
 # These tests are BEHAVIORAL - they verify the skill works,
 # not that it produces specific content.
+#
+# Note: The command runs /migrate first (Step 0), then discovery,
+# then follows routing based on specification state.
 
 name: "start-planning contracts"
 description: "Verify planning command creates correct plan structure"

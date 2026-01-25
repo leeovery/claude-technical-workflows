@@ -7,6 +7,9 @@
 #
 # These tests are BEHAVIORAL - they verify the skill works,
 # not that it produces specific content.
+#
+# Note: The command runs /migrate first (Step 0), then discovery,
+# then follows routing based on state.
 
 name: "start-discussion contracts"
 description: "Verify discussion command creates correct file structure"

@@ -6,6 +6,9 @@
 # IMPORTANT: These tests verify BEHAVIOR and QUALITY, not specific content.
 # The semantic criteria should be generic enough to work regardless of
 # what topic is being discussed.
+#
+# Note: Commands run /migrate first (Step 0), then discovery,
+# then follow routing based on state.
 
 name: "full workflow integration"
 description: "End-to-end workflow tests with semantic validation"
@@ -22,6 +25,10 @@ scenarios:
     choices:
       - match: "topic"
         answer: "test-feature"
+      - match: "proceed"
+        answer: "y"
+      - match: "additional"
+        answer: "none"
     assertions:
       # Structural checks first (fast, free)
       - exists: docs/workflow/discussion/test-feature.md
@@ -48,8 +55,17 @@ scenarios:
     fixture: minimal/has-discussion
     command: /workflow/start-specification
     choices:
-      - match: "topic"
-        answer: "test-topic"
+      # Step 9: Confirm selection
+      - match: "proceed"
+        answer: "y"
+      - match: "confirm"
+        answer: "yes"
+      # Step 10: Additional context
+      - match: "additional"
+        answer: "none"
+      - match: "context"
+        answer: "none"
+      # Skill approval
       - match: "approve"
         answer: "yes"
     assertions:
@@ -76,6 +92,10 @@ scenarios:
         answer: "test-topic"
       - match: "format"
         answer: "local-markdown"
+      - match: "proceed"
+        answer: "y"
+      - match: "additional"
+        answer: "none"
     assertions:
       - exists: docs/workflow/planning/test-topic.md
       # Semantic check - verify QUALITY not specific content
@@ -96,8 +116,10 @@ scenarios:
     fixture: minimal/has-discussion
     command: /workflow/start-specification
     choices:
-      - match: "topic"
-        answer: "test-topic"
+      - match: "proceed"
+        answer: "y"
+      - match: "additional"
+        answer: "none"
       - match: "approve"
         answer: "yes"
     assertions:
