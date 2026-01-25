@@ -677,7 +677,9 @@ Proceed? (y/n)
 ```
 {Creating / Continuing} specification: {topic}
 
-Source: docs/workflow/discussion/{topic}.md
+Sources:
+- docs/workflow/discussion/{topic}.md
+
 Output: docs/workflow/specification/{topic}.md
 
 Proceed? (y/n)
@@ -721,7 +723,9 @@ Invoke the [technical-specification](../../skills/technical-specification/SKILL.
 ```
 Specification session for: {topic}
 
-Source: docs/workflow/discussion/{topic}.md
+Sources:
+- docs/workflow/discussion/{topic}.md
+
 Output: docs/workflow/specification/{topic}.md
 
 Additional context: {summary of user's answers from Step 10}

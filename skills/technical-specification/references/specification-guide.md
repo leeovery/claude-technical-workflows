@@ -178,6 +178,8 @@ sources:
 
 ### Sources and Incorporation Status
 
+**All specifications must track their sources**, even when built from a single discussion. This enables proper tracking when additional discussions are later added to the same grouping.
+
 When a specification is built from discussion(s), track each source with its incorporation status:
 
 ```yaml
