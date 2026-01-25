@@ -23,7 +23,9 @@ This is **Phase 1** of the six-phase workflow:
 
 ## Instructions
 
-Follow these steps in order.
+Follow these steps EXACTLY as written. Do not skip steps or combine them.
+
+**CRITICAL**: After each user interaction, STOP and wait for their response before proceeding. Never assume or anticipate user choices.
 
 ---
 
