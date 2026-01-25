@@ -324,105 +324,14 @@ Enter choice (1-2):
 ```
 
 **Action:** STOP. Wait for user choice.
-
-- If **1 (Analyze)**:
-  ```
-  Before analyzing, is there anything about how these discussions relate
-  that would help me group them appropriately?
-
-  For example:
-  - Topics that are part of the same feature
-  - Dependencies between topics
-  - Topics that must stay separate
-
-  Your context (or 'none'):
-  ```
-  Then: analyze with context → cache results → show groupings (Output 6)
-
-- If **2 (Pick individually)**: Show numbered discussion list to pick from, skip analysis entirely
+- If **1**: Proceed to gather context → analyze → cache results → show groupings (Output 6)
+- If **2**: Show numbered discussion list to pick from
 
 ---
 
 ### Output 6: Show Groupings — Multiple Discussions, No Specs, Valid Cache
 
-**Condition:** `concluded_count >= 2`, `spec_count: 0`, `cache.status: "valid"`
-
-**Sequence:**
-1. Step 0 (Migrations): `[SKIP] No changes needed`
-2. Step 1 (Discovery): Returns multiple concluded discussions, no specs, valid cache
-3. Step 2 (Prerequisites): Passes
-4. Step 3 (Route): Valid cache — show groupings directly
-
-**Output:**
-```
-Specification Overview
-
-Recommended breakdown for specifications with their source discussions.
-
-1. Authentication System
-   └─ Spec: none
-   └─ Discussions:
-      ├─ auth-flow (ready)
-      └─ user-sessions (ready)
-
-2. API Design
-   └─ Spec: none
-   └─ Discussions:
-      ├─ api-endpoints (ready)
-      └─ error-handling (ready)
-
-3. Logging Strategy
-   └─ Spec: none
-   └─ Discussions:
-      └─ logging-strategy (ready)
-
----
-Discussions not ready for specification:
-These discussions are still in progress and must be concluded
-before they can be included in a specification.
-  · rate-limiting (in-progress)
-
----
-Key:
-
-  Discussion status:
-    ready — concluded and available to be specified
-
-  Spec status:
-    none — no specification file exists yet
-
----
-What would you like to do?
-
-1. Start "Authentication System" — 2 ready discussions
-2. Start "API Design" — 2 ready discussions
-3. Start "Logging Strategy" — 1 ready discussion
-4. Re-analyze groupings
-
-Enter choice (1-4):
-```
-
-**Action:** STOP. Wait for user choice.
-- If **1-3**: Proceed to confirm selection → gather additional context → invoke skill
-- If **4 (Re-analyze)**:
-  ```
-  Before re-analyzing, is there anything about how these discussions relate
-  that would help me group them appropriately?
-
-  For example:
-  - Topics that should be combined together
-  - Topics that must stay separate
-  - Different structure you'd prefer
-
-  Your context (or 'none'):
-  ```
-  Then: delete cache → analyze with context → cache results → show updated groupings
-
-**Note on "pick individually":**
-No separate "pick individually" option here because:
-- Single-discussion items (like "Logging Strategy") ARE already selectable as-is
-- If a user wants to extract one discussion from a multi-discussion group, they should re-analyze with guidance (e.g., "keep auth-flow separate from user-sessions")
-- This maintains the integrity of the grouping analysis
+See "Agreed Display Format" section above.
 
 ---
 
