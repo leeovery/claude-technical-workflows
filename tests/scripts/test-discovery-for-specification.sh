@@ -311,39 +311,6 @@ EOF
     echo ""
 }
 
-#
-# Test: Spec with sources in legacy simple format (backward compatibility)
-#
-test_spec_with_legacy_sources() {
-    echo -e "${YELLOW}Test: Specification with legacy simple sources format${NC}"
-    setup_fixture
-
-    mkdir -p "$TEST_DIR/docs/workflow/specification"
-    cat > "$TEST_DIR/docs/workflow/specification/legacy-spec.md" << 'EOF'
----
-topic: legacy-spec
-status: in-progress
-type: feature
-date: 2026-01-20
-sources:
-  - topic-a
-  - topic-b
----
-
-# Specification: Legacy Spec
-EOF
-
-    local output=$(run_discovery)
-
-    assert_contains "$output" 'name: "legacy-spec"' "Found legacy-spec"
-    assert_contains "$output" 'sources:' "Has sources field"
-    assert_contains "$output" 'name: "topic-a"' "Found topic-a source name"
-    assert_contains "$output" 'name: "topic-b"' "Found topic-b source name"
-    # Legacy sources should default to incorporated
-    assert_contains "$output" 'status: "incorporated"' "Legacy sources default to incorporated"
-
-    echo ""
-}
 
 #
 # Test: Spec with superseded_by
@@ -642,7 +609,6 @@ test_discussion_with_spec
 test_discussion_with_concluded_spec
 test_discussion_without_spec_no_status
 test_spec_with_sources
-test_spec_with_legacy_sources
 test_spec_superseded
 test_cache_none
 test_cache_valid

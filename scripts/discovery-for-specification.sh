@@ -46,9 +46,12 @@ extract_array_field() {
     echo "$result"
 }
 
-# Helper: Extract sources with status from new object format
+# Helper: Extract sources with status from object format
 # Outputs YAML-formatted source entries with name and status
 # Usage: extract_sources_with_status <file>
+#
+# Note: This only handles the object format. Legacy simple array format
+# is converted by migration 004 before discovery runs.
 extract_sources_with_status() {
     local file="$1"
     local in_sources=false
@@ -74,7 +77,7 @@ extract_sources_with_status() {
         fi
 
         if $in_sources; then
-            # Check for new object format: "  - name: value"
+            # Object format: "  - name: value"
             if [[ "$line" =~ ^[[:space:]]*-[[:space:]]*name:[[:space:]]*(.+)$ ]]; then
                 # Output previous source if exists
                 if [ -n "$current_name" ]; then
@@ -84,21 +87,10 @@ extract_sources_with_status() {
                 current_name="${BASH_REMATCH[1]}"
                 current_name=$(echo "$current_name" | sed 's/^"//' | sed 's/"$//' | xargs)
                 current_status=""
-            # Check for status line: "    status: value"
+            # Status line: "    status: value"
             elif [[ "$line" =~ ^[[:space:]]*status:[[:space:]]*(.+)$ ]]; then
                 current_status="${BASH_REMATCH[1]}"
                 current_status=$(echo "$current_status" | sed 's/^"//' | sed 's/"$//' | xargs)
-            # Check for simple format: "  - value" (legacy, no "name:" prefix)
-            # Note: We check for "name:" first to avoid this branch for object format
-            elif [[ ! "$line" =~ name: ]] && [[ "$line" =~ ^[[:space:]]*-[[:space:]]*(.+)$ ]]; then
-                # Output previous source if exists
-                if [ -n "$current_name" ]; then
-                    echo "      - name: \"$current_name\""
-                    echo "        status: \"${current_status:-incorporated}\""
-                fi
-                current_name="${BASH_REMATCH[1]}"
-                current_name=$(echo "$current_name" | sed 's/^"//' | sed 's/"$//' | xargs)
-                current_status="incorporated"  # Legacy format assumed incorporated
             fi
         fi
     done < <(sed -n '/^---$/,/^---$/p' "$file" 2>/dev/null | grep -v "^---$")
