@@ -37,10 +37,13 @@ Invoke the `/migrate` command and assess its output before proceeding to Step 1.
 
 ## Step 1: Get the Seed Idea
 
-Ask the first question:
+Ask:
 
 ```
-What idea or topic would you like to explore?
+What's on your mind?
+
+- What idea or topic do you want to explore?
+- What prompted this - a problem, opportunity, curiosity?
 ```
 
 **STOP.** Wait for user response before proceeding.
@@ -49,12 +52,15 @@ What idea or topic would you like to explore?
 
 ---
 
-## Step 2: Understand the Prompt
+## Step 2: Understand Current Knowledge
 
-Ask what prompted this:
+Ask:
 
 ```
-What prompted this - a problem you're facing, an opportunity you spotted, or just curiosity?
+What do you already know?
+
+- Any initial thoughts or research you've done?
+- Constraints or context I should be aware of?
 ```
 
 **STOP.** Wait for user response before proceeding.
@@ -63,12 +69,15 @@ What prompted this - a problem you're facing, an opportunity you spotted, or jus
 
 ---
 
-## Step 3: Gather Context
+## Step 3: Determine Starting Point
 
-Ask about constraints:
+Ask:
 
 ```
-Any constraints or context I should know about upfront? (Or "none" if we're starting fresh)
+Where should we start?
+
+- Technical feasibility? Market landscape? Business model?
+- Or just talk it through and see where it goes?
 ```
 
 **STOP.** Wait for user response before proceeding.
@@ -77,7 +86,23 @@ Any constraints or context I should know about upfront? (Or "none" if we're star
 
 ---
 
-## Step 4: Invoke the Skill
+## Step 4: Gather Final Context
+
+Ask:
+
+```
+Any constraints or context I should know about upfront?
+
+(Or "none" if we're starting fresh)
+```
+
+**STOP.** Wait for user response before proceeding.
+
+→ Proceed to **Step 5**.
+
+---
+
+## Step 5: Invoke the Skill
 
 After completing the steps above, this command's purpose is fulfilled.
 
@@ -90,7 +115,9 @@ Output: docs/workflow/research/exploration.md
 
 Context:
 - Prompted by: {problem, opportunity, or curiosity}
-- Known constraints: {any constraints mentioned, or "none"}
+- Already knows: {any initial thoughts or research, or "starting fresh"}
+- Starting point: {technical feasibility, market, business model, or "open exploration"}
+- Constraints: {any constraints mentioned, or "none"}
 
 Invoke the technical-research skill.
 ```
