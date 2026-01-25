@@ -6,7 +6,7 @@
 #
 # Legacy format (partial frontmatter + inline metadata):
 #   ---
-#   format: local-markdown
+#   format: {format}
 #   ---
 #
 #   # Implementation Plan: {Feature/Project Name}
@@ -20,8 +20,9 @@
 #   topic: {topic-name}
 #   status: in-progress | concluded
 #   date: YYYY-MM-DD
-#   format: local-markdown
+#   format: {format}         # Required - no default, MISSING if not present
 #   specification: {topic}.md
+#   plan_id: {id}            # Optional - migrated from 'epic' or 'project' fields
 #   ---
 #
 #   # Implementation Plan: {Feature/Project Name}
@@ -85,7 +86,14 @@ for file in "$PLAN_DIR"/*.md; do
     # Extract format from existing frontmatter (if present)
     format_value=$(sed -n '/^---$/,/^---$/p' "$file" 2>/dev/null | grep "^format:" | sed 's/^format:[[:space:]]*//' | xargs || echo "")
     if [ -z "$format_value" ]; then
-        format_value="local-markdown"  # Default format
+        format_value="MISSING"  # No default - missing format is an error
+    fi
+
+    # Extract plan_id from existing frontmatter - could be 'epic' (beads) or 'project' (linear/backlog)
+    # These are migrated to a unified 'plan_id' field
+    plan_id_value=$(sed -n '/^---$/,/^---$/p' "$file" 2>/dev/null | grep "^epic:" | sed 's/^epic:[[:space:]]*//' | xargs || echo "")
+    if [ -z "$plan_id_value" ]; then
+        plan_id_value=$(sed -n '/^---$/,/^---$/p' "$file" 2>/dev/null | grep "^project:" | sed 's/^project:[[:space:]]*//' | xargs || echo "")
     fi
 
     # Extract status from **Status**: Value
@@ -107,8 +115,8 @@ for file in "$PLAN_DIR"/*.md; do
             ;;
     esac
 
-    # Extract date from **Date**: YYYY-MM-DD
-    date_value=$(grep -m1 '^\*\*Date\*\*:' "$file" 2>/dev/null | \
+    # Extract date from **Date**: YYYY-MM-DD or **Created**: YYYY-MM-DD
+    date_value=$(grep -m1 '^\*\*Date\*\*:\|^\*\*Created\*\*:' "$file" 2>/dev/null | \
         grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' || echo "")
 
     # Use today's date if none found
@@ -134,14 +142,25 @@ for file in "$PLAN_DIR"/*.md; do
     # Build new file content
     #
 
-    # Create frontmatter
-    frontmatter="---
+    # Create frontmatter (conditionally include plan_id if present)
+    if [ -n "$plan_id_value" ]; then
+        frontmatter="---
+topic: $topic_kebab
+status: $status_new
+date: $date_value
+format: $format_value
+specification: $spec_value
+plan_id: $plan_id_value
+---"
+    else
+        frontmatter="---
 topic: $topic_kebab
 status: $status_new
 date: $date_value
 format: $format_value
 specification: $spec_value
 ---"
+    fi
 
     # Extract H1 heading (preserve original)
     h1_heading=$(grep -m1 "^# " "$file")

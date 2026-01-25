@@ -136,13 +136,17 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
 
         name=$(basename "$file" .md)
         format=$(extract_field "$file" "format")
-        format=${format:-"local-markdown"}
+        format=${format:-"MISSING"}
         status=$(extract_field "$file" "status")
         status=${status:-"unknown"}
+        plan_id=$(extract_field "$file" "plan_id")
 
         echo "    - name: \"$name\""
         echo "      format: \"$format\""
         echo "      status: \"$status\""
+        if [ -n "$plan_id" ]; then
+            echo "      plan_id: \"$plan_id\""
+        fi
     done
 else
     echo "  exists: false"

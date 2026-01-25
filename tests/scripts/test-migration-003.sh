@@ -275,7 +275,7 @@ content=$(cat "$PLAN_DIR/no-frontmatter.md")
 
 assert_file_starts_with "$PLAN_DIR/no-frontmatter.md" "---" "Frontmatter added"
 assert_contains "$content" "^topic: no-frontmatter$" "Topic extracted from filename"
-assert_contains "$content" "^format: local-markdown$" "Format defaults to local-markdown"
+assert_contains "$content" "^format: MISSING$" "Missing format flagged"
 
 echo ""
 
@@ -533,6 +533,147 @@ run_migration
 content=$(cat "$PLAN_DIR/user-profile-settings.md")
 
 assert_contains "$content" "^topic: user-profile-settings$" "Topic uses kebab-case from filename"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Beads format with epic → plan_id${NC}"
+setup_fixture
+cat > "$PLAN_DIR/docman-python-sdk.md" << 'EOF'
+---
+format: beads
+epic: docman-api-python-0c8
+---
+
+# Plan Reference: DocMan Python SDK
+
+**Specification**: `docs/workflow/specification/docman-python-sdk.md`
+**Created**: 2026-01-12
+
+## About This Plan
+
+This plan is managed via Beads.
+EOF
+
+run_migration
+content=$(cat "$PLAN_DIR/docman-python-sdk.md")
+
+assert_contains "$content" "^format: beads$" "Beads format preserved"
+assert_contains "$content" "^plan_id: docman-api-python-0c8$" "Epic migrated to plan_id"
+assert_contains "$content" "^date: 2026-01-12$" "Date extracted from Created field"
+
+# Should NOT have epic field anymore
+TESTS_RUN=$((TESTS_RUN + 1))
+if ! echo "$content" | grep -q "^epic:"; then
+    echo -e "  ${GREEN}✓${NC} Epic field removed (migrated to plan_id)"
+    TESTS_PASSED=$((TESTS_PASSED + 1))
+else
+    echo -e "  ${RED}✗${NC} Epic field removed (migrated to plan_id)"
+    echo -e "    Found epic field when it should be plan_id"
+    TESTS_FAILED=$((TESTS_FAILED + 1))
+fi
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Linear/Backlog format with project → plan_id${NC}"
+setup_fixture
+cat > "$PLAN_DIR/linear-plan.md" << 'EOF'
+---
+format: linear
+project: my-linear-project
+---
+
+# Plan Reference: Linear Plan
+
+**Specification**: `docs/workflow/specification/linear-plan.md`
+**Created**: 2026-01-18
+
+## About This Plan
+
+This plan is managed via Linear.
+EOF
+
+run_migration
+content=$(cat "$PLAN_DIR/linear-plan.md")
+
+assert_contains "$content" "^format: linear$" "Linear format preserved"
+assert_contains "$content" "^plan_id: my-linear-project$" "Project migrated to plan_id"
+
+# Should NOT have project field anymore
+TESTS_RUN=$((TESTS_RUN + 1))
+if ! echo "$content" | grep -q "^project:"; then
+    echo -e "  ${GREEN}✓${NC} Project field removed (migrated to plan_id)"
+    TESTS_PASSED=$((TESTS_PASSED + 1))
+else
+    echo -e "  ${RED}✗${NC} Project field removed (migrated to plan_id)"
+    echo -e "    Found project field when it should be plan_id"
+    TESTS_FAILED=$((TESTS_FAILED + 1))
+fi
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Created field as alternative to Date${NC}"
+setup_fixture
+cat > "$PLAN_DIR/created-field.md" << 'EOF'
+---
+format: local-markdown
+---
+
+# Implementation Plan: Created Field Test
+
+**Created**: 2026-01-15
+**Status**: Draft
+**Specification**: `docs/workflow/specification/created-field.md`
+
+## Overview
+
+Uses Created instead of Date.
+EOF
+
+run_migration
+content=$(cat "$PLAN_DIR/created-field.md")
+
+assert_contains "$content" "^date: 2026-01-15$" "Date extracted from Created field (alternative)"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: No plan_id when original has no epic/project${NC}"
+setup_fixture
+cat > "$PLAN_DIR/no-plan-id.md" << 'EOF'
+---
+format: local-markdown
+---
+
+# Implementation Plan: No Plan ID
+
+**Specification**: `docs/workflow/specification/no-plan-id.md`
+**Date**: 2026-01-20
+
+## Overview
+
+Local markdown format, no external ID.
+EOF
+
+run_migration
+content=$(cat "$PLAN_DIR/no-plan-id.md")
+
+# Should NOT have a plan_id field since original didn't have epic/project
+TESTS_RUN=$((TESTS_RUN + 1))
+if ! echo "$content" | grep -q "^plan_id:"; then
+    echo -e "  ${GREEN}✓${NC} No plan_id when original had no epic/project"
+    TESTS_PASSED=$((TESTS_PASSED + 1))
+else
+    echo -e "  ${RED}✗${NC} No plan_id when original had no epic/project"
+    echo -e "    Found plan_id field when it shouldn't exist"
+    TESTS_FAILED=$((TESTS_FAILED + 1))
+fi
 
 echo ""
 

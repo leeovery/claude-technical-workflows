@@ -64,7 +64,7 @@ This outputs structured YAML. Parse it to understand:
 
 **From `plans` section:**
 - `exists` - whether any plans exist
-- `files` - each plan's name, format, and status
+- `files` - each plan's name, format, status, and plan_id (if present)
 
 **From `state` section:**
 - `scenario` - one of: `"no_specs"`, `"no_ready_specs"`, `"single_ready_spec"`, `"multiple_ready_specs"`
@@ -122,7 +122,7 @@ Cross-cutting specifications (reference context):
   - {rate-limiting} (concluded)
 
 Existing plans:
-  - {topic-3}.md (in-progress, local-markdown)
+  - {topic-3}.md (in-progress, {format})
 ```
 
 **Legend:**

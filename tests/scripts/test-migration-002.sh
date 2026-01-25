@@ -476,6 +476,100 @@ assert_contains "$content" "^topic: user-profile-settings$" "Topic uses kebab-ca
 
 echo ""
 
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Sources field with single source${NC}"
+setup_fixture
+cat > "$SPEC_DIR/migration-spec.md" << 'EOF'
+# Specification: Migration
+
+**Status**: Complete
+**Type**: feature
+**Last Updated**: 2024-01-25
+**Sources**: migration-subcommand
+
+---
+
+## Specification
+
+### Overview
+
+The migration command imports task data.
+EOF
+
+run_migration
+content=$(cat "$SPEC_DIR/migration-spec.md")
+
+assert_contains "$content" "^sources:$" "Sources field present in frontmatter"
+assert_contains "$content" "^  - migration-subcommand$" "Single source preserved as YAML list item"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Sources field with multiple sources (tick-core pattern)${NC}"
+setup_fixture
+cat > "$SPEC_DIR/tick-core.md" << 'EOF'
+# Specification: Tick Core
+
+**Status**: Complete
+**Type**: feature
+**Last Updated**: 2026-01-24
+**Sources**: project-fundamentals, data-schema-design, freshness-dual-write, id-format-implementation, hierarchy-dependency-model, cli-command-structure-ux, toon-output-format, tui
+
+---
+
+## Specification
+
+### Vision & Scope
+
+Tick is a minimal task tracker.
+EOF
+
+run_migration
+content=$(cat "$SPEC_DIR/tick-core.md")
+
+assert_contains "$content" "^sources:$" "Sources field present in frontmatter"
+assert_contains "$content" "^  - project-fundamentals$" "First source preserved"
+assert_contains "$content" "^  - data-schema-design$" "Second source preserved"
+assert_contains "$content" "^  - tui$" "Last source preserved"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Specification without Sources field${NC}"
+setup_fixture
+cat > "$SPEC_DIR/no-sources.md" << 'EOF'
+# Specification: No Sources
+
+**Status**: Complete
+**Type**: feature
+**Last Updated**: 2024-01-24
+
+---
+
+## Overview
+
+This spec has no sources.
+EOF
+
+run_migration
+content=$(cat "$SPEC_DIR/no-sources.md")
+
+# Should NOT have a sources field
+TESTS_RUN=$((TESTS_RUN + 1))
+if ! echo "$content" | grep -q "^sources:"; then
+    echo -e "  ${GREEN}✓${NC} No sources field when source not present"
+    TESTS_PASSED=$((TESTS_PASSED + 1))
+else
+    echo -e "  ${RED}✗${NC} No sources field when source not present"
+    echo -e "    Found sources field when it shouldn't exist"
+    TESTS_FAILED=$((TESTS_FAILED + 1))
+fi
+
+echo ""
+
 # ============================================================================
 # SUMMARY
 # ============================================================================

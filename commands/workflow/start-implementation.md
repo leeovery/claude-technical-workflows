@@ -56,7 +56,7 @@ This outputs structured YAML. Parse it to understand:
 
 **From `plans` section:**
 - `exists` - whether any plans exist
-- `files` - list of plans with: name, topic, status, date, format, specification, specification_exists
+- `files` - list of plans with: name, topic, status, date, format, specification, specification_exists, plan_id (if present)
 - `count` - total number of plans
 
 **From `environment` section:**
@@ -105,9 +105,9 @@ Present all discovered plans to help the user make an informed choice.
 ```
 Available Plans:
 
-  1. {topic-1} (in-progress) - format: local-markdown
-  2. {topic-2} (concluded) - format: local-markdown
-  3. {topic-3} (in-progress) - format: beads
+  1. {topic-1} (in-progress) - format: {format}
+  2. {topic-2} (concluded) - format: {format}
+  3. {topic-3} (in-progress) - format: {format}
 
 Which plan would you like to implement? (Enter a number or name)
 ```
@@ -259,6 +259,7 @@ Invoke the [technical-implementation](../../skills/technical-implementation/SKIL
 Implementation session for: {topic}
 Plan: docs/workflow/planning/{topic}.md
 Format: {format}
+Plan ID: {plan_id} (if applicable)
 Specification: {specification} (exists: {true|false})
 Scope: {all phases | Phase N | Task N.M | next-available}
 

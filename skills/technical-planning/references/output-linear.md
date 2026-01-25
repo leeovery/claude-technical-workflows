@@ -148,7 +148,7 @@ Create `docs/workflow/planning/{topic}.md`:
 ```markdown
 ---
 format: linear
-project: {PROJECT_NAME}
+plan_id: {PROJECT_NAME}
 project_id: {ID from MCP response}
 team: {TEAM_NAME}
 ---
@@ -207,7 +207,7 @@ The frontmatter contains all information needed to query Linear:
 ```yaml
 ---
 format: linear
-project: USER-AUTH-FEATURE
+plan_id: USER-AUTH-FEATURE
 project_id: abc123-def456
 team: Engineering
 ---
@@ -257,7 +257,7 @@ Linear:
 
 ### Reading Plans
 
-1. Extract `project_id` from frontmatter
+1. Extract `plan_id` (Linear project name) from frontmatter
 2. Query Linear MCP for project issues
 3. Filter issues by phase label (e.g., `phase-1`, `phase-2`)
 4. Process in phase order

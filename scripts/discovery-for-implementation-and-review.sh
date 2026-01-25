@@ -55,9 +55,10 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
         date=$(extract_field "$file" "date")
         date=${date:-"unknown"}
         format=$(extract_field "$file" "format")
-        format=${format:-"local-markdown"}
+        format=${format:-"MISSING"}
         specification=$(extract_field "$file" "specification")
         specification=${specification:-"${name}.md"}
+        plan_id=$(extract_field "$file" "plan_id")
 
         # Check if linked specification exists
         spec_exists="false"
@@ -73,6 +74,9 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
         echo "      format: \"$format\""
         echo "      specification: \"$specification\""
         echo "      specification_exists: $spec_exists"
+        if [ -n "$plan_id" ]; then
+            echo "      plan_id: \"$plan_id\""
+        fi
 
         plan_count=$((plan_count + 1))
     done

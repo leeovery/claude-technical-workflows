@@ -56,7 +56,7 @@ This outputs structured YAML. Parse it to understand:
 
 **From `plans` section:**
 - `exists` - whether any plans exist
-- `files` - list of plans with: name, topic, status, date, format, specification, specification_exists
+- `files` - list of plans with: name, topic, status, date, format, specification, specification_exists, plan_id (if present)
 - `count` - total number of plans
 
 **From `state` section:**
@@ -154,6 +154,7 @@ Invoke the [technical-review](../../skills/technical-review/SKILL.md) skill for 
 Review session for: {topic}
 Plan: docs/workflow/planning/{topic}.md
 Format: {format}
+Plan ID: {plan_id} (if applicable)
 Specification: {specification} (exists: {true|false})
 Scope: {all changes | specific paths | from git status}
 

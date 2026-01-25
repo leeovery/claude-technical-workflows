@@ -398,10 +398,10 @@ EOF
 }
 
 #
-# Test: Plan without format defaults to local-markdown
+# Test: Plan without format shows MISSING
 #
-test_plan_default_format() {
-    echo -e "${YELLOW}Test: Plan without format defaults to local-markdown${NC}"
+test_plan_missing_format() {
+    echo -e "${YELLOW}Test: Plan without format shows MISSING${NC}"
     setup_fixture
 
     mkdir -p "$TEST_DIR/docs/workflow/planning"
@@ -418,7 +418,47 @@ EOF
 
     local output=$(run_discovery)
 
-    assert_contains "$output" 'format: "local-markdown"' "Defaults to local-markdown"
+    assert_contains "$output" 'format: "MISSING"' "Missing format flagged"
+
+    echo ""
+}
+
+#
+# Test: Plan with plan_id
+#
+test_plan_with_plan_id() {
+    echo -e "${YELLOW}Test: Plan with plan_id${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/planning"
+
+    cat > "$TEST_DIR/docs/workflow/planning/with-plan-id.md" << 'EOF'
+---
+topic: with-plan-id
+status: in-progress
+format: beads
+plan_id: my-epic-abc123
+---
+
+# Implementation Plan: With Plan ID
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/planning/without-plan-id.md" << 'EOF'
+---
+topic: without-plan-id
+status: in-progress
+format: local-markdown
+---
+
+# Implementation Plan: Without Plan ID
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'plan_id: "my-epic-abc123"' "Plan ID extracted when present"
+    # The plan without plan_id should not have the field
+    # Check that output doesn't have plan_id right after without-plan-id entry
+    # This is tricky to test, so we just verify the one with plan_id works
 
     echo ""
 }
@@ -440,7 +480,8 @@ test_crosscutting_specs
 test_mixed_specs
 test_spec_default_type
 test_plans_section
-test_plan_default_format
+test_plan_missing_format
+test_plan_with_plan_id
 
 #
 # Summary

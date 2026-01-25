@@ -17,6 +17,9 @@
 #   status: in-progress | concluded
 #   type: feature | cross-cutting | (empty if unknown)
 #   date: YYYY-MM-DD
+#   sources:              # Optional - only if Sources field exists
+#     - discussion-one
+#     - discussion-two
 #   ---
 #
 #   # Specification: {Topic}
@@ -128,17 +131,51 @@ for file in "$SPEC_DIR"/*.md; do
         date_value=$(date +%Y-%m-%d)
     fi
 
+    # Extract sources from **Sources**: source1, source2, ... (comma-separated list of discussion names)
+    # These link the specification back to the discussions that informed it
+    sources_raw=$(grep -m1 '^\*\*Sources\*\*:' "$file" 2>/dev/null | \
+        sed 's/^\*\*Sources\*\*:[[:space:]]*//' | \
+        xargs || echo "")
+
+    # Convert comma-separated list to array
+    sources_array=()
+    if [ -n "$sources_raw" ]; then
+        IFS=',' read -ra sources_parts <<< "$sources_raw"
+        for src in "${sources_parts[@]}"; do
+            # Trim whitespace
+            src=$(echo "$src" | xargs)
+            if [ -n "$src" ]; then
+                sources_array+=("$src")
+            fi
+        done
+    fi
+
     #
     # Build new file content
     #
 
-    # Create frontmatter
-    frontmatter="---
+    # Create frontmatter (conditionally include sources if present)
+    if [ ${#sources_array[@]} -gt 0 ]; then
+        sources_yaml=""
+        for src in "${sources_array[@]}"; do
+            sources_yaml="${sources_yaml}
+  - $src"
+        done
+        frontmatter="---
+topic: $topic_kebab
+status: $status_new
+type: $type_new
+date: $date_value
+sources:$sources_yaml
+---"
+    else
+        frontmatter="---
 topic: $topic_kebab
 status: $status_new
 type: $type_new
 date: $date_value
 ---"
+    fi
 
     # Extract H1 heading (preserve original)
     h1_heading=$(grep -m1 "^# " "$file")

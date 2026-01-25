@@ -53,9 +53,9 @@ Compare the `format:` field across all discovered plans.
 ```
 Mixed output formats detected:
 
-- authentication: beads
-- billing-system: linear
-- notifications: beads
+- authentication: {format-a}
+- billing-system: {format-b}
+- notifications: {format-a}
 
 Cross-topic dependencies can only be wired within the same output format.
 Please consolidate your plans to use a single output format before linking dependencies.
@@ -78,15 +78,15 @@ For each plan, find the External Dependencies section:
 ```
 Dependency Summary
 
-Plan: authentication (format: beads)
+Plan: authentication (format: {format})
   - billing-system: Invoice generation (unresolved)
-  - user-management: User profiles → beads-7x2k (resolved)
+  - user-management: User profiles → {task-id} (resolved)
 
-Plan: billing-system (format: beads)
+Plan: billing-system (format: {format})
   - authentication: User context (unresolved)
   - ~~payment-gateway: Payment processing~~ → satisfied externally
 
-Plan: notifications (format: beads)
+Plan: notifications (format: {format})
   - authentication: User lookup (unresolved)
   - billing-system: Invoice events (unresolved)
 ```
@@ -133,11 +133,11 @@ Present a summary:
 Dependency Linking Complete
 
 RESOLVED (newly linked):
-  - authentication → billing-system: beads-b7c2.1.1 (Invoice generation)
-  - notifications → authentication: beads-a3f8.1.2 (Session management)
+  - authentication → billing-system: {task-id} (Invoice generation)
+  - notifications → authentication: {task-id} (Session management)
 
 ALREADY RESOLVED (no action needed):
-  - authentication → user-management: beads-9m3p
+  - authentication → user-management: {task-id}
 
 SATISFIED EXTERNALLY (no action needed):
   - billing-system → payment-gateway

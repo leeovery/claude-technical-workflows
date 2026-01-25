@@ -374,7 +374,7 @@ output=$(run_discovery)
 assert_contains "$output" "name: \"minimal\"" "Name from filename"
 assert_contains "$output" "topic: \"minimal\"" "Topic from frontmatter"
 assert_contains "$output" "status: \"unknown\"" "Status defaults to unknown"
-assert_contains "$output" "format: \"local-markdown\"" "Format defaults to local-markdown"
+assert_contains "$output" "format: \"MISSING\"" "Missing format flagged"
 
 echo ""
 
@@ -421,6 +421,55 @@ EOF
 output=$(run_discovery)
 
 assert_contains "$output" "format: \"beads\"" "Non-default format preserved"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Plan with plan_id (beads format)${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning"
+
+cat > "$TEST_DIR/docs/workflow/planning/with-plan-id.md" << 'EOF'
+---
+topic: with-plan-id
+status: in-progress
+date: 2024-05-01
+format: beads
+specification: with-plan-id.md
+plan_id: my-project-abc123
+---
+
+# Implementation Plan: With Plan ID
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "plan_id: \"my-project-abc123\"" "Plan ID extracted"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Plan without plan_id (local-markdown)${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning"
+
+cat > "$TEST_DIR/docs/workflow/planning/no-plan-id.md" << 'EOF'
+---
+topic: no-plan-id
+status: in-progress
+date: 2024-05-01
+format: local-markdown
+specification: no-plan-id.md
+---
+
+# Implementation Plan: No Plan ID
+EOF
+
+output=$(run_discovery)
+
+assert_not_contains "$output" "plan_id:" "No plan_id when not present"
 
 echo ""
 

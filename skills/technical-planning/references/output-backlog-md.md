@@ -53,7 +53,7 @@ The plan file in `docs/workflow/planning/{topic}.md` serves as the reference poi
 ```markdown
 ---
 format: backlog-md
-project: {TOPIC_NAME}
+plan_id: {TOPIC_NAME}
 ---
 
 # Plan Reference: {Topic Name}

@@ -240,7 +240,7 @@ Create `docs/workflow/planning/{topic}.md`:
 ```markdown
 ---
 format: beads
-epic: bd-{EPIC_ID}
+plan_id: bd-{EPIC_ID}
 ---
 
 # Plan Reference: {Topic Name}
@@ -304,7 +304,7 @@ The `format: beads` frontmatter tells implementation to use beads CLI:
 ```yaml
 ---
 format: beads
-epic: bd-a3f8
+plan_id: bd-a3f8
 ---
 ```
 
@@ -327,7 +327,7 @@ In the task body:
 
 ### Reading Plans
 
-1. Extract `epic` ID from frontmatter
+1. Extract `plan_id` (beads epic ID) from frontmatter
 2. Check `.beads/config.yaml` for `no-db` setting
 3. Run `bd ready` to get unblocked tasks
 4. View task details with `bd show bd-{id}`
