@@ -241,7 +241,45 @@ Create specification from this discussion? (y/n)
 
 ### Output 4: Auto-proceed — Single Concluded Discussion (Has Spec)
 
-TODO
+**Condition:** `concluded_count: 1` and spec exists for that discussion
+
+**Sequence:**
+1. Step 0 (Migrations): `[SKIP] No changes needed`
+2. Step 1 (Discovery): Returns one concluded discussion with `has_individual_spec: true`
+3. Step 2 (Prerequisites): Passes
+4. Step 3 (Route): Single discussion with spec — auto-proceed to continue/refine
+
+**Output:**
+```
+Specification Overview
+
+Single concluded discussion found with existing specification.
+
+1. Auth Flow
+   └─ Spec: in-progress (1 of 1 sources extracted)
+   └─ Discussions:
+      └─ auth-flow (extracted)
+
+---
+Key:
+
+  Discussion status:
+    extracted — content has been incorporated into the specification
+
+  Spec status:
+    in-progress — specification work is ongoing
+
+---
+Proceeding with "Auth Flow".
+
+Continue refining this specification? (y/n)
+```
+
+**Action:** STOP. Wait for user confirmation.
+- If **y**: Proceed to gather additional context, then invoke skill
+- If **n**: "What would you like to do instead?"
+
+**Note:** Same format as Output 3, but shows existing spec progress and uses "Continue refining" prompt.
 
 ---
 
