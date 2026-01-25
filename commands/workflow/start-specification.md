@@ -388,8 +388,31 @@ Present the groupings with FULL status information.
 
 For each grouping, show:
 - The grouping name
-- Whether a specification already exists for this grouping
-- Each discussion in the grouping and whether it has an individual spec
+- Whether a specification already exists for this grouping (and its effective status)
+- Each discussion in the grouping and its incorporation status
+
+### Determining Discussion Status Within a Grouping
+
+For each grouping, first check if a grouped specification exists:
+1. Convert the grouping name to kebab-case (lowercase, spaces to hyphens)
+2. Check if `docs/workflow/specification/{kebab-name}.md` exists
+3. If it exists, get its `sources` array from the discovery output
+
+**If a grouped spec exists for the grouping:**
+
+For each discussion in the grouping:
+- If the discussion is in the spec's `sources` array → status is `"incorporated"`
+- If the discussion is NOT in the spec's `sources` array → status is `"pending"`
+
+Calculate the **effective spec status**:
+- If ALL discussions in the grouping are in the spec's sources → use the spec's actual status from file
+- If ANY discussion is NOT in the spec's sources (pending) → effective status is `"needs update"`
+
+**If NO grouped spec exists:**
+
+For each discussion in the grouping:
+- If the discussion has an individual spec (`has_individual_spec: true`) → status is `"spec: {spec_status}"`
+- If the discussion has no spec → status is `"ready"`
 
 **Format:**
 
@@ -398,19 +421,20 @@ For each grouping, show:
 
 Recommended Groupings:
 
-### 1. {Grouping Name} {if spec exists: "(spec: {spec_status})"}
+### 1. {Grouping Name} (spec: {effective_status})
 | Discussion | Status |
 |------------|--------|
-| {topic-a} | discussion only |
-| {topic-b} | spec: {spec_status} |
-| {topic-c} | discussion only |
+| {topic-a} | incorporated |
+| {topic-b} | incorporated |
+| {topic-c} | pending |
 
 Coupling: {explanation}
 
 ### 2. {Another Grouping}
 | Discussion | Status |
 |------------|--------|
-| {topic-d} | discussion only |
+| {topic-d} | ready |
+| {topic-e} | spec: in-progress |
 
 Coupling: {explanation}
 
@@ -428,6 +452,13 @@ How would you like to proceed?
 
 (Enter 'refresh' to re-analyze)
 ```
+
+**Status Legend:**
+- `incorporated` - Discussion content has been woven into the grouped specification
+- `pending` - Discussion is part of the group but not yet incorporated into the spec
+- `ready` - Discussion has no spec yet (ready to be specified)
+- `spec: {status}` - Discussion has its own individual specification
+- `needs update` - Grouped spec exists but has pending sources to incorporate
 
 **STOP.** Wait for user to choose.
 
