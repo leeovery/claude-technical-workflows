@@ -1,0 +1,135 @@
+# Integration Tests: Full Workflow
+#
+# Tests complete workflow scenarios with semantic validation.
+# These tests use LLM-as-judge for content quality checks.
+#
+# IMPORTANT: These tests verify BEHAVIOR and QUALITY, not specific content.
+# The semantic criteria should be generic enough to work regardless of
+# what topic is being discussed.
+#
+# Note: Commands run /migrate first (Step 0), then discovery,
+# then follow routing based on state.
+
+name: "full workflow integration"
+description: "End-to-end workflow tests with semantic validation"
+type: integration
+
+scenarios:
+  # ==========================================================================
+  # Research → Discussion Quality
+  # ==========================================================================
+  - name: "discussion captures research insights"
+    description: "Discussion should build on research and capture decisions"
+    fixture: minimal/has-research
+    command: /workflow/start-discussion
+    choices:
+      - match: "topic"
+        answer: "test-feature"
+      - match: "proceed"
+        answer: "y"
+      - match: "additional"
+        answer: "none"
+    assertions:
+      # Structural checks first (fast, free)
+      - exists: docs/workflow/discussion/test-feature.md
+      - has_sections:
+          path: docs/workflow/discussion/test-feature.md
+          sections:
+            - "## Context"
+            - "## Summary"
+      # Semantic check - verify QUALITY not specific content
+      - semantic:
+          judge_model: haiku
+          path: docs/workflow/discussion/test-feature.md
+          criteria:
+            - "Contains at least one concrete decision or recommendation"
+            - "Provides rationale or reasoning for decisions made"
+            - "Has a clear summary of outcomes or conclusions"
+          threshold: 0.66
+
+  # ==========================================================================
+  # Discussion → Specification Quality
+  # ==========================================================================
+  - name: "specification validates discussion decisions"
+    description: "Spec should structure and validate discussion outcomes"
+    fixture: minimal/has-discussion
+    command: /workflow/start-specification
+    choices:
+      # Step 9: Confirm selection
+      - match: "proceed"
+        answer: "y"
+      - match: "confirm"
+        answer: "yes"
+      # Step 10: Additional context
+      - match: "additional"
+        answer: "none"
+      - match: "context"
+        answer: "none"
+      # Skill approval
+      - match: "approve"
+        answer: "yes"
+    assertions:
+      - exists: docs/workflow/specification/test-topic.md
+      # Semantic check - verify QUALITY not specific content
+      - semantic:
+          judge_model: haiku
+          path: docs/workflow/specification/test-topic.md
+          criteria:
+            - "Contains validated decisions or requirements"
+            - "Is structured as a standalone document"
+            - "Includes a dependencies section"
+          threshold: 0.66
+
+  # ==========================================================================
+  # Specification → Planning Quality
+  # ==========================================================================
+  - name: "plan is actionable from specification"
+    description: "Plan should break spec into implementable tasks"
+    fixture: minimal/has-specification
+    command: /workflow/start-planning
+    choices:
+      - match: "specification"
+        answer: "test-topic"
+      - match: "format"
+        answer: "local-markdown"
+      - match: "proceed"
+        answer: "y"
+      - match: "additional"
+        answer: "none"
+    assertions:
+      - exists: docs/workflow/planning/test-topic.md
+      # Semantic check - verify QUALITY not specific content
+      - semantic:
+          judge_model: haiku
+          path: docs/workflow/planning/test-topic.md
+          criteria:
+            - "Contains clearly defined phases or milestones"
+            - "Tasks are specific and actionable (not vague)"
+            - "Includes acceptance criteria or tests for tasks"
+          threshold: 0.66
+
+  # ==========================================================================
+  # Cross-Phase Consistency
+  # ==========================================================================
+  - name: "specification consistent with source"
+    description: "Spec should not contradict its source material"
+    fixture: minimal/has-discussion
+    command: /workflow/start-specification
+    choices:
+      - match: "proceed"
+        answer: "y"
+      - match: "additional"
+        answer: "none"
+      - match: "approve"
+        answer: "yes"
+    assertions:
+      - exists: docs/workflow/specification/test-topic.md
+      # Semantic check - verify consistency, not specific content
+      - semantic:
+          judge_model: haiku
+          path: docs/workflow/specification/test-topic.md
+          criteria:
+            - "Technical decisions are present and documented"
+            - "Content appears to build on prior discussion"
+            - "No obvious contradictions or inconsistencies"
+          threshold: 1.0

@@ -1,0 +1,14 @@
+# Test outputs
+results/
+*.log
+
+# Generated fixtures (optional - can be committed or regenerated)
+# Uncomment to ignore generated fixtures:
+# fixtures/generated/
+
+# TypeScript build
+dist/
+*.tsbuildinfo
+
+# Dependencies (if tests have separate node_modules)
+node_modules/

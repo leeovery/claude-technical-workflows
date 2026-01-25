@@ -1,0 +1,58 @@
+# Fixture Seed: Authentication Feature
+#
+# This seed defines canonical inputs for generating realistic fixtures
+# through the full workflow. Run `./tests/scripts/generate-fixtures.sh`
+# to regenerate fixtures from this seed.
+
+name: auth-feature
+description: "OAuth2 authentication feature for REST API"
+
+# Each phase builds on the previous, creating fixtures at each stage
+phases:
+  research:
+    command: /workflow/start-research
+    inputs:
+      topic: "OAuth2 Authentication for REST API"
+      context: |
+        We're building a REST API that needs user authentication.
+
+        Requirements:
+        - Must support web browsers and mobile apps
+        - Need secure token storage
+        - Should handle token refresh automatically
+        - Must prevent common attacks (XSS, CSRF)
+
+        Questions to explore:
+        - OAuth2 vs other auth methods
+        - Token storage strategies
+        - Refresh token handling
+    choices:
+      - match: "focus area"
+        answer: "technical feasibility"
+      - match: "depth"
+        answer: "comprehensive"
+
+  discussion:
+    command: /workflow/start-discussion
+    choices:
+      - match: "topic"
+        answer: "authentication"
+      - match: "which research"
+        answer: "OAuth2 Authentication"
+    # The discussion will use the research output as context
+
+  specification:
+    command: /workflow/start-specification
+    choices:
+      - match: "topic"
+        answer: "authentication"
+      - match: "include all"
+        answer: "yes"
+
+  planning:
+    command: /workflow/start-planning
+    choices:
+      - match: "specification"
+        answer: "authentication"
+      - match: "format"
+        answer: "local-markdown"
