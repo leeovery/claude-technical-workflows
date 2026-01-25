@@ -14,7 +14,7 @@ Each command analyzes documents from the PREVIOUS phase. Migrations are linked t
 | 2. Discussion | start-discussion.md | Research docs | discovery-for-discussion.sh | N/A | N/A (research has no status) |
 | 3. Specification | start-specification.md | Discussion docs | discovery-for-specification.sh | 001-discussion-frontmatter.sh | Discussion docs |
 | 4. Planning | start-planning.md | Specification docs | discovery-for-planning.sh | 002-specification-frontmatter.sh | Specification docs |
-| 5. Implementation | start-implementation.md | Plan docs | TBD | 003-planning-frontmatter.sh (TBD) | Plan docs |
+| 5. Implementation | start-implementation.md | Plan docs | discovery-for-implementation.sh | 003-planning-frontmatter.sh | Plan docs |
 | 6. Review | start-review.md | All docs | TBD | N/A | N/A |
 
 ---
@@ -25,9 +25,9 @@ Each command analyzes documents from the PREVIOUS phase. Migrations are linked t
 |-------|-----------------|------------------|--------------|------------------|-----------|-----------------|
 | 1. Research | ✅ | N/A | N/A | ✅ | N/A | N/A |
 | 2. Discussion | ✅ | ✅ | ✅ (50) | ✅ | N/A | N/A |
-| 3. Specification | ✅ | ✅ | ✅ (38) | ✅ | ✅ 001 | ⬜ TODO |
+| 3. Specification | ✅ | ✅ | ✅ (38) | ✅ | ✅ 001 | ✅ (22) |
 | 4. Planning | ✅ | ✅ | ✅ (48) | ✅ | ✅ 002 | ✅ (25) |
-| 5. Implementation | ⬜ TODO | ⬜ TODO | ⬜ TODO | ⬜ TODO | ⬜ TODO | ⬜ TODO |
+| 5. Implementation | ✅ | ✅ | ✅ (37) | N/A | ✅ 003 | ✅ (26) |
 | 6. Review | ⬜ TODO | ⬜ TODO | ⬜ TODO | N/A | N/A | N/A |
 
 ---
@@ -92,7 +92,7 @@ Documents should use YAML frontmatter for metadata.
 |---------------|-----------------|--------|-------------------|
 | Discussion | ✅ | `topic`, `status`, `date` | `skills/technical-discussion/references/template.md` |
 | Specification | ✅ | `topic`, `status`, `date`, `sources`, `superseded_by` | `skills/technical-specification/references/specification-guide.md` |
-| Plan | ⬜ TODO | `topic`, `status`, `date`, `format`, `specification` | `skills/technical-planning/references/` |
+| Plan | ✅ | `topic`, `status`, `date`, `format`, `specification` | `skills/technical-planning/references/output-local-markdown.md` |
 | Research | ✅ | `topic`, `date` | `skills/technical-research/references/template.md` |
 
 ### C. Caching Strategy
@@ -206,24 +206,26 @@ Cache files for avoiding redundant analysis.
 
 ---
 
-### Phase 5: Implementation
+### Phase 5: Implementation ✅
 
-**Status: Not started**
+**Status: Complete**
 
-**This phase runs migration 003** (migrates Plan docs to frontmatter - if needed).
+**This phase runs migration 003** (migrates Plan docs to frontmatter).
 
-**Work needed:**
-- [ ] Review current command formatting
-- [ ] Create discovery script (reads Plan docs)
-- [ ] Add script tests
-- [ ] Update command to use discovery script
-- [ ] Create migration 003 for Plan docs (if needed)
-- [ ] Add migration tests
+**Completed:**
+- ✅ Discovery script: `scripts/discovery-for-implementation.sh`
+- ✅ Script tests: `tests/scripts/test-discovery-for-implementation.sh` (37 assertions)
+- ✅ Migration 003: `scripts/migrations/003-planning-frontmatter.sh`
+- ✅ Migration tests: `tests/scripts/test-migration-003.sh` (26 assertions)
+- ✅ Command updated: `commands/workflow/start-implementation.md`
+- ✅ Handoff verified: command output matches skill input
 
-**Files to review:**
+**Files updated:**
 - `commands/workflow/start-implementation.md`
-- `skills/technical-implementation/SKILL.md`
-- `skills/technical-implementation/references/`
+- `scripts/discovery-for-implementation.sh`
+- `scripts/migrations/003-planning-frontmatter.sh`
+- `tests/scripts/test-discovery-for-implementation.sh`
+- `tests/scripts/test-migration-003.sh`
 
 ---
 
@@ -299,7 +301,7 @@ Each command must pass the correct information to its skill. Verify:
 | 2. Discussion | start-discussion.md | technical-discussion | ✅ |
 | 3. Specification | start-specification.md | technical-specification | ✅ |
 | 4. Planning | start-planning.md | technical-planning | ✅ |
-| 5. Implementation | start-implementation.md | technical-implementation | ⬜ TODO |
+| 5. Implementation | start-implementation.md | technical-implementation | ✅ |
 | 6. Review | start-review.md | technical-review | ⬜ TODO |
 
 ## Test Organization
@@ -313,16 +315,16 @@ Each command must pass the correct information to its skill. Verify:
 | `test-discovery-for-discussion.sh` | 50 | ✅ |
 | `test-discovery-for-specification.sh` | 38 | ✅ |
 | `test-discovery-for-planning.sh` | 48 | ✅ |
-| `test-implementation-discovery.sh` | TBD | ⬜ TODO |
+| `test-discovery-for-implementation.sh` | 37 | ✅ |
 | `test-review-discovery.sh` | TBD | ⬜ TODO |
 
 ### Migration Tests
 
 | Test File | Status | Notes |
 |-----------|--------|-------|
-| `test-migration-001.sh` | ⬜ TODO | Discussion frontmatter migration |
+| `test-migration-001.sh` | ✅ (22) | Discussion frontmatter migration |
 | `test-migration-002.sh` | ✅ (25) | Specification frontmatter migration |
-| `test-migration-003.sh` | ⬜ TODO | Plan frontmatter migration (if needed) |
+| `test-migration-003.sh` | ✅ (26) | Plan frontmatter migration |
 
 **Migration tests should cover:**
 - Various legacy document formats
