@@ -14,8 +14,8 @@ Each command analyzes documents from the PREVIOUS phase. Migrations are linked t
 | 2. Discussion | start-discussion.md | Research docs | discovery-for-discussion.sh | N/A | N/A (research has no status) |
 | 3. Specification | start-specification.md | Discussion docs | discovery-for-specification.sh | 001-discussion-frontmatter.sh | Discussion docs |
 | 4. Planning | start-planning.md | Specification docs | discovery-for-planning.sh | 002-specification-frontmatter.sh | Specification docs |
-| 5. Implementation | start-implementation.md | Plan docs | discovery-for-implementation.sh | 003-planning-frontmatter.sh | Plan docs |
-| 6. Review | start-review.md | All docs | TBD | N/A | N/A |
+| 5. Implementation | start-implementation.md | Plan docs | discovery-for-implementation-and-review.sh | 003-planning-frontmatter.sh | Plan docs |
+| 6. Review | start-review.md | All docs | discovery-for-implementation-and-review.sh | N/A | N/A |
 
 ---
 
@@ -28,7 +28,7 @@ Each command analyzes documents from the PREVIOUS phase. Migrations are linked t
 | 3. Specification | ✅ | ✅ | ✅ (38) | ✅ | ✅ 001 | ✅ (22) |
 | 4. Planning | ✅ | ✅ | ✅ (48) | ✅ | ✅ 002 | ✅ (25) |
 | 5. Implementation | ✅ | ✅ | ✅ (37) | N/A | ✅ 003 | ✅ (26) |
-| 6. Review | ⬜ TODO | ⬜ TODO | ⬜ TODO | N/A | N/A | N/A |
+| 6. Review | ✅ | ✅ (shared) | ✅ (shared) | N/A | N/A | N/A |
 
 ---
 
@@ -213,8 +213,8 @@ Cache files for avoiding redundant analysis.
 **This phase runs migration 003** (migrates Plan docs to frontmatter).
 
 **Completed:**
-- ✅ Discovery script: `scripts/discovery-for-implementation.sh`
-- ✅ Script tests: `tests/scripts/test-discovery-for-implementation.sh` (37 assertions)
+- ✅ Discovery script: `scripts/discovery-for-implementation-and-review.sh` (shared with Review)
+- ✅ Script tests: `tests/scripts/test-discovery-for-implementation-and-review.sh` (37 assertions)
 - ✅ Migration 003: `scripts/migrations/003-planning-frontmatter.sh`
 - ✅ Migration tests: `tests/scripts/test-migration-003.sh` (26 assertions)
 - ✅ Command updated: `commands/workflow/start-implementation.md`
@@ -222,29 +222,27 @@ Cache files for avoiding redundant analysis.
 
 **Files updated:**
 - `commands/workflow/start-implementation.md`
-- `scripts/discovery-for-implementation.sh`
+- `scripts/discovery-for-implementation-and-review.sh` (shared with Review)
 - `scripts/migrations/003-planning-frontmatter.sh`
-- `tests/scripts/test-discovery-for-implementation.sh`
+- `tests/scripts/test-discovery-for-implementation-and-review.sh`
 - `tests/scripts/test-migration-003.sh`
 
 ---
 
-### Phase 6: Review
+### Phase 6: Review ✅
 
-**Status: Not started**
+**Status: Complete**
 
 **This phase reads ALL docs** (no migration needed - all previous phases handle their own).
 
-**Work needed:**
-- [ ] Review current command formatting
-- [ ] Assess discovery script needs (may read from multiple phases)
-- [ ] Update command to use discovery script(s)
-- [ ] Add script tests if applicable
+**Completed:**
+- ✅ Discovery script: shares `scripts/discovery-for-implementation-and-review.sh`
+- ✅ Script tests: shares `tests/scripts/test-discovery-for-implementation-and-review.sh` (37 assertions)
+- ✅ Command updated: `commands/workflow/start-review.md`
+- ✅ Handoff verified: command output matches skill input
 
-**Files to review:**
+**Files updated:**
 - `commands/workflow/start-review.md`
-- `skills/technical-review/SKILL.md`
-- `skills/technical-review/references/`
 
 ---
 
@@ -302,7 +300,7 @@ Each command must pass the correct information to its skill. Verify:
 | 3. Specification | start-specification.md | technical-specification | ✅ |
 | 4. Planning | start-planning.md | technical-planning | ✅ |
 | 5. Implementation | start-implementation.md | technical-implementation | ✅ |
-| 6. Review | start-review.md | technical-review | ⬜ TODO |
+| 6. Review | start-review.md | technical-review | ✅ |
 
 ## Test Organization
 
@@ -315,8 +313,7 @@ Each command must pass the correct information to its skill. Verify:
 | `test-discovery-for-discussion.sh` | 50 | ✅ |
 | `test-discovery-for-specification.sh` | 38 | ✅ |
 | `test-discovery-for-planning.sh` | 48 | ✅ |
-| `test-discovery-for-implementation.sh` | 37 | ✅ |
-| `test-review-discovery.sh` | TBD | ⬜ TODO |
+| `test-discovery-for-implementation-and-review.sh` | 37 | ✅ (shared) |
 
 ### Migration Tests
 
