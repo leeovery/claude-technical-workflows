@@ -197,7 +197,45 @@ Run /start-discussion to continue working on a discussion.
 
 ### Output 3: Auto-proceed — Single Concluded Discussion (No Spec)
 
-TODO
+**Condition:** `concluded_count: 1` and no spec exists for that discussion
+
+**Sequence:**
+1. Step 0 (Migrations): `[SKIP] No changes needed`
+2. Step 1 (Discovery): Returns one concluded discussion, `spec_count: 0`
+3. Step 2 (Prerequisites): Passes
+4. Step 3 (Route): Single discussion path — auto-proceed
+
+**Output:**
+```
+Specification Overview
+
+Single concluded discussion found.
+
+1. Auth Flow
+   └─ Spec: none
+   └─ Discussions:
+      └─ auth-flow (ready)
+
+---
+Key:
+
+  Discussion status:
+    ready — concluded and available to be specified
+
+  Spec status:
+    none — no specification file exists yet
+
+---
+Proceeding with "Auth Flow".
+
+Create specification from this discussion? (y/n)
+```
+
+**Action:** STOP. Wait for user confirmation.
+- If **y**: Proceed to gather additional context, then invoke skill
+- If **n**: "What would you like to do instead?" (offer alternatives or exit)
+
+**Note:** Uses same format as groupings view for consistency. Single-discussion items are first-class, not special-cased.
 
 ---
 
@@ -243,10 +281,44 @@ TODO
 
 ---
 
+## Discovery Script Improvements
+
+**Task:** Update discovery script to provide explicit counts and states so the command doesn't need to check array lengths or derive states.
+
+**Proposed `current_state` section:**
+```yaml
+current_state:
+  discussions_checksum: "a1b2c3d4..."
+
+  # Counts for easy conditionals
+  discussion_count: 5
+  concluded_count: 3
+  in_progress_count: 2
+  spec_count: 2
+  active_spec_count: 1      # excludes superseded
+  superseded_spec_count: 1
+
+  # Derived states for routing
+  has_discussions: true
+  has_concluded: true
+  has_specs: true
+  has_active_specs: true
+```
+
+**Benefits:**
+- Command can check `concluded_count: 0` instead of iterating arrays
+- Routing logic becomes simple conditionals: `if concluded_count == 1 && spec_count == 0`
+- Reduces cognitive overhead when reading/maintaining the command
+- Single source of truth for counts (discovery calculates once)
+
+**Additional counts to consider:**
+- `grouped_spec_count` — specs with multiple sources
+- `pending_source_count` — total sources pending extraction across all specs
+- `specs_needing_work_count` — specs with at least one pending source
+
 ## Still To Decide
 
 - How this integrates with rest of the flow (Steps 4-11)
-- Whether any changes needed to discovery script output
 - Whether any changes needed to the skill handoff format
 
 ## Related Files
