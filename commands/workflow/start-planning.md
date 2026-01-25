@@ -26,7 +26,13 @@ This is **Phase 4** of the six-phase workflow:
 
 Follow these steps EXACTLY as written. Do not skip steps or combine them. Present output using the EXACT format shown in examples - do not simplify or alter the formatting.
 
-**CRITICAL**: After each user interaction, STOP and wait for their response before proceeding. Never assume or anticipate user choices.
+**CRITICAL**: This guidance is mandatory.
+
+- After each user interaction, STOP and wait for their response before proceeding
+- Never assume or anticipate user choices
+- Even if the user's initial prompt seems to answer a question, still confirm with them at the appropriate step
+- Complete each step fully before moving to the next
+- Do not act on gathered information until the skill is loaded - it contains the instructions for how to proceed
 
 ---
 
