@@ -1,5 +1,6 @@
 ---
 description: Start a technical discussion. Discovers research and existing discussions, offers multiple entry paths, and invokes the technical-discussion skill.
+allowed-tools: Bash(.claude/scripts/discovery-for-discussion.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/research-analysis.md)
 ---
 
 Invoke the **technical-discussion** skill for this conversation.
@@ -8,14 +9,14 @@ Invoke the **technical-discussion** skill for this conversation.
 
 This is **Phase 2** of the six-phase workflow:
 
-| Phase | Focus | You |
-|-------|-------|-----|
-| 1. Research | EXPLORE - ideas, feasibility, market, business | |
-| **2. Discussion** | WHAT and WHY - decisions, architecture, edge cases | ◀ HERE |
-| 3. Specification | REFINE - validate into standalone spec | |
-| 4. Planning | HOW - phases, tasks, acceptance criteria | |
-| 5. Implementation | DOING - tests first, then code | |
-| 6. Review | VALIDATING - check work against artifacts | |
+| Phase              | Focus                                              | You    |
+|--------------------|----------------------------------------------------|--------|
+| 1. Research        | EXPLORE - ideas, feasibility, market, business     |        |
+| **2. Discussion**  | WHAT and WHY - decisions, architecture, edge cases | ◀ HERE |
+| 3. Specification   | REFINE - validate into standalone spec             |        |
+| 4. Planning        | HOW - phases, tasks, acceptance criteria           |        |
+| 5. Implementation  | DOING - tests first, then code                     |        |
+| 6. Review          | VALIDATING - check work against artifacts          |        |
 
 **Stay in your lane**: Capture the WHAT and WHY - decisions, rationale, competing approaches, edge cases. Don't jump to specifications, plans, or code. This is the time for debate and documentation.
 
@@ -25,11 +26,15 @@ This is **Phase 2** of the six-phase workflow:
 
 Follow these steps EXACTLY as written. Do not skip steps or combine them. Present output using the EXACT format shown in examples - do not simplify or alter the formatting.
 
-Before beginning, discover existing work and determine the best entry path.
+**CRITICAL**: This guidance is mandatory.
 
-## Important
+- After each user interaction, STOP and wait for their response before proceeding
+- Never assume or anticipate user choices
+- Even if the user's initial prompt seems to answer a question, still confirm with them at the appropriate step
+- Complete each step fully before moving to the next
+- Do not act on gathered information until the skill is loaded - it contains the instructions for how to proceed
 
-Use simple, individual commands. Never combine multiple operations into bash loops or one-liners. Execute commands one at a time.
+---
 
 ## Step 0: Run Migrations
 
@@ -39,65 +44,102 @@ Invoke the `/migrate` command and assess its output before proceeding to Step 1.
 
 ---
 
-## Step 1: Discover Existing Work
+## Step 1: Run Discovery Script
 
-Scan the codebase for research and discussions:
+Run the discovery script to gather current state:
 
-1. **Find research**: Look in `docs/workflow/research/`
-   - Run `ls docs/workflow/research/` to list research files
-   - Note which files exist (may include `exploration.md` and semantic files like `market-landscape.md`)
-
-2. **Find discussions**: Look in `docs/workflow/discussion/`
-   - Run `ls docs/workflow/discussion/` to list discussion files
-   - Each file is named `{topic}.md`
-
-3. **Check discussion status**: For each discussion file
-   - Run `head -10 docs/workflow/discussion/{topic}.md` to read the frontmatter
-   - Extract the `status:` field from YAML frontmatter: `in-progress` or `concluded`
-   - Do NOT use bash loops - run separate commands for each file
-
-4. **Check for cached analysis** (if research files exist):
-   - Check if `docs/workflow/.cache/research-analysis.md` exists
-   - If it exists, read it to get the stored checksum from the frontmatter
-
-5. **Compute current research checksum** (if research files exist):
-   - Run exactly: `cat docs/workflow/research/*.md 2>/dev/null | md5sum | cut -d' ' -f1`
-   - IMPORTANT: Use this exact command - glob expansion is alphabetically sorted by default
-   - Do NOT modify or "simplify" this command - checksum must be deterministic
-   - Store this value to compare with the cached checksum
-
-## Step 2: Analyze Research (if exists)
-
-Skip this step if no research files were found in Step 1.
-
-This step uses caching to avoid re-analyzing unchanged research documents.
-
-### Step 2.1: Check Cache Validity
-
-Compare the current research checksum (computed in Step 1.5) with the cached checksum:
-
-**If cache exists AND checksums match:**
-```
-📋 Using cached research analysis (unchanged since {date from cache})
+```bash
+.claude/scripts/discovery-for-discussion.sh
 ```
 
-Load the topics from the cache file and proceed to Step 2.3.
+This outputs structured YAML. Parse it to understand:
 
-**If cache missing OR checksums differ:**
+**From `research` section:**
+- `exists` - whether research files exist
+- `files` - each research file's name and topic
+- `checksum` - current checksum of all research files
+
+**From `discussions` section:**
+- `exists` - whether discussion files exist
+- `files` - each discussion's name, status, and date
+- `counts.in_progress` and `counts.concluded` - totals for routing
+
+**From `cache` section:**
+- `status` - one of three values:
+  - `"valid"` - cache exists and checksums match (safe to load)
+  - `"stale"` - cache exists but research has changed (needs re-analysis)
+  - `"none"` - no cache file exists
+- `reason` - explanation of the status
+- `generated` - when the cache was created (null if none)
+- `research_files` - list of files that were analyzed
+
+**From `state` section:**
+- `scenario` - one of: `"fresh"`, `"research_only"`, `"discussions_only"`, `"research_and_discussions"`
+
+**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
+
+→ Proceed to **Step 2**.
+
+---
+
+## Step 2: Route Based on Scenario
+
+Use `state.scenario` from the discovery output to determine the path:
+
+#### If scenario is "fresh"
+
+No research or discussions exist yet.
+
 ```
-🔍 Analyzing research documents...
+Starting fresh - no prior research or discussions found.
+
+What topic would you like to discuss?
 ```
 
-Proceed to Step 2.2 (Full Analysis).
+**STOP.** Wait for user response, then skip to **Step 6** (Gather Context) with their topic.
 
-### Step 2.2: Full Analysis (when cache invalid)
+#### If scenario is "discussions_only"
 
-Read each research file and analyze the content to extract key themes and potential discussion topics. For each theme:
+No research exists, but discussions do. Skip research analysis.
+
+→ Proceed to **Step 4**.
+
+#### If scenario is "research_only" or "research_and_discussions"
+
+Research exists and may need analysis.
+
+→ Proceed to **Step 3**.
+
+---
+
+## Step 3: Handle Research Analysis
+
+This step only runs when research files exist.
+
+Use `cache.status` from discovery to determine the approach:
+
+#### If cache.status is "valid"
+
+```
+Using cached research analysis (unchanged since {cache.generated})
+```
+
+Load the topics from `docs/workflow/.cache/research-analysis.md` and proceed.
+
+→ Proceed to **Step 4**.
+
+#### If cache.status is "stale" or "none"
+
+```
+Analyzing research documents...
+```
+
+Read each research file and extract key themes and potential discussion topics. For each theme:
 - Note the source file and relevant line numbers
 - Summarize what the theme is about in 1-2 sentences
 - Identify key questions or decisions that need discussion
 
-**Be thorough**: This analysis will be cached, so take time to identify ALL potential topics including:
+**Be thorough**: This analysis will be cached, so identify ALL potential topics:
 - Major architectural decisions
 - Technical trade-offs mentioned
 - Open questions or concerns raised
@@ -107,12 +149,18 @@ Read each research file and analyze the content to extract key themes and potent
 - Edge cases or error handling mentioned
 
 **Save to cache:**
-After analysis, create/update `docs/workflow/.cache/research-analysis.md`:
+
+Ensure the cache directory exists:
+```bash
+mkdir -p docs/workflow/.cache
+```
+
+Create/update `docs/workflow/.cache/research-analysis.md`:
 
 ```markdown
 ---
-checksum: {computed_checksum}
-generated: {ISO date}
+checksum: {research.checksum from discovery}
+generated: YYYY-MM-DDTHH:MM:SS  # Use current ISO timestamp
 research_files:
   - {filename1}.md
   - {filename2}.md
@@ -131,67 +179,40 @@ research_files:
 - **Source**: {filename}.md (lines {start}-{end})
 - **Summary**: {1-2 sentence summary}
 - **Key questions**: {what needs deciding}
-
-[... more topics ...]
 ```
 
-Ensure the `.cache` directory exists: `mkdir -p docs/workflow/.cache`
+**Cross-reference**: For each topic, note if a discussion already exists (from `discussions.files` in discovery).
 
-### Step 2.3: Cross-reference with Discussions
+→ Proceed to **Step 4**.
 
-For each identified topic, check if a corresponding discussion already exists in `docs/workflow/discussion/`.
+---
 
-## Step 3: Present Workflow State and Options
+## Step 4: Present Workflow State and Options
 
 Present everything discovered to help the user make an informed choice.
 
-**If NOTHING exists (no research, no discussions):**
-```
-Starting fresh - no prior research or discussions found.
-
-What topic would you like to discuss?
-```
-Then skip to Step 5 (Gather Context) with the fresh topic path.
-
-**Otherwise, present the full state:**
+**Present the full state:**
 
 ```
-📂 Workflow state:
+Workflow Status: Discussion Phase
+
+Research topics:
+  1. · {Theme name} - undiscussed
+       Source: {filename}.md (lines {start}-{end})
+       "{Brief summary}"
+
+  2. ✓ {Theme name} → {topic}.md
+       Source: {filename}.md (lines {start}-{end})
+       "{Brief summary}"
+
+Discussions:
+  - {topic}.md (in-progress)
+  - {topic}.md (concluded)
 ```
 
-**If research exists, show the topics:**
-```
-📚 Research topics:
-
-  1. ✨ {Theme name}
-     Source: {filename}.md (lines {start}-{end})
-     "{Brief summary}"
-
-  2. ✅ {Theme name} → discussed in {topic}.md
-     Source: {filename}.md (lines {start}-{end})
-     "{Brief summary}"
-
-  [... more topics ...]
-```
-
-**Key:**
-- ✨ = Undiscussed topic (potential new discussion)
-- ✅ = Already has a corresponding discussion
-
-**If discussions exist, show them:**
-```
-💬 Existing discussions:
-
-  • {topic}.md — {Status}
-    "{Brief description from context section}"
-
-  • {topic}.md — concluded
-    "{Brief description}"
-```
-
-**Key:**
-- in-progress = Active discussion
-- concluded = Complete (can still be reopened)
+**Legend:**
+- `·` = undiscussed topic (potential new discussion)
+- `✓` = already has a corresponding discussion
 
 **Then present the options based on what exists:**
 
@@ -222,55 +243,72 @@ How would you like to proceed?
   • **Fresh topic** - Describe what you want to discuss
 ```
 
-Wait for the user to respond before proceeding.
+**STOP.** Wait for user response before proceeding.
 
-## Step 4A: "From research" Path
+→ Based on user choice, proceed to **Step 5**.
+
+---
+
+## Step 5: Handle User Selection
+
+Route based on the user's choice from Step 4.
+
+#### If user chose "From research"
 
 User chose to start from research (e.g., "research 1", "1", "from research", or a topic name).
 
 **If user specified a topic inline** (e.g., "research 2", "2", or topic name):
-- Identify the selected topic from Step 3's numbered list
-- Proceed to Step 5 (Gather Context)
+- Identify the selected topic from Step 4's numbered list
+- → Proceed to **Step 6**
 
 **If user just said "from research" without specifying:**
 ```
 Which research topic would you like to discuss? (Enter a number or topic name)
 ```
-Wait for response, then proceed to Step 5.
 
-### Handle "refresh" Request
+**STOP.** Wait for response, then proceed to **Step 6**.
 
-If user enters `refresh`:
-- Delete the cache file: `rm docs/workflow/.cache/research-analysis.md`
-- Return to Step 2.2 (Full Analysis)
-- Inform user: "Refreshing analysis..."
-- After analysis, return to Step 3 to present updated findings
-
-**Important:** Keep track of the source file and line numbers for the chosen topic - this will be passed to the skill.
-
-## Step 4B: "Continue discussion" Path
+#### If user chose "Continue discussion"
 
 User chose to continue a discussion (e.g., "continue auth-flow" or "continue discussion").
 
 **If user specified a discussion inline** (e.g., "continue auth-flow"):
-- Identify the selected discussion from Step 3's list
-- Proceed to Step 5 (Gather Context)
+- Identify the selected discussion from Step 4's list
+- → Proceed to **Step 6**
 
 **If user just said "continue discussion" without specifying:**
 ```
 Which discussion would you like to continue?
 ```
-Wait for response, then proceed to Step 5.
 
-## Step 4C: "Fresh topic" Path
+**STOP.** Wait for response, then proceed to **Step 6**.
 
-User wants to start a fresh discussion. Proceed directly to Step 5.
+#### If user chose "Fresh topic"
 
-## Step 5: Gather Context
+User wants to start a fresh discussion.
+
+→ Proceed to **Step 6**.
+
+#### If user chose "refresh"
+
+```
+Refreshing analysis...
+```
+
+Delete the cache file:
+```bash
+rm docs/workflow/.cache/research-analysis.md
+```
+
+→ Return to **Step 3** to re-analyze, then back to **Step 4**.
+
+---
+
+## Step 6: Gather Context
 
 Gather context based on the chosen path.
 
-**If starting new discussion (from research or fresh):**
+#### If starting new discussion (from research or fresh)
 
 ```
 ## New discussion: {topic}
@@ -284,9 +322,9 @@ Before we begin:
 3. Are there specific files in the codebase I should review first?
 ```
 
-Wait for responses before proceeding.
+**STOP.** Wait for responses before proceeding.
 
-**If continuing existing discussion:**
+#### If continuing existing discussion
 
 Read the existing discussion document first, then ask:
 
@@ -298,9 +336,13 @@ I've read the existing discussion.
 What would you like to focus on in this session?
 ```
 
-Wait for response before proceeding.
+**STOP.** Wait for response before proceeding.
 
-## Step 6: Invoke the Skill
+→ Proceed to **Step 7**.
+
+---
+
+## Step 7: Invoke the Skill
 
 After completing the steps above, this command's purpose is fulfilled.
 

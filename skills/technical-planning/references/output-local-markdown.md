@@ -33,14 +33,14 @@ Create `{topic}.md` with this structure:
 
 ```markdown
 ---
+topic: {feature-name}
+status: in-progress
+date: YYYY-MM-DD
 format: local-markdown
+specification: {topic}.md
 ---
 
 # Implementation Plan: {Feature/Project Name}
-
-**Date**: YYYY-MM-DD *(use today's actual date)*
-**Status**: Draft | Ready | In Progress | Completed
-**Specification**: `docs/workflow/specification/{topic}.md`
 
 ## Overview
 
@@ -222,7 +222,19 @@ grep -A 5 "### Phase 1" docs/workflow/planning/billing-system.md | grep "\[x\]"
 
 ## Frontmatter
 
-The `format: local-markdown` frontmatter tells implementation that the full plan content is in this file.
+Plan documents use YAML frontmatter for metadata:
+
+```yaml
+---
+topic: {feature-name}        # Matches filename (without .md)
+status: in-progress          # in-progress | concluded
+date: YYYY-MM-DD             # Creation date
+format: local-markdown       # Output format used
+specification: {topic}.md    # Source specification filename
+---
+```
+
+The `format` field tells implementation which output adapter to use for reading/updating the plan.
 
 ## Flagging Incomplete Tasks
 
