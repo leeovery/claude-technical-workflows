@@ -324,8 +324,22 @@ Enter choice (1-2):
 ```
 
 **Action:** STOP. Wait for user choice.
-- If **1**: Proceed to gather context → analyze → cache results → show groupings (Output 6)
-- If **2**: Show numbered discussion list to pick from
+
+- If **1 (Analyze)**:
+  ```
+  Before analyzing, is there anything about how these discussions relate
+  that would help me group them appropriately?
+
+  For example:
+  - Topics that are part of the same feature
+  - Dependencies between topics
+  - Topics that must stay separate
+
+  Your context (or 'none'):
+  ```
+  Then: analyze with context → cache results → show groupings (Output 6)
+
+- If **2 (Pick individually)**: Show numbered discussion list to pick from, skip analysis entirely
 
 ---
 
