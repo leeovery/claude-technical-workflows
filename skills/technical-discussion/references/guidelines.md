@@ -84,3 +84,5 @@ Before marking discussion complete:
 - ✅ Impact explained
 - ✅ Confidence stated
 - ✅ No hallucination
+
+**When complete**: Update frontmatter `status: concluded`.

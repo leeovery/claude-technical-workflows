@@ -23,24 +23,109 @@ This is **Phase 1** of the six-phase workflow:
 
 ## Instructions
 
-Ask these questions to gather context:
+Follow these steps EXACTLY as written. Do not skip steps or combine them. Present output using the EXACT format shown in examples - do not simplify or alter the formatting.
 
-1. **What's on your mind?**
-   - What idea or topic do you want to explore?
-   - What prompted this - a problem, opportunity, curiosity?
+**CRITICAL**: This guidance is mandatory.
 
-2. **What do you already know?**
-   - Any initial thoughts or research you've done?
-   - Constraints or context I should be aware of?
+- After each user interaction, STOP and wait for their response before proceeding
+- Never assume or anticipate user choices
+- Even if the user's initial prompt seems to answer a question, still confirm with them at the appropriate step
+- Complete each step fully before moving to the next
+- Do not act on gathered information until the skill is loaded - it contains the instructions for how to proceed
 
-3. **Where should we start?**
-   - Technical feasibility? Market landscape? Business model?
-   - Or just talk it through and see where it goes?
+---
 
-Ask these questions clearly and wait for responses before proceeding.
+## Step 0: Run Migrations
 
-## Invoke the Skill
+**This step is mandatory. You must complete it before proceeding.**
+
+Invoke the `/migrate` command and assess its output before proceeding to Step 1.
+
+---
+
+## Step 1: Get the Seed Idea
+
+Ask:
+
+```
+What's on your mind?
+
+- What idea or topic do you want to explore?
+- What prompted this - a problem, opportunity, curiosity?
+```
+
+**STOP.** Wait for user response before proceeding.
+
+→ Proceed to **Step 2**.
+
+---
+
+## Step 2: Understand Current Knowledge
+
+Ask:
+
+```
+What do you already know?
+
+- Any initial thoughts or research you've done?
+- Constraints or context I should be aware of?
+```
+
+**STOP.** Wait for user response before proceeding.
+
+→ Proceed to **Step 3**.
+
+---
+
+## Step 3: Determine Starting Point
+
+Ask:
+
+```
+Where should we start?
+
+- Technical feasibility? Market landscape? Business model?
+- Or just talk it through and see where it goes?
+```
+
+**STOP.** Wait for user response before proceeding.
+
+→ Proceed to **Step 4**.
+
+---
+
+## Step 4: Gather Final Context
+
+Ask:
+
+```
+Any constraints or context I should know about upfront?
+
+(Or "none" if we're starting fresh)
+```
+
+**STOP.** Wait for user response before proceeding.
+
+→ Proceed to **Step 5**.
+
+---
+
+## Step 5: Invoke the Skill
 
 After completing the steps above, this command's purpose is fulfilled.
 
 Invoke the [technical-research](../../skills/technical-research/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
+
+**Example handoff:**
+```
+Research session for: {topic}
+Output: docs/workflow/research/exploration.md
+
+Context:
+- Prompted by: {problem, opportunity, or curiosity}
+- Already knows: {any initial thoughts or research, or "starting fresh"}
+- Starting point: {technical feasibility, market, business model, or "open exploration"}
+- Constraints: {any constraints mentioned, or "none"}
+
+Invoke the technical-research skill.
+```

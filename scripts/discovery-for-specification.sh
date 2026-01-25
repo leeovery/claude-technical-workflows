@@ -1,7 +1,5 @@
 #!/bin/bash
 #
-# discover-spec-state.sh
-#
 # Discovers the current state of discussions, specifications, and cache
 # for the /start-specification command.
 #
@@ -15,28 +13,17 @@ SPEC_DIR="docs/workflow/specification"
 CACHE_FILE="docs/workflow/.cache/discussion-consolidation-analysis.md"
 
 # Helper: Extract a frontmatter field value from a file
-# Supports both YAML frontmatter and markdown format (**Field**: Value)
 # Usage: extract_field <file> <field_name>
 extract_field() {
     local file="$1"
     local field="$2"
     local value=""
 
-    # Try YAML frontmatter first (only if file starts with ---)
+    # Extract from YAML frontmatter (file must start with ---)
     if head -1 "$file" 2>/dev/null | grep -q "^---$"; then
         value=$(sed -n '2,/^---$/p' "$file" 2>/dev/null | \
-            grep -m1 "^${field}:" | \
-            sed "s/^${field}:[[:space:]]*//" || true)
-    fi
-
-    # If empty, try markdown format: **Field**: Value
-    # Only search the header (before first ## heading) to avoid body matches
-    if [ -z "$value" ]; then
-        value=$(awk '/^## /{exit} {print}' "$file" 2>/dev/null | \
-            grep -i -m1 "^\*\*${field}\*\*:" | \
-            sed -E "s/^\*\*[^*]+\*\*:[[:space:]]*//" || true)
-        # Normalize to lowercase for consistency
-        value=$(echo "$value" | tr '[:upper:]' '[:lower:]')
+            grep -i -m1 "^${field}:" | \
+            sed -E "s/^${field}:[[:space:]]*//i" || true)
     fi
 
     echo "$value"
@@ -79,13 +66,20 @@ if [ -d "$DISCUSSION_DIR" ] && [ -n "$(ls -A "$DISCUSSION_DIR" 2>/dev/null)" ]; 
 
         # Check if this discussion has a corresponding individual spec
         has_individual_spec="false"
+        spec_status=""
         if [ -f "$SPEC_DIR/${name}.md" ]; then
             has_individual_spec="true"
+            # Extract spec status in real-time (not from cache)
+            spec_status=$(extract_field "$SPEC_DIR/${name}.md" "status")
+            spec_status=${spec_status:-"in-progress"}
         fi
 
         echo "  - name: \"$name\""
         echo "    status: \"$status\""
         echo "    has_individual_spec: $has_individual_spec"
+        if [ "$has_individual_spec" = "true" ]; then
+            echo "    spec_status: \"$spec_status\""
+        fi
     done
 else
     echo "  []  # No discussions found"
@@ -132,16 +126,35 @@ echo ""
 #
 # CACHE STATE
 #
+# status: "valid" | "stale" | "none"
+#   - valid: cache exists and checksums match
+#   - stale: cache exists but discussions have changed
+#   - none: no cache file exists
+#
 echo "cache:"
 
 if [ -f "$CACHE_FILE" ]; then
-    echo "  exists: true"
-
     cached_checksum=$(extract_field "$CACHE_FILE" "checksum")
     cached_date=$(extract_field "$CACHE_FILE" "generated")
 
-    echo "  cached_checksum: \"${cached_checksum:-unknown}\""
-    echo "  cached_date: \"${cached_date:-unknown}\""
+    # Determine status based on checksum comparison
+    if [ -d "$DISCUSSION_DIR" ] && [ -n "$(ls -A "$DISCUSSION_DIR" 2>/dev/null)" ]; then
+        current_checksum=$(cat "$DISCUSSION_DIR"/*.md 2>/dev/null | md5sum | cut -d' ' -f1)
+
+        if [ "$cached_checksum" = "$current_checksum" ]; then
+            echo "  status: \"valid\""
+            echo "  reason: \"checksums match\""
+        else
+            echo "  status: \"stale\""
+            echo "  reason: \"discussions have changed since cache was generated\""
+        fi
+    else
+        echo "  status: \"stale\""
+        echo "  reason: \"no discussions to compare\""
+    fi
+
+    echo "  checksum: \"${cached_checksum:-unknown}\""
+    echo "  generated: \"${cached_date:-unknown}\""
 
     # Extract anchored names (groupings that have existing specs)
     # These are the grouping names from the cache that have corresponding specs
@@ -163,16 +176,17 @@ if [ -f "$CACHE_FILE" ]; then
         echo "    []  # No anchored names found"
     fi
 else
-    echo "  exists: false"
-    echo "  cached_checksum: null"
-    echo "  cached_date: null"
+    echo "  status: \"none\""
+    echo "  reason: \"no cache exists\""
+    echo "  checksum: null"
+    echo "  generated: null"
     echo "  anchored_names: []"
 fi
 
 echo ""
 
 #
-# CURRENT CHECKSUM
+# CURRENT STATE
 #
 echo "current_state:"
 
@@ -194,33 +208,4 @@ if [ -d "$DISCUSSION_DIR" ] && [ -n "$(ls -A "$DISCUSSION_DIR" 2>/dev/null)" ]; 
 else
     echo "  discussions_checksum: null"
     echo "  concluded_discussion_count: 0"
-fi
-
-echo ""
-
-#
-# CHECKSUM COMPARISON
-#
-echo "cache_validity:"
-
-if [ -f "$CACHE_FILE" ]; then
-    cached_checksum=$(extract_field "$CACHE_FILE" "checksum")
-
-    if [ -d "$DISCUSSION_DIR" ] && [ -n "$(ls -A "$DISCUSSION_DIR" 2>/dev/null)" ]; then
-        current_checksum=$(cat "$DISCUSSION_DIR"/*.md 2>/dev/null | md5sum | cut -d' ' -f1)
-
-        if [ "$cached_checksum" = "$current_checksum" ]; then
-            echo "  is_valid: true"
-            echo "  reason: \"checksums match\""
-        else
-            echo "  is_valid: false"
-            echo "  reason: \"discussions have changed since cache was generated\""
-        fi
-    else
-        echo "  is_valid: false"
-        echo "  reason: \"no discussions to compare\""
-    fi
-else
-    echo "  is_valid: false"
-    echo "  reason: \"no cache exists\""
 fi

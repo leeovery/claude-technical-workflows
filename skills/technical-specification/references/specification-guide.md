@@ -143,13 +143,14 @@ This is a single file per topic. Structure is **flexible** - organize around pha
 Suggested skeleton:
 
 ```markdown
-# Specification: [Topic Name]
-
-**Status**: Building specification
-**Type**: feature | cross-cutting
-**Last Updated**: YYYY-MM-DD *(use today's actual date)*
-
 ---
+topic: {topic-name}
+status: in-progress
+type: feature
+date: YYYY-MM-DD  # Use today's actual date
+---
+
+# Specification: [Topic Name]
 
 ## Specification
 
@@ -161,6 +162,13 @@ Suggested skeleton:
 
 [Optional - capture in-progress discussion if needed]
 ```
+
+### Frontmatter Fields
+
+- **topic**: Kebab-case identifier matching the filename
+- **status**: `in-progress` (building) or `concluded` (complete)
+- **type**: `feature` (something to build) or `cross-cutting` (patterns/policies)
+- **date**: Last updated date
 
 ## Specification Types
 
@@ -323,11 +331,76 @@ This section feeds into the planning phase, where dependencies become blocking r
 
 ## Final Specification Review
 
-After documenting dependencies, perform a **final comprehensive review** of the entire specification against all source material. This is your last chance to catch anything that was missed.
+After documenting dependencies, perform a **final comprehensive review** in two phases:
 
-**Why this matters**: The specification is the golden document. Plans are built from it. If a detail isn't in the specification, it won't be built - regardless of whether it was in the source material.
+1. **Phase 1 - Input Review**: Compare the specification against all source material to catch anything missed from discussions, research, and requirements
+2. **Phase 2 - Gap Analysis**: Review the specification as a standalone document for gaps, ambiguity, and completeness
 
-### The Review Process
+**Why this matters**: The specification is the golden document. Plans are built from it, and those plans inform implementation. If a detail isn't in the specification, it won't make it to the plan, and therefore won't be built. Worse, the implementation agent may hallucinate to fill gaps, potentially getting it wrong. The goal is a specification robust enough that an agent or human could pick it up, create plans, break it into tasks, and write the code.
+
+### Review Tracking Files
+
+To ensure analysis isn't lost during context refresh, create tracking files that capture your findings. These files persist your analysis so work can continue across sessions.
+
+**Location**: Store tracking files alongside the specification:
+- `docs/workflow/specification/{topic}-review-input-tracking.md` - Phase 1 findings
+- `docs/workflow/specification/{topic}-review-gap-analysis-tracking.md` - Phase 2 findings
+
+**Format**:
+```markdown
+---
+status: in-progress | complete
+created: YYYY-MM-DD
+phase: Input Review | Gap Analysis
+topic: [Topic Name]
+---
+
+# Review Tracking: [Topic Name] - [Phase]
+
+## Findings
+
+### 1. [Brief Title]
+
+**Source**: [Where this came from - file/section reference, or "Specification analysis" for Phase 2]
+**Category**: Enhancement to existing topic | New topic | Gap/Ambiguity
+**Affects**: [Which section(s) of the specification]
+
+**Details**:
+[Explanation of what was found and why it matters]
+
+**Proposed Addition**:
+[What you would add to the specification - leave blank until discussed]
+
+**Resolution**: Pending | Approved | Adjusted | Skipped
+**Notes**: [Any discussion notes or adjustments made]
+
+---
+
+### 2. [Next Finding]
+...
+```
+
+**Workflow with Tracking Files**:
+1. Complete your analysis and create the tracking file with all findings
+2. Present the summary to the user (from the tracking file)
+3. Work through items one at a time:
+   - Present the item
+   - Discuss and refine
+   - Get approval
+   - Log to specification
+   - Update the tracking file: mark resolution, add notes
+4. After all items resolved, delete the tracking file
+5. Proceed to the next phase (or completion)
+
+**Why tracking files**: If context refreshes mid-review, you can read the tracking file and continue where you left off. The tracking file shows which items are resolved and which remain. This is especially important when reviews surface 10-20 items that need individual discussion.
+
+---
+
+### Phase 1: Input Review
+
+Compare the specification against all source material to catch anything that was missed from discussions, research, and requirements.
+
+#### The Review Process
 
 1. **Re-read ALL source material** - Go back to every source document, discussion, research note, and reference. Don't rely on memory.
 
@@ -344,31 +417,13 @@ After documenting dependencies, perform a **final comprehensive review** of the 
    - Error handling, validation rules, or boundary conditions
    - Integration points or data flows mentioned but not elaborated
 
-4. **Flag what you find** - When you discover potentially missed content, present it to the user. **Do NOT add it to the specification without explicit approval.**
+4. **Collect what you find** - When you discover potentially missed content, note it for your summary. You'll present all findings together after the review is complete (see "Presenting Review Findings" below).
 
-   > **CHECKPOINT**: If you found missed content and are about to add it to the specification without presenting it first and receiving explicit approval, **STOP**. Every addition requires the present → approve → log cycle, even during final review.
+   Categorize each finding:
 
-   There are two cases:
+   **Enhancing an existing topic** - Details that belong in an already-documented section. Note which section it would enhance.
 
-   **Enhancing an existing topic** - Details that belong in an already-documented section:
-
-   > "During my final review, I found additional detail about [existing topic] that isn't captured. From [source]:
-   >
-   > [quote or summary from source material]
-   >
-   > I'd add this to the [section name] section. Would you like me to include it, or show you the full section with this addition first?"
-
-   If the user wants to see context, present the entire section with the new content clearly marked (e.g., with a comment like `<!-- NEW -->` or by calling it out before the block).
-
-   **An entirely missed topic** - Something that warrants its own section but was glossed over:
-
-   > "During my final review, I found [topic] discussed in [source] that doesn't have coverage in the specification:
-   >
-   > [quote or summary from source material]
-   >
-   > This would be a new section. Should I add it?"
-
-   In both cases, you know where the content belongs - existing topics get enhanced in place, new topics get added at the end.
+   **An entirely missed topic** - Something that warrants its own section but was glossed over. New topics get added at the end.
 
 5. **Never fabricate** - Every item you flag must trace back to specific source material. If you can't point to where it came from, don't suggest it. The goal is to catch missed content, not invent new requirements.
 
@@ -380,35 +435,207 @@ After documenting dependencies, perform a **final comprehensive review** of the 
    - Integration points that seem implicit but aren't specified
    - Behaviors that are ambiguous without clarification
 
-   Present these as a batch for the user to triage:
-
-   > "I've identified some potential gaps that aren't covered in the source material:
-   >
-   > 1. **[Gap A]** - [brief description of what's unclear/missing]
-   > 2. **[Gap B]** - [brief description]
-   > 3. **[Gap C]** - [brief description]
-   >
-   > Are any of these areas you'd like to discuss, or are they intentionally out of scope?"
-
-   The user can then pick which gaps (if any) need addressing. For those they want to discuss, work through them and add to the specification with standard approval workflow.
+   Collect these alongside the missed content from step 4. They'll be presented together in the summary (see below).
 
    This should be infrequent - most gaps will be caught from source material. But occasionally the sources themselves have blind spots worth surfacing.
 
-### What You're NOT Doing
+#### Presenting Review Findings
+
+After completing your review (steps 1-7):
+
+1. **Create the tracking file** - Write all findings to `{topic}-review-input-tracking.md` using the format above
+2. **Commit the tracking file** - This ensures it survives context refresh
+3. **Present findings** to the user in two stages:
+
+**Stage 1: Summary of All Findings**
+
+Present a numbered summary of everything you found (from your tracking file):
+
+> "I've completed my final review against all source material. I found [N] items:
+>
+> 1. **[Brief title]**
+>    [2-4 line explanation: what was missed, where it came from, what it affects]
+>
+> 2. **[Brief title]**
+>    [2-4 line explanation]
+>
+> 3. **[Brief title]**
+>    [2-4 line explanation]
+>
+> Let's work through these one at a time, starting with #1."
+
+Each item should have enough context that the user understands what they're about to discuss - not just a label, but clarity on what was missed and why it matters.
+
+**Stage 2: Process One Item at a Time**
+
+For each item, follow the **same workflow as the main specification process**:
+
+1. **Present** the item in detail - what you found, where it came from (source reference), and what you propose to add
+2. **Discuss** if needed - clarify ambiguities, answer questions, refine the content
+3. **Present for approval** - show exactly what will be written to the specification:
+
+   > "Here's what I'll add to the specification:
+   >
+   > [content exactly as it would appear]
+   >
+   > **To proceed, choose one:**
+   > - **"Log it"** - I'll add the above to the specification **verbatim**
+   > - **"Adjust"** - Tell me which part to change
+
+4. **Wait for explicit approval** - same rules as always: "Log it" or equivalent before writing
+5. **Log verbatim** when approved
+6. **Update tracking file** - Mark the item's resolution (Approved/Adjusted/Skipped) and add any notes
+7. **Move to the next item**: "Moving to #2: [Brief title]..."
+
+> **CHECKPOINT**: Each review item requires the full present → approve → log cycle. Do not batch multiple items together. Do not proceed to the next item until the current one is resolved (approved, adjusted, or explicitly skipped by the user).
+
+For potential gaps (items not in source material), you're asking questions rather than proposing content. If the user wants to address a gap, discuss it, then present what you'd add for approval.
+
+#### What You're NOT Doing in Phase 1
 
 - **Not inventing requirements** - When surfacing gaps not in sources, you're asking questions, not proposing answers
 - **Not assuming gaps need filling** - If something isn't in the sources, it may have been intentionally omitted
 - **Not padding the spec** - Only add what's genuinely missing and relevant
 - **Not re-litigating decisions** - If something was discussed and rejected, it stays rejected
 
-### Completing the Review
+#### Completing Phase 1
 
 When you've:
 - Systematically reviewed all source material for missed content
 - Addressed any discovered gaps with the user
 - Surfaced any potential gaps not covered by sources (and resolved them)
+- Updated the tracking file with all resolutions
 
-...then inform the user the final review is complete and proceed to getting sign-off on the specification.
+**Delete the Phase 1 tracking file** (`{topic}-review-input-tracking.md`) - it has served its purpose.
+
+Inform the user Phase 1 is complete and proceed to Phase 2: Gap Analysis.
+
+---
+
+### Phase 2: Gap Analysis
+
+At this point, you've captured everything from your source materials. Phase 2 reviews the **specification as a standalone document** - looking *inward* at what's been specified, not outward at what else the product might need.
+
+**Purpose**: Ensure that *within the defined scope*, the specification flows correctly, has sufficient detail, and leaves nothing open to interpretation or assumption. This might be a full product spec or a single feature - the scope is whatever the inputs defined. Your job is to verify that within those boundaries, an agent or human could create plans, break them into tasks, and write code without having to guess.
+
+**Key distinction**: You're not asking "what features are missing from this product?" You're asking "within what we've decided to build, is everything clear and complete?"
+
+#### What to Look For
+
+Review the specification systematically for gaps *within what's specified*:
+
+1. **Internal Completeness**
+   - Workflows that start but don't show how they end
+   - States or transitions mentioned but not fully defined
+   - Behaviors referenced elsewhere but never specified
+   - Default values or fallback behaviors left unstated
+
+2. **Insufficient Detail**
+   - Areas where an implementer would have to guess
+   - Sections that are too high-level to act on
+   - Missing error handling for scenarios the spec introduces
+   - Validation rules implied but not defined
+   - Boundary conditions for limits the spec mentions
+
+3. **Ambiguity**
+   - Vague language that could be interpreted multiple ways
+   - Terms used inconsistently across sections
+   - "It should" without defining what "it" is
+   - Implicit assumptions that aren't stated
+
+4. **Contradictions**
+   - Requirements that conflict with each other
+   - Behaviors defined differently in different sections
+   - Constraints that make other requirements impossible
+
+5. **Edge Cases Within Scope**
+   - For the behaviors specified, what happens at boundaries?
+   - For the inputs defined, what happens when they're empty or malformed?
+   - For the integrations described, what happens when they're unavailable?
+
+6. **Planning Readiness**
+   - Could you break this into clear tasks?
+   - Would an implementer know what to build?
+   - Are acceptance criteria implicit or explicit?
+   - Are there sections that would force an implementer to make design decisions?
+
+#### The Review Process
+
+1. **Read the specification end-to-end** - Not scanning, but carefully reading as if you were about to implement it
+
+2. **For each section, ask**:
+   - Is this internally complete? Does it define everything it references?
+   - Is this clear? Would an implementer know exactly what to build?
+   - Is this consistent? Does it contradict anything else in the spec?
+   - Are there areas left open to interpretation or assumption?
+
+3. **Collect findings** - Note each gap, ambiguity, or area needing clarification
+
+4. **Prioritize** - Focus on issues that would block or confuse implementation of what's specified:
+   - **Critical**: Would prevent implementation or cause incorrect behavior
+   - **Important**: Would require implementer to guess or make design decisions
+   - **Minor**: Polish or clarification that improves understanding
+
+5. **Create the tracking file** - Write findings to `{topic}-review-gap-analysis-tracking.md`
+
+6. **Commit the tracking file** - Ensures it survives context refresh
+
+#### Presenting Gap Analysis Findings
+
+Follow the same two-stage presentation as Phase 1:
+
+**Stage 1: Summary**
+
+> "I've completed the gap analysis of the specification. I found [N] items:
+>
+> 1. **[Brief title]** (Critical/Important/Minor)
+>    [2-4 line explanation: what the gap is, why it matters for implementation]
+>
+> 2. **[Brief title]** (Critical/Important/Minor)
+>    [2-4 line explanation]
+>
+> Let's work through these one at a time, starting with #1."
+
+**Stage 2: Process One Item at a Time**
+
+For each item:
+
+1. **Present** the gap in detail - what's missing or unclear, what questions an implementer would have
+2. **Discuss** - work with the user to determine the correct specification content
+3. **Present for approval** - show exactly what will be written:
+
+   > "Here's what I'll add to the specification:
+   >
+   > [content exactly as it would appear]
+   >
+   > **To proceed, choose one:**
+   > - **"Log it"** - I'll add the above to the specification **verbatim**
+   > - **"Adjust"** - Tell me which part to change
+
+4. **Wait for explicit approval**
+5. **Log verbatim** when approved
+6. **Update tracking file** - Mark resolution and add notes
+7. **Move to next item**
+
+> **CHECKPOINT**: Same rules apply - each item requires explicit approval before logging. No batching.
+
+#### What You're NOT Doing in Phase 2
+
+- **Not expanding scope** - You're looking for gaps *within* what's specified, not suggesting features the product should have. A feature spec for "user login" doesn't need you to ask about password reset if it wasn't in scope.
+- **Not gold-plating** - Only flag gaps that would actually impact implementation of what's specified
+- **Not second-guessing decisions** - The spec reflects validated decisions; you're checking for clarity and completeness, not re-opening debates
+- **Not being exhaustive for its own sake** - Focus on what matters for implementing *this* specification
+
+#### Completing Phase 2
+
+When you've:
+- Reviewed the specification for completeness, clarity, and implementation readiness
+- Addressed all critical and important gaps with the user
+- Updated the tracking file with all resolutions
+
+**Delete the Phase 2 tracking file** (`{topic}-review-gap-analysis-tracking.md`).
+
+Both review phases are now complete. Proceed to Completion.
 
 ## Completion
 
@@ -439,9 +666,20 @@ Present your assessment to the user:
 
 Wait for user confirmation before proceeding.
 
-### Step 2: Sign-Off
+### Step 2: Verify Tracking Files Removed
 
-Once the type is confirmed, ask for final sign-off:
+Before proceeding to sign-off, confirm that all review tracking files have been deleted:
+
+- `{topic}-review-input-tracking.md` - should have been deleted after Phase 1
+- `{topic}-review-gap-analysis-tracking.md` - should have been deleted after Phase 2
+
+If either file still exists, delete it now. These are temporary working files that should not persist after the review is complete.
+
+> **CHECKPOINT**: Do not proceed to sign-off if tracking files still exist. They indicate incomplete review work.
+
+### Step 3: Sign-Off
+
+Once the type is confirmed and tracking files are removed, ask for final sign-off:
 
 > "The specification is ready for sign-off:
 > - **Type**: [feature/cross-cutting]
@@ -452,20 +690,23 @@ Once the type is confirmed, ask for final sign-off:
 >
 > Ready to mark as complete?"
 
-### Step 3: Update Frontmatter
+### Step 4: Update Frontmatter
 
 After user confirms, update the specification frontmatter:
 
 ```markdown
-# Specification: [Topic Name]
-
-**Status**: Complete
-**Type**: [feature/cross-cutting]
-**Last Updated**: YYYY-MM-DD
+---
+topic: {topic-name}
+status: concluded
+type: feature  # or cross-cutting
+date: YYYY-MM-DD  # Use today's actual date
+---
 ```
 
 Specification is complete when:
 - All topics/phases have validated content
+- Both review phases (Input Review and Gap Analysis) completed
+- All review tracking files have been deleted
 - Type has been determined and confirmed
 - User confirms the specification is complete
 - No blocking gaps remain
