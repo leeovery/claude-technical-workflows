@@ -123,10 +123,128 @@ Menu choices are numbered with descriptive context:
 2. Start "API Design" — 2 ready discussions
 ```
 
+## Pathway Outputs
+
+### Entry Conditions Table
+
+| # | Discussions | Concluded | Specs Exist | Cache Status | Pathway |
+|---|-------------|-----------|-------------|--------------|---------|
+| 1 | None | — | — | — | Block: no discussions |
+| 2 | Some | None | — | — | Block: none concluded |
+| 3 | Some | 1 | No | — | Auto-proceed: single discussion |
+| 4 | Some | 1 | Yes | — | Auto-proceed: single with existing spec |
+| 5 | Some | 2+ | No | None | Prompt: analyze? |
+| 6 | Some | 2+ | No | Valid | Show groupings directly |
+| 7 | Some | 2+ | No | Stale | Prompt: analyze (note stale) |
+| 8 | Some | 2+ | Yes | None | Prompt: continue spec or analyze? |
+| 9 | Some | 2+ | Yes | Valid | Show groupings directly |
+| 10 | Some | 2+ | Yes | Stale | Prompt: continue spec or analyze? |
+
+---
+
+### Output 1: Block — No Discussions
+
+**Condition:** `discussions: []` (empty array)
+
+**Sequence:**
+1. Step 0 (Migrations): `[SKIP] No changes needed`
+2. Step 1 (Discovery): Returns `discussions: []`, `concluded_count: 0`
+3. Step 2 (Prerequisites): Blocked
+
+**Output:**
+```
+Specification Phase
+
+No discussions found.
+
+The specification phase requires concluded discussions to work from.
+Discussions capture the technical decisions, edge cases, and rationale
+that specifications are built upon.
+
+Run /start-discussion to begin documenting technical decisions.
+```
+
+**Action:** STOP. Wait for user acknowledgment.
+
+---
+
+### Output 2: Block — Discussions Exist But None Concluded
+
+**Condition:** `discussions` has items but `concluded_count: 0`
+
+**Sequence:**
+1. Step 0 (Migrations): `[SKIP] No changes needed`
+2. Step 1 (Discovery): Returns discussions with `status: "in-progress"`, `concluded_count: 0`
+3. Step 2 (Prerequisites): Blocked
+
+**Output:**
+```
+Specification Phase
+
+No concluded discussions found.
+
+The following discussions are still in progress:
+  · rate-limiting (in-progress)
+  · webhook-design (in-progress)
+
+Specifications can only be created from concluded discussions.
+Run /start-discussion to continue working on a discussion.
+```
+
+**Action:** STOP. Wait for user acknowledgment.
+
+---
+
+### Output 3: Auto-proceed — Single Concluded Discussion (No Spec)
+
+TODO
+
+---
+
+### Output 4: Auto-proceed — Single Concluded Discussion (Has Spec)
+
+TODO
+
+---
+
+### Output 5: Prompt — Multiple Discussions, No Specs, No Cache
+
+TODO
+
+---
+
+### Output 6: Show Groupings — Multiple Discussions, No Specs, Valid Cache
+
+See "Agreed Display Format" section above.
+
+---
+
+### Output 7: Prompt — Multiple Discussions, No Specs, Stale Cache
+
+TODO
+
+---
+
+### Output 8: Prompt — Multiple Discussions, With Specs, No Cache
+
+TODO
+
+---
+
+### Output 9: Show Groupings — Multiple Discussions, With Specs, Valid Cache
+
+See "Agreed Display Format" section above.
+
+---
+
+### Output 10: Prompt — Multiple Discussions, With Specs, Stale Cache
+
+TODO
+
+---
+
 ## Still To Decide
 
-- Display format when cache is stale/none
-- Display format for first run (no specs, no cache)
 - How this integrates with rest of the flow (Steps 4-11)
 - Whether any changes needed to discovery script output
 - Whether any changes needed to the skill handoff format
