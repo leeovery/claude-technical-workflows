@@ -398,15 +398,25 @@ For each grouping, first check if a grouped specification exists:
 2. Check if `docs/workflow/specification/{kebab-name}.md` exists
 3. If it exists, get its `sources` array from the discovery output
 
+The sources array uses object format with explicit status tracking:
+```yaml
+sources:
+  - name: topic-a
+    status: incorporated
+  - name: topic-b
+    status: pending
+```
+
 **If a grouped spec exists for the grouping:**
 
 For each discussion in the grouping:
-- If the discussion is in the spec's `sources` array → status is `"incorporated"`
-- If the discussion is NOT in the spec's `sources` array → status is `"pending"`
+1. Look up the discussion in the spec's `sources` array (by `name` field)
+2. If found → use the source's `status` field (`incorporated` or `pending`)
+3. If NOT found → status is `"pending"` (new source not yet added to spec)
 
 Calculate the **effective spec status**:
-- If ALL discussions in the grouping are in the spec's sources → use the spec's actual status from file
-- If ANY discussion is NOT in the spec's sources (pending) → effective status is `"needs update"`
+- If ALL discussions in the grouping have `status: incorporated` → use the spec's actual status from file
+- If ANY discussion has `status: pending` OR is not in sources → effective status is `"needs update"`
 
 **If NO grouped spec exists:**
 

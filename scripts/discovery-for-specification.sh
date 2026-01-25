@@ -46,6 +46,70 @@ extract_array_field() {
     echo "$result"
 }
 
+# Helper: Extract sources with status from new object format
+# Outputs YAML-formatted source entries with name and status
+# Usage: extract_sources_with_status <file>
+extract_sources_with_status() {
+    local file="$1"
+    local in_sources=false
+    local current_name=""
+    local current_status=""
+
+    # Read frontmatter and parse sources block
+    while IFS= read -r line; do
+        # Detect start of sources block
+        if [[ "$line" =~ ^sources: ]]; then
+            in_sources=true
+            continue
+        fi
+
+        # Detect end of sources block (next top-level field)
+        if $in_sources && [[ "$line" =~ ^[a-z_]+: ]] && [[ ! "$line" =~ ^[[:space:]] ]]; then
+            # Output last source if pending
+            if [ -n "$current_name" ]; then
+                echo "      - name: \"$current_name\""
+                echo "        status: \"${current_status:-incorporated}\""
+            fi
+            break
+        fi
+
+        if $in_sources; then
+            # Check for new object format: "  - name: value"
+            if [[ "$line" =~ ^[[:space:]]*-[[:space:]]*name:[[:space:]]*(.+)$ ]]; then
+                # Output previous source if exists
+                if [ -n "$current_name" ]; then
+                    echo "      - name: \"$current_name\""
+                    echo "        status: \"${current_status:-incorporated}\""
+                fi
+                current_name="${BASH_REMATCH[1]}"
+                current_name=$(echo "$current_name" | sed 's/^"//' | sed 's/"$//' | xargs)
+                current_status=""
+            # Check for status line: "    status: value"
+            elif [[ "$line" =~ ^[[:space:]]*status:[[:space:]]*(.+)$ ]]; then
+                current_status="${BASH_REMATCH[1]}"
+                current_status=$(echo "$current_status" | sed 's/^"//' | sed 's/"$//' | xargs)
+            # Check for simple format: "  - value" (legacy, no "name:" prefix)
+            # Note: We check for "name:" first to avoid this branch for object format
+            elif [[ ! "$line" =~ name: ]] && [[ "$line" =~ ^[[:space:]]*-[[:space:]]*(.+)$ ]]; then
+                # Output previous source if exists
+                if [ -n "$current_name" ]; then
+                    echo "      - name: \"$current_name\""
+                    echo "        status: \"${current_status:-incorporated}\""
+                fi
+                current_name="${BASH_REMATCH[1]}"
+                current_name=$(echo "$current_name" | sed 's/^"//' | sed 's/"$//' | xargs)
+                current_status="incorporated"  # Legacy format assumed incorporated
+            fi
+        fi
+    done < <(sed -n '/^---$/,/^---$/p' "$file" 2>/dev/null | grep -v "^---$")
+
+    # Output last source if pending (end of frontmatter)
+    if [ -n "$current_name" ]; then
+        echo "      - name: \"$current_name\""
+        echo "        status: \"${current_status:-incorporated}\""
+    fi
+}
+
 # Start YAML output
 echo "# Specification Command State Discovery"
 echo "# Generated: $(date -Iseconds)"
@@ -101,7 +165,6 @@ if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
         status=${status:-"active"}
 
         superseded_by=$(extract_field "$file" "superseded_by")
-        sources=$(extract_array_field "$file" "sources")
 
         echo "  - name: \"$name\""
         echo "    status: \"$status\""
@@ -110,11 +173,11 @@ if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
             echo "    superseded_by: \"$superseded_by\""
         fi
 
-        if [ -n "$sources" ]; then
+        # Extract sources with status (handles both old and new format)
+        sources_output=$(extract_sources_with_status "$file")
+        if [ -n "$sources_output" ]; then
             echo "    sources:"
-            for src in $sources; do
-                echo "      - \"$src\""
-            done
+            echo "$sources_output"
         fi
     done
 else

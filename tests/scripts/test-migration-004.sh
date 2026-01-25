@@ -1,0 +1,507 @@
+#!/bin/bash
+#
+# Tests migration 004-sources-object-format.sh
+# Validates conversion from simple sources array to object format with status.
+#
+
+set -eo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+MIGRATION_SCRIPT="$SCRIPT_DIR/../../scripts/migrations/004-sources-object-format.sh"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Test counters
+TESTS_RUN=0
+TESTS_PASSED=0
+TESTS_FAILED=0
+
+# Create a temporary directory for test fixtures
+TEST_DIR=$(mktemp -d)
+trap "rm -rf $TEST_DIR" EXIT
+
+echo "Test directory: $TEST_DIR"
+echo ""
+
+#
+# Mock migration helper functions
+#
+
+MIGRATION_LOG="$TEST_DIR/.migration-log"
+
+is_migrated() {
+    local file="$1"
+    local migration_id="$2"
+    grep -q "^$file:$migration_id$" "$MIGRATION_LOG" 2>/dev/null
+}
+
+record_migration() {
+    local file="$1"
+    local migration_id="$2"
+    echo "$file:$migration_id" >> "$MIGRATION_LOG"
+}
+
+report_update() {
+    local file="$1"
+    local description="$2"
+    echo "[UPDATE] $file: $description"
+}
+
+report_skip() {
+    local file="$1"
+    echo "[SKIP] $file"
+}
+
+# Export functions for sourced script
+export -f is_migrated record_migration report_update report_skip
+
+#
+# Helper functions
+#
+
+setup_fixture() {
+    rm -rf "$TEST_DIR/docs"
+    rm -f "$MIGRATION_LOG"
+    mkdir -p "$TEST_DIR/docs/workflow/specification"
+    SPEC_DIR="$TEST_DIR/docs/workflow/specification"
+}
+
+run_migration() {
+    cd "$TEST_DIR"
+    # Source the migration script (it uses SPEC_DIR variable)
+    SPEC_DIR="$TEST_DIR/docs/workflow/specification"
+    source "$MIGRATION_SCRIPT"
+}
+
+assert_contains() {
+    local content="$1"
+    local expected="$2"
+    local description="$3"
+
+    TESTS_RUN=$((TESTS_RUN + 1))
+
+    if echo "$content" | grep -q -- "$expected"; then
+        echo -e "  ${GREEN}✓${NC} $description"
+        TESTS_PASSED=$((TESTS_PASSED + 1))
+        return 0
+    else
+        echo -e "  ${RED}✗${NC} $description"
+        echo -e "    Expected to find: $expected"
+        TESTS_FAILED=$((TESTS_FAILED + 1))
+        return 1
+    fi
+}
+
+assert_not_contains() {
+    local content="$1"
+    local unexpected="$2"
+    local description="$3"
+
+    TESTS_RUN=$((TESTS_RUN + 1))
+
+    if ! echo "$content" | grep -q -- "$unexpected"; then
+        echo -e "  ${GREEN}✓${NC} $description"
+        TESTS_PASSED=$((TESTS_PASSED + 1))
+        return 0
+    else
+        echo -e "  ${RED}✗${NC} $description"
+        echo -e "    Should NOT find: $unexpected"
+        TESTS_FAILED=$((TESTS_FAILED + 1))
+        return 1
+    fi
+}
+
+assert_equals() {
+    local actual="$1"
+    local expected="$2"
+    local description="$3"
+
+    TESTS_RUN=$((TESTS_RUN + 1))
+
+    if [ "$actual" = "$expected" ]; then
+        echo -e "  ${GREEN}✓${NC} $description"
+        TESTS_PASSED=$((TESTS_PASSED + 1))
+        return 0
+    else
+        echo -e "  ${RED}✗${NC} $description"
+        echo -e "    Expected: $expected"
+        echo -e "    Actual:   $actual"
+        TESTS_FAILED=$((TESTS_FAILED + 1))
+        return 1
+    fi
+}
+
+# ============================================================================
+# TEST CASES
+# ============================================================================
+
+echo -e "${YELLOW}Test: Single source conversion${NC}"
+setup_fixture
+cat > "$SPEC_DIR/single-source.md" << 'EOF'
+---
+topic: single-source
+status: concluded
+type: feature
+date: 2024-01-15
+sources:
+  - auth-flow
+---
+
+# Specification: Single Source
+
+## Overview
+
+Content here.
+EOF
+
+run_migration
+content=$(cat "$SPEC_DIR/single-source.md")
+
+assert_contains "$content" "- name: auth-flow" "Source name converted to object"
+assert_contains "$content" "status: incorporated" "Status set to incorporated"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Multiple sources conversion${NC}"
+setup_fixture
+cat > "$SPEC_DIR/multi-source.md" << 'EOF'
+---
+topic: multi-source
+status: in-progress
+type: feature
+date: 2024-02-20
+sources:
+  - topic-a
+  - topic-b
+  - topic-c
+---
+
+# Specification: Multi Source
+
+## Overview
+
+Content here.
+EOF
+
+run_migration
+content=$(cat "$SPEC_DIR/multi-source.md")
+
+assert_contains "$content" "- name: topic-a" "First source converted"
+assert_contains "$content" "- name: topic-b" "Second source converted"
+assert_contains "$content" "- name: topic-c" "Third source converted"
+# All should have incorporated status
+assert_contains "$content" "status: incorporated" "Status set to incorporated"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Sources with quotes${NC}"
+setup_fixture
+cat > "$SPEC_DIR/quoted-sources.md" << 'EOF'
+---
+topic: quoted-sources
+status: concluded
+type: feature
+date: 2024-03-10
+sources:
+  - "quoted-topic"
+  - "another-topic"
+---
+
+# Specification: Quoted Sources
+
+## Overview
+
+Content here.
+EOF
+
+run_migration
+content=$(cat "$SPEC_DIR/quoted-sources.md")
+
+assert_contains "$content" "- name: quoted-topic" "Quoted source name extracted"
+assert_contains "$content" "- name: another-topic" "Second quoted source extracted"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Already migrated (object format) - should skip${NC}"
+setup_fixture
+cat > "$SPEC_DIR/already-migrated.md" << 'EOF'
+---
+topic: already-migrated
+status: concluded
+type: feature
+date: 2024-04-01
+sources:
+  - name: existing-topic
+    status: incorporated
+  - name: another-topic
+    status: pending
+---
+
+# Specification: Already Migrated
+
+## Overview
+
+Content here.
+EOF
+
+original_content=$(cat "$SPEC_DIR/already-migrated.md")
+run_migration
+new_content=$(cat "$SPEC_DIR/already-migrated.md")
+
+assert_equals "$new_content" "$original_content" "File with object format unchanged"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: No sources field - should skip${NC}"
+setup_fixture
+cat > "$SPEC_DIR/no-sources.md" << 'EOF'
+---
+topic: no-sources
+status: in-progress
+type: feature
+date: 2024-05-15
+---
+
+# Specification: No Sources
+
+## Overview
+
+Content here.
+EOF
+
+original_content=$(cat "$SPEC_DIR/no-sources.md")
+run_migration
+new_content=$(cat "$SPEC_DIR/no-sources.md")
+
+assert_equals "$new_content" "$original_content" "File without sources unchanged"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: No frontmatter - should skip${NC}"
+setup_fixture
+cat > "$SPEC_DIR/no-frontmatter.md" << 'EOF'
+# Specification: No Frontmatter
+
+## Overview
+
+This file has no YAML frontmatter.
+EOF
+
+original_content=$(cat "$SPEC_DIR/no-frontmatter.md")
+run_migration
+new_content=$(cat "$SPEC_DIR/no-frontmatter.md")
+
+assert_equals "$new_content" "$original_content" "File without frontmatter unchanged"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Idempotency (running migration twice)${NC}"
+setup_fixture
+cat > "$SPEC_DIR/idempotent.md" << 'EOF'
+---
+topic: idempotent
+status: concluded
+type: feature
+date: 2024-06-01
+sources:
+  - source-one
+  - source-two
+---
+
+# Specification: Idempotent
+
+## Overview
+
+Content.
+EOF
+
+run_migration
+first_run=$(cat "$SPEC_DIR/idempotent.md")
+
+# Run again
+run_migration
+second_run=$(cat "$SPEC_DIR/idempotent.md")
+
+assert_equals "$second_run" "$first_run" "Second migration run produces same result"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Content preservation after migration${NC}"
+setup_fixture
+cat > "$SPEC_DIR/preserve-content.md" << 'EOF'
+---
+topic: preserve-content
+status: concluded
+type: feature
+date: 2024-07-01
+sources:
+  - discussion-one
+  - discussion-two
+---
+
+# Specification: Preserve Content
+
+## Overview
+
+This is the overview content.
+
+## Architecture
+
+### Component A
+
+Details about component A.
+
+### Component B
+
+Details about component B.
+
+## Edge Cases
+
+- Edge case 1
+- Edge case 2
+- Edge case 3
+
+## Dependencies
+
+None.
+EOF
+
+run_migration
+content=$(cat "$SPEC_DIR/preserve-content.md")
+
+assert_contains "$content" "# Specification: Preserve Content" "H1 heading preserved"
+assert_contains "$content" "## Overview" "Overview section preserved"
+assert_contains "$content" "## Architecture" "Architecture section preserved"
+assert_contains "$content" "### Component A" "Nested heading preserved"
+assert_contains "$content" "## Edge Cases" "Edge Cases section preserved"
+assert_contains "$content" "- Edge case 1" "List content preserved"
+assert_contains "$content" "## Dependencies" "Dependencies section preserved"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Other frontmatter fields preserved${NC}"
+setup_fixture
+cat > "$SPEC_DIR/other-fields.md" << 'EOF'
+---
+topic: other-fields
+status: concluded
+type: feature
+date: 2024-08-01
+sources:
+  - topic-x
+superseded_by: newer-spec
+---
+
+# Specification: Other Fields
+
+## Overview
+
+Content.
+EOF
+
+run_migration
+content=$(cat "$SPEC_DIR/other-fields.md")
+
+assert_contains "$content" "topic: other-fields" "Topic field preserved"
+assert_contains "$content" "status: concluded" "Status field preserved"
+assert_contains "$content" "type: feature" "Type field preserved"
+assert_contains "$content" "date: 2024-08-01" "Date field preserved"
+assert_contains "$content" "superseded_by: newer-spec" "Superseded_by field preserved"
+assert_contains "$content" "- name: topic-x" "Source converted to object"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Empty sources array - should skip${NC}"
+setup_fixture
+cat > "$SPEC_DIR/empty-sources.md" << 'EOF'
+---
+topic: empty-sources
+status: in-progress
+type: feature
+date: 2024-09-01
+sources:
+---
+
+# Specification: Empty Sources
+
+## Overview
+
+Content.
+EOF
+
+# This is a bit tricky - file has sources: but no actual items
+# Migration should recognize this and not break the file
+run_migration
+content=$(cat "$SPEC_DIR/empty-sources.md")
+
+# File should still be valid YAML
+assert_contains "$content" "^---$" "Frontmatter delimiters present"
+assert_contains "$content" "topic: empty-sources" "Topic preserved"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Sources is last field in frontmatter${NC}"
+setup_fixture
+cat > "$SPEC_DIR/sources-last.md" << 'EOF'
+---
+topic: sources-last
+status: concluded
+type: feature
+date: 2024-10-01
+sources:
+  - final-topic
+---
+
+# Specification: Sources Last
+
+## Overview
+
+Content.
+EOF
+
+run_migration
+content=$(cat "$SPEC_DIR/sources-last.md")
+
+assert_contains "$content" "- name: final-topic" "Source converted when last in frontmatter"
+assert_contains "$content" "status: incorporated" "Status added"
+
+echo ""
+
+# ============================================================================
+# SUMMARY
+# ============================================================================
+
+echo ""
+echo "========================================"
+echo -e "Tests run: $TESTS_RUN"
+echo -e "Passed: ${GREEN}$TESTS_PASSED${NC}"
+echo -e "Failed: ${RED}$TESTS_FAILED${NC}"
+echo "========================================"
+
+if [ $TESTS_FAILED -gt 0 ]; then
+    exit 1
+fi
