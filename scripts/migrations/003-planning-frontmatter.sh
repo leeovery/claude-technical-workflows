@@ -65,10 +65,10 @@ for file in "$PLAN_DIR"/*.md; do
 
     # Check if file has legacy format indicators
     # Legacy format has partial frontmatter (format:) OR inline **Date**/**Status**/**Specification**
-    has_partial_frontmatter=$(head -5 "$file" 2>/dev/null | grep -c "^format:" || echo "0")
-    has_inline_metadata=$(grep -c '^\*\*Date\*\*:\|^\*\*Status\*\*:\|^\*\*Specification\*\*:' "$file" 2>/dev/null || echo "0")
+    has_partial_frontmatter=$(head -5 "$file" 2>/dev/null | grep -c "^format:" || true)
+    has_inline_metadata=$(grep -c '^\*\*Date\*\*:\|^\*\*Status\*\*:\|^\*\*Specification\*\*:' "$file" 2>/dev/null || true)
 
-    if [ "$has_partial_frontmatter" = "0" ] && [ "$has_inline_metadata" = "0" ]; then
+    if [ "${has_partial_frontmatter:-0}" = "0" ] && [ "${has_inline_metadata:-0}" = "0" ]; then
         # No legacy format found - might be malformed, skip
         record_migration "$file" "$MIGRATION_ID"
         report_skip "$file"
