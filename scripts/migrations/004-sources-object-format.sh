@@ -3,7 +3,7 @@
 # 004-sources-object-format.sh
 #
 # Migrates specification sources from simple array format to object format
-# with status tracking.
+# with status tracking. Also ensures all specs have a sources field.
 #
 # Previous format (from 002-specification-frontmatter.sh):
 #   sources:
@@ -24,6 +24,10 @@
 # For existing sources, we assume "incorporated" since they were part of
 # the specification when it was created/worked on.
 #
+# For specs WITHOUT a sources field:
+#   - If a matching discussion exists (same filename), add it as incorporated
+#   - If no matching discussion, add empty sources: [] and report for user review
+#
 # This script is sourced by migrate.sh and has access to:
 #   - is_migrated "filepath" "migration_id"
 #   - record_migration "filepath" "migration_id"
@@ -33,6 +37,7 @@
 
 MIGRATION_ID="004"
 SPEC_DIR="docs/workflow/specification"
+DISCUSSION_DIR="docs/workflow/discussion"
 
 # Skip if no specification directory
 if [ ! -d "$SPEC_DIR" ]; then
@@ -86,24 +91,13 @@ for file in "$SPEC_DIR"/*.md; do
     fi
 
     # Check if file has sources field at all
-    if ! grep -q "^sources:" "$file" 2>/dev/null; then
-        record_migration "$file" "$MIGRATION_ID"
-        report_skip "$file"
-        continue
+    has_sources_field=false
+    if grep -q "^sources:" "$file" 2>/dev/null; then
+        has_sources_field=true
     fi
 
-    # Check if sources are already in object format
-    if sources_already_object_format "$file"; then
-        record_migration "$file" "$MIGRATION_ID"
-        report_skip "$file"
-        continue
-    fi
-
-    # Extract existing sources
-    sources=$(extract_simple_sources "$file")
-
-    # If no sources found (empty array), skip
-    if [ -z "$sources" ]; then
+    # If sources field exists, check if already in object format
+    if $has_sources_field && sources_already_object_format "$file"; then
         record_migration "$file" "$MIGRATION_ID"
         report_skip "$file"
         continue
@@ -113,26 +107,59 @@ for file in "$SPEC_DIR"/*.md; do
     # Build new sources block in object format
     #
     new_sources_block="sources:"
-    for src in $sources; do
-        # Clean the source name (trim whitespace)
-        src=$(echo "$src" | xargs)
-        if [ -n "$src" ]; then
-            new_sources_block="${new_sources_block}
+    sources_added=false
+
+    if $has_sources_field; then
+        # Extract existing sources from simple array format
+        sources=$(extract_simple_sources "$file")
+
+        for src in $sources; do
+            # Clean the source name (trim whitespace)
+            src=$(echo "$src" | xargs)
+            if [ -n "$src" ]; then
+                new_sources_block="${new_sources_block}
   - name: $src
     status: incorporated"
+                sources_added=true
+            fi
+        done
+    else
+        # No sources field - check for matching discussion by filename
+        spec_name=$(basename "$file" .md)
+        discussion_file="$DISCUSSION_DIR/${spec_name}.md"
+
+        if [ -f "$discussion_file" ]; then
+            # Matching discussion found - add it as incorporated
+            new_sources_block="${new_sources_block}
+  - name: $spec_name
+    status: incorporated"
+            sources_added=true
         fi
-    done
+    fi
+
+    # If no sources were added, use empty array format
+    if ! $sources_added; then
+        new_sources_block="sources: []"
+        # Echo info for Claude to prompt user about unmatched specs
+        spec_name=$(basename "$file" .md)
+        echo "MIGRATION_INFO: Specification '$spec_name' has no matching discussion. Sources field set to empty - please review and add sources manually."
+    fi
 
     #
-    # Replace sources block in file
+    # Update sources block in file
     #
 
     # Extract frontmatter
     frontmatter=$(sed -n '1,/^---$/p' "$file" | tail -n +2 | head -n -1)
 
-    # Remove old sources block from frontmatter and add new one
-    # First, remove lines from "sources:" until the next top-level field or end of frontmatter
-    new_frontmatter=$(echo "$frontmatter" | sed '/^sources:/,/^[a-z_]*:/{/^sources:/d;/^[a-z_]*:/!d}')
+    if $has_sources_field; then
+        # Remove old sources block from frontmatter
+        # First, remove lines from "sources:" until the next top-level field or end of frontmatter
+        new_frontmatter=$(echo "$frontmatter" | sed '/^sources:/,/^[a-z_]*:/{/^sources:/d;/^[a-z_]*:/!d}')
+    else
+        # No existing sources field - use frontmatter as-is
+        new_frontmatter="$frontmatter"
+    fi
 
     # Add new sources block at the end
     new_frontmatter="${new_frontmatter}
@@ -156,5 +183,13 @@ ${new_sources_block}"
     } > "$file"
 
     record_migration "$file" "$MIGRATION_ID"
-    report_update "$file" "converted sources to object format"
+
+    # Report appropriate message based on what was done
+    if $has_sources_field; then
+        report_update "$file" "converted sources to object format"
+    elif $sources_added; then
+        report_update "$file" "added sources field with matching discussion"
+    else
+        report_update "$file" "added empty sources field (no matching discussion found)"
+    fi
 done

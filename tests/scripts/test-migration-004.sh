@@ -67,13 +67,16 @@ setup_fixture() {
     rm -rf "$TEST_DIR/docs"
     rm -f "$MIGRATION_LOG"
     mkdir -p "$TEST_DIR/docs/workflow/specification"
+    mkdir -p "$TEST_DIR/docs/workflow/discussion"
     SPEC_DIR="$TEST_DIR/docs/workflow/specification"
+    DISCUSSION_DIR="$TEST_DIR/docs/workflow/discussion"
 }
 
 run_migration() {
     cd "$TEST_DIR"
-    # Source the migration script (it uses SPEC_DIR variable)
+    # Source the migration script (it uses SPEC_DIR and DISCUSSION_DIR variables)
     SPEC_DIR="$TEST_DIR/docs/workflow/specification"
+    DISCUSSION_DIR="$TEST_DIR/docs/workflow/discussion"
     source "$MIGRATION_SCRIPT"
 }
 
@@ -264,28 +267,74 @@ echo ""
 
 # ----------------------------------------------------------------------------
 
-echo -e "${YELLOW}Test: No sources field - should skip${NC}"
+echo -e "${YELLOW}Test: No sources field WITH matching discussion${NC}"
 setup_fixture
-cat > "$SPEC_DIR/no-sources.md" << 'EOF'
+
+# Create a matching discussion file
+cat > "$DISCUSSION_DIR/has-discussion.md" << 'EOF'
 ---
-topic: no-sources
+topic: has-discussion
+status: concluded
+date: 2024-05-15
+---
+
+# Discussion: Has Discussion
+
+Some discussion content.
+EOF
+
+# Create spec without sources field
+cat > "$SPEC_DIR/has-discussion.md" << 'EOF'
+---
+topic: has-discussion
 status: in-progress
 type: feature
 date: 2024-05-15
 ---
 
-# Specification: No Sources
+# Specification: Has Discussion
 
 ## Overview
 
 Content here.
 EOF
 
-original_content=$(cat "$SPEC_DIR/no-sources.md")
 run_migration
-new_content=$(cat "$SPEC_DIR/no-sources.md")
+content=$(cat "$SPEC_DIR/has-discussion.md")
 
-assert_equals "$new_content" "$original_content" "File without sources unchanged"
+assert_contains "$content" "sources:" "Sources field added"
+assert_contains "$content" "- name: has-discussion" "Matching discussion added as source"
+assert_contains "$content" "status: incorporated" "Status set to incorporated"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: No sources field WITHOUT matching discussion${NC}"
+setup_fixture
+
+# Create spec without sources field and no matching discussion
+cat > "$SPEC_DIR/no-discussion.md" << 'EOF'
+---
+topic: no-discussion
+status: in-progress
+type: feature
+date: 2024-05-15
+---
+
+# Specification: No Discussion
+
+## Overview
+
+Content here.
+EOF
+
+output=$(run_migration 2>&1)
+content=$(cat "$SPEC_DIR/no-discussion.md")
+
+assert_contains "$content" "sources: \[\]" "Empty sources array added"
+assert_contains "$output" "MIGRATION_INFO" "Info message output for user review"
+assert_contains "$output" "no-discussion" "Spec name mentioned in info message"
 
 echo ""
 
