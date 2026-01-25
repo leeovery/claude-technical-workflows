@@ -50,6 +50,7 @@ This outputs structured YAML. Parse it to understand:
 
 **From `discussions` array:**
 - Each discussion's name, status, and whether it has an individual specification
+- If `has_individual_spec` is true, `spec_status` contains the spec's status (in-progress/concluded)
 
 **From `specifications` array:**
 - Each specification's name, status, sources, and superseded_by (if applicable)
@@ -114,7 +115,7 @@ Workflow Status: Specification Phase
 Discussions:
   ✓ {topic-1} - concluded - ready
   ✓ {topic-2} - concluded - ready
-  ○ {topic-3} - concluded - has individual spec
+  ○ {topic-3} - concluded - spec: {spec_status}
   · {topic-4} - in-progress - not ready
 
 Specifications:
@@ -126,7 +127,7 @@ Specifications:
 
 **Legend:**
 - `✓` = concluded, no spec yet (ready to specify)
-- `○` = concluded, has individual spec (can be combined or continued)
+- `○` = concluded, has individual spec (shows spec status: in-progress or concluded)
 - `·` = in-progress (not ready)
 
 #### Routing Based on State
@@ -137,7 +138,7 @@ This is the simple path - no choices needed.
 
 ```
 Single concluded discussion found: {topic}
-{If has spec: "An existing specification will be continued/refined."}
+{If has spec: "An existing specification ({spec_status}) will be continued/refined."}
 
 Proceeding with this discussion.
 ```
@@ -391,11 +392,11 @@ For each grouping, show:
 
 Recommended Groupings:
 
-### 1. {Grouping Name} {if spec exists: "(specification exists)"}
+### 1. {Grouping Name} {if spec exists: "(spec: {spec_status})"}
 | Discussion | Status |
 |------------|--------|
 | {topic-a} | discussion only |
-| {topic-b} | has individual spec |
+| {topic-b} | spec: {spec_status} |
 | {topic-c} | discussion only |
 
 Coupling: {explanation}
@@ -439,7 +440,7 @@ Which would you like to start with?
 
 Grouped:
 1. {Grouping Name A} - {N} discussions
-2. {Grouping Name B} - {N} discussions (specification exists)
+2. {Grouping Name B} - {N} discussions (spec: {spec_status})
 3. {Grouping Name C} - {N} discussions
 
 Independent:
@@ -523,7 +524,7 @@ Groupings confirmed. Cache updated.
 
 Which grouping would you like to start with?
 
-1. {Grouping A} - {N} discussions {if has spec: "(specification exists)"}
+1. {Grouping A} - {N} discussions {if has spec: "(spec: {spec_status})"}
 2. {Grouping B} - {N} discussions
 ```
 
@@ -550,7 +551,7 @@ Proceed with unified specification? (y/n)
 Which discussion would you like to specify?
 
 1. {topic-1}
-2. {topic-2} (has individual spec - will continue/refine)
+2. {topic-2} (spec: {spec_status})
 3. {topic-3}
 ```
 

@@ -201,6 +201,73 @@ EOF
     local output=$(run_discovery)
 
     assert_contains "$output" 'has_individual_spec: true' "Discussion has corresponding spec"
+    assert_contains "$output" 'spec_status: "in-progress"' "Spec status is in-progress"
+
+    echo ""
+}
+
+#
+# Test: Discussion with corresponding concluded spec
+#
+test_discussion_with_concluded_spec() {
+    echo -e "${YELLOW}Test: Discussion with corresponding concluded spec${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/discussion"
+    mkdir -p "$TEST_DIR/docs/workflow/specification"
+
+    cat > "$TEST_DIR/docs/workflow/discussion/billing.md" << 'EOF'
+---
+topic: billing
+status: concluded
+date: 2026-01-20
+---
+
+# Discussion: Billing
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/specification/billing.md" << 'EOF'
+---
+topic: billing
+status: concluded
+type: feature
+date: 2026-01-21
+---
+
+# Specification: Billing
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'has_individual_spec: true' "Discussion has corresponding spec"
+    assert_contains "$output" 'spec_status: "concluded"' "Spec status is concluded"
+
+    echo ""
+}
+
+#
+# Test: Discussion without spec has no spec_status
+#
+test_discussion_without_spec_no_status() {
+    echo -e "${YELLOW}Test: Discussion without spec has no spec_status${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/discussion"
+
+    cat > "$TEST_DIR/docs/workflow/discussion/standalone.md" << 'EOF'
+---
+topic: standalone
+status: concluded
+date: 2026-01-20
+---
+
+# Discussion: Standalone
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'has_individual_spec: false' "Discussion has no spec"
+    assert_not_contains "$output" 'spec_status:' "No spec_status field when no spec exists"
 
     echo ""
 }
@@ -533,6 +600,8 @@ test_fresh_state
 test_discussions_only
 test_specifications_only
 test_discussion_with_spec
+test_discussion_with_concluded_spec
+test_discussion_without_spec_no_status
 test_spec_with_sources
 test_spec_superseded
 test_cache_none

@@ -66,13 +66,20 @@ if [ -d "$DISCUSSION_DIR" ] && [ -n "$(ls -A "$DISCUSSION_DIR" 2>/dev/null)" ]; 
 
         # Check if this discussion has a corresponding individual spec
         has_individual_spec="false"
+        spec_status=""
         if [ -f "$SPEC_DIR/${name}.md" ]; then
             has_individual_spec="true"
+            # Extract spec status in real-time (not from cache)
+            spec_status=$(extract_field "$SPEC_DIR/${name}.md" "status")
+            spec_status=${spec_status:-"in-progress"}
         fi
 
         echo "  - name: \"$name\""
         echo "    status: \"$status\""
         echo "    has_individual_spec: $has_individual_spec"
+        if [ "$has_individual_spec" = "true" ]; then
+            echo "    spec_status: \"$spec_status\""
+        fi
     done
 else
     echo "  []  # No discussions found"
