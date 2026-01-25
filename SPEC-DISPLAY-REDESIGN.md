@@ -285,7 +285,47 @@ Continue refining this specification? (y/n)
 
 ### Output 5: Prompt — Multiple Discussions, No Specs, No Cache
 
-TODO
+**Condition:** `concluded_count >= 2`, `spec_count: 0`, `cache.status: "none"`
+
+**Sequence:**
+1. Step 0 (Migrations): `[SKIP] No changes needed`
+2. Step 1 (Discovery): Returns multiple concluded discussions, no specs, no cache
+3. Step 2 (Prerequisites): Passes
+4. Step 3 (Route): Multiple discussions, no cache — prompt for analysis
+
+**Output:**
+```
+Specification Overview
+
+3 concluded discussions found. No specifications exist yet.
+
+Concluded discussions:
+  • auth-flow
+  • api-design
+  • error-handling
+
+---
+Discussions not ready for specification:
+These discussions are still in progress and must be concluded
+before they can be included in a specification.
+  · rate-limiting (in-progress)
+
+---
+Would you like me to analyze these discussions for natural groupings? (recommended)
+
+Grouping analysis identifies discussions that should become a single
+specification versus those that should stand alone. Results are cached
+and reused until discussions change.
+
+1. Analyze for groupings
+2. Pick a discussion individually
+
+Enter choice (1-2):
+```
+
+**Action:** STOP. Wait for user choice.
+- If **1**: Proceed to gather context → analyze → cache results → show groupings (Output 6)
+- If **2**: Show numbered discussion list to pick from
 
 ---
 
