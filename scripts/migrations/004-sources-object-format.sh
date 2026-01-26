@@ -44,14 +44,23 @@ if [ ! -d "$SPEC_DIR" ]; then
     return 0
 fi
 
+# Helper: Extract ONLY the frontmatter content (between first pair of --- delimiters)
+# Documents may contain --- elsewhere (horizontal rules), so sed range matching
+# can return content beyond frontmatter. Use awk for precise first-block extraction.
+extract_frontmatter() {
+    local file="$1"
+    awk 'BEGIN{c=0} /^---$/{c++; if(c==2) exit; next} c==1{print}' "$file" 2>/dev/null
+}
+
 # Helper: Check if sources are already in object format
 # Returns 0 if already migrated (has "name:" entries), 1 if not
 sources_already_object_format() {
     local file="$1"
-    # Look for "- name:" pattern within the sources block
+    # Look for "- name:" pattern within the sources block (frontmatter only)
     # This indicates the new object format
     # Using subshell with || false to ensure proper exit code without pipefail issues
-    ( sed -n '/^sources:/,/^[a-z_]*:/p' "$file" 2>/dev/null | \
+    ( extract_frontmatter "$file" | \
+        sed -n '/^sources:/,/^[a-z_]*:/p' | \
         grep -q "^[[:space:]]*-[[:space:]]*name:" 2>/dev/null ) || return 1
     return 0
 }
@@ -60,8 +69,9 @@ sources_already_object_format() {
 # Returns space-separated list of source names
 extract_simple_sources() {
     local file="$1"
-    # Use || true on greps that may not match to avoid pipefail issues
-    sed -n '/^sources:/,/^[a-z_]*:/p' "$file" 2>/dev/null | \
+    # Extract sources from frontmatter only, then find the sources block
+    extract_frontmatter "$file" | \
+        sed -n '/^sources:/,/^[a-z_]*:/p' | \
         grep -v "^sources:" | \
         grep -v "^[a-z_]*:" | \
         { grep "^[[:space:]]*-[[:space:]]" || true; } | \
@@ -114,8 +124,8 @@ for file in "$SPEC_DIR"/*.md; do
         sources=$(extract_simple_sources "$file")
 
         for src in $sources; do
-            # Clean the source name (trim whitespace)
-            src=$(echo "$src" | xargs)
+            # Clean the source name (trim whitespace, sed avoids xargs quote issues)
+            src=$(echo "$src" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
             if [ -n "$src" ]; then
                 new_sources_block="${new_sources_block}
   - name: $src
@@ -149,13 +159,17 @@ for file in "$SPEC_DIR"/*.md; do
     # Update sources block in file
     #
 
-    # Extract frontmatter
-    frontmatter=$(sed -n '1,/^---$/p' "$file" | tail -n +2 | head -n -1)
+    # Extract frontmatter (only the first block between --- delimiters)
+    frontmatter=$(extract_frontmatter "$file")
 
     if $has_sources_field; then
         # Remove old sources block from frontmatter
         # First, remove lines from "sources:" until the next top-level field or end of frontmatter
-        new_frontmatter=$(echo "$frontmatter" | sed '/^sources:/,/^[a-z_]*:/{/^sources:/d;/^[a-z_]*:/!d}')
+        new_frontmatter=$(echo "$frontmatter" | awk '
+/^sources:/ { skip=1; next }
+/^[a-z_]+:/ && skip { skip=0 }
+skip == 0 { print }
+')
     else
         # No existing sources field - use frontmatter as-is
         new_frontmatter="$frontmatter"
@@ -165,14 +179,9 @@ for file in "$SPEC_DIR"/*.md; do
     new_frontmatter="${new_frontmatter}
 ${new_sources_block}"
 
-    # Extract content after frontmatter (everything after the closing ---)
-    content=$(sed '1,/^---$/d' "$file" | sed '1,/^---$/d')
-
-    # Handle case where there's only one --- (malformed, but be safe)
-    if [ -z "$content" ]; then
-        # Try getting content after second ---
-        content=$(awk '/^---$/{count++; if(count==2){found=1; next}} found{print}' "$file")
-    fi
+    # Extract content after frontmatter (everything after the second ---)
+    # Uses awk to skip only the first two --- delimiters, preserving any --- in body content
+    content=$(awk '/^---$/ && c<2 {c++; next} c>=2 {print}' "$file")
 
     # Write new file
     {

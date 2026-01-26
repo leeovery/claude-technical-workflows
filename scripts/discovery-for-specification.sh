@@ -35,9 +35,8 @@ extract_array_field() {
     local file="$1"
     local field="$2"
     local result
-    # Look for field followed by array items (- item), excluding --- delimiters
-    result=$(sed -n '/^---$/,/^---$/p' "$file" 2>/dev/null | \
-        grep -v "^---$" | \
+    # Look for field followed by array items (- item), within frontmatter only
+    result=$(awk 'BEGIN{c=0} /^---$/{c++; if(c==2) exit; next} c==1{print}' "$file" 2>/dev/null | \
         sed -n "/^${field}:/,/^[a-z_]*:/p" | \
         grep "^[[:space:]]*-" | \
         sed 's/^[[:space:]]*-[[:space:]]*//' | \
@@ -93,7 +92,7 @@ extract_sources_with_status() {
                 current_status=$(echo "$current_status" | sed 's/^"//' | sed 's/"$//' | xargs)
             fi
         fi
-    done < <(sed -n '/^---$/,/^---$/p' "$file" 2>/dev/null | grep -v "^---$")
+    done < <(awk 'BEGIN{c=0} /^---$/{c++; if(c==2) exit; next} c==1{print}' "$file" 2>/dev/null)
 
     # Output last source if pending (end of frontmatter)
     if [ -n "$current_name" ]; then

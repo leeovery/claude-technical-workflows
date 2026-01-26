@@ -540,6 +540,291 @@ assert_contains "$content" "status: incorporated" "Status added"
 
 echo ""
 
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Sources last with --- horizontal rules in body${NC}"
+setup_fixture
+cat > "$SPEC_DIR/body-with-hr.md" << 'TESTEOF'
+---
+topic: body-with-hr
+status: concluded
+type: feature
+date: 2024-11-01
+sources:
+  - my-discussion
+---
+
+# Specification: Body With HR
+
+## Overview
+
+Some content here.
+
+---
+
+## Dependencies
+
+| Dep | Reason |
+|-----|--------|
+| core | Needed first |
+
+### Notes
+
+- The plugin architecture itself can be designed in parallel
+- Item two
+
+---
+
+## More content after second HR
+
+Final paragraph.
+TESTEOF
+
+run_migration
+content=$(cat "$SPEC_DIR/body-with-hr.md")
+
+assert_contains "$content" "- name: my-discussion" "Source converted with HR in body"
+assert_contains "$content" "status: incorporated" "Status added with HR in body"
+assert_contains "$content" "## Overview" "Overview section preserved"
+assert_contains "$content" "## Dependencies" "Dependencies section preserved"
+assert_contains "$content" "## More content after second HR" "Content after second HR preserved"
+assert_contains "$content" "Final paragraph." "Final paragraph preserved"
+assert_contains "$content" "The plugin architecture" "List item in body preserved"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Multiple sources last with rich body content${NC}"
+setup_fixture
+cat > "$SPEC_DIR/rich-body.md" << 'TESTEOF'
+---
+topic: rich-body
+status: concluded
+type: feature
+date: 2024-11-01
+sources:
+  - topic-one
+  - topic-two
+  - topic-three
+---
+
+# Specification: Rich Body
+
+## Overview
+
+Content with various markdown:
+
+- List item one
+- List item two with `code`
+
+### Subsection
+
+```bash
+echo "code block"
+tick create "Task with quotes" --priority 1
+```
+
+---
+
+## Another Section
+
+**Bold** and *italic* text.
+
+| Column A | Column B |
+|----------|----------|
+| value    | other    |
+TESTEOF
+
+run_migration
+content=$(cat "$SPEC_DIR/rich-body.md")
+
+assert_contains "$content" "- name: topic-one" "First source converted"
+assert_contains "$content" "- name: topic-two" "Second source converted"
+assert_contains "$content" "- name: topic-three" "Third source converted"
+assert_contains "$content" "## Overview" "Overview preserved"
+assert_contains "$content" 'tick create "Task with quotes"' "Code block with quotes preserved"
+assert_contains "$content" "## Another Section" "Section after HR preserved"
+assert_contains "$content" "Column A" "Table preserved"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: No sources with matching discussion and --- in body${NC}"
+setup_fixture
+cat > "$DISCUSSION_DIR/has-hr-body.md" << 'EOF'
+---
+topic: has-hr-body
+status: concluded
+date: 2024-11-01
+---
+
+# Discussion: Has HR Body
+
+## Content
+EOF
+
+cat > "$SPEC_DIR/has-hr-body.md" << 'TESTEOF'
+---
+topic: has-hr-body
+status: in-progress
+type: feature
+date: 2024-11-01
+---
+
+# Specification: Has HR Body
+
+## Overview
+
+Content here.
+
+---
+
+## Dependencies
+
+More content here.
+TESTEOF
+
+run_migration
+content=$(cat "$SPEC_DIR/has-hr-body.md")
+
+assert_contains "$content" "- name: has-hr-body" "Matching discussion added"
+assert_contains "$content" "status: incorporated" "Status set"
+assert_contains "$content" "## Overview" "Overview preserved"
+assert_contains "$content" "## Dependencies" "Dependencies preserved"
+assert_contains "$content" "More content here." "Content after HR preserved"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Real-world pattern - many sources + body with lists, tables, code, HR${NC}"
+setup_fixture
+cat > "$SPEC_DIR/tick-core-pattern.md" << 'TESTEOF'
+---
+topic: tick-core-pattern
+status: concluded
+type: feature
+date: 2026-01-25
+sources:
+  - project-fundamentals
+  - data-schema-design
+  - freshness-dual-write
+  - id-format-implementation
+  - hierarchy-dependency-model
+  - cli-command-structure-ux
+  - toon-output-format
+  - tui
+---
+
+# Specification: Tick Core Pattern
+
+## Overview
+
+Tick uses a dual-storage architecture:
+
+- **JSONL** (`tasks.jsonl`) - Source of truth
+- **SQLite** (`.tick/cache.db`) - Query cache
+
+### Task Schema
+
+| Field | Type | Required |
+|-------|------|----------|
+| `id` | string | Yes |
+| `title` | string | Yes |
+| `status` | enum | Yes |
+
+#### Field Constraints
+
+- **status**: Only valid transitions enforced
+- **priority**: Integer 0-4 only
+- **blocked_by**: Must reference existing task IDs
+
+### CLI Commands
+
+```bash
+tick create "Setup authentication" --priority 1
+tick create "Login endpoint" --blocked-by tick-a1b2
+```
+
+**Example output:**
+```
+$ tick show tick-xyz
+Error: Task 'tick-xyz' not found
+```
+
+---
+
+## Dependencies
+
+Prerequisites:
+
+| Dependency | Why Blocked |
+|------------|-------------|
+| **core** | Needed first |
+
+### Notes
+
+- The plugin architecture can be designed in parallel
+- Provider implementation requires understanding the format
+
+---
+
+## More Content
+
+Final section with content.
+TESTEOF
+
+run_migration
+content=$(cat "$SPEC_DIR/tick-core-pattern.md")
+
+assert_contains "$content" "- name: project-fundamentals" "First of 8 sources converted"
+assert_contains "$content" "- name: tui" "Last of 8 sources converted"
+assert_contains "$content" "## Overview" "Overview preserved"
+assert_contains "$content" '`tasks.jsonl`' "Inline code preserved"
+assert_contains "$content" "| Field | Type | Required |" "Table preserved"
+assert_contains "$content" 'tick create "Setup authentication"' "Code block with quotes preserved"
+assert_contains "$content" "## Dependencies" "Dependencies after HR preserved"
+assert_contains "$content" "## More Content" "Content after second HR preserved"
+assert_contains "$content" "Final section with content." "Final paragraph preserved"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Real-world pattern - legacy spec without frontmatter (should skip)${NC}"
+setup_fixture
+cat > "$SPEC_DIR/evvi-pattern.md" << 'TESTEOF'
+# Specification: API Design
+
+**Status**: Complete
+**Last Updated**: 2026-01-17
+
+---
+
+## API Philosophy
+
+Content here with **bold** and `code`.
+
+---
+
+## More Content
+
+Final content.
+TESTEOF
+
+run_migration
+content=$(cat "$SPEC_DIR/evvi-pattern.md")
+
+# Should be unchanged (no frontmatter = skip)
+assert_contains "$content" "# Specification: API Design" "Legacy H1 unchanged"
+assert_contains "$content" "Status" "Legacy status line present"
+assert_contains "$content" "## API Philosophy" "Body unchanged"
+assert_contains "$content" "## More Content" "More content unchanged"
+
+echo ""
+
 # ============================================================================
 # SUMMARY
 # ============================================================================

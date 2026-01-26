@@ -595,6 +595,190 @@ EOF
 }
 
 #
+# Test: Spec with many sources (8, tick-core pattern)
+#
+test_spec_many_sources() {
+    echo -e "${YELLOW}Test: Specification with many sources (8)${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/specification"
+    cat > "$TEST_DIR/docs/workflow/specification/tick-core.md" << 'EOF'
+---
+topic: tick-core
+status: in-progress
+type: feature
+date: 2026-01-20
+sources:
+  - name: tick-engine
+    status: incorporated
+  - name: tick-scheduler
+    status: incorporated
+  - name: tick-renderer
+    status: pending
+  - name: tick-storage
+    status: incorporated
+  - name: tick-api
+    status: pending
+  - name: tick-auth
+    status: incorporated
+  - name: tick-notifications
+    status: pending
+  - name: tick-analytics
+    status: incorporated
+---
+
+# Specification: Tick Core
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'name: "tick-core"' "Found tick-core spec"
+    assert_contains "$output" 'name: "tick-engine"' "Found tick-engine source"
+    assert_contains "$output" 'name: "tick-scheduler"' "Found tick-scheduler source"
+    assert_contains "$output" 'name: "tick-renderer"' "Found tick-renderer source"
+    assert_contains "$output" 'name: "tick-storage"' "Found tick-storage source"
+    assert_contains "$output" 'name: "tick-api"' "Found tick-api source"
+    assert_contains "$output" 'name: "tick-auth"' "Found tick-auth source"
+    assert_contains "$output" 'name: "tick-notifications"' "Found tick-notifications source"
+    assert_contains "$output" 'name: "tick-analytics"' "Found tick-analytics source"
+
+    echo ""
+}
+
+#
+# Test: Spec with --- horizontal rules in body
+#
+test_spec_with_hr_in_body() {
+    echo -e "${YELLOW}Test: Specification with --- in body content${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/specification"
+    cat > "$TEST_DIR/docs/workflow/specification/tricky-spec.md" << 'EOF'
+---
+topic: tricky-spec
+status: in-progress
+type: feature
+date: 2026-01-20
+sources:
+  - name: design-doc
+    status: incorporated
+  - name: api-review
+    status: pending
+---
+
+# Specification: Tricky Spec
+
+Some introductory content here.
+
+---
+
+## Section After HR
+
+More content below a horizontal rule.
+
+---
+
+## Another Section
+
+Even more content with another horizontal rule.
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'name: "tricky-spec"' "Found tricky-spec"
+    assert_contains "$output" 'status: "in-progress"' "Status is in-progress"
+    assert_contains "$output" 'name: "design-doc"' "Found design-doc source"
+    assert_contains "$output" 'name: "api-review"' "Found api-review source"
+    assert_not_contains "$output" 'Section After HR' "No body content leaks into output"
+    assert_not_contains "$output" 'introductory content' "No body text leaks into output"
+
+    echo ""
+}
+
+#
+# Test: Spec with empty sources array
+#
+test_spec_empty_sources() {
+    echo -e "${YELLOW}Test: Specification with empty sources${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/specification"
+    cat > "$TEST_DIR/docs/workflow/specification/empty-sources.md" << 'EOF'
+---
+topic: empty-sources
+status: in-progress
+type: feature
+date: 2026-01-20
+sources: []
+---
+
+# Specification: Empty Sources
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'name: "empty-sources"' "Found empty-sources spec"
+    assert_contains "$output" 'status: "in-progress"' "Status is in-progress"
+
+    # Count how many "sources:" lines appear - spec entry should not have sources section
+    local sources_count=$(echo "$output" | grep -c "sources:" || true)
+    TESTS_RUN=$((TESTS_RUN + 1))
+    if [ "$sources_count" -le 1 ]; then
+        echo -e "  ${GREEN}✓${NC} No sources section emitted for empty sources array"
+        TESTS_PASSED=$((TESTS_PASSED + 1))
+    else
+        echo -e "  ${RED}✗${NC} No sources section emitted for empty sources array"
+        echo -e "    Expected at most 1 sources: line, found: $sources_count"
+        TESTS_FAILED=$((TESTS_FAILED + 1))
+    fi
+
+    echo ""
+}
+
+#
+# Test: Discussion with --- horizontal rules in body
+#
+test_discussion_with_hr_in_body() {
+    echo -e "${YELLOW}Test: Discussion with --- in body content${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/discussion"
+    cat > "$TEST_DIR/docs/workflow/discussion/tricky-discussion.md" << 'EOF'
+---
+topic: tricky-discussion
+status: concluded
+date: 2026-01-20
+---
+
+# Discussion: Tricky Discussion
+
+Some discussion content.
+
+---
+
+## Decision Log
+
+We decided to use approach A.
+
+---
+
+## Open Questions
+
+None remaining.
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'name: "tricky-discussion"' "Found tricky-discussion"
+    assert_contains "$output" 'status: "concluded"' "Status is concluded"
+    assert_not_contains "$output" 'Decision Log' "No body content leaks into output"
+    assert_not_contains "$output" 'Open Questions' "No body text leaks into output"
+    assert_contains "$output" 'concluded_discussion_count: 1' "Concluded count is 1"
+
+    echo ""
+}
+
+#
 # Run all tests
 #
 echo "=========================================="
@@ -617,6 +801,10 @@ test_anchored_names
 test_current_state_checksum
 test_spec_default_status
 test_discussion_default_status
+test_spec_many_sources
+test_spec_with_hr_in_body
+test_spec_empty_sources
+test_discussion_with_hr_in_body
 
 #
 # Summary

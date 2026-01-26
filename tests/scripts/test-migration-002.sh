@@ -570,6 +570,150 @@ fi
 
 echo ""
 
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Body with --- horizontal rules preserved${NC}"
+setup_fixture
+cat > "$SPEC_DIR/hr-body.md" << 'TESTEOF'
+# Specification: Test
+
+**Status**: Complete
+**Last Updated**: 2024-01-01
+
+---
+
+## Overview
+
+Content here.
+
+---
+
+## Dependencies
+
+More content.
+
+---
+
+## Final Section
+
+End content.
+TESTEOF
+
+run_migration
+content=$(cat "$SPEC_DIR/hr-body.md")
+
+assert_contains "$content" "^status: concluded$" "Frontmatter status correct"
+assert_contains "$content" "^date: 2024-01-01$" "Frontmatter date correct"
+
+body=$(sed -n '/^## /,$p' "$SPEC_DIR/hr-body.md")
+assert_contains "$body" "^## Overview$" "Overview section preserved"
+assert_contains "$body" "^## Dependencies$" "Dependencies section preserved"
+assert_contains "$body" "^## Final Section$" "Final Section preserved"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Exact body content preservation${NC}"
+setup_fixture
+cat > "$SPEC_DIR/exact-body.md" << 'TESTEOF'
+# Specification: Exact Body
+
+**Status**: Complete
+**Type**: feature
+**Last Updated**: 2024-03-15
+
+---
+
+## Overview
+
+Content with **bold** and `code`.
+
+---
+
+## Data Model
+
+| Column | Type | Notes |
+|--------|------|-------|
+| id     | int  | PK    |
+| name   | text | required |
+
+## Code Example
+
+```php
+$value = "hello";
+echo $value;
+```
+
+## Edge Cases
+
+- Item with "quotes"
+- Item with `backticks`
+- Item with *emphasis*
+
+---
+
+## Final Notes
+
+Done.
+TESTEOF
+
+body_before=$(sed -n '/^## /,$p' "$SPEC_DIR/exact-body.md")
+run_migration
+body_after=$(sed -n '/^## /,$p' "$SPEC_DIR/exact-body.md")
+
+assert_equals "$body_after" "$body_before" "Body content exactly preserved after migration"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Building specification status with complex body${NC}"
+setup_fixture
+cat > "$SPEC_DIR/building-complex.md" << 'TESTEOF'
+# Specification: Building Complex
+
+**Status**: Building specification
+**Type**: cross-cutting
+**Last Updated**: 2024-06-10
+
+---
+
+## Overview
+
+Webhook processing system.
+
+| Event | Handler | Priority |
+|-------|---------|----------|
+| create | onCreate | high |
+| update | onUpdate | medium |
+
+---
+
+## Watchers
+
+Content about watchers.
+
+---
+
+## Integration
+
+Final integration notes.
+TESTEOF
+
+run_migration
+content=$(cat "$SPEC_DIR/building-complex.md")
+
+assert_contains "$content" "^status: in-progress$" "Building specification maps to in-progress"
+
+body=$(sed -n '/^## /,$p' "$SPEC_DIR/building-complex.md")
+assert_contains "$body" "^## Overview$" "Overview section preserved"
+assert_contains "$body" "^## Watchers$" "Watchers section preserved"
+assert_contains "$body" "^## Integration$" "Integration section preserved"
+assert_contains "$body" "| create | onCreate | high |" "Table content preserved"
+
+echo ""
+
 # ============================================================================
 # SUMMARY
 # ============================================================================
