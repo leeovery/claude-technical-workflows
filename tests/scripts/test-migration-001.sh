@@ -455,6 +455,154 @@ assert_contains "$content" "^topic: user-authentication-flow$" "Topic uses kebab
 
 echo ""
 
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Body with multiple --- horizontal rules preserved${NC}"
+setup_fixture
+cat > "$DISCUSSION_DIR/multi-hr.md" << 'TESTEOF'
+# Discussion: Multi HR
+
+**Date**: 2024-11-01
+**Status**: Exploring
+
+## Questions
+
+What is the approach?
+
+---
+
+## Answers
+
+We do X.
+
+---
+
+## Follow-up
+
+More questions here.
+
+---
+
+## Final Notes
+
+Wrap up.
+TESTEOF
+
+body_before=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/multi-hr.md")
+run_migration
+content=$(cat "$DISCUSSION_DIR/multi-hr.md")
+body_after=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/multi-hr.md")
+
+assert_contains "$content" "^status: in-progress$" "Frontmatter status is correct"
+assert_contains "$content" "^topic: multi-hr$" "Frontmatter topic is correct"
+assert_equals "$body_after" "$body_before" "All body --- horizontal rules preserved exactly"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Body with code blocks, tables, and special characters${NC}"
+setup_fixture
+cat > "$DISCUSSION_DIR/special-chars.md" << 'TESTEOF'
+# Discussion: Special Chars
+
+**Date**: 2024-11-02
+**Status**: Deciding
+
+## Overview
+
+Here is a table:
+
+| Column A | Column B | Column C |
+|----------|----------|----------|
+| value1   | value2   | value3   |
+
+## Code Example
+
+```go
+func main() {
+	fmt.Println("hello \"world\"")
+	path := "C:\\Users\\test"
+}
+```
+
+## Inline Code
+
+Use `grep -E "pattern|other"` to search.
+
+Also check `$HOME/.config` for settings.
+TESTEOF
+
+body_before=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/special-chars.md")
+run_migration
+content=$(cat "$DISCUSSION_DIR/special-chars.md")
+body_after=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/special-chars.md")
+
+assert_contains "$content" "^status: in-progress$" "Frontmatter status correct"
+assert_equals "$body_after" "$body_before" "Body with code blocks, tables, and special chars preserved exactly"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Exact body content preservation after migration${NC}"
+setup_fixture
+cat > "$DISCUSSION_DIR/exact-body.md" << 'TESTEOF'
+# Discussion: Exact Body
+
+**Date**: 2024-11-03
+**Status**: Concluded
+
+## Context
+
+This discussion can't be simplified. It has "quoted text" and backslashes: C:\path\to\file.
+
+---
+
+## Options
+
+- Option A: Use `redis-cli --scan`
+- Option B: Use the API
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| A        | Fast | Complex |
+| B        | Simple | Slow |
+
+---
+
+## Decision
+
+```bash
+#!/bin/bash
+echo "We chose option A"
+VAR='single quotes'
+VAR2="double \"escaped\" quotes"
+```
+
+---
+
+## Implementation Notes
+
+1. First step
+2. Second step
+   - Sub-item with special chars: @#$%^&*()
+   - Another sub-item
+
+Final paragraph with apostrophes: don't, won't, can't.
+TESTEOF
+
+body_before=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/exact-body.md")
+run_migration
+content=$(cat "$DISCUSSION_DIR/exact-body.md")
+body_after=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/exact-body.md")
+
+assert_contains "$content" "^status: concluded$" "Frontmatter status correct"
+assert_contains "$content" "^topic: exact-body$" "Frontmatter topic correct"
+assert_equals "$body_after" "$body_before" "Complex body content preserved exactly after migration"
+
+echo ""
+
 # ============================================================================
 # SUMMARY
 # ============================================================================

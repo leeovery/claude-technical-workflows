@@ -124,3 +124,19 @@ The `/migrate` command keeps workflow files in sync with the current system desi
 1. Create `scripts/migrations/NNN-description.sh` (e.g., `002-spec-frontmatter.sh`)
 2. The script will be run automatically in numeric order
 3. Use helper functions: `is_migrated`, `record_migration`, `report_update`, `report_skip`
+
+**Critical: Frontmatter extraction in bash scripts**
+
+Workflow documents may contain `---` horizontal rules in body content. NEVER use `sed -n '/^---$/,/^---$/p'` to extract frontmatter — it matches ALL `---` pairs, not just the first frontmatter block, causing body content to leak into extraction results and potential content loss during file rewrites.
+
+Always use this awk pattern for safe frontmatter extraction:
+```bash
+awk 'BEGIN{c=0} /^---$/{c++; if(c==2) exit; next} c==1{print}' "$file"
+```
+
+For content after frontmatter (preserving all body `---`):
+```bash
+awk '/^---$/ && c<2 {c++; next} c>=2 {print}' "$file"
+```
+
+Also avoid BSD sed incompatibilities: `sed '/range/{cmd1;cmd2}'` syntax fails on macOS. Use awk or separate `sed -e` expressions instead.

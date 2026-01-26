@@ -677,6 +677,111 @@ fi
 
 echo ""
 
+echo -e "${YELLOW}Test: Body with --- horizontal rules preserved${NC}"
+setup_fixture
+cat > "$PLAN_DIR/hr-rules.md" << 'TESTEOF'
+---
+format: local-markdown
+---
+
+# Implementation Plan: HR Rules
+
+**Date**: 2024-12-01
+**Status**: Draft
+**Specification**: `docs/workflow/specification/hr-rules.md`
+
+## Phase 1: Setup
+
+Setup tasks here.
+
+---
+
+## Phase 2: Core
+
+Core tasks here.
+
+---
+
+## Phase 3: Cleanup
+
+Cleanup tasks here.
+TESTEOF
+
+run_migration
+content=$(cat "$PLAN_DIR/hr-rules.md")
+
+assert_contains "$content" "^format: local-markdown$" "Format preserved in frontmatter"
+assert_contains "$content" "^topic: hr-rules$" "Topic extracted from filename"
+assert_contains "$content" "^status: in-progress$" "Status mapped correctly"
+
+body_after=$(sed -n '/^## /,$p' "$PLAN_DIR/hr-rules.md")
+assert_contains "$body_after" "^## Phase 1: Setup$" "Phase 1 section preserved"
+assert_contains "$body_after" "^## Phase 2: Core$" "Phase 2 section preserved"
+assert_contains "$body_after" "^## Phase 3: Cleanup$" "Phase 3 section preserved"
+assert_contains "$body_after" "^---$" "Horizontal rules preserved in body"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Exact body content preservation${NC}"
+setup_fixture
+cat > "$PLAN_DIR/exact-body.md" << 'TESTEOF'
+---
+format: beads
+epic: PROJ-123
+---
+
+# Plan Reference: Exact Body
+
+**Specification**: `docs/workflow/specification/exact-body.md`
+**Created**: 2026-01-10
+
+## Overview
+
+Plan overview paragraph.
+
+---
+
+## Phase 1: Database
+
+| Task | Status | Notes |
+|------|--------|-------|
+| Create migrations | pending | Schema first |
+| Seed data | pending | After migrations |
+
+```php
+Schema::create('users', function (Blueprint $table) {
+    $table->id();
+});
+```
+
+---
+
+## Phase 2: API
+
+| Task | Status | Notes |
+|------|--------|-------|
+| REST endpoints | pending | CRUD |
+| Auth middleware | pending | JWT |
+TESTEOF
+
+body_before=$(sed -n '/^## /,$p' "$PLAN_DIR/exact-body.md")
+
+run_migration
+
+body_after=$(sed -n '/^## /,$p' "$PLAN_DIR/exact-body.md")
+
+assert_equals "$body_after" "$body_before" "Body content exactly preserved after migration"
+
+content=$(cat "$PLAN_DIR/exact-body.md")
+assert_contains "$content" "^format: beads$" "Format preserved"
+assert_contains "$content" "^plan_id: PROJ-123$" "Epic migrated to plan_id"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
 # ============================================================================
 # SUMMARY
 # ============================================================================

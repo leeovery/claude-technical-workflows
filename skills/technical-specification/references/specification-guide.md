@@ -148,6 +148,11 @@ topic: {topic-name}
 status: in-progress
 type: feature
 date: YYYY-MM-DD  # Use today's actual date
+sources:
+  - name: discussion-one
+    status: incorporated
+  - name: discussion-two
+    status: pending
 ---
 
 # Specification: [Topic Name]
@@ -169,6 +174,45 @@ date: YYYY-MM-DD  # Use today's actual date
 - **status**: `in-progress` (building) or `concluded` (complete)
 - **type**: `feature` (something to build) or `cross-cutting` (patterns/policies)
 - **date**: Last updated date
+- **sources**: Array of source discussions with incorporation status (see below)
+
+### Sources and Incorporation Status
+
+**All specifications must track their sources**, even when built from a single discussion. This enables proper tracking when additional discussions are later added to the same grouping.
+
+When a specification is built from discussion(s), track each source with its incorporation status:
+
+```yaml
+sources:
+  - name: auth-flow
+    status: incorporated
+  - name: api-design
+    status: pending
+```
+
+**Status values:**
+- `pending` - Source has been selected for this specification but content extraction is not complete
+- `incorporated` - Source content has been fully extracted and woven into the specification
+
+**When to update source status:**
+
+1. **When creating the specification**: All sources start as `pending`
+2. **After completing exhaustive extraction from a source**: Mark that source as `incorporated`
+3. **When adding a new source to an existing spec**: Add it with `status: pending`
+
+**How to determine if a source is incorporated:**
+
+A source is `incorporated` when you have:
+- Performed exhaustive extraction (reviewed ALL content in the source for relevant material)
+- Presented and logged all relevant content from that source
+- No more content from that source needs to be extracted
+
+**Important**: The specification's overall `status: concluded` should only be set when:
+- All sources are marked as `incorporated`
+- Both review phases are complete
+- User has signed off
+
+If a new source is added to a concluded specification (via grouping analysis), the specification effectively needs updating - even if the file still says `status: concluded`, the presence of `pending` sources indicates work remains.
 
 ## Specification Types
 

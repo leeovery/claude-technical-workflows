@@ -84,16 +84,18 @@ for file in "$PLAN_DIR"/*.md; do
     topic_kebab=$(basename "$file" .md)
 
     # Extract format from existing frontmatter (if present)
-    format_value=$(sed -n '/^---$/,/^---$/p' "$file" 2>/dev/null | grep "^format:" | sed 's/^format:[[:space:]]*//' | xargs || echo "")
+    # Use awk to extract only the first frontmatter block (between first pair of --- delimiters)
+    # This avoids matching --- horizontal rules in body content
+    format_value=$(awk 'BEGIN{c=0} /^---$/{c++; if(c==2) exit; next} c==1{print}' "$file" 2>/dev/null | grep "^format:" | sed 's/^format:[[:space:]]*//' | xargs || echo "")
     if [ -z "$format_value" ]; then
         format_value="MISSING"  # No default - missing format is an error
     fi
 
     # Extract plan_id from existing frontmatter - could be 'epic' (beads) or 'project' (linear/backlog)
     # These are migrated to a unified 'plan_id' field
-    plan_id_value=$(sed -n '/^---$/,/^---$/p' "$file" 2>/dev/null | grep "^epic:" | sed 's/^epic:[[:space:]]*//' | xargs || echo "")
+    plan_id_value=$(awk 'BEGIN{c=0} /^---$/{c++; if(c==2) exit; next} c==1{print}' "$file" 2>/dev/null | grep "^epic:" | sed 's/^epic:[[:space:]]*//' | xargs || echo "")
     if [ -z "$plan_id_value" ]; then
-        plan_id_value=$(sed -n '/^---$/,/^---$/p' "$file" 2>/dev/null | grep "^project:" | sed 's/^project:[[:space:]]*//' | xargs || echo "")
+        plan_id_value=$(awk 'BEGIN{c=0} /^---$/{c++; if(c==2) exit; next} c==1{print}' "$file" 2>/dev/null | grep "^project:" | sed 's/^project:[[:space:]]*//' | xargs || echo "")
     fi
 
     # Extract status from **Status**: Value
