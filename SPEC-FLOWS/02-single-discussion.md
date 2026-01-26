@@ -61,14 +61,10 @@ Key:
     none — no specification file exists yet
 
 ---
-Proceeding with "Auth Flow".
-
-Create specification from this discussion? (y/n)
+Automatically proceeding with "Auth Flow".
 ```
 
-**STOP.** Wait for user.
-
-#### User responds: y
+Step 3 auto-proceeds — no prompt needed since Step 7 immediately follows.
 
 ### Step 7: Confirm Selection
 
@@ -106,7 +102,7 @@ Invoke the technical-specification skill.
 
 ---
 
-#### Alternate: User declines at Step 3
+#### Alternate: User declines at Step 7
 
 **User responds: n**
 
@@ -178,14 +174,10 @@ Key:
     in-progress — specification work is ongoing
 
 ---
-Proceeding with "Auth Flow".
-
-Continue refining this specification? (y/n)
+Automatically proceeding with "Auth Flow".
 ```
 
-**STOP.** Wait for user.
-
-#### User responds: y
+Step 3 auto-proceeds — no prompt needed since Step 7 immediately follows.
 
 ### Step 7: Confirm Selection
 
@@ -253,9 +245,7 @@ Key:
     concluded — specification is complete
 
 ---
-Proceeding with "Auth Flow".
-
-Continue refining this specification? (y/n)
+Automatically proceeding with "Auth Flow".
 ```
 
 ### Step 7: Confirm Selection

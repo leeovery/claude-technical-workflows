@@ -226,14 +226,10 @@ Key:
     none — no specification file exists yet
 
 ---
-Proceeding with "Auth Flow".
-
-Create specification from this discussion? (y/n)
+Automatically proceeding with "Auth Flow".
 ```
 
-**Action:** STOP. Wait for user confirmation.
-- If **y**: Proceed to Step 7 (confirm selection) → Step 8 (invoke skill)
-- If **n**: Graceful exit — "Understood. You can run /start-discussion to continue working on discussions, or re-run this command when ready."
+**Action:** Auto-proceed to Step 7 (confirm selection). Single-discussion paths skip the Step 3 confirmation since Step 7 immediately follows — two consecutive y/n prompts with nothing in between would be redundant. The user confirms once at Step 7.
 
 **Note:** Uses same format as groupings view for consistency. Single-discussion items are first-class, not special-cased.
 
@@ -270,16 +266,12 @@ Key:
     in-progress — specification work is ongoing
 
 ---
-Proceeding with "Auth Flow".
-
-Continue refining this specification? (y/n)
+Automatically proceeding with "Auth Flow".
 ```
 
-**Action:** STOP. Wait for user confirmation.
-- If **y**: Proceed to Step 7 (confirm selection) → Step 8 (invoke skill)
-- If **n**: Graceful exit — "Understood. You can run /start-discussion to continue working on discussions, or re-run this command when ready."
+**Action:** Auto-proceed to Step 7 (confirm selection). Single-discussion paths skip the Step 3 confirmation since Step 7 immediately follows — two consecutive y/n prompts with nothing in between would be redundant. The user confirms once at Step 7.
 
-**Note:** Same format as Output 3, but shows existing spec progress and uses "Continue refining" prompt.
+**Note:** Same format as Output 3, but shows existing spec progress. Both use auto-proceed to Step 7.
 
 ---
 
