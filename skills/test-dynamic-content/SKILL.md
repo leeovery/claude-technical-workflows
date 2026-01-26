@@ -1,11 +1,12 @@
 ---
-description: Test dynamic content - auto-executes discovery script before Claude sees the prompt
+name: test-dynamic-content
+description: "Test dynamic content injection. Verifies that the !backtick syntax auto-executes the discovery script before Claude sees the prompt. Use when testing whether dynamic context injection is working."
 allowed-tools: Bash(scripts/discovery-for-specification.sh)
 ---
 
 # Dynamic Content Test
 
-This command tests whether dynamic content (`!` backtick syntax) causes the discovery script to execute automatically before Claude receives the prompt.
+This skill tests whether dynamic content injection (`!` backtick syntax) causes the discovery script to execute automatically before Claude sees the prompt.
 
 ## Discovery Output (Dynamic Content)
 
