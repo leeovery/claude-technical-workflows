@@ -10,7 +10,7 @@ Plans can be stored in different formats.
 
 ## Presenting the Choice
 
-Present the formats from the [Available Formats](#available-formats) list below as a numbered choice. For each format, show the name, a one-line description, and the "Best for" line. Then ask the user to pick a number.
+Present the [Available Formats](#available-formats) list below to the user as written — including description, pros, cons, and "best for" — so they can make an informed choice. Number each format and ask the user to pick a number.
 
 **STOP.** Wait for the user to choose.
 
