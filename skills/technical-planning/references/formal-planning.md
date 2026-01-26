@@ -46,7 +46,7 @@ From the specification, identify:
 - Architectural choices
 - Edge cases identified
 - Constraints and requirements
-- Whether a Dependencies section exists (you will handle these in Step 3)
+- Whether a Dependencies section exists (you will handle these in Step 4)
 
 #### Define Phases
 
@@ -62,32 +62,66 @@ Present the proposed phase structure. For each phase, show:
 - What it accomplishes and why it comes in this order
 - High-level acceptance criteria
 
-**STOP.** Present your proposed phase structure and wait for user confirmation before breaking phases into tasks. Do not proceed.
+**STOP.** Present your proposed phase structure and wait for user confirmation before proceeding. Do not proceed.
 
 ---
 
-## Step 2: Detail Each Phase
+## Step 2: Present Phase Task Overview
 
-Work through phases **one at a time**, in order. For each phase:
+Take the first (or next) phase and break it into tasks. Present a high-level overview — task names and one-line descriptions — so the user can see the shape of the phase before committing to the detail of each task.
 
-1. **Break the phase into tasks** — each task is one TDD cycle (one thing to build, one test to prove it)
-2. **Write the full task template** for each task (Problem, Solution, Outcome, Do, Acceptance Criteria, Tests, Context) — see [Task Design](#task-design) for the required structure and field requirements
-3. **Address edge cases** relevant to this phase — each gets its own task or is explicitly handled within a task
-4. **Add code examples** only for novel patterns not obvious to implement
-5. **Flag anything unclear** with `[needs-info]` — do not guess or invent
+For each task, show:
+- Task name (clear action statement)
+- One-line summary of what it accomplishes
+- Edge cases it will cover (if any)
 
-Present the phase's tasks to the user. For each task, show the full template. Highlight:
-- How tasks are ordered and any dependencies between them
-- Edge cases covered
-- Any `[needs-info]` flags that need resolution
+This overview establishes the scope and ordering. The user should be able to see whether the phase is well-structured, whether tasks are in the right order, and whether anything is missing or unnecessary — before investing time in writing out full task detail.
 
-**STOP.** Present the phase's tasks and wait for user confirmation before proceeding to the next phase. Do not proceed.
-
-**Write the confirmed phase to the plan file before starting the next phase.** The plan grows incrementally — phase by phase, not all at once. Repeat this step for each phase.
+**STOP.** Present the phase task overview and wait for user confirmation. Do not proceed to task detail until the task list is agreed.
 
 ---
 
-## Step 3: Resolve External Dependencies
+## Step 3: Detail, Approve, and Log Each Task
+
+Work through the agreed task list **one task at a time**. For each task:
+
+#### 1. Present the Full Task
+
+Write the complete task using the required template (Problem, Solution, Outcome, Do, Acceptance Criteria, Tests, Context) — see [Task Design](#task-design) for the required structure and field requirements.
+
+Present it to the user **in the format it will be written to the plan**. The output format adapter determines the exact format. What the user sees is what gets logged — no changes between approval and writing.
+
+#### 2. Discuss If Needed
+
+The user may:
+- Request adjustments to the task content
+- Ask questions about scope, granularity, or approach
+- Flag that something doesn't match the specification
+- Identify missing edge cases or acceptance criteria
+
+Incorporate feedback and re-present the updated task. Repeat until the user is satisfied.
+
+#### 3. Approve
+
+Wait for explicit approval before logging. The user confirms the task is ready to be written.
+
+#### 4. Log
+
+Write the approved task to the plan — verbatim, as presented. Do not modify content between approval and writing. The output format adapter determines how tasks are written (appending markdown, creating issues, etc.).
+
+#### 5. Next Task
+
+Move to the next task in the phase. Present it, discuss, approve, log. Continue until all tasks in the phase are logged.
+
+#### Phase Complete
+
+After all tasks in the current phase are logged, confirm the phase is complete. Then return to **Step 2** for the next phase.
+
+**Repeat Steps 2–3 for each phase** until all phases are complete.
+
+---
+
+## Step 4: Resolve External Dependencies
 
 After all phases are detailed and written, handle external dependencies — things this plan needs from other topics or systems.
 
@@ -126,7 +160,7 @@ Skip the resolution and reverse check — there is nothing to resolve against. D
 
 ---
 
-## Step 4: Plan Review
+## Step 5: Plan Review
 
 After all phases are detailed, confirmed, and dependencies are documented, perform the comprehensive two-phase review. This is the most important quality gate in the planning process — it ensures the plan faithfully represents the specification and is structurally ready for implementation.
 
