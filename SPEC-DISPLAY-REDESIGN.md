@@ -528,7 +528,84 @@ Enter choice (1-4):
 
 ### Output 9: Show Groupings — Multiple Discussions, With Specs, Valid Cache
 
-See "Agreed Display Format" section above.
+**Condition:** `concluded_count >= 2`, `spec_count >= 1`, `cache.status: "valid"`
+
+**Sequence:**
+1. Step 0 (Migrations): `[SKIP] No changes needed`
+2. Step 1 (Discovery): Returns multiple concluded discussions, specs with sources, valid cache
+3. Step 2 (Prerequisites): Passes
+4. Step 3 (Route): Valid cache + specs — show groupings with full status
+
+**Output:**
+```
+Specification Overview
+
+Recommended breakdown for specifications with their source discussions.
+
+1. Authentication System
+   └─ Spec: in-progress (2 of 3 sources extracted)
+   └─ Discussions:
+      ├─ auth-flow (extracted)
+      ├─ user-sessions (extracted)
+      └─ oauth-integration (pending)
+
+2. API Design
+   └─ Spec: none
+   └─ Discussions:
+      ├─ api-endpoints (ready)
+      └─ error-handling (ready)
+
+3. Logging Strategy
+   └─ Spec: none
+   └─ Discussions:
+      └─ logging-strategy (ready)
+
+4. Caching Layer
+   └─ Spec: concluded (1 of 1 sources extracted)
+   └─ Discussions:
+      └─ caching-layer (extracted)
+
+---
+Discussions not ready for specification:
+These discussions are still in progress and must be concluded
+before they can be included in a specification.
+  · rate-limiting (in-progress)
+  · webhook-design (in-progress)
+
+---
+Key:
+
+  Discussion status:
+    extracted — content has been incorporated into the specification
+    pending   — listed as source but content not yet extracted
+    ready     — concluded and available to be specified
+
+  Spec status:
+    none        — no specification file exists yet
+    in-progress — specification work is ongoing
+    concluded   — specification is complete
+
+---
+Tip: To restructure groupings or pull a discussion into its own
+specification, choose "Re-analyze" and provide guidance.
+
+---
+What would you like to do?
+
+1. Continue "Authentication System" — 1 source pending extraction
+2. Start "API Design" — 2 ready discussions
+3. Start "Logging Strategy" — 1 ready discussion
+4. Refine "Caching Layer" — concluded spec
+5. Re-analyze groupings
+
+Enter choice (1-5):
+```
+
+**Action:** STOP. Wait for user choice.
+- If **1-4**: Proceed to confirm selection → gather additional context → invoke skill
+- If **5 (Re-analyze)**: Delete cache → loop back to context gathering step → analyze → show updated groupings
+
+**Note:** Most complete variant — all three discussion statuses visible, mix of spec states, full key. Structurally identical to Output 6 but with real spec data.
 
 ---
 
