@@ -33,22 +33,26 @@ Planning translates the specification into actionable structure. This translatio
 
 ---
 
-## Step 1: Read Specification and Define Phases
+## Step 1: Read Specification
 
-Read the specification **in full**. Not a scan, not a summary — read every section, every decision, every edge case. The specification must be fully digested before any structural decisions are made. You cannot design meaningful phases without understanding the complete scope of what needs to be built.
+Read the specification **in full**. Not a scan, not a summary — read every section, every decision, every edge case. The specification must be fully digested before any structural decisions are made.
 
 The specification contains validated decisions. Your job is to translate it into an actionable plan, not to review or reinterpret it.
 
 **The specification is your sole input.** Everything you need is in the specification — do not reference other documents or prior source materials.
 
-From the specification, identify:
+From the specification, absorb:
 - Key decisions and rationale
 - Architectural choices
 - Edge cases identified
 - Constraints and requirements
-- Whether a Dependencies section exists (you will handle these in Step 4)
+- Whether a Dependencies section exists (you will handle these in Step 5)
 
-#### Define Phases
+Do not present or summarize the specification back to the user — it has already been signed off. Proceed directly to Step 2.
+
+---
+
+## Step 2: Define Phases
 
 With the full specification understood, break it into logical phases:
 - Each independently testable
@@ -57,23 +61,71 @@ With the full specification understood, break it into logical phases:
 
 Understanding what tasks belong in each phase is necessary to determine the right ordering. Consider the natural dependencies between areas of functionality — what must exist before something else can be built. This informs both phase boundaries and phase sequence.
 
-Present the proposed phase structure. For each phase, show:
-- Phase name and goal
-- What it accomplishes and why it comes in this order
-- High-level acceptance criteria
+Present the proposed phase structure using this format:
+
+```
+Phase {N}: {Phase Name}
+  Goal: {What this phase accomplishes}
+  Why this order: {Why this phase comes at this position in the sequence}
+  Acceptance criteria:
+    - [ ] {First verifiable criterion}
+    - [ ] {Second verifiable criterion}
+```
+
+**Example:**
+
+```
+Phase 1: Foundation — Event Model and Storage
+  Goal: Establish the core data model and persistence layer for calendar events
+  Why this order: All subsequent phases depend on events being storable and retrievable
+  Acceptance criteria:
+    - [ ] Events can be created with required fields (title, start, end)
+    - [ ] Events persist to the database and can be retrieved by ID
+    - [ ] Validation rejects events with missing required fields
+
+Phase 2: Core — Recurring Events
+  Goal: Support recurring event patterns (daily, weekly, monthly)
+  Why this order: Recurrence extends the event model from Phase 1
+  Acceptance criteria:
+    - [ ] Events can be created with a recurrence rule
+    - [ ] Recurring instances are generated correctly for a given date range
+    - [ ] Editing a single instance does not affect other instances
+```
 
 **STOP.** Present your proposed phase structure and wait for user confirmation before proceeding. Do not proceed.
 
 ---
 
-## Step 2: Present Phase Task Overview
+## Step 3: Present Phase Task Overview
 
-Take the first (or next) phase and break it into tasks. Present a high-level overview — task names and one-line descriptions — so the user can see the shape of the phase before committing to the detail of each task.
+Take the first (or next) phase and break it into tasks. Present a high-level overview so the user can see the shape of the phase before committing to the detail of each task.
 
-For each task, show:
-- Task name (clear action statement)
-- One-line summary of what it accomplishes
-- Edge cases it will cover (if any)
+Present the task overview using this format:
+
+```
+Phase {N}: {Phase Name}
+
+  1. {Task Name} — {One-line summary}
+     Edge cases: {comma-separated list, or "none"}
+
+  2. {Task Name} — {One-line summary}
+     Edge cases: {comma-separated list, or "none"}
+```
+
+**Example:**
+
+```
+Phase 1: Foundation — Event Model and Storage
+
+  1. Create Event model and migration — Define the events table and Eloquent model with required fields
+     Edge cases: none
+
+  2. Implement event creation endpoint — POST /api/events with validation and persistence
+     Edge cases: overlapping time ranges, past dates
+
+  3. Implement event retrieval — GET /api/events/{id} and GET /api/events with date filtering
+     Edge cases: empty result sets, invalid date ranges
+```
 
 This overview establishes the scope and ordering. The user should be able to see whether the phase is well-structured, whether tasks are in the right order, and whether anything is missing or unnecessary — before investing time in writing out full task detail.
 
@@ -81,7 +133,7 @@ This overview establishes the scope and ordering. The user should be able to see
 
 ---
 
-## Step 3: Detail, Approve, and Log Each Task
+## Step 4: Detail, Approve, and Log Each Task
 
 Work through the agreed task list **one task at a time**. For each task:
 
@@ -115,13 +167,19 @@ Move to the next task in the phase. Present it, discuss, approve, log. Continue 
 
 #### Phase Complete
 
-After all tasks in the current phase are logged, confirm the phase is complete. Then return to **Step 2** for the next phase.
+After all tasks in the current phase are logged:
 
-**Repeat Steps 2–3 for each phase** until all phases are complete.
+```
+Phase {N}: {Phase Name} — complete ({M} tasks logged).
+```
+
+Then return to **Step 3** for the next phase.
+
+**Repeat Steps 3–4 for each phase** until all phases are complete.
 
 ---
 
-## Step 4: Resolve External Dependencies
+## Step 5: Resolve External Dependencies
 
 After all phases are detailed and written, handle external dependencies — things this plan needs from other topics or systems.
 
@@ -160,7 +218,7 @@ Skip the resolution and reverse check — there is nothing to resolve against. D
 
 ---
 
-## Step 5: Plan Review
+## Step 6: Plan Review
 
 After all phases are detailed, confirmed, and dependencies are documented, perform the comprehensive two-phase review. This is the most important quality gate in the planning process — it ensures the plan faithfully represents the specification and is structurally ready for implementation.
 
