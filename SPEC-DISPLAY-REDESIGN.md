@@ -795,6 +795,7 @@ Skills are workflow-agnostic. The handoff passes sources and output path to the 
 ## Still To Decide
 
 - Discovery script improvements (explicit counts) — design agreed, implementation pending
+- Planning command: `discovery-for-planning.sh` does not extract `superseded_by` and `start-planning.md` does not display superseded specs differently. A superseded spec won't be accidentally planned (it lacks `status: concluded`), but it shows as `(superseded) - not ready` with no indication of what replaced it. Should show something like `× auth-flow (superseded → authentication-system)` and the discovery script should output `superseded_by` so the command can display the replacement.
 - Remove this tracking file when implementation is complete
 
 ## Pending Questions
