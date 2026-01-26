@@ -8,7 +8,7 @@ Cache exists but discussions have changed since analysis. Auto-proceeds to re-an
 
 ## Scenario A: User Confirms Analysis → Picks Grouping
 
-**Steps:** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
+**Steps:** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 ### Step 0: Run Migrations
 
@@ -153,7 +153,7 @@ What would you like to do?
 Enter choice (1-4):
 ```
 
-Flow continues to Steps 7 → 8 → 9 as normal.
+Flow continues to Steps 7 → 8 as normal.
 
 ---
 

@@ -8,7 +8,7 @@ Specs exist and cache exists but is outdated. Show existing specs from frontmatt
 
 ## Scenario A: User Chooses "Analyze for Groupings"
 
-**Steps:** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
+**Steps:** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 ### Step 0: Run Migrations
 
@@ -210,13 +210,13 @@ What would you like to do?
 Enter choice (1-5):
 ```
 
-Flow continues to Steps 7 → 8 → 9 as normal.
+Flow continues to Steps 7 → 8 as normal.
 
 ---
 
 ## Scenario B: User Chooses "Continue Existing Spec"
 
-**Steps:** 0 → 1 → 2 → 3 → 7 → 8 → 9
+**Steps:** 0 → 1 → 2 → 3 → 7 → 8
 
 Steps 0-3 identical to Scenario A.
 
@@ -240,13 +240,7 @@ Proceed? (y/n)
 
 #### User responds: y
 
-### Step 8: Gather Additional Context
-
-(Standard prompt)
-
-#### User responds: none
-
-### Step 9: Invoke Skill
+### Step 8: Invoke Skill
 
 ```
 Specification session for: Authentication System
@@ -257,9 +251,7 @@ Sources for reference:
 - docs/workflow/discussion/auth-flow.md
 - docs/workflow/discussion/user-sessions.md
 
-Context: This specification already exists. Review and refine it based on the source discussions and any new context provided.
-
-Additional context: None provided.
+Context: This specification already exists. Review and refine it based on the source discussions.
 
 ---
 Invoke the technical-specification skill.

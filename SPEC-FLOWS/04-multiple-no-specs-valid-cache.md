@@ -8,7 +8,7 @@ Groupings have been analyzed previously and discussions haven't changed. Show gr
 
 ## Scenario A: User Picks a Grouping
 
-**Steps:** 0 → 1 → 2 → 3 → 7 → 8 → 9
+**Steps:** 0 → 1 → 2 → 3 → 7 → 8
 
 ### Step 0: Run Migrations
 
@@ -118,23 +118,7 @@ Proceed? (y/n)
 
 #### User responds: y
 
-### Step 8: Gather Additional Context
-
-```
-Before invoking the specification skill:
-
-1. Any additional context or priorities to consider?
-2. Any constraints or changes since the discussion(s) concluded?
-3. Are there existing partial implementations or related documentation I should review?
-
-(Say 'none' or 'continue' if nothing to add)
-```
-
-**STOP.** Wait for user.
-
-#### User responds: none
-
-### Step 9: Invoke Skill
+### Step 8: Invoke Skill
 
 ```
 Specification session for: API Authentication
@@ -144,8 +128,6 @@ Sources:
 - docs/workflow/discussion/api-design.md
 
 Output: docs/workflow/specification/api-authentication.md
-
-Additional context: None provided.
 
 ---
 Invoke the technical-specification skill.
@@ -157,7 +139,7 @@ Invoke the technical-specification skill.
 
 ## Scenario B: User Chooses "Re-analyze"
 
-**Steps:** 0 → 1 → 2 → 3 → (re-analyze) → 4 → 5 → 6 → 7 → 8 → 9
+**Steps:** 0 → 1 → 2 → 3 → (re-analyze) → 4 → 5 → 6 → 7 → 8
 
 Steps 0-3 are identical to Scenario A.
 
@@ -238,4 +220,4 @@ What would you like to do?
 Enter choice (1-4):
 ```
 
-Flow continues to Steps 7 → 8 → 9 as normal.
+Flow continues to Steps 7 → 8 as normal.

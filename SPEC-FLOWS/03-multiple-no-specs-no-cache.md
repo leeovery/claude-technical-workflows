@@ -8,7 +8,7 @@ First time running specification with multiple discussions and no prior analysis
 
 ## Scenario A: User Confirms Analysis → Picks Grouping
 
-**Steps:** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
+**Steps:** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 ### Step 0: Run Migrations
 
@@ -198,23 +198,7 @@ Proceed? (y/n)
 
 #### User responds: y
 
-### Step 8: Gather Additional Context
-
-```
-Before invoking the specification skill:
-
-1. Any additional context or priorities to consider?
-2. Any constraints or changes since the discussion(s) concluded?
-3. Are there existing partial implementations or related documentation I should review?
-
-(Say 'none' or 'continue' if nothing to add)
-```
-
-**STOP.** Wait for user.
-
-#### User responds: none
-
-### Step 9: Invoke Skill
+### Step 8: Invoke Skill
 
 ```
 Specification session for: API Authentication
@@ -224,8 +208,6 @@ Sources:
 - docs/workflow/discussion/api-design.md
 
 Output: docs/workflow/specification/api-authentication.md
-
-Additional context: None provided.
 
 ---
 Invoke the technical-specification skill.
@@ -237,7 +219,7 @@ Invoke the technical-specification skill.
 
 ## Scenario B: User Chooses "Unify All" from Step 6
 
-**Steps:** 0 → 1 → 2 → 3 → 4 → 5 → 6 → (unify) → 7 → 8 → 9
+**Steps:** 0 → 1 → 2 → 3 → 4 → 5 → 6 → (unify) → 7 → 8
 
 Steps 0-6 are identical to Scenario A.
 
@@ -264,13 +246,7 @@ Proceed? (y/n)
 
 #### User responds: y
 
-### Step 8: Gather Additional Context
-
-(Standard prompt)
-
-#### User responds: none
-
-### Step 9: Invoke Skill
+### Step 8: Invoke Skill
 
 ```
 Specification session for: Unified
@@ -281,8 +257,6 @@ Sources:
 - docs/workflow/discussion/error-handling.md
 
 Output: docs/workflow/specification/unified.md
-
-Additional context: None provided.
 
 ---
 Invoke the technical-specification skill.
@@ -380,7 +354,7 @@ Enter choice (1-2):
 
 **Note:** Only 1 grouping exists, so "Unify" option is not shown. No tip about restructuring either since re-analyze is already visible.
 
-Flow continues to Steps 7 → 8 → 9 as normal.
+Flow continues to Steps 7 → 8 as normal.
 
 ---
 

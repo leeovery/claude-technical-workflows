@@ -232,7 +232,7 @@ Create specification from this discussion? (y/n)
 ```
 
 **Action:** STOP. Wait for user confirmation.
-- If **y**: Proceed to gather additional context, then invoke skill
+- If **y**: Proceed to Step 7 (confirm selection) → Step 8 (invoke skill)
 - If **n**: Graceful exit — "Understood. You can run /start-discussion to continue working on discussions, or re-run this command when ready."
 
 **Note:** Uses same format as groupings view for consistency. Single-discussion items are first-class, not special-cased.
@@ -276,7 +276,7 @@ Continue refining this specification? (y/n)
 ```
 
 **Action:** STOP. Wait for user confirmation.
-- If **y**: Proceed to gather additional context, then invoke skill
+- If **y**: Proceed to Step 7 (confirm selection) → Step 8 (invoke skill)
 - If **n**: Graceful exit — "Understood. You can run /start-discussion to continue working on discussions, or re-run this command when ready."
 
 **Note:** Same format as Output 3, but shows existing spec progress and uses "Continue refining" prompt.
@@ -389,7 +389,7 @@ Enter choice (1-5):
 ```
 
 **Action:** STOP. Wait for user choice.
-- If **1-3**: Proceed to Step 7 (confirm selection) → Step 8 (additional context) → Step 9 (invoke skill)
+- If **1-3**: Proceed to Step 7 (confirm selection) → Step 8 (invoke skill)
 - If **4 (Unify)**: Update cache to single unified grouping → proceed to Step 7 (confirm) with all discussions as sources
 - If **5 (Re-analyze)**: Delete cache → loop back to context gathering step → analyze → show updated groupings
 
@@ -503,7 +503,7 @@ Enter choice (1-3):
 
 **Action:** STOP. Wait for user choice.
 - If **1 (Analyze)**: Step 4 (context gathering) → Step 5 (analyze) → Step 6 (show groupings)
-- If **2-3**: Proceed to Step 7 (confirm selection) → Step 8 (additional context) → Step 9 (invoke skill)
+- If **2-3**: Proceed to Step 7 (confirm selection) → Step 8 (invoke skill)
 
 **Note:** Existing specifications are shown using data from the spec files' `sources` frontmatter — no cache needed. The unassigned discussions are shown as a flat list because without a grouping analysis we can't recommend how they should be organized. This is why "Analyze for groupings" is the recommended first action — it will organize unassigned discussions and may suggest incorporating them into existing specs.
 
@@ -586,7 +586,7 @@ Enter choice (1-6):
 ```
 
 **Action:** STOP. Wait for user choice.
-- If **1-4**: Proceed to Step 7 (confirm selection) → Step 8 (additional context) → Step 9 (invoke skill)
+- If **1-4**: Proceed to Step 7 (confirm selection) → Step 8 (invoke skill)
 - If **5 (Unify)**: Update cache to single unified grouping → proceed to Step 7 (confirm) with all discussions as sources. Existing specs will be incorporated and superseded.
 - If **6 (Re-analyze)**: Delete cache → loop back to context gathering step → analyze → show updated groupings
 
@@ -657,7 +657,7 @@ Enter choice (1-3):
 
 **Action:** STOP. Wait for user choice.
 - If **1 (Analyze)**: Delete stale cache → Step 4 (context gathering) → Step 5 (analyze) → Step 6 (show groupings)
-- If **2-3**: Proceed to Step 7 (confirm selection) → Step 8 (additional context) → Step 9 (invoke skill)
+- If **2-3**: Proceed to Step 7 (confirm selection) → Step 8 (invoke skill)
 
 **Note:** Identical to Output 8 except for the stale cache message. Stale cache is not used for display — existing specs shown from spec files' frontmatter. Unassigned discussions shown as flat list.
 
@@ -700,7 +700,7 @@ current_state:
 
 ## Reorganized Step Structure
 
-The original command had Steps 0-11. With the redesign, the flow simplifies to Steps 0-9.
+The original command had Steps 0-11. With the redesign, the flow simplifies to Steps 0-8.
 
 | Step | Purpose | Notes |
 |------|---------|-------|
@@ -712,23 +712,23 @@ The original command had Steps 0-11. With the redesign, the flow simplifies to S
 | 5 | Analyze discussions + cache | Read discussions, form groupings, save cache |
 | 6 | Display groupings | Shows Output 6 or 9 format, stops for input |
 | 7 | Confirm selection | After user picks a grouping/discussion |
-| 8 | Gather additional context | "Any constraints or changes?" |
-| 9 | Invoke skill | Handoff to technical-specification skill |
+| 8 | Invoke skill | Handoff to technical-specification skill |
 
 ### Removed / Merged Steps
 
 - **Old Step 5 (Check Cache Status)**: Removed — cache status is already checked during routing in Step 3. By the time we reach the analysis flow, we know the cache is stale or absent.
 - **Old Step 7 (Present Grouping Options)**: Replaced by new Step 6. The old format used tables and different vocabulary. Now uses nested tree format.
 - **Old Step 8 (Select Grouping)**: Eliminated as a separate step. The old 4-option menu (Proceed as recommended / Combine differently / Single specification / Individual specifications) is gone. Selection is now built into the numbered menu shown in Steps 3 and 6. Restructuring is handled via "Re-analyze with guidance." "Pick individually" has been removed — grouping analysis is part of the specification process. "Unify all" option added to groupings display for when user wants a single specification.
+- **Old Step 10 (Gather Additional Context)**: Removed. By this point, the discussion files contain everything needed. If context has changed since the discussion concluded, the user should reopen the discussion phase. Injecting ephemeral context here creates undocumented decisions that break the artifact chain.
 
 ### Flows Through Steps
 
-- **Single discussion (Outputs 3-4):** 0 → 1 → 2 → 3 → 7 → 8 → 9
-- **Multiple, no specs, analyze (Outputs 5/7):** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 (auto-proceed to analysis)
-- **Multiple, with specs, analyze (Outputs 8/10):** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
-- **Multiple, with specs, continue (Outputs 8/10):** 0 → 1 → 2 → 3 → 7 → 8 → 9
-- **Multiple, valid cache (Outputs 6/9):** 0 → 1 → 2 → 3 → 7 → 8 → 9 (Step 3 shows groupings directly)
-- **Multiple, valid cache, unify (Outputs 6/9):** 0 → 1 → 2 → 3 → (update cache) → 7 → 8 → 9
+- **Single discussion (Outputs 3-4):** 0 → 1 → 2 → 3 → 7 → 8
+- **Multiple, no specs, analyze (Outputs 5/7):** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 (auto-proceed to analysis)
+- **Multiple, with specs, analyze (Outputs 8/10):** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
+- **Multiple, with specs, continue (Outputs 8/10):** 0 → 1 → 2 → 3 → 7 → 8
+- **Multiple, valid cache (Outputs 6/9):** 0 → 1 → 2 → 3 → 7 → 8 (Step 3 shows groupings directly)
+- **Multiple, valid cache, unify (Outputs 6/9):** 0 → 1 → 2 → 3 → (update cache) → 7 → 8
 - **Re-analyze:** from Step 3 or 6 → delete cache → 4 → 5 → 6
 - **Decline at confirm:** Step 7 → back to Step 3 or 6 (whichever displayed the menu)
 
@@ -796,21 +796,9 @@ After completion:
 Proceed? (y/n)
 ```
 
-### Step 8: Gather Additional Context (Unchanged)
+### Step 8: Invoke Skill
 
-```
-Before invoking the specification skill:
-
-1. Any additional context or priorities to consider?
-2. Any constraints or changes since the discussion(s) concluded?
-3. Are there existing partial implementations or related documentation I should review?
-
-(Say 'none' or 'continue' if nothing to add)
-```
-
-### Step 9: Skill Handoff (Unchanged)
-
-Skills are workflow-agnostic. The handoff simply passes sources and output path to the technical-specification skill. No changes needed — the skill doesn't need to know about groupings, caches, or source statuses.
+Skills are workflow-agnostic. The handoff passes sources and output path to the technical-specification skill. No additional context gathering step — by this point, the discussion files contain everything needed. If context has changed since the discussion concluded, the user should go back to the discussion phase.
 
 ## Still To Decide
 

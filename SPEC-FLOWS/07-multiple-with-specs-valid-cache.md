@@ -8,7 +8,7 @@ The richest scenario — specs exist and groupings are cached and current. Full 
 
 ## Scenario A: User Picks a Grouping With Pending Sources
 
-**Steps:** 0 → 1 → 2 → 3 → 7 → 8 → 9
+**Steps:** 0 → 1 → 2 → 3 → 7 → 8
 
 ### Step 0: Run Migrations
 
@@ -180,23 +180,7 @@ Proceed? (y/n)
 
 #### User responds: y
 
-### Step 8: Gather Additional Context
-
-```
-Before invoking the specification skill:
-
-1. Any additional context or priorities to consider?
-2. Any constraints or changes since the discussion(s) concluded?
-3. Are there existing partial implementations or related documentation I should review?
-
-(Say 'none' or 'continue' if nothing to add)
-```
-
-**STOP.** Wait for user.
-
-#### User responds: The oauth-integration discussion covers third-party OAuth providers. Make sure to align with the existing auth-flow patterns already in the spec.
-
-### Step 9: Invoke Skill
+### Step 8: Invoke Skill
 
 ```
 Specification session for: Authentication System
@@ -208,9 +192,7 @@ Sources for reference:
 - docs/workflow/discussion/user-sessions.md
 - docs/workflow/discussion/oauth-integration.md
 
-Context: This specification already exists. Review and refine it based on the source discussions and any new context provided.
-
-Additional context: The oauth-integration discussion covers third-party OAuth providers. Make sure to align with the existing auth-flow patterns already in the spec.
+Context: This specification already exists. Review and refine it based on the source discussions.
 
 ---
 Invoke the technical-specification skill.
@@ -222,7 +204,7 @@ Invoke the technical-specification skill.
 
 ## Scenario B: User Starts a New Spec From Grouping
 
-**Steps:** 0 → 1 → 2 → 3 → 7 → 8 → 9
+**Steps:** 0 → 1 → 2 → 3 → 7 → 8
 
 Steps 0-3 identical to Scenario A.
 
@@ -244,13 +226,7 @@ Proceed? (y/n)
 
 #### User responds: y
 
-### Step 8: Gather Additional Context
-
-(Standard prompt)
-
-#### User responds: none
-
-### Step 9: Invoke Skill
+### Step 8: Invoke Skill
 
 ```
 Specification session for: API Design
@@ -260,8 +236,6 @@ Sources:
 - docs/workflow/discussion/error-handling.md
 
 Output: docs/workflow/specification/api-design.md
-
-Additional context: None provided.
 
 ---
 Invoke the technical-specification skill.
@@ -273,7 +247,7 @@ Invoke the technical-specification skill.
 
 ## Scenario C: User Refines a Concluded Spec
 
-**Steps:** 0 → 1 → 2 → 3 → 7 → 8 → 9
+**Steps:** 0 → 1 → 2 → 3 → 7 → 8
 
 Steps 0-3 identical to Scenario A.
 
@@ -294,13 +268,7 @@ Proceed? (y/n)
 
 #### User responds: y
 
-### Step 8: Gather Additional Context
-
-(Standard prompt)
-
-#### User responds: We need to add Redis cluster support. The current spec only covers single-node Redis.
-
-### Step 9: Invoke Skill
+### Step 8: Invoke Skill
 
 ```
 Specification session for: Caching Layer
@@ -310,9 +278,7 @@ Continuing existing: docs/workflow/specification/caching-layer.md
 Sources for reference:
 - docs/workflow/discussion/caching-layer.md
 
-Context: This specification already exists. Review and refine it based on the source discussions and any new context provided.
-
-Additional context: We need to add Redis cluster support. The current spec only covers single-node Redis.
+Context: This specification already exists. Review and refine it based on the source discussions.
 
 ---
 Invoke the technical-specification skill.
@@ -324,7 +290,7 @@ Invoke the technical-specification skill.
 
 ## Scenario D: User Re-analyzes
 
-**Steps:** 0 → 1 → 2 → 3 → (re-analyze) → 4 → 5 → 6 → 7 → 8 → 9
+**Steps:** 0 → 1 → 2 → 3 → (re-analyze) → 4 → 5 → 6 → 7 → 8
 
 Steps 0-3 identical to Scenario A.
 
@@ -419,13 +385,13 @@ What would you like to do?
 Enter choice (1-5):
 ```
 
-Flow continues to Steps 7 → 8 → 9 as normal.
+Flow continues to Steps 7 → 8 as normal.
 
 ---
 
 ## Scenario E: User Chooses "Unify All"
 
-**Steps:** 0 → 1 → 2 → 3 → (unify) → 7 → 8 → 9
+**Steps:** 0 → 1 → 2 → 3 → (unify) → 7 → 8
 
 Steps 0-3 identical to Scenario A.
 
@@ -460,11 +426,7 @@ Proceed? (y/n)
 
 #### User responds: y
 
-### Step 8: Gather Additional Context
-
-(Standard prompt)
-
-### Step 9: Invoke Skill
+### Step 8: Invoke Skill
 
 ```
 Specification session for: Unified
@@ -491,8 +453,6 @@ After the unified specification is complete, mark the incorporated specs as supe
     status: superseded
     superseded_by: unified
 
-Additional context: None provided.
-
 ---
 Invoke the technical-specification skill.
 ```
@@ -513,7 +473,7 @@ If the user sees the groupings in Step 6 after a fresh analysis and wants to res
 
 ## Scenario G: New Grouped Spec Supersedes Individual Spec
 
-**Steps:** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
+**Steps:** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 This shows what happens when a grouping includes a discussion that already has its own individual spec.
 
@@ -552,7 +512,7 @@ Proceed? (y/n)
 
 #### User responds: y
 
-### Step 9: Invoke Skill
+### Step 8: Invoke Skill
 
 ```
 Specification session for: API Authentication
@@ -572,8 +532,6 @@ After the api-authentication specification is complete, mark the incorporated sp
 
     status: superseded
     superseded_by: api-authentication
-
-Additional context: None provided.
 
 ---
 Invoke the technical-specification skill.

@@ -8,7 +8,7 @@ Auto-proceed paths — only one concluded discussion exists, so no selection men
 
 **Entry state:** 1 concluded discussion (auth-flow), 1 in-progress, no specs
 
-**Steps:** 0 → 1 → 2 → 3 → 7 → 8 → 9
+**Steps:** 0 → 1 → 2 → 3 → 7 → 8
 
 ### Step 0: Run Migrations
 
@@ -87,23 +87,7 @@ Proceed? (y/n)
 
 #### User responds: y
 
-### Step 8: Gather Additional Context
-
-```
-Before invoking the specification skill:
-
-1. Any additional context or priorities to consider?
-2. Any constraints or changes since the discussion(s) concluded?
-3. Are there existing partial implementations or related documentation I should review?
-
-(Say 'none' or 'continue' if nothing to add)
-```
-
-**STOP.** Wait for user.
-
-#### User responds: none
-
-### Step 9: Invoke Skill
+### Step 8: Invoke Skill
 
 Handoff to technical-specification skill:
 ```
@@ -113,8 +97,6 @@ Sources:
 - docs/workflow/discussion/auth-flow.md
 
 Output: docs/workflow/specification/auth-flow.md
-
-Additional context: None provided.
 
 ---
 Invoke the technical-specification skill.
@@ -141,7 +123,7 @@ discussions, or re-run this command when ready.
 
 **Entry state:** 1 concluded discussion (auth-flow), spec exists (in-progress)
 
-**Steps:** 0 → 1 → 2 → 3 → 7 → 8 → 9
+**Steps:** 0 → 1 → 2 → 3 → 7 → 8
 
 ### Step 0: Run Migrations
 
@@ -222,23 +204,7 @@ Proceed? (y/n)
 
 #### User responds: y
 
-### Step 8: Gather Additional Context
-
-```
-Before invoking the specification skill:
-
-1. Any additional context or priorities to consider?
-2. Any constraints or changes since the discussion(s) concluded?
-3. Are there existing partial implementations or related documentation I should review?
-
-(Say 'none' or 'continue' if nothing to add)
-```
-
-**STOP.** Wait for user.
-
-#### User responds: Focus on the edge cases around token expiry.
-
-### Step 9: Invoke Skill
+### Step 8: Invoke Skill
 
 Handoff to technical-specification skill:
 ```
@@ -249,9 +215,7 @@ Continuing existing: docs/workflow/specification/auth-flow.md
 Sources for reference:
 - docs/workflow/discussion/auth-flow.md
 
-Context: This specification already exists. Review and refine it based on the source discussions and any new context provided.
-
-Additional context: Focus on the edge cases around token expiry.
+Context: This specification already exists. Review and refine it based on the source discussions.
 
 ---
 Invoke the technical-specification skill.
