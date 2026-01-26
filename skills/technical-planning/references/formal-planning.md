@@ -35,42 +35,27 @@ Planning translates the specification into actionable structure. This translatio
 
 ## Step 1: Read Specification and Define Phases
 
-Read the specification **in full**. Do not summarize it — work from the complete document throughout the planning process. The specification contains validated decisions. Your job is to translate it into an actionable plan, not to review or reinterpret it.
+Read the specification **in full**. Not a scan, not a summary — read every section, every decision, every edge case. The specification must be fully digested before any structural decisions are made. You cannot design meaningful phases without understanding the complete scope of what needs to be built.
 
-From the specification, extract:
+The specification contains validated decisions. Your job is to translate it into an actionable plan, not to review or reinterpret it.
+
+**The specification is your sole input.** Everything you need is in the specification — do not reference other documents or prior source materials.
+
+From the specification, identify:
 - Key decisions and rationale
 - Architectural choices
 - Edge cases identified
 - Constraints and requirements
-- **External dependencies** (from the Dependencies section)
-
-**The specification is your sole input.** Everything you need is in the specification — do not reference other documents or prior source materials.
-
-#### Extract External Dependencies
-
-The specification's Dependencies section lists things this feature needs from other topics/systems. These are **external dependencies** — things outside this plan's scope that must exist for implementation to proceed.
-
-Copy these into the plan index file (see "External Dependencies Section" below). During planning:
-
-1. **Check for existing plans**: For each dependency, search existing plan files for a matching topic
-2. **If plan exists**: Try to identify specific tasks that satisfy the dependency. Query the output format to find relevant tasks. If ambiguous, ask the user which tasks apply.
-3. **If no plan exists**: Record the dependency in natural language — it will be linked later via `/link-dependencies` or when that topic is planned.
-
-**Optional reverse check**: Ask the user: "Would you like me to check if any existing plans depend on this topic?"
-
-If yes:
-1. Scan other plan indexes for External Dependencies that reference this topic
-2. For each match, identify which task(s) in the current plan satisfy that dependency
-3. Update the other plan's dependency entry with the task ID (unresolved → resolved)
-
-Alternatively, the user can run `/link-dependencies` later to resolve dependencies across all plans in bulk.
+- Whether a Dependencies section exists (you will handle these in Step 3)
 
 #### Define Phases
 
-Break the specification into logical phases:
+With the full specification understood, break it into logical phases:
 - Each independently testable
 - Each has acceptance criteria
 - Progression: Foundation → Core → Edge cases → Refinement
+
+Understanding what tasks belong in each phase is necessary to determine the right ordering. Consider the natural dependencies between areas of functionality — what must exist before something else can be built. This informs both phase boundaries and phase sequence.
 
 Present the proposed phase structure. For each phase, show:
 - Phase name and goal
@@ -102,9 +87,48 @@ Present the phase's tasks to the user. For each task, show the full template. Hi
 
 ---
 
-## Step 3: Plan Review
+## Step 3: Resolve External Dependencies
 
-After all phases are detailed and confirmed, perform the comprehensive two-phase review. This is the most important quality gate in the planning process — it ensures the plan faithfully represents the specification and is structurally ready for implementation.
+After all phases are detailed and written, handle external dependencies — things this plan needs from other topics or systems.
+
+#### If the specification has a Dependencies section
+
+The specification's Dependencies section lists what this feature needs from outside its own scope. These must be documented in the plan so implementation knows what is blocked and what is available.
+
+1. **Document each dependency** in the plan's External Dependencies section using the format described in [dependencies.md](dependencies.md). Initially, record each as unresolved.
+
+2. **Resolve where possible** — For each dependency, check whether a plan already exists for that topic:
+   - If a plan exists, identify the specific task(s) that satisfy the dependency. Query the output format to find relevant tasks. If ambiguous, ask the user which tasks apply. Update the dependency entry from unresolved → resolved with the task reference.
+   - If no plan exists, leave the dependency as unresolved. It will be linked later via `/link-dependencies` or when that topic is planned.
+
+3. **Reverse check** — Check whether any existing plans have unresolved dependencies that reference *this* topic. Now that this plan exists with specific tasks:
+   - Scan other plan files for External Dependencies entries that mention this topic
+   - For each match, identify which task(s) in the current plan satisfy that dependency
+   - Update the other plan's dependency entry with the task reference (unresolved → resolved)
+
+#### If the specification has no Dependencies section
+
+Document this explicitly in the plan:
+
+```markdown
+## External Dependencies
+
+No external dependencies.
+```
+
+This makes it clear that dependencies were considered and none exist — not that they were overlooked.
+
+#### If no other plans exist
+
+Skip the resolution and reverse check — there is nothing to resolve against. Document the dependencies as unresolved. They will be linked when other topics are planned, or via `/link-dependencies`.
+
+**STOP.** Present a summary of the dependency state: what was documented, what was resolved, what remains unresolved, and any reverse resolutions made. Wait for user confirmation before proceeding.
+
+---
+
+## Step 4: Plan Review
+
+After all phases are detailed, confirmed, and dependencies are documented, perform the comprehensive two-phase review. This is the most important quality gate in the planning process — it ensures the plan faithfully represents the specification and is structurally ready for implementation.
 
 **This review is not optional.** See [Plan Review](#plan-review) below for the full process.
 
@@ -530,10 +554,6 @@ After both review phases:
 5. **Final commit** — Commit the concluded plan
 
 > **CHECKPOINT**: Do not proceed to sign-off if tracking files still exist. They indicate incomplete review work.
-
-## External Dependencies Section
-
-The plan index file must include an External Dependencies section. See **[dependencies.md](dependencies.md)** for the format, states, and how they affect implementation.
 
 ## Commit Frequently
 
