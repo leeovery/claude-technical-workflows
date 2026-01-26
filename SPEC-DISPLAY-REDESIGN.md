@@ -611,7 +611,72 @@ Enter choice (1-5):
 
 ### Output 10: Prompt — Multiple Discussions, With Specs, Stale Cache
 
-TODO
+**Condition:** `concluded_count >= 2`, `spec_count >= 1`, `cache.status: "stale"`
+
+**Sequence:**
+1. Step 0 (Migrations): `[SKIP] No changes needed`
+2. Step 1 (Discovery): Returns multiple concluded discussions, specs exist, stale cache
+3. Step 2 (Prerequisites): Passes
+4. Step 3 (Route): Specs exist, stale cache — show specs, recommend re-analysis
+
+**Output:**
+```
+Specification Overview
+
+5 concluded discussions found. 2 specifications exist.
+
+Existing specifications:
+
+1. Authentication System
+   └─ Spec: in-progress (2 of 2 sources extracted)
+   └─ Discussions:
+      ├─ auth-flow (extracted)
+      └─ user-sessions (extracted)
+
+2. Caching Layer
+   └─ Spec: concluded (1 of 1 sources extracted)
+   └─ Discussions:
+      └─ caching-layer (extracted)
+
+Concluded discussions not in a specification:
+  • api-design
+  • error-handling
+  • oauth-integration
+
+---
+Discussions not ready for specification:
+These discussions are still in progress and must be concluded
+before they can be included in a specification.
+  · rate-limiting (in-progress)
+
+---
+Key:
+
+  Discussion status:
+    extracted — content has been incorporated into the specification
+
+  Spec status:
+    in-progress — specification work is ongoing
+    concluded   — specification is complete
+
+---
+A previous grouping analysis exists but is outdated — discussions
+have changed since it was created. Re-analysis is required.
+
+1. Analyze for groupings (recommended)
+2. Continue "Authentication System" — in-progress
+3. Continue "Caching Layer" — concluded
+4. Pick a discussion individually
+
+Enter choice (1-4):
+```
+
+**Action:** STOP. Wait for user choice.
+- If **1 (Analyze)**: Delete stale cache → context gathering step → analyze → cache → show groupings (Output 9)
+- If **2-3**: Proceed to confirm selection → gather additional context → invoke skill
+- If **4 (Pick individually)**: Show numbered discussion list to pick from
+
+**Note:** Identical to Output 8 except for the stale cache message. Stale cache is not used for display — existing specs shown from spec files' frontmatter. Unassigned discussions shown as flat list.
 
 ---
 
