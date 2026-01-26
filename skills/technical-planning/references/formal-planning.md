@@ -16,7 +16,7 @@ Planning translates the specification into actionable structure. This translatio
 
 ### Process Expectations
 
-**This is a step-by-step process with mandatory checkpoints.** You must work through each step sequentially, presenting your work at designated checkpoints and waiting for user confirmation before proceeding. Steps marked with **⛔ CHECKPOINT** are gates — you cannot pass them without user confirmation.
+**This is a step-by-step process with mandatory stop points.** You must work through each step sequentially. Steps end with **STOP** — you must present your work, wait for explicit user confirmation, and only then proceed to the next step.
 
 **Never one-shot the plan.** Do not write the entire plan document in a single operation. The plan is built incrementally — one phase at a time, with the user confirming the structure at each stage. A one-shot plan that misses requirements, hallucinates content, or structures tasks poorly wastes more time than a careful, step-by-step process. Go slow to go fast.
 
@@ -31,11 +31,9 @@ Planning translates the specification into actionable structure. This translatio
 
 **Never invent to fill gaps.** If the specification doesn't address something, flag it with `[needs-info]` and ask the user. The specification is the golden document — everything in the plan must trace back to it. Assuming or guessing — even when it seems reasonable — is not acceptable. Surface the problem immediately rather than continuing and hoping to address it later.
 
-## The Planning Process
+---
 
-Work through these steps sequentially. Steps marked with **⛔ CHECKPOINT** require you to stop, present your work, and wait for explicit user confirmation before proceeding. Do not skip checkpoints. Do not combine steps. Do not write ahead.
-
-### Step 1: Read Specification and Define Phases
+## Step 1: Read Specification and Define Phases
 
 Read the specification (`docs/workflow/specification/{topic}.md`) **in full**. Do not summarize it — work from the complete document throughout the planning process. The specification has already been validated and signed off. Your job is to translate it into an actionable plan, not to review or reinterpret it.
 
@@ -74,18 +72,16 @@ Break the specification into logical phases:
 - Each has acceptance criteria
 - Progression: Foundation → Core → Edge cases → Refinement
 
-> **⛔ CHECKPOINT**: Present the proposed phase structure:
->
-> For each phase, show:
-> - Phase name and goal
-> - What it accomplishes and why it comes in this order
-> - High-level acceptance criteria
->
-> *"Here's the phase structure I'm proposing: [phases]. Does this breakdown and ordering make sense? Would you restructure anything?"*
->
-> **Wait for user confirmation before breaking phases into tasks.**
+Present the proposed phase structure. For each phase, show:
+- Phase name and goal
+- What it accomplishes and why it comes in this order
+- High-level acceptance criteria
 
-### Step 2: Detail Each Phase
+**STOP.** Present your proposed phase structure and wait for user confirmation before breaking phases into tasks. Do not proceed.
+
+---
+
+## Step 2: Detail Each Phase
 
 Work through phases **one at a time**, in order. For each phase:
 
@@ -95,24 +91,24 @@ Work through phases **one at a time**, in order. For each phase:
 4. **Add code examples** only for novel patterns not obvious to implement
 5. **Flag anything unclear** with `[needs-info]` — do not guess or invent
 
-> **⛔ CHECKPOINT** (after each phase): Present the phase's tasks to the user.
->
-> For each task, show the full template. Highlight:
-> - How tasks are ordered and any dependencies between them
-> - Edge cases covered
-> - Any `[needs-info]` flags that need resolution
->
-> *"Here are the tasks for Phase N: [Name]. [Present tasks]. Do these cover the specification requirements for this phase? Anything to add, remove, or restructure?"*
->
-> **Wait for user confirmation before proceeding to the next phase.**
->
-> **Write the confirmed phase to the plan file before starting the next phase.** The plan grows incrementally — phase by phase, not all at once.
+Present the phase's tasks to the user. For each task, show the full template. Highlight:
+- How tasks are ordered and any dependencies between them
+- Edge cases covered
+- Any `[needs-info]` flags that need resolution
 
-### Step 3: Plan Review
+**STOP.** Present the phase's tasks and wait for user confirmation before proceeding to the next phase. Do not proceed.
+
+**Write the confirmed phase to the plan file before starting the next phase.** The plan grows incrementally — phase by phase, not all at once. Repeat this step for each phase.
+
+---
+
+## Step 3: Plan Review
 
 After all phases are detailed and confirmed, perform the comprehensive two-phase review. This is the most important quality gate in the planning process — it ensures the plan faithfully represents the specification and is structurally ready for implementation.
 
 **This review is not optional.** See [Plan Review](#plan-review) below for the full process.
+
+---
 
 ## Phase Design
 
