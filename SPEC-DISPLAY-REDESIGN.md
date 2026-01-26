@@ -715,10 +715,117 @@ current_state:
 - `pending_source_count` — total sources pending extraction across all specs
 - `specs_needing_work_count` — specs with at least one pending source
 
+## Reorganized Step Structure
+
+The original command had Steps 0-11. With the redesign, the flow simplifies to Steps 0-9.
+
+| Step | Purpose | Notes |
+|------|---------|-------|
+| 0 | Run migrations | Unchanged |
+| 1 | Run discovery | Unchanged |
+| 2 | Check prerequisites | Outputs 1-2 (block paths) |
+| 3 | Route and display | Outputs 3-10 (includes menu, stops for input) |
+| 4 | Gather analysis context | Only if user chose "Analyze" |
+| 5 | Analyze discussions + cache | Read discussions, form groupings, save cache |
+| 6 | Display groupings | Shows Output 6 or 9 format, stops for input |
+| 7 | Confirm selection | After user picks a grouping/discussion |
+| 8 | Gather additional context | "Any constraints or changes?" |
+| 9 | Invoke skill | Handoff to technical-specification skill |
+
+### Removed / Merged Steps
+
+- **Old Step 5 (Check Cache Status)**: Removed — cache status is already checked during routing in Step 3. By the time we reach the analysis flow, we know the cache is stale or absent.
+- **Old Step 7 (Present Grouping Options)**: Replaced by new Step 6. The old format used tables and different vocabulary. Now uses nested tree format.
+- **Old Step 8 (Select Grouping)**: Eliminated as a separate step. The old 4-option menu (Proceed as recommended / Combine differently / Single specification / Individual specifications) is gone. Selection is now built into the numbered menu shown in Steps 3 and 6. Restructuring is handled via "Re-analyze with guidance." Picking a single discussion is always available in the menu where relevant.
+
+### Flows Through Steps
+
+- **Single discussion (Outputs 3-4):** 0 → 1 → 2 → 3 → 7 → 8 → 9
+- **Multiple, pick individually:** 0 → 1 → 2 → 3 → (pick) → 7 → 8 → 9
+- **Multiple, analyze:** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
+- **Multiple, valid cache (Outputs 6/9):** 0 → 1 → 2 → 3 → 7 → 8 → 9 (Step 3 shows groupings directly)
+- **Re-analyze:** from Step 3 or 6 → delete cache → 4 → 5 → 6
+- **Decline at confirm:** Step 7 → back to Step 3 or 6 (whichever displayed the menu)
+
+### Step 7: Confirm Selection Formats
+
+**Creating a new spec (from grouping or individual pick):**
+```
+Creating specification: Authentication System
+
+Sources:
+  • auth-flow
+  • user-sessions
+
+Output: docs/workflow/specification/authentication-system.md
+
+Proceed? (y/n)
+```
+
+**Continuing a spec with pending sources:**
+```
+Continuing specification: Authentication System
+
+Existing: docs/workflow/specification/authentication-system.md (in-progress)
+
+Sources to extract:
+  • oauth-integration (pending)
+
+Previously extracted (for reference):
+  • auth-flow
+  • user-sessions
+
+Proceed? (y/n)
+```
+
+**Refining a concluded spec:**
+```
+Refining specification: Caching Layer
+
+Existing: docs/workflow/specification/caching-layer.md (concluded)
+
+All sources extracted:
+  • caching-layer
+
+Proceed? (y/n)
+```
+
+**Creating a new grouped spec that supersedes individual specs:**
+```
+Creating specification: Authentication System
+
+Sources:
+  • auth-flow (has individual spec — will be incorporated)
+  • user-sessions
+
+Output: docs/workflow/specification/authentication-system.md
+
+After completion:
+  specification/auth-flow.md → marked as superseded
+
+Proceed? (y/n)
+```
+
+### Step 8: Gather Additional Context (Unchanged)
+
+```
+Before invoking the specification skill:
+
+1. Any additional context or priorities to consider?
+2. Any constraints or changes since the discussion(s) concluded?
+3. Are there existing partial implementations or related documentation I should review?
+
+(Say 'none' or 'continue' if nothing to add)
+```
+
+### Step 9: Skill Handoff (Unchanged)
+
+Skills are workflow-agnostic. The handoff simply passes sources and output path to the technical-specification skill. No changes needed — the skill doesn't need to know about groupings, caches, or source statuses.
+
 ## Still To Decide
 
-- How this integrates with rest of the flow (Steps 4-11)
-- Whether any changes needed to the skill handoff format
+- Discovery script improvements (explicit counts) — design agreed, implementation pending
+- Remove this tracking file when implementation is complete
 
 ## Related Files
 
