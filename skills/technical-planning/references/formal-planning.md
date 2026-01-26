@@ -4,11 +4,7 @@
 
 ---
 
-You are creating the formal implementation plan from the specification.
-
-## Before You Begin
-
-**Confirm output format with user.** Ask which format they want, then load the appropriate output adapter from the main skill file. If you don't know which format, ask.
+You are creating the formal implementation plan from the specification. The output format has already been chosen and its adapter is loaded alongside this reference.
 
 ## Planning is a Gated Process
 
