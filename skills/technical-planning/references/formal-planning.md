@@ -161,39 +161,47 @@ Orient the user:
 
 > "Task list for Phase {N} is agreed. I'll work through each task one at a time — presenting the full detail, discussing if needed, and logging it to the plan once approved."
 
-Work through the agreed task list **one task at a time**. For each task:
+Work through the agreed task list **one task at a time**.
 
-#### 1. Present the Full Task
+#### Present
 
 Write the complete task using the required template (Problem, Solution, Outcome, Do, Acceptance Criteria, Tests, Context) — see [Task Design](#task-design) for the required structure and field requirements.
 
 Present it to the user **in the format it will be written to the plan**. The output format adapter determines the exact format. What the user sees is what gets logged — no changes between approval and writing.
 
-#### 2. Discuss If Needed
+After presenting, ask:
+
+> **Task {M} of {total}: {Task Name}**
+>
+> **To proceed, choose one:**
+> - **"Approve"** — Task is confirmed. I'll log it to the plan verbatim.
+> - **"Adjust"** — Tell me what to change.
+
+**STOP.** Wait for the user's response.
+
+#### If adjust
 
 The user may:
-- Request adjustments to the task content
+- Request changes to the task content
 - Ask questions about scope, granularity, or approach
 - Flag that something doesn't match the specification
 - Identify missing edge cases or acceptance criteria
 
-Incorporate feedback and re-present the updated task. Repeat until the user is satisfied.
+Incorporate feedback and re-present the updated task **in full**. Then ask the same choice again. Repeat until approved.
 
-#### 3. Approve
+#### If approved
 
-Wait for explicit approval before logging. The user confirms the task is ready to be written.
+Log the task to the plan — verbatim, as presented. Do not modify content between approval and writing. The output format adapter determines how tasks are written (appending markdown, creating issues, etc.).
 
-#### 4. Log
+After logging, confirm:
 
-Write the approved task to the plan — verbatim, as presented. Do not modify content between approval and writing. The output format adapter determines how tasks are written (appending markdown, creating issues, etc.).
+> "Task {M} of {total}: {Task Name} — logged."
 
-#### 5. Next Task
+#### Next task or phase complete
 
-Move to the next task in the phase. Present it, discuss, approve, log. Continue until all tasks in the phase are logged.
+**If tasks remain in this phase:** → Return to the top of **Step 4** with the next task. Present it, ask, wait.
 
-#### Phase Complete
-
-After all tasks in the current phase are logged:
+**If all tasks in this phase are logged:**
 
 ```
 Phase {N}: {Phase Name} — complete ({M} tasks logged).
@@ -201,7 +209,7 @@ Phase {N}: {Phase Name} — complete ({M} tasks logged).
 
 → Return to **Step 3** for the next phase.
 
-**Repeat Steps 3–4 for each phase** until all phases are complete.
+**If all phases are complete:** → Proceed to **Step 5**.
 
 ---
 
