@@ -414,7 +414,46 @@ Enter choice (1-4):
 
 ### Output 7: Prompt — Multiple Discussions, No Specs, Stale Cache
 
-TODO
+**Condition:** `concluded_count >= 2`, `spec_count: 0`, `cache.status: "stale"`
+
+**Sequence:**
+1. Step 0 (Migrations): `[SKIP] No changes needed`
+2. Step 1 (Discovery): Returns multiple concluded discussions, no specs, stale cache
+3. Step 2 (Prerequisites): Passes
+4. Step 3 (Route): Stale cache — must re-analyze
+
+**Output:**
+```
+Specification Overview
+
+3 concluded discussions found. No specifications exist yet.
+
+Concluded discussions:
+  • auth-flow
+  • api-design
+  • error-handling
+
+---
+Discussions not ready for specification:
+These discussions are still in progress and must be concluded
+before they can be included in a specification.
+  · rate-limiting (in-progress)
+
+---
+A previous grouping analysis exists but is outdated — discussions
+have changed since it was created. Re-analysis is required.
+
+1. Analyze for groupings (recommended)
+2. Pick a discussion individually
+
+Enter choice (1-2):
+```
+
+**Action:** STOP. Wait for user choice.
+- If **1 (Analyze)**: Delete stale cache → context gathering step → analyze → cache → show groupings (Output 6)
+- If **2 (Pick individually)**: Show numbered discussion list to pick from, skip analysis entirely
+
+**Note:** Essentially Output 5 with a stale cache explanation. Flow after choosing is identical.
 
 ---
 
