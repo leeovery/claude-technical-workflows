@@ -30,6 +30,7 @@ What we know so far:
 
 - `topic`: Use `exploration` for the initial exploration file. Use semantic names (`market-landscape`, `technical-feasibility`) when splitting into focused files.
 - `date`: Today's date when creating the document.
+- **No `status` field**: Research documents intentionally have no status. Do not add `status`, `state`, or any lifecycle field. Research is open-ended — it never "concludes."
 
 ## Notes
 
