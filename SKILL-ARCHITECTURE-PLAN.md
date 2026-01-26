@@ -373,9 +373,64 @@ This project is distributed via Composer as `leeovery/claude-technical-workflows
 
 ## Dependencies
 
-- Completion of the specification display redesign (current work)
-- Flow documents finalized and reviewed
+- Completion of the specification display redesign (current work) — **DONE**
+- Flow documents finalized and reviewed — **DONE**
 - Understanding of any skill system limitations through testing
+
+## Implementation Notes
+
+These notes are for the agent picking up this work.
+
+### Current State of start-specification.md
+
+The current command file (`commands/workflow/start-specification.md`) is 810 lines with the **old** step structure (Steps 0-11). It does NOT reflect the redesigned flow. The redesigned flow (Steps 0-8) is documented in `SPEC-DISPLAY-REDESIGN.md` and the `SPEC-FLOWS/` documents.
+
+Changes already deployed on main:
+- Migration 004 (`scripts/migrations/004-sources-object-format.sh`) — converts spec sources to object format with status tracking
+- Discovery script (`scripts/discovery-for-specification.sh`) — outputs sources with name + status in object format
+- Spec guide (`skills/technical-specification/references/specification-guide.md`) — documents sources tracking
+- The command itself has partial updates to Step 7 display logic (source incorporation status) but still uses the old step structure throughout
+
+### Implementation Path
+
+Go directly to the skill structure. Do NOT rewrite the monolithic command first — that would be throwaway work since the skill structure replaces it entirely. The steps:
+
+1. Build the skill directory (`skills/start-specification/`) with SKILL.md and reference files
+2. Extract content from the flow documents and tracking file into the reference files
+3. Test all 10 output paths
+4. Remove `commands/workflow/start-specification.md`
+
+### Discovery Script Improvements
+
+The `SPEC-DISPLAY-REDESIGN.md` tracking file documents proposed `current_state` improvements to `discovery-for-specification.sh` (explicit counts like `concluded_count`, `has_discussions`, etc.). These should be implemented alongside the skill refactor since the new SKILL.md routing logic will benefit from them. The design is agreed — see the "Discovery Script Improvements" section in the tracking file.
+
+### Anchored Names
+
+When grouping analysis runs (or re-runs), existing specification names must be preserved. This prevents analysis from renaming a specification that already has work done against it.
+
+**How it works:**
+- The discovery script outputs `anchored_names` in the cache section — an array of specification names that already exist as files
+- During analysis (Step 5), Claude must use these exact names for any grouping that corresponds to an existing specification
+- New groupings (discussions not covered by existing specs) get fresh names from analysis
+- When the cache is saved, `anchored_names` is persisted so subsequent runs know which names to preserve
+
+**Example from discovery output:**
+```yaml
+cache:
+  status: "valid"
+  reason: "Cache exists and checksums match"
+  anchored_names:
+    - authentication-system
+    - caching-layer
+```
+
+If re-analysis runs, the grouping containing auth-flow and user-sessions MUST still be called "Authentication System" (matching the `authentication-system` anchored name), even if the analysis would otherwise suggest a different name.
+
+**Where this matters:**
+- Step 5 (Analyze Discussions) — must respect anchored names
+- Step 6 (Display Groupings) — grouping names match spec filenames
+- Cache file — stores anchored_names for future runs
+- Re-analyze flow — deletes cache but anchored_names are re-derived from existing spec files on next discovery run
 
 ## Related Files
 

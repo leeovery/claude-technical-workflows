@@ -123,6 +123,18 @@ Menu choices are numbered with descriptive context:
 2. Start "API Design" — 2 ready discussions
 ```
 
+### 10. Anchored Names
+When grouping analysis runs (or re-runs), existing specification names must be preserved. This prevents analysis from renaming a specification that already has work done against it.
+
+- The discovery script outputs `anchored_names` in the cache section — an array of specification names that already exist as files
+- During analysis (Step 5), Claude must use these exact names for any grouping that corresponds to an existing specification
+- New groupings (discussions not covered by existing specs) get fresh names from analysis
+- When the cache is saved, `anchored_names` is persisted so subsequent runs know which names to preserve
+- On re-analysis, anchored names are re-derived from existing spec files during the next discovery run
+
+### 11. Inline Menu Explanations
+The "meta" menu options (Analyze, Unify, Re-analyze) include brief inline explanations. Individual spec picks (Start/Continue/Refine) are self-explanatory and have no explanation. Explanations vary by context (specs exist or not). See outputs for exact wording.
+
 ## Pathway Outputs
 
 ### Entry Conditions Table
