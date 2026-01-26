@@ -8,7 +8,11 @@ Show the current state of the workflow for this project.
 
 **This step is mandatory. You must complete it before proceeding.**
 
-Invoke the `/migrate` command and assess its output before proceeding to Step 1.
+Invoke the `/migrate` command and assess its output.
+
+**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
+
+**If no updates needed**: Proceed to Step 1.
 
 ---
 
