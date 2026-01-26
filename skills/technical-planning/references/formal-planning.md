@@ -48,7 +48,9 @@ From the specification, absorb:
 - Constraints and requirements
 - Whether a Dependencies section exists (you will handle these in Step 5)
 
-Do not present or summarize the specification back to the user — it has already been signed off. Proceed directly to Step 2.
+Do not present or summarize the specification back to the user — it has already been signed off.
+
+→ Proceed to **Step 2**.
 
 ---
 
@@ -173,7 +175,7 @@ After all tasks in the current phase are logged:
 Phase {N}: {Phase Name} — complete ({M} tasks logged).
 ```
 
-Then return to **Step 3** for the next phase.
+→ Return to **Step 3** for the next phase.
 
 **Repeat Steps 3–4 for each phase** until all phases are complete.
 
