@@ -522,6 +522,8 @@ Enter choice (1-4):
 - If **2-3**: Proceed to confirm selection → gather additional context → invoke skill
 - If **4 (Pick individually)**: Show numbered discussion list to pick from
 
+**Note:** Existing specifications are shown using data from the spec files' `sources` frontmatter — no cache needed. The unassigned discussions are shown as a flat list because without a grouping analysis we can't recommend how they should be organized. This is why "Analyze for groupings" is the recommended first action — it will organize unassigned discussions and may suggest incorporating them into existing specs.
+
 ---
 
 ### Output 9: Show Groupings — Multiple Discussions, With Specs, Valid Cache
