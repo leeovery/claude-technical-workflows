@@ -1,12 +1,12 @@
 # Flow: Multiple Discussions, No Specs, No Cache (Output 5)
 
-First time running specification with multiple discussions and no prior analysis.
+First time running specification with multiple discussions and no prior analysis. Auto-proceeds to analysis.
 
 **Entry state:** 3 concluded discussions, 1 in-progress, 0 specs, no cache
 
 ---
 
-## Scenario A: User Chooses "Analyze for Groupings"
+## Scenario A: User Confirms Analysis → Picks Grouping
 
 **Steps:** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
 
@@ -44,7 +44,7 @@ cache:
 
 ### Step 3: Route and Display (Output 5)
 
-Multiple concluded, no specs, no cache → prompt for analysis.
+Multiple concluded, no specs, no cache → auto-proceed to analysis.
 
 ```
 Specification Overview
@@ -63,21 +63,16 @@ before they can be included in a specification.
   · rate-limiting (in-progress)
 
 ---
-Would you like me to analyze these discussions for natural groupings? (recommended)
-
-Grouping analysis identifies discussions that should become a single
-specification versus those that should stand alone. Results are cached
+These discussions will be analyzed for natural groupings to determine
+how they should be organized into specifications. Results are cached
 and reused until discussions change.
 
-1. Analyze for groupings
-2. Pick a discussion individually
-
-Enter choice (1-2):
+Proceed with analysis? (y/n)
 ```
 
 **STOP.** Wait for user.
 
-#### User responds: 1
+#### User responds: y
 
 ### Step 4: Gather Analysis Context
 
@@ -175,9 +170,10 @@ What would you like to do?
 
 1. Start "API Authentication" — 2 ready discussions
 2. Start "Error Handling" — 1 ready discussion
-3. Re-analyze groupings
+3. Unify all into single specification
+4. Re-analyze groupings
 
-Enter choice (1-3):
+Enter choice (1-4):
 ```
 
 **STOP.** Wait for user.
@@ -239,37 +235,27 @@ Invoke the technical-specification skill.
 
 ---
 
-## Scenario B: User Chooses "Pick a Discussion Individually"
+## Scenario B: User Chooses "Unify All" from Step 6
 
-**Steps:** 0 → 1 → 2 → 3 → (pick) → 7 → 8 → 9
+**Steps:** 0 → 1 → 2 → 3 → 4 → 5 → 6 → (unify) → 7 → 8 → 9
 
-Steps 0-3 are identical to Scenario A.
+Steps 0-6 are identical to Scenario A.
 
-#### User responds: 2 (Pick individually)
+#### User responds: 3 (Unify all into single specification)
 
-```
-Which discussion would you like to specify?
-
-1. auth-flow
-2. api-design
-3. error-handling
-
-Enter choice (1-3):
-```
-
-**STOP.** Wait for user.
-
-#### User responds: 2
+Claude updates the cache to reflect a single unified grouping containing all concluded discussions.
 
 ### Step 7: Confirm Selection
 
 ```
-Creating specification: Api Design
+Creating specification: Unified
 
 Sources:
+  • auth-flow
   • api-design
+  • error-handling
 
-Output: docs/workflow/specification/api-design.md
+Output: docs/workflow/specification/unified.md
 
 Proceed? (y/n)
 ```
@@ -280,19 +266,21 @@ Proceed? (y/n)
 
 ### Step 8: Gather Additional Context
 
-(Same prompt as Scenario A)
+(Standard prompt)
 
 #### User responds: none
 
 ### Step 9: Invoke Skill
 
 ```
-Specification session for: Api Design
+Specification session for: Unified
 
 Sources:
+- docs/workflow/discussion/auth-flow.md
 - docs/workflow/discussion/api-design.md
+- docs/workflow/discussion/error-handling.md
 
-Output: docs/workflow/specification/api-design.md
+Output: docs/workflow/specification/unified.md
 
 Additional context: None provided.
 
@@ -302,6 +290,17 @@ Invoke the technical-specification skill.
 
 **Command complete.** Skill takes over.
 
+**On re-entry:** Cache shows single unified grouping. Display will show:
+```
+1. Unified
+   └─ Spec: in-progress (0 of 3 sources extracted)
+   └─ Discussions:
+      ├─ auth-flow (pending)
+      ├─ api-design (pending)
+      └─ error-handling (pending)
+```
+Since there's only 1 grouping, "Unify" option is not shown in the menu.
+
 ---
 
 ## Scenario C: User Chooses "Re-analyze" from Step 6
@@ -310,7 +309,7 @@ Invoke the technical-specification skill.
 
 Steps 0-6 are identical to Scenario A.
 
-#### User responds: 3 (Re-analyze)
+#### User responds: 4 (Re-analyze)
 
 Claude deletes the cache:
 ```bash
@@ -335,20 +334,11 @@ Your context (or 'none'):
 
 **STOP.** Wait for user.
 
-#### User responds: Actually, keep all three together as one unified API specification.
+#### User responds: Actually, keep all three together as one API specification.
 
 ### Step 5: Analyze Discussions + Cache
 
-Claude re-reads discussions with new guidance. Produces updated groupings:
-
-```markdown
-### Unified API
-- **auth-flow**: Authentication mechanisms
-- **api-design**: API structure and endpoints
-- **error-handling**: Error handling across the API
-
-**Coupling**: User requested all three combined into a single API specification.
-```
+Claude re-reads discussions with new guidance. Produces updated groupings.
 
 ### Step 6: Display Groupings
 
@@ -357,7 +347,7 @@ Specification Overview
 
 Recommended breakdown for specifications with their source discussions.
 
-1. Unified API
+1. API Platform
    └─ Spec: none
    └─ Discussions:
       ├─ auth-flow (ready)
@@ -380,16 +370,26 @@ Key:
     none — no specification file exists yet
 
 ---
-Tip: To restructure groupings or pull a discussion into its own
-specification, choose "Re-analyze" and provide guidance.
-
----
 What would you like to do?
 
-1. Start "Unified API" — 3 ready discussions
+1. Start "API Platform" — 3 ready discussions
 2. Re-analyze groupings
 
 Enter choice (1-2):
 ```
 
+**Note:** Only 1 grouping exists, so "Unify" option is not shown. No tip about restructuring either since re-analyze is already visible.
+
 Flow continues to Steps 7 → 8 → 9 as normal.
+
+---
+
+## Scenario D: User Declines Analysis at Step 3
+
+**Steps:** 0 → 1 → 2 → 3 (STOP)
+
+Steps 0-3 identical to Scenario A up to the confirmation.
+
+#### User responds: n
+
+**STOP.** Wait for user direction. They may exit or provide alternative guidance.

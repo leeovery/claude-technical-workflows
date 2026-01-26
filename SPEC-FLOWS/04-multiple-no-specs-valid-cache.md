@@ -90,9 +90,10 @@ What would you like to do?
 
 1. Start "API Authentication" — 2 ready discussions
 2. Start "Error Handling" — 1 ready discussion
-3. Re-analyze groupings
+3. Unify all into single specification
+4. Re-analyze groupings
 
-Enter choice (1-3):
+Enter choice (1-4):
 ```
 
 **STOP.** Wait for user.
@@ -160,7 +161,7 @@ Invoke the technical-specification skill.
 
 Steps 0-3 are identical to Scenario A.
 
-#### User responds: 3 (Re-analyze)
+#### User responds: 4 (Re-analyze)
 
 Claude deletes the cache:
 ```bash
@@ -231,9 +232,10 @@ What would you like to do?
 
 1. Start "API Layer" — 2 ready discussions
 2. Start "Auth Flow" — 1 ready discussion
-3. Re-analyze groupings
+3. Unify all into single specification
+4. Re-analyze groupings
 
-Enter choice (1-3):
+Enter choice (1-4):
 ```
 
 Flow continues to Steps 7 → 8 → 9 as normal.

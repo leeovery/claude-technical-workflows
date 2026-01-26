@@ -1,12 +1,12 @@
 # Flow: Multiple Discussions, No Specs, Stale Cache (Output 7)
 
-Cache exists but discussions have changed since analysis. Must re-analyze.
+Cache exists but discussions have changed since analysis. Auto-proceeds to re-analysis.
 
 **Entry state:** 3 concluded discussions, 1 in-progress, 0 specs, stale cache
 
 ---
 
-## Scenario A: User Chooses "Analyze for Groupings"
+## Scenario A: User Confirms Analysis → Picks Grouping
 
 **Steps:** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
 
@@ -46,7 +46,7 @@ cache:
 
 ### Step 3: Route and Display (Output 7)
 
-Stale cache, no specs → prompt for analysis with stale note.
+Stale cache, no specs → auto-proceed to re-analysis.
 
 ```
 Specification Overview
@@ -66,24 +66,24 @@ before they can be included in a specification.
 
 ---
 A previous grouping analysis exists but is outdated — discussions
-have changed since it was created. Re-analysis is required.
+have changed since it was created.
 
-1. Analyze for groupings (recommended)
-2. Pick a discussion individually
+These discussions will be re-analyzed for natural groupings. Results
+are cached and reused until discussions change.
 
-Enter choice (1-2):
+Proceed with analysis? (y/n)
 ```
 
 **STOP.** Wait for user.
 
-#### User responds: 1
-
-### Step 4: Gather Analysis Context
+#### User responds: y
 
 Claude deletes the stale cache:
 ```bash
 rm docs/workflow/.cache/discussion-consolidation-analysis.md
 ```
+
+### Step 4: Gather Analysis Context
 
 ```
 Before analyzing, is there anything about how these discussions relate
@@ -147,80 +147,28 @@ What would you like to do?
 
 1. Start "API Authentication" — 2 ready discussions
 2. Start "Error Handling" — 1 ready discussion
-3. Re-analyze groupings
+3. Unify all into single specification
+4. Re-analyze groupings
 
-Enter choice (1-3):
+Enter choice (1-4):
 ```
 
 Flow continues to Steps 7 → 8 → 9 as normal.
 
 ---
 
-## Scenario B: User Chooses "Pick a Discussion Individually"
+## Scenario B: User Declines Analysis at Step 3
 
-**Steps:** 0 → 1 → 2 → 3 → (pick) → 7 → 8 → 9
+**Steps:** 0 → 1 → 2 → 3 (STOP)
 
-Steps 0-3 are identical to Scenario A.
+Steps 0-3 identical to Scenario A up to the confirmation.
 
-#### User responds: 2 (Pick individually)
+#### User responds: n
 
-```
-Which discussion would you like to specify?
-
-1. auth-flow
-2. api-design
-3. error-handling
-
-Enter choice (1-3):
-```
-
-**STOP.** Wait for user.
-
-#### User responds: 3
-
-### Step 7: Confirm Selection
-
-```
-Creating specification: Error Handling
-
-Sources:
-  • error-handling
-
-Output: docs/workflow/specification/error-handling.md
-
-Proceed? (y/n)
-```
-
-**STOP.** Wait for user.
-
-#### User responds: y
-
-### Step 8: Gather Additional Context
-
-(Standard prompt)
-
-#### User responds: none
-
-### Step 9: Invoke Skill
-
-```
-Specification session for: Error Handling
-
-Sources:
-- docs/workflow/discussion/error-handling.md
-
-Output: docs/workflow/specification/error-handling.md
-
-Additional context: None provided.
-
----
-Invoke the technical-specification skill.
-```
-
-**Command complete.** Skill takes over.
+**STOP.** Wait for user direction. They may exit or provide alternative guidance.
 
 ---
 
 ## Note
 
-This flow is functionally identical to Output 5 (no cache). The only difference is the initial message in Step 3 — it mentions the stale cache and that re-analysis is required, rather than describing what grouping analysis does. The user's choices and subsequent steps are the same.
+This flow is functionally identical to Output 5 (no cache). The only difference is the initial message in Step 3 — it mentions the stale cache rather than describing grouping analysis from scratch. The steps after confirming are identical.

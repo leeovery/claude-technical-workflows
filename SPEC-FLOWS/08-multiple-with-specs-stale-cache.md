@@ -117,9 +117,8 @@ have changed since it was created. Re-analysis is required.
 1. Analyze for groupings (recommended)
 2. Continue "Authentication System" — in-progress
 3. Continue "Caching Layer" — concluded
-4. Pick a discussion individually
 
-Enter choice (1-4):
+Enter choice (1-3):
 ```
 
 **STOP.** Wait for user.
@@ -205,9 +204,10 @@ What would you like to do?
 1. Continue "Authentication System" — all sources extracted
 2. Start "API Design" — 2 ready discussions
 3. Refine "Caching Layer" — concluded spec
-4. Re-analyze groupings
+4. Unify all into single specification
+5. Re-analyze groupings
 
-Enter choice (1-4):
+Enter choice (1-5):
 ```
 
 Flow continues to Steps 7 → 8 → 9 as normal.
@@ -258,71 +258,6 @@ Sources for reference:
 - docs/workflow/discussion/user-sessions.md
 
 Context: This specification already exists. Review and refine it based on the source discussions and any new context provided.
-
-Additional context: None provided.
-
----
-Invoke the technical-specification skill.
-```
-
-**Command complete.** Skill takes over.
-
----
-
-## Scenario C: User Chooses "Pick a Discussion Individually"
-
-**Steps:** 0 → 1 → 2 → 3 → (pick) → 7 → 8 → 9
-
-Steps 0-3 identical to Scenario A.
-
-#### User responds: 4 (Pick individually)
-
-```
-Which discussion would you like to specify?
-
-1. auth-flow
-2. user-sessions
-3. caching-layer
-4. api-design
-5. error-handling
-
-Enter choice (1-5):
-```
-
-**STOP.** Wait for user.
-
-#### User responds: 4
-
-### Step 7: Confirm Selection
-
-```
-Creating specification: Api Design
-
-Sources:
-  • api-design
-
-Output: docs/workflow/specification/api-design.md
-
-Proceed? (y/n)
-```
-
-#### User responds: y
-
-### Step 8: Gather Additional Context
-
-(Standard prompt)
-
-#### User responds: none
-
-### Step 9: Invoke Skill
-
-```
-Specification session for: Api Design
-
-Sources:
-- docs/workflow/discussion/api-design.md
-
-Output: docs/workflow/specification/api-design.md
 
 Additional context: None provided.
 

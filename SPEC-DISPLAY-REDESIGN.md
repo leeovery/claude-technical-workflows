@@ -283,7 +283,7 @@ Continue refining this specification? (y/n)
 
 ---
 
-### Output 5: Prompt — Multiple Discussions, No Specs, No Cache
+### Output 5: Auto-analyze — Multiple Discussions, No Specs, No Cache
 
 **Condition:** `concluded_count >= 2`, `spec_count: 0`, `cache.status: "none"`
 
@@ -291,7 +291,7 @@ Continue refining this specification? (y/n)
 1. Step 0 (Migrations): `[SKIP] No changes needed`
 2. Step 1 (Discovery): Returns multiple concluded discussions, no specs, no cache
 3. Step 2 (Prerequisites): Passes
-4. Step 3 (Route): Multiple discussions, no cache — prompt for analysis
+4. Step 3 (Route): Multiple discussions, no cache — proceed to analysis
 
 **Output:**
 ```
@@ -311,35 +311,16 @@ before they can be included in a specification.
   · rate-limiting (in-progress)
 
 ---
-Would you like me to analyze these discussions for natural groupings? (recommended)
-
-Grouping analysis identifies discussions that should become a single
-specification versus those that should stand alone. Results are cached
+These discussions will be analyzed for natural groupings to determine
+how they should be organized into specifications. Results are cached
 and reused until discussions change.
 
-1. Analyze for groupings
-2. Pick a discussion individually
-
-Enter choice (1-2):
+Proceed with analysis? (y/n)
 ```
 
-**Action:** STOP. Wait for user choice.
-
-- If **1 (Analyze)**:
-  ```
-  Before analyzing, is there anything about how these discussions relate
-  that would help me group them appropriately?
-
-  For example:
-  - Topics that are part of the same feature
-  - Dependencies between topics
-  - Topics that must stay separate
-
-  Your context (or 'none'):
-  ```
-  Then: analyze with context → cache results → show groupings (Output 6)
-
-- If **2 (Pick individually)**: Show numbered discussion list to pick from, skip analysis entirely
+**Action:** STOP. Wait for user confirmation.
+- If **y**: Proceed to Step 4 (context gathering) → Step 5 (analyze) → Step 6 (show groupings)
+- If **n**: STOP. Wait for user direction.
 
 ---
 
@@ -401,18 +382,22 @@ What would you like to do?
 1. Start "Authentication System" — 2 ready discussions
 2. Start "API Design" — 2 ready discussions
 3. Start "Logging Strategy" — 1 ready discussion
-4. Re-analyze groupings
+4. Unify all into single specification
+5. Re-analyze groupings
 
-Enter choice (1-4):
+Enter choice (1-5):
 ```
 
 **Action:** STOP. Wait for user choice.
-- If **1-3**: Proceed to confirm selection → gather additional context → invoke skill
-- If **4 (Re-analyze)**: Delete cache → loop back to context gathering step (same as Output 5's analyze flow) → analyze → show updated groupings
+- If **1-3**: Proceed to Step 7 (confirm selection) → Step 8 (additional context) → Step 9 (invoke skill)
+- If **4 (Unify)**: Update cache to single unified grouping → proceed to Step 7 (confirm) with all discussions as sources
+- If **5 (Re-analyze)**: Delete cache → loop back to context gathering step → analyze → show updated groupings
+
+**Note:** "Unify" option only shown when there are 2+ groupings. If analysis produces a single grouping, it's already effectively unified.
 
 ---
 
-### Output 7: Prompt — Multiple Discussions, No Specs, Stale Cache
+### Output 7: Auto-analyze — Multiple Discussions, No Specs, Stale Cache
 
 **Condition:** `concluded_count >= 2`, `spec_count: 0`, `cache.status: "stale"`
 
@@ -441,19 +426,19 @@ before they can be included in a specification.
 
 ---
 A previous grouping analysis exists but is outdated — discussions
-have changed since it was created. Re-analysis is required.
+have changed since it was created.
 
-1. Analyze for groupings (recommended)
-2. Pick a discussion individually
+These discussions will be re-analyzed for natural groupings. Results
+are cached and reused until discussions change.
 
-Enter choice (1-2):
+Proceed with analysis? (y/n)
 ```
 
-**Action:** STOP. Wait for user choice.
-- If **1 (Analyze)**: Delete stale cache → context gathering step → analyze → cache → show groupings (Output 6)
-- If **2 (Pick individually)**: Show numbered discussion list to pick from, skip analysis entirely
+**Action:** STOP. Wait for user confirmation.
+- If **y**: Delete stale cache → Step 4 (context gathering) → Step 5 (analyze) → Step 6 (show groupings)
+- If **n**: STOP. Wait for user direction.
 
-**Note:** Essentially Output 5 with a stale cache explanation. Flow after choosing is identical.
+**Note:** Essentially Output 5 with a stale cache explanation. Flow after confirming is identical.
 
 ---
 
@@ -512,15 +497,13 @@ No grouping analysis exists.
 1. Analyze for groupings (recommended)
 2. Continue "Authentication System" — in-progress
 3. Continue "Caching Layer" — concluded
-4. Pick a discussion individually
 
-Enter choice (1-4):
+Enter choice (1-3):
 ```
 
 **Action:** STOP. Wait for user choice.
-- If **1 (Analyze)**: Context gathering step → analyze → cache → show groupings (Output 9)
-- If **2-3**: Proceed to confirm selection → gather additional context → invoke skill
-- If **4 (Pick individually)**: Show numbered discussion list to pick from
+- If **1 (Analyze)**: Step 4 (context gathering) → Step 5 (analyze) → Step 6 (show groupings)
+- If **2-3**: Proceed to Step 7 (confirm selection) → Step 8 (additional context) → Step 9 (invoke skill)
 
 **Note:** Existing specifications are shown using data from the spec files' `sources` frontmatter — no cache needed. The unassigned discussions are shown as a flat list because without a grouping analysis we can't recommend how they should be organized. This is why "Analyze for groupings" is the recommended first action — it will organize unassigned discussions and may suggest incorporating them into existing specs.
 
@@ -596,16 +579,18 @@ What would you like to do?
 2. Start "API Design" — 2 ready discussions
 3. Start "Logging Strategy" — 1 ready discussion
 4. Refine "Caching Layer" — concluded spec
-5. Re-analyze groupings
+5. Unify all into single specification
+6. Re-analyze groupings
 
-Enter choice (1-5):
+Enter choice (1-6):
 ```
 
 **Action:** STOP. Wait for user choice.
-- If **1-4**: Proceed to confirm selection → gather additional context → invoke skill
-- If **5 (Re-analyze)**: Delete cache → loop back to context gathering step → analyze → show updated groupings
+- If **1-4**: Proceed to Step 7 (confirm selection) → Step 8 (additional context) → Step 9 (invoke skill)
+- If **5 (Unify)**: Update cache to single unified grouping → proceed to Step 7 (confirm) with all discussions as sources. Existing specs will be incorporated and superseded.
+- If **6 (Re-analyze)**: Delete cache → loop back to context gathering step → analyze → show updated groupings
 
-**Note:** Most complete variant — all three discussion statuses visible, mix of spec states, full key. Structurally identical to Output 6 but with real spec data.
+**Note:** Most complete variant — all three discussion statuses visible, mix of spec states, full key. Structurally identical to Output 6 but with real spec data. "Unify" option only shown when there are 2+ groupings.
 
 ---
 
@@ -666,15 +651,13 @@ have changed since it was created. Re-analysis is required.
 1. Analyze for groupings (recommended)
 2. Continue "Authentication System" — in-progress
 3. Continue "Caching Layer" — concluded
-4. Pick a discussion individually
 
-Enter choice (1-4):
+Enter choice (1-3):
 ```
 
 **Action:** STOP. Wait for user choice.
-- If **1 (Analyze)**: Delete stale cache → context gathering step → analyze → cache → show groupings (Output 9)
-- If **2-3**: Proceed to confirm selection → gather additional context → invoke skill
-- If **4 (Pick individually)**: Show numbered discussion list to pick from
+- If **1 (Analyze)**: Delete stale cache → Step 4 (context gathering) → Step 5 (analyze) → Step 6 (show groupings)
+- If **2-3**: Proceed to Step 7 (confirm selection) → Step 8 (additional context) → Step 9 (invoke skill)
 
 **Note:** Identical to Output 8 except for the stale cache message. Stale cache is not used for display — existing specs shown from spec files' frontmatter. Unassigned discussions shown as flat list.
 
@@ -736,14 +719,16 @@ The original command had Steps 0-11. With the redesign, the flow simplifies to S
 
 - **Old Step 5 (Check Cache Status)**: Removed — cache status is already checked during routing in Step 3. By the time we reach the analysis flow, we know the cache is stale or absent.
 - **Old Step 7 (Present Grouping Options)**: Replaced by new Step 6. The old format used tables and different vocabulary. Now uses nested tree format.
-- **Old Step 8 (Select Grouping)**: Eliminated as a separate step. The old 4-option menu (Proceed as recommended / Combine differently / Single specification / Individual specifications) is gone. Selection is now built into the numbered menu shown in Steps 3 and 6. Restructuring is handled via "Re-analyze with guidance." Picking a single discussion is always available in the menu where relevant.
+- **Old Step 8 (Select Grouping)**: Eliminated as a separate step. The old 4-option menu (Proceed as recommended / Combine differently / Single specification / Individual specifications) is gone. Selection is now built into the numbered menu shown in Steps 3 and 6. Restructuring is handled via "Re-analyze with guidance." "Pick individually" has been removed — grouping analysis is part of the specification process. "Unify all" option added to groupings display for when user wants a single specification.
 
 ### Flows Through Steps
 
 - **Single discussion (Outputs 3-4):** 0 → 1 → 2 → 3 → 7 → 8 → 9
-- **Multiple, pick individually:** 0 → 1 → 2 → 3 → (pick) → 7 → 8 → 9
-- **Multiple, analyze:** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
+- **Multiple, no specs, analyze (Outputs 5/7):** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 (auto-proceed to analysis)
+- **Multiple, with specs, analyze (Outputs 8/10):** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
+- **Multiple, with specs, continue (Outputs 8/10):** 0 → 1 → 2 → 3 → 7 → 8 → 9
 - **Multiple, valid cache (Outputs 6/9):** 0 → 1 → 2 → 3 → 7 → 8 → 9 (Step 3 shows groupings directly)
+- **Multiple, valid cache, unify (Outputs 6/9):** 0 → 1 → 2 → 3 → (update cache) → 7 → 8 → 9
 - **Re-analyze:** from Step 3 or 6 → delete cache → 4 → 5 → 6
 - **Decline at confirm:** Step 7 → back to Step 3 or 6 (whichever displayed the menu)
 
@@ -829,19 +814,28 @@ Skills are workflow-agnostic. The handoff simply passes sources and output path 
 
 ## Pending Questions
 
-### Active Discussion
+### Resolved
 
-1. **Should "Pick individually" be removed?** The option may be redundant. If specs exist, the menu already offers "Continue" for each. The remaining unassigned discussions would be better served by going through grouping analysis first — that's arguably the point of the specification phase. Counter-argument: sometimes a user just wants to quickly specify one discussion without analyzing everything.
+1. **"Pick individually" removed.** Grouping analysis is part of the specification process. If the user wants a single discussion as its own spec, they can provide that guidance during analysis. This simplifies the flow:
+   - **Outputs 5/7 (no specs):** No menu needed — auto-proceed to analysis with confirmation.
+   - **Outputs 8/10 (with specs):** Menu becomes "Analyze for groupings" + "Continue {spec}" only.
+   - **Even with just 2 discussions**, still analyze — they might belong together or apart. The context gathering step handles this naturally.
 
-2. **Should we offer a "Unified specification" option?** Allow the user to ignore groupings and consolidate all discussions into a single spec. If chosen, update the cache to reflect this so subsequent runs display the unified group. Needs design for: where the option appears in the menu, how the cache is updated, and what the display looks like on re-entry.
+2. **"Unified specification" option added to groupings display.** After analysis, the user can choose to combine all discussions into a single specification instead of following the recommended groupings.
+   - Only offered when there are **2+ groupings** (if there's already one group, it's effectively unified).
+   - Appears in the Step 6 menu (and Step 3 when showing cached groupings) alongside individual groupings and re-analyze.
+   - When chosen: update cache to reflect a single unified grouping, then proceed to confirm.
+   - On re-entry: cache shows one unified group. Since there's only 1 grouping, "Unify" is not shown again.
+   - Uses "unified" as the specification name (consistent with existing convention).
+   - If existing specs exist, the confirm step lists them as being superseded.
 
-### Parked (circle back after active items resolved)
+### Parked (circle back after resolved items are applied)
 
 3. **Confirm step wording for "all sources extracted"** — When continuing a spec where everything is already extracted, the confirm says "All sources extracted" but the handoff says "review and refine." Could be clearer about what the user is actually doing (refinement, not extraction).
 
 4. **"Continue" vs "Refine" verb logic** — In-progress specs use "Continue", concluded specs use "Refine." Rule is implied but never explicitly stated. Should be documented in the command.
 
-5. **Title case inconsistency on individual picks** — Mechanical kebab-to-title conversion (`api-design` → `Api Design`) can differ from proper names chosen during analysis (`API Design`). Minor but visible.
+5. **Title case inconsistency on individual picks** — Mechanical kebab-to-title conversion (`api-design` → `Api Design`) can differ from proper names chosen during analysis (`API Design`). Minor but visible. (Note: with "Pick individually" removed, this may only apply to single-discussion auto-proceed in Outputs 3-4.)
 
 6. **Single-discussion decline has no fallback** — Outputs 3-4 ask y/n. If user says no, there's nothing to fall back to. Should be a graceful exit rather than an open-ended "What would you like to do instead?"
 

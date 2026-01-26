@@ -149,9 +149,10 @@ What would you like to do?
 2. Start "API Design" — 2 ready discussions
 3. Start "Logging Strategy" — 1 ready discussion
 4. Refine "Caching Layer" — concluded spec
-5. Re-analyze groupings
+5. Unify all into single specification
+6. Re-analyze groupings
 
-Enter choice (1-5):
+Enter choice (1-6):
 ```
 
 **STOP.** Wait for user.
@@ -327,7 +328,7 @@ Invoke the technical-specification skill.
 
 Steps 0-3 identical to Scenario A.
 
-#### User responds: 5 (Re-analyze)
+#### User responds: 6 (Re-analyze)
 
 Claude deletes the cache:
 ```bash
@@ -412,16 +413,95 @@ What would you like to do?
 1. Continue "Authentication System" — 1 source pending extraction
 2. Start "API Infrastructure" — 3 ready discussions
 3. Refine "Caching Layer" — concluded spec
-4. Re-analyze groupings
+4. Unify all into single specification
+5. Re-analyze groupings
 
-Enter choice (1-4):
+Enter choice (1-5):
 ```
 
 Flow continues to Steps 7 → 8 → 9 as normal.
 
 ---
 
-## Scenario E: User Re-analyzes From Step 6
+## Scenario E: User Chooses "Unify All"
+
+**Steps:** 0 → 1 → 2 → 3 → (unify) → 7 → 8 → 9
+
+Steps 0-3 identical to Scenario A.
+
+#### User responds: 5 (Unify all into single specification)
+
+Claude updates the cache to reflect a single unified grouping containing all concluded discussions.
+
+### Step 7: Confirm Selection
+
+```
+Creating specification: Unified
+
+Sources:
+  • auth-flow
+  • user-sessions
+  • oauth-integration
+  • api-endpoints
+  • error-handling
+  • logging-strategy
+  • caching-layer
+
+Existing specifications to incorporate:
+  • authentication-system.md → will be superseded
+  • caching-layer.md → will be superseded
+
+Output: docs/workflow/specification/unified.md
+
+Proceed? (y/n)
+```
+
+**STOP.** Wait for user.
+
+#### User responds: y
+
+### Step 8: Gather Additional Context
+
+(Standard prompt)
+
+### Step 9: Invoke Skill
+
+```
+Specification session for: Unified
+
+Source discussions:
+- docs/workflow/discussion/auth-flow.md
+- docs/workflow/discussion/user-sessions.md
+- docs/workflow/discussion/oauth-integration.md
+- docs/workflow/discussion/api-endpoints.md
+- docs/workflow/discussion/error-handling.md
+- docs/workflow/discussion/logging-strategy.md
+- docs/workflow/discussion/caching-layer.md
+
+Existing specifications to incorporate:
+- docs/workflow/specification/authentication-system.md
+- docs/workflow/specification/caching-layer.md
+
+Output: docs/workflow/specification/unified.md
+
+Context: This consolidates all discussions into a single unified specification. The existing specifications should be incorporated - extract and adapt their content alongside the discussion material.
+
+After the unified specification is complete, mark the incorporated specs as superseded by updating their frontmatter:
+
+    status: superseded
+    superseded_by: unified
+
+Additional context: None provided.
+
+---
+Invoke the technical-specification skill.
+```
+
+**Command complete.** Skill takes over.
+
+---
+
+## Scenario F: User Re-analyzes From Step 6
 
 **Steps:** ... → 6 → (re-analyze) → 4 → 5 → 6
 
@@ -431,7 +511,7 @@ If the user sees the groupings in Step 6 after a fresh analysis and wants to res
 
 ---
 
-## Scenario F: New Grouped Spec Supersedes Individual Spec
+## Scenario G: New Grouped Spec Supersedes Individual Spec
 
 **Steps:** 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
 
