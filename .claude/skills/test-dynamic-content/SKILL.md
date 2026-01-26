@@ -1,12 +1,12 @@
 ---
 name: test-dynamic-content
-description: "Test dynamic content injection. Verifies that the !backtick syntax auto-executes the discovery script before Claude sees the prompt. Use when testing whether dynamic context injection is working."
+description: "Test dynamic content injection. Verifies that the exclamation-backtick syntax auto-executes the discovery script before Claude sees the prompt. Use when testing whether dynamic context injection is working."
 allowed-tools: Bash(scripts/discovery-for-specification.sh)
 ---
 
 # Dynamic Content Test
 
-This skill tests whether dynamic content injection (`!` backtick syntax) causes the discovery script to execute automatically before Claude sees the prompt.
+This skill tests whether dynamic context injection causes the discovery script to execute automatically before Claude sees the prompt.
 
 ## Discovery Output (Dynamic Content)
 
@@ -22,12 +22,12 @@ If dynamic content is working correctly:
 - You should see entries for: authentication-flow (concluded), api-versioning (concluded), rate-limiting (in-progress)
 
 If dynamic content is NOT working:
-- You'll see the literal text with the exclamation mark and backtick syntax instead of YAML output
+- You will see the literal exclamation-backtick syntax instead of YAML output
 - You would need to run the script manually as a separate tool call
 
 ## Your Task
 
-1. Report whether you see actual YAML discovery output above, or the literal exclamation-backtick syntax
+1. Report whether you see actual YAML discovery output above, or the raw unresolved syntax
 2. If you see actual output, confirm what discussions and their statuses were discovered
 3. State clearly: "Dynamic content IS working" or "Dynamic content is NOT working"
 
