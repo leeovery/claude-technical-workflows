@@ -1,7 +1,7 @@
 ---
 name: test-dynamic-content
 description: "Test dynamic content injection. Verifies that the exclamation-backtick syntax auto-executes the discovery script before Claude sees the prompt. Use when testing whether dynamic context injection is working."
-allowed-tools: Bash(scripts/discovery-for-specification.sh)
+allowed-tools: Bash(.claude/skills/test-dynamic-content/scripts/discovery-for-specification.sh)
 ---
 
 # Dynamic Content Test
@@ -12,7 +12,7 @@ This skill tests whether dynamic context injection causes the discovery script t
 
 The following section should contain the YAML output from the discovery script, auto-executed before you see this prompt:
 
-!`bash scripts/discovery-for-specification.sh`
+!`bash .claude/skills/test-dynamic-content/scripts/discovery-for-specification.sh`
 
 ## Verification
 
