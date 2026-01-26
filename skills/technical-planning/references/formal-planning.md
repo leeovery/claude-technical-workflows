@@ -94,7 +94,15 @@ Phase 2: Core — Recurring Events
     - [ ] Editing a single instance does not affect other instances
 ```
 
-**STOP.** Present your proposed phase structure and wait for user confirmation before proceeding. Do not proceed.
+**STOP.** Present your proposed phase structure and ask:
+
+> **To proceed, choose one:**
+> - **"Approve"** — Phase structure is confirmed. I'll proceed to task breakdown.
+> - **"Adjust"** — Tell me what to change: reorder, split, merge, add, or remove phases.
+
+**If approved:** → Proceed to **Step 3**.
+
+**If adjust:** Incorporate feedback, re-present the updated phase structure, and ask again. Repeat until approved.
 
 ---
 
@@ -131,7 +139,15 @@ Phase 1: Foundation — Event Model and Storage
 
 This overview establishes the scope and ordering. The user should be able to see whether the phase is well-structured, whether tasks are in the right order, and whether anything is missing or unnecessary — before investing time in writing out full task detail.
 
-**STOP.** Present the phase task overview and wait for user confirmation. Do not proceed to task detail until the task list is agreed.
+**STOP.** Present the phase task overview and ask:
+
+> **To proceed, choose one:**
+> - **"Approve"** — Task list is confirmed. I'll begin writing full task detail.
+> - **"Adjust"** — Tell me what to change: reorder, split, merge, add, or remove tasks.
+
+**If approved:** → Proceed to **Step 4**.
+
+**If adjust:** Incorporate feedback, re-present the updated task overview, and ask again. Repeat until approved.
 
 ---
 
@@ -216,7 +232,15 @@ This makes it clear that dependencies were considered and none exist — not tha
 
 Skip the resolution and reverse check — there is nothing to resolve against. Document the dependencies as unresolved. They will be linked when other topics are planned, or via `/link-dependencies`.
 
-**STOP.** Present a summary of the dependency state: what was documented, what was resolved, what remains unresolved, and any reverse resolutions made. Wait for user confirmation before proceeding.
+**STOP.** Present a summary of the dependency state: what was documented, what was resolved, what remains unresolved, and any reverse resolutions made.
+
+> **To proceed, choose one:**
+> - **"Approve"** — Dependency state is confirmed. Proceed to plan review.
+> - **"Adjust"** — Tell me what to change.
+
+**If approved:** → Proceed to **Step 6**.
+
+**If adjust:** Incorporate feedback, re-present the updated dependency state, and ask again. Repeat until approved.
 
 ---
 
