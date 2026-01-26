@@ -10,23 +10,32 @@ You are creating the formal implementation plan from the specification.
 
 **Confirm output format with user.** Ask which format they want, then load the appropriate output adapter from the main skill file. If you don't know which format, ask.
 
-## Planning is Collaborative
+## Planning is a Gated Process
 
-Planning is an iterative process between you and the user. The specification contains validated, considered decisions - planning translates that work into actionable structure. But translation still requires judgment, and the user should guide that judgment.
+Planning translates the specification into actionable structure. This translation requires judgment, and the process is designed to ensure that judgment is exercised carefully and collaboratively — not rushed.
 
-**Stop, reflect, and ask** when:
+### Process Expectations
+
+**This is a step-by-step process with mandatory checkpoints.** You must work through each step sequentially, presenting your work at designated checkpoints and waiting for user confirmation before proceeding. Steps marked with **⛔ CHECKPOINT** are gates — you cannot pass them without user confirmation.
+
+**Never one-shot the plan.** Do not write the entire plan document in a single operation. The plan is built incrementally — one phase at a time, with the user confirming the structure at each stage. A one-shot plan that misses requirements, hallucinates content, or structures tasks poorly wastes more time than a careful, step-by-step process. Go slow to go fast.
+
+**Stop and ask when judgment is needed.** Planning is collaborative — not in the sense that every line needs approval, but in the sense that the user guides structural decisions and resolves ambiguity. You must stop and ask when:
+
 - The specification is ambiguous about implementation approach
 - Multiple valid ways to structure phases or tasks exist
 - You're uncertain whether a task is appropriately scoped
 - Edge cases aren't fully addressed in the specification
+- You need to make any decision the specification doesn't cover
+- Something doesn't add up or feels like a gap
 
-**Never invent to fill gaps.** If the specification doesn't address something, use `[needs-info]` and ask the user. The specification is the golden document - everything in the plan must trace back to it.
-
-**The user expects collaboration.** Planning doesn't have to be done by the agent alone. It's normal and encouraged to pause for guidance rather than guess.
+**Never invent to fill gaps.** If the specification doesn't address something, flag it with `[needs-info]` and ask the user. The specification is the golden document — everything in the plan must trace back to it. Assuming or guessing — even when it seems reasonable — is not acceptable. Surface the problem immediately rather than continuing and hoping to address it later.
 
 ## The Planning Process
 
-### 1. Read Specification
+Work through these steps sequentially. Steps marked with **⛔ CHECKPOINT** require you to stop, present your work, and wait for explicit user confirmation before proceeding. Do not skip checkpoints. Do not combine steps. Do not write ahead.
+
+### Step 1: Read Specification
 
 From the specification (`docs/workflow/specification/{topic}.md`), extract:
 - Key decisions and rationale
@@ -35,17 +44,17 @@ From the specification (`docs/workflow/specification/{topic}.md`), extract:
 - Constraints and requirements
 - **External dependencies** (from the Dependencies section)
 
-**The specification is your sole input.** Prior source materials have already been validated, filtered, and enriched into the specification. Everything you need is in the specification - do not reference other documents.
+**The specification is your sole input.** Prior source materials have already been validated, filtered, and enriched into the specification. Everything you need is in the specification — do not reference other documents.
 
 #### Extract External Dependencies
 
-The specification's Dependencies section lists things this feature needs from other topics/systems. These are **external dependencies** - things outside this plan's scope that must exist for implementation to proceed.
+The specification's Dependencies section lists things this feature needs from other topics/systems. These are **external dependencies** — things outside this plan's scope that must exist for implementation to proceed.
 
 Copy these into the plan index file (see "External Dependencies Section" below). During planning:
 
 1. **Check for existing plans**: For each dependency, search `docs/workflow/planning/` for a matching topic
 2. **If plan exists**: Try to identify specific tasks that satisfy the dependency. Query the output format to find relevant tasks. If ambiguous, ask the user which tasks apply.
-3. **If no plan exists**: Record the dependency in natural language - it will be linked later via `/link-dependencies` or when that topic is planned.
+3. **If no plan exists**: Record the dependency in natural language — it will be linked later via `/link-dependencies` or when that topic is planned.
 
 **Optional reverse check**: Ask the user: "Would you like me to check if any existing plans depend on this topic?"
 
@@ -56,34 +65,62 @@ If yes:
 
 Alternatively, the user can run `/link-dependencies` later to resolve dependencies across all plans in bulk.
 
-### 2. Define Phases
+> **⛔ CHECKPOINT**: Present a summary of what you extracted from the specification:
+>
+> - Key decisions and their rationale
+> - Architectural choices
+> - Edge cases identified
+> - Constraints and requirements
+> - External dependencies (if any)
+>
+> *"Here's what I've extracted from the specification: [summary]. Does this capture everything? Did I miss or misinterpret anything?"*
+>
+> **Wait for user confirmation before proceeding.**
+
+### Step 2: Define Phases
 
 Break into logical phases:
 - Each independently testable
 - Each has acceptance criteria
 - Progression: Foundation → Core → Edge cases → Refinement
 
-### 3. Break Phases into Tasks
+> **⛔ CHECKPOINT**: Present the proposed phase structure:
+>
+> For each phase, show:
+> - Phase name and goal
+> - What it accomplishes and why it comes in this order
+> - High-level acceptance criteria
+>
+> *"Here's the phase structure I'm proposing: [phases]. Does this breakdown and ordering make sense? Would you restructure anything?"*
+>
+> **Wait for user confirmation before breaking phases into tasks.**
 
-Each task is one TDD cycle:
-- One clear thing to build
-- One test to prove it works
+### Step 3: Detail Each Phase
 
-### 4. Write Micro Acceptance
+Work through phases **one at a time**, in order. For each phase:
 
-For each task, name the test that proves completion. Implementation writes this test first.
+1. **Break the phase into tasks** — each task is one TDD cycle (one thing to build, one test to prove it)
+2. **Write the full task template** for each task (Problem, Solution, Outcome, Do, Acceptance Criteria, Tests, Context) — see [Task Design](#task-design) for the required structure and field requirements
+3. **Address edge cases** relevant to this phase — each gets its own task or is explicitly handled within a task
+4. **Add code examples** only for novel patterns not obvious to implement
+5. **Flag anything unclear** with `[needs-info]` — do not guess or invent
 
-### 5. Address Every Edge Case
+> **⛔ CHECKPOINT** (after each phase): Present the phase's tasks to the user.
+>
+> For each task, show the full template. Highlight:
+> - How tasks are ordered and any dependencies between them
+> - Edge cases covered
+> - Any `[needs-info]` flags that need resolution
+>
+> *"Here are the tasks for Phase N: [Name]. [Present tasks]. Do these cover the specification requirements for this phase? Anything to add, remove, or restructure?"*
+>
+> **Wait for user confirmation before proceeding to the next phase.**
+>
+> **Write the confirmed phase to the plan file before starting the next phase.** The plan grows incrementally — phase by phase, not all at once.
 
-Extract each edge case, create a task with micro acceptance.
+### Step 4: Plan Review
 
-### 6. Add Code Examples (if needed)
-
-Only for novel patterns not obvious to implement.
-
-### 7. Plan Review
-
-After completing the plan, perform a comprehensive two-phase review. This is the most important quality gate in the planning process — it ensures the plan faithfully represents the specification and is structurally ready for implementation.
+After all phases are detailed and confirmed, perform the comprehensive two-phase review. This is the most important quality gate in the planning process — it ensures the plan faithfully represents the specification and is structurally ready for implementation.
 
 **This review is not optional.** See [Plan Review](#plan-review) below for the full process.
 
