@@ -115,6 +115,8 @@ A previous grouping analysis exists but is outdated — discussions
 have changed since it was created. Re-analysis is required.
 
 1. Analyze for groupings (recommended)
+   All discussions are analyzed for natural groupings. Existing
+   specification names are preserved.
 2. Continue "Authentication System" — in-progress
 3. Continue "Caching Layer" — concluded
 
@@ -205,7 +207,11 @@ What would you like to do?
 2. Start "API Design" — 2 ready discussions
 3. Refine "Caching Layer" — concluded spec
 4. Unify all into single specification
+   All discussions are combined into one specification. Existing
+   specifications are incorporated and superseded.
 5. Re-analyze groupings
+   Current groupings are discarded and rebuilt. Existing
+   specification names are preserved.
 
 Enter choice (1-5):
 ```

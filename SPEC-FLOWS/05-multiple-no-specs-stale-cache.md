@@ -148,7 +148,11 @@ What would you like to do?
 1. Start "API Authentication" — 2 ready discussions
 2. Start "Error Handling" — 1 ready discussion
 3. Unify all into single specification
+   All discussions are combined into one specification instead
+   of following the recommended groupings.
 4. Re-analyze groupings
+   Current groupings are discarded and rebuilt. You can provide
+   guidance on how to organize them.
 
 Enter choice (1-4):
 ```

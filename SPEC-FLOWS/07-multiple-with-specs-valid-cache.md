@@ -150,7 +150,11 @@ What would you like to do?
 3. Start "Logging Strategy" — 1 ready discussion
 4. Refine "Caching Layer" — concluded spec
 5. Unify all into single specification
+   All discussions are combined into one specification. Existing
+   specifications are incorporated and superseded.
 6. Re-analyze groupings
+   Current groupings are discarded and rebuilt. Existing
+   specification names are preserved.
 
 Enter choice (1-6):
 ```
@@ -380,7 +384,11 @@ What would you like to do?
 2. Start "API Infrastructure" — 3 ready discussions
 3. Refine "Caching Layer" — concluded spec
 4. Unify all into single specification
+   All discussions are combined into one specification. Existing
+   specifications are incorporated and superseded.
 5. Re-analyze groupings
+   Current groupings are discarded and rebuilt. Existing
+   specification names are preserved.
 
 Enter choice (1-5):
 ```
