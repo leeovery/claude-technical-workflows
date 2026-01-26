@@ -345,7 +345,70 @@ Enter choice (1-2):
 
 ### Output 6: Show Groupings — Multiple Discussions, No Specs, Valid Cache
 
-See "Agreed Display Format" section above.
+**Condition:** `concluded_count >= 2`, `spec_count: 0`, `cache.status: "valid"`
+
+**Sequence:**
+1. Step 0 (Migrations): `[SKIP] No changes needed`
+2. Step 1 (Discovery): Returns multiple concluded discussions, no specs, valid cache
+3. Step 2 (Prerequisites): Passes
+4. Step 3 (Route): Valid cache — show groupings directly
+
+**Output:**
+```
+Specification Overview
+
+Recommended breakdown for specifications with their source discussions.
+
+1. Authentication System
+   └─ Spec: none
+   └─ Discussions:
+      ├─ auth-flow (ready)
+      └─ user-sessions (ready)
+
+2. API Design
+   └─ Spec: none
+   └─ Discussions:
+      ├─ api-endpoints (ready)
+      └─ error-handling (ready)
+
+3. Logging Strategy
+   └─ Spec: none
+   └─ Discussions:
+      └─ logging-strategy (ready)
+
+---
+Discussions not ready for specification:
+These discussions are still in progress and must be concluded
+before they can be included in a specification.
+  · rate-limiting (in-progress)
+
+---
+Key:
+
+  Discussion status:
+    ready — concluded and available to be specified
+
+  Spec status:
+    none — no specification file exists yet
+
+---
+Tip: To restructure groupings or pull a discussion into its own
+specification, choose "Re-analyze" and provide guidance.
+
+---
+What would you like to do?
+
+1. Start "Authentication System" — 2 ready discussions
+2. Start "API Design" — 2 ready discussions
+3. Start "Logging Strategy" — 1 ready discussion
+4. Re-analyze groupings
+
+Enter choice (1-4):
+```
+
+**Action:** STOP. Wait for user choice.
+- If **1-3**: Proceed to confirm selection → gather additional context → invoke skill
+- If **4 (Re-analyze)**: Delete cache → loop back to context gathering step (same as Output 5's analyze flow) → analyze → show updated groupings
 
 ---
 
