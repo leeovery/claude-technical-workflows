@@ -56,6 +56,10 @@ Do not present or summarize the specification back to the user — it has alread
 
 ## Step 2: Define Phases
 
+Orient the user:
+
+> "I've read the full specification. I'm going to propose a phase structure — how we break this into independently testable stages. Once we agree on the phases, we'll take each one and break it into tasks."
+
 With the full specification understood, break it into logical phases:
 - Each independently testable
 - Each has acceptance criteria
@@ -108,6 +112,10 @@ Phase 2: Core — Recurring Events
 
 ## Step 3: Present Phase Task Overview
 
+Orient the user:
+
+> "Taking Phase {N}: {Phase Name} and breaking it into tasks. Here's the overview — once we agree on the list, I'll write each task out in full detail."
+
 Take the first (or next) phase and break it into tasks. Present a high-level overview so the user can see the shape of the phase before committing to the detail of each task.
 
 Present the task overview using this format:
@@ -152,6 +160,10 @@ This overview establishes the scope and ordering. The user should be able to see
 ---
 
 ## Step 4: Detail, Approve, and Log Each Task
+
+Orient the user:
+
+> "Task list for Phase {N} is agreed. I'll work through each task one at a time — presenting the full detail, discussing if needed, and logging it to the plan once approved."
 
 Work through the agreed task list **one task at a time**. For each task:
 
@@ -198,6 +210,10 @@ Phase {N}: {Phase Name} — complete ({M} tasks logged).
 ---
 
 ## Step 5: Resolve External Dependencies
+
+Orient the user:
+
+> "All phases and tasks are written. Now I'll check for external dependencies — things this plan needs from other topics or systems."
 
 After all phases are detailed and written, handle external dependencies — things this plan needs from other topics or systems.
 
