@@ -87,7 +87,7 @@ Research without documentation is wasted. Follow this loop:
 
 ## Critical Rules
 
-**No status field**: Research documents do NOT have a `status` field in their frontmatter. Only `topic` and `date`. Research is open-ended by nature — it doesn't "conclude." Even when a research exploration feels complete, do not add `status: concluded` or any similar field. The concept of document status is introduced in later phases (discussion onwards), not here. When research naturally leads to deeper work, you simply move on to the next phase — the research document stays as-is.
+**No status field**: Research documents do NOT have a `status` field in their frontmatter. Only `topic` and `date`. Research is open-ended by nature — it doesn't "conclude." Even when a research exploration feels complete, do not add `status: concluded` or any similar field. The document stays as-is.
 
 **Don't hallucinate**: Only document what was actually discussed.
 
