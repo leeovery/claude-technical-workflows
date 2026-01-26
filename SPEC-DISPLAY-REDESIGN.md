@@ -233,7 +233,7 @@ Create specification from this discussion? (y/n)
 
 **Action:** STOP. Wait for user confirmation.
 - If **y**: Proceed to gather additional context, then invoke skill
-- If **n**: "What would you like to do instead?" (offer alternatives or exit)
+- If **n**: Graceful exit — "Understood. You can run /start-discussion to continue working on discussions, or re-run this command when ready."
 
 **Note:** Uses same format as groupings view for consistency. Single-discussion items are first-class, not special-cased.
 
@@ -277,7 +277,7 @@ Continue refining this specification? (y/n)
 
 **Action:** STOP. Wait for user confirmation.
 - If **y**: Proceed to gather additional context, then invoke skill
-- If **n**: "What would you like to do instead?"
+- If **n**: Graceful exit — "Understood. You can run /start-discussion to continue working on discussions, or re-run this command when ready."
 
 **Note:** Same format as Output 3, but shows existing spec progress and uses "Continue refining" prompt.
 
@@ -320,7 +320,7 @@ Proceed with analysis? (y/n)
 
 **Action:** STOP. Wait for user confirmation.
 - If **y**: Proceed to Step 4 (context gathering) → Step 5 (analyze) → Step 6 (show groupings)
-- If **n**: STOP. Wait for user direction.
+- If **n**: Graceful exit — "Understood. You can run /start-discussion to continue working on discussions, or re-run this command when ready."
 
 ---
 
@@ -436,7 +436,7 @@ Proceed with analysis? (y/n)
 
 **Action:** STOP. Wait for user confirmation.
 - If **y**: Delete stale cache → Step 4 (context gathering) → Step 5 (analyze) → Step 6 (show groupings)
-- If **n**: STOP. Wait for user direction.
+- If **n**: Graceful exit — "Understood. You can run /start-discussion to continue working on discussions, or re-run this command when ready."
 
 **Note:** Essentially Output 5 with a stale cache explanation. Flow after confirming is identical.
 
@@ -734,6 +734,11 @@ The original command had Steps 0-11. With the redesign, the flow simplifies to S
 
 ### Step 7: Confirm Selection Formats
 
+**Verb rule:** The heading verb is determined by the spec's status:
+- No spec exists → **"Creating"** / "Start" in menu
+- Spec is `in-progress` → **"Continuing"** / "Continue" in menu
+- Spec is `concluded` → **"Refining"** / "Refine" in menu
+
 **Creating a new spec (from grouping or individual pick):**
 ```
 Creating specification: Authentication System
@@ -829,15 +834,20 @@ Skills are workflow-agnostic. The handoff simply passes sources and output path 
    - Uses "unified" as the specification name (consistent with existing convention).
    - If existing specs exist, the confirm step lists them as being superseded.
 
-### Parked (circle back after resolved items are applied)
+### Resolved (continued)
 
-3. **Confirm step wording for "all sources extracted"** — When continuing a spec where everything is already extracted, the confirm says "All sources extracted" but the handoff says "review and refine." Could be clearer about what the user is actually doing (refinement, not extraction).
+3. **Confirm step wording for "all sources extracted" — no change needed.** "All sources extracted" is informational context (here's where you are), not a description of the action. The handoff correctly says "review and refine." The user is refining what's already there — revisiting decisions, improving clarity, adding detail. No wording change required.
 
-4. **"Continue" vs "Refine" verb logic** — In-progress specs use "Continue", concluded specs use "Refine." Rule is implied but never explicitly stated. Should be documented in the command.
+4. **"Continue" vs "Refine" verb logic — document explicitly in the command.** Rule: `in-progress` spec → "Continue", `concluded` spec → "Refine." This applies to both the menu labels and the confirm step heading. Must be stated as an explicit rule in the command so Claude applies it consistently.
 
-5. **Title case inconsistency on individual picks** — Mechanical kebab-to-title conversion (`api-design` → `Api Design`) can differ from proper names chosen during analysis (`API Design`). Minor but visible. (Note: with "Pick individually" removed, this may only apply to single-discussion auto-proceed in Outputs 3-4.)
+5. **Title case from filenames — acceptable inconsistency.** With "Pick individually" removed, this only affects Outputs 3-4 (single discussion auto-proceed). Single-discussion specs get their name from the filename via kebab-to-title conversion (`auth-flow` → `Auth Flow`). Grouped specs get proper names from analysis (`API Design`). This is consistent within each context — single discussions don't have analysis-assigned names, so filename-derived titles are the correct behaviour.
 
-6. **Single-discussion decline has no fallback** — Outputs 3-4 ask y/n. If user says no, there's nothing to fall back to. Should be a graceful exit rather than an open-ended "What would you like to do instead?"
+6. **Single-discussion decline — graceful exit.** If the user says "n" to the single-discussion auto-proceed (Outputs 3-4), there's nothing else to offer. Show a graceful exit message:
+   ```
+   Understood. You can run /start-discussion to continue working on
+   discussions, or re-run this command when ready.
+   ```
+   This ends the command's job and passes control back to the user. We don't exit their Claude session — we just stop the command flow.
 
 ## Related Files
 

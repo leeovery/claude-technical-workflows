@@ -392,4 +392,9 @@ Steps 0-3 identical to Scenario A up to the confirmation.
 
 #### User responds: n
 
-**STOP.** Wait for user direction. They may exit or provide alternative guidance.
+```
+Understood. You can run /start-discussion to continue working on
+discussions, or re-run this command when ready.
+```
+
+**Command ends.** Control returns to the user.

@@ -129,10 +129,11 @@ Invoke the technical-specification skill.
 **User responds: n**
 
 ```
-What would you like to do instead?
+Understood. You can run /start-discussion to continue working on
+discussions, or re-run this command when ready.
 ```
 
-**STOP.** Wait for user. They may exit or provide alternative direction.
+**Command ends.** Control returns to the user.
 
 ---
 
