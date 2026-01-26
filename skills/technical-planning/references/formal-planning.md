@@ -35,7 +35,7 @@ Planning translates the specification into actionable structure. This translatio
 
 ## Step 1: Read Specification and Define Phases
 
-Read the specification (`docs/workflow/specification/{topic}.md`) **in full**. Do not summarize it — work from the complete document throughout the planning process. The specification has already been validated and signed off. Your job is to translate it into an actionable plan, not to review or reinterpret it.
+Read the specification **in full**. Do not summarize it — work from the complete document throughout the planning process. The specification contains validated decisions. Your job is to translate it into an actionable plan, not to review or reinterpret it.
 
 From the specification, extract:
 - Key decisions and rationale
@@ -44,7 +44,7 @@ From the specification, extract:
 - Constraints and requirements
 - **External dependencies** (from the Dependencies section)
 
-**The specification is your sole input.** Prior source materials have already been validated, filtered, and enriched into the specification. Everything you need is in the specification — do not reference other documents.
+**The specification is your sole input.** Everything you need is in the specification — do not reference other documents or prior source materials.
 
 #### Extract External Dependencies
 
@@ -52,7 +52,7 @@ The specification's Dependencies section lists things this feature needs from ot
 
 Copy these into the plan index file (see "External Dependencies Section" below). During planning:
 
-1. **Check for existing plans**: For each dependency, search `docs/workflow/planning/` for a matching topic
+1. **Check for existing plans**: For each dependency, search existing plan files for a matching topic
 2. **If plan exists**: Try to identify specific tasks that satisfy the dependency. Query the output format to find relevant tasks. If ambiguous, ask the user which tasks apply.
 3. **If no plan exists**: Record the dependency in natural language — it will be linked later via `/link-dependencies` or when that topic is planned.
 
@@ -242,9 +242,9 @@ After completing the plan, perform a comprehensive two-phase review before handi
 
 To ensure analysis isn't lost during context refresh, create tracking files that capture findings. These files persist analysis so work can continue across sessions.
 
-**Location**: Store tracking files alongside the plan:
-- `docs/workflow/planning/{topic}-review-traceability-tracking.md` — Phase 1 findings
-- `docs/workflow/planning/{topic}-review-integrity-tracking.md` — Phase 2 findings
+**Location**: Store tracking files alongside the plan file:
+- `{topic}-review-traceability-tracking.md` — Phase 1 findings
+- `{topic}-review-integrity-tracking.md` — Phase 2 findings
 
 **Format**:
 ```markdown
