@@ -4,9 +4,39 @@
 
 ---
 
-Plans can be stored in different formats. **Ask the user which format they prefer** - present the benefits from each adapter file and let them decide.
+Plans can be stored in different formats.
 
 **IMPORTANT**: Only offer formats listed below. Do not invent or suggest formats that don't have corresponding `output-*.md` files in this directory.
+
+## Presenting the Choice
+
+Present the available formats to the user so they can make an informed decision. Use this format:
+
+```
+Which output format would you like for this plan?
+
+  1. Local Markdown — Single markdown file, no setup required
+     Best for: Simple features, small plans, quick iterations
+
+  2. Linear — Tasks as Linear issues with visual tracking
+     Best for: Teams already using Linear, collaborative projects
+
+  3. Backlog.md — Per-task files with local Kanban board
+     Best for: Solo developers wanting a local Kanban with per-task files
+
+  4. Beads — Git-backed graph tracker with dependency management
+     Best for: Complex multi-phase features, AI-agent-driven workflows
+
+Pick a number (1–4):
+```
+
+**STOP.** Wait for the user to choose.
+
+After the user picks a format, confirm the choice and load the corresponding output adapter:
+
+> "Using **{Format Name}**. Loading the output adapter."
+
+→ Load the chosen `output-{format}.md` adapter and proceed with planning.
 
 ## Available Formats
 
