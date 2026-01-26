@@ -35,9 +35,11 @@ Planning translates the specification into actionable structure. This translatio
 
 Work through these steps sequentially. Steps marked with **⛔ CHECKPOINT** require you to stop, present your work, and wait for explicit user confirmation before proceeding. Do not skip checkpoints. Do not combine steps. Do not write ahead.
 
-### Step 1: Read Specification
+### Step 1: Read Specification and Define Phases
 
-From the specification (`docs/workflow/specification/{topic}.md`), extract:
+Read the specification (`docs/workflow/specification/{topic}.md`) **in full**. Do not summarize it — work from the complete document throughout the planning process. The specification has already been validated and signed off. Your job is to translate it into an actionable plan, not to review or reinterpret it.
+
+From the specification, extract:
 - Key decisions and rationale
 - Architectural choices
 - Edge cases identified
@@ -65,21 +67,9 @@ If yes:
 
 Alternatively, the user can run `/link-dependencies` later to resolve dependencies across all plans in bulk.
 
-> **⛔ CHECKPOINT**: Present a summary of what you extracted from the specification:
->
-> - Key decisions and their rationale
-> - Architectural choices
-> - Edge cases identified
-> - Constraints and requirements
-> - External dependencies (if any)
->
-> *"Here's what I've extracted from the specification: [summary]. Does this capture everything? Did I miss or misinterpret anything?"*
->
-> **Wait for user confirmation before proceeding.**
+#### Define Phases
 
-### Step 2: Define Phases
-
-Break into logical phases:
+Break the specification into logical phases:
 - Each independently testable
 - Each has acceptance criteria
 - Progression: Foundation → Core → Edge cases → Refinement
@@ -95,7 +85,7 @@ Break into logical phases:
 >
 > **Wait for user confirmation before breaking phases into tasks.**
 
-### Step 3: Detail Each Phase
+### Step 2: Detail Each Phase
 
 Work through phases **one at a time**, in order. For each phase:
 
@@ -118,7 +108,7 @@ Work through phases **one at a time**, in order. For each phase:
 >
 > **Write the confirmed phase to the plan file before starting the next phase.** The plan grows incrementally — phase by phase, not all at once.
 
-### Step 4: Plan Review
+### Step 3: Plan Review
 
 After all phases are detailed and confirmed, perform the comprehensive two-phase review. This is the most important quality gate in the planning process — it ensures the plan faithfully represents the specification and is structurally ready for implementation.
 
