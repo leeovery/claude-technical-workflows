@@ -154,7 +154,8 @@ What would you like to do?
    specifications are incorporated and superseded.
 6. Re-analyze groupings
    Current groupings are discarded and rebuilt. Existing
-   specification names are preserved.
+   specification names are preserved. You can provide guidance
+   in the next step.
 
 Enter choice (1-6):
 ```
@@ -388,7 +389,8 @@ What would you like to do?
    specifications are incorporated and superseded.
 5. Re-analyze groupings
    Current groupings are discarded and rebuilt. Existing
-   specification names are preserved.
+   specification names are preserved. You can provide guidance
+   in the next step.
 
 Enter choice (1-5):
 ```

@@ -95,7 +95,7 @@ What would you like to do?
    of following the recommended groupings.
 4. Re-analyze groupings
    Current groupings are discarded and rebuilt. You can provide
-   guidance on how to organize them.
+   guidance on how to organize them in the next step.
 
 Enter choice (1-4):
 ```
@@ -223,7 +223,7 @@ What would you like to do?
    of following the recommended groupings.
 4. Re-analyze groupings
    Current groupings are discarded and rebuilt. You can provide
-   guidance on how to organize them.
+   guidance on how to organize them in the next step.
 
 Enter choice (1-4):
 ```

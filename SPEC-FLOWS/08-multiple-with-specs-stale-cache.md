@@ -116,7 +116,8 @@ have changed since it was created. Re-analysis is required.
 
 1. Analyze for groupings (recommended)
    All discussions are analyzed for natural groupings. Existing
-   specification names are preserved.
+   specification names are preserved. You can provide guidance
+   in the next step.
 2. Continue "Authentication System" — in-progress
 3. Continue "Caching Layer" — concluded
 
@@ -211,7 +212,8 @@ What would you like to do?
    specifications are incorporated and superseded.
 5. Re-analyze groupings
    Current groupings are discarded and rebuilt. Existing
-   specification names are preserved.
+   specification names are preserved. You can provide guidance
+   in the next step.
 
 Enter choice (1-5):
 ```
