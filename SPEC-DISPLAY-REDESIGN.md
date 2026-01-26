@@ -827,6 +827,24 @@ Skills are workflow-agnostic. The handoff simply passes sources and output path 
 - Discovery script improvements (explicit counts) — design agreed, implementation pending
 - Remove this tracking file when implementation is complete
 
+## Pending Questions
+
+### Active Discussion
+
+1. **Should "Pick individually" be removed?** The option may be redundant. If specs exist, the menu already offers "Continue" for each. The remaining unassigned discussions would be better served by going through grouping analysis first — that's arguably the point of the specification phase. Counter-argument: sometimes a user just wants to quickly specify one discussion without analyzing everything.
+
+2. **Should we offer a "Unified specification" option?** Allow the user to ignore groupings and consolidate all discussions into a single spec. If chosen, update the cache to reflect this so subsequent runs display the unified group. Needs design for: where the option appears in the menu, how the cache is updated, and what the display looks like on re-entry.
+
+### Parked (circle back after active items resolved)
+
+3. **Confirm step wording for "all sources extracted"** — When continuing a spec where everything is already extracted, the confirm says "All sources extracted" but the handoff says "review and refine." Could be clearer about what the user is actually doing (refinement, not extraction).
+
+4. **"Continue" vs "Refine" verb logic** — In-progress specs use "Continue", concluded specs use "Refine." Rule is implied but never explicitly stated. Should be documented in the command.
+
+5. **Title case inconsistency on individual picks** — Mechanical kebab-to-title conversion (`api-design` → `Api Design`) can differ from proper names chosen during analysis (`API Design`). Minor but visible.
+
+6. **Single-discussion decline has no fallback** — Outputs 3-4 ask y/n. If user says no, there's nothing to fall back to. Should be a graceful exit rather than an open-ended "What would you like to do instead?"
+
 ## Related Files
 
 - `commands/workflow/start-specification.md` — the command to update
