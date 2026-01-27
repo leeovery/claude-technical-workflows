@@ -36,6 +36,8 @@ Either way: Transform specifications into actionable phases, tasks, and acceptan
 
 ## The Process
 
+Follow every step in sequence. No steps are optional.
+
 ---
 
 ## Step 1: Choose Output Format
@@ -103,9 +105,7 @@ Load **[steps/resolve-dependencies.md](references/steps/resolve-dependencies.md)
 
 ## Step 8: Plan Review
 
-The comprehensive two-phase review — the most important quality gate in the planning process. It ensures the plan faithfully represents the specification and is structurally ready for implementation.
-
-**This review is not optional.** Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its instructions as written.
+Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its instructions as written.
 
 ---
 

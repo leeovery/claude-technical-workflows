@@ -8,8 +8,6 @@ After completing the plan, perform a comprehensive two-phase review before handi
 
 **Why this matters**: The plan is what gets built. If content was hallucinated into the plan, it will be implemented — building something that was never discussed or validated. If specification content was missed, it won't be built. The entire purpose of this workflow is that artifacts carry validated decisions through to implementation. The plan is the final gate before code is written.
 
-**This review is not optional.** It is the most important quality gate in the planning process.
-
 ## Review Tracking Files
 
 To ensure analysis isn't lost during context refresh, create tracking files that capture findings. These files persist analysis so work can continue across sessions.
