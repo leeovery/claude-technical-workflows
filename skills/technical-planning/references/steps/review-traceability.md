@@ -86,19 +86,9 @@ Show the finding with full detail:
 
 Present the proposed fix **in the format it will be written to the plan**. What the user sees is what gets applied — no changes between approval and writing.
 
-**For new content** (missing from plan) — show the content to be added and where:
+State the action type explicitly so the user knows what's changing structurally:
 
-> **Proposed fix — add to Phase {N}, Task {M}:**
->
-> [The exact content to be added, in plan format]
-
-**For content to remove** (hallucinated) — show what will be removed:
-
-> **Proposed fix — remove from Phase {N}, Task {M}:**
->
-> [The exact content to be removed]
-
-**For content to change** (incomplete coverage, weak criteria, etc.) — show current and proposed:
+**Update a task** — change content within an existing task:
 
 > **Proposed fix — update Phase {N}, Task {M}:**
 >
@@ -107,6 +97,42 @@ Present the proposed fix **in the format it will be written to the plan**. What 
 >
 > **Proposed:**
 > [The replacement content]
+
+**Add content to a task** — insert into an existing task (e.g., missing acceptance criteria, edge case):
+
+> **Proposed fix — add to Phase {N}, Task {M}, {section}:**
+>
+> [The exact content to be added, in plan format]
+
+**Remove content from a task** — strip content that shouldn't be there:
+
+> **Proposed fix — remove from Phase {N}, Task {M}, {section}:**
+>
+> [The exact content to be removed]
+
+**Add a new task** — a spec section has no plan coverage and needs its own task:
+
+> **Proposed fix — add new task to Phase {N}:**
+>
+> [The complete task in plan format, using the task template]
+
+**Remove a task** — an entire task is hallucinated with no spec backing:
+
+> **Proposed fix — remove Phase {N}, Task {M}: {Task Name}**
+>
+> **Reason**: [Why this task has no specification basis]
+
+**Add a new phase** — a significant area of the specification has no plan coverage:
+
+> **Proposed fix — add new Phase {N}: {Phase Name}**
+>
+> [Phase goal, acceptance criteria, and task overview]
+
+**Remove a phase** — an entire phase is not backed by the specification:
+
+> **Proposed fix — remove Phase {N}: {Phase Name}**
+>
+> **Reason**: [Why this phase has no specification basis]
 
 After presenting the finding and proposed fix, ask:
 
