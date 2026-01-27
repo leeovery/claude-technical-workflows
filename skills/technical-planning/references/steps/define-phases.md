@@ -4,16 +4,22 @@
 
 ---
 
+## Phase Design
+
+**Each phase should**:
+- Be independently testable
+- Have clear acceptance criteria (checkboxes)
+- Provide incremental value
+
+**Progression**: Foundation → Core functionality → Edge cases → Refinement
+
+---
+
 Orient the user:
 
 > "I've read the full specification. I'm going to propose a phase structure — how we break this into independently testable stages. Once we agree on the phases, we'll take each one and break it into tasks."
 
-With the full specification understood, break it into logical phases:
-- Each independently testable
-- Each has acceptance criteria
-- Progression: Foundation → Core → Edge cases → Refinement
-
-Understanding what tasks belong in each phase is necessary to determine the right ordering. Consider the natural dependencies between areas of functionality — what must exist before something else can be built. This informs both phase boundaries and phase sequence.
+With the full specification understood, break it into logical phases. Understanding what tasks belong in each phase is necessary to determine the right ordering. Consider the natural dependencies between areas of functionality — what must exist before something else can be built. This informs both phase boundaries and phase sequence.
 
 Present the proposed phase structure using this format:
 
@@ -59,14 +65,3 @@ Phase 2: Core — Recurring Events
 #### If Adjust
 
 Incorporate feedback, re-present the updated phase structure, and ask again. Repeat until approved.
-
----
-
-## Phase Design
-
-**Each phase should**:
-- Be independently testable
-- Have clear acceptance criteria (checkboxes)
-- Provide incremental value
-
-**Progression**: Foundation → Core functionality → Edge cases → Refinement
