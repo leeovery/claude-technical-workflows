@@ -4,7 +4,7 @@
 
 ---
 
-Load **[task-design.md](../task-design.md)** — the principles for breaking phases into well-scoped tasks.
+Load **[task-design.md](../task-design.md)** — the principles for breaking phases into well-scoped, vertically-sliced tasks.
 
 ---
 

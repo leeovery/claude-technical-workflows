@@ -4,14 +4,7 @@
 
 ---
 
-## Phase Design
-
-**Each phase should**:
-- Be independently testable
-- Have clear acceptance criteria (checkboxes)
-- Provide incremental value
-
-**Progression**: Foundation → Core functionality → Edge cases → Refinement
+Load **[phase-design.md](../phase-design.md)** — the principles for structuring phases as independently valuable, testable increments built on a walking skeleton.
 
 ---
 
