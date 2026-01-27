@@ -77,7 +77,9 @@ Show the finding with full detail:
 > **Finding {N} of {total}: {Brief Title}**
 >
 > **Type**: Missing from plan | Hallucinated content | Incomplete coverage
+>
 > **Spec Reference**: [Section/decision in the specification]
+>
 > **Plan Reference**: [Phase/task in the plan, or "N/A" for missing content]
 >
 > **Details**: [What's wrong and why it matters]

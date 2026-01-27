@@ -100,7 +100,9 @@ Show the finding with full detail:
 > **Finding {N} of {total}: {Brief Title}**
 >
 > **Severity**: Critical | Important | Minor
+>
 > **Plan Reference**: [Phase/task in the plan]
+>
 > **Category**: [Which review criterion — e.g., "Task Template Compliance", "Vertical Slicing"]
 >
 > **Details**: [What the issue is and why it matters for implementation]
