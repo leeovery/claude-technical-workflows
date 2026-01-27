@@ -10,7 +10,7 @@ Orient the user:
 
 After all phases are detailed and written, handle external dependencies — things this plan needs from other topics or systems.
 
-## If the specification has a Dependencies section
+#### If the specification has a Dependencies section
 
 The specification's Dependencies section lists what this feature needs from outside its own scope. These must be documented in the plan so implementation knows what is blocked and what is available.
 
@@ -25,7 +25,7 @@ The specification's Dependencies section lists what this feature needs from outs
    - For each match, identify which task(s) in the current plan satisfy that dependency
    - Update the other plan's dependency entry with the task reference (unresolved → resolved)
 
-## If the specification has no Dependencies section
+#### If the specification has no Dependencies section
 
 Document this explicitly in the plan:
 
@@ -37,7 +37,7 @@ No external dependencies.
 
 This makes it clear that dependencies were considered and none exist — not that they were overlooked.
 
-## If no other plans exist
+#### If no other plans exist
 
 Skip the resolution and reverse check — there is nothing to resolve against. Document the dependencies as unresolved. They will be linked when other topics are planned, or via `/link-dependencies`.
 
@@ -47,6 +47,10 @@ Skip the resolution and reverse check — there is nothing to resolve against. D
 > - **"Approve"** — Dependency state is confirmed. Proceed to plan review.
 > - **"Adjust"** — Tell me what to change.
 
-**If approved:** → Proceed to **Step 6**.
+#### If Approved
 
-**If adjust:** Incorporate feedback, re-present the updated dependency state, and ask again. Repeat until approved.
+→ Proceed to **Step 7**.
+
+#### If Adjust
+
+Incorporate feedback, re-present the updated dependency state, and ask again. Repeat until approved.

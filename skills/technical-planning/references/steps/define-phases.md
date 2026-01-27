@@ -52,9 +52,13 @@ Phase 2: Core — Recurring Events
 > - **"Approve"** — Phase structure is confirmed. I'll proceed to task breakdown.
 > - **"Adjust"** — Tell me what to change: reorder, split, merge, add, or remove phases.
 
-**If approved:** → Proceed to **Step 4**.
+#### If Approved
 
-**If adjust:** Incorporate feedback, re-present the updated phase structure, and ask again. Repeat until approved.
+→ Proceed to **Step 4**.
+
+#### If Adjust
+
+Incorporate feedback, re-present the updated phase structure, and ask again. Repeat until approved.
 
 ---
 

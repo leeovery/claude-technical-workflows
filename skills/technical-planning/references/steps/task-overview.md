@@ -45,6 +45,10 @@ This overview establishes the scope and ordering. The user should be able to see
 > - **"Approve"** — Task list is confirmed. I'll begin writing full task detail.
 > - **"Adjust"** — Tell me what to change: reorder, split, merge, add, or remove tasks.
 
-**If approved:** → Proceed to **Step 5**.
+#### If Approved
 
-**If adjust:** Incorporate feedback, re-present the updated task overview, and ask again. Repeat until approved.
+→ Proceed to **Step 5**.
+
+#### If Adjust
+
+Incorporate feedback, re-present the updated task overview, and ask again. Repeat until approved.

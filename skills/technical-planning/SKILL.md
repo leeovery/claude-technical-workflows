@@ -26,9 +26,13 @@ Either way: Transform specifications into actionable phases, tasks, and acceptan
 
 **If missing:** Will ask user for specification location or content.
 
+---
+
 ## The Process
 
-### Step 1: Choose Output Format
+---
+
+## Step 1: Choose Output Format
 
 Present the formats from **[output-formats.md](references/output-formats.md)** to the user as written — including description, pros, cons, and "best for" — so they can make an informed choice. Number each format and ask the user to pick a number.
 
@@ -36,7 +40,9 @@ Present the formats from **[output-formats.md](references/output-formats.md)** t
 
 → Proceed to **Step 2**.
 
-### Step 2: Load Planning Principles and Read Specification
+---
+
+## Step 2: Load Planning Principles and Read Specification
 
 Load **[formal-planning.md](references/formal-planning.md)** — this contains the planning principles, rules, and quality standards that apply throughout the process.
 
@@ -57,29 +63,41 @@ Do not present or summarize the specification back to the user — it has alread
 
 → Proceed to **Step 3**.
 
-### Step 3: Define Phases
+---
+
+## Step 3: Define Phases
 
 Load **[steps/define-phases.md](references/steps/define-phases.md)** and follow its instructions as written.
 
-### Step 4: Phase Task Overview
+---
+
+## Step 4: Phase Task Overview
 
 Load **[steps/task-overview.md](references/steps/task-overview.md)** and follow its instructions as written.
 
-### Step 5: Detail, Approve, and Log Each Task
+---
+
+## Step 5: Detail, Approve, and Log Each Task
 
 Load **[steps/detail-tasks.md](references/steps/detail-tasks.md)** and follow its instructions as written.
 
-### Step 6: Resolve External Dependencies
+---
+
+## Step 6: Resolve External Dependencies
 
 Load **[steps/resolve-dependencies.md](references/steps/resolve-dependencies.md)** and follow its instructions as written.
 
-### Step 7: Plan Review
+---
+
+## Step 7: Plan Review
 
 The comprehensive two-phase review — the most important quality gate in the planning process. It ensures the plan faithfully represents the specification and is structurally ready for implementation.
 
 **This review is not optional.** Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its instructions as written.
 
-### Step 8: Conclude the Plan
+---
+
+## Step 8: Conclude the Plan
 
 After the review is complete:
 
