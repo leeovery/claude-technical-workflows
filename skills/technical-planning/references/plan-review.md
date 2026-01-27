@@ -85,16 +85,12 @@ After both review phases:
    - Dependencies are documented and ordered (Phase 2)
    - External dependencies match specification (Phase 2)
 
-3. **Ask for sign-off**:
+3. **Confirm with the user**:
 
 > "The plan has passed both review phases:
 > - **Traceability**: All specification content is covered; no hallucinated content
 > - **Integrity**: Plan structure, tasks, and dependencies are implementation-ready
 >
-> Ready to mark the plan as complete?"
+> Review is complete."
 
-4. **Update plan status** — After user confirms, update the plan frontmatter to `status: concluded`
-
-5. **Final commit** — Commit the concluded plan
-
-> **CHECKPOINT**: Do not proceed to sign-off if tracking files still exist. They indicate incomplete review work.
+> **CHECKPOINT**: Do not confirm completion if tracking files still exist. They indicate incomplete review work.

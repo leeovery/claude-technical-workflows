@@ -229,6 +229,15 @@ After all phases are detailed, confirmed, and dependencies are documented, perfo
 
 ---
 
+## Step 7: Conclude the Plan
+
+After the review is complete:
+
+1. **Update plan status** — Update the plan frontmatter to `status: concluded`
+2. **Final commit** — Commit the concluded plan
+
+---
+
 ## Phase Design
 
 **Each phase should**:
