@@ -47,10 +47,10 @@ Skip the resolution and reverse check — there is nothing to resolve against. D
 > - **"Approve"** — Dependency state is confirmed. Proceed to plan review.
 > - **"Adjust"** — Tell me what to change.
 
-#### If Approved
-
-→ Proceed to **Step 8**.
-
 #### If Adjust
 
 Incorporate feedback, re-present the updated dependency state, and ask again. Repeat until approved.
+
+#### If Approved
+
+→ Proceed to **Step 8**.

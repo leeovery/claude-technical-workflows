@@ -31,10 +31,10 @@ Phase {N}: {Phase Name}
 > - **"Approve"** — Phase structure is confirmed. I'll proceed to task breakdown.
 > - **"Adjust"** — Tell me what to change: reorder, split, merge, add, or remove phases.
 
-#### If Approved
-
-→ Proceed to **Step 5**.
-
 #### If Adjust
 
 Incorporate feedback, re-present the updated phase structure, and ask again. Repeat until approved.
+
+#### If Approved
+
+→ Proceed to **Step 5**.
