@@ -10,6 +10,15 @@ Compare the plan against the specification **in both directions** to ensure comp
 
 Re-read the specification in full before starting. Don't rely on memory — read it as if seeing it for the first time. Then check both directions:
 
+## What You're NOT Doing
+
+- **Not adding new requirements** — If something isn't in the spec, the fix is to remove it from the plan or flag it with `[needs-info]`, not to justify its inclusion
+- **Not expanding scope** — Missing spec content should be added as tasks; it shouldn't trigger re-architecture of the plan
+- **Not being lenient with hallucinated content** — If it can't be traced to the specification, it must be removed or the user must explicitly approve it as an intentional addition
+- **Not re-litigating spec decisions** — The specification reflects validated decisions; you're checking the plan's fidelity to them
+
+---
+
 ## Direction 1: Specification → Plan (completeness)
 
 Is everything from the specification represented in the plan?
@@ -176,25 +185,10 @@ Commit the tracking file (and any plan changes) before moving on. This ensures p
 
 **If findings remain:** → Present the next finding. Follow the same present → propose → ask → apply sequence.
 
-**If all findings are processed:** → Proceed to Completing Phase 1.
+**If all findings are processed:**
 
-## What You're NOT Doing
+**Delete the traceability tracking file** (`{topic}-review-traceability-tracking.md`) — it has served its purpose.
 
-- **Not adding new requirements** — If something isn't in the spec, the fix is to remove it from the plan or flag it with `[needs-info]`, not to justify its inclusion
-- **Not expanding scope** — Missing spec content should be added as tasks; it shouldn't trigger re-architecture of the plan
-- **Not being lenient with hallucinated content** — If it can't be traced to the specification, it must be removed or the user must explicitly approve it as an intentional addition
-- **Not re-litigating spec decisions** — The specification reflects validated decisions; you're checking the plan's fidelity to them
+Inform the user the traceability review is complete.
 
-## Completing Phase 1
-
-When you've:
-- Verified every specification element has plan coverage
-- Verified every plan element traces to the specification
-- Resolved all findings with the user
-- Updated the tracking file with all resolutions
-
-**Delete the Phase 1 tracking file** (`{topic}-review-traceability-tracking.md`) — it has served its purpose.
-
-Inform the user Phase 1 is complete.
-
-→ Return to **[plan-review.md](plan-review.md)** for Phase 2.
+→ Return to **[plan-review.md](plan-review.md)** for the integrity review.

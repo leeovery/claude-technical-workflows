@@ -4,7 +4,7 @@
 
 ---
 
-After completing the plan, perform a comprehensive two-phase review before handing off to implementation.
+After completing the plan, perform a comprehensive two-part review before handing off to implementation.
 
 **Why this matters**: The plan is what gets built. If content was hallucinated into the plan, it will be implemented — building something that was never discussed or validated. If specification content was missed, it won't be built. The entire purpose of this workflow is that artifacts carry validated decisions through to implementation. The plan is the final gate before code is written.
 
@@ -13,8 +13,8 @@ After completing the plan, perform a comprehensive two-phase review before handi
 To ensure analysis isn't lost during context refresh, create tracking files that capture findings. These files persist analysis so work can continue across sessions.
 
 **Location**: Store tracking files alongside the plan file:
-- `{topic}-review-traceability-tracking.md` — Phase 1 findings
-- `{topic}-review-integrity-tracking.md` — Phase 2 findings
+- `{topic}-review-traceability-tracking.md` — Traceability findings
+- `{topic}-review-integrity-tracking.md` — Integrity findings
 
 **Format**:
 ```markdown
@@ -54,7 +54,7 @@ topic: [Topic Name]
 
 ---
 
-## Phase 1: Traceability Review
+## Traceability Review
 
 Compare the plan against the specification in both directions — checking that everything from the spec is in the plan, and everything in the plan traces back to the spec.
 
@@ -62,7 +62,7 @@ Load **[review-traceability.md](review-traceability.md)** and follow its instruc
 
 ---
 
-## Phase 2: Plan Integrity Review
+## Plan Integrity Review
 
 Review the plan as a standalone document for structural quality, implementation readiness, and adherence to planning standards.
 
@@ -72,20 +72,20 @@ Load **[review-integrity.md](review-integrity.md)** and follow its instructions 
 
 ## Completion
 
-After both review phases:
+After both reviews:
 
 1. **Verify tracking files are deleted** — Both traceability and integrity tracking files must be gone
 
 2. **Final quality confirmation**:
-   - All specification content has plan coverage (Phase 1)
-   - No hallucinated content remains (Phase 1)
-   - All tasks follow the required template (Phase 2)
-   - Dependencies are documented and ordered (Phase 2)
-   - External dependencies match specification (Phase 2)
+   - All specification content has plan coverage (Traceability)
+   - No hallucinated content remains (Traceability)
+   - All tasks follow the required template (Integrity)
+   - Dependencies are documented and ordered (Integrity)
+   - External dependencies match specification (Integrity)
 
 3. **Confirm with the user**:
 
-> "The plan has passed both review phases:
+> "The plan has passed both reviews:
 > - **Traceability**: All specification content is covered; no hallucinated content
 > - **Integrity**: Plan structure, tasks, and dependencies are implementation-ready
 >

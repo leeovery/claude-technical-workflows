@@ -12,6 +12,15 @@ Review the plan **as a standalone document** for structural quality, implementat
 
 Read the plan end-to-end — carefully, as if you were about to implement it. For each phase, each task, and the plan overall, check against the following criteria:
 
+## What You're NOT Doing
+
+- **Not redesigning the plan** — You're checking quality, not re-architecting
+- **Not adding content from outside the spec** — If a task needs more detail, the detail must come from the specification
+- **Not gold-plating** — Focus on issues that would actually impact implementation
+- **Not second-guessing phase structure** — Unless it's fundamentally broken, the structure stands
+
+---
+
 ## What to Look For
 
 1. **Task Template Compliance**
@@ -199,24 +208,10 @@ Commit the tracking file (and any plan changes) before moving on. This ensures p
 
 **If findings remain:** → Present the next finding. Follow the same present → propose → ask → apply sequence.
 
-**If all findings are processed:** → Proceed to Completing Phase 2.
+**If all findings are processed:**
 
-## What You're NOT Doing
+**Delete the integrity tracking file** (`{topic}-review-integrity-tracking.md`) — it has served its purpose.
 
-- **Not redesigning the plan** — You're checking quality, not re-architecting
-- **Not adding content from outside the spec** — If a task needs more detail, the detail must come from the specification
-- **Not gold-plating** — Focus on issues that would actually impact implementation
-- **Not second-guessing phase structure** — Unless it's fundamentally broken, the structure stands
+Inform the user the integrity review is complete.
 
-## Completing Phase 2
-
-When you've:
-- Reviewed the plan for structure, quality, and implementation readiness
-- Resolved all critical and important findings with the user
-- Updated the tracking file with all resolutions
-
-**Delete the Phase 2 tracking file** (`{topic}-review-integrity-tracking.md`).
-
-Inform the user Phase 2 is complete.
-
-→ Return to **[plan-review.md](plan-review.md)** for Completion.
+→ Return to **[plan-review.md](plan-review.md)** for completion.
