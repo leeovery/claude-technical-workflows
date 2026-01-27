@@ -196,6 +196,8 @@ Update the tracking file: mark resolution as "Skipped", note the reason.
 
 #### Next Finding
 
+Commit the tracking file (and any plan changes) before moving on. This ensures progress survives context refresh or session interruption.
+
 **If findings remain:** → Present the next finding. Follow the same present → propose → ask → apply sequence.
 
 **If all findings are processed:** → Proceed to [Completing Phase 1](#completing-phase-1).
