@@ -10,6 +10,8 @@ Review the plan **as a standalone document** for structural quality, implementat
 
 **Key distinction**: The traceability review checked *what's in the plan* against the spec. This review checks *how it's structured* — looking inward at the plan's own quality.
 
+Read the plan end-to-end — carefully, as if you were about to implement it. For each phase, each task, and the plan overall, check against the following criteria:
+
 ## What to Look For
 
 1. **Task Template Compliance**
@@ -61,22 +63,19 @@ Review the plan **as a standalone document** for structural quality, implementat
    - Dependencies are in the correct state (resolved/unresolved)
    - No external dependencies were missed or invented
 
-## The Review Process
-
-1. **Read the plan end-to-end** — Carefully, as if you were about to implement it
-2. **For each phase**: Check structure, acceptance criteria, logical progression
-3. **For each task**: Check template compliance, self-containment, granularity
-4. **For the plan overall**: Check dependencies, ordering, external dependencies
-5. **Collect findings** and categorize by severity:
-   - **Critical**: Would block implementation or cause incorrect behavior
-   - **Important**: Would force implementer to guess or make design decisions
-   - **Minor**: Polish or improvement that strengthens the plan
-6. **Create the tracking file** — Write findings to `{topic}-review-integrity-tracking.md`
-7. **Commit the tracking file**
-
 ## Presenting Integrity Findings
 
-Follow the same two-stage pattern:
+After completing your review, categorize each finding by severity:
+
+- **Critical**: Would block implementation or cause incorrect behavior
+- **Important**: Would force implementer to guess or make design decisions
+- **Minor**: Polish or improvement that strengthens the plan
+
+Then:
+
+1. **Create the tracking file** — Write all findings to `{topic}-review-integrity-tracking.md`
+2. **Commit the tracking file** — Ensures it survives context refresh
+3. **Present findings** in two stages:
 
 **Stage 1: Summary**
 
@@ -92,9 +91,11 @@ Follow the same two-stage pattern:
 
 **Stage 2: Process One Item at a Time**
 
-Follow the same per-item workflow as the traceability review (see [review-traceability.md](review-traceability.md#present-the-finding)): present the finding, propose the fix (showing exactly what will change in the plan), offer the Approve / Adjust / Skip choice, wait for the user's response, and apply the fix verbatim if approved.
+Work through each finding **one at a time**. For each finding: present it, propose the fix, wait for approval, then apply it verbatim.
 
-The only difference is the finding format — use severity and category instead of type and spec reference:
+### Present the Finding
+
+Show the finding with full detail:
 
 > **Finding {N} of {total}: {Brief Title}**
 >
@@ -104,7 +105,73 @@ The only difference is the finding format — use severity and category instead 
 >
 > **Details**: [What the issue is and why it matters for implementation]
 
-The proposed fix format, choice block, and routing (If Adjust / If Approved / If Skipped / Next Finding) are identical to the traceability review.
+### Propose the Fix
+
+Present the proposed fix **in the format it will be written to the plan**. What the user sees is what gets applied — no changes between approval and writing.
+
+**For new content** — show the content to be added and where:
+
+> **Proposed fix — add to Phase {N}, Task {M}:**
+>
+> [The exact content to be added, in plan format]
+
+**For content to remove** — show what will be removed:
+
+> **Proposed fix — remove from Phase {N}, Task {M}:**
+>
+> [The exact content to be removed]
+
+**For content to change** — show current and proposed:
+
+> **Proposed fix — update Phase {N}, Task {M}:**
+>
+> **Current:**
+> [The existing content as it appears in the plan]
+>
+> **Proposed:**
+> [The replacement content]
+
+After presenting the finding and proposed fix, ask:
+
+> **Finding {N} of {total}: {Brief Title}**
+>
+> **To proceed, choose one:**
+> - **"Approve"** — Fix is confirmed. I'll apply it to the plan verbatim.
+> - **"Adjust"** — Tell me what to change about the proposed fix.
+> - **"Skip"** — Leave this as-is and move to the next finding.
+
+**STOP.** Wait for the user's response.
+
+### If Adjust
+
+The user may:
+- Request changes to the proposed fix
+- Ask questions about why this was flagged
+- Suggest a different approach to resolving the finding
+
+Incorporate feedback and re-present the proposed fix **in full** using the same format above. Then ask the same choice again. Repeat until approved or skipped.
+
+### If Approved
+
+Apply the fix to the plan — verbatim, as presented. Do not modify content between approval and writing. Then update the tracking file: mark resolution as "Fixed", add any discussion notes.
+
+Confirm:
+
+> "Finding {N} of {total}: {Brief Title} — fixed."
+
+### If Skipped
+
+Update the tracking file: mark resolution as "Skipped", note the reason.
+
+> "Finding {N} of {total}: {Brief Title} — skipped."
+
+### Next Finding
+
+Commit the tracking file (and any plan changes) before moving on. This ensures progress survives context refresh or session interruption.
+
+**If findings remain:** → Present the next finding. Follow the same present → propose → ask → apply sequence.
+
+**If all findings are processed:** → Proceed to Completing Phase 2.
 
 ## What You're NOT Doing
 
