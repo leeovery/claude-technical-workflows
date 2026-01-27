@@ -115,5 +115,10 @@ After the review is complete:
 
 1. **Update plan status** — Update the plan frontmatter to `status: concluded`
 2. **Final commit** — Commit the concluded plan
+3. **Present completion summary**:
 
-**Output**: A complete implementation plan in the chosen format — phases, tasks, acceptance criteria, and dependencies — built collaboratively and reviewed for traceability and integrity.
+> "Planning is complete for **{topic}**.
+>
+> The plan contains **{N} phases** with **{M} tasks** total, reviewed for traceability against the specification and structural integrity.
+>
+> Status has been marked as `concluded`. The plan is ready for implementation."
