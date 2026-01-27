@@ -4,6 +4,10 @@
 
 ---
 
+Load **[task-design.md](../task-design.md)** — the principles for breaking phases into well-scoped tasks.
+
+---
+
 Orient the user:
 
 > "Taking Phase {N}: {Phase Name} and breaking it into tasks. Here's the overview — once we agree on the list, I'll write each task out in full detail."
