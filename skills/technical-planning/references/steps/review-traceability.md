@@ -158,7 +158,7 @@ Incorporate feedback and re-present the proposed fix **in full** using the same 
 
 ### If Approved
 
-Apply the fix to the plan — verbatim, as presented. Do not modify content between approval and writing. Then update the tracking file: mark resolution as "Fixed", add any discussion notes.
+Apply the fix to the plan — as presented, using the output format adapter to determine how it's written. Do not modify content between approval and writing. Then update the tracking file: mark resolution as "Fixed", add any discussion notes.
 
 Confirm:
 
