@@ -52,17 +52,6 @@ topic: [Topic Name]
 ...
 ```
 
-**Workflow with Tracking Files**:
-1. Complete your analysis and create the tracking file with all findings
-2. Present the summary to the user (Stage 1)
-3. Work through items one at a time (Stage 2):
-   - Present the finding with full detail
-   - Propose the fix — shown verbatim in the format it will be written to the plan
-   - Ask: Approve / Adjust / Skip
-   - If approved, apply the fix to the plan verbatim and update the tracking file
-4. After all items resolved, delete the tracking file
-5. Proceed to the next phase (or completion)
-
 **Why tracking files**: If context refreshes mid-review, you can read the tracking file and continue where you left off. The tracking file shows which items are resolved and which remain.
 
 ---
