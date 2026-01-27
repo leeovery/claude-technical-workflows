@@ -42,19 +42,3 @@ The plan IS the source of truth. Every phase, every task must contain all inform
 - **Self-contained**: Each task executable without external context
 - **No assumptions**: Spell out the context, don't assume implementer knows it
 
-## Flagging Incomplete Tasks
-
-When information is missing, mark it clearly with `[needs-info]`:
-
-```markdown
-### Task 3: Configure rate limiting [needs-info]
-
-**Do**: Set up rate limiting for the API endpoint
-**Test**: `it throttles requests exceeding limit`
-
-**Needs clarification**:
-- What's the rate limit threshold?
-- Per-user or per-IP?
-```
-
-Planning is iterative. Create structure, flag gaps, refine.
