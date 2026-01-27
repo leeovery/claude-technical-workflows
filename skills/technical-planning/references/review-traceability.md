@@ -6,13 +6,15 @@
 
 Compare the plan against the specification **in both directions** to ensure complete, faithful translation.
 
+**Purpose**: Verify that the plan is a faithful, complete translation of the specification. Everything in the spec must be in the plan, and everything in the plan must trace back to the spec. This is the anti-hallucination gate — it catches both missing content and invented content before implementation begins.
+
+Re-read the specification in full before starting. Don't rely on memory — read it as if seeing it for the first time. Then check both directions:
+
 ## Direction 1: Specification → Plan (completeness)
 
 Is everything from the specification represented in the plan?
 
-1. **Re-read the entire specification** — Don't rely on memory. Read it as if seeing it for the first time.
-
-2. **For each specification element, verify plan coverage**:
+1. **For each specification element, verify plan coverage**:
    - Every decision → has a task that implements it
    - Every requirement → has a task with matching acceptance criteria
    - Every edge case → has a task or is explicitly handled within a task
@@ -21,7 +23,7 @@ Is everything from the specification represented in the plan?
    - Every integration point → has a task that addresses it
    - Every validation rule → has a task with test coverage
 
-3. **Check depth of coverage** — It's not enough that a spec topic is *mentioned* in a task. The task must contain enough detail that an implementer wouldn't need to go back to the specification. Summarizing and rewording is fine, but the essence and instruction must be preserved.
+2. **Check depth of coverage** — It's not enough that a spec topic is *mentioned* in a task. The task must contain enough detail that an implementer wouldn't need to go back to the specification. Summarizing and rewording is fine, but the essence and instruction must be preserved.
 
 ## Direction 2: Plan → Specification (fidelity)
 
