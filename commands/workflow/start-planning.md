@@ -1,5 +1,5 @@
 ---
-description: Start a planning session from an existing specification. Discovers available specifications, asks where to store the plan, and invokes the technical-planning skill.
+description: Start a planning session from an existing specification. Discovers available specifications, gathers context, and invokes the technical-planning skill.
 allowed-tools: Bash(.claude/scripts/discovery-for-planning.sh)
 ---
 
@@ -164,19 +164,7 @@ To proceed:
 
 ---
 
-## Step 4: Choose Output Destination
-
-Ask: **Where should this plan live?**
-
-Load **[output-formats.md](../../skills/technical-planning/references/output-formats.md)** and present the available formats to help the user choose. Then load the corresponding output adapter for that format's setup requirements.
-
-**STOP.** Wait for user response.
-
-→ Proceed to **Step 5**.
-
----
-
-## Step 5: Gather Additional Context
+## Step 4: Gather Additional Context
 
 Ask:
 - Any additional context or priorities to consider?
@@ -184,11 +172,11 @@ Ask:
 
 **STOP.** Wait for user response.
 
-→ Proceed to **Step 6**.
+→ Proceed to **Step 5**.
 
 ---
 
-## Step 6: Surface Cross-Cutting Context
+## Step 5: Surface Cross-Cutting Context
 
 If any **concluded cross-cutting specifications** exist (from `specifications.crosscutting` in discovery), surface them as reference context for planning:
 
@@ -208,11 +196,11 @@ These specifications contain validated architectural decisions that should infor
 
 **If no cross-cutting specifications exist**: Skip this step.
 
-→ Proceed to **Step 7**.
+→ Proceed to **Step 6**.
 
 ---
 
-## Step 7: Invoke the Skill
+## Step 6: Invoke the Skill
 
 After completing the steps above, this command's purpose is fulfilled.
 
@@ -222,8 +210,7 @@ Invoke the [technical-planning](../../skills/technical-planning/SKILL.md) skill 
 ```
 Planning session for: {topic}
 Specification: docs/workflow/specification/{topic}.md
-Output format: {format}
-Additional context: {summary of user's answers from Step 5}
+Additional context: {summary of user's answers from Step 4}
 Cross-cutting references: {list of applicable cross-cutting specs with brief summaries, or "none"}
 
 Invoke the technical-planning skill.
