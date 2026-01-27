@@ -8,18 +8,6 @@ Plans can be stored in different formats.
 
 **IMPORTANT**: Only offer formats listed below. Do not invent or suggest formats that don't have corresponding `output-*.md` files in this directory.
 
-## Presenting the Choice
-
-Present the [Available Formats](#available-formats) list below to the user as written — including description, pros, cons, and "best for" — so they can make an informed choice. Number each format and ask the user to pick a number.
-
-**STOP.** Wait for the user to choose.
-
-After the user picks a format, confirm the choice and load the corresponding output adapter:
-
-> "Using **{Format Name}**. Loading the output adapter."
-
-→ Load the chosen `output-{format}.md` adapter and proceed with planning.
-
 ## Available Formats
 
 ### [Local Markdown](output-local-markdown.md)

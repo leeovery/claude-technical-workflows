@@ -57,7 +57,7 @@ Cross-cutting references are context, not scope. They shape how tasks are writte
 
 ## The Process
 
-1. **Choose output format** — Ask the user which format they want. See **[output-formats.md](references/output-formats.md)** for available formats. Load the chosen output format adapter.
+1. **Choose output format** — Present the formats from **[output-formats.md](references/output-formats.md)** to the user as written — including description, pros, cons, and "best for" — so they can make an informed choice. Number each format and ask the user to pick a number. **STOP.** Wait for the user to choose. After they pick, confirm the choice and load the corresponding `output-{format}.md` adapter.
 
 2. **Load formal planning** — Load **[formal-planning.md](references/formal-planning.md)** alongside the output format adapter. This reference contains the complete step-by-step planning process — gated steps, presentation formats, stop points, and review procedures. **Follow its instructions as written.**
 
