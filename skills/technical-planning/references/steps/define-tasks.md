@@ -26,21 +26,6 @@ Phase {N}: {Phase Name}
      Edge cases: {comma-separated list, or "none"}
 ```
 
-**Example:**
-
-```
-Phase 1: Foundation — Event Model and Storage
-
-  1. Create Event model and migration — Define the events table and Eloquent model with required fields
-     Edge cases: none
-
-  2. Implement event creation endpoint — POST /api/events with validation and persistence
-     Edge cases: overlapping time ranges, past dates
-
-  3. Implement event retrieval — GET /api/events/{id} and GET /api/events with date filtering
-     Edge cases: empty result sets, invalid date ranges
-```
-
 This overview establishes the scope and ordering. The user should be able to see whether the phase is well-structured, whether tasks are in the right order, and whether anything is missing or unnecessary — before investing time in writing out full task detail.
 
 **STOP.** Present the phase task overview and ask:
