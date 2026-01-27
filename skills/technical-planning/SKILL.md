@@ -83,15 +83,15 @@ Load **[steps/define-phases.md](references/steps/define-phases.md)** and follow 
 
 ---
 
-## Step 5: Phase Task Overview
+## Step 5: Define Tasks
 
-Load **[steps/task-overview.md](references/steps/task-overview.md)** and follow its instructions as written.
+Load **[steps/define-tasks.md](references/steps/define-tasks.md)** and follow its instructions as written.
 
 ---
 
-## Step 6: Detail, Approve, and Log Each Task
+## Step 6: Author Tasks
 
-Load **[steps/detail-tasks.md](references/steps/detail-tasks.md)** and follow its instructions as written.
+Load **[steps/author-tasks.md](references/steps/author-tasks.md)** and follow its instructions as written.
 
 ---
 

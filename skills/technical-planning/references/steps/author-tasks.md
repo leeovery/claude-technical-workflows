@@ -1,4 +1,4 @@
-# Detail, Approve, and Log Each Task
+# Author Tasks
 
 *Reference for **[technical-planning](../../SKILL.md)***
 
