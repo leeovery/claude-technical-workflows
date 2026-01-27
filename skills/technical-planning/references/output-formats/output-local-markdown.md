@@ -1,6 +1,6 @@
 # Output: Local Markdown
 
-*Output adapter for **[technical-planning](../SKILL.md)***
+*Output adapter for **[technical-planning](../../SKILL.md)***
 
 ---
 
@@ -60,8 +60,8 @@ Architectural decisions from cross-cutting specifications that inform this plan:
 
 | Specification | Key Decisions | Applies To |
 |---------------|---------------|------------|
-| [Caching Strategy](../specification/caching-strategy.md) | Cache API responses for 5 min; use Redis | Tasks involving API calls |
-| [Rate Limiting](../specification/rate-limiting.md) | 100 req/min per user; sliding window | User-facing endpoints |
+| [Caching Strategy](../../specification/caching-strategy.md) | Cache API responses for 5 min; use Redis | Tasks involving API calls |
+| [Rate Limiting](../../specification/rate-limiting.md) | 100 req/min per user; sliding window | User-facing endpoints |
 
 *Remove this section if no cross-cutting specifications apply.*
 

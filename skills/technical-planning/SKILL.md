@@ -26,41 +26,64 @@ Either way: Transform specifications into actionable phases, tasks, and acceptan
 
 **If missing:** Will ask user for specification location or content.
 
-## Source Material
-
-**The specification is your sole input for what to build.** Everything you need should be in the specification — do not request details from prior source material. If information is missing, ask for clarification on the specification itself.
-
-### Cross-Cutting References
-
-Cross-cutting specifications (e.g., caching strategy, error handling conventions, rate limiting policy) are not things to build — they are architectural decisions that influence how features are built. They inform technical choices within the plan without adding scope.
-
-If cross-cutting specifications are provided:
-
-1. **Read them alongside the specification** so their patterns are available during planning
-2. **Apply their decisions** when designing tasks (e.g., if caching strategy says "cache API responses for 5 minutes", reflect that in relevant task detail)
-3. **Note where patterns apply** — when a task implements a cross-cutting pattern, reference it
-4. **Include a "Cross-Cutting References" section** in the plan linking to these specifications
-
-Cross-cutting references are context, not scope. They shape how tasks are written, not what tasks exist.
-
-## Critical Rules
-
-**Capture immediately**: After each user response, update the planning document BEFORE your next question. Never let more than 2-3 exchanges pass without writing.
-
-**Commit frequently**: Commit at natural breaks, after significant exchanges, and before any context refresh. Context refresh = lost work.
-
-**Never invent reasoning**: If it's not in the specification, ask again. The specification is the golden document — all plan content must trace back to it.
-
-**Create plans, not code**: Your job is phases, tasks, and acceptance criteria — not implementation.
-
-**Collaborate with the user**: Planning is iterative. Stop and ask when the specification is ambiguous, multiple valid approaches exist, or you're uncertain about task scope. The user expects collaboration — don't guess when you can ask.
-
 ## The Process
 
-1. **Choose output format** — Present the formats from **[output-formats.md](references/output-formats.md)** to the user as written — including description, pros, cons, and "best for" — so they can make an informed choice. Number each format and ask the user to pick a number. **STOP.** Wait for the user to choose. After they pick, confirm the choice and load the corresponding `output-{format}.md` adapter.
+### Step 1: Choose Output Format
 
-2. **Load formal planning** — Load **[formal-planning.md](references/formal-planning.md)** alongside the output format adapter. This reference contains the complete step-by-step planning process — gated steps, presentation formats, stop points, and review procedures. **Follow its instructions as written.**
+Present the formats from **[output-formats.md](references/output-formats.md)** to the user as written — including description, pros, cons, and "best for" — so they can make an informed choice. Number each format and ask the user to pick a number.
 
-3. **Follow the process** — formal-planning.md is your main instruction set. Work through its steps sequentially, presenting work at each stop point and waiting for user confirmation before proceeding.
+**STOP.** Wait for the user to choose. After they pick, confirm the choice and load the corresponding `output-{format}.md` adapter from **[output-formats/](references/output-formats/)**.
+
+→ Proceed to **Step 2**.
+
+### Step 2: Load Planning Principles and Read Specification
+
+Load **[formal-planning.md](references/formal-planning.md)** — this contains the planning principles, rules, and quality standards that apply throughout the process.
+
+Read the specification **in full**. Not a scan, not a summary — read every section, every decision, every edge case. The specification must be fully digested before any structural decisions are made.
+
+The specification contains validated decisions. Your job is to translate it into an actionable plan, not to review or reinterpret it.
+
+**The specification is your sole input.** Everything you need is in the specification — do not reference other documents or prior source materials. If cross-cutting specifications are provided, read them alongside the specification so their patterns are available during planning.
+
+From the specification, absorb:
+- Key decisions and rationale
+- Architectural choices
+- Edge cases identified
+- Constraints and requirements
+- Whether a Dependencies section exists (you will handle these in Step 6)
+
+Do not present or summarize the specification back to the user — it has already been signed off.
+
+→ Proceed to **Step 3**.
+
+### Step 3: Define Phases
+
+Load **[steps/define-phases.md](references/steps/define-phases.md)** and follow its instructions as written.
+
+### Step 4: Phase Task Overview
+
+Load **[steps/task-overview.md](references/steps/task-overview.md)** and follow its instructions as written.
+
+### Step 5: Detail, Approve, and Log Each Task
+
+Load **[steps/detail-tasks.md](references/steps/detail-tasks.md)** and follow its instructions as written.
+
+### Step 6: Resolve External Dependencies
+
+Load **[steps/resolve-dependencies.md](references/steps/resolve-dependencies.md)** and follow its instructions as written.
+
+### Step 7: Plan Review
+
+The comprehensive two-phase review — the most important quality gate in the planning process. It ensures the plan faithfully represents the specification and is structurally ready for implementation.
+
+**This review is not optional.** Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its instructions as written.
+
+### Step 8: Conclude the Plan
+
+After the review is complete:
+
+1. **Update plan status** — Update the plan frontmatter to `status: concluded`
+2. **Final commit** — Commit the concluded plan
 
 **Output**: A complete implementation plan in the chosen format — phases, tasks, acceptance criteria, and dependencies — built collaboratively and reviewed for traceability and integrity.

@@ -60,7 +60,7 @@ Complete ALL setup steps before proceeding to implementation work.
 
 2. **Read the plan** from the provided location (typically `docs/workflow/planning/{topic}.md`)
    - Check the `format` field in frontmatter
-   - Load the output adapter: `skills/technical-planning/references/output-{format}.md`
+   - Load the output adapter: `skills/technical-planning/references/output-formats/output-{format}.md`
    - If no format field, ask user which format the plan uses
    - Follow the **Implementation** section for how to read tasks and update progress
 

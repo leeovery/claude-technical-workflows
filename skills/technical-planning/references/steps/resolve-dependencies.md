@@ -1,6 +1,6 @@
 # Resolve External Dependencies
 
-*Reference for **[formal-planning](formal-planning.md)***
+*Reference for **[technical-planning](../../SKILL.md)***
 
 ---
 
@@ -14,7 +14,7 @@ After all phases are detailed and written, handle external dependencies — thin
 
 The specification's Dependencies section lists what this feature needs from outside its own scope. These must be documented in the plan so implementation knows what is blocked and what is available.
 
-1. **Document each dependency** in the plan's External Dependencies section using the format described in [dependencies.md](dependencies.md). Initially, record each as unresolved.
+1. **Document each dependency** in the plan's External Dependencies section using the format described in [dependencies.md](../dependencies.md). Initially, record each as unresolved.
 
 2. **Resolve where possible** — For each dependency, check whether a plan already exists for that topic:
    - If a plan exists, identify the specific task(s) that satisfy the dependency. Query the output format to find relevant tasks. If ambiguous, ask the user which tasks apply. Update the dependency entry from unresolved → resolved with the task reference.

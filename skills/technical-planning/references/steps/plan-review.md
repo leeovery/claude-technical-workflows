@@ -1,6 +1,6 @@
 # Plan Review
 
-*Reference for **[formal-planning](formal-planning.md)***
+*Reference for **[technical-planning](../../SKILL.md)***
 
 ---
 

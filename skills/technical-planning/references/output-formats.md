@@ -6,11 +6,11 @@
 
 Plans can be stored in different formats.
 
-**IMPORTANT**: Only offer formats listed below. Do not invent or suggest formats that don't have corresponding `output-*.md` files in this directory.
+**IMPORTANT**: Only offer formats listed below. Do not invent or suggest formats that don't have corresponding `output-*.md` files in the [output-formats/](output-formats/) directory.
 
 ## Available Formats
 
-### [Local Markdown](output-local-markdown.md)
+### [Local Markdown](output-formats/output-local-markdown.md)
 
 Single markdown file per topic containing all phases, tasks, and progress tracking inline. No external tools or setup required.
 
@@ -18,7 +18,7 @@ Single markdown file per topic containing all phases, tasks, and progress tracki
 - **Cons**: No visual board, everything in one file can get long for complex features, no dependency graph
 - **Best for**: Simple features, small plans, quick iterations
 
-### [Linear](output-linear.md)
+### [Linear](output-formats/output-linear.md)
 
 Tasks managed as Linear issues within a Linear project. A thin local plan file points to the Linear project; Linear is the source of truth.
 
@@ -26,7 +26,7 @@ Tasks managed as Linear issues within a Linear project. A thin local plan file p
 - **Cons**: Requires Linear account and MCP server, external dependency, not fully local
 - **Best for**: Teams already using Linear, collaborative projects needing shared visibility
 
-### [Backlog.md](output-backlog-md.md)
+### [Backlog.md](output-formats/output-backlog-md.md)
 
 Individual task files in a `backlog/` directory with a local Kanban board. Each task is a self-contained markdown file with frontmatter for status, priority, labels, and dependencies.
 
@@ -34,7 +34,7 @@ Individual task files in a `backlog/` directory with a local Kanban board. Each 
 - **Cons**: Requires npm install, flat directory (phases via labels not folders), external tool dependency
 - **Best for**: Solo developers wanting a local Kanban board with per-task files
 
-### [Beads](output-beads.md)
+### [Beads](output-formats/output-beads.md)
 
 Git-backed graph issue tracker with hierarchical tasks (epics → phases → tasks) and native dependency management. Uses JSONL storage with a CLI interface.
 
