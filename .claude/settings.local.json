@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Skill(skill-creator)"
+      "Skill(skill-creator)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nadd chunked reading guidance for large specifications\n\nExplicitly instruct Claude to read large documents in sequential\nchunks rather than summarising or skipping sections to fit tool limits.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push)"
     ],
     "deny": [],
     "ask": []

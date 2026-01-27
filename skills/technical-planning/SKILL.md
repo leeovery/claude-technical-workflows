@@ -58,7 +58,7 @@ Load **[planning-principles.md](references/planning-principles.md)** — this co
 
 ## Step 3: Read Specification Content
 
-Now read the specification content **in full**. Not a scan, not a summary — read every section, every decision, every edge case. The specification must be fully digested before any structural decisions are made.
+Now read the specification content **in full**. Not a scan, not a summary — read every section, every decision, every edge case. The specification must be fully digested before any structural decisions are made. If a document is too large for a single read, read it in sequential chunks until you have consumed the entire file. Never summarise or skip sections to fit within tool limits.
 
 The specification contains validated decisions. Your job is to translate it into an actionable plan, not to review or reinterpret it.
 
