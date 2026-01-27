@@ -22,40 +22,103 @@ Either way: Transform specifications into actionable phases, tasks, and acceptan
 - **Specification content** (required) - The validated decisions and requirements to plan from
 - **Topic name** (optional) - Will derive from specification if not provided
 - **Output format preference** (optional) - Will ask if not specified
-- **Cross-cutting references** (optional) - List of cross-cutting specifications that inform this plan
+- **Cross-cutting references** (optional) - Cross-cutting specifications that inform technical decisions in this plan
 
-**If missing:** Will ask user for specification location or content.
+**Before proceeding**, verify the required input is available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.
 
-### Cross-Cutting References
+- **No specification content provided?**
+  > "I need the specification content to plan from. Could you point me to the specification file (e.g., `docs/workflow/specification/{topic}.md`), or provide the content directly?"
 
-If cross-cutting specifications are provided (e.g., caching strategy, rate limiting policy), incorporate their decisions into the plan:
+- **Specification seems incomplete or not concluded?**
+  > "The specification at {path} appears to be {concern — e.g., 'still in-progress' or 'missing sections that are referenced elsewhere'}. Should I proceed with this, or is there a more complete version?"
 
-1. **Include a "Cross-Cutting References" section** in the plan linking to these specifications
-2. **Apply their patterns** when designing phases and tasks (e.g., if caching strategy says "cache API responses for 5 minutes", include that in relevant tasks)
-3. **Note where patterns apply** - when a task implements a cross-cutting pattern, reference it
-
-Cross-cutting specifications are architectural decisions that inform HOW features are built. They don't have their own implementation plans - instead, their patterns are applied within feature plans.
-
-## Source Material
-
-**The specification is your sole input.** Everything you need should be in the specification - do not request details from prior source material. If information is missing, ask for clarification on the specification itself.
+---
 
 ## The Process
 
-**Load**: [formal-planning.md](references/formal-planning.md)
+Follow every step in sequence. No steps are optional.
 
-**Choose output format**: Ask user which format, then load the appropriate output adapter. See **[output-formats.md](references/output-formats.md)** for available formats.
+---
 
-**Output**: Implementation plan in chosen format
+## Step 1: Choose Output Format
 
-## Critical Rules
+Present the formats from **[output-formats.md](references/output-formats.md)** to the user as written — including description, pros, cons, and "best for" — so they can make an informed choice. Number each format and ask the user to pick a number.
 
-**Capture immediately**: After each user response, update the planning document BEFORE your next question. Never let more than 2-3 exchanges pass without writing.
+**STOP.** Wait for the user to choose. After they pick, confirm the choice and load the corresponding `output-{format}.md` adapter from **[output-formats/](references/output-formats/)**.
 
-**Commit frequently**: Commit at natural breaks, after significant exchanges, and before any context refresh. Context refresh = lost work.
+→ Proceed to **Step 2**.
 
-**Never invent reasoning**: If it's not in the specification, ask again. The specification is the golden document - all plan content must trace back to it.
+---
 
-**Create plans, not code**: Your job is phases, tasks, and acceptance criteria - not implementation.
+## Step 2: Load Planning Principles
 
-**Collaborate with the user**: Planning is iterative. Stop and ask when the specification is ambiguous, multiple valid approaches exist, or you're uncertain about task scope. The user expects collaboration - don't guess when you can ask.
+Load **[planning-principles.md](references/planning-principles.md)** — this contains the planning principles, rules, and quality standards that apply throughout the process.
+
+→ Proceed to **Step 3**.
+
+---
+
+## Step 3: Read Specification Content
+
+Now read the specification content **in full**. Not a scan, not a summary — read every section, every decision, every edge case. The specification must be fully digested before any structural decisions are made. If a document is too large for a single read, read it in sequential chunks until you have consumed the entire file. Never summarise or skip sections to fit within tool limits.
+
+The specification contains validated decisions. Your job is to translate it into an actionable plan, not to review or reinterpret it.
+
+**The specification is your sole input.** Everything you need is in the specification — do not reference other documents or prior source materials. If cross-cutting specifications are provided, read them alongside the specification so their patterns are available during planning.
+
+From the specification, absorb:
+- Key decisions and rationale
+- Architectural choices
+- Edge cases identified
+- Constraints and requirements
+- Whether a Dependencies section exists (you will handle these in Step 7)
+
+Do not present or summarize the specification back to the user — it has already been signed off.
+
+→ Proceed to **Step 4**.
+
+---
+
+## Step 4: Define Phases
+
+Load **[steps/define-phases.md](references/steps/define-phases.md)** and follow its instructions as written.
+
+---
+
+## Step 5: Define Tasks
+
+Load **[steps/define-tasks.md](references/steps/define-tasks.md)** and follow its instructions as written.
+
+---
+
+## Step 6: Author Tasks
+
+Load **[steps/author-tasks.md](references/steps/author-tasks.md)** and follow its instructions as written.
+
+---
+
+## Step 7: Resolve External Dependencies
+
+Load **[steps/resolve-dependencies.md](references/steps/resolve-dependencies.md)** and follow its instructions as written.
+
+---
+
+## Step 8: Plan Review
+
+Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its instructions as written.
+
+---
+
+## Step 9: Conclude the Plan
+
+After the review is complete:
+
+1. **Update plan status** — Update the plan frontmatter to `status: concluded`
+2. **Final commit** — Commit the concluded plan
+3. **Present completion summary**:
+
+> "Planning is complete for **{topic}**.
+>
+> The plan contains **{N} phases** with **{M} tasks** total, reviewed for traceability against the specification and structural integrity.
+>
+> Status has been marked as `concluded`. The plan is ready for implementation."

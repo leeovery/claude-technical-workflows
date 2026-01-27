@@ -100,7 +100,7 @@ For each unresolved dependency:
 
 2. **If plan exists**: Load the output format reference file
    - Read `format:` from the dependency plan's frontmatter
-   - Load `skills/technical-planning/references/output-{format}.md`
+   - Load `skills/technical-planning/references/output-formats/output-{format}.md`
    - Follow the "Querying Dependencies" section to search for matching tasks
 
 3. **Handle ambiguous matches**:
@@ -115,7 +115,7 @@ For each resolved match:
    - Change `- {topic}: {description}` to `- {topic}: {description} → {task-id}`
 
 2. **Create dependency in output format**:
-   - Load `skills/technical-planning/references/output-{format}.md`
+   - Load `skills/technical-planning/references/output-formats/output-{format}.md`
    - Follow the "Cross-Epic Dependencies" or equivalent section to create the blocking relationship
 
 ## Step 6: Bidirectional Check

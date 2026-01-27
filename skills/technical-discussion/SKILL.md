@@ -21,7 +21,13 @@ Either way: Capture decisions, rationale, competing approaches, and edge cases.
 - **Context** (optional) - Prior research, constraints, existing decisions
 - **Questions to explore** (optional) - Specific architectural questions to address
 
-**If missing:** Will ask user what topic they want to discuss.
+**Before proceeding**, confirm the required input is clear. If anything is missing or unclear, **STOP** and resolve with the user.
+
+- **No topic provided?**
+  > "What topic would you like to discuss? This could be an architectural decision, a design problem, or edge cases to work through — anything that needs structured technical discussion."
+
+- **Topic is broad or ambiguous?**
+  > "You mentioned {topic}. To keep the discussion focused, is there a specific aspect or decision you want to work through first?"
 
 ## What to Capture
 

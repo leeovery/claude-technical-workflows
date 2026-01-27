@@ -4,18 +4,6 @@ description: View a plan's tasks and progress, regardless of output format.
 
 Display a readable summary of a plan's phases, tasks, and status.
 
-## Step 0: Run Migrations
-
-**This step is mandatory. You must complete it before proceeding.**
-
-Invoke the `/migrate` command and assess its output.
-
-**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
-
-**If no updates needed**: Proceed to Step 1.
-
----
-
 ## Step 1: Identify the Plan
 
 If no topic is specified, list available plans:
@@ -35,7 +23,7 @@ Read the plan file from `docs/workflow/planning/{topic}.md` and check the `forma
 Load the corresponding output format reference:
 
 ```
-skills/technical-planning/references/output-{format}.md
+skills/technical-planning/references/output-formats/output-{format}.md
 ```
 
 This reference contains instructions for reading plans in that format.

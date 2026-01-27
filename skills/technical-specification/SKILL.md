@@ -26,7 +26,16 @@ Either way: Transform unvalidated reference material into a specification that's
   - Any other reference material
 - **Topic name** (required) - Used for the output filename
 
-**If missing:** Will ask user to provide context or point to source files.
+**Before proceeding**, verify all required inputs are available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.
+
+- **No source material provided?**
+  > "I need source material to build a specification from. Could you point me to the source files (e.g., `docs/workflow/discussion/{topic}.md`), or provide the content directly?"
+
+- **No topic name provided?**
+  > "What should the specification be named? This determines the output file: `docs/workflow/specification/{name}.md`."
+
+- **Source material seems incomplete or unclear?**
+  > "I have the source material, but {concern}. Should I proceed as-is, or is there additional material I should review?"
 
 **Multiple sources:** When multiple sources are provided, extract exhaustively from ALL of them. Content may be scattered across sources - a decision in one may have constraints or details in another. The specification consolidates everything into a single standalone document.
 

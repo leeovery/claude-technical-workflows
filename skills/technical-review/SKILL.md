@@ -31,7 +31,15 @@ Either way: Verify every plan task was implemented, tested adequately, and meets
 - **Specification content** (optional) - Context for design decisions
 - **Implementation scope** (optional) - What code/files to review. Will identify from git if not specified.
 
-**If missing:** Will ask user for plan location. Can proceed without specification.
+**Before proceeding**, verify the required input is available. If anything is missing, **STOP** — do not proceed until resolved.
+
+- **No plan provided?**
+  > "I need the implementation plan to review against. Could you point me to the plan file (e.g., `docs/workflow/planning/{topic}.md`)?"
+
+- **Plan references a specification that can't be found?**
+  > "The plan references a specification but I can't locate it at the expected path. Could you confirm where the specification is? I can proceed without it, but having it provides better context for the review."
+
+The specification is optional — the review can proceed with just the plan.
 
 ## Review Approach
 

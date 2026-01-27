@@ -139,18 +139,18 @@ The "meta" menu options (Analyze, Unify, Re-analyze) include brief inline explan
 
 ### Entry Conditions Table
 
-| # | Discussions | Concluded | Specs Exist | Cache Status | Pathway |
-|---|-------------|-----------|-------------|--------------|---------|
-| 1 | None | — | — | — | Block: no discussions |
-| 2 | Some | None | — | — | Block: none concluded |
-| 3 | Some | 1 | No | — | Auto-proceed: single discussion |
-| 4 | Some | 1 | Yes | — | Auto-proceed: single with existing spec |
-| 5 | Some | 2+ | No | None | Prompt: analyze? |
-| 6 | Some | 2+ | No | Valid | Show groupings directly |
-| 7 | Some | 2+ | No | Stale | Prompt: analyze (note stale) |
-| 8 | Some | 2+ | Yes | None | Prompt: continue spec or analyze? |
-| 9 | Some | 2+ | Yes | Valid | Show groupings directly |
-| 10 | Some | 2+ | Yes | Stale | Prompt: continue spec or analyze? |
+| #  | Discussions | Concluded | Specs Exist | Cache Status | Pathway                                 |
+|----|-------------|-----------|-------------|--------------|-----------------------------------------|
+| 1  | None        | —         | —           | —            | Block: no discussions                   |
+| 2  | Some        | None      | —           | —            | Block: none concluded                   |
+| 3  | Some        | 1         | No          | —            | Auto-proceed: single discussion         |
+| 4  | Some        | 1         | Yes         | —            | Auto-proceed: single with existing spec |
+| 5  | Some        | 2+        | No          | None         | Prompt: analyze?                        |
+| 6  | Some        | 2+        | No          | Valid        | Show groupings directly                 |
+| 7  | Some        | 2+        | No          | Stale        | Prompt: analyze (note stale)            |
+| 8  | Some        | 2+        | Yes         | None         | Prompt: continue spec or analyze?       |
+| 9  | Some        | 2+        | Yes         | Valid        | Show groupings directly                 |
+| 10 | Some        | 2+        | Yes         | Stale        | Prompt: continue spec or analyze?       |
 
 ---
 

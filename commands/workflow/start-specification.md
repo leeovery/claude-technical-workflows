@@ -328,7 +328,12 @@ Then analyze coupling between discussions:
 - **Behavioral coupling**: Discussions where one's implementation requires another
 - **Conceptual coupling**: Discussions that address different facets of the same problem
 
-Group discussions that are tightly coupled - they should become a single specification because their decisions are inseparable.
+Group discussions into specifications where each grouping represents a **coherent feature or capability that can be independently planned and built** — with clear stages delivering incremental, testable value. Coupling tells you what's related; the grouping decision also requires that the result is the right shape:
+
+- **Tightly coupled discussions belong together** — their decisions are inseparable and would produce interleaved implementation work
+- **Don't group too broadly** — if a grouping mixes unrelated concerns, the resulting specification will produce incoherent stages and tasks that jump between disconnected areas
+- **Don't group too narrowly** — if a grouping is too thin, it may not warrant its own specification, planning, and implementation cycle
+- **Flag cross-cutting discussions** — discussions about patterns or policies (not features) should become cross-cutting specifications rather than being grouped with feature discussions
 
 #### Preserve Anchored Names
 

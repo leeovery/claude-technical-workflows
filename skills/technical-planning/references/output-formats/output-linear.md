@@ -1,6 +1,6 @@
 # Output: Linear
 
-*Output adapter for **[technical-planning](../SKILL.md)***
+*Output adapter for **[technical-planning](../../SKILL.md)***
 
 ---
 
@@ -185,8 +185,8 @@ Architectural decisions from cross-cutting specifications that inform this plan:
 
 | Specification | Key Decisions | Applies To |
 |---------------|---------------|------------|
-| [Caching Strategy](../specification/caching-strategy.md) | Cache API responses for 5 min | Tasks involving API calls |
-| [Rate Limiting](../specification/rate-limiting.md) | 100 req/min per user | User-facing endpoints |
+| [Caching Strategy](../../specification/caching-strategy.md) | Cache API responses for 5 min | Tasks involving API calls |
+| [Rate Limiting](../../specification/rate-limiting.md) | 100 req/min per user | User-facing endpoints |
 
 *Remove this section if no cross-cutting specifications apply.*
 
@@ -198,7 +198,7 @@ Architectural decisions from cross-cutting specifications that inform this plan:
 - {topic}: {description} → {issue-id} (resolved)
 ```
 
-The External Dependencies section tracks what this plan needs from other topics. See `formal-planning.md` for the format and states (unresolved, resolved, satisfied externally).
+The External Dependencies section tracks what this plan needs from other topics. See `../dependencies.md` for the format and states (unresolved, resolved, satisfied externally).
 
 ## Frontmatter
 

@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Skill(skill-creator)"
+      "Skill(skill-creator)",
+      "Bash(git add:*)",
+      "Bash(git push)"
     ],
     "deny": [],
     "ask": []

@@ -25,7 +25,18 @@ Either way: Execute via strict TDD - tests first, implementation second.
 - **Environment setup** (optional) - First-time setup instructions
 - **Scope** (optional) - Specific phase/task to work on
 
-**If missing:** Will ask user for plan location. If no specification, plan becomes sole authority.
+**Before proceeding**, verify all required inputs are available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.
+
+- **No plan provided?**
+  > "I need an implementation plan to execute. Could you point me to the plan file (e.g., `docs/workflow/planning/{topic}.md`)?"
+
+- **Plan has no `format` field in frontmatter?**
+  > "The plan at {path} doesn't specify an output format in its frontmatter. Which format does this plan use?"
+
+- **Plan status is not `concluded`?**
+  > "The plan at {path} has status '{status}' — it hasn't completed the review process. Should I proceed anyway, or should the plan be reviewed first?"
+
+If no specification is available, the plan becomes the sole authority for design decisions.
 
 ## Hard Rules
 
@@ -60,7 +71,7 @@ Complete ALL setup steps before proceeding to implementation work.
 
 2. **Read the plan** from the provided location (typically `docs/workflow/planning/{topic}.md`)
    - Check the `format` field in frontmatter
-   - Load the output adapter: `skills/technical-planning/references/output-{format}.md`
+   - Load the output adapter: `skills/technical-planning/references/output-formats/output-{format}.md`
    - If no format field, ask user which format the plan uses
    - Follow the **Implementation** section for how to read tasks and update progress
 

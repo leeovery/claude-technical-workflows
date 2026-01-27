@@ -55,7 +55,7 @@ If the environment setup document contains only "No special setup required" (or 
 Some plan formats require specific tools. Check the plan's `format` field and load the corresponding output adapter from the planning skill for setup instructions:
 
 ```
-skills/technical-planning/references/output-{format}.md
+skills/technical-planning/references/output-formats/output-{format}.md
 ```
 
 Each output adapter contains prerequisites and installation instructions for that format.
