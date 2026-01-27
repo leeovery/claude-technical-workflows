@@ -54,12 +54,12 @@ topic: [Topic Name]
 
 **Workflow with Tracking Files**:
 1. Complete your analysis and create the tracking file with all findings
-2. Present the summary to the user (from the tracking file)
-3. Work through items one at a time:
-   - Present the finding
-   - Discuss and agree on the fix
-   - Apply the fix to the plan
-   - Update the tracking file: mark resolution, add notes
+2. Present the summary to the user (Stage 1)
+3. Work through items one at a time (Stage 2):
+   - Present the finding with full detail
+   - Propose the fix — shown verbatim in the format it will be written to the plan
+   - Ask: Approve / Adjust / Skip
+   - If approved, apply the fix to the plan verbatim and update the tracking file
 4. After all items resolved, delete the tracking file
 5. Proceed to the next phase (or completion)
 
@@ -131,15 +131,85 @@ After completing your review:
 
 **Stage 2: Process One Item at a Time**
 
-For each item:
+Work through each finding **one at a time**. For each finding: present it, propose the fix, wait for approval, then apply it verbatim.
 
-1. **Present** the finding in detail — what's wrong, the spec reference, the plan reference
-2. **Discuss** the appropriate fix with the user
-3. **Apply the fix** to the plan
-4. **Update tracking file** — Mark resolution, add notes
-5. **Move to next item**: "Moving to #2: [Brief title]..."
+#### Present the Finding
 
-> **CHECKPOINT**: Each finding requires discussion and resolution before moving on. Do not batch fixes. Do not proceed to the next item until the current one is resolved (fixed, adjusted, or explicitly skipped by the user).
+Show the finding with full detail:
+
+> **Finding {N} of {total}: {Brief Title}**
+>
+> **Type**: Missing from plan | Hallucinated content | Incomplete coverage
+> **Spec Reference**: [Section/decision in the specification]
+> **Plan Reference**: [Phase/task in the plan, or "N/A" for missing content]
+>
+> **Details**: [What's wrong and why it matters]
+
+#### Propose the Fix
+
+Present the proposed fix **in the format it will be written to the plan**. What the user sees is what gets applied — no changes between approval and writing.
+
+**For new content** (missing from plan) — show the content to be added and where:
+
+> **Proposed fix — add to Phase {N}, Task {M}:**
+>
+> [The exact content to be added, in plan format]
+
+**For content to remove** (hallucinated) — show what will be removed:
+
+> **Proposed fix — remove from Phase {N}, Task {M}:**
+>
+> [The exact content to be removed]
+
+**For content to change** (incomplete coverage, weak criteria, etc.) — show current and proposed:
+
+> **Proposed fix — update Phase {N}, Task {M}:**
+>
+> **Current:**
+> [The existing content as it appears in the plan]
+>
+> **Proposed:**
+> [The replacement content]
+
+After presenting the finding and proposed fix, ask:
+
+> **Finding {N} of {total}: {Brief Title}**
+>
+> **To proceed, choose one:**
+> - **"Approve"** — Fix is confirmed. I'll apply it to the plan verbatim.
+> - **"Adjust"** — Tell me what to change about the proposed fix.
+> - **"Skip"** — Leave this as-is and move to the next finding.
+
+**STOP.** Wait for the user's response.
+
+#### If Adjust
+
+The user may:
+- Request changes to the proposed fix
+- Ask questions about why this was flagged
+- Suggest a different approach to resolving the finding
+
+Incorporate feedback and re-present the proposed fix **in full** using the same format above. Then ask the same choice again. Repeat until approved or skipped.
+
+#### If Approved
+
+Apply the fix to the plan — verbatim, as presented. Do not modify content between approval and writing. Then update the tracking file: mark resolution as "Fixed", add any discussion notes.
+
+Confirm:
+
+> "Finding {N} of {total}: {Brief Title} — fixed."
+
+#### If Skipped
+
+Update the tracking file: mark resolution as "Skipped", note the reason.
+
+> "Finding {N} of {total}: {Brief Title} — skipped."
+
+#### Next Finding
+
+**If findings remain:** → Present the next finding. Follow the same present → propose → ask → apply sequence.
+
+**If all findings are processed:** → Proceed to [Completing Phase 1](#completing-phase-1).
 
 ### What You're NOT Doing in Phase 1
 
@@ -252,9 +322,19 @@ Follow the same two-stage pattern:
 
 **Stage 2: Process One Item at a Time**
 
-Same workflow as Phase 1: present → discuss → fix → update tracking → next.
+Follow the same per-item workflow as [Phase 1 Stage 2](#present-the-finding): present the finding, propose the fix (showing exactly what will change in the plan), offer the Approve / Adjust / Skip choice, wait for the user's response, and apply the fix verbatim if approved.
 
-> **CHECKPOINT**: Each finding requires discussion and resolution. Do not batch fixes.
+The only difference is the finding format — use severity instead of type:
+
+> **Finding {N} of {total}: {Brief Title}**
+>
+> **Severity**: Critical | Important | Minor
+> **Plan Reference**: [Phase/task in the plan]
+> **Category**: [Which review criterion — e.g., "Task Template Compliance", "Vertical Slicing"]
+>
+> **Details**: [What the issue is and why it matters for implementation]
+
+The proposed fix format, choice block, and routing (If Adjust / If Approved / If Skipped / Next Finding) are identical to Phase 1.
 
 ### What You're NOT Doing in Phase 2
 
