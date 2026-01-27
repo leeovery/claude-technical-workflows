@@ -330,6 +330,17 @@ Then analyze coupling between discussions:
 
 Group discussions that are tightly coupled - they should become a single specification because their decisions are inseparable.
 
+#### Validate Groupings
+
+After identifying coupling, validate each proposed grouping:
+
+- **Coherent feature**: Each grouping should represent a coherent feature or capability that can be independently planned and built — with clear stages delivering incremental, testable value
+- **Not too broad**: If a grouping mixes unrelated concerns, the resulting specification will produce incoherent stages and tasks that jump between disconnected areas
+- **Not too narrow**: If a grouping is too thin, it may not warrant its own specification, planning, and implementation cycle
+- **Cross-cutting awareness**: Discussions about patterns or policies (not features) should be flagged as potential cross-cutting specifications rather than grouped with feature discussions
+
+Coupling tells you what's related. This validation tells you whether the result is the right shape for what comes next.
+
 #### Preserve Anchored Names
 
 **CRITICAL**: Check the `cache.anchored_names` from discovery state. These are grouping names that have existing specifications.
