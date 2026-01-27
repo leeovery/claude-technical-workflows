@@ -50,7 +50,7 @@ Present the formats from **[output-formats.md](references/output-formats.md)** t
 
 ## Step 2: Load Planning Principles
 
-Load **[formal-planning.md](references/formal-planning.md)** — this contains the planning principles, rules, and quality standards that apply throughout the process.
+Load **[planning-principles.md](references/planning-principles.md)** — this contains the planning principles, rules, and quality standards that apply throughout the process.
 
 → Proceed to **Step 3**.
 
