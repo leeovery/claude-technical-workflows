@@ -25,26 +25,6 @@ Phase {N}: {Phase Name}
     - [ ] {Second verifiable criterion}
 ```
 
-**Example:**
-
-```
-Phase 1: Foundation — Event Model and Storage
-  Goal: Establish the core data model and persistence layer for calendar events
-  Why this order: All subsequent phases depend on events being storable and retrievable
-  Acceptance criteria:
-    - [ ] Events can be created with required fields (title, start, end)
-    - [ ] Events persist to the database and can be retrieved by ID
-    - [ ] Validation rejects events with missing required fields
-
-Phase 2: Core — Recurring Events
-  Goal: Support recurring event patterns (daily, weekly, monthly)
-  Why this order: Recurrence extends the event model from Phase 1
-  Acceptance criteria:
-    - [ ] Events can be created with a recurrence rule
-    - [ ] Recurring instances are generated correctly for a given date range
-    - [ ] Editing a single instance does not affect other instances
-```
-
 **STOP.** Present your proposed phase structure and ask:
 
 > **To proceed, choose one:**
