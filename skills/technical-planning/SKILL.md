@@ -24,7 +24,13 @@ Either way: Transform specifications into actionable phases, tasks, and acceptan
 - **Output format preference** (optional) - Will ask if not specified
 - **Cross-cutting references** (optional) - Cross-cutting specifications that inform technical decisions in this plan
 
-**If missing:** Will ask user for specification location or content.
+**Before proceeding**, verify the required input is available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.
+
+- **No specification content provided?**
+  > "I need the specification content to plan from. Could you point me to the specification file (e.g., `docs/workflow/specification/{topic}.md`), or provide the content directly?"
+
+- **Specification seems incomplete or not concluded?**
+  > "The specification at {path} appears to be {concern — e.g., 'still in-progress' or 'missing sections that are referenced elsewhere'}. Should I proceed with this, or is there a more complete version?"
 
 ---
 

@@ -20,7 +20,13 @@ Either way: Explore feasibility (technical, business, market), validate assumpti
 - **Topic or idea** (required) - What to research/explore
 - **Existing context** (optional) - Any prior research or constraints
 
-**If missing:** Will ask user what they want to explore.
+**Before proceeding**, confirm the required input is clear. If anything is missing or unclear, **STOP** and resolve with the user.
+
+- **No topic provided?**
+  > "What would you like to research or explore? This could be a new idea, a technical concept, a market opportunity — anything you want to investigate."
+
+- **Topic is vague or could go many directions?**
+  > "You mentioned {topic}. That could cover a lot of ground — is there a specific angle you'd like to start with, or should I explore broadly?"
 
 ## Your Expertise
 
