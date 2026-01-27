@@ -54,7 +54,7 @@ Phase 2: Core — Recurring Events
 
 #### If Approved
 
-→ Proceed to **Step 4**.
+→ Proceed to **Step 5**.
 
 #### If Adjust
 

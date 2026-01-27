@@ -42,11 +42,17 @@ Present the formats from **[output-formats.md](references/output-formats.md)** t
 
 ---
 
-## Step 2: Load Planning Principles and Read Specification
+## Step 2: Load Planning Principles
 
 Load **[formal-planning.md](references/formal-planning.md)** — this contains the planning principles, rules, and quality standards that apply throughout the process.
 
-Read the specification **in full**. Not a scan, not a summary — read every section, every decision, every edge case. The specification must be fully digested before any structural decisions are made.
+→ Proceed to **Step 3**.
+
+---
+
+## Step 3: Read Specification Content
+
+Now read the specification content **in full**. Not a scan, not a summary — read every section, every decision, every edge case. The specification must be fully digested before any structural decisions are made.
 
 The specification contains validated decisions. Your job is to translate it into an actionable plan, not to review or reinterpret it.
 
@@ -57,39 +63,39 @@ From the specification, absorb:
 - Architectural choices
 - Edge cases identified
 - Constraints and requirements
-- Whether a Dependencies section exists (you will handle these in Step 6)
+- Whether a Dependencies section exists (you will handle these in Step 7)
 
 Do not present or summarize the specification back to the user — it has already been signed off.
 
-→ Proceed to **Step 3**.
+→ Proceed to **Step 4**.
 
 ---
 
-## Step 3: Define Phases
+## Step 4: Define Phases
 
 Load **[steps/define-phases.md](references/steps/define-phases.md)** and follow its instructions as written.
 
 ---
 
-## Step 4: Phase Task Overview
+## Step 5: Phase Task Overview
 
 Load **[steps/task-overview.md](references/steps/task-overview.md)** and follow its instructions as written.
 
 ---
 
-## Step 5: Detail, Approve, and Log Each Task
+## Step 6: Detail, Approve, and Log Each Task
 
 Load **[steps/detail-tasks.md](references/steps/detail-tasks.md)** and follow its instructions as written.
 
 ---
 
-## Step 6: Resolve External Dependencies
+## Step 7: Resolve External Dependencies
 
 Load **[steps/resolve-dependencies.md](references/steps/resolve-dependencies.md)** and follow its instructions as written.
 
 ---
 
-## Step 7: Plan Review
+## Step 8: Plan Review
 
 The comprehensive two-phase review — the most important quality gate in the planning process. It ensures the plan faithfully represents the specification and is structurally ready for implementation.
 
@@ -97,7 +103,7 @@ The comprehensive two-phase review — the most important quality gate in the pl
 
 ---
 
-## Step 8: Conclude the Plan
+## Step 9: Conclude the Plan
 
 After the review is complete:
 

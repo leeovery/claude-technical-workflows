@@ -49,7 +49,7 @@ Skip the resolution and reverse check — there is nothing to resolve against. D
 
 #### If Approved
 
-→ Proceed to **Step 7**.
+→ Proceed to **Step 8**.
 
 #### If Adjust
 

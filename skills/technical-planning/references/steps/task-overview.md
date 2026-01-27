@@ -47,7 +47,7 @@ This overview establishes the scope and ordering. The user should be able to see
 
 #### If Approved
 
-→ Proceed to **Step 5**.
+→ Proceed to **Step 6**.
 
 #### If Adjust
 

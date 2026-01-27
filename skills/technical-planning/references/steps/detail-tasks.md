@@ -46,7 +46,7 @@ After logging, confirm:
 
 #### Next task or phase complete
 
-**If tasks remain in this phase:** → Return to the top of **Step 5** with the next task. Present it, ask, wait.
+**If tasks remain in this phase:** → Return to the top of **Step 6** with the next task. Present it, ask, wait.
 
 **If all tasks in this phase are logged:**
 
@@ -54,9 +54,9 @@ After logging, confirm:
 Phase {N}: {Phase Name} — complete ({M} tasks logged).
 ```
 
-→ Return to **Step 4** for the next phase.
+→ Return to **Step 5** for the next phase.
 
-**If all phases are complete:** → Proceed to **Step 6**.
+**If all phases are complete:** → Proceed to **Step 7**.
 
 ---
 
