@@ -55,8 +55,8 @@ Read `progress.md` to determine current position. Ask the user:
 
 **If `resume`:**
 1. Read `phases.md` and `tasks.md` for context
-2. Load the output format adapter indicated in `progress.md`
-3. Jump to the step indicated in `progress.md` and continue
+2. If step > 1, load the output format adapter indicated in `progress.md`
+3. Jump to the step indicated in `progress.md`
 
 **If `restart`:**
 1. Delete `.progress/{topic}/` directory
