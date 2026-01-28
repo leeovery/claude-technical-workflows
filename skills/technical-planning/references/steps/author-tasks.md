@@ -8,33 +8,13 @@ Load **[task-design.md](../task-design.md)** — the task design principles, tem
 
 ---
 
-## Progress Tracking
-
-**Before authoring**, check `tasks.md` for transfer status:
-
-1. Read the transfer status for each task in the current phase
-2. Skip tasks already marked `transfer: transferred`
-3. Start with the first `transfer: pending` task
-
-**After writing to the output format** (task approved and logged):
-
-1. Update `tasks.md`: set `transfer: transferred` for this task
-2. Update `progress.md`: note current phase and task position
-3. Commit progress files alongside plan files: `planning({topic}): transfer task {N.M} ({task name})`
-
-**On phase complete**:
-
-1. Verify all tasks in phase show `transfer: transferred`
-2. Update `progress.md`: note phase complete
-3. Commit: `planning({topic}): complete Phase {N}`
-
----
-
 Orient the user:
 
 > "Task list for Phase {N} is agreed. I'll work through each task one at a time — presenting the full detail, discussing if needed, and logging it to the plan once approved."
 
-Work through the agreed task list **one task at a time**.
+Check `tasks.md` for transfer status. Skip tasks already marked `transfer: transferred`. Start with the first `transfer: pending` task.
+
+Work through the task list **one task at a time**.
 
 #### Present
 
@@ -66,9 +46,12 @@ Incorporate feedback and re-present the updated task **in full**. Then ask the s
 
 > **CHECKPOINT**: Before logging, verify: (1) You presented this exact content, (2) The user explicitly approved with `y`/`yes` or equivalent — not a question, comment, or "okay" in passing, (3) You are writing exactly what was approved with no modifications.
 
-Log the task to the plan — verbatim, as presented. Do not modify content between approval and writing. The output format adapter determines how tasks are written (appending markdown, creating issues, etc.).
+1. Log the task to the plan — verbatim, as presented
+2. Update `tasks.md`: set `transfer: transferred` for this task
+3. Update `progress.md`: note current phase and task
+4. Commit: `planning({topic}): transfer task {N.M} ({task name})`
 
-After logging, confirm:
+Confirm:
 
 > "Task {M} of {total}: {Task Name} — logged."
 
@@ -77,6 +60,9 @@ After logging, confirm:
 **If tasks remain in this phase:** → Return to the top with the next task. Present it, ask, wait.
 
 **If all tasks in this phase are logged:**
+
+1. Update `progress.md`: note phase complete
+2. Commit: `planning({topic}): complete Phase {N}`
 
 ```
 Phase {N}: {Phase Name} — complete ({M} tasks logged).

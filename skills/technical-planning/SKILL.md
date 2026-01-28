@@ -54,7 +54,12 @@ Check if progress files exist for this topic at `docs/workflow/planning/.progres
 
 Present the formats from **[output-formats.md](references/output-formats.md)** to the user as written — including description, pros, cons, and "best for" — so they can make an informed choice. Number each format and ask the user to pick a number.
 
-**STOP.** Wait for the user to choose. After they pick, confirm the choice and load the corresponding `output-{format}.md` adapter from **[output-formats/](references/output-formats/)**.
+**STOP.** Wait for the user to choose. After they pick:
+
+1. Confirm the choice and load the corresponding `output-{format}.md` adapter from **[output-formats/](references/output-formats/)**
+2. Create `docs/workflow/planning/.progress/{topic}/` directory
+3. Write `progress.md` with topic, format, specification path, and current step
+4. Commit: `planning({topic}): initialize progress tracking`
 
 → Proceed to **Step 2**.
 
@@ -63,8 +68,6 @@ Present the formats from **[output-formats.md](references/output-formats.md)** t
 ## Step 2: Load Planning Principles
 
 Load **[planning-principles.md](references/planning-principles.md)** — the planning principles, rules, and quality standards that apply throughout the process.
-
-Also load **[progress-tracking.md](references/progress-tracking.md)** — the progress file formats used to persist work across sessions.
 
 → Proceed to **Step 3**.
 

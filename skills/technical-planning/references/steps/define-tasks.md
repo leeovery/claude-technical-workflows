@@ -8,27 +8,6 @@ Load **[task-design.md](../task-design.md)** — the principles for breaking pha
 
 ---
 
-## Progress Tracking
-
-**On first entry for a phase**, add the phase section to `tasks.md`:
-
-1. Add phase header with `overview_status: pending`
-2. Add task list with each task showing `transfer: pending`
-3. Commit: `planning({topic}): propose Phase {N} tasks`
-
-**On adjustment** (user requests changes):
-
-1. Update the task list in `tasks.md` (keep `overview_status: pending`)
-2. Commit if significant changes: `planning({topic}): revise Phase {N} tasks`
-
-**On approval** (user approves with `y`/`yes`):
-
-1. Update `tasks.md`: set `overview_status: approved` for this phase
-2. Update `progress.md`: note phase tasks approved
-3. Commit: `planning({topic}): approve Phase {N} task overview`
-
----
-
 Orient the user:
 
 > "Taking Phase {N}: {Phase Name} and breaking it into tasks. Here's the overview — once we agree on the list, I'll write each task out in full detail."
@@ -49,7 +28,9 @@ Phase {N}: {Phase Name}
 
 This overview establishes the scope and ordering. The user should be able to see whether the phase is well-structured, whether tasks are in the right order, and whether anything is missing or unnecessary — before investing time in writing out full task detail.
 
-**STOP.** Present the phase task overview and ask:
+Add the phase section to `tasks.md` with `overview_status: pending` and each task showing `transfer: pending`, then present to the user.
+
+**STOP.** Ask:
 
 > **To proceed:**
 > - **`y`/`yes`** — Approved. I'll begin writing full task detail.
@@ -57,8 +38,12 @@ This overview establishes the scope and ordering. The user should be able to see
 
 #### If the user provides feedback
 
-Incorporate feedback, re-present the updated task overview, and ask again. Repeat until approved.
+Incorporate feedback, update the task list in `tasks.md`, re-present the updated task overview, and ask again. Repeat until approved.
 
 #### If approved
+
+1. Update `tasks.md`: set `overview_status: approved` for this phase
+2. Update `progress.md`: note current step and phase
+3. Commit: `planning({topic}): approve Phase {N} task overview`
 
 → Proceed to **Step 6**.
