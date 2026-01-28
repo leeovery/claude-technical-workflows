@@ -28,7 +28,23 @@ Phase {N}: {Phase Name}
 
 This overview establishes the scope and ordering. The user should be able to see whether the phase is well-structured, whether tasks are in the right order, and whether anything is missing or unnecessary — before investing time in writing out full task detail.
 
-Add the phase section to `tasks.md` with `overview_status: pending` and each task showing `transfer: pending`, then present to the user.
+Add the phase section to `tasks.md` with `overview_status: pending` and each task showing `transfer: pending`:
+
+```markdown
+## Phase {N}: {Phase Name}
+
+overview_status: pending
+
+1. {Task Name} — {One-line summary}
+   Edge cases: {list}
+   transfer: pending
+
+2. {Task Name} — {One-line summary}
+   Edge cases: {list}
+   transfer: pending
+```
+
+Then present to the user.
 
 **STOP.** Ask:
 
@@ -46,4 +62,4 @@ Incorporate feedback, update the task list in `tasks.md`, re-present the updated
 2. Update `progress.md`: note current step and phase
 3. Commit: `planning({topic}): approve Phase {N} task overview`
 
-→ Proceed to **Step 6**.
+→ Proceed to **Step 7**.

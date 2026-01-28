@@ -40,17 +40,32 @@ Follow every step in sequence. No steps are optional.
 
 ---
 
-## Step 0: Resume Detection
+## Step 1: Progress Tracking
 
 Check if progress files exist for this topic at `docs/workflow/planning/.progress/{topic}/`.
 
-**If no progress files exist** → Fresh session. Proceed to Step 1.
+**If no progress files exist** → Fresh session. Proceed to Step 2.
 
-**If progress files exist** → Load **[progress-tracking.md](references/progress-tracking.md)** and follow the resume flow.
+**If progress files exist** → Read `progress.md` to determine current position. Ask the user:
+
+> "Found existing progress for **{topic}** — {Note from progress.md}.
+>
+> - **`resume`** — Continue where you left off
+> - **`restart`** — Delete progress and start fresh"
+
+**If `restart`:**
+1. Delete `.progress/{topic}/` directory
+2. Commit: `planning({topic}): restart planning`
+3. Proceed to Step 2
+
+**If `resume`:**
+1. Read `phases.md` and `tasks.md` for context
+2. Load the output format adapter indicated in `progress.md`
+3. Jump to the step indicated in `progress.md` and continue
 
 ---
 
-## Step 1: Choose Output Format
+## Step 2: Choose Output Format
 
 Present the formats from **[output-formats.md](references/output-formats.md)** to the user as written — including description, pros, cons, and "best for" — so they can make an informed choice. Number each format and ask the user to pick a number.
 
@@ -58,22 +73,43 @@ Present the formats from **[output-formats.md](references/output-formats.md)** t
 
 1. Confirm the choice and load the corresponding `output-{format}.md` adapter from **[output-formats/](references/output-formats/)**
 2. Create `docs/workflow/planning/.progress/{topic}/` directory
-3. Write `progress.md` with topic, format, specification path, and current step
-4. Commit: `planning({topic}): initialize progress tracking`
+3. Write `progress.md`:
 
-→ Proceed to **Step 2**.
-
+```markdown
+---
+topic: {topic-name}
+format: {chosen-format}
+specification: {specification-path}
+step: 3
+status: in-progress
+created: {today}
+updated: {today}
 ---
 
-## Step 2: Load Planning Principles
+# Planning Progress: {topic}
 
-Load **[planning-principles.md](references/planning-principles.md)** — the planning principles, rules, and quality standards that apply throughout the process.
+## Current Position
+
+Phase: ~
+Task: ~
+Note: "Starting planning. Output format chosen."
+```
+
+4. Commit: `planning({topic}): initialize progress tracking`
 
 → Proceed to **Step 3**.
 
 ---
 
-## Step 3: Read Specification Content
+## Step 3: Load Planning Principles
+
+Load **[planning-principles.md](references/planning-principles.md)** — the planning principles, rules, and quality standards that apply throughout the process.
+
+→ Proceed to **Step 4**.
+
+---
+
+## Step 4: Read Specification Content
 
 Now read the specification content **in full**. Not a scan, not a summary — read every section, every decision, every edge case. The specification must be fully digested before any structural decisions are made. If a document is too large for a single read, read it in sequential chunks until you have consumed the entire file. Never summarise or skip sections to fit within tool limits.
 
@@ -86,49 +122,49 @@ From the specification, absorb:
 - Architectural choices
 - Edge cases identified
 - Constraints and requirements
-- Whether a Dependencies section exists (you will handle these in Step 7)
+- Whether a Dependencies section exists (you will handle these in Step 8)
 
 Do not present or summarize the specification back to the user — it has already been signed off.
 
-→ Proceed to **Step 4**.
+→ Proceed to **Step 5**.
 
 ---
 
-## Step 4: Define Phases
+## Step 5: Define Phases
 
 Load **[steps/define-phases.md](references/steps/define-phases.md)** and follow its instructions as written.
 
 ---
 
-## Step 5: Define Tasks
+## Step 6: Define Tasks
 
 Load **[steps/define-tasks.md](references/steps/define-tasks.md)** and follow its instructions as written.
 
 ---
 
-## Step 6: Author Tasks
+## Step 7: Author Tasks
 
 Load **[steps/author-tasks.md](references/steps/author-tasks.md)** and follow its instructions as written.
 
 ---
 
-## Step 7: Resolve External Dependencies
+## Step 8: Resolve External Dependencies
 
 Load **[steps/resolve-dependencies.md](references/steps/resolve-dependencies.md)** and follow its instructions as written.
 
 ---
 
-## Step 8: Plan Review
+## Step 9: Plan Review
 
 Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its instructions as written.
 
 ---
 
-## Step 9: Conclude the Plan
+## Step 10: Conclude the Plan
 
 After the review is complete:
 
-1. **Clean up progress files** — Delete `docs/workflow/planning/.progress/{topic}/` directory if it exists
+1. **Clean up progress files** — Delete `docs/workflow/planning/.progress/{topic}/` directory
 2. **Update plan status** — Update the plan frontmatter to `status: concluded`
 3. **Final commit** — Commit the concluded plan (including progress file deletion)
 4. **Present completion summary**:

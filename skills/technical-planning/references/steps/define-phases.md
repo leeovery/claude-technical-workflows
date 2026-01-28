@@ -25,7 +25,29 @@ Phase {N}: {Phase Name}
     - [ ] {Second verifiable criterion}
 ```
 
-Write your proposal to `phases.md` with `status: draft`, then present it to the user.
+Write your proposal to `phases.md` with `status: draft`:
+
+```markdown
+---
+status: draft
+---
+
+# Phases
+
+## Phase 1: {Phase Name}
+
+Goal: {What this phase accomplishes}
+Why this order: {Why this comes at this position}
+
+Acceptance criteria:
+- [ ] {First verifiable criterion}
+- [ ] {Second verifiable criterion}
+
+## Phase 2: {Phase Name}
+...
+```
+
+Then present it to the user.
 
 **STOP.** Ask:
 
@@ -43,4 +65,4 @@ Incorporate feedback, update `phases.md` with the revised proposal, re-present t
 2. Update `progress.md`: note current step
 3. Commit: `planning({topic}): approve phase structure`
 
-→ Proceed to **Step 5**.
+→ Proceed to **Step 6**.
