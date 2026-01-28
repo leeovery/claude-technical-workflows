@@ -48,32 +48,18 @@ Check if a plan already exists at `docs/workflow/planning/{topic}.md`.
 
 The `planning:` block indicates work in progress. Read the plan to determine current position.
 
-Present the resume prompt:
-
-> "Resuming planning for **{topic}**.
+> "Found existing plan for **{topic}** at phase {N}, task {M}.
 >
-> Options:
-> - **`y`/`yes`** — Approve, proceed to next item
-> - **`<feedback>`** — Discuss or amend
-> - **`skip to {X}`** — Natural language navigation
->
-> Examples of skip:
-> - "skip to phase 4"
-> - "skip to the first pending task"
-> - "skip back to phase 2 task 3"
-> - "skip to the end"
->
-> Constraint: Can't skip forward past the leading edge (nothing planned yet).
-> Can always skip back to review earlier work.
->
+> - **`continue`** — Resume where you left off
 > - **`restart`** — Delete plan and start fresh"
 
 **If `restart`:**
 1. Delete the plan file (and `{topic}/` directory if local-markdown format)
 2. Commit: `planning({topic}): restart planning`
-3. Continue below to create fresh plan
+3. → Proceed to **Step 1** (fresh start)
 
-**If resuming:** Check spec hash (see Spec Change Detection below), then proceed to the appropriate step based on `planning:` position.
+**If `continue`:**
+Load **[steps/spec-change-detection.md](references/steps/spec-change-detection.md)** to validate the specification hasn't changed, then proceed to the appropriate step based on `planning:` position.
 
 **If no plan exists:**
 
@@ -81,103 +67,39 @@ Present the resume prompt:
 
 ---
 
-## Spec Change Detection
+## Step 1: Initialize Plan
 
-When resuming, compare the current specification hash to the stored hash in frontmatter.
+**If resuming:** The plan already exists. Load the output format adapter from **[output-formats/](references/output-formats/)** based on the `format:` field. → Proceed to **Step 3**.
 
-**If unchanged:** Proceed (fast path).
+**If fresh:** Create the plan index file.
 
-**If different:** Prompt the user:
-
-> "The specification hash has changed since planning started.
->
-> - **`continue`** — Proceed anyway (e.g., just formatting changes)
-> - **`re-analyze`** — I'll re-read the spec and compare to existing phases"
-
-**If re-analyzing:**
-1. Read the current specification fully
-2. Produce a new phase proposal based on fresh analysis
-3. Compare new proposal to existing phases in the plan
-4. Identify differences: "Phase 2 scope differs because X"
-5. User decides: keep existing, take new, or discuss/merge
-
-The plan file is the anchor — we compare new analysis against persisted phases.
-
----
-
-## Navigation Protocol
-
-Throughout planning (fresh or resume), the user can navigate:
-
-- **`y`/`yes`** — Approve current item, proceed to next
-- **`<feedback>`** — Discuss or amend current item
-- **`skip to {X}`** — Natural language navigation
-
-Claude interprets intent:
-- "skip to phase 4" → jump to Phase 4
-- "skip to first pending task" → find first task not yet authored
-- "skip back to phase 2 task 3" → return to earlier item
-- "skip to the end" → fast-forward to leading edge
-
-**Constraints:**
-- Can't skip forward past the leading edge (nothing planned yet)
-- Can always skip back to review/amend earlier work
-- Navigation works on first run too — skip back to review earlier phases
-
----
-
-## Downstream Impact Handling
-
-When user amends an earlier phase/task:
-
-> "You've changed Phase 2. This may affect:
-> - Phase 3: {name} — depends on Phase 2 outcome
-> - Phase 4: {name} — builds on Phase 2 work
->
-> Review these phases next? (y/skip)"
-
-Flag downstream items for review. User can accept or skip.
-
----
-
-## Step 1: Choose Output Format
-
-Check if the plan file exists with a `format:` field in frontmatter.
-
-**If format exists:** Load the corresponding `output-{format}.md` adapter from **[output-formats/](references/output-formats/)**. Proceed to Step 2.
-
-**If no format (fresh planning):** Present the formats from **[output-formats.md](references/output-formats.md)** to the user as written — including description, pros, cons, and "best for" — so they can make an informed choice. Number each format and ask the user to pick a number.
+First, choose the output format. Present the formats from **[output-formats.md](references/output-formats.md)** to the user — including description, pros, cons, and "best for". Number each format and ask the user to pick.
 
 **STOP.** Wait for the user to choose. After they pick:
 
-1. Confirm the choice and load the corresponding `output-{format}.md` adapter from **[output-formats/](references/output-formats/)**
-2. Create the plan index file with initial frontmatter (see Plan Index Format below)
-3. Commit: `planning({topic}): initialize plan with {format} format`
-
-→ Proceed to **Step 2**.
-
----
-
-## Plan Index Format
-
-The plan index file at `docs/workflow/planning/{topic}.md` contains all progress information:
+1. Load the corresponding `output-{format}.md` adapter from **[output-formats/](references/output-formats/)**
+2. Create the plan index file at `docs/workflow/planning/{topic}.md`:
 
 ```yaml
 ---
 topic: {topic-name}
-status: planning | concluded
-format: local-markdown | linear | beads | backlog-md
+status: planning
+format: {chosen-format}
 specification: ../specification/{topic}.md
 spec_hash: {sha256-first-8-chars}
 created: YYYY-MM-DD  # Use today's actual date
-updated: YYYY-MM-DD  # Use today's actual date
-planning:                          # Removed when concluded
-  phase: 2
-  task: 3
+updated: YYYY-MM-DD
+planning:
+  phase: 1
+  task: ~
 ---
+
+# Plan: {Topic Name}
 ```
 
-The `planning:` block tracks current position. It's removed when the plan is concluded.
+3. Commit: `planning({topic}): initialize plan`
+
+→ Proceed to **Step 2**.
 
 ---
 
