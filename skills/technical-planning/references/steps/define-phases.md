@@ -8,6 +8,28 @@ Load **[phase-design.md](../phase-design.md)** — the principles for structurin
 
 ---
 
+## Progress Tracking
+
+**On first entry**, create the progress directory and files:
+
+1. Create `docs/workflow/planning/.progress/{topic}/`
+2. Write `progress.md` with current state
+3. Write `phases.md` with `status: draft` containing your proposed phases
+4. Commit: `planning({topic}): initialize progress tracking`
+
+**On adjustment** (user requests changes):
+
+1. Update `phases.md` with the revised proposal (keep `status: draft`)
+2. Commit if significant changes: `planning({topic}): revise phase structure`
+
+**On approval** (user approves with `y`/`yes`):
+
+1. Update `phases.md`: set `status: approved` and `approved_at: {today}`
+2. Update `progress.md`: mark step complete
+3. Commit: `planning({topic}): approve phase structure`
+
+---
+
 Orient the user:
 
 > "I've read the full specification. I'm going to propose a phase structure — how we break this into independently testable stages. Once we agree on the phases, we'll take each one and break it into tasks."
@@ -37,26 +59,4 @@ Incorporate feedback, re-present the updated phase structure, and ask again. Rep
 
 #### If approved
 
-Update progress files and commit:
-
-1. Update `phases.md`: set `status: approved` and `approved_at: {today}`
-2. Update `progress.md`: mark Step 4 complete
-3. Commit: `planning({topic}): approve phase structure`
-
 → Proceed to **Step 5**.
-
----
-
-## Progress Tracking
-
-**On first entry to Step 4**, create the progress directory and files:
-
-1. Create `docs/workflow/planning/.progress/{topic}/`
-2. Write `progress.md` with current state (step 4, status in-progress)
-3. Write `phases.md` with `status: draft` containing your proposed phases
-4. Commit: `planning({topic}): initialize progress tracking`
-
-**On adjustment** (user requests changes):
-
-1. Update `phases.md` with the revised proposal (keep `status: draft`)
-2. Commit if significant changes: `planning({topic}): revise phase structure`

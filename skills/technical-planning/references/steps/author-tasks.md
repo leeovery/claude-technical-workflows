@@ -8,6 +8,28 @@ Load **[task-design.md](../task-design.md)** — the task design principles, tem
 
 ---
 
+## Progress Tracking
+
+**Before authoring**, check `tasks.md` for transfer status:
+
+1. Read the transfer status for each task in the current phase
+2. Skip tasks already marked `transfer: transferred`
+3. Start with the first `transfer: pending` task
+
+**After writing to the output format** (task approved and logged):
+
+1. Update `tasks.md`: set `transfer: transferred` for this task
+2. Update `progress.md`: note current phase and task position
+3. Commit progress files alongside plan files: `planning({topic}): transfer task {N.M} ({task name})`
+
+**On phase complete**:
+
+1. Verify all tasks in phase show `transfer: transferred`
+2. Update `progress.md`: note phase complete
+3. Commit: `planning({topic}): complete Phase {N}`
+
+---
+
 Orient the user:
 
 > "Task list for Phase {N} is agreed. I'll work through each task one at a time — presenting the full detail, discussing if needed, and logging it to the plan once approved."
@@ -52,7 +74,7 @@ After logging, confirm:
 
 #### Next task or phase complete
 
-**If tasks remain in this phase:** → Return to the top of **Step 6** with the next task. Present it, ask, wait.
+**If tasks remain in this phase:** → Return to the top with the next task. Present it, ask, wait.
 
 **If all tasks in this phase are logged:**
 
@@ -63,25 +85,3 @@ Phase {N}: {Phase Name} — complete ({M} tasks logged).
 → Return to **Step 5** for the next phase.
 
 **If all phases are complete:** → Proceed to **Step 7**.
-
----
-
-## Progress Tracking
-
-**Before authoring**, check `tasks.md` for transfer status:
-
-1. Read the transfer status for each task in the current phase
-2. Skip tasks already marked `transfer: transferred`
-3. Start with the first `transfer: pending` task
-
-**After writing to the output format** (task approved and logged):
-
-1. Update `tasks.md`: set `transfer: transferred` for this task
-2. Update `progress.md`: note current phase and task position
-3. Commit progress files alongside plan files: `planning({topic}): transfer task {N.M} ({task name})`
-
-**On phase complete**:
-
-1. Verify all tasks in phase show `transfer: transferred`
-2. Update `progress.md`: note phase complete
-3. Commit: `planning({topic}): complete Phase {N}`
