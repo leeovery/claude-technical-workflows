@@ -52,14 +52,21 @@ The plan file in `docs/workflow/planning/{topic}.md` serves as the reference poi
 
 ```markdown
 ---
+topic: {topic-name}
+status: planning
 format: backlog-md
+specification: ../specification/{topic}.md
+spec_hash: {sha256-first-8-chars}
 plan_id: {TOPIC_NAME}
+created: YYYY-MM-DD  # Use today's actual date
+updated: YYYY-MM-DD
+planning:
+  phase: 1
+  task: ~
+  note: "Starting planning"
 ---
 
-# Plan Reference: {Topic Name}
-
-**Specification**: `docs/workflow/specification/{topic}.md`
-**Created**: YYYY-MM-DD *(use today's actual date)*
+# Plan: {Topic Name}
 
 ## About This Plan
 
@@ -78,12 +85,6 @@ This plan is managed via Backlog.md. Tasks are stored in the `backlog/` director
 
 **To add tasks**: Run `backlog add "Task title"` or create task files directly.
 
-## Phases
-
-Tasks are organized with labels/priorities:
-- Label: `phase-1`, `phase-2`, etc.
-- Priority: high (foundational), medium (core), low (refinement)
-
 ## Key Decisions
 
 [Summary of key decisions from specification]
@@ -99,6 +100,32 @@ Architectural decisions from cross-cutting specifications that inform this plan:
 
 *Remove this section if no cross-cutting specifications apply.*
 
+## Phases
+
+### Phase 1: {Name}
+status: draft
+label: phase-1
+
+**Goal**: {What this phase accomplishes}
+**Why this order**: {Why this comes at this position}
+
+**Acceptance**:
+- [ ] Criterion 1
+- [ ] Criterion 2
+
+#### Tasks
+| ID | Name | Edge Cases | Status |
+|----|------|------------|--------|
+| task-1 | {Task Name} | {list} | pending |
+
+---
+
+### Phase 2: {Name}
+status: draft
+label: phase-2
+
+...
+
 ## External Dependencies
 
 [Dependencies on other topics - copy from specification's Dependencies section]
@@ -108,6 +135,27 @@ Architectural decisions from cross-cutting specifications that inform this plan:
 ```
 
 The External Dependencies section tracks what this plan needs from other topics. See `../dependencies.md` for the format and states (unresolved, resolved, satisfied externally).
+
+## Frontmatter
+
+The frontmatter tracks planning progress:
+
+```yaml
+---
+topic: {topic-name}
+status: planning | concluded
+format: backlog-md
+specification: ../specification/{topic}.md
+spec_hash: {sha256-first-8-chars}
+plan_id: {TOPIC_NAME}
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+planning:                          # Removed when concluded
+  phase: 2
+  task: 3
+  note: "Authoring Phase 2 tasks"
+---
+```
 
 ### Task File Format
 

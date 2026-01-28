@@ -40,73 +40,168 @@ Follow every step in sequence. No steps are optional.
 
 ---
 
-## Step 0: Progress Tracking
+## Core Concept: Deterministic Replay
 
-Check if progress files exist for this topic at `docs/workflow/planning/.progress/{topic}/`.
+The plan index file IS the progress tracker. Same flow whether fresh or resuming:
+1. Present phases → approve or amend
+2. Present task lists per phase → approve or amend
+3. Author each task → approve or amend
 
-**If progress files exist:**
+**Why it works:**
+- Fresh: slow (analyzing spec, designing phases)
+- Resume: fast (reading from plan file, just presenting)
+- Same code path, different data source
+- User always has review opportunity
+- Option to skip to next pending for fast-forward
 
-Read `progress.md` to determine current position. Ask the user:
-
-> "Found existing progress for **{topic}** — {Note from progress.md}.
->
-> - **`resume`** — Continue where you left off
-> - **`restart`** — Delete progress and start fresh"
-
-**If `resume`:**
-
-Proceed to Step 1. Each step handles its own resume logic by checking progress files.
-
-**If `restart`:**
-1. Delete `.progress/{topic}/` directory
-2. Commit: `planning({topic}): restart planning`
-3. Continue below to create fresh progress files
-
-**Create progress files** (fresh session or after restart):
-
-1. Create `docs/workflow/planning/.progress/{topic}/` directory
-2. Write `progress.md`:
-
-```markdown
----
-topic: {topic-name}
-specification: {specification-path}
-step: 1
-status: in-progress
-created: YYYY-MM-DD  # Use today's actual date
-updated: YYYY-MM-DD  # Use today's actual date
 ---
 
-# Planning Progress: {topic}
+## Step 0: Resume Detection
 
-## Current Position
+Check if a plan already exists at `docs/workflow/planning/{topic}.md`.
 
-Phase: ~
-Task: ~
-Note: "Fresh session."
+**If plan exists with `planning:` block in frontmatter:**
+
+The `planning:` block indicates work in progress. Read the plan to determine current position.
+
+```yaml
+planning:
+  phase: 2
+  task: 3
+  note: "Authoring Phase 2 tasks"
 ```
 
-3. Commit: `planning({topic}): initialize progress tracking`
+Present the resume prompt:
 
-→ Proceed to **Step 1**.
+> "Resuming planning for **{topic}** — {note from planning block}.
+>
+> Options:
+> - **`y`/`yes`** — Approve, proceed to next item
+> - **`<feedback>`** — Discuss or amend
+> - **`skip to {X}`** — Natural language navigation
+>
+> Examples of skip:
+> - "skip to phase 4"
+> - "skip to the first pending task"
+> - "skip back to phase 2 task 3"
+> - "skip to the end"
+>
+> Constraint: Can't skip forward past the leading edge (nothing planned yet).
+> Can always skip back to review earlier work.
+>
+> - **`restart`** — Delete plan and start fresh"
+
+**If `restart`:**
+1. Delete the plan file (and `{topic}/` directory if local-markdown format)
+2. Commit: `planning({topic}): restart planning`
+3. Continue below to create fresh plan
+
+**If resuming:** Check spec hash (see Spec Change Detection below), then proceed to the appropriate step based on `planning:` position.
+
+**If no plan exists:**
+
+→ Proceed to **Step 1** (fresh planning session).
+
+---
+
+## Spec Change Detection
+
+When resuming, compare the current specification hash to the stored hash in frontmatter.
+
+**If unchanged:** Proceed (fast path).
+
+**If different:** Prompt the user:
+
+> "The specification hash has changed since planning started.
+>
+> - **`continue`** — Proceed anyway (e.g., just formatting changes)
+> - **`re-analyze`** — I'll re-read the spec and compare to existing phases"
+
+**If re-analyzing:**
+1. Read the current specification fully
+2. Produce a new phase proposal based on fresh analysis
+3. Compare new proposal to existing phases in the plan
+4. Identify differences: "Phase 2 scope differs because X"
+5. User decides: keep existing, take new, or discuss/merge
+
+The plan file is the anchor — we compare new analysis against persisted phases.
+
+---
+
+## Navigation Protocol
+
+Throughout planning (fresh or resume), the user can navigate:
+
+- **`y`/`yes`** — Approve current item, proceed to next
+- **`<feedback>`** — Discuss or amend current item
+- **`skip to {X}`** — Natural language navigation
+
+Claude interprets intent:
+- "skip to phase 4" → jump to Phase 4
+- "skip to first pending task" → find first task not yet authored
+- "skip back to phase 2 task 3" → return to earlier item
+- "skip to the end" → fast-forward to leading edge
+
+**Constraints:**
+- Can't skip forward past the leading edge (nothing planned yet)
+- Can always skip back to review/amend earlier work
+- Navigation works on first run too — skip back to review earlier phases
+
+---
+
+## Downstream Impact Handling
+
+When user amends an earlier phase/task:
+
+> "You've changed Phase 2. This may affect:
+> - Phase 3: {name} — depends on Phase 2 outcome
+> - Phase 4: {name} — builds on Phase 2 work
+>
+> Review these phases next? (y/skip)"
+
+Flag downstream items for review. User can accept or skip.
 
 ---
 
 ## Step 1: Choose Output Format
 
-Check `progress.md` for an existing `format` field.
+Check if the plan file exists with a `format:` field in frontmatter.
 
 **If format exists:** Load the corresponding `output-{format}.md` adapter from **[output-formats/](references/output-formats/)**. Proceed to Step 2.
 
-**If no format:** Present the formats from **[output-formats.md](references/output-formats.md)** to the user as written — including description, pros, cons, and "best for" — so they can make an informed choice. Number each format and ask the user to pick a number.
+**If no format (fresh planning):** Present the formats from **[output-formats.md](references/output-formats.md)** to the user as written — including description, pros, cons, and "best for" — so they can make an informed choice. Number each format and ask the user to pick a number.
 
 **STOP.** Wait for the user to choose. After they pick:
 
 1. Confirm the choice and load the corresponding `output-{format}.md` adapter from **[output-formats/](references/output-formats/)**
-2. Update `progress.md`: add `format: {chosen-format}`, update step and Note
-3. Commit: `planning({topic}): choose output format`
+2. Create the plan index file with initial frontmatter (see Plan Index Format below)
+3. Commit: `planning({topic}): initialize plan with {format} format`
 
 → Proceed to **Step 2**.
+
+---
+
+## Plan Index Format
+
+The plan index file at `docs/workflow/planning/{topic}.md` contains all progress information:
+
+```yaml
+---
+topic: {topic-name}
+status: planning | concluded
+format: local-markdown | linear | beads | backlog-md
+specification: ../specification/{topic}.md
+spec_hash: {sha256-first-8-chars}
+created: YYYY-MM-DD  # Use today's actual date
+updated: YYYY-MM-DD  # Use today's actual date
+planning:                          # Removed when concluded
+  phase: 2
+  task: 3
+  note: "Authoring Phase 2 tasks"
+---
+```
+
+The `planning:` block tracks current position. It's removed when the plan is concluded.
 
 ---
 
@@ -173,9 +268,9 @@ Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its 
 
 After the review is complete:
 
-1. **Clean up progress files** — Delete `docs/workflow/planning/.progress/{topic}/` directory
-2. **Update plan status** — Update the plan frontmatter to `status: concluded`
-3. **Final commit** — Commit the concluded plan (including progress file deletion)
+1. **Remove the `planning:` block** — Edit the plan frontmatter to remove the entire `planning:` block
+2. **Update plan status** — Set `status: concluded` in frontmatter
+3. **Final commit** — Commit the concluded plan
 4. **Present completion summary**:
 
 > "Planning is complete for **{topic}**.
@@ -184,4 +279,4 @@ After the review is complete:
 >
 > Status has been marked as `concluded`. The plan is ready for implementation."
 
-> **CHECKPOINT**: Do not conclude if progress files indicate incomplete work. If `.progress/{topic}/tasks.md` shows any `transfer: pending` tasks, those tasks have not been written to the output format.
+> **CHECKPOINT**: Do not conclude if any tasks in the plan index show `status: pending`. All tasks must be `authored` before concluding.

@@ -8,9 +8,26 @@ Load **[phase-design.md](../phase-design.md)** — the principles for structurin
 
 ---
 
-Check `phases.md`. If it exists with `status: approved`, proceed to Step 5.
+## Check for Existing Phases
+
+Read the plan index file. Check if phases already exist in the body.
+
+**If phases exist with `status: approved`:**
+- Present them to the user for review (deterministic replay)
+- User can approve (`y`), amend, or navigate (`skip to {X}`)
+- If amended, flag downstream content for review
+- Once approved (or skipped), proceed to Step 5
+
+**If phases exist with `status: draft`:**
+- Present the draft for review/approval
+- Continue the approval flow below
+
+**If no phases exist:**
+- Continue with fresh phase design below
 
 ---
+
+## Fresh Phase Design
 
 Orient the user:
 
@@ -29,29 +46,37 @@ Phase {N}: {Phase Name}
     - [ ] {Second verifiable criterion}
 ```
 
-Write your proposal to `phases.md` with `status: draft`:
+Write the phases directly to the plan index file body:
 
 ```markdown
----
+## Phases
+
+### Phase 1: {Phase Name}
 status: draft
----
 
-# Phases
+**Goal**: {What this phase accomplishes}
+**Why this order**: {Why this comes at this position}
 
-## Phase 1: {Phase Name}
-
-Goal: {What this phase accomplishes}
-Why this order: {Why this comes at this position}
-
-Acceptance criteria:
+**Acceptance**:
 - [ ] {First verifiable criterion}
 - [ ] {Second verifiable criterion}
 
-## Phase 2: {Phase Name}
+### Phase 2: {Phase Name}
+status: draft
 ...
 ```
 
-Then present it to the user.
+Update the frontmatter `planning:` block:
+```yaml
+planning:
+  phase: 1
+  task: ~
+  note: "Reviewing phase structure"
+```
+
+Commit: `planning({topic}): draft phase structure`
+
+Then present to the user.
 
 **STOP.** Ask:
 
@@ -61,12 +86,12 @@ Then present it to the user.
 
 #### If the user provides feedback
 
-Incorporate feedback, update `phases.md` with the revised proposal, re-present the updated phase structure, and ask again. Repeat until approved.
+Incorporate feedback, update the phases in the plan index, re-present the updated phase structure, and ask again. Repeat until approved.
 
 #### If approved
 
-1. Update `phases.md`: set `status: approved` and `approved_at: YYYY-MM-DD` (use today's actual date)
-2. Update `progress.md`: note current step
+1. Update each phase in the plan index: set `status: approved` and `approved_at: YYYY-MM-DD`
+2. Update `planning:` block in frontmatter to note current position
 3. Commit: `planning({topic}): approve phase structure`
 
 → Proceed to **Step 5**.

@@ -147,16 +147,23 @@ Create `docs/workflow/planning/{topic}.md`:
 
 ```markdown
 ---
+topic: {topic-name}
+status: planning
 format: linear
+specification: ../specification/{topic}.md
+spec_hash: {sha256-first-8-chars}
 plan_id: {PROJECT_NAME}
 project_id: {ID from MCP response}
 team: {TEAM_NAME}
+created: YYYY-MM-DD  # Use today's actual date
+updated: YYYY-MM-DD
+planning:
+  phase: 1
+  task: ~
+  note: "Starting planning"
 ---
 
-# Plan Reference: {Topic Name}
-
-**Specification**: `docs/workflow/specification/{topic}.md`
-**Created**: YYYY-MM-DD *(use today's actual date)*
+# Plan: {Topic Name}
 
 ## About This Plan
 
@@ -190,6 +197,32 @@ Architectural decisions from cross-cutting specifications that inform this plan:
 
 *Remove this section if no cross-cutting specifications apply.*
 
+## Phases
+
+### Phase 1: {Name}
+status: draft
+label: phase-1
+
+**Goal**: {What this phase accomplishes}
+**Why this order**: {Why this comes at this position}
+
+**Acceptance**:
+- [ ] Criterion 1
+- [ ] Criterion 2
+
+#### Tasks
+| ID | Name | Edge Cases | Status |
+|----|------|------------|--------|
+| {issue-id} | {Task Name} | {list} | pending |
+
+---
+
+### Phase 2: {Name}
+status: draft
+label: phase-2
+
+...
+
 ## External Dependencies
 
 [Dependencies on other topics - copy from specification's Dependencies section]
@@ -202,14 +235,24 @@ The External Dependencies section tracks what this plan needs from other topics.
 
 ## Frontmatter
 
-The frontmatter contains all information needed to query Linear:
+The frontmatter contains all information needed to query Linear and tracks planning progress:
 
 ```yaml
 ---
+topic: {topic-name}
+status: planning | concluded
 format: linear
+specification: ../specification/{topic}.md
+spec_hash: {sha256-first-8-chars}
 plan_id: USER-AUTH-FEATURE
 project_id: abc123-def456
 team: Engineering
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+planning:                          # Removed when concluded
+  phase: 2
+  task: 3
+  note: "Authoring Phase 2 tasks"
 ---
 ```
 
