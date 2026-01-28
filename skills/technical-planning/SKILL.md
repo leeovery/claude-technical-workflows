@@ -40,22 +40,6 @@ Follow every step in sequence. No steps are optional.
 
 ---
 
-## Core Concept: Deterministic Replay
-
-The plan index file IS the progress tracker. Same flow whether fresh or resuming:
-1. Present phases → approve or amend
-2. Present task lists per phase → approve or amend
-3. Author each task → approve or amend
-
-**Why it works:**
-- Fresh: slow (analyzing spec, designing phases)
-- Resume: fast (reading from plan file, just presenting)
-- Same code path, different data source
-- User always has review opportunity
-- Option to skip to next pending for fast-forward
-
----
-
 ## Step 0: Resume Detection
 
 Check if a plan already exists at `docs/workflow/planning/{topic}.md`.
