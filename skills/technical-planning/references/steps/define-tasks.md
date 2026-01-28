@@ -57,9 +57,7 @@ Write the task table directly to the plan index, under the phase:
 | {id} | {Task Name} | {list} | pending |
 ```
 
-The ID format depends on the output format:
-- **local-markdown**: `{topic}-{phase}-{seq}` (e.g., `auth-1-1`, `auth-1-2`)
-- **linear/beads/backlog-md**: Will be assigned when task is authored to external system
+The ID format is determined by the output format adapter. Use placeholder IDs in the table during task list approval; final IDs are assigned when tasks are authored.
 
 Update the frontmatter `planning:` block:
 ```yaml

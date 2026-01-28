@@ -54,7 +54,7 @@ The `planning:` block indicates work in progress. Read the plan to determine cur
 > - **`restart`** — Delete plan and start fresh"
 
 **If `restart`:**
-1. Delete the plan file (and `{topic}/` directory if local-markdown format)
+1. Delete the plan file
 2. Commit: `planning({topic}): restart planning`
 3. → Proceed to **Step 1** (fresh start)
 
