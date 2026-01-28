@@ -27,14 +27,14 @@ Phase {N}: {Phase Name}
 
 **STOP.** Present your proposed phase structure and ask:
 
-> **To proceed, choose one:**
-> - **"Approve"** — Phase structure is confirmed. I'll proceed to task breakdown.
-> - **"Adjust"** — Tell me what to change: reorder, split, merge, add, or remove phases.
+> **To proceed:**
+> - **`y`/`yes`** — Approved. I'll proceed to task breakdown.
+> - **Or tell me what to change** — reorder, split, merge, add, edit, or remove phases.
 
-#### If Adjust
+#### If the user provides feedback
 
 Incorporate feedback, re-present the updated phase structure, and ask again. Repeat until approved.
 
-#### If Approved
+#### If approved
 
 → Proceed to **Step 5**.

@@ -24,13 +24,13 @@ After presenting, ask:
 
 > **Task {M} of {total}: {Task Name}**
 >
-> **To proceed, choose one:**
-> - **"Approve"** — Task is confirmed. I'll log it to the plan verbatim.
-> - **"Adjust"** — Tell me what to change.
+> **To proceed:**
+> - **`y`/`yes`** — Approved. I'll log it to the plan verbatim.
+> - **Or tell me what to change.**
 
 **STOP.** Wait for the user's response.
 
-#### If adjust
+#### If the user provides feedback
 
 The user may:
 - Request changes to the task content
@@ -40,7 +40,9 @@ The user may:
 
 Incorporate feedback and re-present the updated task **in full**. Then ask the same choice again. Repeat until approved.
 
-#### If approved
+#### If approved (`y`/`yes`)
+
+> **CHECKPOINT**: Before logging, verify: (1) You presented this exact content, (2) The user explicitly approved with `y`/`yes` or equivalent — not a question, comment, or "okay" in passing, (3) You are writing exactly what was approved with no modifications.
 
 Log the task to the plan — verbatim, as presented. Do not modify content between approval and writing. The output format adapter determines how tasks are written (appending markdown, creating issues, etc.).
 
