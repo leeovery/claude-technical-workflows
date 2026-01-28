@@ -66,7 +66,6 @@ Update the frontmatter `planning:` block:
 planning:
   phase: {N}
   task: ~
-  note: "Reviewing Phase {N} task list"
 ```
 
 Commit: `planning({topic}): draft Phase {N} task list`

@@ -63,7 +63,6 @@ updated: YYYY-MM-DD
 planning:
   phase: 1
   task: ~
-  note: "Starting planning"
 ---
 
 # Plan: {Topic Name}
@@ -153,7 +152,6 @@ updated: YYYY-MM-DD
 planning:                          # Removed when concluded
   phase: 2
   task: 3
-  note: "Authoring Phase 2 tasks"
 ---
 ```
 

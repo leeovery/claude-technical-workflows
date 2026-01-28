@@ -50,7 +50,7 @@ The `planning:` block indicates work in progress. Read the plan to determine cur
 
 Present the resume prompt:
 
-> "Resuming planning for **{topic}** — {note from planning block}.
+> "Resuming planning for **{topic}**.
 >
 > Options:
 > - **`y`/`yes`** — Approve, proceed to next item
@@ -174,7 +174,6 @@ updated: YYYY-MM-DD  # Use today's actual date
 planning:                          # Removed when concluded
   phase: 2
   task: 3
-  note: "Authoring Phase 2 tasks"
 ---
 ```
 
