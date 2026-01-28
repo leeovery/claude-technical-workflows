@@ -40,7 +40,7 @@ Incorporate feedback, re-present the updated phase structure, and ask again. Rep
 Update progress files and commit:
 
 1. Update `phases.md`: set `status: approved` and `approved_at: {today}`
-2. Update `progress.md`: mark Step 4 complete, set step to 5
+2. Update `progress.md`: mark Step 4 complete
 3. Commit: `planning({topic}): approve phase structure`
 
 → Proceed to **Step 5**.
@@ -60,9 +60,3 @@ Update progress files and commit:
 
 1. Update `phases.md` with the revised proposal (keep `status: draft`)
 2. Commit if significant changes: `planning({topic}): revise phase structure`
-
-**On approval** (user approves with `y`/`yes`):
-
-1. Update `phases.md`: set `status: approved` and `approved_at: {today}`
-2. Update `progress.md`: mark Step 4 complete
-3. Commit: `planning({topic}): approve phase structure`

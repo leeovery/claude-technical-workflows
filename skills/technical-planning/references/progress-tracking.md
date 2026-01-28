@@ -128,21 +128,7 @@ overview_status: pending
 
 Full task detail (Problem, Solution, Outcome, Do, Acceptance Criteria, Tests, Context) is NOT stored here — that's the output format's job. These files capture what was agreed (structure, scope, ordering) not the authored content.
 
----
-
-## Lifecycle
-
-| Event | Action |
-|-------|--------|
-| Step 4 starts | Create `.progress/{topic}/`, write `progress.md` + `phases.md` (draft) |
-| Step 4: user adjusts | Update `phases.md` with new proposal |
-| Step 4: user approves | Update `phases.md` status to `approved`, update `progress.md`, commit |
-| Step 5: propose tasks | Add phase section to `tasks.md` with `overview_status: pending` |
-| Step 5: user approves | Set `overview_status: approved`, update `progress.md`, commit |
-| Step 6: task transferred | Set task `transfer: transferred` in `tasks.md`, update `progress.md`, commit |
-| Step 6: phase complete | Update `progress.md`, commit |
-| Step 7+: | Progress files available as reference but no longer actively updated |
-| Step 9: conclude | Delete `.progress/{topic}/` directory, commit |
+Each step file (define-phases.md, define-tasks.md, author-tasks.md) contains the specific progress tracking actions for that step.
 
 ---
 
@@ -185,29 +171,7 @@ When resuming, orient the user:
 
 ---
 
-## Commit Strategy
+## Commit Convention
 
-Follows existing "commit frequently" principle, now with progress files included:
+**Commit message format**: `planning({topic}): {description}`
 
-- After every approval gate (Step 4 approve, Step 5 per-phase approve, Step 6 per-task transfer)
-- After significant user exchanges during adjustment rounds
-- Before any potential context refresh
-
-**Commit message convention**: `planning({topic}): {description}`
-
-Examples:
-- `planning(user-auth): approve phase structure`
-- `planning(user-auth): approve Phase 1 task overview`
-- `planning(user-auth): transfer task 1.2 (validate credentials)`
-
----
-
-## Cleanup
-
-At Step 9 (Conclude the Plan), delete the progress directory:
-
-1. Verify all tasks show `transfer: transferred` in `tasks.md`
-2. Delete `docs/workflow/planning/.progress/{topic}/` directory
-3. Commit the deletion with the concluded plan
-
-> **CHECKPOINT**: Do not proceed to conclude if progress files indicate incomplete work. If `tasks.md` shows any `transfer: pending` tasks, those tasks have not been written to the output format.

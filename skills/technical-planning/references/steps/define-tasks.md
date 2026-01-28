@@ -62,9 +62,3 @@ Update progress files and commit:
 
 1. Update the task list in `tasks.md` (keep `overview_status: pending`)
 2. Commit if significant changes: `planning({topic}): revise Phase {N} tasks`
-
-**On approval** (user approves with `y`/`yes`):
-
-1. Update `tasks.md`: set `overview_status: approved` for this phase
-2. Update `progress.md`: note which phases have approved overviews
-3. Commit: `planning({topic}): approve Phase {N} task overview`
