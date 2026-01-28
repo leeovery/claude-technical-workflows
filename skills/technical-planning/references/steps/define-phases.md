@@ -65,4 +65,4 @@ Incorporate feedback, update `phases.md` with the revised proposal, re-present t
 2. Update `progress.md`: note current step
 3. Commit: `planning({topic}): approve phase structure`
 
-→ Proceed to **Step 6**.
+→ Proceed to **Step 5**.

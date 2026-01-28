@@ -62,4 +62,4 @@ Incorporate feedback, update the task list in `tasks.md`, re-present the updated
 2. Update `progress.md`: note current step and phase
 3. Commit: `planning({topic}): approve Phase {N} task overview`
 
-→ Proceed to **Step 7**.
+→ Proceed to **Step 6**.

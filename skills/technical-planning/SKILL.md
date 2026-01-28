@@ -40,7 +40,7 @@ Follow every step in sequence. No steps are optional.
 
 ---
 
-## Step 1: Progress Tracking
+## Step 0: Progress Tracking
 
 Check if progress files exist for this topic at `docs/workflow/planning/.progress/{topic}/`.
 
@@ -53,7 +53,7 @@ Check if progress files exist for this topic at `docs/workflow/planning/.progres
 ---
 topic: {topic-name}
 specification: {specification-path}
-step: 2
+step: 1
 status: in-progress
 created: {today}
 updated: {today}
@@ -69,7 +69,7 @@ Note: "Fresh session."
 ```
 
 3. Commit: `planning({topic}): initialize progress tracking`
-4. Proceed to Step 2
+4. Proceed to Step 1
 
 **If progress files exist:**
 
@@ -83,7 +83,7 @@ Read `progress.md` to determine current position. Ask the user:
 **If `restart`:**
 1. Delete `.progress/{topic}/` directory
 2. Commit: `planning({topic}): restart planning`
-3. Proceed to Step 2
+3. Proceed to Step 1
 
 **If `resume`:**
 1. Read `phases.md` and `tasks.md` for context
@@ -92,7 +92,7 @@ Read `progress.md` to determine current position. Ask the user:
 
 ---
 
-## Step 2: Choose Output Format
+## Step 1: Choose Output Format
 
 Present the formats from **[output-formats.md](references/output-formats.md)** to the user as written — including description, pros, cons, and "best for" — so they can make an informed choice. Number each format and ask the user to pick a number.
 
@@ -102,19 +102,19 @@ Present the formats from **[output-formats.md](references/output-formats.md)** t
 2. Update `progress.md`: add `format: {chosen-format}`, update step and Note
 3. Commit: `planning({topic}): choose output format`
 
+→ Proceed to **Step 2**.
+
+---
+
+## Step 2: Load Planning Principles
+
+Load **[planning-principles.md](references/planning-principles.md)** — the planning principles, rules, and quality standards that apply throughout the process.
+
 → Proceed to **Step 3**.
 
 ---
 
-## Step 3: Load Planning Principles
-
-Load **[planning-principles.md](references/planning-principles.md)** — the planning principles, rules, and quality standards that apply throughout the process.
-
-→ Proceed to **Step 4**.
-
----
-
-## Step 4: Read Specification Content
+## Step 3: Read Specification Content
 
 Now read the specification content **in full**. Not a scan, not a summary — read every section, every decision, every edge case. The specification must be fully digested before any structural decisions are made. If a document is too large for a single read, read it in sequential chunks until you have consumed the entire file. Never summarise or skip sections to fit within tool limits.
 
@@ -127,45 +127,45 @@ From the specification, absorb:
 - Architectural choices
 - Edge cases identified
 - Constraints and requirements
-- Whether a Dependencies section exists (you will handle these in Step 8)
+- Whether a Dependencies section exists (you will handle these in Step 7)
 
 Do not present or summarize the specification back to the user — it has already been signed off.
 
-→ Proceed to **Step 5**.
+→ Proceed to **Step 4**.
 
 ---
 
-## Step 5: Define Phases
+## Step 4: Define Phases
 
 Load **[steps/define-phases.md](references/steps/define-phases.md)** and follow its instructions as written.
 
 ---
 
-## Step 6: Define Tasks
+## Step 5: Define Tasks
 
 Load **[steps/define-tasks.md](references/steps/define-tasks.md)** and follow its instructions as written.
 
 ---
 
-## Step 7: Author Tasks
+## Step 6: Author Tasks
 
 Load **[steps/author-tasks.md](references/steps/author-tasks.md)** and follow its instructions as written.
 
 ---
 
-## Step 8: Resolve External Dependencies
+## Step 7: Resolve External Dependencies
 
 Load **[steps/resolve-dependencies.md](references/steps/resolve-dependencies.md)** and follow its instructions as written.
 
 ---
 
-## Step 9: Plan Review
+## Step 8: Plan Review
 
 Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its instructions as written.
 
 ---
 
-## Step 10: Conclude the Plan
+## Step 9: Conclude the Plan
 
 After the review is complete:
 

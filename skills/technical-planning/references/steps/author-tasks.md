@@ -68,6 +68,6 @@ Confirm:
 Phase {N}: {Phase Name} — complete ({M} tasks logged).
 ```
 
-→ Return to **Step 6** for the next phase.
+→ Return to **Step 5** for the next phase.
 
-**If all phases are complete:** → Proceed to **Step 8**.
+**If all phases are complete:** → Proceed to **Step 7**.
