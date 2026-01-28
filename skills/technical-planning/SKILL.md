@@ -44,7 +44,26 @@ Follow every step in sequence. No steps are optional.
 
 Check if progress files exist for this topic at `docs/workflow/planning/.progress/{topic}/`.
 
-**If no progress files exist:**
+**If progress files exist:**
+
+Read `progress.md` to determine current position. Ask the user:
+
+> "Found existing progress for **{topic}** — {Note from progress.md}.
+>
+> - **`resume`** — Continue where you left off
+> - **`restart`** — Delete progress and start fresh"
+
+**If `resume`:**
+1. Read `phases.md` and `tasks.md` for context
+2. Load the output format adapter indicated in `progress.md`
+3. Jump to the step indicated in `progress.md` and continue
+
+**If `restart`:**
+1. Delete `.progress/{topic}/` directory
+2. Commit: `planning({topic}): restart planning`
+3. Continue below to create fresh progress files
+
+**Create progress files** (fresh session or after restart):
 
 1. Create `docs/workflow/planning/.progress/{topic}/` directory
 2. Write `progress.md`:
@@ -69,26 +88,8 @@ Note: "Fresh session."
 ```
 
 3. Commit: `planning({topic}): initialize progress tracking`
-4. Proceed to Step 1
 
-**If progress files exist:**
-
-Read `progress.md` to determine current position. Ask the user:
-
-> "Found existing progress for **{topic}** — {Note from progress.md}.
->
-> - **`resume`** — Continue where you left off
-> - **`restart`** — Delete progress and start fresh"
-
-**If `restart`:**
-1. Delete `.progress/{topic}/` directory
-2. Commit: `planning({topic}): restart planning`
-3. Proceed to Step 1
-
-**If `resume`:**
-1. Read `phases.md` and `tasks.md` for context
-2. Load the output format adapter indicated in `progress.md`
-3. Jump to the step indicated in `progress.md` and continue
+→ Proceed to **Step 1**.
 
 ---
 
