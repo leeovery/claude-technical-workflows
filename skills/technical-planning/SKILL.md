@@ -64,7 +64,7 @@ Present the formats from **[output-formats.md](references/output-formats.md)** t
 
 Load **[planning-principles.md](references/planning-principles.md)** — the planning principles, rules, and quality standards that apply throughout the process.
 
-Also load **[progress-tracking.md](references/progress-tracking.md)** — the progress file formats and tracking procedures for Steps 4-6.
+Also load **[progress-tracking.md](references/progress-tracking.md)** — the progress file formats used to persist work across sessions.
 
 → Proceed to **Step 3**.
 
