@@ -152,7 +152,16 @@ Check: does `docs/workflow/planning/.progress/{topic}/` exist?
 
 **No** → Fresh session. Proceed to Step 1.
 
-**Yes** → Read `progress.md`. Resume based on current step:
+**Yes** → Read `progress.md` to determine current position. Ask the user:
+
+> "Found existing progress for **{topic}** — currently at {description of position}.
+>
+> - **`resume`** — Continue from where you left off
+> - **`restart`** — Delete progress and start fresh from Step 1"
+
+**If `restart`** → Delete `.progress/{topic}/` directory, commit: `planning({topic}): restart planning`, then proceed to Step 1.
+
+**If `resume`** → Resume based on current step:
 
 ### Step 4 (draft)
 Read `phases.md`, present draft, continue phase discussion.

@@ -46,7 +46,16 @@ Check if progress files exist for this topic at `docs/workflow/planning/.progres
 
 **If no progress files exist** → Fresh session. Proceed to Step 1.
 
-**If progress files exist** → Load **[progress-tracking.md](references/progress-tracking.md)** and follow the resume flow. Read `progress.md` first to determine current position, then resume at the appropriate step.
+**If progress files exist** → Read `progress.md` to determine current position, then ask:
+
+> "Found existing progress for **{topic}** — currently at {description of position}.
+>
+> - **`resume`** — Continue from where you left off
+> - **`restart`** — Delete progress and start fresh from Step 1"
+
+**If user chooses `resume`** → Load **[progress-tracking.md](references/progress-tracking.md)** and follow the resume flow.
+
+**If user chooses `restart`** → Delete `.progress/{topic}/` directory, commit the deletion, then proceed to Step 1.
 
 ---
 
