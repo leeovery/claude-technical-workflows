@@ -63,3 +63,25 @@ Phase {N}: {Phase Name} — complete ({M} tasks logged).
 → Return to **Step 5** for the next phase.
 
 **If all phases are complete:** → Proceed to **Step 7**.
+
+---
+
+## Progress Tracking
+
+**Before authoring**, check `tasks.md` for transfer status:
+
+1. Read the transfer status for each task in the current phase
+2. Skip tasks already marked `transfer: transferred`
+3. Start with the first `transfer: pending` task
+
+**After writing to the output format** (task approved and logged):
+
+1. Update `tasks.md`: set `transfer: transferred` for this task
+2. Update `progress.md`: note current phase and task position
+3. Commit progress files alongside plan files: `planning({topic}): transfer task {N.M} ({task name})`
+
+**On phase complete**:
+
+1. Verify all tasks in phase show `transfer: transferred`
+2. Update `progress.md`: note phase complete
+3. Commit: `planning({topic}): complete Phase {N}`

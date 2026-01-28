@@ -40,6 +40,16 @@ Follow every step in sequence. No steps are optional.
 
 ---
 
+## Step 0: Resume Detection
+
+Check if progress files exist for this topic at `docs/workflow/planning/.progress/{topic}/`.
+
+**If no progress files exist** → Fresh session. Proceed to Step 1.
+
+**If progress files exist** → Load **[progress-tracking.md](references/progress-tracking.md)** and follow the resume flow. Read `progress.md` first to determine current position, then resume at the appropriate step.
+
+---
+
 ## Step 1: Choose Output Format
 
 Present the formats from **[output-formats.md](references/output-formats.md)** to the user as written — including description, pros, cons, and "best for" — so they can make an informed choice. Number each format and ask the user to pick a number.
@@ -52,7 +62,9 @@ Present the formats from **[output-formats.md](references/output-formats.md)** t
 
 ## Step 2: Load Planning Principles
 
-Load **[planning-principles.md](references/planning-principles.md)** — this contains the planning principles, rules, and quality standards that apply throughout the process.
+Load **[planning-principles.md](references/planning-principles.md)** — the planning principles, rules, and quality standards that apply throughout the process.
+
+Also load **[progress-tracking.md](references/progress-tracking.md)** — the progress file formats and tracking procedures for Steps 4-6.
 
 → Proceed to **Step 3**.
 
@@ -113,12 +125,15 @@ Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its 
 
 After the review is complete:
 
-1. **Update plan status** — Update the plan frontmatter to `status: concluded`
-2. **Final commit** — Commit the concluded plan
-3. **Present completion summary**:
+1. **Clean up progress files** — Delete `docs/workflow/planning/.progress/{topic}/` directory if it exists
+2. **Update plan status** — Update the plan frontmatter to `status: concluded`
+3. **Final commit** — Commit the concluded plan (including progress file deletion)
+4. **Present completion summary**:
 
 > "Planning is complete for **{topic}**.
 >
 > The plan contains **{N} phases** with **{M} tasks** total, reviewed for traceability against the specification and structural integrity.
 >
 > Status has been marked as `concluded`. The plan is ready for implementation."
+
+> **CHECKPOINT**: Do not conclude if progress files indicate incomplete work. If `.progress/{topic}/tasks.md` shows any `transfer: pending` tasks, those tasks have not been written to the output format.
