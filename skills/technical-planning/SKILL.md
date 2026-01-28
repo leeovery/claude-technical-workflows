@@ -55,8 +55,8 @@ topic: {topic-name}
 specification: {specification-path}
 step: 1
 status: in-progress
-created: {today}
-updated: {today}
+created: YYYY-MM-DD  # Use today's actual date
+updated: YYYY-MM-DD  # Use today's actual date
 ---
 
 # Planning Progress: {topic}
