@@ -61,12 +61,6 @@ Before logging any task to the plan, ask yourself:
 
 **Create plans, not code**: Your job is phases, tasks, and acceptance criteria — not implementation.
 
-## Progress Tracking
-
-Steps 4-6 involve approved decisions that exist only in conversation memory until transferred to the output format. **[progress-tracking.md](progress-tracking.md)** defines files that persist this work across sessions.
-
-The progress files enforce "capture immediately" — approved phases, task overviews, and transfer status are written to files, not just discussed. If context refreshes, read the progress files and continue where you left off.
-
 ## Plan as Source of Truth
 
 The plan IS the source of truth. Every phase, every task must contain all information needed to execute it.
