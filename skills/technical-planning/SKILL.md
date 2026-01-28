@@ -44,9 +44,36 @@ Follow every step in sequence. No steps are optional.
 
 Check if progress files exist for this topic at `docs/workflow/planning/.progress/{topic}/`.
 
-**If no progress files exist** → Fresh session. Proceed to Step 2.
+**If no progress files exist:**
 
-**If progress files exist** → Read `progress.md` to determine current position. Ask the user:
+1. Create `docs/workflow/planning/.progress/{topic}/` directory
+2. Write `progress.md`:
+
+```markdown
+---
+topic: {topic-name}
+specification: {specification-path}
+step: 2
+status: in-progress
+created: {today}
+updated: {today}
+---
+
+# Planning Progress: {topic}
+
+## Current Position
+
+Phase: ~
+Task: ~
+Note: "Fresh session."
+```
+
+3. Commit: `planning({topic}): initialize progress tracking`
+4. Proceed to Step 2
+
+**If progress files exist:**
+
+Read `progress.md` to determine current position. Ask the user:
 
 > "Found existing progress for **{topic}** — {Note from progress.md}.
 >
@@ -72,30 +99,8 @@ Present the formats from **[output-formats.md](references/output-formats.md)** t
 **STOP.** Wait for the user to choose. After they pick:
 
 1. Confirm the choice and load the corresponding `output-{format}.md` adapter from **[output-formats/](references/output-formats/)**
-2. Create `docs/workflow/planning/.progress/{topic}/` directory
-3. Write `progress.md`:
-
-```markdown
----
-topic: {topic-name}
-format: {chosen-format}
-specification: {specification-path}
-step: 3
-status: in-progress
-created: {today}
-updated: {today}
----
-
-# Planning Progress: {topic}
-
-## Current Position
-
-Phase: ~
-Task: ~
-Note: "Starting planning. Output format chosen."
-```
-
-4. Commit: `planning({topic}): initialize progress tracking`
+2. Update `progress.md`: add `format: {chosen-format}`, update step and Note
+3. Commit: `planning({topic}): choose output format`
 
 → Proceed to **Step 3**.
 
