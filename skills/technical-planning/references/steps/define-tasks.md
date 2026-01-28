@@ -8,6 +8,10 @@ Load **[task-design.md](../task-design.md)** — the principles for breaking pha
 
 ---
 
+Check `tasks.md`. Skip phases with `overview_status: approved`. Continue with the first phase that has `overview_status: pending` or no entry yet. If all phases have approved overviews, proceed to Step 6.
+
+---
+
 Orient the user:
 
 > "Taking Phase {N}: {Phase Name} and breaking it into tasks. Here's the overview — once we agree on the list, I'll write each task out in full detail."

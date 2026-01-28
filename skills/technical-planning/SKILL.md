@@ -54,9 +54,8 @@ Read `progress.md` to determine current position. Ask the user:
 > - **`restart`** — Delete progress and start fresh"
 
 **If `resume`:**
-1. Read `phases.md` and `tasks.md` for context
-2. If step > 1, load the output format adapter indicated in `progress.md`
-3. Jump to the step indicated in `progress.md`
+
+Proceed to Step 1. Each step handles its own resume logic by checking progress files.
 
 **If `restart`:**
 1. Delete `.progress/{topic}/` directory
@@ -95,7 +94,11 @@ Note: "Fresh session."
 
 ## Step 1: Choose Output Format
 
-Present the formats from **[output-formats.md](references/output-formats.md)** to the user as written — including description, pros, cons, and "best for" — so they can make an informed choice. Number each format and ask the user to pick a number.
+Check `progress.md` for an existing `format` field.
+
+**If format exists:** Load the corresponding `output-{format}.md` adapter from **[output-formats/](references/output-formats/)**. Proceed to Step 2.
+
+**If no format:** Present the formats from **[output-formats.md](references/output-formats.md)** to the user as written — including description, pros, cons, and "best for" — so they can make an informed choice. Number each format and ask the user to pick a number.
 
 **STOP.** Wait for the user to choose. After they pick:
 

@@ -8,6 +8,10 @@ Load **[phase-design.md](../phase-design.md)** — the principles for structurin
 
 ---
 
+Check `phases.md`. If it exists with `status: approved`, proceed to Step 5.
+
+---
+
 Orient the user:
 
 > "I've read the full specification. I'm going to propose a phase structure — how we break this into independently testable stages. Once we agree on the phases, we'll take each one and break it into tasks."
