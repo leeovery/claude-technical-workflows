@@ -30,14 +30,14 @@ This overview establishes the scope and ordering. The user should be able to see
 
 **STOP.** Present the phase task overview and ask:
 
-> **To proceed, choose one:**
-> - **"Approve"** — Task list is confirmed. I'll begin writing full task detail.
-> - **"Adjust"** — Tell me what to change: reorder, split, merge, add, or remove tasks.
+> **To proceed:**
+> - **`y`/`yes`** — Approved. I'll begin writing full task detail.
+> - **Or tell me what to change** — reorder, split, merge, add, edit, or remove tasks.
 
-#### If Adjust
+#### If the user provides feedback
 
 Incorporate feedback, re-present the updated task overview, and ask again. Repeat until approved.
 
-#### If Approved
+#### If approved
 
 → Proceed to **Step 6**.

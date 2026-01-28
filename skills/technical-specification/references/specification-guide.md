@@ -35,7 +35,7 @@ Before starting any topic, identify ALL available reference material:
 
 This is a collaborative dialogue, not an autonomous task. The user validates every piece before it's logged.
 
-> **CHECKPOINT**: If you are about to write to the specification file and haven't received explicit approval (e.g., "Log it") for this specific content, **STOP**. You are violating the workflow. Go back and present the choices first.
+> **CHECKPOINT**: If you are about to write to the specification file and haven't received explicit approval (e.g., `y`/`yes`) for this specific content, **STOP**. You are violating the workflow. Go back and present the choices first.
 
 ---
 
@@ -78,9 +78,9 @@ Present your understanding to the user **in the format it would appear in the sp
 
 Then present two explicit choices:
 
-> **To proceed, choose one:**
-> - **"Log it"** - I'll add the above to the specification **verbatim** (exactly as shown, no modifications)
-> - **"Adjust"** - Tell me which part to change and what you want it to say instead
+> **To proceed:**
+> - **`y`/`yes`** — Approved. I'll add the above to the specification **verbatim** (exactly as shown, no modifications).
+> - **Or tell me what to change.**
 
 **Do not paraphrase these choices.** Present them exactly as written so users always know what to expect.
 
@@ -101,8 +101,8 @@ This is a **human-level conversation**, not form-filling. The user brings contex
 **DO NOT PROCEED TO LOGGING WITHOUT EXPLICIT USER APPROVAL.**
 
 **What counts as approval:**
-- **"Log it"** - the standard confirmation you present as a choice
-- Or equivalent explicit confirmation: "Yes", "Approved", "Add it", "That's good"
+- **`y`/`yes`** - the standard confirmation you present as a choice
+- Or equivalent explicit confirmation: "Approved", "Add it", "That's good"
 
 **What does NOT count as approval:**
 - Silence
@@ -112,7 +112,7 @@ This is a **human-level conversation**, not form-filling. The user brings contex
 - The user making a minor comment without explicit approval
 - ANY response that isn't explicit confirmation
 
-**If you are uncertain, ASK:** "Would you like me to log it, or do you want to adjust something?"
+**If you are uncertain, ASK:** "Ready to log it, or do you want to change something?"
 
 > **CHECKPOINT**: If you are about to write to the specification and the user's last message was not explicit approval, **STOP**. You are violating the workflow. Present the choices again.
 
@@ -522,11 +522,11 @@ For each item, follow the **same workflow as the main specification process**:
    >
    > [content exactly as it would appear]
    >
-   > **To proceed, choose one:**
-   > - **"Log it"** - I'll add the above to the specification **verbatim**
-   > - **"Adjust"** - Tell me which part to change
+   > **To proceed:**
+   > - **`y`/`yes`** — Approved. I'll add the above to the specification **verbatim**.
+   > - **Or tell me what to change.**
 
-4. **Wait for explicit approval** - same rules as always: "Log it" or equivalent before writing
+4. **Wait for explicit approval** - same rules as always: `y`/`yes` or equivalent before writing
 5. **Log verbatim** when approved
 6. **Update tracking file** - Mark the item's resolution (Approved/Adjusted/Skipped) and add any notes
 7. **Move to the next item**: "Moving to #2: [Brief title]..."
@@ -652,9 +652,9 @@ For each item:
    >
    > [content exactly as it would appear]
    >
-   > **To proceed, choose one:**
-   > - **"Log it"** - I'll add the above to the specification **verbatim**
-   > - **"Adjust"** - Tell me which part to change
+   > **To proceed:**
+   > - **`y`/`yes`** — Approved. I'll add the above to the specification **verbatim**.
+   > - **Or tell me what to change.**
 
 4. **Wait for explicit approval**
 5. **Log verbatim** when approved
@@ -764,7 +764,7 @@ Before ANY write operation to the specification file, verify:
 | Question | If No... |
 |----------|----------|
 | Did I present this specific content to the user? | **STOP**. Present it first. |
-| Did the user explicitly approve? (e.g., "Log it") | **STOP**. Wait for approval or ask. |
+| Did the user explicitly approve? (e.g., `y`/`yes`) | **STOP**. Wait for approval or ask. |
 | Am I writing exactly what was approved, with no additions? | **STOP**. Present any changes first. |
 
 > **FINAL CHECK**: If you have written to the specification file and cannot answer "yes" to all three questions above for that content, you have violated the workflow. Every piece of content requires explicit user approval before logging.

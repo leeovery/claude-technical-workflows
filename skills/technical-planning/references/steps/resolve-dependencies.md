@@ -43,14 +43,14 @@ Skip the resolution and reverse check — there is nothing to resolve against. D
 
 **STOP.** Present a summary of the dependency state: what was documented, what was resolved, what remains unresolved, and any reverse resolutions made.
 
-> **To proceed, choose one:**
-> - **"Approve"** — Dependency state is confirmed. Proceed to plan review.
-> - **"Adjust"** — Tell me what to change.
+> **To proceed:**
+> - **`y`/`yes`** — Approved. I'll proceed to plan review.
+> - **Or tell me what to change.**
 
-#### If Adjust
+#### If the user provides feedback
 
 Incorporate feedback, re-present the updated dependency state, and ask again. Repeat until approved.
 
-#### If Approved
+#### If approved
 
 → Proceed to **Step 8**.
