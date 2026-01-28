@@ -59,7 +59,7 @@ The `planning:` block indicates work in progress. Read the plan to determine cur
 3. → Proceed to **Step 1** (fresh start)
 
 **If `continue`:**
-Load **[steps/spec-change-detection.md](references/steps/spec-change-detection.md)** to validate the specification hasn't changed, then proceed to the appropriate step based on `planning:` position.
+Load **[spec-change-detection.md](references/spec-change-detection.md)** to validate the specification hasn't changed, then proceed to the appropriate step based on `planning:` position.
 
 **If no plan exists:**
 

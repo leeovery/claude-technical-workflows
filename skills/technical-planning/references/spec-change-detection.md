@@ -1,6 +1,6 @@
 # Spec Change Detection
 
-*Reference for **[technical-planning](../../SKILL.md)***
+*Reference for **[technical-planning](../SKILL.md)***
 
 ---
 
