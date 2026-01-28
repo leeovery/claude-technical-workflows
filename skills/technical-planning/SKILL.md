@@ -44,7 +44,7 @@ Follow every step in sequence. No steps are optional.
 
 Check if a plan already exists at `docs/workflow/planning/{topic}.md`.
 
-**If plan exists with `planning:` block in frontmatter:**
+#### If plan exists with `planning:` block in frontmatter
 
 The `planning:` block indicates work in progress. Read the plan to determine current position.
 
@@ -53,15 +53,20 @@ The `planning:` block indicates work in progress. Read the plan to determine cur
 > - **`continue`** — Resume where you left off
 > - **`restart`** — Delete plan and start fresh"
 
-**If `restart`:**
+**STOP.** Wait for user response.
+
+#### If `restart`
+
 1. Delete the plan file
 2. Commit: `planning({topic}): restart planning`
-3. → Proceed to **Step 1** (fresh start)
 
-**If `continue`:**
+→ Proceed to **Step 1** (fresh start).
+
+#### If `continue`
+
 Load **[spec-change-detection.md](references/spec-change-detection.md)** to validate the specification hasn't changed, then proceed to the appropriate step based on `planning:` position.
 
-**If no plan exists:**
+#### If no plan exists
 
 → Proceed to **Step 1** (fresh planning session).
 
@@ -69,9 +74,15 @@ Load **[spec-change-detection.md](references/spec-change-detection.md)** to vali
 
 ## Step 1: Initialize Plan
 
-**If resuming:** The plan already exists. Load the output format adapter from **[output-formats/](references/output-formats/)** based on the `format:` field. → Proceed to **Step 3**.
+#### If resuming
 
-**If fresh:** Create the plan index file.
+The plan already exists. Load the output format adapter from **[output-formats/](references/output-formats/)** based on the `format:` field.
+
+→ Proceed to **Step 3**.
+
+#### If fresh
+
+Create the plan index file.
 
 First, choose the output format. Present the formats from **[output-formats.md](references/output-formats.md)** to the user — including description, pros, cons, and "best for". Number each format and ask the user to pick.
 
