@@ -24,7 +24,7 @@ In plan index files, external dependencies appear in a dedicated section:
 ## External Dependencies
 
 - billing-system: Invoice generation for order completion
-- user-authentication: User context for permissions → beads-9m3p (resolved)
+- user-authentication: User context for permissions → {task-id} (resolved)
 - ~~payment-gateway: Payment processing~~ → satisfied externally
 ```
 

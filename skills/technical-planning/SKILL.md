@@ -40,11 +40,75 @@ Follow every step in sequence. No steps are optional.
 
 ---
 
-## Step 1: Choose Output Format
+## Step 0: Resume Detection
 
-Present the formats from **[output-formats.md](references/output-formats.md)** to the user as written — including description, pros, cons, and "best for" — so they can make an informed choice. Number each format and ask the user to pick a number.
+Check if a plan already exists at `docs/workflow/planning/{topic}.md`.
 
-**STOP.** Wait for the user to choose. After they pick, confirm the choice and load the corresponding `output-{format}.md` adapter from **[output-formats/](references/output-formats/)**.
+#### If plan exists with `planning:` block in frontmatter
+
+The `planning:` block indicates work in progress. Read the plan to determine current position.
+
+> "Found existing plan for **{topic}** at phase {N}, task {M}.
+>
+> - **`continue`** — Resume where you left off
+> - **`restart`** — Delete plan and start fresh"
+
+**STOP.** Wait for user response.
+
+#### If `restart`
+
+1. Delete the plan file
+2. Commit: `planning({topic}): restart planning`
+
+→ Proceed to **Step 1** (fresh start).
+
+#### If `continue`
+
+Load **[spec-change-detection.md](references/spec-change-detection.md)** to validate the specification hasn't changed, then proceed to the appropriate step based on `planning:` position.
+
+#### If no plan exists
+
+→ Proceed to **Step 1** (fresh planning session).
+
+---
+
+## Step 1: Initialize Plan
+
+#### If resuming
+
+The plan already exists. Load the output format adapter from **[output-formats/](references/output-formats/)** based on the `format:` field.
+
+→ Proceed to **Step 3**.
+
+#### If fresh
+
+Create the plan index file.
+
+First, choose the output format. Present the formats from **[output-formats.md](references/output-formats.md)** to the user — including description, pros, cons, and "best for". Number each format and ask the user to pick.
+
+**STOP.** Wait for the user to choose. After they pick:
+
+1. Load the corresponding `output-{format}.md` adapter from **[output-formats/](references/output-formats/)**
+2. Create the plan index file at `docs/workflow/planning/{topic}.md`:
+
+```yaml
+---
+topic: {topic-name}
+status: planning
+format: {chosen-format}
+specification: ../specification/{topic}.md
+spec_hash: {sha256-first-8-chars}
+created: YYYY-MM-DD  # Use today's actual date
+updated: YYYY-MM-DD  # Use today's actual date
+planning:
+  phase: 1
+  task: ~
+---
+
+# Plan: {Topic Name}
+```
+
+3. Commit: `planning({topic}): initialize plan`
 
 → Proceed to **Step 2**.
 
@@ -52,7 +116,7 @@ Present the formats from **[output-formats.md](references/output-formats.md)** t
 
 ## Step 2: Load Planning Principles
 
-Load **[planning-principles.md](references/planning-principles.md)** — this contains the planning principles, rules, and quality standards that apply throughout the process.
+Load **[planning-principles.md](references/planning-principles.md)** — the planning principles, rules, and quality standards that apply throughout the process.
 
 → Proceed to **Step 3**.
 
@@ -113,12 +177,15 @@ Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its 
 
 After the review is complete:
 
-1. **Update plan status** — Update the plan frontmatter to `status: concluded`
-2. **Final commit** — Commit the concluded plan
-3. **Present completion summary**:
+1. **Remove the `planning:` block** — Edit the plan frontmatter to remove the entire `planning:` block
+2. **Update plan status** — Set `status: concluded` in frontmatter
+3. **Final commit** — Commit the concluded plan
+4. **Present completion summary**:
 
 > "Planning is complete for **{topic}**.
 >
 > The plan contains **{N} phases** with **{M} tasks** total, reviewed for traceability against the specification and structural integrity.
 >
 > Status has been marked as `concluded`. The plan is ready for implementation."
+
+> **CHECKPOINT**: Do not conclude if any tasks in the plan index show `status: pending`. All tasks must be `authored` before concluding.
