@@ -89,7 +89,7 @@ Incorporate feedback, update the phases in the plan index, re-present the update
 
 #### If approved
 
-1. Update each phase in the plan index: set `status: approved` and `approved_at: YYYY-MM-DD`
+1. Update each phase in the plan index: set `status: approved` and `approved_at: YYYY-MM-DD` (use today's actual date)
 2. Update `planning:` block in frontmatter to note current position
 3. Commit: `planning({topic}): approve phase structure`
 

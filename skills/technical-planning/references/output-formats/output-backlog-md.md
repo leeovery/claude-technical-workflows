@@ -59,7 +59,7 @@ specification: ../specification/{topic}.md
 spec_hash: {sha256-first-8-chars}
 plan_id: {TOPIC_NAME}
 created: YYYY-MM-DD  # Use today's actual date
-updated: YYYY-MM-DD
+updated: YYYY-MM-DD  # Use today's actual date
 planning:
   phase: 1
   task: ~
@@ -147,8 +147,8 @@ format: backlog-md
 specification: ../specification/{topic}.md
 spec_hash: {sha256-first-8-chars}
 plan_id: {TOPIC_NAME}
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
+created: YYYY-MM-DD  # Use today's actual date
+updated: YYYY-MM-DD  # Use today's actual date
 planning:                          # Removed when concluded
   phase: 2
   task: 3

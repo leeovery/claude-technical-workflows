@@ -88,7 +88,7 @@ format: {chosen-format}
 specification: ../specification/{topic}.md
 spec_hash: {sha256-first-8-chars}
 created: YYYY-MM-DD  # Use today's actual date
-updated: YYYY-MM-DD
+updated: YYYY-MM-DD  # Use today's actual date
 planning:
   phase: 1
   task: ~

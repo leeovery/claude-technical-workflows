@@ -156,7 +156,7 @@ plan_id: {PROJECT_NAME}
 project_id: {ID from MCP response}
 team: {TEAM_NAME}
 created: YYYY-MM-DD  # Use today's actual date
-updated: YYYY-MM-DD
+updated: YYYY-MM-DD  # Use today's actual date
 planning:
   phase: 1
   task: ~
@@ -246,8 +246,8 @@ spec_hash: {sha256-first-8-chars}
 plan_id: USER-AUTH-FEATURE
 project_id: abc123-def456
 team: Engineering
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
+created: YYYY-MM-DD  # Use today's actual date
+updated: YYYY-MM-DD  # Use today's actual date
 planning:                          # Removed when concluded
   phase: 2
   task: 3

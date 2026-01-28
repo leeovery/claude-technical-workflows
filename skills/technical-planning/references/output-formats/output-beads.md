@@ -246,7 +246,7 @@ specification: ../specification/{topic}.md
 spec_hash: {sha256-first-8-chars}
 plan_id: bd-{EPIC_ID}
 created: YYYY-MM-DD  # Use today's actual date
-updated: YYYY-MM-DD
+updated: YYYY-MM-DD  # Use today's actual date
 planning:
   phase: 1
   task: ~
@@ -334,8 +334,8 @@ format: beads
 specification: ../specification/{topic}.md
 spec_hash: {sha256-first-8-chars}
 plan_id: bd-a3f8
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
+created: YYYY-MM-DD  # Use today's actual date
+updated: YYYY-MM-DD  # Use today's actual date
 planning:                          # Removed when concluded
   phase: 2
   task: 3

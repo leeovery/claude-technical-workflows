@@ -20,7 +20,7 @@ To ensure analysis isn't lost during context refresh, create tracking files that
 ```markdown
 ---
 status: in-progress | complete
-created: YYYY-MM-DD
+created: YYYY-MM-DD  # Use today's actual date
 phase: Traceability Review | Plan Integrity Review
 topic: [Topic Name]
 ---
