@@ -48,13 +48,6 @@ Check if a plan already exists at `docs/workflow/planning/{topic}.md`.
 
 The `planning:` block indicates work in progress. Read the plan to determine current position.
 
-```yaml
-planning:
-  phase: 2
-  task: 3
-  note: "Authoring Phase 2 tasks"
-```
-
 Present the resume prompt:
 
 > "Resuming planning for **{topic}** — {note from planning block}.
