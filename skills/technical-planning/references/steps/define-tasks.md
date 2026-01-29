@@ -17,7 +17,7 @@ Read the plan index file. Check the task table under each phase.
 - If task table exists but not all approved → present for review (deterministic replay)
 - User can approve (`y`), amend, or navigate (`skip to {X}`)
 
-**If resuming:** Use the `planning:` block to determine which phase to continue with.
+Walk through each phase in order, presenting existing task tables for review before moving to phases that need fresh work.
 
 **If all phases have approved task tables:** → Proceed to Step 6.
 

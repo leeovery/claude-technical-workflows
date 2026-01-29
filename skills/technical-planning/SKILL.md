@@ -46,11 +46,11 @@ Check if a plan already exists at `docs/workflow/planning/{topic}.md`.
 
 #### If plan exists with `planning:` block in frontmatter
 
-The `planning:` block indicates work in progress. Read the plan to determine current position.
+The `planning:` block indicates work in progress. Note the current phase and task position for reference.
 
-> "Found existing plan for **{topic}** at phase {N}, task {M}.
+> "Found existing plan for **{topic}** (previously reached phase {N}, task {M}).
 >
-> - **`continue`** — Resume where you left off
+> - **`continue`** — Walk through the plan from the start, reviewing existing work
 > - **`restart`** — Delete plan and start fresh"
 
 **STOP.** Wait for user response.
@@ -64,7 +64,9 @@ The `planning:` block indicates work in progress. Read the plan to determine cur
 
 #### If `continue`
 
-Load **[spec-change-detection.md](references/spec-change-detection.md)** to validate the specification hasn't changed, then proceed to the appropriate step based on `planning:` position.
+Load **[spec-change-detection.md](references/spec-change-detection.md)** to validate the specification hasn't changed.
+
+→ Proceed to **Step 1**. Each step will check for existing work and present it for review. The user can approve quickly through completed sections or amend as needed.
 
 #### If no plan exists
 
@@ -74,13 +76,13 @@ Load **[spec-change-detection.md](references/spec-change-detection.md)** to vali
 
 ## Step 1: Initialize Plan
 
-#### If resuming
+#### If plan already exists
 
-The plan already exists. Load the output format adapter from **[output-formats/](references/output-formats/)** based on the `format:` field.
+Load the output format adapter from **[output-formats/](references/output-formats/)** based on the `format:` field.
 
-→ Proceed to **Step 3**.
+→ Proceed to **Step 2**.
 
-#### If fresh
+#### If no plan exists
 
 Create the plan index file.
 

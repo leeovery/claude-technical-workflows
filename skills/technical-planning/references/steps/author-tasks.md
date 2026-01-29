@@ -16,7 +16,7 @@ Read the plan index file. Check the task table under the current phase.
 - If `status: authored` → skip (already written to output format)
 - If `status: pending` → needs authoring
 
-**If resuming:** Use the `planning:` block to determine which task to continue with. Present already-authored tasks for quick review (user can approve or amend).
+Walk through tasks in order. Already-authored tasks are presented for quick review (user can approve or amend). Pending tasks need full authoring.
 
 **If all tasks in current phase are authored:** → Return to Step 5 for next phase, or Step 7 if all phases complete.
 

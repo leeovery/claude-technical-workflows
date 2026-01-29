@@ -6,7 +6,7 @@
 
 When resuming planning, compare the current specification hash to the stored `spec_hash` in the plan frontmatter.
 
-**If unchanged:** Proceed to the appropriate step based on `planning:` position.
+**If unchanged:** No action needed. Proceed with the normal step sequence.
 
 **If different:** Prompt the user:
 
