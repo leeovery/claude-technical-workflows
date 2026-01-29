@@ -4,15 +4,15 @@
 
 ---
 
-Use this format for simple features or when you want everything in a single version-controlled file.
+Use this format for simple features or when you want everything in a single version-controlled file with detailed task files.
 
 ## Benefits
 
 - No external tools or dependencies required
-- Everything in a single version-controlled file
+- Plan Index File provides overview; task files provide detail
 - Human-readable and easy to edit
 - Works offline with any text editor
-- Simplest setup - just create a markdown file
+- Simplest setup - just create markdown files
 
 ## Setup
 
@@ -22,25 +22,34 @@ No external tools required. This format uses plain markdown files stored in the 
 
 ```
 docs/workflow/planning/
-└── {topic}.md
+├── {topic}.md                    # Plan Index File
+└── {topic}/
+    └── {task-id}.md              # Task detail files
 ```
 
-This is a single file per topic in the planning directory.
+The Plan Index File contains phases and task tables. Each authored task gets its own file in the `{topic}/` directory. Task filename = task ID for easy lookup.
 
-## Template
+## Plan Index Template
 
 Create `{topic}.md` with this structure:
 
 ```markdown
 ---
 topic: {feature-name}
-status: in-progress
-date: YYYY-MM-DD
+status: planning
 format: local-markdown
-specification: {topic}.md
+specification: ../specification/{topic}.md
+cross_cutting_specs:              # Omit if none
+  - ../specification/{spec}.md
+spec_commit: {git-commit-hash}
+created: YYYY-MM-DD  # Use today's actual date
+updated: YYYY-MM-DD  # Use today's actual date
+planning:
+  phase: 1
+  task: ~
 ---
 
-# Implementation Plan: {Feature/Project Name}
+# Plan: {Feature/Project Name}
 
 ## Overview
 
@@ -65,80 +74,43 @@ Architectural decisions from cross-cutting specifications that inform this plan:
 
 *Remove this section if no cross-cutting specifications apply.*
 
-## Architecture
-
-- Components
-- Data flow
-- Integration points
-
 ## Phases
 
-Each phase is independently testable with clear acceptance criteria.
-Each task is a single TDD cycle: write test → implement → commit.
-
----
-
 ### Phase 1: {Name}
+status: draft
 
 **Goal**: What this phase accomplishes
+**Why this order**: Why this comes at this position
 
 **Acceptance**:
 - [ ] Criterion 1
 - [ ] Criterion 2
 
-**Tasks**:
-
-1. **{Task Name}**
-   - **Do**: What to implement
-   - **Test**: `"it does expected behavior"`
-   - **Edge cases**: (if any)
-
-2. **{Task Name}**
-   - **Do**: What to implement
-   - **Test**: `"it does expected behavior"`
+#### Tasks
+| ID | Name | Edge Cases | Status |
+|----|------|------------|--------|
+| {topic}-1-1 | {Task Name} | {list} | pending |
+| {topic}-1-2 | {Task Name} | {list} | pending |
 
 ---
 
 ### Phase 2: {Name}
+status: draft
 
 **Goal**: What this phase accomplishes
+**Why this order**: Why this comes at this position
 
 **Acceptance**:
 - [ ] Criterion 1
 - [ ] Criterion 2
 
-**Tasks**:
-
-1. **{Task Name}**
-   - **Do**: What to implement
-   - **Test**: `"it does expected behavior"`
+#### Tasks
+| ID | Name | Edge Cases | Status |
+|----|------|------------|--------|
 
 (Continue pattern for remaining phases)
 
 ---
-
-## Edge Cases
-
-Map edge cases from specification to specific tasks:
-
-| Edge Case | Solution | Phase.Task | Test |
-|-----------|----------|------------|------|
-| {From specification} | How handled | 1.2 | `"it handles X"` |
-
-## Testing Strategy
-
-**Unit**: What to test per component
-**Integration**: What flows to verify
-**Manual**: (if needed)
-
-## Data Models (if applicable)
-
-Tables, schemas, API contracts
-
-## Internal Dependencies
-
-- Prerequisites for Phase 1
-- Phase dependencies (Phase 2 depends on Phase 1, etc.)
 
 ## External Dependencies
 
@@ -148,15 +120,56 @@ Tables, schemas, API contracts
 - {topic}: {description} → {task-reference} (resolved)
 - ~~{topic}: {description}~~ → satisfied externally
 
-## Rollback (if applicable)
-
-Triggers and steps
-
 ## Log
 
 | Date | Change |
 |------|--------|
 | YYYY-MM-DD *(use today's actual date)* | Created from specification |
+```
+
+## Task File Template
+
+Each authored task is written to `{topic}/{task-id}.md`:
+
+```markdown
+---
+id: {topic}-{phase}-{seq}
+phase: {phase-number}
+status: pending
+created: YYYY-MM-DD  # Use today's actual date
+---
+
+# {Task Name}
+
+## Goal
+
+{What this task accomplishes and why — include rationale from specification}
+
+## Implementation
+
+{The "Do" — specific files, methods, approach}
+
+## Tests
+
+- `it does expected behavior`
+- `it handles edge case`
+
+## Edge Cases
+
+{Specific edge cases for this task}
+
+## Acceptance Criteria
+
+- [ ] Test written and failing
+- [ ] Implementation complete
+- [ ] Tests passing
+- [ ] Committed
+
+## Context
+
+{Relevant decisions and constraints from specification}
+
+Specification reference: `docs/workflow/specification/{topic}.md` (for ambiguity resolution)
 ```
 
 ## Cross-Topic Dependencies
@@ -165,21 +178,19 @@ Cross-topic dependencies link tasks between different plan files. This is how yo
 
 ### In the External Dependencies Section
 
-Use the format `{topic}: {description} → {task-reference}` where task-reference points to a specific task in another plan file:
+Use the format `{topic}: {description} → {task-id}` where task-id points to a specific task:
 
 ```markdown
 ## External Dependencies
 
-- billing-system: Invoice generation → billing-system.md#phase-1-task-2 (resolved)
-- authentication: User context → authentication.md#phase-2-task-1 (resolved)
+- billing-system: Invoice generation → billing-1-2 (resolved)
+- authentication: User context → auth-2-1 (resolved)
 - payment-gateway: Payment processing (unresolved - not yet planned)
 ```
 
 ### Task References
 
-For local markdown plans, reference tasks using:
-- `{topic}.md#phase-{n}-task-{m}` - references a specific task by phase and number
-- Consider adding nano IDs to task headers for more stable references
+For local markdown plans, reference tasks using the task ID (e.g., `billing-1-2`). The task file is at `{topic}/{task-id}.md`.
 
 ## Querying Dependencies
 
@@ -202,51 +213,60 @@ grep -A 10 "## External Dependencies" docs/workflow/planning/*.md | grep "^- " |
 grep -l "billing-system:" docs/workflow/planning/*.md
 ```
 
-### Check if a Dependency Task Exists
-
-Read the referenced plan file and verify the task exists:
+### Check if a Task Exists
 
 ```bash
-# Check if a task exists in another plan
-grep "Phase 1.*Task 2" docs/workflow/planning/billing-system.md
+# Check if task file exists
+ls docs/workflow/planning/billing-system/billing-1-2.md
 ```
 
-### Check if a Dependency is Complete
+### Check if a Task is Complete
 
-For local markdown, check if the task's acceptance criteria are checked off:
+Read the task file and check the status in frontmatter:
 
 ```bash
-# Look for completed acceptance criteria
-grep -A 5 "### Phase 1" docs/workflow/planning/billing-system.md | grep "\[x\]"
+# Check task status
+grep "status:" docs/workflow/planning/billing-system/billing-1-2.md
 ```
 
 ## Frontmatter
 
-Plan documents use YAML frontmatter for metadata:
+Plan Index Files use YAML frontmatter for metadata:
 
 ```yaml
 ---
-topic: {feature-name}        # Matches filename (without .md)
-status: in-progress          # in-progress | concluded
-date: YYYY-MM-DD             # Creation date
-format: local-markdown       # Output format used
-specification: {topic}.md    # Source specification filename
+topic: {feature-name}                    # Matches filename (without .md)
+status: planning | concluded             # Planning status
+format: local-markdown                   # Output format used
+specification: ../specification/{topic}.md
+cross_cutting_specs:                     # Omit if none
+  - ../specification/{spec}.md
+spec_commit: {git-commit-hash}        # Git commit when planning started
+created: YYYY-MM-DD  # Use today's actual date
+updated: YYYY-MM-DD  # Use today's actual date
+planning:
+  phase: 2
+  task: 3
 ---
 ```
 
-The `format` field tells implementation which output adapter to use for reading/updating the plan.
+The `planning:` block tracks current progress position. It persists after the plan is concluded — `status:` indicates whether the plan is active or concluded.
 
 ## Flagging Incomplete Tasks
 
-When information is missing, mark clearly with `[needs-info]`:
+When information is missing, mark in the task table:
 
 ```markdown
-### Task 3: Configure rate limiting [needs-info]
+| ID | Name | Edge Cases | Status |
+|----|------|------------|--------|
+| auth-1-3 | Configure rate limiting | [needs-info] threshold, per-user vs per-IP | pending |
+```
 
-**Do**: Set up rate limiting for the API endpoint
-**Test**: `it throttles requests exceeding limit`
+And in the task file, add a "Needs Clarification" section:
 
-**Needs clarification**:
+```markdown
+## Needs Clarification
+
 - What's the rate limit threshold?
 - Per-user or per-IP?
 ```
@@ -257,20 +277,42 @@ After planning:
 
 ```
 docs/workflow/
-├── discussion/{topic}.md      # Discussion output
-├── specification/{topic}.md   # Specification output
-└── planning/{topic}.md        # Planning output (format: local-markdown)
+├── discussion/{topic}.md           # Discussion output
+├── specification/{topic}.md        # Specification output
+└── planning/
+    ├── {topic}.md                  # Plan Index File (format: local-markdown)
+    └── {topic}/
+        ├── {topic}-1-1.md          # Task detail files
+        ├── {topic}-1-2.md
+        └── {topic}-2-1.md
 ```
 
 ## Implementation
 
 ### Reading Plans
 
-1. Read the plan file - all content is inline
-2. Phases and tasks are in the document
-3. Follow phase order as written
+1. Read the Plan Index File to get overview and task tables
+2. For each task to implement, read `{topic}/{task-id}.md`
+3. Follow phase order as written in the index
+4. Check task status in the index table
 
 ### Updating Progress
 
-- Check off acceptance criteria in the plan file
-- Update phase status as phases complete
+- Update task file frontmatter `status: completed` when done
+- Update the task table in the Plan Index File
+- Check off phase acceptance criteria when all phase tasks complete
+
+### Authoring Tasks (During Planning)
+
+When a task is approved:
+1. Create `{topic}/{task-id}.md` with the task content
+2. Update the task table: set `status: authored`
+3. Update the `planning:` block in frontmatter
+
+### Cleanup (Restart)
+
+Delete the task detail directory for this topic:
+
+```bash
+rm -rf docs/workflow/planning/{topic}/
+```
