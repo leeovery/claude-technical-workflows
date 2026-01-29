@@ -105,7 +105,7 @@ Once selected:
 
 1. Read **[output-formats.md](references/output-formats.md)**, find the chosen format entry, and load the linked adapter
 2. Capture the current git commit hash: `git rev-parse HEAD`
-3. Create the Plan Index File at `docs/workflow/planning/{topic}.md`:
+3. Create the Plan Index File at `docs/workflow/planning/{topic}.md` with the following frontmatter and title:
 
 ```yaml
 ---
