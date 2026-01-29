@@ -244,13 +244,13 @@ cross_cutting_specs:                     # Omit if none
 spec_commit: {git-commit-hash}        # Git commit when planning started
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date
-planning:                                # Removed when concluded
+planning:
   phase: 2
   task: 3
 ---
 ```
 
-The `planning:` block tracks current progress position. It's removed when the plan is concluded.
+The `planning:` block tracks current progress position. It persists after the plan is concluded — `status:` indicates whether the plan is active or concluded.
 
 ## Flagging Incomplete Tasks
 

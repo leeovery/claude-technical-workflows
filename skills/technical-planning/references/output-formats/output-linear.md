@@ -252,7 +252,7 @@ project_id: abc123-def456
 team: Engineering
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date
-planning:                          # Removed when concluded
+planning:
   phase: 2
   task: 3
 ---

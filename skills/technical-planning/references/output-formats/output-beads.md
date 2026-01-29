@@ -340,7 +340,7 @@ spec_commit: {git-commit-hash}
 plan_id: bd-a3f8
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date
-planning:                          # Removed when concluded
+planning:
   phase: 2
   task: 3
 ---

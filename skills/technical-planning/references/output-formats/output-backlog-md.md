@@ -153,7 +153,7 @@ spec_commit: {git-commit-hash}
 plan_id: {TOPIC_NAME}
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date
-planning:                          # Removed when concluded
+planning:
   phase: 2
   task: 3
 ---

@@ -53,19 +53,11 @@ Check if a Plan Index File already exists at `docs/workflow/planning/{topic}.md`
 
 → Proceed to **Step 1**.
 
-#### If Plan Index File exists without `planning:` block
+#### If Plan Index File exists
 
-The plan is concluded (`status: concluded`). Re-open it for review:
+If `status: concluded`, update it to `status: planning` and commit: `planning({topic}): re-open concluded plan`
 
-1. Set `status: planning` in frontmatter
-2. Add a `planning:` block: `phase: 1`, `task: ~`
-3. Commit: `planning({topic}): re-open concluded plan`
-
-Fall through to the resume flow below.
-
-#### If Plan Index File exists with `planning:` block in frontmatter
-
-The `planning:` block indicates work in progress. Note the current phase and task position.
+Note the current phase and task position from the `planning:` block.
 
 Load **[spec-change-detection.md](references/spec-change-detection.md)** to check whether the specification has changed since planning started. Then present the user with an informed choice:
 
@@ -202,8 +194,7 @@ Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its 
 
 After the review is complete:
 
-1. **Remove the `planning:` block** — Edit the Plan Index File frontmatter to remove the entire `planning:` block
-2. **Update plan status** — Set `status: concluded` in the Plan Index File frontmatter
+1. **Update plan status** — Set `status: concluded` in the Plan Index File frontmatter
 3. **Final commit** — Commit the concluded plan
 4. **Present completion summary**:
 
