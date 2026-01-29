@@ -50,8 +50,8 @@ The `planning:` block indicates work in progress. Note the current phase and tas
 
 > "Found existing plan for **{topic}** (previously reached phase {N}, task {M}).
 >
-> - **`continue`** — Walk through the plan from the start, reviewing existing work
-> - **`restart`** — Delete plan and start fresh"
+> - **`continue`** — Walk through the plan from the start. You can review, amend, or skip to any point — including straight to the leading edge.
+> - **`restart`** — Erase all planning work for this topic and start fresh. This deletes the plan and any authored tasks. Other topics are unaffected."
 
 **STOP.** Wait for user response.
 
