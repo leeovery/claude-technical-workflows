@@ -28,7 +28,7 @@ format: `linear`
 adapter: [output-linear.md](output-formats/output-linear.md)
 
 
-Tasks managed as Linear issues within a Linear project. A thin local plan file points to the Linear project; Linear is the source of truth.
+Tasks managed as Linear issues within a Linear project. A thin Plan Index File points to the Linear project; Linear is the source of truth.
 
 - **Pros**: Visual tracking, team collaboration, real-time updates, integrates with existing Linear workflows
 - **Cons**: Requires Linear account and MCP server, external dependency, not fully local

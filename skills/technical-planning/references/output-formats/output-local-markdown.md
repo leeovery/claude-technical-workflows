@@ -9,7 +9,7 @@ Use this format for simple features or when you want everything in a single vers
 ## Benefits
 
 - No external tools or dependencies required
-- Plan index provides overview; task files provide detail
+- Plan Index File provides overview; task files provide detail
 - Human-readable and easy to edit
 - Works offline with any text editor
 - Simplest setup - just create markdown files
@@ -22,12 +22,12 @@ No external tools required. This format uses plain markdown files stored in the 
 
 ```
 docs/workflow/planning/
-├── {topic}.md                    # Plan index file
+├── {topic}.md                    # Plan Index File
 └── {topic}/
     └── {task-id}.md              # Task detail files
 ```
 
-The plan index contains phases and task tables. Each authored task gets its own file in the `{topic}/` directory. Task filename = task ID for easy lookup.
+The Plan Index File contains phases and task tables. Each authored task gets its own file in the `{topic}/` directory. Task filename = task ID for easy lookup.
 
 ## Plan Index Template
 
@@ -39,6 +39,8 @@ topic: {feature-name}
 status: planning
 format: local-markdown
 specification: ../specification/{topic}.md
+cross_cutting_specs:              # Omit if none
+  - ../specification/{spec}.md
 spec_commit: {git-commit-hash}
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date
@@ -229,7 +231,7 @@ grep "status:" docs/workflow/planning/billing-system/billing-1-2.md
 
 ## Frontmatter
 
-Plan index files use YAML frontmatter for metadata:
+Plan Index Files use YAML frontmatter for metadata:
 
 ```yaml
 ---
@@ -237,6 +239,8 @@ topic: {feature-name}                    # Matches filename (without .md)
 status: planning | concluded             # Planning status
 format: local-markdown                   # Output format used
 specification: ../specification/{topic}.md
+cross_cutting_specs:                     # Omit if none
+  - ../specification/{spec}.md
 spec_commit: {git-commit-hash}        # Git commit when planning started
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date
@@ -276,7 +280,7 @@ docs/workflow/
 ├── discussion/{topic}.md           # Discussion output
 ├── specification/{topic}.md        # Specification output
 └── planning/
-    ├── {topic}.md                  # Plan index (format: local-markdown)
+    ├── {topic}.md                  # Plan Index File (format: local-markdown)
     └── {topic}/
         ├── {topic}-1-1.md          # Task detail files
         ├── {topic}-1-2.md
@@ -287,7 +291,7 @@ docs/workflow/
 
 ### Reading Plans
 
-1. Read the plan index file to get overview and task tables
+1. Read the Plan Index File to get overview and task tables
 2. For each task to implement, read `{topic}/{task-id}.md`
 3. Follow phase order as written in the index
 4. Check task status in the index table
@@ -295,7 +299,7 @@ docs/workflow/
 ### Updating Progress
 
 - Update task file frontmatter `status: completed` when done
-- Update the task table in the plan index
+- Update the task table in the Plan Index File
 - Check off phase acceptance criteria when all phase tasks complete
 
 ### Authoring Tasks (During Planning)

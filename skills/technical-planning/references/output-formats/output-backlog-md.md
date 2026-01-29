@@ -44,7 +44,7 @@ backlog/
 └── task-3 - Add session management.md
 ```
 
-The plan file in `docs/workflow/planning/{topic}.md` serves as the reference pointer to backlog tasks.
+The Plan Index File at `docs/workflow/planning/{topic}.md` serves as the reference pointer to backlog tasks.
 
 ## File Structure
 
@@ -56,6 +56,8 @@ topic: {topic-name}
 status: planning
 format: backlog-md
 specification: ../specification/{topic}.md
+cross_cutting_specs:              # Omit if none
+  - ../specification/{spec}.md
 spec_commit: {git-commit-hash}
 plan_id: {TOPIC_NAME}
 created: YYYY-MM-DD  # Use today's actual date
@@ -145,6 +147,8 @@ topic: {topic-name}
 status: planning | concluded
 format: backlog-md
 specification: ../specification/{topic}.md
+cross_cutting_specs:              # Omit if none
+  - ../specification/{spec}.md
 spec_commit: {git-commit-hash}
 plan_id: {TOPIC_NAME}
 created: YYYY-MM-DD  # Use today's actual date

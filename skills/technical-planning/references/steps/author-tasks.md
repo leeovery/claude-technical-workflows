@@ -4,13 +4,13 @@
 
 ---
 
-Load **[task-design.md](../task-design.md)** — the task design principles, template structure, and quality standards for writing task detail.
+This step uses the `planning-task-author` agent to write full task detail. You (the orchestrator) invoke the agent per task, present its output, and handle the approval gate.
 
 ---
 
 ## Check for Existing Authored Tasks
 
-Read the plan index file. Check the task table under the current phase.
+Read the Plan Index File. Check the task table under the current phase.
 
 **For each task:**
 - If `status: authored` → skip (already written to output format)
@@ -26,15 +26,26 @@ Walk through tasks in order. Already-authored tasks are presented for quick revi
 
 Orient the user:
 
-> "Task list for Phase {N} is agreed. I'll work through each task one at a time — presenting the full detail, discussing if needed, and logging it to the plan once approved."
+> "Task list for Phase {N} is agreed. I'll work through each task one at a time — delegating to a specialist agent that will read the full specification and write the complete task detail. You'll review each one before it's logged."
 
 Work through the task list **one task at a time**.
 
-#### Present
+### Invoke the Agent
 
-Write the complete task using the task template — Problem, Solution, Outcome, Do, Acceptance Criteria, Tests, Context.
+For each pending task, invoke `planning-task-author` with these file paths:
 
-Present it to the user **in the format it will be written to the output format**. The output format adapter determines the exact format. What the user sees is what gets logged — no changes between approval and writing.
+1. **read-specification.md**: `references/steps/read-specification.md`
+2. **Specification**: path from the Plan Index File's `specification:` field
+3. **Cross-cutting specs**: paths from the Plan Index File's `cross_cutting_specs:` field (if any)
+4. **task-design.md**: `references/task-design.md`
+5. **All approved phases**: the complete phase structure from the Plan Index File body
+6. **Task list for current phase**: the approved task table
+7. **Target task**: the task name, edge cases, and ID from the table
+8. **Output format adapter**: path to the loaded output format adapter
+
+### Present the Output
+
+The agent returns complete task detail in the output format's structure. Present it to the user **exactly as it will be written** — what the user sees is what gets logged.
 
 After presenting, ask:
 
@@ -49,20 +60,18 @@ After presenting, ask:
 
 #### If the user provides feedback
 
-The user may:
-- Request changes to the task content
-- Ask questions about scope, granularity, or approach
-- Flag that something doesn't match the specification
-- Identify missing edge cases or acceptance criteria
+Re-invoke `planning-task-author` with all original inputs PLUS:
+- **Previous output**: the current task detail
+- **User feedback**: what the user wants changed
 
-Incorporate feedback and re-present the updated task **in full**. Then ask the same choice again. Repeat until approved.
+Present the revised task in full. Ask the same choice again. Repeat until approved.
 
 #### If approved (`y`/`yes`)
 
 > **CHECKPOINT**: Before logging, verify: (1) You presented this exact content, (2) The user explicitly approved with `y`/`yes` or equivalent — not a question, comment, or "okay" in passing, (3) You are writing exactly what was approved with no modifications.
 
 1. Write the task to the output format (format-specific — see output adapter)
-2. Update the task table in the plan index: set `status: authored`
+2. Update the task table in the Plan Index File: set `status: authored`
 3. Update the `planning:` block in frontmatter: note current phase and task
 4. Commit: `planning({topic}): author task {task-id} ({task name})`
 

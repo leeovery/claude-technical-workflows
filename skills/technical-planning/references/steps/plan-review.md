@@ -12,7 +12,7 @@ After completing the plan, perform a comprehensive two-part review before handin
 
 To ensure analysis isn't lost during context refresh, create tracking files that capture findings. These files persist analysis so work can continue across sessions.
 
-**Location**: Store tracking files alongside the plan file:
+**Location**: Store tracking files alongside the Plan Index File:
 - `{topic}-review-traceability-tracking.md` — Traceability findings
 - `{topic}-review-integrity-tracking.md` — Integrity findings
 

@@ -18,7 +18,7 @@ External dependencies are things a feature needs from other topics or systems th
 
 ## Format
 
-In plan index files, external dependencies appear in a dedicated section:
+In Plan Index Files, external dependencies appear in a dedicated section:
 
 ```markdown
 ## External Dependencies
@@ -51,7 +51,7 @@ This makes it explicit for downstream stages that dependencies were considered a
 ```
 SPECIFICATION                    PLANNING
 ───────────────────────────────────────────────────────────────────
-Dependencies section    →    Copied to plan index as unresolved
+Dependencies section    →    Copied to Plan Index File as unresolved
 (natural language)                      ↓
                              Resolved when linked to specific task ID
                              (via planning or /link-dependencies)

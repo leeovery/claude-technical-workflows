@@ -141,7 +141,7 @@ When creating issues, if something is unclear or missing from the specification:
 
 This allows iterative refinement. Create all issues, identify gaps, circle back to specification if needed, then update issues with missing detail. Plans don't have to be perfect on first pass.
 
-### 4. Create Local Plan File
+### 4. Create Plan Index File
 
 Create `docs/workflow/planning/{topic}.md`:
 
@@ -151,6 +151,8 @@ topic: {topic-name}
 status: planning
 format: linear
 specification: ../specification/{topic}.md
+cross_cutting_specs:              # Omit if none
+  - ../specification/{spec}.md
 spec_commit: {git-commit-hash}
 plan_id: {PROJECT_NAME}
 project_id: {ID from MCP response}
@@ -242,6 +244,8 @@ topic: {topic-name}
 status: planning | concluded
 format: linear
 specification: ../specification/{topic}.md
+cross_cutting_specs:              # Omit if none
+  - ../specification/{spec}.md
 spec_commit: {git-commit-hash}
 plan_id: USER-AUTH-FEATURE
 project_id: abc123-def456

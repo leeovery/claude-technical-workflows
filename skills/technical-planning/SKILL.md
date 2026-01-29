@@ -105,6 +105,8 @@ topic: {topic-name}
 status: planning
 format: {chosen-format}
 specification: ../specification/{topic}.md
+cross_cutting_specs:              # Omit if none
+  - ../specification/{spec}.md
 spec_commit: {output of git rev-parse HEAD}
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date
@@ -122,30 +124,25 @@ planning:
 
 ---
 
-## Step 2: Load Planning Principles
+## Step 2: Load Orchestration Principles
 
-Load **[planning-principles.md](references/planning-principles.md)** — the planning principles, rules, and quality standards that apply throughout the process.
+Load **[planning-principles.md](references/planning-principles.md)** — the orchestration principles, rules, and quality standards that govern the planning process.
+
+These principles are for **you** (the orchestrator): gating, approval flow, commit frequency, and quality standards. Analysis principles (`phase-design.md`, `task-design.md`) are loaded by the planning agents, not by you.
 
 → Proceed to **Step 3**.
 
 ---
 
-## Step 3: Read Specification Content
+## Step 3: Verify Source Material
 
-Now read the specification content **in full**. Not a scan, not a summary — read every section, every decision, every edge case. The specification must be fully digested before any structural decisions are made. If a document is too large for a single read, read it in sequential chunks until you have consumed the entire file. Never summarise or skip sections to fit within tool limits.
+Verify that the source material exists and is accessible before entering agent-driven work.
 
-The specification contains validated decisions. Your job is to translate it into an actionable plan, not to review or reinterpret it.
+1. Verify the specification file exists at the path in the Plan Index File's `specification:` field
+2. If `cross_cutting_specs:` are listed in frontmatter, verify each file exists
+3. If any file is missing, **STOP** — inform the user and do not proceed
 
-**The specification is your sole input.** Everything you need is in the specification — do not reference other documents or prior source materials. If cross-cutting specifications are provided, read them alongside the specification so their patterns are available during planning.
-
-From the specification, absorb:
-- Key decisions and rationale
-- Architectural choices
-- Edge cases identified
-- Constraints and requirements
-- Whether a Dependencies section exists (you will handle these in Step 7)
-
-Do not present or summarize the specification back to the user — it has already been signed off.
+You do **not** read these files. The planning agents read the specification directly, guided by **[steps/read-specification.md](references/steps/read-specification.md)**. This keeps your context clean — you hold only the planning artifacts (phases, task tables), not the specification content.
 
 → Proceed to **Step 4**.
 
@@ -155,17 +152,23 @@ Do not present or summarize the specification back to the user — it has alread
 
 Load **[steps/define-phases.md](references/steps/define-phases.md)** and follow its instructions as written.
 
+This step uses the `planning-phase-designer` agent. You invoke the agent, present its output, and handle the approval gate.
+
 ---
 
 ## Step 5: Define Tasks
 
 Load **[steps/define-tasks.md](references/steps/define-tasks.md)** and follow its instructions as written.
 
+This step uses the `planning-task-designer` agent. You invoke the agent per phase, present its output, and handle the approval gate.
+
 ---
 
 ## Step 6: Author Tasks
 
 Load **[steps/author-tasks.md](references/steps/author-tasks.md)** and follow its instructions as written.
+
+This step uses the `planning-task-author` agent. You invoke the agent per task, present its output, and handle the approval gate.
 
 ---
 

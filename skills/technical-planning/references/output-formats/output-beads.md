@@ -233,7 +233,7 @@ When tasks depend on each other:
 bd dep add bd-a3f8.1.2 bd-a3f8.1.1  # 1.2 blocked by 1.1
 ```
 
-### 5. Create Local Plan File
+### 5. Create Plan Index File
 
 Create `docs/workflow/planning/{topic}.md`:
 
@@ -243,6 +243,8 @@ topic: {topic-name}
 status: planning
 format: beads
 specification: ../specification/{topic}.md
+cross_cutting_specs:              # Omit if none
+  - ../specification/{spec}.md
 spec_commit: {git-commit-hash}
 plan_id: bd-{EPIC_ID}
 created: YYYY-MM-DD  # Use today's actual date
@@ -332,6 +334,8 @@ topic: {topic-name}
 status: planning | concluded
 format: beads
 specification: ../specification/{topic}.md
+cross_cutting_specs:              # Omit if none
+  - ../specification/{spec}.md
 spec_commit: {git-commit-hash}
 plan_id: bd-a3f8
 created: YYYY-MM-DD  # Use today's actual date

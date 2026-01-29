@@ -4,13 +4,13 @@
 
 ---
 
-Load **[task-design.md](../task-design.md)** — the principles for breaking phases into well-scoped, vertically-sliced tasks.
+This step uses the `planning-task-designer` agent to break phases into task lists. You (the orchestrator) invoke the agent per phase, present its output, and handle the approval gate.
 
 ---
 
 ## Check for Existing Task Tables
 
-Read the plan index file. Check the task table under each phase.
+Read the Plan Index File. Check the task table under each phase.
 
 **For each phase with an existing task table:**
 - If all tasks show `status: authored` → skip to next phase
@@ -29,35 +29,22 @@ Walk through each phase in order, presenting existing task tables for review bef
 
 Orient the user:
 
-> "Taking Phase {N}: {Phase Name} and breaking it into tasks. Here's the overview — once we agree on the list, I'll write each task out in full detail."
+> "Taking Phase {N}: {Phase Name} and breaking it into tasks. I'll delegate this to a specialist agent that will read the full specification and propose a task list. Once we agree on the list, I'll write each task out in full detail."
 
-Take the first (or next) phase and break it into tasks. Present a high-level overview so the user can see the shape of the phase before committing to the detail of each task.
+### Invoke the Agent
 
-Present the task overview using this format:
+Invoke `planning-task-designer` with these file paths:
 
-```
-Phase {N}: {Phase Name}
+1. **read-specification.md**: `references/steps/read-specification.md`
+2. **Specification**: path from the Plan Index File's `specification:` field
+3. **Cross-cutting specs**: paths from the Plan Index File's `cross_cutting_specs:` field (if any)
+4. **task-design.md**: `references/task-design.md`
+5. **All approved phases**: the complete phase structure from the Plan Index File body
+6. **Target phase number**: the phase being broken into tasks
 
-  1. {Task Name} — {One-line summary}
-     Edge cases: {comma-separated list, or "none"}
+### Present the Output
 
-  2. {Task Name} — {One-line summary}
-     Edge cases: {comma-separated list, or "none"}
-```
-
-This overview establishes the scope and ordering. The user should be able to see whether the phase is well-structured, whether tasks are in the right order, and whether anything is missing or unnecessary — before investing time in writing out full task detail.
-
-Write the task table directly to the plan index, under the phase:
-
-```markdown
-#### Tasks
-| ID | Name | Edge Cases | Status |
-|----|------|------------|--------|
-| {id} | {Task Name} | {list} | pending |
-| {id} | {Task Name} | {list} | pending |
-```
-
-The ID format is determined by the output format adapter. Use placeholder IDs in the table during task list approval; final IDs are assigned when tasks are authored.
+The agent returns a task overview and task table. Write the task table directly to the Plan Index File under the phase.
 
 Update the frontmatter `planning:` block:
 ```yaml
@@ -68,7 +55,7 @@ planning:
 
 Commit: `planning({topic}): draft Phase {N} task list`
 
-Then present to the user.
+Present the task overview to the user.
 
 **STOP.** Ask:
 
@@ -78,7 +65,11 @@ Then present to the user.
 
 #### If the user provides feedback
 
-Incorporate feedback, update the task table in the plan index, re-present the updated overview, and ask again. Repeat until approved.
+Re-invoke `planning-task-designer` with all original inputs PLUS:
+- **Previous output**: the current task list
+- **User feedback**: what the user wants changed
+
+Update the Plan Index File with the revised task table, re-present, and ask again. Repeat until approved.
 
 #### If approved
 

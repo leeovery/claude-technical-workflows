@@ -14,7 +14,7 @@ Planning translates the specification into actionable structure. This translatio
 
 **This is a step-by-step process with mandatory stop points.** You must work through each step sequentially. Steps end with **STOP** — you must present your work, wait for explicit user approval, and only then proceed to the next step.
 
-**Never one-shot the plan.** Do not write the entire plan document in a single operation. The plan is built incrementally — one phase at a time, with the user confirming the structure at each stage. A one-shot plan that misses requirements, hallucinates content, or structures tasks poorly wastes more time than a careful, step-by-step process. Go slow to go fast.
+**Never one-shot the plan.** Do not write the entire Plan Index File in a single operation. The plan is built incrementally — one phase at a time, with the user confirming the structure at each stage. A one-shot plan that misses requirements, hallucinates content, or structures tasks poorly wastes more time than a careful, step-by-step process. Go slow to go fast.
 
 ### Explicit Approval Required
 
