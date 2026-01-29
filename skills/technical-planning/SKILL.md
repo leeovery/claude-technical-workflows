@@ -53,6 +53,16 @@ Check if a Plan Index File already exists at `docs/workflow/planning/{topic}.md`
 
 → Proceed to **Step 1**.
 
+#### If Plan Index File exists without `planning:` block
+
+The plan is concluded (`status: concluded`). Re-open it for review:
+
+1. Set `status: planning` in frontmatter
+2. Add a `planning:` block: `phase: 1`, `task: ~`
+3. Commit: `planning({topic}): re-open concluded plan`
+
+Fall through to the resume flow below.
+
 #### If Plan Index File exists with `planning:` block in frontmatter
 
 The `planning:` block indicates work in progress. Note the current phase and task position.
