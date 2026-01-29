@@ -36,28 +36,33 @@ Either way: Transform specifications into actionable phases, tasks, and acceptan
 
 ## The Process
 
+This process constructs a plan from a specification. A plan consists of:
+
+- **Plan Index File** — `docs/workflow/planning/{topic}.md`. Contains frontmatter (topic, format, status, progress), phases with acceptance criteria, and task tables tracking status. This is the single source of truth for planning progress.
+- **Authored Tasks** — Detailed task files written to the chosen **Output Format** (selected during planning). The output format determines where and how task detail is stored.
+
 Follow every step in sequence. No steps are optional.
 
 ---
 
 ## Step 0: Resume Detection
 
-Check if a plan already exists at `docs/workflow/planning/{topic}.md`.
+Check if a Plan Index File already exists at `docs/workflow/planning/{topic}.md`.
 
-#### If plan exists with `planning:` block in frontmatter
+#### If Plan Index File exists with `planning:` block in frontmatter
 
 The `planning:` block indicates work in progress. Note the current phase and task position for reference.
 
 > "Found existing plan for **{topic}** (previously reached phase {N}, task {M}).
 >
 > - **`continue`** — Walk through the plan from the start. You can review, amend, or skip to any point — including straight to the leading edge.
-> - **`restart`** — Erase all planning work for this topic and start fresh. This deletes the plan and any authored tasks. Other topics are unaffected."
+> - **`restart`** — Erase all planning work for this topic and start fresh. This deletes the Plan Index File and any Authored Tasks. Other topics are unaffected."
 
 **STOP.** Wait for user response.
 
 #### If `restart`
 
-1. Delete the plan file
+1. Delete the Plan Index File and any Authored Tasks (refer to the output format adapter for cleanup)
 2. Commit: `planning({topic}): restart planning`
 
 → Proceed to **Step 1** (fresh start).
@@ -68,7 +73,7 @@ Load **[spec-change-detection.md](references/spec-change-detection.md)** to vali
 
 → Proceed to **Step 1**. Each step will check for existing work and present it for review. The user can approve quickly through completed sections or amend as needed.
 
-#### If no plan exists
+#### If no Plan Index File exists
 
 → Proceed to **Step 1** (fresh planning session).
 
@@ -76,22 +81,22 @@ Load **[spec-change-detection.md](references/spec-change-detection.md)** to vali
 
 ## Step 1: Initialize Plan
 
-#### If plan already exists
+#### If Plan Index File already exists
 
-Load the output format adapter from **[output-formats/](references/output-formats/)** based on the `format:` field.
+Load the Output Format adapter from **[output-formats/](references/output-formats/)** based on the `format:` field.
 
 → Proceed to **Step 2**.
 
-#### If no plan exists
+#### If no Plan Index File exists
 
-Create the plan index file.
+Create the Plan Index File.
 
-First, choose the output format. Present the formats from **[output-formats.md](references/output-formats.md)** to the user — including description, pros, cons, and "best for". Number each format and ask the user to pick.
+First, choose the Output Format. Present the formats from **[output-formats.md](references/output-formats.md)** to the user — including description, pros, cons, and "best for". Number each format and ask the user to pick.
 
 **STOP.** Wait for the user to choose. After they pick:
 
 1. Load the corresponding `output-{format}.md` adapter from **[output-formats/](references/output-formats/)**
-2. Create the plan index file at `docs/workflow/planning/{topic}.md`:
+2. Create the Plan Index File at `docs/workflow/planning/{topic}.md`:
 
 ```yaml
 ---
@@ -179,8 +184,8 @@ Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its 
 
 After the review is complete:
 
-1. **Remove the `planning:` block** — Edit the plan frontmatter to remove the entire `planning:` block
-2. **Update plan status** — Set `status: concluded` in frontmatter
+1. **Remove the `planning:` block** — Edit the Plan Index File frontmatter to remove the entire `planning:` block
+2. **Update plan status** — Set `status: concluded` in the Plan Index File frontmatter
 3. **Final commit** — Commit the concluded plan
 4. **Present completion summary**:
 
@@ -190,4 +195,4 @@ After the review is complete:
 >
 > Status has been marked as `concluded`. The plan is ready for implementation."
 
-> **CHECKPOINT**: Do not conclude if any tasks in the plan index show `status: pending`. All tasks must be `authored` before concluding.
+> **CHECKPOINT**: Do not conclude if any tasks in the Plan Index File show `status: pending`. All tasks must be `authored` before concluding.
