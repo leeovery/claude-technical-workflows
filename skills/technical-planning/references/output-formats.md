@@ -12,7 +12,9 @@ Plans can be stored in different formats.
 
 ### Local Markdown
 format: `local-markdown`
+
 adapter: [output-local-markdown.md](output-formats/output-local-markdown.md)
+
 
 Single markdown file per topic containing all phases, tasks, and progress tracking inline. No external tools or setup required.
 
@@ -22,7 +24,9 @@ Single markdown file per topic containing all phases, tasks, and progress tracki
 
 ### Linear
 format: `linear`
+
 adapter: [output-linear.md](output-formats/output-linear.md)
+
 
 Tasks managed as Linear issues within a Linear project. A thin local plan file points to the Linear project; Linear is the source of truth.
 
@@ -32,7 +36,9 @@ Tasks managed as Linear issues within a Linear project. A thin local plan file p
 
 ### Backlog.md
 format: `backlog-md`
+
 adapter: [output-backlog-md.md](output-formats/output-backlog-md.md)
+
 
 Individual task files in a `backlog/` directory with a local Kanban board. Each task is a self-contained markdown file with frontmatter for status, priority, labels, and dependencies.
 
@@ -42,7 +48,9 @@ Individual task files in a `backlog/` directory with a local Kanban board. Each 
 
 ### Beads
 format: `beads`
+
 adapter: [output-beads.md](output-formats/output-beads.md)
+
 
 Git-backed graph issue tracker with hierarchical tasks (epics → phases → tasks) and native dependency management. Uses JSONL storage with a CLI interface.
 
