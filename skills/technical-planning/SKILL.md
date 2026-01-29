@@ -69,7 +69,7 @@ The `planning:` block indicates work in progress. Note the current phase and tas
 
 #### If `continue`
 
-Load **[spec-change-detection.md](references/spec-change-detection.md)** to validate the specification hasn't changed.
+Load **[spec-change-detection.md](references/spec-change-detection.md)** to detect whether the specification has changed since planning started.
 
 → Proceed to **Step 1**. Each step will check for existing work and present it for review. The user can approve quickly through completed sections or amend as needed.
 
