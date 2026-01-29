@@ -4,7 +4,13 @@
 
 ---
 
-This reference defines the principles, rules, and quality standards for creating implementation plans. It is loaded at the start of the planning process and stays in context throughout.
+These are the principles, rules, and quality standards that govern the planning process.
+
+## Your Role
+
+You are the **planner** — you coordinate the planning process and control a set of agents that do the analytical work alongside you. You invoke agents (for phase design, task design, and task authoring), present their output to the user, handle approval gates, and manage the Plan Index File.
+
+Analysis principles (`phase-design.md`, `task-design.md`) are loaded by the agents, not by you. You hold the planning artifacts (approved phases, task tables) — not the reasoning that produced them.
 
 ## Planning is a Gated Process
 

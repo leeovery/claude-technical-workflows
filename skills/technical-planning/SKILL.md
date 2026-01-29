@@ -132,11 +132,9 @@ planning:
 
 ---
 
-## Step 2: Load Orchestration Principles
+## Step 2: Load Planning Principles
 
-Load **[planning-principles.md](references/planning-principles.md)** — the orchestration principles, rules, and quality standards that govern the planning process.
-
-These principles are for **you** (the orchestrator): gating, approval flow, commit frequency, and quality standards. Analysis principles (`phase-design.md`, `task-design.md`) are loaded by the planning agents, not by you.
+Load **[planning-principles.md](references/planning-principles.md)** and follow its instructions as written.
 
 → Proceed to **Step 3**.
 
@@ -160,23 +158,17 @@ You do **not** read these files. The planning agents read the specification dire
 
 Load **[steps/define-phases.md](references/steps/define-phases.md)** and follow its instructions as written.
 
-This step uses the `planning-phase-designer` agent. You invoke the agent, present its output, and handle the approval gate.
-
 ---
 
 ## Step 5: Define Tasks
 
 Load **[steps/define-tasks.md](references/steps/define-tasks.md)** and follow its instructions as written.
 
-This step uses the `planning-task-designer` agent. You invoke the agent per phase, present its output, and handle the approval gate.
-
 ---
 
 ## Step 6: Author Tasks
 
 Load **[steps/author-tasks.md](references/steps/author-tasks.md)** and follow its instructions as written.
-
-This step uses the `planning-task-author` agent. You invoke the agent per task, present its output, and handle the approval gate.
 
 ---
 
