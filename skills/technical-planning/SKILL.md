@@ -55,7 +55,7 @@ Check if a Plan Index File already exists at `docs/workflow/planning/{topic}.md`
 
 #### If Plan Index File exists
 
-If `status: concluded`, update it to `status: planning` and commit: `planning({topic}): re-open concluded plan`
+If `status: concluded`, update it to `status: planning`.
 
 Note the current phase and task position from the `planning:` block.
 
