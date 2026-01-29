@@ -49,16 +49,30 @@ Follow every step in sequence. No steps are optional.
 
 Check if a Plan Index File already exists at `docs/workflow/planning/{topic}.md`.
 
+#### If no Plan Index File exists
+
+→ Proceed to **Step 1**.
+
 #### If Plan Index File exists with `planning:` block in frontmatter
 
-The `planning:` block indicates work in progress. Note the current phase and task position for reference.
+The `planning:` block indicates work in progress. Note the current phase and task position.
+
+Load **[spec-change-detection.md](references/spec-change-detection.md)** to check whether the specification has changed since planning started. Then present the user with an informed choice:
 
 > "Found existing plan for **{topic}** (previously reached phase {N}, task {M}).
+>
+> {spec change summary from spec-change-detection.md}
 >
 > - **`continue`** — Walk through the plan from the start. You can review, amend, or skip to any point — including straight to the leading edge.
 > - **`restart`** — Erase all planning work for this topic and start fresh. This deletes the Plan Index File and any Authored Tasks. Other topics are unaffected."
 
 **STOP.** Wait for user response.
+
+#### If `continue`
+
+If the specification changed, update `spec_commit` in the Plan Index File frontmatter to the current commit hash.
+
+→ Proceed to **Step 1**.
 
 #### If `restart`
 
@@ -67,17 +81,7 @@ The `planning:` block indicates work in progress. Note the current phase and tas
 3. Delete the Plan Index File
 4. Commit: `planning({topic}): restart planning`
 
-→ Proceed to **Step 1** (fresh start).
-
-#### If `continue`
-
-Load **[spec-change-detection.md](references/spec-change-detection.md)** to detect whether the specification has changed since planning started.
-
-→ Proceed to **Step 1**. Each step will check for existing work and present it for review. The user can approve quickly through completed sections or amend as needed.
-
-#### If no Plan Index File exists
-
-→ Proceed to **Step 1** (fresh planning session).
+→ Proceed to **Step 1**.
 
 ---
 
