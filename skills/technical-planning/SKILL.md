@@ -142,15 +142,7 @@ Load **[planning-principles.md](references/planning-principles.md)** and follow 
 
 ## Step 3: Verify Source Material
 
-Verify that the source material exists and is accessible before entering agent-driven work.
-
-1. Verify the specification file exists at the path in the Plan Index File's `specification:` field
-2. If `cross_cutting_specs:` are listed in frontmatter, verify each file exists
-3. If any file is missing, **STOP** — inform the user and do not proceed
-
-You do **not** read these files. The planning agents read the specification directly, guided by **[steps/read-specification.md](references/steps/read-specification.md)**. This keeps your context clean — you hold only the planning artifacts (phases, task tables), not the specification content.
-
-→ Proceed to **Step 4**.
+Load **[steps/verify-source-material.md](references/steps/verify-source-material.md)** and follow its instructions as written.
 
 ---
 

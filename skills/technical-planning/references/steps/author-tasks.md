@@ -34,7 +34,7 @@ Work through the task list **one task at a time**.
 
 For each pending task, invoke `planning-task-author` with these file paths:
 
-1. **read-specification.md**: `references/steps/read-specification.md`
+1. **read-specification.md**: `references/read-specification.md`
 2. **Specification**: path from the Plan Index File's `specification:` field
 3. **Cross-cutting specs**: paths from the Plan Index File's `cross_cutting_specs:` field (if any)
 4. **task-design.md**: `references/task-design.md`
