@@ -56,7 +56,7 @@ topic: {topic-name}
 status: planning
 format: backlog-md
 specification: ../specification/{topic}.md
-spec_hash: {sha256-first-8-chars}
+spec_commit: {git-commit-hash}
 plan_id: {TOPIC_NAME}
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date
@@ -145,7 +145,7 @@ topic: {topic-name}
 status: planning | concluded
 format: backlog-md
 specification: ../specification/{topic}.md
-spec_hash: {sha256-first-8-chars}
+spec_commit: {git-commit-hash}
 plan_id: {TOPIC_NAME}
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date

@@ -4,29 +4,55 @@
 
 ---
 
-When resuming planning, compare the current specification hash to the stored `spec_hash` in the plan frontmatter.
+When resuming planning, check whether the specification or cross-cutting specifications have changed since planning started.
 
-**If unchanged:** No action needed. Proceed with the normal step sequence.
+The Plan Index File stores `spec_commit` — the git commit hash captured when planning began. This allows diffing any input file against that point in time.
 
-**If different:** Prompt the user:
+## Detection
 
-> "The specification hash has changed since planning started.
+Run a git diff against the stored commit for all input files:
+
+```bash
+git diff {spec_commit} -- {specification-path} {cross-cutting-spec-paths...}
+```
+
+Also check for new cross-cutting specification files that didn't exist at that commit.
+
+#### If no changes detected
+
+No action needed. Proceed with the normal step sequence.
+
+#### If changes detected
+
+Summarise the extent of changes for the user:
+
+- **What files changed** (specification, cross-cutting specs, or both)
+- **Whether any cross-cutting specs are new** (didn't exist at the stored commit)
+- **Nature of changes** — formatting/cosmetic, minor additions/removals, or substantial restructuring
+
+Present the summary and options:
+
+> "{Summary of changes detected}
 >
-> - **`continue`** — Proceed anyway (e.g., just formatting changes)
-> - **`re-analyze`** — I'll re-read the spec and compare to existing phases"
+> - **`continue`** — Proceed with the existing plan as-is
+> - **`restart`** — Delete the plan and start fresh from the updated specification"
+
+**STOP.** Wait for user response.
 
 #### If `continue`
 
-Update `spec_hash` in frontmatter to the new value and proceed.
+Update `spec_commit` in the Plan Index File frontmatter to the current commit hash and proceed.
 
-#### If `re-analyze`
+The user accepts the plan as-is. They can still amend individual phases or tasks through the normal review flow if they spot something that needs updating.
 
-1. Read the current specification fully
-2. Produce a new phase proposal based on fresh analysis
-3. Compare new proposal to existing phases in the plan
-4. Present differences: "Phase 2 scope differs because X"
-5. User decides: keep existing, take new, or discuss/merge
+#### If `restart`
 
-The plan file is the anchor — we compare new analysis against persisted phases, not against the old spec (which we don't have).
+Return to Step 0's restart flow — delete the Plan Index File and any Authored Tasks, then begin fresh.
 
-After resolving any differences, update `spec_hash` and proceed.
+---
+
+## Why Not Incremental Merge
+
+Even small specification changes can cascade into phase reordering, task restructuring, and invalidation of authored tasks. Attempting to incrementally propagate spec changes through a half-built plan risks producing a worse result than starting fresh.
+
+The planning process (phase design, task design, authoring) is a heavyweight analysis with detailed instructions at each stage. A reliable merge would require re-running that full analysis and reconciling the results — which is effectively a restart with extra complexity.

@@ -104,7 +104,7 @@ topic: {topic-name}
 status: planning
 format: {chosen-format}
 specification: ../specification/{topic}.md
-spec_hash: {sha256-first-8-chars}
+spec_commit: {git-commit-hash}
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date
 planning:

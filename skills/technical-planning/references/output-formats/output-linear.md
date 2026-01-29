@@ -151,7 +151,7 @@ topic: {topic-name}
 status: planning
 format: linear
 specification: ../specification/{topic}.md
-spec_hash: {sha256-first-8-chars}
+spec_commit: {git-commit-hash}
 plan_id: {PROJECT_NAME}
 project_id: {ID from MCP response}
 team: {TEAM_NAME}
@@ -242,7 +242,7 @@ topic: {topic-name}
 status: planning | concluded
 format: linear
 specification: ../specification/{topic}.md
-spec_hash: {sha256-first-8-chars}
+spec_commit: {git-commit-hash}
 plan_id: USER-AUTH-FEATURE
 project_id: abc123-def456
 team: Engineering

@@ -39,7 +39,7 @@ topic: {feature-name}
 status: planning
 format: local-markdown
 specification: ../specification/{topic}.md
-spec_hash: {sha256-first-8-chars}
+spec_commit: {git-commit-hash}
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date
 planning:
@@ -237,7 +237,7 @@ topic: {feature-name}                    # Matches filename (without .md)
 status: planning | concluded             # Planning status
 format: local-markdown                   # Output format used
 specification: ../specification/{topic}.md
-spec_hash: {sha256-first-8-chars}        # For change detection
+spec_commit: {git-commit-hash}        # Git commit when planning started
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date
 planning:                                # Removed when concluded

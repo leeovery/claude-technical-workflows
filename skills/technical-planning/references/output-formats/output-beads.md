@@ -243,7 +243,7 @@ topic: {topic-name}
 status: planning
 format: beads
 specification: ../specification/{topic}.md
-spec_hash: {sha256-first-8-chars}
+spec_commit: {git-commit-hash}
 plan_id: bd-{EPIC_ID}
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date
@@ -332,7 +332,7 @@ topic: {topic-name}
 status: planning | concluded
 format: beads
 specification: ../specification/{topic}.md
-spec_hash: {sha256-first-8-chars}
+spec_commit: {git-commit-hash}
 plan_id: bd-a3f8
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date
