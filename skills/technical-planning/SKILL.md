@@ -96,7 +96,8 @@ First, choose the Output Format. Present the formats from **[output-formats.md](
 **STOP.** Wait for the user to choose. After they pick:
 
 1. Load the corresponding `output-{format}.md` adapter from **[output-formats/](references/output-formats/)**
-2. Create the Plan Index File at `docs/workflow/planning/{topic}.md`:
+2. Capture the current git commit hash: `git rev-parse HEAD`
+3. Create the Plan Index File at `docs/workflow/planning/{topic}.md`:
 
 ```yaml
 ---
@@ -104,7 +105,7 @@ topic: {topic-name}
 status: planning
 format: {chosen-format}
 specification: ../specification/{topic}.md
-spec_commit: {git-commit-hash}
+spec_commit: {output of git rev-parse HEAD}
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date
 planning:
