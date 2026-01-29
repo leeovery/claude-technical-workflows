@@ -4,7 +4,7 @@
 
 ---
 
-This step uses the `planning-task-author` agent to write full task detail. You (the orchestrator) invoke the agent per task, present its output, and handle the approval gate.
+This step uses the `planning-task-author` agent (`.claude/agents/planning-task-author.md`) to write full task detail. You invoke the agent per task, present its output, and handle the approval gate.
 
 ---
 
@@ -34,10 +34,10 @@ Work through the task list **one task at a time**.
 
 For each pending task, invoke `planning-task-author` with these file paths:
 
-1. **read-specification.md**: `references/read-specification.md`
+1. **read-specification.md**: `.claude/skills/technical-planning/references/read-specification.md`
 2. **Specification**: path from the Plan Index File's `specification:` field
 3. **Cross-cutting specs**: paths from the Plan Index File's `cross_cutting_specs:` field (if any)
-4. **task-design.md**: `references/task-design.md`
+4. **task-design.md**: `.claude/skills/technical-planning/references/task-design.md`
 5. **All approved phases**: the complete phase structure from the Plan Index File body
 6. **Task list for current phase**: the approved task table
 7. **Target task**: the task name, edge cases, and ID from the table

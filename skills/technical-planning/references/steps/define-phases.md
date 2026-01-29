@@ -4,7 +4,7 @@
 
 ---
 
-This step uses the `planning-phase-designer` agent to design phases. You (the orchestrator) invoke the agent, present its output, and handle the approval gate.
+This step uses the `planning-phase-designer` agent (`.claude/agents/planning-phase-designer.md`) to design phases. You invoke the agent, present its output, and handle the approval gate.
 
 ---
 
@@ -37,11 +37,11 @@ Orient the user:
 
 Invoke `planning-phase-designer` with these file paths:
 
-1. **read-specification.md**: `references/read-specification.md`
+1. **read-specification.md**: `.claude/skills/technical-planning/references/read-specification.md`
 2. **Specification**: path from the Plan Index File's `specification:` field
 3. **Cross-cutting specs**: paths from the Plan Index File's `cross_cutting_specs:` field (if any)
-4. **phase-design.md**: `references/phase-design.md`
-5. **task-design.md**: `references/task-design.md`
+4. **phase-design.md**: `.claude/skills/technical-planning/references/phase-design.md`
+5. **task-design.md**: `.claude/skills/technical-planning/references/task-design.md`
 
 ### Present the Output
 
