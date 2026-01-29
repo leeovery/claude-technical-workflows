@@ -91,8 +91,6 @@ Read **[output-formats.md](references/output-formats.md)**, find the entry match
 
 #### If no Plan Index File exists
 
-Create the Plan Index File.
-
 First, choose the Output Format. Present the formats from **[output-formats.md](references/output-formats.md)** to the user — including description, pros, cons, and "best for". Number each format and ask the user to pick.
 
 **STOP.** Wait for the user to choose. After they pick:
