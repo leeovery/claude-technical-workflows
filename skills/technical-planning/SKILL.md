@@ -62,7 +62,7 @@ The `planning:` block indicates work in progress. Note the current phase and tas
 
 #### If `restart`
 
-1. Load the Output Format adapter from **[output-formats/](references/output-formats/)** based on the `format:` field in the Plan Index File
+1. Read **[output-formats.md](references/output-formats.md)**, find the entry matching the `format:` field in the Plan Index File, and load the linked adapter
 2. Follow the adapter's cleanup instructions to remove Authored Tasks for this topic
 3. Delete the Plan Index File
 4. Commit: `planning({topic}): restart planning`
@@ -85,7 +85,7 @@ Load **[spec-change-detection.md](references/spec-change-detection.md)** to dete
 
 #### If Plan Index File already exists
 
-Load the Output Format adapter from **[output-formats/](references/output-formats/)** based on the `format:` field.
+Read **[output-formats.md](references/output-formats.md)**, find the entry matching the `format:` field, and load the linked adapter.
 
 → Proceed to **Step 2**.
 
@@ -97,7 +97,7 @@ First, choose the Output Format. Present the formats from **[output-formats.md](
 
 **STOP.** Wait for the user to choose. After they pick:
 
-1. Load the corresponding `output-{format}.md` adapter from **[output-formats/](references/output-formats/)**
+1. Read **[output-formats.md](references/output-formats.md)**, find the chosen format entry, and load the linked adapter
 2. Capture the current git commit hash: `git rev-parse HEAD`
 3. Create the Plan Index File at `docs/workflow/planning/{topic}.md`:
 
