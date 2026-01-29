@@ -308,6 +308,14 @@ Linear:
 - Update issue status in Linear via MCP after each task
 - User sees real-time progress in Linear UI
 
+### Cleanup (Restart)
+
+The official Linear MCP server does not support deletion. Ask the user to delete the Linear project manually via the Linear UI.
+
+> "The Linear project **{project name}** needs to be deleted before restarting. Please delete it in the Linear UI (Project Settings → Delete project), then confirm so I can proceed."
+
+**STOP.** Wait for the user to confirm.
+
 ### Fallback
 
 If Linear MCP is unavailable:

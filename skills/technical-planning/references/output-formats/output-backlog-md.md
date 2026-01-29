@@ -343,6 +343,16 @@ project/
 
 Can read `backlog/` files directly if MCP unavailable.
 
+### Cleanup (Restart)
+
+Delete the backlog task files for this topic. Read the task IDs from the Plan Index File's task tables, then delete each corresponding file:
+
+```bash
+rm backlog/task-{id}*.md
+```
+
+No index or database needs updating — Backlog.md uses the filesystem as its source of truth.
+
 ## CLI Commands Reference
 
 ```bash

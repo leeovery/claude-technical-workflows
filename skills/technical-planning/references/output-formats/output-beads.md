@@ -425,6 +425,20 @@ project/
 │   └── planning/{topic}.md        # Planning output (format: beads)
 ```
 
+### Cleanup (Restart)
+
+Delete the epic and all its children (phases and tasks):
+
+```bash
+bd delete {epic-id} --cascade --force
+```
+
+If using database mode, sync afterwards to persist the deletion to JSONL:
+
+```bash
+bd sync
+```
+
 ## Priority Mapping
 
 | Planning Priority | Beads Priority |

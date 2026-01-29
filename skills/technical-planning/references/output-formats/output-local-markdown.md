@@ -304,3 +304,11 @@ When a task is approved:
 1. Create `{topic}/{task-id}.md` with the task content
 2. Update the task table: set `status: authored`
 3. Update the `planning:` block in frontmatter
+
+### Cleanup (Restart)
+
+Delete the task detail directory for this topic:
+
+```bash
+rm -rf docs/workflow/planning/{topic}/
+```

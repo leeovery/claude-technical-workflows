@@ -62,8 +62,10 @@ The `planning:` block indicates work in progress. Note the current phase and tas
 
 #### If `restart`
 
-1. Delete the Plan Index File and any Authored Tasks (refer to the output format adapter for cleanup)
-2. Commit: `planning({topic}): restart planning`
+1. Load the Output Format adapter from **[output-formats/](references/output-formats/)** based on the `format:` field in the Plan Index File
+2. Follow the adapter's cleanup instructions to remove Authored Tasks for this topic
+3. Delete the Plan Index File
+4. Commit: `planning({topic}): restart planning`
 
 → Proceed to **Step 1** (fresh start).
 
