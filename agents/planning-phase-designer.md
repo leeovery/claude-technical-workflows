@@ -36,7 +36,20 @@ If this is an **amendment**: read your previous output and the user's feedback, 
 
 ## Your Output
 
-Return the complete phase structure in this exact markdown format:
+Return both a human-readable summary and the full markdown structure.
+
+**Summary format:**
+
+```
+Phase {N}: {Phase Name}
+  Goal: {What this phase accomplishes}
+  Why this order: {Why this phase comes at this position}
+  Acceptance criteria:
+    - [ ] {First verifiable criterion}
+    - [ ] {Second verifiable criterion}
+```
+
+**Phase structure (for the Plan Index File):**
 
 ```markdown
 ## Phases
@@ -63,17 +76,6 @@ status: draft
 ```
 
 Continue for all phases.
-
-Also present a human-readable summary before the markdown:
-
-```
-Phase {N}: {Phase Name}
-  Goal: {What this phase accomplishes}
-  Why this order: {Why this phase comes at this position}
-  Acceptance criteria:
-    - [ ] {First verifiable criterion}
-    - [ ] {Second verifiable criterion}
-```
 
 ## Rules
 
