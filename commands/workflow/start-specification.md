@@ -120,25 +120,29 @@ At least one concluded discussion exists.
 Show the current state clearly. Use this EXACT format:
 
 ```
-Workflow Status: Specification Phase
+Specification Phase
 
-Discussions:
-  ✓ {topic-1} - concluded - ready
-  ✓ {topic-2} - concluded - ready
-  ○ {topic-3} - concluded - spec: {spec_status}
-  · {topic-4} - in-progress - not ready
+Available discussions:
+  ✓ {topic-1} - ready to specify
+  ✓ {topic-2} - ready to specify
+  ○ {topic-3} - spec exists [{status}]
 
-Specifications:
-  • {spec-1} (active) - sources: {topic-1}
-  • {spec-2} (superseded → {other-spec}) - sources: {topic-x}
+Not specifiable discussions:
+  · {topic-4} [in-progress]
+
+Existing specifications:
+  • {spec-1} [active] - sources: {topic-1}
+  • {spec-2} [superseded → {other-spec}] - sources: {topic-x}
 
 {N} concluded discussions available.
 ```
 
 **Legend:**
 - `✓` = concluded, no spec yet (ready to specify)
-- `○` = concluded, has individual spec (shows spec status: in-progress or concluded)
-- `·` = in-progress (not ready)
+- `○` = concluded, has individual spec (shows spec status in brackets)
+- `·` = in-progress (not specifiable)
+
+Omit either discussions section if it has no entries.
 
 #### Routing Based on State
 
