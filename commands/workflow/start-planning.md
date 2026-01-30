@@ -120,9 +120,9 @@ Present everything discovered to help the user make an informed choice.
 Planning Phase
 
 Available:
-  1. ✓ {topic-2} - create new plan
+  1. + {topic-2} - create new plan
   2. ▶ {topic-3} - continue in-progress plan
-  3. ✔ {topic-4} - review concluded plan
+  3. > {topic-4} - review concluded plan
 
 Not plannable specifications:
   · {topic-1} [feature, in-progress]
@@ -133,9 +133,9 @@ Not plannable specifications:
 **Formatting rules:**
 
 Available (numbered, selectable):
-- **`✓`** — concluded spec with no plan yet
+- **`+`** — concluded spec with no plan yet
 - **`▶`** — has a plan with `plan_status: planning`
-- **`✔`** — has a plan with `plan_status: concluded`
+- **`>`** — has a plan with `plan_status: concluded`
 
 Not plannable specifications (no number, not selectable — `[type, status]` format):
 - **`·`** — feature specs still in-progress, or cross-cutting specifications
