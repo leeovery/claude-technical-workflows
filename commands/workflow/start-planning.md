@@ -112,31 +112,36 @@ At least one specification is ready for planning, or an existing plan can be con
 
 ## Step 3: Present Workflow State and Options
 
-Present everything discovered to help the user make an informed choice. Each feature specification falls into one of four visual states:
+Present everything discovered to help the user make an informed choice.
 
 **Present the full state:**
 
 ```
 Planning Phase
 
-Feature specifications:
-  · {topic-1} (spec in-progress) — not ready
-  1. ✓ {topic-2} (concluded) — start new plan
-  2. ▶ {topic-3} → plan in-progress — continue planning
-  3. ✔ {topic-4} → plan concluded — review/revise
+Available:
+  1. ✓ {topic-2} - create new plan
+  2. ▶ {topic-3} - continue planning
+  3. ✔ {topic-4} - review plan
 
-Cross-cutting specifications (reference context):
-  - {caching-strategy} (concluded)
-  - {rate-limiting} (concluded)
+Not plannable:
+  · {topic-1} - spec in-progress
+  · {caching-strategy} - cross-cutting
+  · {rate-limiting} - cross-cutting
 ```
 
 **Formatting rules:**
-- **`·` not ready** — spec still in-progress; no number, not selectable
-- **`✓` start new plan** — concluded spec with no plan yet; numbered
-- **`▶` continue planning** — has a plan with `plan_status: planning`; numbered
-- **`✔` review/revise** — has a plan with `plan_status: concluded`; numbered
-- Only show cross-cutting section if cross-cutting specs exist
-- Only show states that have entries (e.g., omit the `·` group if all specs are concluded)
+
+Available (numbered, selectable):
+- **`✓`** — concluded spec with no plan yet
+- **`▶`** — has a plan with `plan_status: planning`
+- **`✔`** — has a plan with `plan_status: concluded`
+
+Not plannable (no number, not selectable):
+- **`·`** — feature specs still in-progress, or cross-cutting specifications
+- Label each with the reason: `spec in-progress` or `cross-cutting`
+
+Omit either section entirely if it has no entries.
 
 **Then prompt based on what's actionable:**
 
@@ -156,7 +161,7 @@ Auto-selecting: {topic} (only actionable specification)
 
 **If nothing actionable:**
 ```
-No actionable specifications.
+No plannable specifications.
 
 To proceed:
 - Complete any in-progress specifications with /start-specification
