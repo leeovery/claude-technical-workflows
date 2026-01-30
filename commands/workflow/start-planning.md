@@ -125,9 +125,9 @@ Available:
   3. ✔ {topic-4} - review plan
 
 Not plannable:
-  · {topic-1} - spec in-progress
-  · {caching-strategy} - cross-cutting (concluded)
-  · {rate-limiting} - cross-cutting (in-progress)
+  · {topic-1} [spec in-progress]
+  · {caching-strategy} [cross-cutting, concluded]
+  · {rate-limiting} [cross-cutting, in-progress]
 ```
 
 **Formatting rules:**
@@ -137,10 +137,10 @@ Available (numbered, selectable):
 - **`▶`** — has a plan with `plan_status: planning`
 - **`✔`** — has a plan with `plan_status: concluded`
 
-Not plannable (no number, not selectable):
+Not plannable (no number, not selectable — square brackets for all metadata):
 - **`·`** — feature specs still in-progress, or cross-cutting specifications
-- Feature specs: label with `spec in-progress`
-- Cross-cutting specs: label with `cross-cutting ({status})` showing their concluded/in-progress status
+- Feature specs: `[spec in-progress]`
+- Cross-cutting specs: `[cross-cutting, {status}]`
 
 Omit either section entirely if it has no entries.
 
