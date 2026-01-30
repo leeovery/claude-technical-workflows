@@ -121,8 +121,8 @@ Planning Phase
 
 Available:
   1. ✓ {topic-2} - create new plan
-  2. ▶ {topic-3} - continue planning
-  3. ✔ {topic-4} - review plan
+  2. ▶ {topic-3} - continue in-progress plan
+  3. ✔ {topic-4} - review concluded plan
 
 Not plannable specifications:
   · {topic-1} [feature, in-progress]
