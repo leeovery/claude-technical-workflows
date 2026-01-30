@@ -4,32 +4,15 @@
 
 ---
 
-This step uses the `planning-task-designer` agent (`.claude/agents/planning-task-designer.md`) to break phases into task lists. You invoke the agent per phase, present its output, and handle the approval gate.
+This step uses the `planning-task-designer` agent (`.claude/agents/planning-task-designer.md`) to design a task list for a single phase. You invoke the agent, present its output, and handle the approval gate.
 
 ---
 
-## Check for Existing Task Tables
-
-Read the Plan Index File. Check the task table under each phase.
-
-**For each phase with an existing task table:**
-- If all tasks show `status: authored` → skip to next phase
-- If task table exists but not all approved → present for review (deterministic replay)
-- User can approve (`y`), amend, or navigate (`skip to {X}`)
-
-Walk through each phase in order, presenting existing task tables for review before moving to phases that need fresh work.
-
-**If all phases have approved task tables:** → Proceed to Step 6.
-
-**If no task table for current phase:** Continue with fresh task design below.
-
----
-
-## Fresh Task Design
+## Design the Task List
 
 Orient the user:
 
-> "Taking Phase {N}: {Phase Name} and breaking it into tasks. I'll delegate this to a specialist agent that will read the full specification and propose a task list. Once we agree on the list, I'll write each task out in full detail."
+> "Taking Phase {N}: {Phase Name} and breaking it into tasks. I'll delegate this to a specialist agent that will read the full specification and propose a task list."
 
 ### Invoke the Agent
 
@@ -60,8 +43,9 @@ Present the task overview to the user.
 **STOP.** Ask:
 
 > **To proceed:**
-> - **`y`/`yes`** — Approved. I'll begin writing full task detail.
+> - **`y`/`yes`** — Approved.
 > - **Or tell me what to change** — reorder, split, merge, add, edit, or remove tasks.
+> - **Or navigate** — describe where you want to go.
 
 #### If the user provides feedback
 
@@ -73,7 +57,11 @@ Update the Plan Index File with the revised task table, re-present, and ask agai
 
 #### If approved
 
-1. Update the `planning:` block to note task authoring is starting
+**If the task list is new or was amended:**
+
+1. Advance the `planning:` block to the first task in this phase
 2. Commit: `planning({topic}): approve Phase {N} task list`
 
-→ Proceed to **Step 6**.
+**If the task list was already approved and unchanged:** No updates needed.
+
+→ Return to **Plan Construction**.

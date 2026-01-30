@@ -18,5 +18,3 @@ Verify that all source material exists and is accessible before entering agent-d
 ls docs/workflow/specification/{topic}.md
 ls docs/workflow/specification/{cross-cutting-spec}.md
 ```
-
-→ Proceed to **Step 4**.

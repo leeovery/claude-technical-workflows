@@ -52,5 +52,3 @@ Skip the resolution and reverse check — there is nothing to resolve against. D
 Incorporate feedback, re-present the updated dependency state, and ask again. Repeat until approved.
 
 #### If approved
-
-→ Proceed to **Step 8**.

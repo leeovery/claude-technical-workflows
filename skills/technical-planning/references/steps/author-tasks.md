@@ -4,35 +4,15 @@
 
 ---
 
-This step uses the `planning-task-author` agent (`.claude/agents/planning-task-author.md`) to write full task detail. You invoke the agent per task, present its output, and handle the approval gate.
+This step uses the `planning-task-author` agent (`.claude/agents/planning-task-author.md`) to write full detail for a single task. You invoke the agent, present its output, and handle the approval gate.
 
 ---
 
-## Check for Existing Authored Tasks
-
-Read the Plan Index File. Check the task table under the current phase.
-
-**For each task:**
-- If `status: authored` → skip (already written to output format)
-- If `status: pending` → needs authoring
-
-Walk through tasks in order. Already-authored tasks are presented for quick review (user can approve or amend). Pending tasks need full authoring.
-
-**If all tasks in current phase are authored:** → Return to Step 5 for next phase, or Step 7 if all phases complete.
-
----
-
-## Author Tasks
-
-Orient the user:
-
-> "Task list for Phase {N} is agreed. I'll work through each task one at a time — delegating to a specialist agent that will read the full specification and write the complete task detail. You'll review each one before it's logged."
-
-Work through the task list **one task at a time**.
+## Author the Task
 
 ### Invoke the Agent
 
-For each pending task, invoke `planning-task-author` with these file paths:
+Invoke `planning-task-author` with these file paths:
 
 1. **read-specification.md**: `.claude/skills/technical-planning/references/read-specification.md`
 2. **Specification**: path from the Plan Index File's `specification:` field
@@ -52,9 +32,9 @@ After presenting, ask:
 > **Task {M} of {total}: {Task Name}**
 >
 > **To proceed:**
-> - **`y`/`yes`** — Approved. I'll log it to the plan verbatim.
+> - **`y`/`yes`** — Approved. I'll log it to the plan.
 > - **Or tell me what to change.**
-> - **`skip to {X}`** — Navigate to different task/phase
+> - **Or navigate** — describe where you want to go.
 
 **STOP.** Wait for the user's response.
 
@@ -66,31 +46,21 @@ Re-invoke `planning-task-author` with all original inputs PLUS:
 
 Present the revised task in full. Ask the same choice again. Repeat until approved.
 
+#### If the user navigates
+
+→ Return to **Plan Construction**.
+
 #### If approved (`y`/`yes`)
 
 > **CHECKPOINT**: Before logging, verify: (1) You presented this exact content, (2) The user explicitly approved with `y`/`yes` or equivalent — not a question, comment, or "okay" in passing, (3) You are writing exactly what was approved with no modifications.
 
 1. Write the task to the output format (format-specific — see output adapter)
 2. Update the task table in the Plan Index File: set `status: authored`
-3. Update the `planning:` block in frontmatter: note current phase and task
+3. Advance the `planning:` block in frontmatter to the next pending task (or next phase if this was the last task)
 4. Commit: `planning({topic}): author task {task-id} ({task name})`
 
 Confirm:
 
 > "Task {M} of {total}: {Task Name} — authored."
 
-#### Next task or phase complete
-
-**If tasks remain in this phase:** → Return to the top with the next task. Present it, ask, wait.
-
-**If all tasks in this phase are authored:**
-
-Update `planning:` block and commit: `planning({topic}): complete Phase {N} tasks`
-
-```
-Phase {N}: {Phase Name} — complete ({M} tasks authored).
-```
-
-→ Return to **Step 5** for the next phase.
-
-**If all phases are complete:** → Proceed to **Step 7**.
+→ Return to **Plan Construction**.
