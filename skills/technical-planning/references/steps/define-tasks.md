@@ -45,7 +45,7 @@ Present the task overview to the user.
 > **To proceed:**
 > - **`y`/`yes`** — Approved.
 > - **Or tell me what to change** — reorder, split, merge, add, edit, or remove tasks.
-> - **Or navigate** — describe where you want to go.
+> - **Or navigate** — a different phase or task, or the leading edge.
 
 #### If the user provides feedback
 
