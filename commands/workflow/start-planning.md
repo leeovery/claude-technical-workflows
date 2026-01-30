@@ -126,8 +126,8 @@ Available:
 
 Not plannable:
   · {topic-1} - spec in-progress
-  · {caching-strategy} - cross-cutting
-  · {rate-limiting} - cross-cutting
+  · {caching-strategy} - cross-cutting (concluded)
+  · {rate-limiting} - cross-cutting (in-progress)
 ```
 
 **Formatting rules:**
@@ -139,7 +139,8 @@ Available (numbered, selectable):
 
 Not plannable (no number, not selectable):
 - **`·`** — feature specs still in-progress, or cross-cutting specifications
-- Label each with the reason: `spec in-progress` or `cross-cutting`
+- Feature specs: label with `spec in-progress`
+- Cross-cutting specs: label with `cross-cutting ({status})` showing their concluded/in-progress status
 
 Omit either section entirely if it has no entries.
 
@@ -204,23 +205,39 @@ Ask:
 
 ## Step 6: Surface Cross-Cutting Context
 
-If any **concluded cross-cutting specifications** exist (from `specifications.crosscutting` in discovery), surface them as reference context for planning:
+**If no cross-cutting specifications exist**: Skip this step. → Proceed to **Step 7**.
 
-1. **List applicable cross-cutting specs**:
-   - Read each cross-cutting specification
-   - Identify which ones are relevant to the feature being planned
-   - Relevance is determined by topic overlap (e.g., caching strategy applies if the feature involves data retrieval or API calls)
+Read each cross-cutting specification from `specifications.crosscutting` in the discovery output.
 
-2. **Summarize for handoff**:
-   ```
-   Cross-cutting specifications to reference:
-   - caching-strategy.md: [brief summary of key decisions]
-   - rate-limiting.md: [brief summary of key decisions]
-   ```
+### 6a: Warn about in-progress cross-cutting specs
+
+If any **in-progress** cross-cutting specifications exist, check whether they could be relevant to the feature being planned (by topic overlap — e.g., a caching strategy is relevant if the feature involves data retrieval or API calls).
+
+If any are relevant:
+
+```
+Note: The following cross-cutting specifications are still in-progress:
+  · {rate-limiting} - in-progress
+
+These may contain architectural decisions relevant to this plan. You can:
+- Continue planning without them
+- Stop and complete them first (/start-specification)
+```
+
+**STOP.** Wait for user response.
+
+If the user chooses to stop, end here. If they choose to continue, proceed.
+
+### 6b: Summarize concluded cross-cutting specs
+
+If any **concluded** cross-cutting specifications exist, identify which are relevant to the feature being planned and summarize for handoff:
+
+```
+Cross-cutting specifications to reference:
+- caching-strategy.md: [brief summary of key decisions]
+```
 
 These specifications contain validated architectural decisions that should inform the plan. The planning skill will incorporate these as a "Cross-Cutting References" section in the plan.
-
-**If no cross-cutting specifications exist**: Skip this step.
 
 → Proceed to **Step 7**.
 
