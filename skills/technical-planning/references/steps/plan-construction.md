@@ -74,7 +74,7 @@ Present the task list to the user for review.
 > **To proceed:**
 > - **`y`/`yes`** — Confirmed.
 > - **Or tell me what to change.**
-> - **Or navigate** — describe where you want to go.
+> - **Or navigate** — a different phase or task, or the leading edge.
 
 **STOP.** Wait for the user's response.
 
