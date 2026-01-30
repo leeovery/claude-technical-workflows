@@ -57,7 +57,11 @@ Update the Plan Index File with the revised task table, re-present, and ask agai
 
 #### If approved
 
-1. Advance the `planning:` block: `phase: {N}, task: 1`
+**If the task list is new or was amended:**
+
+1. Advance the `planning:` block to the first task in this phase
 2. Commit: `planning({topic}): approve Phase {N} task list`
+
+**If the task list was already approved and unchanged:** No updates needed.
 
 → Return to **Plan Construction**.
