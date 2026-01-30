@@ -57,7 +57,7 @@ Update the Plan Index File with the revised task table, re-present, and ask agai
 
 #### If approved
 
-1. Update the `planning:` block to note task authoring is starting
+1. Advance the `planning:` block: `phase: {N}, task: 1`
 2. Commit: `planning({topic}): approve Phase {N} task list`
 
 → Return to **Plan Construction**.

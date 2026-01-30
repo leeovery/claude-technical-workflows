@@ -48,8 +48,6 @@ Present the revised task in full. Ask the same choice again. Repeat until approv
 
 #### If the user navigates
 
-Update the `planning:` block in the Plan Index File to reflect the requested position.
-
 → Return to **Plan Construction**.
 
 #### If approved (`y`/`yes`)
@@ -58,7 +56,7 @@ Update the `planning:` block in the Plan Index File to reflect the requested pos
 
 1. Write the task to the output format (format-specific — see output adapter)
 2. Update the task table in the Plan Index File: set `status: authored`
-3. Update the `planning:` block in frontmatter: note current phase and task
+3. Advance the `planning:` block in frontmatter to the next pending task (or next phase if this was the last task)
 4. Commit: `planning({topic}): author task {task-id} ({task name})`
 
 Confirm:

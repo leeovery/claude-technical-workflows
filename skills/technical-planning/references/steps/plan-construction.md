@@ -31,9 +31,9 @@ This step constructs the complete plan — defining phases, designing task lists
 
 At any approval gate during plan construction, the user can navigate. They may describe where they want to go in their own words — a specific phase, a specific task, "the beginning", "the leading edge", or any point in the plan.
 
-The **leading edge** is where new work begins — the first phase, task list, or task that hasn't been completed yet. If all phases and tasks are complete, the leading edge is the end of plan construction.
+The **leading edge** is where new work begins — the first phase, task list, or task that hasn't been completed yet. It is tracked by the `planning:` block in the Plan Index File frontmatter (`phase` and `task`). To find the leading edge, read those values. If all phases and tasks are complete, the leading edge is the end of plan construction.
 
-When the user navigates, update the `planning:` block in the Plan Index File to reflect the new position, then continue from that point.
+The `planning:` block always tracks the leading edge. It is only advanced when work is completed — never when the user navigates. Navigation moves the user's position, not the leading edge.
 
 Navigation stays within plan construction. It cannot skip past the end of this step.
 
@@ -104,7 +104,7 @@ After Step B returns, the task is authored. Continue to the next task.
 
 #### When all tasks in the phase are authored
 
-Update the `planning:` block in frontmatter. Commit: `planning({topic}): complete Phase {N} tasks`
+Advance the `planning:` block in frontmatter to the next phase. Commit: `planning({topic}): complete Phase {N} tasks`
 
 > Phase {N}: {Phase Name} — complete ({M} tasks authored).
 
