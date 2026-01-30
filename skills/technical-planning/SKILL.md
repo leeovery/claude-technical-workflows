@@ -65,7 +65,7 @@ Load **[spec-change-detection.md](references/spec-change-detection.md)** to chec
 >
 > {spec change summary from spec-change-detection.md}
 >
-> - **`continue`** — Walk through the plan from the start. You can review, amend, or skip to any point — including straight to the leading edge.
+> - **`continue`** — Walk through the plan from the start. You can review, amend, or navigate at any point — including straight to the leading edge.
 > - **`restart`** — Erase all planning work for this topic and start fresh. This deletes the Plan Index File and any Authored Tasks. Other topics are unaffected."
 
 **STOP.** Wait for user response.
@@ -144,39 +144,35 @@ Load **[planning-principles.md](references/planning-principles.md)** and follow 
 
 Load **[steps/verify-source-material.md](references/steps/verify-source-material.md)** and follow its instructions as written.
 
----
-
-## Step 4: Define Phases
-
-Load **[steps/define-phases.md](references/steps/define-phases.md)** and follow its instructions as written.
+→ Proceed to **Step 4**.
 
 ---
 
-## Step 5: Define Tasks
+## Step 4: Plan Construction
 
-Load **[steps/define-tasks.md](references/steps/define-tasks.md)** and follow its instructions as written.
+Load **[steps/plan-construction.md](references/steps/plan-construction.md)** and follow its instructions as written.
 
----
-
-## Step 6: Author Tasks
-
-Load **[steps/author-tasks.md](references/steps/author-tasks.md)** and follow its instructions as written.
+→ Proceed to **Step 5**.
 
 ---
 
-## Step 7: Resolve External Dependencies
+## Step 5: Resolve External Dependencies
 
 Load **[steps/resolve-dependencies.md](references/steps/resolve-dependencies.md)** and follow its instructions as written.
 
+→ Proceed to **Step 6**.
+
 ---
 
-## Step 8: Plan Review
+## Step 6: Plan Review
 
 Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its instructions as written.
 
+→ Proceed to **Step 7**.
+
 ---
 
-## Step 9: Conclude the Plan
+## Step 7: Conclude the Plan
 
 After the review is complete:
 

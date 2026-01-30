@@ -92,5 +92,3 @@ After both reviews:
 > Review is complete."
 
 > **CHECKPOINT**: Do not confirm completion if tracking files still exist. They indicate incomplete review work.
-
-→ Proceed to **Step 9**.

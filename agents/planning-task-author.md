@@ -1,6 +1,6 @@
 ---
 name: planning-task-author
-description: Writes full detail for a single plan task. Invoked by technical-planning skill during task authoring (Step 6).
+description: Writes full detail for a single plan task. Invoked by technical-planning skill during plan construction (Step 4).
 tools: Read, Glob, Grep
 model: inherit
 ---

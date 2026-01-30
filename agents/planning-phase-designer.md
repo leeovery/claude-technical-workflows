@@ -1,6 +1,6 @@
 ---
 name: planning-phase-designer
-description: Designs implementation phases from a specification. Invoked by technical-planning skill during phase design (Step 4).
+description: Designs implementation phases from a specification. Invoked by technical-planning skill during plan construction (Step 4).
 tools: Read, Glob, Grep
 model: inherit
 ---
