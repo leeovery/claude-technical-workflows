@@ -1,6 +1,6 @@
 ---
 name: planning-task-designer
-description: Breaks a single phase into a task list with edge cases. Invoked by technical-planning skill during plan construction (Step 4).
+description: Breaks a single phase into a task list with edge cases. Invoked by technical-planning skill during plan construction.
 tools: Read, Glob, Grep
 model: inherit
 ---
