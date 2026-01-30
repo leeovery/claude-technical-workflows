@@ -74,6 +74,9 @@ Update the Plan Index File with the revised output, re-present, and ask again. R
 
 #### If approved
 
+**If the phase structure is new or was amended:**
+
 1. Update each phase in the Plan Index File: set `status: approved` and `approved_at: YYYY-MM-DD` (use today's actual date)
-2. Advance the `planning:` block in frontmatter: `phase: 1, task: ~`
-3. Commit: `planning({topic}): approve phase structure`
+2. Commit: `planning({topic}): approve phase structure`
+
+**If the phase structure was already approved and unchanged:** No updates needed.
