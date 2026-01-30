@@ -126,7 +126,7 @@ EOF
     assert_contains "$output" 'has_plan: false' "No plan exists"
     assert_contains "$output" 'feature: 1' "Feature count is 1"
     assert_contains "$output" 'feature_ready: 0' "Feature ready count is 0"
-    assert_contains "$output" 'scenario: "no_ready_specs"' "Scenario is no_ready_specs"
+    assert_contains "$output" 'scenario: "nothing_actionable"' "Scenario is nothing_actionable"
 
     echo ""
 }
@@ -154,7 +154,7 @@ EOF
     assert_contains "$output" 'status: "concluded"' "Status is concluded"
     assert_contains "$output" 'has_plan: false' "No plan exists"
     assert_contains "$output" 'feature_ready: 1' "Feature ready count is 1"
-    assert_contains "$output" 'scenario: "single_ready_spec"' "Scenario is single_ready_spec"
+    assert_contains "$output" 'scenario: "has_options"' "Scenario is has_options"
 
     echo ""
 }
@@ -182,6 +182,7 @@ EOF
     cat > "$TEST_DIR/docs/workflow/planning/auth-system.md" << 'EOF'
 ---
 format: local-markdown
+status: planning
 ---
 
 # Implementation Plan: Auth System
@@ -190,8 +191,10 @@ EOF
     local output=$(run_discovery)
 
     assert_contains "$output" 'has_plan: true' "Plan exists"
+    assert_contains "$output" 'plan_status: "planning"' "Plan status extracted"
     assert_contains "$output" 'feature_ready: 0' "Feature ready count is 0 (has plan)"
-    assert_contains "$output" 'scenario: "no_ready_specs"' "Scenario is no_ready_specs"
+    assert_contains "$output" 'feature_with_plan: 1' "Feature with plan count is 1"
+    assert_contains "$output" 'scenario: "has_options"' "Scenario is has_options (plan exists to continue)"
     assert_contains "$output" 'has_plans: true' "has_plans is true"
 
     echo ""
@@ -243,7 +246,7 @@ EOF
     assert_contains "$output" 'name: "dashboard"' "Found dashboard"
     assert_contains "$output" 'feature: 3' "Feature count is 3"
     assert_contains "$output" 'feature_ready: 2' "Feature ready count is 2"
-    assert_contains "$output" 'scenario: "multiple_ready_specs"' "Scenario is multiple_ready_specs"
+    assert_contains "$output" 'scenario: "has_options"' "Scenario is has_options"
 
     echo ""
 }
@@ -283,8 +286,8 @@ EOF
     assert_contains "$output" 'name: "rate-limiting"' "Found rate-limiting"
     assert_contains "$output" 'crosscutting: 2' "Crosscutting count is 2"
     assert_contains "$output" 'feature: 0' "Feature count is 0"
-    # With no feature specs, scenario should be no_ready_specs
-    assert_contains "$output" 'scenario: "no_ready_specs"' "Scenario is no_ready_specs"
+    # With no feature specs and no plans, scenario should be nothing_actionable
+    assert_contains "$output" 'scenario: "nothing_actionable"' "Scenario is nothing_actionable"
 
     echo ""
 }
@@ -323,7 +326,7 @@ EOF
     assert_contains "$output" 'feature: 1' "Feature count is 1"
     assert_contains "$output" 'crosscutting: 1' "Crosscutting count is 1"
     assert_contains "$output" 'feature_ready: 1' "Feature ready count is 1"
-    assert_contains "$output" 'scenario: "single_ready_spec"' "Scenario is single_ready_spec"
+    assert_contains "$output" 'scenario: "has_options"' "Scenario is has_options"
 
     echo ""
 }
@@ -464,6 +467,146 @@ EOF
 }
 
 #
+# Test: Concluded plan shows plan_status concluded and is actionable
+#
+test_concluded_plan_is_actionable() {
+    echo -e "${YELLOW}Test: Concluded plan is actionable (review/revise)${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/specification"
+    mkdir -p "$TEST_DIR/docs/workflow/planning"
+
+    cat > "$TEST_DIR/docs/workflow/specification/auth-system.md" << 'EOF'
+---
+topic: auth-system
+status: concluded
+type: feature
+---
+
+# Specification: Auth System
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system.md" << 'EOF'
+---
+format: local-markdown
+status: concluded
+---
+
+# Implementation Plan: Auth System
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'has_plan: true' "Plan exists"
+    assert_contains "$output" 'plan_status: "concluded"' "Plan status is concluded"
+    assert_contains "$output" 'feature_with_plan: 1' "Feature with plan count is 1"
+    assert_contains "$output" 'scenario: "has_options"' "Scenario is has_options (concluded plan is reviewable)"
+
+    echo ""
+}
+
+#
+# Test: Mix of ready specs and existing plans
+#
+test_mixed_ready_and_plans() {
+    echo -e "${YELLOW}Test: Mix of ready specs and existing plans${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/specification"
+    mkdir -p "$TEST_DIR/docs/workflow/planning"
+
+    # Ready spec (no plan)
+    cat > "$TEST_DIR/docs/workflow/specification/billing.md" << 'EOF'
+---
+topic: billing
+status: concluded
+type: feature
+---
+
+# Specification: Billing
+EOF
+
+    # Spec with in-progress plan
+    cat > "$TEST_DIR/docs/workflow/specification/auth-system.md" << 'EOF'
+---
+topic: auth-system
+status: concluded
+type: feature
+---
+
+# Specification: Auth System
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system.md" << 'EOF'
+---
+format: local-markdown
+status: planning
+---
+
+# Implementation Plan: Auth System
+EOF
+
+    # In-progress spec (not ready)
+    cat > "$TEST_DIR/docs/workflow/specification/dashboard.md" << 'EOF'
+---
+topic: dashboard
+status: in-progress
+type: feature
+---
+
+# Specification: Dashboard
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'feature: 3' "Feature count is 3"
+    assert_contains "$output" 'feature_ready: 1' "Feature ready count is 1"
+    assert_contains "$output" 'feature_with_plan: 1' "Feature with plan count is 1"
+    assert_contains "$output" 'scenario: "has_options"' "Scenario is has_options"
+
+    echo ""
+}
+
+#
+# Test: All specs in-progress with no plans is nothing_actionable
+#
+test_all_in_progress_nothing_actionable() {
+    echo -e "${YELLOW}Test: All specs in-progress with no plans${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/specification"
+
+    cat > "$TEST_DIR/docs/workflow/specification/auth-system.md" << 'EOF'
+---
+topic: auth-system
+status: in-progress
+type: feature
+---
+
+# Specification: Auth System
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/specification/billing.md" << 'EOF'
+---
+topic: billing
+status: in-progress
+type: feature
+---
+
+# Specification: Billing
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'feature: 2' "Feature count is 2"
+    assert_contains "$output" 'feature_ready: 0' "Feature ready count is 0"
+    assert_contains "$output" 'feature_with_plan: 0' "Feature with plan count is 0"
+    assert_contains "$output" 'scenario: "nothing_actionable"' "Scenario is nothing_actionable"
+
+    echo ""
+}
+
+#
 # Run all tests
 #
 echo "=========================================="
@@ -482,6 +625,9 @@ test_spec_default_type
 test_plans_section
 test_plan_missing_format
 test_plan_with_plan_id
+test_concluded_plan_is_actionable
+test_mixed_ready_and_plans
+test_all_in_progress_nothing_actionable
 
 #
 # Summary
