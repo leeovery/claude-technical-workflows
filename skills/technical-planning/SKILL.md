@@ -22,6 +22,7 @@ Either way: Transform specifications into actionable phases, tasks, and acceptan
 - **Specification content** (required) - The validated decisions and requirements to plan from
 - **Topic name** (optional) - Will derive from specification if not provided
 - **Output format preference** (optional) - Will ask if not specified
+- **Recommended output format** (optional) - A format suggestion for consistency with existing plans
 - **Cross-cutting references** (optional) - Cross-cutting specifications that inform technical decisions in this plan
 
 **Before proceeding**, verify the required input is available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.
@@ -97,7 +98,21 @@ Read **[output-formats.md](references/output-formats.md)**, find the entry match
 
 #### If no Plan Index File exists
 
-First, choose the Output Format. Present the formats from **[output-formats.md](references/output-formats.md)** to the user — including description, pros, cons, and "best for". Number each format and ask the user to pick.
+First, choose the Output Format.
+
+**If a recommended output format was provided** (non-empty, not "none"):
+
+Present the recommendation:
+
+> "Existing plans use **{format}**. Use the same format for consistency?
+> - **yes** — use {format}
+> - **no** — see all available formats"
+
+**STOP.** Wait for user choice. If declined, fall through to the full list below.
+
+**If no recommendation, or user declined:**
+
+Present the formats from **[output-formats.md](references/output-formats.md)** to the user — including description, pros, cons, and "best for". Number each format and ask the user to pick.
 
 **STOP.** Wait for the user to choose.
 

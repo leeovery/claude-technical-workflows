@@ -396,6 +396,7 @@ EOF
     assert_contains "$output" 'format: "linear"' "Found linear format"
     assert_contains "$output" 'status: "In Progress"' "Found In Progress status"
     assert_contains "$output" 'status: "Ready"' "Found Ready status"
+    assert_contains "$output" 'common_format: ""' "Mixed formats yield empty common_format"
 
     echo ""
 }
@@ -422,6 +423,7 @@ EOF
     local output=$(run_discovery)
 
     assert_contains "$output" 'format: "MISSING"' "Missing format flagged"
+    assert_contains "$output" 'common_format: ""' "Only MISSING formats yield empty common_format"
 
     echo ""
 }
@@ -607,6 +609,148 @@ EOF
 }
 
 #
+# Test: common_format empty when no plans exist
+#
+test_common_format_no_plans() {
+    echo -e "${YELLOW}Test: common_format empty when no plans exist${NC}"
+    setup_fixture
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'common_format: ""' "No plans yields empty common_format"
+
+    echo ""
+}
+
+#
+# Test: common_format with single plan
+#
+test_common_format_single_plan() {
+    echo -e "${YELLOW}Test: common_format with single plan${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/planning"
+
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system.md" << 'EOF'
+---
+format: local-markdown
+status: planning
+---
+
+# Implementation Plan: Auth System
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'common_format: "local-markdown"' "Single plan format becomes common_format"
+
+    echo ""
+}
+
+#
+# Test: common_format with multiple same format
+#
+test_common_format_multiple_same() {
+    echo -e "${YELLOW}Test: common_format with multiple same format${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/planning"
+
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system.md" << 'EOF'
+---
+format: beads
+status: planning
+---
+
+# Implementation Plan: Auth System
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/planning/billing.md" << 'EOF'
+---
+format: beads
+status: Ready
+---
+
+# Implementation Plan: Billing
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'common_format: "beads"' "Multiple same format yields common_format"
+
+    echo ""
+}
+
+#
+# Test: common_format empty with mixed formats
+#
+test_common_format_mixed() {
+    echo -e "${YELLOW}Test: common_format empty with mixed formats${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/planning"
+
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system.md" << 'EOF'
+---
+format: local-markdown
+status: planning
+---
+
+# Implementation Plan: Auth System
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/planning/billing.md" << 'EOF'
+---
+format: linear
+status: Ready
+---
+
+# Implementation Plan: Billing
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'common_format: ""' "Mixed formats yield empty common_format"
+
+    echo ""
+}
+
+#
+# Test: common_format ignores MISSING format
+#
+test_common_format_missing_ignored() {
+    echo -e "${YELLOW}Test: common_format ignores MISSING format${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/planning"
+
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system.md" << 'EOF'
+---
+format: local-markdown
+status: planning
+---
+
+# Implementation Plan: Auth System
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/planning/old-plan.md" << 'EOF'
+---
+status: Draft
+---
+
+# Implementation Plan: Old Plan
+
+No format field.
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'common_format: "local-markdown"' "MISSING format ignored, common_format from valid plans"
+
+    echo ""
+}
+
+#
 # Run all tests
 #
 echo "=========================================="
@@ -628,6 +772,11 @@ test_plan_with_plan_id
 test_concluded_plan_is_actionable
 test_mixed_ready_and_plans
 test_all_in_progress_nothing_actionable
+test_common_format_no_plans
+test_common_format_single_plan
+test_common_format_multiple_same
+test_common_format_mixed
+test_common_format_missing_ignored
 
 #
 # Summary

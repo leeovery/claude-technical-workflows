@@ -139,6 +139,9 @@ echo ""
 #
 echo "plans:"
 
+plan_format_seen=""
+plan_format_unanimous="true"
+
 if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
     echo "  exists: true"
     echo "  files:"
@@ -149,6 +152,15 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
         name=$(basename "$file" .md)
         format=$(extract_field "$file" "format")
         format=${format:-"MISSING"}
+
+        if [ "$format" != "MISSING" ]; then
+            if [ -z "$plan_format_seen" ]; then
+                plan_format_seen="$format"
+            elif [ "$plan_format_seen" != "$format" ]; then
+                plan_format_unanimous="false"
+            fi
+        fi
+
         status=$(extract_field "$file" "status")
         status=${status:-"unknown"}
         plan_id=$(extract_field "$file" "plan_id")
@@ -160,9 +172,16 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
             echo "      plan_id: \"$plan_id\""
         fi
     done
+
+    if [ "$plan_format_unanimous" = "true" ] && [ -n "$plan_format_seen" ]; then
+        echo "  common_format: \"$plan_format_seen\""
+    else
+        echo "  common_format: \"\""
+    fi
 else
     echo "  exists: false"
     echo "  files: []"
+    echo "  common_format: \"\""
 fi
 
 echo ""

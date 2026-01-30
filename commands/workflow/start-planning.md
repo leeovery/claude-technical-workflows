@@ -70,6 +70,7 @@ This outputs structured YAML. Parse it to understand:
 **From `plans` section:**
 - `exists` - whether any plans exist
 - `files` - each plan's name, format, status, and plan_id (if present)
+- `common_format` - the output format if all existing plans share the same one; empty string otherwise
 
 **From `state` section:**
 - `scenario` - one of: `"no_specs"`, `"nothing_actionable"`, `"has_options"`
@@ -255,6 +256,7 @@ Planning session for: {topic}
 Specification: docs/workflow/specification/{topic}.md
 Additional context: {summary of user's answers from Step 5}
 Cross-cutting references: {list of applicable cross-cutting specs with brief summaries, or "none"}
+Recommended output format: {common_format from discovery if non-empty, otherwise "none"}
 
 Invoke the technical-planning skill.
 ```
