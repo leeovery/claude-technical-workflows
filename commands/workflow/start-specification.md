@@ -123,12 +123,13 @@ Show the current state clearly. Use this EXACT format:
 Specification Phase
 
 Available discussions:
-  ✓ {topic-1} - ready to specify
-  ✓ {topic-2} - ready to specify
-  ○ {topic-3} - spec exists [{status}]
+  + {topic-1} - create new spec
+  + {topic-2} - create new spec
+  ▶ {topic-3} - continue in-progress spec
+  > {topic-4} - review concluded spec
 
 Not specifiable discussions:
-  · {topic-4} [in-progress]
+  · {topic-5} [in-progress]
 
 Existing specifications:
   • {spec-1} [active] - sources: {topic-1}
@@ -138,8 +139,9 @@ Existing specifications:
 ```
 
 **Legend:**
-- `✓` = concluded, no spec yet (ready to specify)
-- `○` = concluded, has individual spec (shows spec status in brackets)
+- `+` = concluded, no spec yet (create new)
+- `▶` = concluded, has in-progress spec (continue)
+- `>` = concluded, has concluded spec (review)
 - `·` = in-progress (not specifiable)
 
 Omit either discussions section if it has no entries.
