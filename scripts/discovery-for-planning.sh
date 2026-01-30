@@ -40,6 +40,7 @@ echo "specifications:"
 
 feature_count=0
 feature_ready_count=0
+feature_with_plan_count=0
 crosscutting_count=0
 
 if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
@@ -59,20 +60,29 @@ if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
         # Skip cross-cutting specs in this pass
         [ "$spec_type" = "cross-cutting" ] && continue
 
-        # Check if plan exists
+        # Check if plan exists and its status
         has_plan="false"
+        plan_status=""
         if [ -f "$PLAN_DIR/${name}.md" ]; then
             has_plan="true"
+            plan_status=$(extract_field "$PLAN_DIR/${name}.md" "status")
+            plan_status=${plan_status:-"unknown"}
         fi
 
         echo "    - name: \"$name\""
         echo "      status: \"$status\""
         echo "      has_plan: $has_plan"
+        if [ "$has_plan" = "true" ]; then
+            echo "      plan_status: \"$plan_status\""
+        fi
 
         feature_count=$((feature_count + 1))
         # "concluded" specs without plans are ready for planning
         if [ "$status" = "concluded" ] && [ "$has_plan" = "false" ]; then
             feature_ready_count=$((feature_ready_count + 1))
+        fi
+        if [ "$has_plan" = "true" ]; then
+            feature_with_plan_count=$((feature_with_plan_count + 1))
         fi
     done
 
@@ -109,6 +119,7 @@ if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
     echo "  counts:"
     echo "    feature: $feature_count"
     echo "    feature_ready: $feature_ready_count"
+    echo "    feature_with_plan: $feature_with_plan_count"
     echo "    crosscutting: $crosscutting_count"
 else
     echo "  exists: false"
@@ -117,6 +128,7 @@ else
     echo "  counts:"
     echo "    feature: 0"
     echo "    feature_ready: 0"
+    echo "    feature_with_plan: 0"
     echo "    crosscutting: 0"
 fi
 
@@ -177,10 +189,8 @@ echo "  has_plans: $plans_exist"
 # Determine workflow state for routing
 if [ "$specs_exist" = "false" ]; then
     echo "  scenario: \"no_specs\""
-elif [ "$feature_ready_count" -eq 0 ]; then
-    echo "  scenario: \"no_ready_specs\""
-elif [ "$feature_ready_count" -eq 1 ]; then
-    echo "  scenario: \"single_ready_spec\""
+elif [ "$feature_ready_count" -eq 0 ] && [ "$feature_with_plan_count" -eq 0 ]; then
+    echo "  scenario: \"nothing_actionable\""
 else
-    echo "  scenario: \"multiple_ready_specs\""
+    echo "  scenario: \"has_options\""
 fi

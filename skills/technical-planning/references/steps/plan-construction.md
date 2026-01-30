@@ -88,6 +88,17 @@ Present the task list to the user for review.
 
 Work through each task in the phase's task table, in order.
 
+### Parallel authoring (optional optimization)
+
+After the first `pending` task in a phase is approved, you may invoke multiple Step B agents concurrently for tasks you judge to be independent — where the authored detail of one would not inform the other. This is an invocation optimization only; the approval flow is unchanged:
+
+- Present tasks one at a time, in order
+- Each task still requires explicit user approval before logging
+- If user feedback on a presented task changes context that could affect any already-authored task waiting to be presented, discard those results and re-invoke Step B
+- When uncertain about independence, default to sequential — it is always safe
+
+Never parallelize the first `pending` task in a phase. Never parallelize across phases.
+
 #### If the task status is `authored`
 
 Already written. Present a brief summary:

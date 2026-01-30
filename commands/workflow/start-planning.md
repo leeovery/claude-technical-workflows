@@ -60,10 +60,11 @@ This outputs structured YAML. Parse it to understand:
 
 **From `specifications` section:**
 - `exists` - whether any specifications exist
-- `feature` - list of feature specs (name, status, has_plan)
+- `feature` - list of feature specs (name, status, has_plan, plan_status)
 - `crosscutting` - list of cross-cutting specs (name, status)
 - `counts.feature` - total feature specifications
 - `counts.feature_ready` - feature specs ready for planning (concluded + no plan)
+- `counts.feature_with_plan` - feature specs that already have plans
 - `counts.crosscutting` - total cross-cutting specifications
 
 **From `plans` section:**
@@ -71,7 +72,7 @@ This outputs structured YAML. Parse it to understand:
 - `files` - each plan's name, format, status, and plan_id (if present)
 
 **From `state` section:**
-- `scenario` - one of: `"no_specs"`, `"no_ready_specs"`, `"single_ready_spec"`, `"multiple_ready_specs"`
+- `scenario` - one of: `"no_specs"`, `"nothing_actionable"`, `"has_options"`
 
 **IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
 
@@ -95,66 +96,70 @@ The planning phase requires a concluded specification. Please run /start-specifi
 
 **STOP.** Wait for user to acknowledge before ending.
 
-#### If scenario is "no_ready_specs"
+#### If scenario is "nothing_actionable"
 
-Specifications exist but none are ready for planning (either still in-progress, or already have plans).
+Specifications exist but none are actionable — all are still in-progress and no plans exist to continue.
 
 → Proceed to **Step 3** to show the state.
 
-#### If scenario is "single_ready_spec" or "multiple_ready_specs"
+#### If scenario is "has_options"
 
-Specifications are ready for planning.
+At least one specification is ready for planning, or an existing plan can be continued or reviewed.
 
 → Proceed to **Step 3** to present options.
 
+---
+
 ## Step 3: Present Workflow State and Options
 
-Present everything discovered to help the user make an informed choice.
+Present everything discovered to help the user make an informed choice. Each feature specification falls into one of four visual states:
 
 **Present the full state:**
 
 ```
-Workflow Status: Planning Phase
+Planning Phase
 
 Feature specifications:
-  1. · {topic-1} (in-progress) - not ready
-  2. ✓ {topic-2} (concluded) - ready for planning
-  3. - {topic-3} (concluded) → plan exists
+  · {topic-1} (spec in-progress) — not ready
+  1. ✓ {topic-2} (concluded) — start new plan
+  2. ▶ {topic-3} → plan in-progress — continue planning
+  3. ✔ {topic-4} → plan concluded — review/revise
 
 Cross-cutting specifications (reference context):
   - {caching-strategy} (concluded)
   - {rate-limiting} (concluded)
-
-Existing plans:
-  - {topic-3}.md (in-progress, {format})
 ```
 
-**Legend:**
-- `·` = not ready for planning (still in-progress)
-- `✓` = ready for planning (concluded, no plan yet)
-- `-` = already has a plan
+**Formatting rules:**
+- **`·` not ready** — spec still in-progress; no number, not selectable
+- **`✓` start new plan** — concluded spec with no plan yet; numbered
+- **`▶` continue planning** — has a plan with `plan_status: planning`; numbered
+- **`✔` review/revise** — has a plan with `plan_status: concluded`; numbered
+- Only show cross-cutting section if cross-cutting specs exist
+- Only show states that have entries (e.g., omit the `·` group if all specs are concluded)
 
-**Then present options based on what's ready:**
+**Then prompt based on what's actionable:**
 
-**If multiple specs ready for planning:**
+**If multiple actionable items:**
 ```
-Which specification would you like to plan? (Enter a number or name)
+Select a specification (enter number):
 ```
 
 **STOP.** Wait for user response.
 
-**If single spec ready for planning (auto-select):**
+**If single actionable item (auto-select):**
 ```
-Auto-selecting: {topic} (only ready specification)
+Auto-selecting: {topic} (only actionable specification)
 ```
+
 → Proceed directly to **Step 4**.
 
-**If no specs ready for planning:**
+**If nothing actionable:**
 ```
-No specifications ready for planning.
+No actionable specifications.
 
 To proceed:
-- Complete any "in-progress" specifications with /start-specification
+- Complete any in-progress specifications with /start-specification
 - Or create a new specification first
 ```
 
@@ -164,7 +169,23 @@ To proceed:
 
 ---
 
-## Step 4: Gather Additional Context
+## Step 4: Route by Plan State
+
+Check whether the selected specification already has a plan (from `has_plan` in discovery output).
+
+#### If no existing plan (fresh start)
+
+→ Proceed to **Step 5** to gather context before invoking the skill.
+
+#### If existing plan (continue or review)
+
+The plan already has its context from when it was created. Skip context gathering.
+
+→ Go directly to **Step 7** to invoke the skill.
+
+---
+
+## Step 5: Gather Additional Context
 
 Ask:
 - Any additional context or priorities to consider?
@@ -172,11 +193,11 @@ Ask:
 
 **STOP.** Wait for user response.
 
-→ Proceed to **Step 5**.
+→ Proceed to **Step 6**.
 
 ---
 
-## Step 5: Surface Cross-Cutting Context
+## Step 6: Surface Cross-Cutting Context
 
 If any **concluded cross-cutting specifications** exist (from `specifications.crosscutting` in discovery), surface them as reference context for planning:
 
@@ -196,22 +217,31 @@ These specifications contain validated architectural decisions that should infor
 
 **If no cross-cutting specifications exist**: Skip this step.
 
-→ Proceed to **Step 6**.
+→ Proceed to **Step 7**.
 
 ---
 
-## Step 6: Invoke the Skill
+## Step 7: Invoke the Skill
 
 After completing the steps above, this command's purpose is fulfilled.
 
 Invoke the [technical-planning](../../skills/technical-planning/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
-**Example handoff:**
+**Example handoff (fresh plan):**
 ```
 Planning session for: {topic}
 Specification: docs/workflow/specification/{topic}.md
-Additional context: {summary of user's answers from Step 4}
+Additional context: {summary of user's answers from Step 5}
 Cross-cutting references: {list of applicable cross-cutting specs with brief summaries, or "none"}
+
+Invoke the technical-planning skill.
+```
+
+**Example handoff (continue/review existing plan):**
+```
+Planning session for: {topic}
+Specification: docs/workflow/specification/{topic}.md
+Existing plan: docs/workflow/planning/{topic}.md
 
 Invoke the technical-planning skill.
 ```
