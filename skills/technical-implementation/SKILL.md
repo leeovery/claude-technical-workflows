@@ -23,7 +23,6 @@ Either way: Execute via strict TDD - tests first, implementation second.
 - **Plan format** (required) - How to parse tasks (from plan frontmatter)
 - **Specification content** (optional) - For context when task rationale is unclear
 - **Environment setup** (optional) - First-time setup instructions
-- **Scope** (optional) - Specific phase/task to work on
 
 **Before proceeding**, verify all required inputs are available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.
 
@@ -82,19 +81,14 @@ Complete ALL setup steps before proceeding to implementation work.
    - **If not**: Create it with the initial tracking frontmatter (see [Implementation Tracking](#implementation-tracking) below), set `status: in-progress`, `started: {today}`. Commit: `impl({topic}): start implementation`
    - **If exists**: Read it to determine current position (see [Resuming After Context Refresh](#resuming-after-context-refresh) below)
 
-5. **Validate scope** (if specific phase or task was requested)
-   - If the requested phase or task doesn't exist in the plan, STOP immediately
-   - Ask the user for clarification - don't assume or proceed with a different scope
-   - Wait for the user to either correct the scope or ask you to stop
-
-6. **For each phase**:
+5. **For each phase** (working through phases and tasks in plan order):
    - Announce phase start and review acceptance criteria
    - For each task: follow the TDD cycle loaded in step 3
    - After each task completes: update progress in **both** the output format (as loaded in step 2) **and** the implementation tracking file (see below)
    - Verify all phase acceptance criteria met
    - **Ask user before proceeding to next phase**
 
-7. **Reference specification** when rationale unclear
+6. **Reference specification** when rationale unclear
 
 ## Implementation Tracking
 

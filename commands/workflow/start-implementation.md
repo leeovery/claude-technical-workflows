@@ -306,32 +306,7 @@ Are there any environment setup instructions I should follow before implementati
 
 ---
 
-## Step 6: Ask About Scope
-
-Ask the user about implementation scope:
-
-```
-How would you like to proceed?
-
-1. Implement all phases - Work through the entire plan sequentially
-2. Implement specific phase - Focus on one phase (e.g., "Phase 1")
-3. Implement specific task - Focus on a single task
-4. Next available task - Auto-discover the next incomplete task
-
-Which approach?
-```
-
-**STOP.** Wait for user response.
-
-If they choose a specific phase or task, ask them to specify which one.
-
-> **Note:** Do NOT verify that the phase or task exists at this stage. Record the user's answer in the handoff context. Validation happens when the skill is invoked.
-
-→ Proceed to **Step 7**.
-
----
-
-## Step 7: Invoke the Skill
+## Step 6: Invoke the Skill
 
 After completing the steps above, this command's purpose is fulfilled.
 
@@ -344,7 +319,6 @@ Plan: docs/workflow/planning/{topic}.md
 Format: {format}
 Plan ID: {plan_id} (if applicable)
 Specification: {specification} (exists: {true|false})
-Scope: {all phases | Phase N | Task N.M | next-available}
 Implementation tracking: {exists | new} (status: {in-progress | not-started | completed})
 
 Dependencies: {All satisfied | List any notes}
