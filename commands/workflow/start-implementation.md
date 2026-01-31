@@ -118,13 +118,15 @@ Plans exist.
 
 ## Step 3: Present Plans and Select
 
-Present all discovered plans using the icon system below. Classify each plan as **Available** or **Not implementable** based on its state.
+Present all discovered plans using the icon system below. Classify each plan into one of three sections based on its state.
 
 **Classification logic:**
 
-A plan is **Available** if:
-- It has `status: concluded` AND all deps are satisfied (`deps_satisfied: true` or no deps), OR
-- It has an implementation tracking file with `status: in-progress`, OR
+A plan is **Implementable** if:
+- It has `status: concluded` AND all deps are satisfied (`deps_satisfied: true` or no deps) AND no tracking file or tracking `status: not-started`, OR
+- It has an implementation tracking file with `status: in-progress`
+
+A plan is **Implemented** if:
 - It has an implementation tracking file with `status: completed`
 
 A plan is **Not implementable** if:
@@ -137,44 +139,50 @@ A plan is **Not implementable** if:
 ```
 Implementation Phase
 
-Available:
-  1. ▶ billing - continue implementation (Phase 2, Task 3)
-  2. + core-features - start implementation (format: local-markdown)
-  3. > user-auth - completed
+Implementable:
+  1. ▶ billing - continue [Phase 2, Task 3]
+  2. + core-features - start
+
+Implemented:
+  3. > user-auth
 
 Not implementable:
   · advanced-features [blocked: core-features task core-2-3 not completed]
-  · reporting [plan: still in progress]
+  · reporting [planning]
 ```
 
-**Icon mapping:**
-- **`▶`** = implementation `status: in-progress` — show current position (Phase N, Task M)
-- **`+`** = concluded plan, deps met, no tracking file or tracking `status: not-started`
-- **`>`** = implementation `status: completed`
-- **`·`** = blocked or plan not concluded
+**Formatting rules:**
 
-**Ordering within Available (numbered, selectable):**
-1. `▶` in-progress items first (resume existing work)
-2. `+` items next, foundational (no deps) before dependent
-3. `>` completed items last (informational)
+Implementable (numbered, selectable):
+- **`▶`** — implementation `status: in-progress`, show current position `[Phase N, Task M]`
+- **`+`** — concluded plan, deps met, no tracking file or tracking `status: not-started`
 
-**Not implementable (not numbered, not selectable):**
+Implemented (numbered, selectable):
+- **`>`** — implementation `status: completed`
+
+Not implementable (not numbered, not selectable):
+- **`·`** — blocked or plan not concluded
 - `[blocked: {topic} task {id} not completed]` — resolved dep, task not done
 - `[blocked: unresolved dep on {topic}]` — no task linked
-- `[plan: still in progress]` — plan status is not `concluded`
+- `[planning]` — plan status is not `concluded`
 
-Omit either section entirely if it has no entries.
+**Ordering:**
+1. Implementable first: `▶` in-progress, then `+` new (foundational before dependent)
+2. Implemented next: `>` completed
+3. Not implementable last
+
+Numbering is sequential across Implementable and Implemented. Omit any section entirely if it has no entries.
 
 **Then prompt based on what's actionable:**
 
-**If single implementable plan (auto-select):**
+**If single implementable plan and no implemented plans (auto-select):**
 ```
 Auto-selecting: {topic} (only implementable plan)
 ```
 → Proceed directly to **Step 4**.
 
-**If nothing implementable:**
-Show "Not implementable" section only.
+**If nothing selectable (no implementable or implemented):**
+Show Not implementable section only.
 
 ```
 No implementable plans.
@@ -186,7 +194,7 @@ To proceed:
 
 **STOP.** Wait for user to acknowledge before ending.
 
-**If multiple implementable plans:**
+**Otherwise (multiple selectable plans, or implemented plans exist):**
 ```
 Select a plan (enter number):
 ```
@@ -215,7 +223,7 @@ External dependencies satisfied.
 
 #### If any deps are blocking
 
-This should not normally happen for plans classified as "Available" in Step 3. However, as an escape hatch:
+This should not normally happen for plans classified as "Implementable" in Step 3. However, as an escape hatch:
 
 ```
 Missing dependencies:
