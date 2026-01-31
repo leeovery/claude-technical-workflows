@@ -65,13 +65,13 @@ Stop here.
 
 ## Step 3: Extract External Dependencies
 
-For each plan, find the External Dependencies section:
+For each plan, read the `external_dependencies` field from the frontmatter:
 
-1. **Read the External Dependencies section** from each plan index file
-2. **Categorize each dependency**:
-   - **Unresolved**: `- {topic}: {description}` (no arrow, no task ID)
-   - **Resolved**: `- {topic}: {description} → {task-id}` (has task ID)
-   - **Satisfied externally**: `- ~~{topic}: {description}~~ → satisfied externally`
+1. **Read `external_dependencies`** from each plan index file's frontmatter
+2. **Categorize each dependency** by its `state` field:
+   - **Unresolved**: `state: unresolved` (no task linked)
+   - **Resolved**: `state: resolved` (has `task_id`)
+   - **Satisfied externally**: `state: satisfied_externally`
 
 3. **Build a summary**:
 
@@ -84,7 +84,7 @@ Plan: authentication (format: {format})
 
 Plan: billing-system (format: {format})
   - authentication: User context (unresolved)
-  - ~~payment-gateway: Payment processing~~ → satisfied externally
+  - payment-gateway: Payment processing (satisfied externally)
 
 Plan: notifications (format: {format})
   - authentication: User lookup (unresolved)
@@ -111,8 +111,8 @@ For each unresolved dependency:
 
 For each resolved match:
 
-1. **Update the plan index file**:
-   - Change `- {topic}: {description}` to `- {topic}: {description} → {task-id}`
+1. **Update the plan index file's frontmatter**:
+   - Change the dependency's `state: unresolved` to `state: resolved` and add `task_id: {task-id}`
 
 2. **Create dependency in output format**:
    - Load `skills/technical-planning/references/output-formats/output-{format}.md`
@@ -123,7 +123,7 @@ For each resolved match:
 For each plan that was a dependency target (i.e., other plans depend on it):
 
 1. **Check reverse dependencies**: Are there other plans that should have this wired up?
-2. **Offer to update**: "Plan X depends on tasks you just linked. Update its External Dependencies section?"
+2. **Offer to update**: "Plan X depends on tasks you just linked. Update its `external_dependencies` frontmatter?"
 
 ## Step 7: Report Results
 

@@ -61,7 +61,18 @@ This outputs structured YAML. Parse it to understand:
 **From `plans` section:**
 - `exists` - whether any plans exist
 - `files` - list of plans with: name, topic, status, date, format, specification, specification_exists, plan_id (if present)
+- Per plan `external_deps` - array of dependencies with topic, state, task_id
+- Per plan `has_unresolved_deps` - whether plan has unresolved dependencies
+- Per plan `unresolved_dep_count` - count of unresolved dependencies
 - `count` - total number of plans
+
+**From `implementation` section:**
+- `exists` - whether any implementation tracking files exist
+- `files` - list of tracking files with: topic, status, current_phase, completed_phases, completed_tasks
+
+**From `dependency_resolution` section:**
+- Per plan `deps_satisfied` - whether all resolved deps have their tasks completed
+- Per plan `deps_blocking` - list of deps not yet satisfied with reason
 
 **From `environment` section:**
 - `setup_file_exists` - whether environment-setup.md exists
@@ -69,6 +80,11 @@ This outputs structured YAML. Parse it to understand:
 
 **From `state` section:**
 - `scenario` - one of: `"no_plans"`, `"single_plan"`, `"multiple_plans"`
+- `plans_concluded_count` - plans with status concluded
+- `plans_with_unresolved_deps` - plans with unresolved external deps
+- `plans_ready_count` - concluded plans with all deps satisfied
+- `plans_in_progress_count` - implementations in progress
+- `plans_completed_count` - implementations completed
 
 **IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
 
@@ -102,31 +118,78 @@ Plans exist.
 
 ## Step 3: Present Plans and Select
 
-Present all discovered plans to help the user make an informed choice.
+Present all discovered plans using the icon system below. Classify each plan as **Available** or **Not implementable** based on its state.
+
+**Classification logic:**
+
+A plan is **Available** if:
+- It has `status: concluded` AND all deps are satisfied (`deps_satisfied: true` or no deps), OR
+- It has an implementation tracking file with `status: in-progress`, OR
+- It has an implementation tracking file with `status: completed`
+
+A plan is **Not implementable** if:
+- It has `status: concluded` but deps are NOT satisfied (blocking deps exist)
+- It has `status: planning` or other non-concluded status
+- It has unresolved deps (`has_unresolved_deps: true`)
 
 **Present the full state:**
 
 ```
-Available Plans:
+Implementation Phase
 
-  1. {topic-1} (in-progress) - format: {format}
-  2. {topic-2} (concluded) - format: {format}
-  3. {topic-3} (in-progress) - format: {format}
+Available:
+  1. ▶ billing - continue implementation (Phase 2, Task 3)
+  2. + core-features - start implementation (format: local-markdown)
+  3. > user-auth - completed
 
-Which plan would you like to implement? (Enter a number or name)
+Not implementable:
+  · advanced-features [blocked: core-features task core-2-3 not completed]
+  · reporting [plan: still in progress]
 ```
 
-**Legend:**
-- `in-progress` = implementation ongoing or not started
-- `concluded` = implementation complete (can still be selected for review/continuation)
+**Icon mapping:**
+- **`▶`** = implementation `status: in-progress` — show current position (Phase N, Task M)
+- **`+`** = concluded plan, deps met, no tracking file or tracking `status: not-started`
+- **`>`** = implementation `status: completed`
+- **`·`** = blocked or plan not concluded
 
-**If single plan exists (auto-select):**
+**Ordering within Available (numbered, selectable):**
+1. `▶` in-progress items first (resume existing work)
+2. `+` items next, foundational (no deps) before dependent
+3. `>` completed items last (informational)
+
+**Not implementable (not numbered, not selectable):**
+- `[blocked: {topic} task {id} not completed]` — resolved dep, task not done
+- `[blocked: unresolved dep on {topic}]` — no task linked
+- `[plan: still in progress]` — plan status is not `concluded`
+
+Omit either section entirely if it has no entries.
+
+**Then prompt based on what's actionable:**
+
+**If single implementable plan (auto-select):**
 ```
-Auto-selecting: {topic} (only available plan)
+Auto-selecting: {topic} (only implementable plan)
 ```
 → Proceed directly to **Step 4**.
 
-**If multiple plans exist:**
+**If nothing implementable:**
+Show "Not implementable" section only.
+
+```
+No implementable plans.
+
+To proceed:
+- Complete blocking dependencies first
+- Or finish plans still in progress with /start-planning
+```
+
+**STOP.** Wait for user to acknowledge before ending.
+
+**If multiple implementable plans:**
+```
+Select a plan (enter number):
+```
 
 **STOP.** Wait for user response.
 
@@ -136,32 +199,34 @@ Auto-selecting: {topic} (only available plan)
 
 ## Step 4: Check External Dependencies
 
-**This step is a gate.** Implementation cannot proceed if dependencies are not satisfied.
-
-See **[dependencies.md](../../skills/technical-planning/references/dependencies.md)** for dependency format and states.
+**This step is a confirmation gate.** Dependencies have been pre-analyzed by the discovery script.
 
 After the plan is selected:
 
-1. **Read the External Dependencies section** from the plan file
-2. **Check each dependency** according to its state:
-   - **Unresolved**: Block
-   - **Resolved**: Check if task is complete (load output format reference, follow "Querying Dependencies" section)
-   - **Satisfied externally**: Proceed
+1. **Check the plan's `external_deps` and `dependency_resolution`** from the discovery output
 
-### Blocking Behavior
-
-If ANY dependency is unresolved or incomplete, **stop and present**:
+#### If all deps satisfied (or no deps)
 
 ```
-⚠️ Implementation blocked. Missing dependencies:
+External dependencies satisfied.
+```
+
+→ Proceed to **Step 5**.
+
+#### If any deps are blocking
+
+This should not normally happen for plans classified as "Available" in Step 3. However, as an escape hatch:
+
+```
+Missing dependencies:
 
 UNRESOLVED (not yet planned):
-- billing-system: Invoice generation for order completion
-  → No plan exists for this topic. Create with /start-planning or mark as satisfied externally.
+- {topic}: {description}
+  -> No plan exists for this topic. Create with /start-planning or mark as satisfied externally.
 
 INCOMPLETE (planned but not implemented):
-- authentication: User context retrieval
-  → Status: in-progress. This task must be completed first.
+- {topic}: task {task_id} not yet completed
+  -> This task must be completed first.
 
 OPTIONS:
 1. Implement the blocking dependencies first
@@ -171,22 +236,14 @@ OPTIONS:
 
 **STOP.** Wait for user response.
 
-### Escape Hatch
+#### Escape Hatch
 
 If the user says a dependency has been implemented outside the workflow:
 
 1. Ask which dependency to mark as satisfied
-2. Update the plan file: Change `- {topic}: {description}` to `- ~~{topic}: {description}~~ → satisfied externally`
+2. Update the plan frontmatter: Change the dependency's `state` to `satisfied_externally`
 3. Commit the change
 4. Re-check dependencies
-
-### All Dependencies Satisfied
-
-If all dependencies are resolved and complete (or satisfied externally), proceed to Step 5.
-
-```
-✅ External dependencies satisfied.
-```
 
 → Proceed to **Step 5**.
 
@@ -266,8 +323,9 @@ Format: {format}
 Plan ID: {plan_id} (if applicable)
 Specification: {specification} (exists: {true|false})
 Scope: {all phases | Phase N | Task N.M | next-available}
+Implementation tracking: {exists | new} (status: {in-progress | not-started | completed})
 
-Dependencies: {All satisfied ✓ | List any notes}
+Dependencies: {All satisfied | List any notes}
 Environment: {Setup required | No special setup required}
 
 Invoke the technical-implementation skill.

@@ -133,6 +133,7 @@ cross_cutting_specs:              # Omit if none
 spec_commit: {output of git rev-parse HEAD}
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date
+external_dependencies: []
 planning:
   phase: 1
   task: ~

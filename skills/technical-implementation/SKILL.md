@@ -77,18 +77,113 @@ Complete ALL setup steps before proceeding to implementation work.
 
 3. **Read the TDD workflow** - Load **[tdd-workflow.md](references/tdd-workflow.md)** before writing any code. This is mandatory.
 
-4. **Validate scope** (if specific phase or task was requested)
+4. **Initialize or resume implementation tracking**
+   - Check if `docs/workflow/implementation/{topic}.md` exists
+   - **If not**: Create it with the initial tracking frontmatter (see [Implementation Tracking](#implementation-tracking) below), set `status: in-progress`, `started: {today}`. Commit: `impl({topic}): start implementation`
+   - **If exists**: Read it to determine current position (see [Resuming After Context Refresh](#resuming-after-context-refresh) below)
+
+5. **Validate scope** (if specific phase or task was requested)
    - If the requested phase or task doesn't exist in the plan, STOP immediately
    - Ask the user for clarification - don't assume or proceed with a different scope
    - Wait for the user to either correct the scope or ask you to stop
 
-5. **For each phase**:
+6. **For each phase**:
    - Announce phase start and review acceptance criteria
    - For each task: follow the TDD cycle loaded in step 3
+   - After each task completes: update progress in **both** the output format (as loaded in step 2) **and** the implementation tracking file (see below)
    - Verify all phase acceptance criteria met
    - **Ask user before proceeding to next phase**
 
-6. **Reference specification** when rationale unclear
+7. **Reference specification** when rationale unclear
+
+## Implementation Tracking
+
+Each topic has a tracking file at `docs/workflow/implementation/{topic}.md` that records progress programmatically (frontmatter) and as a human-readable summary (body).
+
+### Initial Tracking File
+
+When starting implementation for a topic, create:
+
+```yaml
+---
+topic: {topic}
+plan: ../planning/{topic}.md
+format: {format from plan}
+status: in-progress
+current_phase: 1
+current_task: ~
+completed_phases: []
+completed_tasks: []
+started: YYYY-MM-DD
+updated: YYYY-MM-DD
+completed: ~
+---
+
+# Implementation: {Topic Name}
+
+Implementation started.
+```
+
+### Updating Progress
+
+When a task or phase completes, update **two** things:
+
+1. **Output format progress** — Follow the output adapter's Implementation section (loaded in workflow step 2) to mark tasks/phases complete in the plan index file and any format-specific files. This is the plan's own progress tracking.
+
+2. **Implementation tracking file** — Update `docs/workflow/implementation/{topic}.md` as described below. This enables cross-topic dependency resolution and resume detection.
+
+**After each task completes (tracking file):**
+- Append the task ID to `completed_tasks`
+- Update `current_task` to the next task (or `~` if phase done)
+- Update `updated` date
+- Update the body progress section
+
+**After each phase completes (tracking file):**
+- Append the phase number to `completed_phases`
+- Update `current_phase` to the next phase (or leave as last)
+- Update the body progress section
+
+**On implementation completion (tracking file):**
+- Set `status: completed`
+- Set `completed: {today}`
+- Commit: `impl({topic}): complete implementation`
+
+Task IDs in `completed_tasks` use whatever ID format the output format assigns -- the same IDs used in dependency references.
+
+### Body Progress Section
+
+The body provides a human-readable summary for context refresh:
+
+```markdown
+# Implementation: {Topic Name}
+
+## Phase 1: Foundation
+All tasks completed.
+
+## Phase 2: Core Logic (current)
+- Task 2.1: Service layer - done
+- Task 2.2: Validation - done
+- Task 2.3: Controllers (next)
+```
+
+## Resuming After Context Refresh
+
+When resuming implementation (tracking file already exists):
+
+1. Read `docs/workflow/implementation/{topic}.md`
+2. Check `current_phase` and `current_task` in frontmatter
+3. Cross-reference against `completed_tasks` to verify position
+4. Read the body progress section for human-readable context
+5. Resume from the next incomplete task
+6. Announce current position to user:
+
+```
+Resuming implementation for {topic}.
+Position: Phase {N}, Task {M} ({task description}).
+{N} tasks completed so far.
+```
+
+This replaces git log spelunking -- the tracking file IS the resume state.
 
 ## Progress Announcements
 
