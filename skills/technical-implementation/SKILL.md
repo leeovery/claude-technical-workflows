@@ -23,7 +23,6 @@ Either way: Execute via strict TDD - tests first, implementation second.
 - **Plan format** (required) - How to parse tasks (from plan frontmatter)
 - **Specification content** (optional) - For context when task rationale is unclear
 - **Environment setup** (optional) - First-time setup instructions
-- **Scope** (optional) - Specific phase/task to work on
 
 **Before proceeding**, verify all required inputs are available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.
 
@@ -37,6 +36,21 @@ Either way: Execute via strict TDD - tests first, implementation second.
   > "The plan at {path} has status '{status}' — it hasn't completed the review process. Should I proceed anyway, or should the plan be reviewed first?"
 
 If no specification is available, the plan becomes the sole authority for design decisions.
+
+---
+
+## Resuming After Context Refresh
+
+Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
+
+1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
+2. **Read all tracking and state files** for the current topic — plan index files, review tracking files, implementation tracking files, or any working documents this skill creates. These are your source of truth for progress.
+3. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
+4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
+
+Do not guess at progress or continue from memory. The files on disk and git history are authoritative — your recollection is not.
+
+---
 
 ## Hard Rules
 
@@ -77,18 +91,89 @@ Complete ALL setup steps before proceeding to implementation work.
 
 3. **Read the TDD workflow** - Load **[tdd-workflow.md](references/tdd-workflow.md)** before writing any code. This is mandatory.
 
-4. **Validate scope** (if specific phase or task was requested)
-   - If the requested phase or task doesn't exist in the plan, STOP immediately
-   - Ask the user for clarification - don't assume or proceed with a different scope
-   - Wait for the user to either correct the scope or ask you to stop
+4. **Initialize or resume implementation tracking**
+   - Check if `docs/workflow/implementation/{topic}.md` exists
+   - **If not**: Create it with the initial tracking frontmatter (see [Implementation Tracking](#implementation-tracking) below), set `status: in-progress`, `started: {today}`. Commit: `impl({topic}): start implementation`
+   - **If exists**: Read it to determine current position (see [Resuming After Context Refresh](#resuming-after-context-refresh) below)
 
-5. **For each phase**:
+5. **For each phase** (working through phases and tasks in plan order):
    - Announce phase start and review acceptance criteria
    - For each task: follow the TDD cycle loaded in step 3
+   - After each task completes: update progress in **both** the output format (as loaded in step 2) **and** the implementation tracking file (see below)
    - Verify all phase acceptance criteria met
    - **Ask user before proceeding to next phase**
 
 6. **Reference specification** when rationale unclear
+
+## Implementation Tracking
+
+Each topic has a tracking file at `docs/workflow/implementation/{topic}.md` that records progress programmatically (frontmatter) and as a human-readable summary (body).
+
+### Initial Tracking File
+
+When starting implementation for a topic, create:
+
+```yaml
+---
+topic: {topic}
+plan: ../planning/{topic}.md
+format: {format from plan}
+status: in-progress
+current_phase: 1
+current_task: ~
+completed_phases: []
+completed_tasks: []
+started: YYYY-MM-DD
+updated: YYYY-MM-DD
+completed: ~
+---
+
+# Implementation: {Topic Name}
+
+Implementation started.
+```
+
+### Updating Progress
+
+When a task or phase completes, update **two** things:
+
+1. **Output format progress** — Follow the output adapter's Implementation section (loaded in workflow step 2) to mark tasks/phases complete in the plan index file and any format-specific files. This is the plan's own progress tracking.
+
+2. **Implementation tracking file** — Update `docs/workflow/implementation/{topic}.md` as described below. This enables cross-topic dependency resolution and resume detection.
+
+**After each task completes (tracking file):**
+- Append the task ID to `completed_tasks`
+- Update `current_task` to the next task (or `~` if phase done)
+- Update `updated` date
+- Update the body progress section
+
+**After each phase completes (tracking file):**
+- Append the phase number to `completed_phases`
+- Update `current_phase` to the next phase (or leave as last)
+- Update the body progress section
+
+**On implementation completion (tracking file):**
+- Set `status: completed`
+- Set `completed: {today}`
+- Commit: `impl({topic}): complete implementation`
+
+Task IDs in `completed_tasks` use whatever ID format the output format assigns -- the same IDs used in dependency references.
+
+### Body Progress Section
+
+The body provides a human-readable summary for context refresh:
+
+```markdown
+# Implementation: {Topic Name}
+
+## Phase 1: Foundation
+All tasks completed.
+
+## Phase 2: Core Logic (current)
+- Task 2.1: Service layer - done
+- Task 2.2: Validation - done
+- Task 2.3: Controllers (next)
+```
 
 ## Progress Announcements
 

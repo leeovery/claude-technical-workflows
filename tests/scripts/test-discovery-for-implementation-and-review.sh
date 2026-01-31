@@ -49,7 +49,7 @@ assert_contains() {
 
     TESTS_RUN=$((TESTS_RUN + 1))
 
-    if echo "$output" | grep -q -- "$expected"; then
+    if echo "$output" | grep -qF -- "$expected"; then
         echo -e "  ${GREEN}✓${NC} $description"
         TESTS_PASSED=$((TESTS_PASSED + 1))
         return 0
@@ -68,7 +68,7 @@ assert_not_contains() {
 
     TESTS_RUN=$((TESTS_RUN + 1))
 
-    if ! echo "$output" | grep -q -- "$pattern"; then
+    if ! echo "$output" | grep -qF -- "$pattern"; then
         echo -e "  ${GREEN}✓${NC} $description"
         TESTS_PASSED=$((TESTS_PASSED + 1))
         return 0
@@ -470,6 +470,525 @@ EOF
 output=$(run_discovery)
 
 assert_not_contains "$output" "plan_id:" "No plan_id when not present"
+
+echo ""
+
+# ============================================================================
+# EXTERNAL DEPENDENCIES FROM FRONTMATTER
+# ============================================================================
+
+echo -e "${YELLOW}Test: Plan with empty external_dependencies${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning"
+
+cat > "$TEST_DIR/docs/workflow/planning/no-deps.md" << 'EOF'
+---
+topic: no-deps
+status: concluded
+format: local-markdown
+specification: no-deps.md
+external_dependencies: []
+---
+
+# Plan: No Deps
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "has_unresolved_deps: false" "No unresolved deps with empty array"
+assert_contains "$output" "unresolved_dep_count: 0" "Unresolved dep count is 0"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Plan with unresolved dependency${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning"
+
+cat > "$TEST_DIR/docs/workflow/planning/has-unresolved.md" << 'EOF'
+---
+topic: has-unresolved
+status: concluded
+format: local-markdown
+specification: has-unresolved.md
+external_dependencies:
+  - topic: billing-system
+    description: Invoice generation for order completion
+    state: unresolved
+---
+
+# Plan: Has Unresolved
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "has_unresolved_deps: true" "Has unresolved deps"
+assert_contains "$output" "unresolved_dep_count: 1" "Unresolved dep count is 1"
+assert_contains "$output" 'topic: "billing-system"' "Unresolved dep topic extracted"
+assert_contains "$output" 'state: "unresolved"' "Unresolved dep state extracted"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Plan with resolved dependency${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning"
+
+cat > "$TEST_DIR/docs/workflow/planning/has-resolved.md" << 'EOF'
+---
+topic: has-resolved
+status: concluded
+format: local-markdown
+specification: has-resolved.md
+external_dependencies:
+  - topic: authentication
+    description: User context for permissions
+    state: resolved
+    task_id: auth-1-3
+---
+
+# Plan: Has Resolved
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "has_unresolved_deps: false" "No unresolved deps"
+assert_contains "$output" 'topic: "authentication"' "Resolved dep topic extracted"
+assert_contains "$output" 'state: "resolved"' "Resolved dep state extracted"
+assert_contains "$output" 'task_id: "auth-1-3"' "Resolved dep task_id extracted"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Plan with satisfied_externally dependency${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning"
+
+cat > "$TEST_DIR/docs/workflow/planning/has-external.md" << 'EOF'
+---
+topic: has-external
+status: concluded
+format: local-markdown
+specification: has-external.md
+external_dependencies:
+  - topic: payment-gateway
+    description: Payment processing
+    state: satisfied_externally
+---
+
+# Plan: Has External
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "has_unresolved_deps: false" "No unresolved deps for externally satisfied"
+assert_contains "$output" 'state: "satisfied_externally"' "Externally satisfied state extracted"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Plan with mixed dependencies${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning"
+
+cat > "$TEST_DIR/docs/workflow/planning/mixed-deps.md" << 'EOF'
+---
+topic: mixed-deps
+status: concluded
+format: local-markdown
+specification: mixed-deps.md
+external_dependencies:
+  - topic: billing-system
+    description: Invoice generation
+    state: unresolved
+  - topic: authentication
+    description: User context
+    state: resolved
+    task_id: auth-1-3
+  - topic: payment-gateway
+    description: Payment processing
+    state: satisfied_externally
+---
+
+# Plan: Mixed Deps
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "has_unresolved_deps: true" "Has unresolved deps in mixed"
+assert_contains "$output" "unresolved_dep_count: 1" "Only 1 unresolved in mixed"
+assert_contains "$output" 'topic: "billing-system"' "First dep topic"
+assert_contains "$output" 'topic: "authentication"' "Second dep topic"
+assert_contains "$output" 'topic: "payment-gateway"' "Third dep topic"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Plan without external_dependencies field (legacy)${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning"
+
+cat > "$TEST_DIR/docs/workflow/planning/legacy.md" << 'EOF'
+---
+topic: legacy
+status: concluded
+format: local-markdown
+specification: legacy.md
+---
+
+# Plan: Legacy
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "has_unresolved_deps: false" "No unresolved deps for legacy plan"
+assert_contains "$output" "unresolved_dep_count: 0" "Zero unresolved for legacy plan"
+
+echo ""
+
+# ============================================================================
+# IMPLEMENTATION TRACKING
+# ============================================================================
+
+echo -e "${YELLOW}Test: No implementation directory${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning"
+
+cat > "$TEST_DIR/docs/workflow/planning/test.md" << 'EOF'
+---
+topic: test
+status: concluded
+format: local-markdown
+specification: test.md
+external_dependencies: []
+---
+
+# Plan: Test
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "implementation:" "Has implementation section"
+assert_contains "$output" "exists: false" "Implementation does not exist"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Implementation tracking file - in-progress${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning"
+mkdir -p "$TEST_DIR/docs/workflow/implementation"
+
+cat > "$TEST_DIR/docs/workflow/planning/core-features.md" << 'EOF'
+---
+topic: core-features
+status: concluded
+format: local-markdown
+specification: core-features.md
+external_dependencies: []
+---
+
+# Plan: Core Features
+EOF
+
+cat > "$TEST_DIR/docs/workflow/implementation/core-features.md" << 'EOF'
+---
+topic: core-features
+plan: ../planning/core-features.md
+format: local-markdown
+status: in-progress
+current_phase: 2
+current_task: 3
+completed_phases:
+  - 1
+completed_tasks:
+  - "core-1-1"
+  - "core-1-2"
+  - "core-1-3"
+  - "core-2-1"
+  - "core-2-2"
+started: 2025-01-15
+updated: 2025-01-20
+completed: ~
+---
+
+# Implementation: Core Features
+
+## Phase 1: Foundation
+All tasks completed.
+
+## Phase 2: Core Logic (current)
+- Task 2.1: done
+- Task 2.2: done
+- Task 2.3: next
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" 'topic: "core-features"' "Tracking file topic extracted"
+assert_contains "$output" 'status: "in-progress"' "Tracking file status extracted"
+assert_contains "$output" "current_phase: 2" "Current phase extracted"
+assert_contains "$output" "completed_phases: [1]" "Completed phases extracted"
+assert_contains "$output" '"core-1-1"' "Completed task extracted"
+assert_contains "$output" '"core-2-2"' "Last completed task extracted"
+assert_contains "$output" "plans_in_progress_count: 1" "In-progress count is 1"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Implementation tracking file - completed${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning"
+mkdir -p "$TEST_DIR/docs/workflow/implementation"
+
+cat > "$TEST_DIR/docs/workflow/planning/user-auth.md" << 'EOF'
+---
+topic: user-auth
+status: concluded
+format: local-markdown
+specification: user-auth.md
+external_dependencies: []
+---
+
+# Plan: User Auth
+EOF
+
+cat > "$TEST_DIR/docs/workflow/implementation/user-auth.md" << 'EOF'
+---
+topic: user-auth
+plan: ../planning/user-auth.md
+format: local-markdown
+status: completed
+current_phase: 3
+current_task: ~
+completed_phases:
+  - 1
+  - 2
+  - 3
+completed_tasks:
+  - "auth-1-1"
+  - "auth-1-2"
+  - "auth-1-3"
+  - "auth-2-1"
+started: 2025-01-10
+updated: 2025-01-25
+completed: 2025-01-25
+---
+
+# Implementation: User Auth
+
+All phases completed.
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" 'status: "completed"' "Completed status extracted"
+assert_contains "$output" "completed_phases: [1, 2, 3]" "All completed phases extracted"
+assert_contains "$output" '"auth-1-3"' "Specific completed task in list"
+assert_contains "$output" "plans_completed_count: 1" "Completed count is 1"
+
+echo ""
+
+# ============================================================================
+# DEPENDENCY RESOLUTION
+# ============================================================================
+
+echo -e "${YELLOW}Test: Resolved dep with task in completed_tasks${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning"
+mkdir -p "$TEST_DIR/docs/workflow/implementation"
+
+cat > "$TEST_DIR/docs/workflow/planning/billing.md" << 'EOF'
+---
+topic: billing
+status: concluded
+format: local-markdown
+specification: billing.md
+external_dependencies:
+  - topic: user-auth
+    description: User context for permissions
+    state: resolved
+    task_id: auth-1-3
+---
+
+# Plan: Billing
+EOF
+
+cat > "$TEST_DIR/docs/workflow/implementation/user-auth.md" << 'EOF'
+---
+topic: user-auth
+plan: ../planning/user-auth.md
+format: local-markdown
+status: completed
+current_phase: 3
+completed_phases:
+  - 1
+  - 2
+  - 3
+completed_tasks:
+  - "auth-1-1"
+  - "auth-1-2"
+  - "auth-1-3"
+started: 2025-01-10
+updated: 2025-01-25
+completed: 2025-01-25
+---
+
+# Implementation: User Auth
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "deps_satisfied: true" "Deps satisfied when task completed"
+assert_contains "$output" "plans_ready_count: 1" "Plan is ready"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Resolved dep with task NOT in completed_tasks${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning"
+mkdir -p "$TEST_DIR/docs/workflow/implementation"
+
+cat > "$TEST_DIR/docs/workflow/planning/billing.md" << 'EOF'
+---
+topic: billing
+status: concluded
+format: local-markdown
+specification: billing.md
+external_dependencies:
+  - topic: core-features
+    description: Core logic needed
+    state: resolved
+    task_id: core-2-3
+---
+
+# Plan: Billing
+EOF
+
+cat > "$TEST_DIR/docs/workflow/implementation/core-features.md" << 'EOF'
+---
+topic: core-features
+plan: ../planning/core-features.md
+format: local-markdown
+status: in-progress
+current_phase: 2
+completed_phases:
+  - 1
+completed_tasks:
+  - "core-1-1"
+  - "core-2-1"
+  - "core-2-2"
+started: 2025-01-15
+updated: 2025-01-20
+---
+
+# Implementation: Core Features
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "deps_satisfied: false" "Deps not satisfied when task incomplete"
+assert_contains "$output" 'task_id: "core-2-3"' "Blocking task_id listed"
+assert_contains "$output" "task not yet completed" "Blocking reason given"
+assert_contains "$output" "plans_ready_count: 0" "Plan is not ready"
+
+echo ""
+
+# ============================================================================
+# STATE SUMMARY COUNTS
+# ============================================================================
+
+echo -e "${YELLOW}Test: State summary counts with multiple plans${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning"
+mkdir -p "$TEST_DIR/docs/workflow/implementation"
+
+# Concluded plan, no deps, no impl -> ready
+cat > "$TEST_DIR/docs/workflow/planning/feature-a.md" << 'EOF'
+---
+topic: feature-a
+status: concluded
+format: local-markdown
+specification: feature-a.md
+external_dependencies: []
+---
+
+# Plan: Feature A
+EOF
+
+# Concluded plan with unresolved dep -> not ready
+cat > "$TEST_DIR/docs/workflow/planning/feature-b.md" << 'EOF'
+---
+topic: feature-b
+status: concluded
+format: local-markdown
+specification: feature-b.md
+external_dependencies:
+  - topic: feature-c
+    description: Needs feature C
+    state: unresolved
+---
+
+# Plan: Feature B
+EOF
+
+# Planning status -> not concluded
+cat > "$TEST_DIR/docs/workflow/planning/feature-c.md" << 'EOF'
+---
+topic: feature-c
+status: planning
+format: local-markdown
+specification: feature-c.md
+external_dependencies: []
+---
+
+# Plan: Feature C
+EOF
+
+# Concluded with completed impl
+cat > "$TEST_DIR/docs/workflow/planning/feature-d.md" << 'EOF'
+---
+topic: feature-d
+status: concluded
+format: local-markdown
+specification: feature-d.md
+external_dependencies: []
+---
+
+# Plan: Feature D
+EOF
+
+cat > "$TEST_DIR/docs/workflow/implementation/feature-d.md" << 'EOF'
+---
+topic: feature-d
+status: completed
+completed_phases: [1, 2]
+completed_tasks:
+  - "d-1-1"
+  - "d-2-1"
+started: 2025-01-01
+completed: 2025-01-10
+---
+
+# Implementation: Feature D
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "plan_count: 4" "Total plan count is 4"
+assert_contains "$output" "plans_concluded_count: 3" "Concluded count is 3"
+assert_contains "$output" "plans_with_unresolved_deps: 1" "Plans with unresolved deps is 1"
+assert_contains "$output" "plans_ready_count: 2" "Plans ready count is 2 (A and D)"
+assert_contains "$output" "plans_completed_count: 1" "Plans completed count is 1"
 
 echo ""
 

@@ -295,12 +295,6 @@ Ask: **"Is there a standalone thing to build, or does this inform how we build o
 
 **Trust nothing without validation**: Synthesize and present, but never assume source material is correct.
 
-## After Context Refresh
-
-Read the specification. It contains validated, approved content. Trust it - you built it together with the user.
-
-If working notes exist, they show where you left off.
-
 ## Dependencies Section
 
 At the end of every specification, add a **Dependencies** section that identifies **prerequisites** - systems that must exist before this feature can be built.
