@@ -176,7 +176,7 @@ Numbering is sequential across Implementable and Implemented. Omit any section e
 **If Not implementable section is shown**, append after the presentation:
 
 ```
-To unblock a plan, name it and describe what changed.
+If a blocked dependency has been resolved outside this workflow, name the plan and the dependency to unblock it.
 ```
 
 **Then prompt based on what's actionable:**
