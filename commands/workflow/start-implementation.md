@@ -173,6 +173,12 @@ Not implementable (not numbered, not selectable):
 
 Numbering is sequential across Implementable and Implemented. Omit any section entirely if it has no entries.
 
+**If Not implementable section is shown**, append after the presentation:
+
+```
+To unblock a plan, name it and describe what changed.
+```
+
 **Then prompt based on what's actionable:**
 
 **If single implementable plan and no implemented plans (auto-select):**
@@ -182,7 +188,7 @@ Auto-selecting: {topic} (only implementable plan)
 → Proceed directly to **Step 4**.
 
 **If nothing selectable (no implementable or implemented):**
-Show Not implementable section only.
+Show Not implementable section only (with unblock hint above).
 
 ```
 No implementable plans.
@@ -192,7 +198,7 @@ To proceed:
 - Or finish plans still in progress with /start-planning
 ```
 
-**STOP.** Wait for user to acknowledge before ending.
+**STOP.** Wait for user response.
 
 **Otherwise (multiple selectable plans, or implemented plans exist):**
 ```
@@ -200,6 +206,14 @@ Select a plan (enter number):
 ```
 
 **STOP.** Wait for user response.
+
+#### If the user requests an unblock
+
+1. Identify the plan and the specific dependency
+2. Confirm with the user which dependency to mark as satisfied
+3. Update the plan's `external_dependencies` frontmatter: set `state` to `satisfied_externally`
+4. Commit the change
+5. Re-run classification and re-present Step 3
 
 → Based on user choice, proceed to **Step 4**.
 
