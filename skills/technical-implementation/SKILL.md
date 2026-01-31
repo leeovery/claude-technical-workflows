@@ -37,6 +37,17 @@ Either way: Execute via strict TDD - tests first, implementation second.
 
 If no specification is available, the plan becomes the sole authority for design decisions.
 
+## Resuming After Context Refresh
+
+Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
+
+1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
+2. **Read all tracking and state files** for the current topic — plan index files, review tracking files, implementation tracking files, or any working documents this skill creates. These are your source of truth for progress.
+3. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
+4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
+
+Do not guess at progress or continue from memory. The files on disk and git history are authoritative — your recollection is not.
+
 ## Hard Rules
 
 **MANDATORY. No exceptions. Violating these rules invalidates the work.**
@@ -159,25 +170,6 @@ All tasks completed.
 - Task 2.2: Validation - done
 - Task 2.3: Controllers (next)
 ```
-
-## Resuming After Context Refresh
-
-When resuming implementation (tracking file already exists):
-
-1. Read `docs/workflow/implementation/{topic}.md`
-2. Check `current_phase` and `current_task` in frontmatter
-3. Cross-reference against `completed_tasks` to verify position
-4. Read the body progress section for human-readable context
-5. Resume from the next incomplete task
-6. Announce current position to user:
-
-```
-Resuming implementation for {topic}.
-Position: Phase {N}, Task {M} ({task description}).
-{N} tasks completed so far.
-```
-
-This replaces git log spelunking -- the tracking file IS the resume state.
 
 ## Progress Announcements
 
