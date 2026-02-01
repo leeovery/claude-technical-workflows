@@ -4,25 +4,17 @@
 
 ---
 
-This step executes all phases in the plan sequentially. Each phase contains tasks; each task is implemented by an executor agent and verified by a reviewer agent.
+Work through all phases in the plan. For each phase, tasks are executed and reviewed via **[execute-task.md](execute-task.md)**, then a mandatory phase gate controls progression.
 
 ```
 Determine starting position (from tracking file)
 │
 └─ For each phase:
-    │
     ├─ Announce phase + acceptance criteria
-    │
-    ├─ For each task:
-    │   ├─ Extract task details (verbatim from plan)
-    │   ├─ Step A: Execute task
-    │   │   ├─ Invoke executor (TDD: test → implement, no git)
-    │   │   ├─ Invoke reviewer (spec, criteria, tests, conventions, architecture)
-    │   │   └─ If needs-changes → user gate → fix round (loop)
-    │   ├─ Update tracking
-    │   └─ Commit: impl({topic}): P{N} T{id} — {description}
-    │
+    ├─ Determine next task (adapter or sequential)
+    │   └─ For each task → load execute-task.md
     ├─ Phase completion checklist
+    ├─ Update phase tracking
     └─ PHASE GATE — STOP, wait for y/yes
 ```
 
@@ -30,18 +22,15 @@ Determine starting position (from tracking file)
 
 ## Determine Starting Position
 
-Read the implementation tracking file (`docs/workflow/implementation/{topic}.md`). Check `current_phase`, `current_task`, `completed_phases`, and `completed_tasks`.
+Read the implementation tracking file (`docs/workflow/implementation/{topic}.md`). Check `completed_phases` and `completed_tasks` to identify completed work.
 
 - **Completed phases**: skip entirely
-- **Completed tasks within the current phase**: skip
-- **Current task** (`current_task`): resume from here
-- **If `current_task` is `~` and `completed_tasks` is empty**: fresh start — begin at Phase 1, Task 1
+- **Completed tasks**: skip
+- **Fresh start** (`completed_tasks` empty, `current_task` is `~`): begin at Phase 1
 
 ---
 
 ## Process Phases
-
-Work through each phase in plan order, starting from the position determined above.
 
 ### For each phase:
 
@@ -51,7 +40,7 @@ Skip. Continue to the next phase.
 
 #### Otherwise
 
-Announce the phase to the user:
+Announce the phase:
 
 > **Starting Phase {N}: {Phase Name}**
 >
@@ -62,41 +51,17 @@ Announce the phase to the user:
 
 ### For each task in phase:
 
+Check whether the output format adapter's Reading section defines a mechanism for determining the next task (e.g., dependency-aware querying, priority ordering). If so, use it — filtering out tasks already in `completed_tasks`. If not, process tasks sequentially as listed in the plan.
+
 #### If task is already in `completed_tasks`
 
 Skip. Continue to the next task.
 
 #### Otherwise
 
-Extract task details from the plan using the output format adapter. Pass content **verbatim** — no summarisation, no rewriting.
+Load **[execute-task.md](execute-task.md)** and follow its instructions.
 
-#### Step A: Execute Task
-
-Load **[execute-task.md](execute-task.md)** and follow it:
-- Invoke `implementation-task-executor` — implements via TDD (writes code + tests, runs tests, no git)
-- Invoke `implementation-task-reviewer` — independently verifies (spec, criteria, tests, conventions, architecture)
-- If `needs-changes`: present to user (human-in-the-loop gate), then fix loop
-- If `approved`: proceed to tracking update below
-
-#### After task approved
-
-**1. Update implementation tracking file** (`docs/workflow/implementation/{topic}.md`):
-- Append the task ID to `completed_tasks`
-- Update `current_task` to the next task (or `~` if phase done)
-- Update `updated` to today's date
-- Update the body progress section
-
-**2. Update output format progress** — follow the output adapter's Implementation section to mark the task complete in the plan index file and any format-specific files.
-
-**3. Commit all changes** in a single commit:
-
-```
-impl({topic}): P{N} T{task-id} — {brief description}
-```
-
-This includes code, tests, tracking file, and output format progress. Tasks are the atomic unit — one commit per approved task.
-
-#### Then continue to the next task.
+Continue to the next task.
 
 ---
 

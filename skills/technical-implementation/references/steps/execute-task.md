@@ -4,42 +4,38 @@
 
 ---
 
-This step uses the `implementation-task-executor` agent (`.claude/agents/implementation-task-executor.md`) to implement one task via TDD, then the `implementation-task-reviewer` agent (`.claude/agents/implementation-task-reviewer.md`) to independently verify it. You invoke both agents, handle review gates, and commit on approval.
+Implements one task: extract context from the plan, invoke the executor agent, invoke the reviewer agent, handle the review gate, update tracking, and commit.
 
 ---
 
 ## Prepare Task Context
 
-Extract the full task details from the plan using the loaded output format adapter. Pass the task content **verbatim** — no summarisation, no rewriting. What the plan says is what the agent receives.
-
-The adapter determines how to read task fields (title, goal/problem, solution, implementation steps, acceptance criteria, test cases, context/constraints, dependencies). Follow the adapter's Implementation (Reading) section.
+Extract the task details from the plan using the output format adapter's Reading section. Pass the task content **verbatim** — no summarisation, no rewriting.
 
 ---
 
 ## Invoke the Executor
 
-Invoke `implementation-task-executor` with:
+Invoke `implementation-task-executor` (`.claude/agents/implementation-task-executor.md`) with:
 
 1. **tdd-workflow.md**: `.claude/skills/technical-implementation/references/tdd-workflow.md`
 2. **code-quality.md**: `.claude/skills/technical-implementation/references/code-quality.md`
 3. **Specification path**: from the plan's frontmatter (if available)
 4. **Project skill paths**: the paths confirmed by user during project skills discovery
-5. **Task context**: verbatim task content extracted from the plan
-6. **Phase context**: brief note on current phase number, phase name, and what's been built so far in this phase
-
-The agent implements the task (writes code, writes tests, runs tests). Code is left on disk — the agent does NOT commit.
+5. **Task context**: the verbatim task content
+6. **Phase context**: current phase number, phase name, and what's been built so far
 
 ---
 
 ## Handle Executor Result
 
-### If `complete`
+#### If `complete`
 
-Proceed to invoke the reviewer.
+→ Proceed to **Invoke the Reviewer**.
 
-### If `blocked` or `failed`
+#### If `blocked` or `failed`
 
-Present the issue to the user with full context from the executor's ISSUES field:
+Present the executor's ISSUES to the user:
 
 > **Task {id}: {Task Name} — {blocked/failed}**
 >
@@ -47,83 +43,73 @@ Present the issue to the user with full context from the executor's ISSUES field
 >
 > **How would you like to proceed?**
 
-**STOP.** Wait for user decision.
-
-After receiving direction:
-- Re-invoke executor with original task context PLUS the user's decision/feedback, OR
-- Adjust plan as directed by user
+**STOP.** Wait for user decision. Then either re-invoke the executor with the user's direction, or adjust plan as directed.
 
 ---
 
 ## Invoke the Reviewer
 
-After the executor returns `complete`, invoke `implementation-task-reviewer` with:
+Invoke `implementation-task-reviewer` (`.claude/agents/implementation-task-reviewer.md`) with:
 
-1. **Specification path**: same path given to executor
-2. **Task context**: verbatim task content — same content the executor received
+1. **Specification path**: same as executor
+2. **Task context**: same verbatim content the executor received
 3. **Files changed**: the FILES_CHANGED list from the executor's result
-4. **Project skill paths**: same paths given to executor
-
-The reviewer evaluates spec conformance, acceptance criteria, test adequacy, convention adherence, and architectural quality. It does not modify any files.
+4. **Project skill paths**: same as executor
 
 ---
 
 ## Handle Review Result
 
-### If `approved`
+#### If `approved`
 
-Proceed to commit (see below). No user gate needed — the reviewer approved, and the user has phase-level gates.
+→ Proceed to **Update Tracking and Commit**.
 
-### If `needs-changes`
+#### If `needs-changes`
 
-Present the reviewer's full findings to the user:
+Present the reviewer's findings to the user:
 
 > **Review for Task {id}: {Task Name}**
 >
-> The reviewer found issues:
->
-> {ISSUES from reviewer — full content}
+> {ISSUES from reviewer}
 >
 > Notes (non-blocking):
-> {NOTES from reviewer — full content}
+> {NOTES from reviewer}
 >
 > **How would you like to proceed?**
-> - **`y`/`yes`** — Accept these review notes. I'll pass them to the executor to fix.
-> - **Modify** — Edit or add to the review notes before passing to executor.
+> - **`y`/`yes`** — Accept these notes. I'll pass them to the executor to fix.
+> - **Modify** — Edit or add to the notes before passing to executor.
 > - **`skip`** — Override the reviewer and proceed as-is.
 
 **STOP.** Wait for user direction.
 
-This ensures the user is always in the loop on review decisions. No auto-looping on potentially bad reviewer judgement.
+#### Fix Round
+
+After user approves or modifies the notes:
+
+1. Re-invoke executor with original task context PLUS the user-approved review notes
+2. Re-invoke reviewer with updated FILES_CHANGED
+3. If `approved` → proceed to commit
+4. If `needs-changes` → present to user again (same gate)
+5. Repeat until approved or user skips
+
+No iteration cap — the user controls every cycle.
 
 ---
 
-## Fix Round
+## Update Tracking and Commit
 
-After user approves or modifies the review notes:
+**Update implementation tracking file** (`docs/workflow/implementation/{topic}.md`):
+- Append the task ID to `completed_tasks`
+- Update `current_task` to the next task (or `~` if phase done)
+- Update `updated` to today's date
+- Update the body progress section
 
-1. Re-invoke `implementation-task-executor` with original task context PLUS:
-   - **User-approved review notes**: the notes the user approved (verbatim or as modified)
-   - **Specific issues to address**: the ISSUES from the review
-2. After executor completes, re-invoke `implementation-task-reviewer` (same inputs as before, updated FILES_CHANGED)
-3. If reviewer says `approved` → proceed to commit
-4. If reviewer says `needs-changes` → present findings to user again (same human-in-the-loop gate)
-5. Repeat until reviewer approves OR user skips
+**Update output format progress** — follow the adapter's Implementation section to mark the task complete.
 
-There is no iteration cap — the user controls every cycle.
-
----
-
-## Commit
-
-After reviewer approval (or user skip):
-
-Stage and commit all changes — code, tests, output format progress updates, and tracking file updates — in a single commit:
+**Commit all changes** in a single commit:
 
 ```
-impl({topic}): P{phase} T{task-id} — {brief description}
+impl({topic}): P{N} T{task-id} — {brief description}
 ```
 
-Example: `impl(auth): P2 T2.3 — implement password hashing with bcrypt`
-
-Tasks are the atomic unit — one meaningful commit per approved task.
+Code, tests, tracking file, and output format progress — one commit per approved task.
