@@ -102,7 +102,7 @@ Save their instructions to `docs/workflow/environment-setup.md` (or "No special 
 2. Check the `format` field in frontmatter
 3. Load the output adapter: `skills/technical-planning/references/output-formats/output-{format}.md`
 4. If no format field, ask user which format the plan uses
-5. Follow the adapter's **Implementation** section for how to read tasks and update progress
+5. Read the adapter's **Implementation** section — understand how to extract task content and update progress. These instructions apply later during Step 5.
 
 → Proceed to **Step 3**.
 
