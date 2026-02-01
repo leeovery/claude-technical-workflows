@@ -47,7 +47,7 @@ If no specification is available, the plan becomes the sole authority for design
 Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
-2. **Read all tracking and state files** for the current topic — plan index files, review tracking files, implementation tracking files, or any working documents this skill creates. These are your source of truth for progress.
+2. **Check the output format adapter's state** for the current topic — the adapter is authoritative for task progress. Also read the implementation tracking file and any other working documents for additional context.
 3. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 
@@ -140,8 +140,6 @@ Store the selected skill paths — pass to every agent invocation.
 ## Step 4: Initialize Implementation Tracking
 
 #### If `docs/workflow/implementation/{topic}.md` already exists
-
-The tracking file records current phase and task position. Step 5 will use it to resume from where work left off.
 
 → Proceed to **Step 5**.
 
