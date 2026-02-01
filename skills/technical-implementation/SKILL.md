@@ -63,23 +63,40 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 ---
 
-## Workflow
-
-### Step 1: Environment Setup
+## Step 1: Environment Setup
 
 Run setup commands EXACTLY as written, one step at a time.
 Do NOT modify commands based on other project documentation (CLAUDE.md, etc.).
 Do NOT parallelize steps — execute each command sequentially.
-Complete ALL setup steps before proceeding to implementation work.
+Complete ALL setup steps before proceeding.
 
-1. Look for `docs/workflow/environment-setup.md`
-2. If exists and states "No special setup required", skip to step 2
-3. If exists with instructions, follow the setup before proceeding
-4. If missing, ask: "Are there any environment setup instructions I should follow?"
+Load **[environment-setup.md](references/environment-setup.md)** and follow its instructions.
 
-See **[environment-setup.md](references/environment-setup.md)** for details.
+#### If `docs/workflow/environment-setup.md` states "No special setup required"
 
-### Step 2: Read Plan + Load Output Format Adapter
+→ Proceed to **Step 2**.
+
+#### If setup instructions exist
+
+Follow them. Complete ALL steps before proceeding.
+
+→ Proceed to **Step 2**.
+
+#### If no setup file exists
+
+Ask:
+
+> "No environment setup document found. Are there any setup instructions I should follow before implementing?"
+
+**STOP.** Wait for user response.
+
+Save their instructions to `docs/workflow/environment-setup.md` (or "No special setup required." if none needed). Commit.
+
+→ Proceed to **Step 2**.
+
+---
+
+## Step 2: Read Plan + Load Output Format Adapter
 
 1. Read the plan from the provided location (typically `docs/workflow/planning/{topic}.md`)
 2. Check the `format` field in frontmatter
@@ -87,69 +104,87 @@ See **[environment-setup.md](references/environment-setup.md)** for details.
 4. If no format field, ask user which format the plan uses
 5. Follow the adapter's **Implementation** section for how to read tasks and update progress
 
-### Step 3: Project Skills Discovery
+→ Proceed to **Step 3**.
 
-After loading the plan and output format adapter:
+---
 
-1. Scan `.claude/skills/` for project-specific skill directories
-2. Present findings to user:
+## Step 3: Project Skills Discovery
 
-> "Found these project skills that may be relevant to implementation:
+#### If `.claude/skills/` does not exist or is empty
+
+```
+No project skills found. Proceeding without project-specific conventions.
+```
+
+→ Proceed to **Step 4**.
+
+#### If project skills exist
+
+Scan `.claude/skills/` for project-specific skill directories. Present findings:
+
+> Found these project skills that may be relevant to implementation:
+> - `{skill-name}` — {brief description}
 > - `{skill-name}` — {brief description}
 > - ...
 >
-> Which of these should I pass to the implementation agents? (all / list / none)"
+> Which of these should I pass to the implementation agents? (all / list / none)
 
-3. **STOP.** Wait for user to confirm which skills are relevant.
-4. Store the selected skill paths — pass to every agent invocation.
+**STOP.** Wait for user to confirm which skills are relevant.
 
-If `.claude/skills/` doesn't exist or is empty, note this and proceed without project skills.
+Store the selected skill paths — pass to every agent invocation.
 
-### Step 4: Initialize or Resume Implementation Tracking
+→ Proceed to **Step 4**.
 
-- Check if `docs/workflow/implementation/{topic}.md` exists
-- **If not**: Create it with the initial tracking frontmatter (see [Implementation Tracking](#implementation-tracking) below), set `status: in-progress`, `started: {today}`. Commit: `impl({topic}): start implementation`
-- **If exists**: Read it to determine current position (see [Resuming After Context Refresh](#resuming-after-context-refresh))
+---
 
-### Step 5: Phase Loop
+## Step 4: Initialize or Resume Implementation Tracking
+
+#### If `docs/workflow/implementation/{topic}.md` exists
+
+Read it to determine current position. See [Resuming After Context Refresh](#resuming-after-context-refresh) for recovery protocol.
+
+→ Proceed to **Step 5**.
+
+#### If no tracking file exists
+
+Create it with the initial tracking frontmatter (see [Implementation Tracking](#implementation-tracking) below). Set `status: in-progress`, `started: {today}`.
+
+Commit: `impl({topic}): start implementation`
+
+→ Proceed to **Step 5**.
+
+---
+
+## Step 5: Phase Loop
 
 For each phase (working through phases and tasks in plan order):
 
 1. **Announce phase start** — review acceptance criteria with user
+
 2. **For each task in phase:**
+
    a. Extract task details from plan (using output adapter — verbatim, no summarisation)
+
    b. Load **[steps/execute-task.md](references/steps/execute-task.md)** and follow it:
       - Invoke `implementation-task-executor`
       - Invoke `implementation-task-reviewer`
       - If `needs-changes`: present to user (human-in-the-loop), then fix loop
       - If `approved`: proceed
+
    c. Update output format progress + tracking file
+
    d. Commit all changes: `impl({topic}): P{N} T{id} — {description}`
       (code + tests + output format + tracking — single commit per task)
-3. **Phase completion checklist** (see below)
-4. **MANDATORY PHASE GATE** (see below)
 
-### Step 6: Mark Implementation Complete
+3. **Phase completion checklist:**
+   - [ ] All phase tasks implemented and reviewer-approved
+   - [ ] All tests passing
+   - [ ] Tests cover task acceptance criteria
+   - [ ] No skipped edge cases from plan
+   - [ ] All changes committed
+   - [ ] Manual verification steps completed (if specified in plan)
 
-- Set tracking file `status: completed`, `completed: {today}`
-- Commit: `impl({topic}): complete implementation`
-
----
-
-## Phase Completion Checklist
-
-Before marking a phase complete:
-
-- [ ] All phase tasks implemented and reviewer-approved
-- [ ] All tests passing
-- [ ] Tests cover task acceptance criteria
-- [ ] No skipped edge cases from plan
-- [ ] All changes committed
-- [ ] Manual verification steps completed (if specified in plan)
-
-## Phase Gate — MANDATORY
-
-After all tasks in a phase are complete:
+4. **Phase gate — MANDATORY:**
 
 > **Phase {N}: {Phase Name} — complete.**
 >
@@ -160,6 +195,15 @@ After all tasks in a phase are complete:
 > - **Or raise concerns** — anything to address before moving on.
 
 **STOP.** Wait for explicit user confirmation. Do not proceed to the next phase without `y`/`yes` or equivalent affirmative. A question, comment, or follow-up is NOT confirmation — address it and ask again.
+
+→ After final phase gate, proceed to **Step 6**.
+
+---
+
+## Step 6: Mark Implementation Complete
+
+- Set tracking file `status: completed`, `completed: {today}`
+- Commit: `impl({topic}): complete implementation`
 
 ---
 
@@ -195,7 +239,7 @@ Implementation started.
 
 When a task or phase completes, update **two** things:
 
-1. **Output format progress** — Follow the output adapter's Implementation section (loaded in step 2) to mark tasks/phases complete in the plan index file and any format-specific files. This is the plan's own progress tracking.
+1. **Output format progress** — Follow the output adapter's Implementation section (loaded in Step 2) to mark tasks/phases complete in the plan index file and any format-specific files. This is the plan's own progress tracking.
 
 2. **Implementation tracking file** — Update `docs/workflow/implementation/{topic}.md` as described below. This enables cross-topic dependency resolution and resume detection.
 
@@ -233,6 +277,8 @@ All tasks completed.
 - Task 2.3: Controllers (next)
 ```
 
+---
+
 ## Progress Announcements
 
 Keep user informed of progress:
@@ -245,6 +291,8 @@ Executor complete — invoking reviewer...
 Reviewer approved — committing...
 Phase 2 complete. Ready for Phase 3?
 ```
+
+---
 
 ## When to Reference Specification
 
@@ -260,6 +308,8 @@ Check the specification when:
 The specification (if available) is the source of truth for design decisions. If no specification exists, the plan is the authority.
 
 **Important:** If prior source material exists (research notes, discussion documents, etc.), ignore it during implementation. It may contain outdated ideas, rejected approaches, or superseded decisions. The specification filtered and validated that content — refer only to the specification and plan.
+
+---
 
 ## Handling Problems
 
@@ -282,6 +332,8 @@ Stop and escalate:
 > "The plan says X, but during implementation I discovered Y. This affects Z. Should I continue as planned or revise?"
 
 Never silently deviate from the plan.
+
+---
 
 ## References
 
