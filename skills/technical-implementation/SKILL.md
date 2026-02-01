@@ -139,6 +139,8 @@ Store the selected skill paths — pass to every agent invocation.
 
 ## Step 4: Initialize or Resume Implementation Tracking
 
+Load **[implementation-tracking.md](references/implementation-tracking.md)** for tracking file format and conventions.
+
 #### If `docs/workflow/implementation/{topic}.md` exists
 
 Read it to determine current position. See [Resuming After Context Refresh](#resuming-after-context-refresh) for recovery protocol.
@@ -147,7 +149,7 @@ Read it to determine current position. See [Resuming After Context Refresh](#res
 
 #### If no tracking file exists
 
-Create it with the initial tracking frontmatter (see [Implementation Tracking](#implementation-tracking) below). Set `status: in-progress`, `started: {today}`.
+Create the tracking file following the template in [implementation-tracking.md](references/implementation-tracking.md). Set `status: in-progress`, `started: {today}`.
 
 Commit: `impl({topic}): start implementation`
 
@@ -159,7 +161,7 @@ Commit: `impl({topic}): start implementation`
 
 For each phase (working through phases and tasks in plan order):
 
-1. **Announce phase start** — review acceptance criteria with user
+1. **Announce phase start** — state phase name and review acceptance criteria with user
 
 2. **For each task in phase:**
 
@@ -171,7 +173,7 @@ For each phase (working through phases and tasks in plan order):
       - If `needs-changes`: present to user (human-in-the-loop), then fix loop
       - If `approved`: proceed
 
-   c. Update output format progress + tracking file
+   c. Update tracking — follow the "Updating Progress" section in **[implementation-tracking.md](references/implementation-tracking.md)** for both output format progress and tracking file updates
 
    d. Commit all changes: `impl({topic}): P{N} T{id} — {description}`
       (code + tests + output format + tracking — single commit per task)
@@ -202,143 +204,17 @@ For each phase (working through phases and tasks in plan order):
 
 ## Step 6: Mark Implementation Complete
 
-- Set tracking file `status: completed`, `completed: {today}`
-- Commit: `impl({topic}): complete implementation`
+Update tracking file: set `status: completed`, `completed: {today}`.
 
----
-
-## Implementation Tracking
-
-Each topic has a tracking file at `docs/workflow/implementation/{topic}.md` that records progress programmatically (frontmatter) and as a human-readable summary (body).
-
-### Initial Tracking File
-
-When starting implementation for a topic, create:
-
-```yaml
----
-topic: {topic}
-plan: ../planning/{topic}.md
-format: {format from plan}
-status: in-progress
-current_phase: 1
-current_task: ~
-completed_phases: []
-completed_tasks: []
-started: YYYY-MM-DD
-updated: YYYY-MM-DD
-completed: ~
----
-
-# Implementation: {Topic Name}
-
-Implementation started.
-```
-
-### Updating Progress
-
-When a task or phase completes, update **two** things:
-
-1. **Output format progress** — Follow the output adapter's Implementation section (loaded in Step 2) to mark tasks/phases complete in the plan index file and any format-specific files. This is the plan's own progress tracking.
-
-2. **Implementation tracking file** — Update `docs/workflow/implementation/{topic}.md` as described below. This enables cross-topic dependency resolution and resume detection.
-
-**After each task completes (tracking file):**
-- Append the task ID to `completed_tasks`
-- Update `current_task` to the next task (or `~` if phase done)
-- Update `updated` date
-- Update the body progress section
-
-**After each phase completes (tracking file):**
-- Append the phase number to `completed_phases`
-- Update `current_phase` to the next phase (or leave as last)
-- Update the body progress section
-
-**On implementation completion (tracking file):**
-- Set `status: completed`
-- Set `completed: {today}`
-- Commit: `impl({topic}): complete implementation`
-
-Task IDs in `completed_tasks` use whatever ID format the output format assigns — the same IDs used in dependency references.
-
-### Body Progress Section
-
-The body provides a human-readable summary for context refresh:
-
-```markdown
-# Implementation: {Topic Name}
-
-## Phase 1: Foundation
-All tasks completed.
-
-## Phase 2: Core Logic (current)
-- Task 2.1: Service layer - done
-- Task 2.2: Validation - done
-- Task 2.3: Controllers (next)
-```
-
----
-
-## Progress Announcements
-
-Keep user informed of progress:
-
-```
-Starting Phase 2: Core Cache Functionality
-Task 1: Implement CacheManager.get()
-Invoking executor agent...
-Executor complete — invoking reviewer...
-Reviewer approved — committing...
-Phase 2 complete. Ready for Phase 3?
-```
-
----
-
-## When to Reference Specification
-
-Check the specification when:
-
-- Task rationale is unclear
-- Multiple valid approaches exist
-- Edge case handling not specified in plan
-- You need the "why" behind a decision
-
-**Location**: Specification should be linked in the plan file (check frontmatter or plan header). Ask user if not found.
-
-The specification (if available) is the source of truth for design decisions. If no specification exists, the plan is the authority.
-
-**Important:** If prior source material exists (research notes, discussion documents, etc.), ignore it during implementation. It may contain outdated ideas, rejected approaches, or superseded decisions. The specification filtered and validated that content — refer only to the specification and plan.
-
----
-
-## Handling Problems
-
-### Executor Reports Blocker
-
-Present the executor's ISSUES to the user with full context. **STOP.** Wait for user decision before re-invoking or adjusting.
-
-### Reviewer Finds Issues
-
-Present the reviewer's findings to the user via the human-in-the-loop gate in [execute-task.md](references/steps/execute-task.md). User decides: accept notes, modify, or skip.
-
-### Plan is Incomplete
-
-Stop and escalate:
-> "Task X requires Y, but the plan doesn't specify how to handle it. Options: (A) ... (B) ... Which approach?"
-
-### Plan Seems Wrong
-
-Stop and escalate:
-> "The plan says X, but during implementation I discovered Y. This affects Z. Should I continue as planned or revise?"
-
-Never silently deviate from the plan.
+Commit: `impl({topic}): complete implementation`
 
 ---
 
 ## References
 
 - **[environment-setup.md](references/environment-setup.md)** — Environment setup before implementation
-- **[plan-execution.md](references/plan-execution.md)** — Following plans, phase verification, hierarchy
+- **[plan-execution.md](references/plan-execution.md)** — Plan structure, specification referencing, problem handling, context refresh recovery
+- **[implementation-tracking.md](references/implementation-tracking.md)** — Tracking file format, creation, and progress updates
 - **[steps/execute-task.md](references/steps/execute-task.md)** — Executor + reviewer invocation per task
 - **[tdd-workflow.md](references/tdd-workflow.md)** — TDD cycle (passed to executor agent)
 - **[code-quality.md](references/code-quality.md)** — Quality standards (passed to executor agent)
