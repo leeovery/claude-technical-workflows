@@ -16,7 +16,7 @@ Plans live in `docs/workflow/planning/{topic}.md` with phases and tasks.
 1. Read entire plan
 2. Read specification for context
 3. Check dependencies and blockers
-4. Load the output format adapter for task extraction
+4. Load the output format adapter — instructions for reading and updating the plan
 
 ## Execution Flow
 

@@ -47,7 +47,7 @@ If no specification is available, the plan becomes the sole authority for design
 Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
-2. **Check the output format adapter's state** for the current topic — the adapter is authoritative for task progress. Also read the implementation tracking file and any other working documents for additional context.
+2. **Check task progress in the plan** — use the output format adapter's instructions to read the plan's current state. Also read the implementation tracking file and any other working documents for additional context.
 3. **Check `task_gate_mode`** in the tracking file — if `auto`, the user previously opted out of per-task gates for this session.
 4. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 5. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
@@ -102,7 +102,7 @@ Save their instructions to `docs/workflow/environment-setup.md` (or "No special 
 2. Check the `format` field in frontmatter
 3. Load the output adapter: `skills/technical-planning/references/output-formats/output-{format}.md`
 4. If no format field, ask user which format the plan uses
-5. Read the adapter's **Implementation** section — understand how to extract task content and update progress. These instructions apply later during Step 5.
+5. Read the adapter's **Implementation** section — these instructions explain how to extract task content and update progress in the plan. They apply later during Step 5.
 
 → Proceed to **Step 3**.
 

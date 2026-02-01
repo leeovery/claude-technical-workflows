@@ -22,17 +22,21 @@ Retrieve next task
 
 ## Retrieving the Next Task
 
-The output format adapter is authoritative for determining which task to work on next. Follow the adapter's Reading section to retrieve the next available task.
+The output format adapter's Reading section contains instructions for retrieving tasks. Follow those instructions to determine the next available task.
 
-If the adapter defines a mechanism for task selection (e.g., dependency-aware querying, priority ordering), use it. If not, read tasks from the plan in sequence, checking each task's completion state via the adapter, and take the first incomplete task.
+If the adapter describes a mechanism for task selection (e.g., dependency-aware querying, priority ordering), use it. If not, read tasks from the plan in sequence, checking each task's completion state using the adapter's instructions, and take the first incomplete task.
 
-The orchestrator does not maintain its own skip logic — the adapter's state determines what's done and what's next.
+The orchestrator does not maintain its own skip logic — the plan's recorded state determines what's done and what's next.
 
 ---
 
 ## For Each Task
 
-**1.** Load **[invoke-executor.md](invoke-executor.md)** — prepare task context and invoke the executor agent.
+**1.** Load **[invoke-executor.md](invoke-executor.md)** and follow its instructions. Return here with the executor's result.
+
+**STOP.** Do not proceed until the executor agent has returned its result.
+
+---
 
 #### If executor returns `blocked` or `failed`
 
@@ -46,9 +50,15 @@ Present the executor's ISSUES to the user:
 
 **STOP.** Wait for user decision. Re-invoke the executor with the user's direction, or adjust plan as directed.
 
+---
+
 #### If executor returns `complete`
 
-**2.** Load **[invoke-reviewer.md](invoke-reviewer.md)** — invoke the reviewer agent with the executor's results.
+**2.** Load **[invoke-reviewer.md](invoke-reviewer.md)** and follow its instructions. Return here with the reviewer's result.
+
+**STOP.** Do not proceed until the reviewer agent has returned its result.
+
+---
 
 #### If reviewer returns `needs-changes`
 
@@ -68,7 +78,9 @@ Present the reviewer's findings to the user:
 
 **STOP.** Wait for user direction.
 
-**Fix round:** After user approves or modifies the notes, re-invoke executor (with review notes added), then re-invoke reviewer. If `approved`, proceed to task gate. If `needs-changes`, present to user again. No iteration cap — the user controls every cycle.
+**Fix round:** Re-invoke executor (with review notes added), then re-invoke reviewer. If `approved`, proceed to task gate. If `needs-changes`, present to user again. No iteration cap — the user controls every cycle.
+
+---
 
 #### If reviewer returns `approved`
 
@@ -113,7 +125,7 @@ Announce the result (one line, no stop):
 
 ## Update Progress and Commit
 
-**Update output format progress** — follow the adapter's Implementation section to mark the task complete. The adapter is the source of truth for task progress.
+**Update task progress in the plan** — follow the output format adapter's Implementation section for instructions on how to mark the task complete.
 
 **Mirror to implementation tracking file** (`docs/workflow/implementation/{topic}.md`):
 - Append the task ID to `completed_tasks`
