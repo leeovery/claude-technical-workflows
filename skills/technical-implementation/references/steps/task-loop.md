@@ -4,10 +4,10 @@
 
 ---
 
-Work through the plan by retrieving tasks from the output format adapter, executing them via executor and reviewer agents, and gating progress on per-task approval.
+Work through the plan task by task. The output format adapter provides instructions suited to the plan's format — use them to query and retrieve tasks in the correct order. Each task passes through executor and reviewer agents, then a per-task approval gate.
 
 ```
-Retrieve next task (via adapter)
+Retrieve next task
 │
 └─ Loop:
     ├─ Invoke executor → invoke-executor.md
