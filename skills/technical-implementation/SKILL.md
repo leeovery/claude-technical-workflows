@@ -198,7 +198,8 @@ Commit: `impl({topic}): complete implementation`
 
 - **[environment-setup.md](references/environment-setup.md)** — Environment setup before implementation
 - **[plan-execution.md](references/plan-execution.md)** — Plan structure, specification referencing, problem handling, context refresh recovery
-- **[steps/phase-loop.md](references/steps/phase-loop.md)** — Phase execution loop with per-task agent invocation and tracking updates
-- **[steps/execute-task.md](references/steps/execute-task.md)** — Executor + reviewer invocation per task
+- **[steps/phase-loop.md](references/steps/phase-loop.md)** — Phase execution loop, review gates, tracking, commits
+- **[steps/invoke-executor.md](references/steps/invoke-executor.md)** — How to invoke the executor agent
+- **[steps/invoke-reviewer.md](references/steps/invoke-reviewer.md)** — How to invoke the reviewer agent
 - **[tdd-workflow.md](references/tdd-workflow.md)** — TDD cycle (passed to executor agent)
 - **[code-quality.md](references/code-quality.md)** — Quality standards (passed to executor agent)
