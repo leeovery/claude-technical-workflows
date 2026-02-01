@@ -46,9 +46,23 @@ Present the executor's ISSUES to the user:
 >
 > {executor's ISSUES content}
 >
-> **How would you like to proceed?**
+> - **`retry`** — Re-invoke the executor with your comments (provide below)
+> - **`skip`** — Skip this task and move to the next
+> - **`stop`** — Stop implementation entirely
 
-**STOP.** Wait for user decision. Re-invoke the executor with the user's direction, or adjust plan as directed.
+**STOP.** Wait for user choice.
+
+#### If `retry`
+
+Re-invoke the executor with the user's comments added to the task context. Return to the top of **For Each Task** with the new result.
+
+#### If `skip`
+
+→ Proceed to **Update Progress and Commit** (mark task as skipped).
+
+#### If `stop`
+
+→ Return to the skill for **Step 6**.
 
 ---
 
@@ -64,21 +78,30 @@ Present the executor's ISSUES to the user:
 
 Present the reviewer's findings to the user:
 
-> **Review for Task {id}: {Task Name}**
+> **Review for Task {id}: {Task Name} — needs changes**
 >
 > {ISSUES from reviewer}
 >
 > Notes (non-blocking):
 > {NOTES from reviewer}
 >
-> **How would you like to proceed?**
-> - **`y`/`yes`** — Accept these notes. I'll pass them to the executor to fix.
-> - **Modify** — Edit or add to the notes before passing to executor.
-> - **`skip`** — Override the reviewer and proceed as-is.
+> - **`y`/`yes`** — Accept these notes and pass them to the executor to fix
+> - **`modify`** — Edit or add to the notes before passing to the executor
+> - **`skip`** — Override the reviewer and proceed as-is
 
-**STOP.** Wait for user direction.
+**STOP.** Wait for user choice.
 
-**Fix round:** Re-invoke executor (with review notes added), then re-invoke reviewer. If `approved`, proceed to task gate. If `needs-changes`, present to user again. No iteration cap — the user controls every cycle.
+#### If `y`/`yes`
+
+Re-invoke executor with the reviewer's notes added, then re-invoke reviewer. If `approved`, proceed to **Task Gate**. If `needs-changes`, present to user again. No iteration cap — the user controls every cycle.
+
+#### If `modify`
+
+Wait for the user's edited notes. Re-invoke executor with those notes, then re-invoke reviewer. Same loop as above.
+
+#### If `skip`
+
+→ Proceed to **Task Gate**.
 
 ---
 
