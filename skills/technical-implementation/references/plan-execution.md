@@ -8,7 +8,7 @@
 
 Plans live in `docs/workflow/planning/{topic}.md` with phases and tasks.
 
-**Phase** = grouping with acceptance criteria
+**Phase** = organizational grouping with acceptance criteria
 **Task** = single agent cycle = one commit (after review approval)
 
 ## Before Starting
@@ -20,17 +20,15 @@ Plans live in `docs/workflow/planning/{topic}.md` with phases and tasks.
 
 ## Execution Flow
 
-For each phase:
-1. Announce phase start with acceptance criteria
-2. For each task: invoke executor agent, then reviewer agent (see **[steps/execute-task.md](steps/execute-task.md)**)
+For each task (flat loop, phases are metadata not workflow states):
+1. Invoke executor agent (see **[steps/invoke-executor.md](steps/invoke-executor.md)**)
    - Executor implements via TDD (writes code + tests, runs tests, no git)
+2. Invoke reviewer agent (see **[steps/invoke-reviewer.md](steps/invoke-reviewer.md)**)
    - Reviewer independently verifies (spec conformance, criteria, tests, conventions, architecture)
    - If `needs-changes`: present to user → user approves/modifies/skips → fix round
-   - If `approved`: orchestrator commits
-3. Verify all acceptance criteria met
-4. **MANDATORY PHASE GATE — STOP and wait for explicit `y`/`yes`**
-
-Do not proceed to the next phase without explicit user confirmation. A question, comment, or follow-up is NOT confirmation — address it and ask again.
+   - If `approved`: task gate check
+3. Task gate: if `gated`, prompt user (`y`/`auto`/comment); if `auto`, announce and continue
+4. Orchestrator commits
 
 ## Referencing Specification
 
@@ -55,7 +53,8 @@ The specification is the source of truth. Don't look further back than this.
 
 1. Re-read the skill file completely
 2. Read tracking file (`docs/workflow/implementation/{topic}.md`)
-3. Check `git log` for recent commits
-4. Find current phase/task in plan
-5. Announce position to user, wait for confirmation
-6. Resume from last committed task
+3. Check `task_gate_mode` in tracking file — if `auto`, preserve it
+4. Check `git log` for recent commits
+5. Find current task in plan
+6. Announce position to user, wait for confirmation
+7. Resume from last committed task

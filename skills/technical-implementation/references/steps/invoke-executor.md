@@ -23,7 +23,7 @@ Invoke the agent with:
 3. **Specification path**: from the plan's frontmatter (if available)
 4. **Project skill paths**: the paths confirmed by user during project skills discovery
 5. **Task context**: the verbatim task content
-6. **Phase context**: current phase number, phase name, and what's been built so far
+6. **Phase context** (informational): which phase this task belongs to (e.g., Phase 2: Authentication) and what's been built so far — not a workflow state, just context for the executor to understand where this task fits
 
 On **re-invocation after review feedback**, also include:
 - **User-approved review notes**: verbatim or as modified by the user

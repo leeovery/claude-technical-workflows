@@ -1,20 +1,19 @@
-# Phase Loop
+# Task Loop
 
 *Reference for **[technical-implementation](../../SKILL.md)***
 
 ---
 
-Work through the plan by retrieving tasks from the output format adapter, executing them via executor and reviewer agents, and gating phase transitions on user approval.
+Work through the plan by retrieving tasks from the output format adapter, executing them via executor and reviewer agents, and gating progress on per-task approval.
 
 ```
 Retrieve next task (via adapter)
 │
 └─ Loop:
-    ├─ Phase transition? → checklist + phase gate
-    ├─ Announce new phase if needed
     ├─ Invoke executor → invoke-executor.md
     ├─ Invoke reviewer → invoke-reviewer.md
     ├─ Handle review (approved / needs-changes / fix round)
+    ├─ Task gate check (gated → prompt user / auto → announce)
     ├─ Update progress + mirror to tracking file + commit
     └─ Retrieve next task → repeat until done
 ```
@@ -28,29 +27,6 @@ The output format adapter is authoritative for determining which task to work on
 If the adapter defines a mechanism for task selection (e.g., dependency-aware querying, priority ordering), use it. If not, read tasks from the plan in sequence, checking each task's completion state via the adapter, and take the first incomplete task.
 
 The orchestrator does not maintain its own skip logic — the adapter's state determines what's done and what's next.
-
----
-
-## Phase Transitions
-
-Tasks belong to phases as defined in the plan. Track which phase the current task belongs to.
-
-#### When starting the first task
-
-Announce the phase:
-
-> **Starting Phase {N}: {Phase Name}**
->
-> Acceptance criteria:
-> {list acceptance criteria from the plan}
-
-#### When a task belongs to a different phase than the previous task
-
-The previous phase is complete. Before starting the new phase:
-
-1. Run the **phase completion checklist** (below)
-2. Run the **phase gate** (below)
-3. Announce the new phase (as above)
 
 ---
 
@@ -74,10 +50,6 @@ Present the executor's ISSUES to the user:
 
 **2.** Load **[invoke-reviewer.md](invoke-reviewer.md)** — invoke the reviewer agent with the executor's results.
 
-#### If reviewer returns `approved`
-
-→ Proceed to **Update Progress and Commit**.
-
 #### If reviewer returns `needs-changes`
 
 Present the reviewer's findings to the user:
@@ -96,7 +68,46 @@ Present the reviewer's findings to the user:
 
 **STOP.** Wait for user direction.
 
-**Fix round:** After user approves or modifies the notes, re-invoke executor (with review notes added), then re-invoke reviewer. If `approved`, proceed to commit. If `needs-changes`, present to user again. No iteration cap — the user controls every cycle.
+**Fix round:** After user approves or modifies the notes, re-invoke executor (with review notes added), then re-invoke reviewer. If `approved`, proceed to task gate. If `needs-changes`, present to user again. No iteration cap — the user controls every cycle.
+
+#### If reviewer returns `approved`
+
+→ Proceed to **Task Gate**.
+
+---
+
+## Task Gate
+
+After the reviewer approves a task, check the `task_gate_mode` field in the implementation tracking file.
+
+### If `task_gate_mode: gated`
+
+Present a summary and wait for user input:
+
+> **Task {id}: {Task Name} — approved**
+>
+> Phase: {phase number} — {phase name}
+> Built: {brief summary of what was implemented}
+> Files: {list of files changed}
+>
+> **Options:**
+> - **`y`/`yes`** — Approve, commit, continue to next task
+> - **`auto`** — Approve this and all future reviewer-approved tasks automatically
+> - **Comment** — Feedback the reviewer missed (triggers a fix round)
+
+**STOP.** Wait for user input.
+
+- **`y`/`yes`**: → Proceed to **Update Progress and Commit**.
+- **`auto`**: Note that `task_gate_mode` should be updated to `auto` during the commit step. → Proceed to **Update Progress and Commit**.
+- **Comment**: Treat as a fix round — re-invoke executor with the user's notes, then re-invoke reviewer. Return to **Task Gate** after reviewer approves.
+
+### If `task_gate_mode: auto`
+
+Announce the result (one line, no stop):
+
+> **Task {id}: {Task Name} — approved** (phase {N}: {phase name}, {brief summary}). Committing.
+
+→ Proceed to **Update Progress and Commit**.
 
 ---
 
@@ -107,14 +118,16 @@ Present the reviewer's findings to the user:
 **Mirror to implementation tracking file** (`docs/workflow/implementation/{topic}.md`):
 - Append the task ID to `completed_tasks`
 - Update `current_phase` if phase changed
+- Update `current_task` to the next task (or `~` if done)
 - Update `updated` to today's date
+- If user chose `auto` this turn: update `task_gate_mode: auto`
 
-The tracking file is a derived view for discovery scripts and cross-topic dependency resolution — not a decision-making input during implementation.
+The tracking file is a derived view for discovery scripts and cross-topic dependency resolution — not a decision-making input during implementation (except `task_gate_mode`).
 
 **Commit all changes** in a single commit:
 
 ```
-impl({topic}): P{N} T{task-id} — {brief description}
+impl({topic}): T{task-id} — {brief description}
 ```
 
 Code, tests, output format progress, and tracking file — one commit per approved task.
@@ -123,40 +136,8 @@ Code, tests, output format progress, and tracking file — one commit per approv
 
 ---
 
-## Phase Completion Checklist
-
-Run when all tasks in a phase are complete (detected when the next task belongs to a new phase, or no tasks remain):
-
-- [ ] All phase tasks implemented and reviewer-approved
-- [ ] All tests passing
-- [ ] Tests cover task acceptance criteria
-- [ ] No skipped edge cases from plan
-- [ ] All changes committed
-- [ ] Manual verification steps completed (if specified in plan)
-
-**Update implementation tracking file:**
-- Append the phase number to `completed_phases`
-
----
-
-## Phase Gate — MANDATORY
-
-> **Phase {N}: {Phase Name} — complete.**
->
-> {Summary of what was built in this phase}
->
-> **To proceed to Phase {N+1}: {Next Phase Name}:**
-> - **`y`/`yes`** — Proceed.
-> - **Or raise concerns** — anything to address before moving on.
-
-**STOP.** Wait for explicit user confirmation. Do not proceed without `y`/`yes` or equivalent affirmative. A question, comment, or follow-up is NOT confirmation — address it and ask again.
-
----
-
 ## When All Tasks Are Complete
 
-Run the phase completion checklist and phase gate for the final phase, then:
-
-> "All phases complete. {N} phases, {M} tasks implemented."
+> "All tasks complete. {M} tasks implemented."
 
 → Return to the skill for **Step 6**.

@@ -185,7 +185,7 @@ When using the full workflow, it progresses through six distinct phases:
 │ • Plan check  │   │ • Tests first │   │ • Phases      │
 │ • Specs check │   │ • Then code   │   │ • Tasks       │
 │ • Test quality│   │ • Commit often│   │ • Criteria    │
-│ • Code quality│   │ • Phase gates │   │ • Outputs     │
+│ • Code quality│   │ • Task gates  │   │ • Outputs     │
 └───────────────┘   └───────────────┘   └───────────────┘
 ```
 
@@ -197,7 +197,7 @@ When using the full workflow, it progresses through six distinct phases:
 
 **Phase 4 - Planning:** Converts specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (local markdown, Linear, Backlog.md).
 
-**Phase 5 - Implementation:** Executes the plan using strict TDD. Writes tests first, implements to pass, commits frequently, and stops for user approval between phases.
+**Phase 5 - Implementation:** Executes the plan using strict TDD. Writes tests first, implements to pass, commits frequently, with per-task approval gates (auto mode available).
 
 **Phase 6 - Review:** Validates completed work against specification requirements and plan acceptance criteria. The specification is the validated source of truth; earlier phases may contain rejected ideas that were intentionally filtered out. Provides structured feedback without fixing code directly.
 

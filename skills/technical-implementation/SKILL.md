@@ -1,6 +1,6 @@
 ---
 name: technical-implementation
-description: "Orchestrate implementation of plans using agent-based TDD workflow with per-task review. Use when: (1) Implementing a plan from docs/workflow/planning/{topic}.md, (2) User says 'implement', 'build', or 'code this' with a plan available, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Dispatches executor and reviewer agents per task, commits after review approval, stops for user approval between phases."
+description: "Orchestrate implementation of plans using agent-based TDD workflow with per-task review and approval gate (auto mode available). Use when: (1) Implementing a plan from docs/workflow/planning/{topic}.md, (2) User says 'implement', 'build', or 'code this' with a plan available, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Dispatches executor and reviewer agents per task, commits after review approval."
 ---
 
 # Technical Implementation
@@ -10,7 +10,7 @@ Orchestrate implementation by dispatching **executor** and **reviewer** agents p
 - **Executor** (`.claude/agents/implementation-task-executor.md`) — implements one task via strict TDD
 - **Reviewer** (`.claude/agents/implementation-task-reviewer.md`) — independently verifies the task (opus)
 
-The orchestrator owns: plan reading, task extraction, agent invocation, git operations, tracking, phase gates.
+The orchestrator owns: plan reading, task extraction, agent invocation, git operations, tracking, task gates.
 
 ## Purpose in the Workflow
 
@@ -48,8 +48,9 @@ Context refresh (compaction) summarizes the conversation, losing procedural deta
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
 2. **Check the output format adapter's state** for the current topic — the adapter is authoritative for task progress. Also read the implementation tracking file and any other working documents for additional context.
-3. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
-4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
+3. **Check `task_gate_mode`** in the tracking file — if `auto`, the user previously opted out of per-task gates for this session.
+4. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
+5. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 
 Do not guess at progress or continue from memory. The files on disk and git history are authoritative — your recollection is not.
 
@@ -58,8 +59,7 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 ## Orchestrator Hard Rules
 
 1. **No autonomous decisions on spec deviations** — when the executor reports a blocker or spec deviation, present to user and STOP. Never resolve on the user's behalf.
-2. **No phase progression without explicit approval** — STOP at every phase gate.
-3. **All git operations are the orchestrator's responsibility** — agents never commit, stage, or interact with git.
+2. **All git operations are the orchestrator's responsibility** — agents never commit, stage, or interact with git.
 
 ---
 
@@ -141,6 +141,8 @@ Store the selected skill paths — pass to every agent invocation.
 
 #### If `docs/workflow/implementation/{topic}.md` already exists
 
+Reset `task_gate_mode` to `gated` in the tracking file before proceeding (fresh session = fresh gate).
+
 → Proceed to **Step 5**.
 
 #### If no tracking file exists
@@ -153,6 +155,7 @@ topic: {topic}
 plan: ../planning/{topic}.md
 format: {format from plan}
 status: in-progress
+task_gate_mode: gated
 current_phase: 1
 current_task: ~
 completed_phases: []
@@ -173,9 +176,9 @@ Commit: `impl({topic}): start implementation`
 
 ---
 
-## Step 5: Phase Loop
+## Step 5: Task Loop
 
-Load **[steps/phase-loop.md](references/steps/phase-loop.md)** and follow its instructions as written.
+Load **[steps/task-loop.md](references/steps/task-loop.md)** and follow its instructions as written.
 
 → After the loop completes, proceed to **Step 6**.
 
@@ -196,7 +199,7 @@ Commit: `impl({topic}): complete implementation`
 
 - **[environment-setup.md](references/environment-setup.md)** — Environment setup before implementation
 - **[plan-execution.md](references/plan-execution.md)** — Plan structure, specification referencing, problem handling, context refresh recovery
-- **[steps/phase-loop.md](references/steps/phase-loop.md)** — Phase execution loop, review gates, tracking, commits
+- **[steps/task-loop.md](references/steps/task-loop.md)** — Task execution loop, task gates, tracking, commits
 - **[steps/invoke-executor.md](references/steps/invoke-executor.md)** — How to invoke the executor agent
 - **[steps/invoke-reviewer.md](references/steps/invoke-reviewer.md)** — How to invoke the reviewer agent
 - **[tdd-workflow.md](references/tdd-workflow.md)** — TDD cycle (passed to executor agent)
