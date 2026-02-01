@@ -4,41 +4,40 @@
 
 ---
 
-Work through the plan task by task. The output format adapter provides instructions suited to the plan's format — use them to query and retrieve tasks in the correct order. Each task passes through executor and reviewer agents, then a per-task approval gate.
+Flat loop over tasks. The plan adapter (loaded in Step 2) provides instructions for reading tasks from and writing progress to the plan.
 
 ```
 Retrieve next task
 │
 └─ Loop:
-    ├─ Invoke executor → invoke-executor.md
-    ├─ Invoke reviewer → invoke-reviewer.md
-    ├─ Handle review (approved / needs-changes / fix round)
-    ├─ Task gate check (gated → prompt user / auto → announce)
-    ├─ Update progress + mirror to tracking file + commit
+    ├─ Execute task → invoke-executor.md
+    ├─ Review task → invoke-reviewer.md
+    ├─ Task gate (gated → prompt user / auto → announce)
+    ├─ Update progress + commit
     └─ Retrieve next task → repeat until done
 ```
 
 ---
 
-## Retrieving the Next Task
+## Retrieve Next Task
 
-The output format adapter's Reading section contains instructions for retrieving tasks. Follow those instructions to determine the next available task.
-
-If the adapter describes a mechanism for task selection (e.g., dependency-aware querying, priority ordering), use it. If not, read tasks from the plan in sequence, checking each task's completion state using the adapter's instructions, and take the first incomplete task.
-
-The orchestrator does not maintain its own skip logic — the plan's recorded state determines what's done and what's next.
+1. Follow the plan adapter's Reading instructions to determine the next incomplete task.
+2. Extract the task content verbatim from the plan.
+3. If no incomplete tasks remain → skip to **When All Tasks Are Complete**.
 
 ---
 
-## For Each Task
+## Execute Task
 
-**1.** Load **[invoke-executor.md](invoke-executor.md)** and follow its instructions. Return here with the executor's result.
-
-**STOP.** Do not proceed until the executor agent has returned its result.
+1. Load **[invoke-executor.md](invoke-executor.md)** and follow its instructions. Pass the task content verbatim.
+2. **STOP.** Do not proceed until the executor has returned its result.
+3. Route on STATUS:
+   - `blocked` or `failed` → **Executor Blocked**
+   - `complete` → **Review Task**
 
 ---
 
-#### If executor returns `blocked` or `failed`
+## Executor Blocked
 
 Present the executor's ISSUES to the user:
 
@@ -54,7 +53,7 @@ Present the executor's ISSUES to the user:
 
 #### If `retry`
 
-Re-invoke the executor with the user's comments added to the task context. Return to the top of **For Each Task** with the new result.
+Re-invoke the executor with the user's comments added to the task context. Return to **Execute Task** with the new result.
 
 #### If `skip`
 
@@ -66,15 +65,17 @@ Re-invoke the executor with the user's comments added to the task context. Retur
 
 ---
 
-#### If executor returns `complete`
+## Review Task
 
-**2.** Load **[invoke-reviewer.md](invoke-reviewer.md)** and follow its instructions. Return here with the reviewer's result.
-
-**STOP.** Do not proceed until the reviewer agent has returned its result.
+1. Load **[invoke-reviewer.md](invoke-reviewer.md)** and follow its instructions. Pass the executor's result.
+2. **STOP.** Do not proceed until the reviewer has returned its result.
+3. Route on VERDICT:
+   - `needs-changes` → **Review Changes**
+   - `approved` → **Task Gate**
 
 ---
 
-#### If reviewer returns `needs-changes`
+## Review Changes
 
 Present the reviewer's findings to the user:
 
@@ -100,12 +101,6 @@ Re-invoke executor with the reviewer's notes added, then re-invoke reviewer. If 
 Wait for the user's edited notes. Re-invoke executor with those notes, then re-invoke reviewer. Same loop as above.
 
 #### If `skip`
-
-→ Proceed to **Task Gate**.
-
----
-
-#### If reviewer returns `approved`
 
 → Proceed to **Task Gate**.
 
@@ -148,7 +143,7 @@ Announce the result (one line, no stop):
 
 ## Update Progress and Commit
 
-**Update task progress in the plan** — follow the output format adapter's Implementation section for instructions on how to mark the task complete.
+**Update task progress in the plan** — follow the plan adapter's Implementation section for instructions on how to mark the task complete.
 
 **Mirror to implementation tracking file** (`docs/workflow/implementation/{topic}.md`):
 - Append the task ID to `completed_tasks`
@@ -165,7 +160,7 @@ The tracking file is a derived view for discovery scripts and cross-topic depend
 impl({topic}): T{task-id} — {brief description}
 ```
 
-Code, tests, output format progress, and tracking file — one commit per approved task.
+Code, tests, plan progress, and tracking file — one commit per approved task.
 
 → Retrieve the next task.
 

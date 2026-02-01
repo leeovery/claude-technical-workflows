@@ -4,18 +4,18 @@
 
 ---
 
-How to invoke the `implementation-task-reviewer` agent (`.claude/agents/implementation-task-reviewer.md`) after the executor completes a task.
+This step invokes the `implementation-task-reviewer` agent (`.claude/agents/implementation-task-reviewer.md`) to independently verify a completed task.
 
 ---
 
-## Inputs
+## Invoke the Agent
 
-Invoke the agent with:
+Invoke `implementation-task-reviewer` with:
 
 1. **Specification path**: same path given to the executor
-2. **Task context**: same verbatim content the executor received
+2. **Task content**: same verbatim content the executor received
 3. **Files changed**: the FILES_CHANGED list from the executor's result
-4. **Project skill paths**: same paths given to the executor
+4. **Project skill paths**: from `project_skills` in the implementation tracking file
 
 ---
 

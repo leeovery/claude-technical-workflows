@@ -4,25 +4,19 @@
 
 ---
 
-How to invoke the `implementation-task-executor` agent (`.claude/agents/implementation-task-executor.md`) for one task.
+This step invokes the `implementation-task-executor` agent (`.claude/agents/implementation-task-executor.md`) to implement one task via strict TDD.
 
 ---
 
-## Prepare Task Context
+## Invoke the Agent
 
-Extract the task details from the plan using the output format adapter's Reading section. Pass the task content **verbatim** — no summarisation, no rewriting.
-
----
-
-## Inputs
-
-Invoke the agent with:
+Invoke `implementation-task-executor` with these file paths:
 
 1. **tdd-workflow.md**: `.claude/skills/technical-implementation/references/tdd-workflow.md`
 2. **code-quality.md**: `.claude/skills/technical-implementation/references/code-quality.md`
 3. **Specification path**: from the plan's frontmatter (if available)
-4. **Project skill paths**: the paths confirmed by user during project skills discovery
-5. **Task context**: the verbatim task content
+4. **Project skill paths**: from `project_skills` in the implementation tracking file
+5. **Task content**: verbatim — no summarisation, no rewriting
 6. **Phase context** (informational): which phase this task belongs to (e.g., Phase 2: Authentication) and what's been built so far — not a workflow state, just context for the executor to understand where this task fits
 
 On **re-invocation after review feedback**, also include:

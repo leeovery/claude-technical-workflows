@@ -47,7 +47,7 @@ If no specification is available, the plan becomes the sole authority for design
 Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
-2. **Check task progress in the plan** — use the output format adapter's instructions to read the plan's current state. Also read the implementation tracking file and any other working documents for additional context.
+2. **Check task progress in the plan** — use the plan adapter's instructions to read the plan's current state. Also read the implementation tracking file and any other working documents for additional context.
 3. **Check `task_gate_mode`** in the tracking file — if `auto`, the user previously opted out of per-task gates for this session.
 4. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 5. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
@@ -96,13 +96,13 @@ Save their instructions to `docs/workflow/environment-setup.md` (or "No special 
 
 ---
 
-## Step 2: Read Plan + Load Output Format Adapter
+## Step 2: Read Plan + Load Plan Adapter
 
 1. Read the plan from the provided location (typically `docs/workflow/planning/{topic}.md`)
-2. Check the `format` field in frontmatter
-3. Load the output adapter: `skills/technical-planning/references/output-formats/output-{format}.md`
-4. If no format field, ask user which format the plan uses
-5. Read the adapter's **Implementation** section — these instructions explain how to extract task content and update progress in the plan. They apply later during Step 5.
+2. Plans can be stored in various formats. The `format` field in the plan's frontmatter identifies which format this plan uses.
+3. Load the corresponding adapter file: `skills/technical-planning/references/output-formats/output-{format}.md` — this document provides instructions for reading tasks from and writing progress to the plan. Hereafter referred to as the **plan adapter**.
+4. If no `format` field exists, ask the user which format the plan uses.
+5. Read the plan adapter's **Implementation** section to understand the instructions — they apply during Step 5.
 
 → Proceed to **Step 3**.
 
@@ -131,7 +131,7 @@ Scan `.claude/skills/` for project-specific skill directories. Present findings:
 
 **STOP.** Wait for user to confirm which skills are relevant.
 
-Store the selected skill paths — pass to every agent invocation.
+Store the selected skill paths — they will be persisted to the tracking file in Step 4.
 
 → Proceed to **Step 4**.
 
@@ -142,6 +142,20 @@ Store the selected skill paths — pass to every agent invocation.
 #### If `docs/workflow/implementation/{topic}.md` already exists
 
 Reset `task_gate_mode` to `gated` in the tracking file before proceeding (fresh session = fresh gate).
+
+If `project_skills` is populated in the tracking file, present for confirmation:
+
+> "Previous session used these project skills:
+> - `{skill-name}` — {path}
+> - ...
+>
+> - **`y`/`yes`** — Keep these, proceed
+> - **`change`** — Add or remove skills"
+
+**STOP.** Wait for user choice.
+
+- **`y`/`yes`**: Proceed with the persisted paths.
+- **`change`**: Re-run discovery (Step 3), update `project_skills` in the tracking file.
 
 → Proceed to **Step 5**.
 
@@ -156,6 +170,7 @@ plan: ../planning/{topic}.md
 format: {format from plan}
 status: in-progress
 task_gate_mode: gated
+project_skills: []
 current_phase: 1
 current_task: ~
 completed_phases: []
@@ -169,6 +184,8 @@ completed: ~
 
 Implementation started.
 ```
+
+After creating the file, populate `project_skills` with the paths confirmed in Step 3 (empty array if none).
 
 Commit: `impl({topic}): start implementation`
 
