@@ -6,25 +6,25 @@
 
 This step executes all phases in the plan sequentially. Each phase contains tasks; each task is implemented by an executor agent and verified by a reviewer agent.
 
-    ┌───────────────────────────────────────────────────┐
-    │                                                   │
-    │  For each phase:                                  │
-    │                                                   │
-    │  1. Announce phase + acceptance criteria           │
-    │                                                   │
-    │    ┌─────────────────────────────────────────┐    │
-    │    │  For each task in phase:                │    │
-    │    │                                         │    │
-    │    │    Step A → Execute task                │    │
-    │    │      (executor + reviewer + review gate)│    │
-    │    │                                         │    │
-    │    │    Update tracking + commit             │    │
-    │    └─────────────────────────────────────────┘    │
-    │                                                   │
-    │  2. Phase completion checklist                    │
-    │  3. Phase gate — MANDATORY STOP                   │
-    │                                                   │
-    └───────────────────────────────────────────────────┘
+```
+Determine starting position (from tracking file)
+│
+└─ For each phase:
+    │
+    ├─ Announce phase + acceptance criteria
+    │
+    ├─ For each task:
+    │   ├─ Extract task details (verbatim from plan)
+    │   ├─ Step A: Execute task
+    │   │   ├─ Invoke executor (TDD: test → implement, no git)
+    │   │   ├─ Invoke reviewer (spec, criteria, tests, conventions, architecture)
+    │   │   └─ If needs-changes → user gate → fix round (loop)
+    │   ├─ Update tracking
+    │   └─ Commit: impl({topic}): P{N} T{id} — {description}
+    │
+    ├─ Phase completion checklist
+    └─ PHASE GATE — STOP, wait for y/yes
+```
 
 ---
 
