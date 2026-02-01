@@ -1,13 +1,16 @@
 ---
 name: technical-implementation
-description: "Execute implementation plans using strict TDD workflow with quality gates. Use when: (1) Implementing a plan from docs/workflow/planning/{topic}.md, (2) User says 'implement', 'build', or 'code this' with a plan available, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Writes tests first, implements to pass, commits frequently, stops for user approval between phases."
+description: "Orchestrate implementation of plans using agent-based TDD workflow with per-task review. Use when: (1) Implementing a plan from docs/workflow/planning/{topic}.md, (2) User says 'implement', 'build', or 'code this' with a plan available, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Dispatches executor and reviewer agents per task, commits after review approval, stops for user approval between phases."
 ---
 
 # Technical Implementation
 
-Act as **expert senior developer** who builds quality software through disciplined TDD. Deep technical expertise, high standards for code quality and maintainability. Follow project-specific skills for language/framework conventions.
+Orchestrate implementation by dispatching **executor** and **reviewer** agents per task. Each agent invocation starts fresh — flat context, no accumulated state.
 
-Execute plans through strict TDD. Write tests first, then code to pass them.
+- **Executor** (`.claude/agents/implementation-task-executor.md`) — implements one task via strict TDD
+- **Reviewer** (`.claude/agents/implementation-task-reviewer.md`) — independently verifies the task (opus)
+
+The orchestrator owns: plan reading, task extraction, agent invocation, git operations, tracking, phase gates.
 
 ## Purpose in the Workflow
 
@@ -15,7 +18,7 @@ This skill can be used:
 - **Sequentially**: To execute a plan created by technical-planning
 - **Standalone** (Contract entry): To execute any plan that follows plan-format conventions
 
-Either way: Execute via strict TDD - tests first, implementation second.
+Either way: dispatch agents per task — executor implements via TDD, reviewer verifies independently.
 
 ### What This Skill Needs
 
@@ -52,58 +55,113 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 ---
 
-## Hard Rules
+## Orchestrator Hard Rules
 
-**MANDATORY. No exceptions. Violating these rules invalidates the work.**
+1. **No autonomous decisions on spec deviations** — when the executor reports a blocker or spec deviation, present to user and STOP. Never resolve on the user's behalf.
+2. **No phase progression without explicit approval** — STOP at every phase gate.
+3. **All git operations are the orchestrator's responsibility** — agents never commit, stage, or interact with git.
 
-1. **No code before tests** - Write the failing test first. Always.
-2. **No test changes to pass** - Fix the code, not the test.
-3. **No scope expansion** - If it's not in the plan, don't build it.
-4. **No assumptions** - Uncertain? Check specification. Still uncertain? Stop and ask.
-5. **Commit after green** - Every passing test = commit point.
-
-**Pragmatic TDD**: The discipline is test-first sequencing, not artificial minimalism. Write complete, functional implementations - don't fake it with hardcoded returns. "Minimal" means no gold-plating beyond what the test requires.
-
-See **[tdd-workflow.md](references/tdd-workflow.md)** for the full TDD cycle, violation recovery, and guidance on when tests can change.
+---
 
 ## Workflow
 
-### IMPORTANT: Setup Instructions
+### Step 1: Environment Setup
 
 Run setup commands EXACTLY as written, one step at a time.
 Do NOT modify commands based on other project documentation (CLAUDE.md, etc.).
-Do NOT parallelize steps - execute each command sequentially.
+Do NOT parallelize steps — execute each command sequentially.
 Complete ALL setup steps before proceeding to implementation work.
 
-1. **Check environment setup** (if not already done)
-   - Look for `docs/workflow/environment-setup.md`
-   - If exists and states "No special setup required", skip to step 2
-   - If exists with instructions, follow the setup before proceeding
-   - If missing, ask: "Are there any environment setup instructions I should follow?"
+1. Look for `docs/workflow/environment-setup.md`
+2. If exists and states "No special setup required", skip to step 2
+3. If exists with instructions, follow the setup before proceeding
+4. If missing, ask: "Are there any environment setup instructions I should follow?"
 
-   See **[environment-setup.md](references/environment-setup.md)** for details.
+See **[environment-setup.md](references/environment-setup.md)** for details.
 
-2. **Read the plan** from the provided location (typically `docs/workflow/planning/{topic}.md`)
-   - Check the `format` field in frontmatter
-   - Load the output adapter: `skills/technical-planning/references/output-formats/output-{format}.md`
-   - If no format field, ask user which format the plan uses
-   - Follow the **Implementation** section for how to read tasks and update progress
+### Step 2: Read Plan + Load Output Format Adapter
 
-3. **Read the TDD workflow** - Load **[tdd-workflow.md](references/tdd-workflow.md)** before writing any code. This is mandatory.
+1. Read the plan from the provided location (typically `docs/workflow/planning/{topic}.md`)
+2. Check the `format` field in frontmatter
+3. Load the output adapter: `skills/technical-planning/references/output-formats/output-{format}.md`
+4. If no format field, ask user which format the plan uses
+5. Follow the adapter's **Implementation** section for how to read tasks and update progress
 
-4. **Initialize or resume implementation tracking**
-   - Check if `docs/workflow/implementation/{topic}.md` exists
-   - **If not**: Create it with the initial tracking frontmatter (see [Implementation Tracking](#implementation-tracking) below), set `status: in-progress`, `started: {today}`. Commit: `impl({topic}): start implementation`
-   - **If exists**: Read it to determine current position (see [Resuming After Context Refresh](#resuming-after-context-refresh) below)
+### Step 3: Project Skills Discovery
 
-5. **For each phase** (working through phases and tasks in plan order):
-   - Announce phase start and review acceptance criteria
-   - For each task: follow the TDD cycle loaded in step 3
-   - After each task completes: update progress in **both** the output format (as loaded in step 2) **and** the implementation tracking file (see below)
-   - Verify all phase acceptance criteria met
-   - **Ask user before proceeding to next phase**
+After loading the plan and output format adapter:
 
-6. **Reference specification** when rationale unclear
+1. Scan `.claude/skills/` for project-specific skill directories
+2. Present findings to user:
+
+> "Found these project skills that may be relevant to implementation:
+> - `{skill-name}` — {brief description}
+> - ...
+>
+> Which of these should I pass to the implementation agents? (all / list / none)"
+
+3. **STOP.** Wait for user to confirm which skills are relevant.
+4. Store the selected skill paths — pass to every agent invocation.
+
+If `.claude/skills/` doesn't exist or is empty, note this and proceed without project skills.
+
+### Step 4: Initialize or Resume Implementation Tracking
+
+- Check if `docs/workflow/implementation/{topic}.md` exists
+- **If not**: Create it with the initial tracking frontmatter (see [Implementation Tracking](#implementation-tracking) below), set `status: in-progress`, `started: {today}`. Commit: `impl({topic}): start implementation`
+- **If exists**: Read it to determine current position (see [Resuming After Context Refresh](#resuming-after-context-refresh))
+
+### Step 5: Phase Loop
+
+For each phase (working through phases and tasks in plan order):
+
+1. **Announce phase start** — review acceptance criteria with user
+2. **For each task in phase:**
+   a. Extract task details from plan (using output adapter — verbatim, no summarisation)
+   b. Load **[steps/execute-task.md](references/steps/execute-task.md)** and follow it:
+      - Invoke `implementation-task-executor`
+      - Invoke `implementation-task-reviewer`
+      - If `needs-changes`: present to user (human-in-the-loop), then fix loop
+      - If `approved`: proceed
+   c. Update output format progress + tracking file
+   d. Commit all changes: `impl({topic}): P{N} T{id} — {description}`
+      (code + tests + output format + tracking — single commit per task)
+3. **Phase completion checklist** (see below)
+4. **MANDATORY PHASE GATE** (see below)
+
+### Step 6: Mark Implementation Complete
+
+- Set tracking file `status: completed`, `completed: {today}`
+- Commit: `impl({topic}): complete implementation`
+
+---
+
+## Phase Completion Checklist
+
+Before marking a phase complete:
+
+- [ ] All phase tasks implemented and reviewer-approved
+- [ ] All tests passing
+- [ ] Tests cover task acceptance criteria
+- [ ] No skipped edge cases from plan
+- [ ] All changes committed
+- [ ] Manual verification steps completed (if specified in plan)
+
+## Phase Gate — MANDATORY
+
+After all tasks in a phase are complete:
+
+> **Phase {N}: {Phase Name} — complete.**
+>
+> {Summary of what was built in this phase}
+>
+> **To proceed to Phase {N+1}: {Next Phase Name}:**
+> - **`y`/`yes`** — Proceed.
+> - **Or raise concerns** — anything to address before moving on.
+
+**STOP.** Wait for explicit user confirmation. Do not proceed to the next phase without `y`/`yes` or equivalent affirmative. A question, comment, or follow-up is NOT confirmation — address it and ask again.
+
+---
 
 ## Implementation Tracking
 
@@ -137,7 +195,7 @@ Implementation started.
 
 When a task or phase completes, update **two** things:
 
-1. **Output format progress** — Follow the output adapter's Implementation section (loaded in workflow step 2) to mark tasks/phases complete in the plan index file and any format-specific files. This is the plan's own progress tracking.
+1. **Output format progress** — Follow the output adapter's Implementation section (loaded in step 2) to mark tasks/phases complete in the plan index file and any format-specific files. This is the plan's own progress tracking.
 
 2. **Implementation tracking file** — Update `docs/workflow/implementation/{topic}.md` as described below. This enables cross-topic dependency resolution and resume detection.
 
@@ -157,7 +215,7 @@ When a task or phase completes, update **two** things:
 - Set `completed: {today}`
 - Commit: `impl({topic}): complete implementation`
 
-Task IDs in `completed_tasks` use whatever ID format the output format assigns -- the same IDs used in dependency references.
+Task IDs in `completed_tasks` use whatever ID format the output format assigns — the same IDs used in dependency references.
 
 ### Body Progress Section
 
@@ -180,11 +238,12 @@ All tasks completed.
 Keep user informed of progress:
 
 ```
-📍 Starting Phase 2: Core Cache Functionality
-📝 Task 1: Implement CacheManager.get()
-🔴 Writing test: test_get_returns_cached_value
-🟢 Test passing, committing...
-✅ Phase 2 complete. Ready for Phase 3?
+Starting Phase 2: Core Cache Functionality
+Task 1: Implement CacheManager.get()
+Invoking executor agent...
+Executor complete — invoking reviewer...
+Reviewer approved — committing...
+Phase 2 complete. Ready for Phase 3?
 ```
 
 ## When to Reference Specification
@@ -200,20 +259,17 @@ Check the specification when:
 
 The specification (if available) is the source of truth for design decisions. If no specification exists, the plan is the authority.
 
-**Important:** If prior source material exists (research notes, discussion documents, etc.), ignore it during implementation. It may contain outdated ideas, rejected approaches, or superseded decisions. The specification filtered and validated that content - refer only to the specification and plan.
-
-## Project-Specific Conventions
-
-Follow project-specific coding skills in `.claude/skills/` for:
-
-- Framework patterns (Laravel, Vue, Python, etc.)
-- Code style and formatting
-- Architecture conventions
-- Testing conventions
-
-This skill contains the implementation **process**. Project skills contain the **style**.
+**Important:** If prior source material exists (research notes, discussion documents, etc.), ignore it during implementation. It may contain outdated ideas, rejected approaches, or superseded decisions. The specification filtered and validated that content — refer only to the specification and plan.
 
 ## Handling Problems
+
+### Executor Reports Blocker
+
+Present the executor's ISSUES to the user with full context. **STOP.** Wait for user decision before re-invoking or adjusting.
+
+### Reviewer Finds Issues
+
+Present the reviewer's findings to the user via the human-in-the-loop gate in [execute-task.md](references/steps/execute-task.md). User decides: accept notes, modify, or skip.
 
 ### Plan is Incomplete
 
@@ -225,54 +281,12 @@ Stop and escalate:
 Stop and escalate:
 > "The plan says X, but during implementation I discovered Y. This affects Z. Should I continue as planned or revise?"
 
-### Test Reveals Design Flaw
-
-Stop and escalate:
-> "Writing tests for X revealed that the approach won't work because Y. Need to revisit the design."
-
 Never silently deviate from the plan.
-
-## Quality Standards
-
-See [code-quality.md](references/code-quality.md) for:
-
-- DRY (without premature abstraction)
-- SOLID principles
-- Cyclomatic complexity
-- YAGNI enforcement
-
-## Phase Completion Checklist
-
-Before marking a phase complete:
-
-- [ ] All phase tasks implemented
-- [ ] All tests passing
-- [ ] Tests cover task acceptance criteria
-- [ ] No skipped edge cases from plan
-- [ ] Code committed
-- [ ] Manual verification steps completed (if specified in plan)
-
-## Commit Practices
-
-- Commit after each passing test
-- Use descriptive commit messages referencing the task
-- Commits can be squashed before PR if desired
-- Never commit failing tests (except intentional red phase in TDD)
-
-Example commit message:
-```
-feat(cache): implement CacheManager.get() with TTL support
-
-- Returns cached value if exists and not expired
-- Falls back to DB on cache miss
-- Handles connection failures gracefully
-
-Task: Phase 2, Task 1
-```
 
 ## References
 
-- **[environment-setup.md](references/environment-setup.md)** - Environment setup before implementation
-- **[plan-execution.md](references/plan-execution.md)** - Following plans, phase verification, hierarchy
-- **[tdd-workflow.md](references/tdd-workflow.md)** - TDD cycle, test derivation, when tests can change
-- **[code-quality.md](references/code-quality.md)** - DRY, SOLID, complexity, YAGNI
+- **[environment-setup.md](references/environment-setup.md)** — Environment setup before implementation
+- **[plan-execution.md](references/plan-execution.md)** — Following plans, phase verification, hierarchy
+- **[steps/execute-task.md](references/steps/execute-task.md)** — Executor + reviewer invocation per task
+- **[tdd-workflow.md](references/tdd-workflow.md)** — TDD cycle (passed to executor agent)
+- **[code-quality.md](references/code-quality.md)** — Quality standards (passed to executor agent)

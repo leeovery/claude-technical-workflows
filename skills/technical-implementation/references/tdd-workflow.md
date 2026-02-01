@@ -66,7 +66,9 @@ Run tests after. If they fail, undo the refactor.
 
 ## COMMIT: After Every Green
 
-Commit with descriptive message referencing the task. This is non-negotiable - it creates recovery points.
+**When running standalone** (not via agent): Commit with descriptive message referencing the task. This is non-negotiable — it creates recovery points.
+
+**When running as an agent**: The executor agent does NOT commit. The orchestrator commits after review approval — one commit per approved task covering code, tests, tracking, and plan progress. The agent's responsibility ends at GREEN (all tests passing). The orchestrator handles git.
 
 ## When Tests CAN Change
 
