@@ -139,8 +139,6 @@ Store the selected skill paths — pass to every agent invocation.
 
 ## Step 4: Initialize or Resume Implementation Tracking
 
-Load **[implementation-tracking.md](references/implementation-tracking.md)** for tracking file format and conventions.
-
 #### If `docs/workflow/implementation/{topic}.md` exists
 
 Read it to determine current position. See [Resuming After Context Refresh](#resuming-after-context-refresh) for recovery protocol.
@@ -149,7 +147,27 @@ Read it to determine current position. See [Resuming After Context Refresh](#res
 
 #### If no tracking file exists
 
-Create the tracking file following the template in [implementation-tracking.md](references/implementation-tracking.md). Set `status: in-progress`, `started: {today}`.
+Create `docs/workflow/implementation/{topic}.md`:
+
+```yaml
+---
+topic: {topic}
+plan: ../planning/{topic}.md
+format: {format from plan}
+status: in-progress
+current_phase: 1
+current_task: ~
+completed_phases: []
+completed_tasks: []
+started: YYYY-MM-DD  # Use today's actual date
+updated: YYYY-MM-DD  # Use today's actual date
+completed: ~
+---
+
+# Implementation: {Topic Name}
+
+Implementation started.
+```
 
 Commit: `impl({topic}): start implementation`
 
@@ -159,52 +177,18 @@ Commit: `impl({topic}): start implementation`
 
 ## Step 5: Phase Loop
 
-For each phase (working through phases and tasks in plan order):
+Load **[steps/phase-loop.md](references/steps/phase-loop.md)** and follow its instructions as written.
 
-1. **Announce phase start** — state phase name and review acceptance criteria with user
-
-2. **For each task in phase:**
-
-   a. Extract task details from plan (using output adapter — verbatim, no summarisation)
-
-   b. Load **[steps/execute-task.md](references/steps/execute-task.md)** and follow it:
-      - Invoke `implementation-task-executor`
-      - Invoke `implementation-task-reviewer`
-      - If `needs-changes`: present to user (human-in-the-loop), then fix loop
-      - If `approved`: proceed
-
-   c. Update tracking — follow the "Updating Progress" section in **[implementation-tracking.md](references/implementation-tracking.md)** for both output format progress and tracking file updates
-
-   d. Commit all changes: `impl({topic}): P{N} T{id} — {description}`
-      (code + tests + output format + tracking — single commit per task)
-
-3. **Phase completion checklist:**
-   - [ ] All phase tasks implemented and reviewer-approved
-   - [ ] All tests passing
-   - [ ] Tests cover task acceptance criteria
-   - [ ] No skipped edge cases from plan
-   - [ ] All changes committed
-   - [ ] Manual verification steps completed (if specified in plan)
-
-4. **Phase gate — MANDATORY:**
-
-> **Phase {N}: {Phase Name} — complete.**
->
-> {Summary of what was built in this phase}
->
-> **To proceed to Phase {N+1}: {Next Phase Name}:**
-> - **`y`/`yes`** — Proceed.
-> - **Or raise concerns** — anything to address before moving on.
-
-**STOP.** Wait for explicit user confirmation. Do not proceed to the next phase without `y`/`yes` or equivalent affirmative. A question, comment, or follow-up is NOT confirmation — address it and ask again.
-
-→ After final phase gate, proceed to **Step 6**.
+→ After the loop completes, proceed to **Step 6**.
 
 ---
 
 ## Step 6: Mark Implementation Complete
 
-Update tracking file: set `status: completed`, `completed: {today}`.
+Update the tracking file (`docs/workflow/implementation/{topic}.md`):
+- Set `status: completed`
+- Set `completed: YYYY-MM-DD` (use today's actual date)
+- Update `updated` date
 
 Commit: `impl({topic}): complete implementation`
 
@@ -214,7 +198,7 @@ Commit: `impl({topic}): complete implementation`
 
 - **[environment-setup.md](references/environment-setup.md)** — Environment setup before implementation
 - **[plan-execution.md](references/plan-execution.md)** — Plan structure, specification referencing, problem handling, context refresh recovery
-- **[implementation-tracking.md](references/implementation-tracking.md)** — Tracking file format, creation, and progress updates
+- **[steps/phase-loop.md](references/steps/phase-loop.md)** — Phase execution loop with per-task agent invocation and tracking updates
 - **[steps/execute-task.md](references/steps/execute-task.md)** — Executor + reviewer invocation per task
 - **[tdd-workflow.md](references/tdd-workflow.md)** — TDD cycle (passed to executor agent)
 - **[code-quality.md](references/code-quality.md)** — Quality standards (passed to executor agent)
