@@ -137,11 +137,11 @@ Store the selected skill paths — pass to every agent invocation.
 
 ---
 
-## Step 4: Initialize or Resume Implementation Tracking
+## Step 4: Initialize Implementation Tracking
 
-#### If `docs/workflow/implementation/{topic}.md` exists
+#### If `docs/workflow/implementation/{topic}.md` already exists
 
-Read it to determine current position. See [Resuming After Context Refresh](#resuming-after-context-refresh) for recovery protocol.
+The tracking file records current phase and task position. Step 5 will use it to resume from where work left off.
 
 → Proceed to **Step 5**.
 

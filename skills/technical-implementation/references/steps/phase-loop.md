@@ -28,11 +28,28 @@ This step executes all phases in the plan sequentially. Each phase contains task
 
 ---
 
+## Determine Starting Position
+
+Read the implementation tracking file (`docs/workflow/implementation/{topic}.md`). Check `current_phase`, `current_task`, `completed_phases`, and `completed_tasks`.
+
+- **Completed phases**: skip entirely
+- **Completed tasks within the current phase**: skip
+- **Current task** (`current_task`): resume from here
+- **If `current_task` is `~` and `completed_tasks` is empty**: fresh start — begin at Phase 1, Task 1
+
+---
+
 ## Process Phases
 
-Work through each phase in plan order.
+Work through each phase in plan order, starting from the position determined above.
 
 ### For each phase:
+
+#### If phase is already in `completed_phases`
+
+Skip. Continue to the next phase.
+
+#### Otherwise
 
 Announce the phase to the user:
 
@@ -44,6 +61,12 @@ Announce the phase to the user:
 ---
 
 ### For each task in phase:
+
+#### If task is already in `completed_tasks`
+
+Skip. Continue to the next task.
+
+#### Otherwise
 
 Extract task details from the plan using the output format adapter. Pass content **verbatim** — no summarisation, no rewriting.
 
