@@ -92,8 +92,8 @@ If the specification changed, update `spec_commit` in the Plan Index File frontm
 
 #### If `restart`
 
-1. Read **[output-formats.md](references/output-formats.md)**, find the entry matching the `format:` field in the Plan Index File, and load the linked adapter
-2. Follow the adapter's cleanup instructions to remove Authored Tasks for this topic
+1. Read **[output-formats.md](references/output-formats.md)**, find the entry matching the `format:` field in the Plan Index File, and load the format's **[authoring.md](references/output-formats/{format}/authoring.md)**
+2. Follow the authoring file's cleanup instructions to remove Authored Tasks for this topic
 3. Delete the Plan Index File
 4. Commit: `planning({topic}): restart planning`
 
@@ -105,7 +105,7 @@ If the specification changed, update `spec_commit` in the Plan Index File frontm
 
 #### If Plan Index File already exists
 
-Read **[output-formats.md](references/output-formats.md)**, find the entry matching the `format:` field, and load the linked adapter.
+Read **[output-formats.md](references/output-formats.md)**, find the entry matching the `format:` field, and load the format's **[about.md](references/output-formats/{format}/about.md)** and **[authoring.md](references/output-formats/{format}/authoring.md)**.
 
 → Proceed to **Step 2**.
 
@@ -131,7 +131,7 @@ Present the formats from **[output-formats.md](references/output-formats.md)** t
 
 Once selected:
 
-1. Read **[output-formats.md](references/output-formats.md)**, find the chosen format entry, and load the linked adapter
+1. Read **[output-formats.md](references/output-formats.md)**, find the chosen format entry, and load the format's **[about.md](references/output-formats/{format}/about.md)** and **[authoring.md](references/output-formats/{format}/authoring.md)**
 2. Capture the current git commit hash: `git rev-parse HEAD`
 3. Create the Plan Index File at `docs/workflow/planning/{topic}.md` with the following frontmatter and title:
 
@@ -185,23 +185,31 @@ Load **[steps/plan-construction.md](references/steps/plan-construction.md)** and
 
 ---
 
-## Step 5: Resolve External Dependencies
+## Step 5: Analyze Task Graph
 
-Load **[steps/resolve-dependencies.md](references/steps/resolve-dependencies.md)** and follow its instructions as written.
+Load **[steps/analyze-task-graph.md](references/steps/analyze-task-graph.md)** and follow its instructions as written.
 
 → Proceed to **Step 6**.
 
 ---
 
-## Step 6: Plan Review
+## Step 6: Resolve External Dependencies
 
-Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its instructions as written.
+Load **[steps/resolve-dependencies.md](references/steps/resolve-dependencies.md)** and follow its instructions as written.
 
 → Proceed to **Step 7**.
 
 ---
 
-## Step 7: Conclude the Plan
+## Step 7: Plan Review
+
+Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its instructions as written.
+
+→ Proceed to **Step 8**.
+
+---
+
+## Step 8: Conclude the Plan
 
 After the review is complete:
 

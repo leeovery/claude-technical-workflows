@@ -2,7 +2,7 @@
 name: planning-task-author
 description: Writes full detail for a single plan task. Invoked by technical-planning skill during plan construction.
 tools: Read, Glob, Grep
-model: inherit
+model: opus
 ---
 
 # Planning Task Author

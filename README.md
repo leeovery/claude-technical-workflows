@@ -14,6 +14,14 @@
 
 ---
 
+<p align="center">
+  <a href="https://leeovery.github.io/claude-technical-workflows/"><strong>Open the Interactive Workflow Explorer</strong></a>
+</p>
+
+> **Workflow Explorer** — A visual, interactive guide to every phase, skill, and command in this toolkit. See how commands route to skills, trace decision logic through flowcharts, and understand the full pipeline at a glance. No install required — runs in your browser.
+
+---
+
 ## What is this?
 
 A complete development workflow for Claude Code: explore ideas, capture decisions, build actionable plans, implement via strict TDD, and validate the result.
@@ -195,7 +203,7 @@ When using the full workflow, it progresses through six distinct phases:
 
 **Phase 3 - Specification:** Transforms discussion(s) into validated, standalone specifications. Automatically analyses multiple discussions for natural groupings, filters hallucinations and inaccuracies, enriches gaps, and builds documents that planning can execute against without referencing other sources.
 
-**Phase 4 - Planning:** Converts specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (local markdown, Linear, Backlog.md).
+**Phase 4 - Planning:** Converts specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (local markdown, Linear).
 
 **Phase 5 - Implementation:** Executes the plan using strict TDD. Writes tests first, implements to pass, commits frequently, with per-task approval gates (auto mode available).
 
@@ -235,6 +243,7 @@ skills/                              # Input-agnostic processors
 └── technical-review/                # Validate against artefacts
 
 commands/                            # Input layer (gather context → invoke skills)
+├── migrate.md                       # Keep workflow files in sync with system design
 ├── start-feature.md                 # Standalone: spec from inline context
 ├── link-dependencies.md             # Standalone: wire cross-topic deps
 └── workflow/                        # Sequential workflow commands
@@ -248,12 +257,24 @@ commands/                            # Input layer (gather context → invoke sk
     └── view-plan.md                 # View plan tasks
 
 agents/
-└── chain-verifier.md                # Parallel task verification for review
+├── review-task-verifier.md           # Verifies single task implementation for review
+├── implementation-task-executor.md  # TDD executor for single plan tasks
+├── implementation-task-reviewer.md  # Post-task review for spec conformance
+├── planning-phase-designer.md       # Design phases from specification
+├── planning-task-designer.md        # Break phases into task lists
+├── planning-task-author.md          # Write full task detail
+└── planning-dependency-grapher.md   # Analyze task dependencies and priorities
 
 scripts/                             # Helper scripts for commands
 ├── migrate.sh                       # Migration orchestrator
-├── specification-discovery.sh       # Discovery for specification command
+├── discovery-for-discussion.sh      # Discovery for discussion command
+├── discovery-for-specification.sh   # Discovery for specification command
+├── discovery-for-planning.sh        # Discovery for planning command
+├── discovery-for-implementation-and-review.sh  # Discovery for impl/review
 └── migrations/                      # Individual migration scripts (numbered)
+
+tests/
+└── scripts/                         # Shell script tests for discovery and migrations
 ```
 
 ## Skills
@@ -282,7 +303,7 @@ Sequential commands in `commands/workflow/`. They expect files from previous pha
 | [**/start-research**](commands/workflow/start-research.md)                  | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion.                                                                                     |
 | [**/start-discussion**](commands/workflow/start-discussion.md)              | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation.                                                               |
 | [**/start-specification**](commands/workflow/start-specification.md)        | Start a specification session from existing discussion(s). Automatically analyses multiple discussions for natural groupings and consolidates them into unified specifications.                            |
-| [**/start-planning**](commands/workflow/start-planning.md)                  | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md, Beads). |
+| [**/start-planning**](commands/workflow/start-planning.md)                  | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (local markdown, Linear). |
 | [**/start-implementation**](commands/workflow/start-implementation.md)      | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
 | [**/start-review**](commands/workflow/start-review.md)                      | Start reviewing completed work. Validates implementation against plan tasks and acceptance criteria.                                                                                                        |
 
@@ -318,9 +339,15 @@ See `/start-feature` as an example: it provides inline context to the specificat
 
 Subagents that skills can spawn for parallel task execution.
 
-| Agent                                          | Used By          | Description                                                                                                                                                                                              |
-|------------------------------------------------|------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [**chain-verifier**](agents/chain-verifier.md) | technical-review | Verifies a single plan task was implemented correctly. Checks implementation, tests (not under/over-tested), and code quality. Multiple chain-verifiers run in parallel to verify ALL tasks efficiently. |
+| Agent | Used By | Description |
+|-------|---------|-------------|
+| [**review-task-verifier**](agents/review-task-verifier.md) | technical-review | Verifies a single plan task was implemented correctly. Checks implementation, tests, and code quality. Multiple run in parallel. |
+| [**implementation-task-executor**](agents/implementation-task-executor.md) | technical-implementation | Implements a single plan task via strict TDD. |
+| [**implementation-task-reviewer**](agents/implementation-task-reviewer.md) | technical-implementation | Reviews a completed task for spec conformance, acceptance criteria, and architectural quality. |
+| [**planning-phase-designer**](agents/planning-phase-designer.md) | technical-planning | Designs implementation phases from a specification. |
+| [**planning-task-designer**](agents/planning-task-designer.md) | technical-planning | Breaks a single phase into a task list with edge cases. |
+| [**planning-task-author**](agents/planning-task-author.md) | technical-planning | Writes full detail for a single plan task. |
+| [**planning-dependency-grapher**](agents/planning-dependency-grapher.md) | technical-planning | Analyzes authored tasks to establish internal dependencies and priorities. |
 
 ## Requirements
 

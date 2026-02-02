@@ -2,7 +2,7 @@
 name: implementation-task-executor
 description: Implements a single plan task via strict TDD. Invoked by technical-implementation skill for each task.
 tools: Read, Glob, Grep, Edit, Write, Bash
-model: inherit
+model: opus
 ---
 
 # Implementation Task Executor

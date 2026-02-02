@@ -104,6 +104,8 @@ Ask: "Can I write a test for this task that passes without any other task being 
 
 ## Task Template
 
+This is the canonical task format. The planning skill owns task content — output format adapters only define where/how this content is stored.
+
 Every task should follow this structure:
 
 ```markdown
@@ -130,9 +132,15 @@ Every task should follow this structure:
 - `"it handles edge case correctly"`
 - `"it fails appropriately for invalid input"`
 
+**Edge Cases**: (when relevant)
+- Boundary condition details
+- Unusual inputs or race conditions
+
 **Context**: (when relevant)
 > Relevant details from specification: code examples, architectural decisions,
 > data models, or constraints that inform implementation.
+
+**Spec Reference**: `docs/workflow/specification/{topic}.md` (if specification was provided)
 ```
 
 ### Field Requirements
@@ -145,7 +153,9 @@ Every task should follow this structure:
 | Do | Yes | At least one concrete action |
 | Acceptance Criteria | Yes | At least one pass/fail criterion |
 | Tests | Yes | At least one test name; include edge cases, not just happy path |
+| Edge Cases | When relevant | Boundary conditions, unusual inputs |
 | Context | When relevant | Only include when spec has details worth pulling forward |
+| Spec Reference | When provided | Path to specification for ambiguity resolution. Include when a specification file was provided as input. Omit if planning from inline context or other non-file sources. |
 
 ### The Template as Quality Gate
 
