@@ -100,9 +100,11 @@ Save their instructions to `docs/workflow/environment-setup.md` (or "No special 
 
 1. Read the plan from the provided location (typically `docs/workflow/planning/{topic}.md`)
 2. Plans can be stored in various formats. The `format` field in the plan's frontmatter identifies which format this plan uses.
-3. Load the corresponding adapter file: `skills/technical-planning/references/output-formats/output-{format}.md` — this document provides instructions for reading tasks from and writing progress to the plan. Hereafter referred to as the **plan adapter**.
+3. Load the format's per-concern adapter files from `skills/technical-planning/references/output-formats/{format}/`:
+   - **[reading.md](../technical-planning/references/output-formats/{format}/reading.md)** — how to read tasks from the plan
+   - **[updating.md](../technical-planning/references/output-formats/{format}/updating.md)** — how to write progress to the plan
 4. If no `format` field exists, ask the user which format the plan uses.
-5. Read the plan adapter's **Implementation** section to understand the instructions — they apply during Step 5.
+5. These adapter files apply during Step 5 (task loop).
 
 → Proceed to **Step 3**.
 

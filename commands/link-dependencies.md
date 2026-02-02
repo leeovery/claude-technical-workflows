@@ -98,9 +98,9 @@ For each unresolved dependency:
 1. **Search for matching plan**: Does `docs/workflow/planning/{dependency-topic}.md` exist?
    - If no match: Mark as "no plan exists" - cannot resolve yet
 
-2. **If plan exists**: Load the output format reference file
+2. **If plan exists**: Load the format's dependencies reference
    - Read `format:` from the dependency plan's frontmatter
-   - Load `skills/technical-planning/references/output-formats/output-{format}.md`
+   - Load `skills/technical-planning/references/output-formats/{format}/dependencies.md`
    - Follow the "Querying Dependencies" section to search for matching tasks
 
 3. **Handle ambiguous matches**:
@@ -115,8 +115,8 @@ For each resolved match:
    - Change the dependency's `state: unresolved` to `state: resolved` and add `task_id: {task-id}`
 
 2. **Create dependency in output format**:
-   - Load `skills/technical-planning/references/output-formats/output-{format}.md`
-   - Follow the "Cross-Epic Dependencies" or equivalent section to create the blocking relationship
+   - Load `skills/technical-planning/references/output-formats/{format}/dependencies.md`
+   - Follow the "Creating Dependencies" section to create the blocking relationship
 
 ## Step 6: Bidirectional Check
 

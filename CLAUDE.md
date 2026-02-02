@@ -44,6 +44,9 @@ commands/
     status.md                      # Show workflow status and next steps
     view-plan.md                   # View plan tasks and progress
 
+.claude/skills/
+  create-output-format/      # Dev-time skill: scaffold new output format adapters
+
 agents/
   chain-verifier.md          # Parallel chain verification for review phase
 
@@ -89,24 +92,31 @@ Commit docs frequently (natural breaks, before context refresh). Skills capture 
 
 ## Adding New Output Formats
 
-To add a new planning output format:
+Use the `/create-output-format` skill to scaffold a new format adapter. Each format is a directory of 6 files:
 
-1. Create `skills/technical-planning/references/output-formats/output-{format}.md`
-2. Include sections: About, Setup, Benefits, Output Process, Implementation (Reading/Updating)
-3. Add to the list in `skills/technical-planning/references/output-formats.md`
+```
+skills/technical-planning/references/output-formats/{format}/
+├── about.md        # Benefits, setup, output location
+├── authoring.md    # Plan Index template, task writing, cleanup
+├── reading.md      # Reading plans, extracting tasks
+├── updating.md     # Marking complete/skipped, advancing progress
+├── dependencies.md # Cross-topic dependency format + querying
+└── frontmatter.md  # Plan Index + task frontmatter schemas
+```
+
+The contract and scaffolding templates live in `.claude/skills/create-output-format/references/`.
 
 ## Output Format References (IMPORTANT)
 
-**NEVER list output format names (beads, linear, local-markdown, etc.) anywhere except:**
+**NEVER list output format names (linear, local-markdown, etc.) anywhere except:**
 - `skills/technical-planning/references/output-formats.md` - the authoritative list
-- `skills/technical-planning/references/output-formats/output-{format}.md` - individual format definitions
+- `skills/technical-planning/references/output-formats/{format}/` - individual format directories
 
 **Why this matters:** Listing formats elsewhere creates maintenance dependencies. If a format is added or removed, we should only need to update the planning references - not hunt through skills, commands, or documentation.
 
 **How other phases reference formats:**
 - Plans include a `format:` field in their frontmatter
-- Implementation/review skills read the format from the plan
-- They then load the appropriate `output-formats/output-{format}.md` reference file
+- Consumers load only the per-concern file they need (e.g., `{format}/reading.md` for implementation)
 
 This keeps format knowledge centralized in the planning phase where it belongs.
 

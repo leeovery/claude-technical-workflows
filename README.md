@@ -14,6 +14,14 @@
 
 ---
 
+<p align="center">
+  <a href="https://leeovery.github.io/claude-technical-workflows/"><strong>Open the Interactive Workflow Explorer</strong></a>
+</p>
+
+> **Workflow Explorer** — A visual, interactive guide to every phase, skill, and command in this toolkit. See how commands route to skills, trace decision logic through flowcharts, and understand the full pipeline at a glance. No install required — runs in your browser.
+
+---
+
 ## What is this?
 
 A complete development workflow for Claude Code: explore ideas, capture decisions, build actionable plans, implement via strict TDD, and validate the result.
@@ -195,7 +203,7 @@ When using the full workflow, it progresses through six distinct phases:
 
 **Phase 3 - Specification:** Transforms discussion(s) into validated, standalone specifications. Automatically analyses multiple discussions for natural groupings, filters hallucinations and inaccuracies, enriches gaps, and builds documents that planning can execute against without referencing other sources.
 
-**Phase 4 - Planning:** Converts specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (local markdown, Linear, Backlog.md).
+**Phase 4 - Planning:** Converts specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (local markdown, Linear).
 
 **Phase 5 - Implementation:** Executes the plan using strict TDD. Writes tests first, implements to pass, commits frequently, with per-task approval gates (auto mode available).
 
@@ -282,7 +290,7 @@ Sequential commands in `commands/workflow/`. They expect files from previous pha
 | [**/start-research**](commands/workflow/start-research.md)                  | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion.                                                                                     |
 | [**/start-discussion**](commands/workflow/start-discussion.md)              | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation.                                                               |
 | [**/start-specification**](commands/workflow/start-specification.md)        | Start a specification session from existing discussion(s). Automatically analyses multiple discussions for natural groupings and consolidates them into unified specifications.                            |
-| [**/start-planning**](commands/workflow/start-planning.md)                  | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (markdown, Linear, Backlog.md, Beads). |
+| [**/start-planning**](commands/workflow/start-planning.md)                  | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (local markdown, Linear). |
 | [**/start-implementation**](commands/workflow/start-implementation.md)      | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
 | [**/start-review**](commands/workflow/start-review.md)                      | Start reviewing completed work. Validates implementation against plan tasks and acceptance criteria.                                                                                                        |
 

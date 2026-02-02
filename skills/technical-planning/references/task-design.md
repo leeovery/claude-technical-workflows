@@ -102,7 +102,9 @@ Ask: "Can I write a test for this task that passes without any other task being 
 
 ---
 
-## Task Template
+## Task Template (Canonical Format)
+
+These field names are the standard across all output format adapters. Every format's authoring instructions map to these fields.
 
 Every task should follow this structure:
 
@@ -130,9 +132,15 @@ Every task should follow this structure:
 - `"it handles edge case correctly"`
 - `"it fails appropriately for invalid input"`
 
+**Edge Cases**: (when relevant)
+- Boundary condition details
+- Unusual inputs or race conditions
+
 **Context**: (when relevant)
 > Relevant details from specification: code examples, architectural decisions,
 > data models, or constraints that inform implementation.
+
+**Spec Reference**: `docs/workflow/specification/{topic}.md`
 ```
 
 ### Field Requirements
@@ -145,7 +153,9 @@ Every task should follow this structure:
 | Do | Yes | At least one concrete action |
 | Acceptance Criteria | Yes | At least one pass/fail criterion |
 | Tests | Yes | At least one test name; include edge cases, not just happy path |
+| Edge Cases | When relevant | Boundary conditions, unusual inputs |
 | Context | When relevant | Only include when spec has details worth pulling forward |
+| Spec Reference | Yes | Path to specification for ambiguity resolution |
 
 ### The Template as Quality Gate
 

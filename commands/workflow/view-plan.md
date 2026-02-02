@@ -18,19 +18,19 @@ Ask the user which plan to view.
 
 Read the plan file from `docs/workflow/planning/{topic}.md` and check the `format:` field in the frontmatter.
 
-## Step 3: Load Format Reference
+## Step 3: Load Format Reading Reference
 
-Load the corresponding output format reference:
+Load the format's reading reference:
 
 ```
-skills/technical-planning/references/output-formats/output-{format}.md
+skills/technical-planning/references/output-formats/{format}/reading.md
 ```
 
-This reference contains instructions for reading plans in that format.
+This file contains instructions for reading plans in that format.
 
 ## Step 4: Read Plan Content
 
-Follow the "Reading" or "Implementation" section in the format reference to locate and read the actual plan content.
+Follow the reading reference to locate and read the actual plan content.
 
 ## Step 5: Present Summary
 

@@ -23,7 +23,7 @@ E. Update progress + commit
 
 ## A. Retrieve Next Task
 
-1. Follow the plan adapter's Reading instructions to determine the next available task.
+1. Follow the format's **reading.md** instructions to determine the next available task.
 2. If no available tasks remain → skip to **When All Tasks Are Complete**.
 3. Normalise the task content following **[task-normalisation.md](../task-normalisation.md)**.
 
@@ -132,7 +132,7 @@ Announce the result (one line, no stop):
 
 ## E. Update Progress and Commit
 
-**Update task progress in the plan** — follow the plan adapter's Implementation section for instructions on how to mark the task complete.
+**Update task progress in the plan** — follow the format's **updating.md** instructions to mark the task complete.
 
 **Mirror to implementation tracking file** (`docs/workflow/implementation/{topic}.md`):
 - Append the task ID to `completed_tasks`
