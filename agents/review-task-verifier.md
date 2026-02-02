@@ -2,7 +2,7 @@
 name: review-task-verifier
 description: Verifies a single plan task was implemented correctly. Checks implementation, tests, and code quality against the task's acceptance criteria and spec context. Invoked by technical-review to verify ALL plan tasks in PARALLEL.
 tools: Read, Glob, Grep
-model: haiku
+model: opus
 ---
 
 # Review Task Verifier
