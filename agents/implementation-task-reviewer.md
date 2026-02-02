@@ -1,7 +1,7 @@
 ---
 name: implementation-task-reviewer
 description: Reviews a single implemented task for spec conformance, acceptance criteria, and architectural quality. Invoked by technical-implementation skill after each task.
-tools: Read, Glob, Grep
+tools: Read, Glob, Grep, Bash
 model: opus
 ---
 
@@ -17,15 +17,15 @@ You receive via the orchestrator's prompt:
 
 1. **Specification path** — The validated specification for design decision context
 2. **Task content** — Same task content the executor received: task ID, phase, and all instructional content
-3. **Files changed** — List of files created/modified by the executor
-4. **Project skill paths** — Relevant `.claude/skills/` paths for checking framework convention adherence
+3. **Project skill paths** — Relevant `.claude/skills/` paths for checking framework convention adherence
 
 ## Your Process
 
 1. **Read the specification** for relevant context — understand the broader design intent
-2. **Read all changed files** — implementation code and test code
-3. **Read project skills** — understand framework conventions, testing patterns, architecture patterns
-4. **Evaluate all five review dimensions** (see below)
+2. **Check unstaged changes** — use `git diff` and `git status` to identify files changed by the executor
+3. **Read all changed files** — implementation code and test code
+4. **Read project skills** — understand framework conventions, testing patterns, architecture patterns
+5. **Evaluate all five review dimensions** (see below)
 
 ## Review Dimensions
 
