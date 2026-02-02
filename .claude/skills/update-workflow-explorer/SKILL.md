@@ -35,7 +35,7 @@ For each in-scope flowchart key, read its source file(s) and extract the logical
 | `skill-specification` | `skills/technical-specification/SKILL.md` + `skills/technical-specification/references/steps/*.md` |
 | `skill-planning` | `skills/technical-planning/SKILL.md` + `skills/technical-planning/references/steps/*.md` |
 | `skill-implementation` | `skills/technical-implementation/SKILL.md` + `skills/technical-implementation/references/steps/*.md` |
-| `skill-review` | `skills/technical-review/SKILL.md` + `agents/chain-verifier.md` |
+| `skill-review` | `skills/technical-review/SKILL.md` + `agents/review-task-verifier.md` |
 | `start-feature` | `commands/start-feature.md` |
 | `link-deps` | `commands/link-dependencies.md` |
 | `status` | `commands/workflow/status.md` |

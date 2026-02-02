@@ -1138,13 +1138,13 @@ const phases = {
     cache: null,
     prerequisites: 'Implementation of a plan',
     scenarios: ['no_plans','single_plan','multiple_plans'],
-    desc: 'Validate implementation against plan. Uses parallel chain-verifier subagents (one per task).',
+    desc: 'Validate implementation against plan. Uses parallel review-task-verifier subagents (one per task).',
     detailHTML: () => `
       <h2 style="color:var(--review)">Phase 6: Review</h2>
       <div class="detail-subtitle">/start-review &rarr; technical-review skill</div>
       <div class="detail-section">
         <h3>Overview</h3>
-        <p>Validate completed implementation against plan tasks and acceptance criteria. Uses parallel chain-verifier subagents for efficiency. Does NOT fix code &mdash; only reviews.</p>
+        <p>Validate completed implementation against plan tasks and acceptance criteria. Uses parallel review-task-verifier subagents for efficiency. Does NOT fix code &mdash; only reviews.</p>
       </div>
       <div class="detail-section">
         <h3>Discovery Script (shared with Implementation)</h3>
@@ -1182,7 +1182,7 @@ const phases = {
         <h3>Skill: Parallel Chain Verification</h3>
         <ul>
           <li>Read plan &rarr; Read spec &rarr; Extract ALL tasks</li>
-          <li>Spawn <strong>parallel chain-verifier subagents</strong> (Haiku model)</li>
+          <li>Spawn <strong>parallel review-task-verifier subagents</strong> (Haiku model)</li>
           <li>One verifier per task &mdash; all run simultaneously</li>
           <li>Each checks: implementation exists, acceptance criteria met, test coverage, code quality</li>
           <li>Aggregate findings into structured review</li>
@@ -1569,10 +1569,10 @@ const FLOWCHARTS = {
       { id: 'ask', label: 'ASK: Which plan?', w: 180, h: 44, color: '#a78bfa', bg: 'rgba(167,139,250,0.15)', desc: 'Multiple plans. Ask user which to review.' },
       { id: 'scope', label: 'ASK: Review scope', w: 180, h: 44, color: '#a78bfa', bg: 'rgba(167,139,250,0.15)', desc: 'Step 4: Choose scope - all changes since plan, specific dirs/files, or from git status.' },
       { id: 'skill', label: 'technical-review', shape: 'pill', w: 150, h: 40, color: '#f97316', bg: 'rgba(249,115,22,0.15)', desc: 'Step 5: Invoke technical-review skill. Reads plan, spec, extracts ALL tasks.', skillLink: 'skill-review' },
-      { id: 'fanout', label: 'Spawn chain-verifiers', w: 180, h: 44, color: '#f97316', bg: 'rgba(249,115,22,0.08)', desc: 'Spawn parallel chain-verifier subagents (Haiku model). One per task, all run simultaneously.' },
-      { id: 'v1', label: 'Verify task 1', w: 140, h: 44, color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', desc: 'Chain-verifier: Check implementation exists, acceptance criteria met, test coverage, code quality.' },
-      { id: 'v2', label: 'Verify task 2', w: 140, h: 44, color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', desc: 'Chain-verifier: Same checks, different task. Runs in parallel with others.' },
-      { id: 'vn', label: 'Verify task N', w: 140, h: 44, color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', desc: 'Chain-verifier: One per task in the plan. All run simultaneously.' },
+      { id: 'fanout', label: 'Spawn review-task-verifiers', w: 180, h: 44, color: '#f97316', bg: 'rgba(249,115,22,0.08)', desc: 'Spawn parallel review-task-verifier subagents (Haiku model). One per task, all run simultaneously.' },
+      { id: 'v1', label: 'Verify task 1', w: 140, h: 44, color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', desc: 'Review-task-verifier: Check implementation exists, acceptance criteria met, test coverage, code quality.' },
+      { id: 'v2', label: 'Verify task 2', w: 140, h: 44, color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', desc: 'Review-task-verifier: Same checks, different task. Runs in parallel with others.' },
+      { id: 'vn', label: 'Verify task N', w: 140, h: 44, color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', desc: 'Review-task-verifier: One per task in the plan. All run simultaneously.' },
       { id: 'aggregate', label: 'Aggregate findings', w: 180, h: 44, color: '#f97316', bg: 'rgba(249,115,22,0.08)', desc: 'Collect all verifier results. Aggregate into structured review feedback.' },
       { id: 'end', label: 'approve / changes / comments', shape: 'pill', w: 150, h: 40, color: 'var(--review)', bg: 'var(--review-bg)', desc: 'Output: Structured review - approve, request changes, or comments. Does NOT fix code.' },
     ],
@@ -1841,7 +1841,7 @@ const FLOWCHARTS = {
       { id: 'read-plan', label: 'Read plan', w: 180, h: 44, color: '#f43f5e', bg: 'rgba(244,63,94,0.12)', desc: 'Read the plan — all phases, tasks, and acceptance criteria.' },
       { id: 'read-spec', label: 'Read specification', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'If available, read specification for design context.' },
       { id: 'extract', label: 'Extract ALL tasks', w: 180, h: 44, color: '#f43f5e', bg: 'rgba(244,63,94,0.15)', desc: 'List every task from every phase. Verify all, not a sample.' },
-      { id: 'spawn', label: 'Spawn chain-verifiers', w: 180, h: 44, color: '#f43f5e', bg: 'rgba(244,63,94,0.15)', desc: 'Launch parallel chain-verifier subagents (haiku). One per task.' },
+      { id: 'spawn', label: 'Spawn review-task-verifiers', w: 180, h: 44, color: '#f43f5e', bg: 'rgba(244,63,94,0.15)', desc: 'Launch parallel review-task-verifier subagents (haiku). One per task.' },
       { id: 'v1', label: 'Verify task 1', w: 140, h: 44, color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', desc: 'Check: implementation, acceptance criteria, tests, code quality.' },
       { id: 'v2', label: 'Verify task 2', w: 140, h: 44, color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', desc: 'Same checks, different task. Runs in parallel.' },
       { id: 'vn', label: 'Verify task N', w: 140, h: 44, color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', desc: 'One per task. All run simultaneously.' },
@@ -1969,8 +1969,8 @@ const FLOWCHART_DESCS = {
     meta: { output: 'Code changes (tracked in plan)', skill: 'technical-implementation', discovery: 'discovery-for-implementation-and-review.sh' }
   },
   review: {
-    summary: 'Validate completed implementation against plan tasks using parallel chain-verifier subagents.',
-    body: `<p>Shares a discovery script with implementation. After plan selection and scope identification, the <strong>technical-review</strong> skill reads the plan and spec, extracts all tasks, then spawns <strong>parallel chain-verifier subagents</strong> (one per task, using Haiku model).</p>
+    summary: 'Validate completed implementation against plan tasks using parallel review-task-verifier subagents.',
+    body: `<p>Shares a discovery script with implementation. After plan selection and scope identification, the <strong>technical-review</strong> skill reads the plan and spec, extracts all tasks, then spawns <strong>parallel review-task-verifier subagents</strong> (one per task, using Haiku model).</p>
 <p>Each verifier checks: implementation exists, acceptance criteria met, test coverage adequate, and code quality acceptable. Results are aggregated into a structured review with one of three outcomes: <strong>approve</strong>, <strong>request changes</strong>, or <strong>comments</strong>. The skill does NOT fix code — it only reviews.</p>`,
     meta: { output: 'Review feedback', skill: 'technical-review', discovery: 'discovery-for-implementation-and-review.sh' }
   },
@@ -2018,8 +2018,8 @@ const FLOWCHART_DESCS = {
   },
   'skill-review': {
     summary: 'The review skill — parallel fan-out verification of every task in the plan.',
-    body: `<p>Reads the plan and specification, extracts ALL tasks, then spawns <strong>parallel chain-verifier subagents</strong> (Haiku model, one per task). All verifiers run simultaneously for efficiency.</p>
-<p>Each chain-verifier checks: implementation correctness, acceptance criteria coverage, test adequacy, and code quality. Results are aggregated into a structured review and the skill produces a final assessment. It does not fix code — only identifies issues.</p>`,
+    body: `<p>Reads the plan and specification, extracts ALL tasks, then spawns <strong>parallel review-task-verifier subagents</strong> (Haiku model, one per task). All verifiers run simultaneously for efficiency.</p>
+<p>Each review-task-verifier checks: implementation correctness, acceptance criteria coverage, test adequacy, and code quality. Results are aggregated into a structured review and the skill produces a final assessment. It does not fix code — only identifies issues.</p>`,
     meta: { complexity: 'Parallel fan-out' }
   },
   'status': {

@@ -257,7 +257,7 @@ commands/                            # Input layer (gather context → invoke sk
     └── view-plan.md                 # View plan tasks
 
 agents/
-├── chain-verifier.md                # Parallel task verification for review
+├── review-task-verifier.md           # Verifies single task implementation for review
 ├── implementation-task-executor.md  # TDD executor for single plan tasks
 ├── implementation-task-reviewer.md  # Post-task review for spec conformance
 ├── planning-phase-designer.md       # Design phases from specification
@@ -344,7 +344,7 @@ Subagents that skills can spawn for parallel task execution.
 
 | Agent | Used By | Description |
 |-------|---------|-------------|
-| [**chain-verifier**](agents/chain-verifier.md) | technical-review | Verifies a single plan task was implemented correctly. Checks implementation, tests, and code quality. Multiple run in parallel. |
+| [**review-task-verifier**](agents/review-task-verifier.md) | technical-review | Verifies a single plan task was implemented correctly. Checks implementation, tests, and code quality. Multiple run in parallel. |
 | [**implementation-task-executor**](agents/implementation-task-executor.md) | technical-implementation | Implements a single plan task via strict TDD. |
 | [**implementation-task-reviewer**](agents/implementation-task-reviewer.md) | technical-implementation | Reviews a completed task for spec conformance, acceptance criteria, and architectural quality. |
 | [**planning-phase-designer**](agents/planning-phase-designer.md) | technical-planning | Designs implementation phases from a specification. |

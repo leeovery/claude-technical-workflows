@@ -26,18 +26,18 @@ From the plan, list every task across all phases:
 
 ### Parallel Verification
 
-Spawn `chain-verifier` subagents **in parallel** for ALL tasks:
+Spawn `review-task-verifier` subagents **in parallel** for ALL tasks:
 
 ```
-Task 1 ──▶ [chain-verifier] ──▶ Findings
-Task 2 ──▶ [chain-verifier] ──▶ Findings
-Task 3 ──▶ [chain-verifier] ──▶ Findings  (all running in parallel)
-Task 4 ──▶ [chain-verifier] ──▶ Findings
+Task 1 ──▶ [review-task-verifier] ──▶ Findings
+Task 2 ──▶ [review-task-verifier] ──▶ Findings
+Task 3 ──▶ [review-task-verifier] ──▶ Findings  (all running in parallel)
+Task 4 ──▶ [review-task-verifier] ──▶ Findings
   ...
-Task N ──▶ [chain-verifier] ──▶ Findings
+Task N ──▶ [review-task-verifier] ──▶ Findings
 ```
 
-**How to invoke each chain-verifier:**
+**How to invoke each review-task-verifier:**
 
 Provide:
 - The specific task (with acceptance criteria)
@@ -45,14 +45,14 @@ Provide:
 - Path to plan (for phase context)
 - Implementation scope (files/directories changed)
 
-**Each chain-verifier checks:**
+**Each review-task-verifier checks:**
 1. Implementation exists and matches acceptance criteria
 2. Tests are adequate (not under-tested, not over-tested)
 3. Code quality is acceptable
 
 **Aggregate the findings:**
 
-Once all chain-verifiers complete, synthesize their reports:
+Once all review-task-verifiers complete, synthesize their reports:
 - Collect all incomplete/failed tasks as blocking issues
 - Collect all test issues (under/over-tested)
 - Collect all code quality concerns
@@ -60,7 +60,7 @@ Once all chain-verifiers complete, synthesize their reports:
 
 ## Per-Task Verification Details
 
-For each task, the chain-verifier checks:
+For each task, the review-task-verifier checks:
 
 ### Implementation
 

@@ -74,7 +74,7 @@ Plan (tasks + acceptance criteria)
         → Check Code Quality (readable, conventions)
 ```
 
-**Use parallel `chain-verifier` subagents** to verify ALL plan tasks simultaneously. Each verifier checks one task for implementation, tests, and quality. This enables comprehensive review without sequential bottlenecks.
+**Use parallel `review-task-verifier` subagents** to verify ALL plan tasks simultaneously. Each verifier checks one task for implementation, tests, and quality. This enables comprehensive review without sequential bottlenecks.
 
 ## What You Verify (Per Task)
 
@@ -115,8 +115,8 @@ Review as a senior architect would:
 1. **Read the plan** - Understand all phases, tasks, and acceptance criteria
 2. **Read the specification** - Load context for the feature being reviewed
 3. **Extract all tasks** - List every task from every phase
-4. **Spawn chain-verifiers in parallel** - One subagent per task, all running simultaneously
-5. **Aggregate findings** - Collect reports from all chain-verifiers
+4. **Spawn review-task-verifiers in parallel** - One subagent per task, all running simultaneously
+5. **Aggregate findings** - Collect reports from all review-task-verifiers
 6. **Check project skills** - Framework/language conventions
 7. **Produce review** - Structured feedback covering all tasks
 

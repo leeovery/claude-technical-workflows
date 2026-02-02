@@ -49,7 +49,7 @@ commands/
   skill-creator/             # Dev-time skill: guide for creating effective skills
 
 agents/
-  chain-verifier.md                # Parallel chain verification for review phase
+  review-task-verifier.md           # Verifies single task implementation for review
   implementation-task-executor.md  # TDD executor for single plan tasks
   implementation-task-reviewer.md  # Post-task review for spec conformance
   planning-phase-designer.md       # Design phases from specification
