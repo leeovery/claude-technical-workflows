@@ -153,7 +153,7 @@ impl({topic}): T{task-id} — {brief description}
 
 Code, tests, plan progress, and tracking file — one commit per approved task.
 
-→ Retrieve the next task.
+This completes one iteration of the loop. → Proceed to **Retrieve Next Task** and follow the instructions as written. Every iteration must be followed fully — do not abbreviate or skip steps based on previous iterations.
 
 ---
 
