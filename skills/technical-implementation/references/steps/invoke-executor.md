@@ -4,7 +4,7 @@
 
 ---
 
-This step invokes the `implementation-task-executor` agent (`.claude/agents/implementation-task-executor.md`) to implement one task via strict TDD.
+This step invokes the `implementation-task-executor` agent (`.claude/agents/implementation-task-executor.md`) to implement one task.
 
 ---
 
