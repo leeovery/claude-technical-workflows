@@ -975,42 +975,41 @@ const phases = {
   planning: {
     color: '#fbbf24', bg: 'rgba(251,191,36,0.12)',
     label: 'Planning', cmd: '/start-planning',
-    complexity: 'Moderate', steps: 6,
+    complexity: 'Moderate', steps: 8,
     output: 'docs/workflow/planning/{topic}.md',
     skill: 'technical-planning',
     discovery: 'discovery-for-planning.sh',
     cache: null,
     prerequisites: 'Concluded specifications required',
-    scenarios: ['no_specs','no_ready_specs','single_ready_spec','multiple_ready_specs'],
-    desc: 'Transform specs into phased implementation plans. Supports 4 output formats. Surfaces cross-cutting specs.',
+    scenarios: ['no_specs','nothing_actionable','has_options'],
+    desc: 'Transform specs into phased implementation plans. Routes by plan state (new vs existing). Surfaces cross-cutting specs.',
     detailHTML: () => `
       <h2 style="color:var(--planning)">Phase 4: Planning</h2>
       <div class="detail-subtitle">/start-planning &rarr; technical-planning skill</div>
       <div class="detail-section">
         <h3>Overview</h3>
-        <p>Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports 4 output formats. Surfaces cross-cutting specifications as context.</p>
+        <p>Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Routes by plan state &mdash; new plans gather context first, existing plans skip straight to the skill. Surfaces cross-cutting specifications as context.</p>
       </div>
       <div class="detail-section">
         <h3>Discovery Script</h3>
         <div class="file-path">scripts/discovery-for-planning.sh</div>
-        <p style="margin-top:6px;font-size:12px">Scans specs (separates feature vs cross-cutting by <code>type:</code> field). Counts ready specs (concluded + no existing plan).</p>
+        <p style="margin-top:6px;font-size:12px">Scans specs (separates feature vs cross-cutting by <code>type:</code> field). Counts ready specs (concluded + no existing plan). Tracks plan status for existing plans.</p>
       </div>
       <div class="detail-section">
         <h3>Scenario Routing</h3>
         <table class="routing-table">
           <tr><th>Scenario</th><th>Action</th></tr>
           <tr><td><span class="scenario-tag tag-stop">no_specs</span></td><td>STOP &mdash; run <code>/start-specification</code></td></tr>
-          <tr><td><span class="scenario-tag tag-gate">no_ready_specs</span></td><td>Show state, nothing ready to plan</td></tr>
-          <tr><td><span class="scenario-tag tag-auto">single_ready_spec</span></td><td>Auto-select, proceed</td></tr>
-          <tr><td><span class="scenario-tag tag-ask">multiple_ready_specs</span></td><td>Ask which to plan</td></tr>
+          <tr><td><span class="scenario-tag tag-gate">nothing_actionable</span></td><td>Show state, nothing ready to plan</td></tr>
+          <tr><td><span class="scenario-tag tag-route">has_options</span></td><td>Present options (single auto-selects, multiple asks)</td></tr>
         </table>
       </div>
       <div class="detail-section">
-        <h3>Output Format Selection</h3>
+        <h3>Plan State Routing (Step 4)</h3>
         <table class="routing-table">
-          <tr><th>Format</th><th>Storage</th><th>Best For</th></tr>
-          <tr><td><code>local-markdown</code></td><td>Markdown task files in repo</td><td>Simple features, zero deps</td></tr>
-          <tr><td><code>linear</code></td><td>Linear issues via MCP</td><td>Teams using Linear</td></tr>
+          <tr><th>State</th><th>Action</th></tr>
+          <tr><td>No existing plan</td><td>Gather context (Step 5) &rarr; cross-cutting (Step 6) &rarr; invoke skill</td></tr>
+          <tr><td>Existing plan</td><td>Skip context &rarr; invoke skill directly (Step 7)</td></tr>
         </table>
       </div>
       <div class="detail-section">
@@ -1019,10 +1018,11 @@ const phases = {
           <div class="step-item"><div class="step-num migration">0</div><div class="step-text">Run <code>/migrate</code></div></div>
           <div class="step-item"><div class="step-num discovery">1</div><div class="step-text">Run discovery script</div></div>
           <div class="step-item"><div class="step-num route">2</div><div class="step-text">Route based on scenario</div></div>
-          <div class="step-item"><div class="step-num gather">3</div><div class="step-text">Select spec (auto or ask)</div></div>
-          <div class="step-item"><div class="step-num gather">4</div><div class="step-text">Gather additional context</div></div>
-          <div class="step-item"><div class="step-num">5</div><div class="step-text">Surface cross-cutting specs as context</div></div>
-          <div class="step-item"><div class="step-num skill">6</div><div class="step-text">Invoke <code>technical-planning</code> skill (9-step process)</div></div>
+          <div class="step-item"><div class="step-num gather">3</div><div class="step-text">Present state &amp; select spec (auto or ask)</div></div>
+          <div class="step-item"><div class="step-num route">4</div><div class="step-text">Route by plan state (new vs existing)</div></div>
+          <div class="step-item"><div class="step-num gather">5</div><div class="step-text">Gather additional context (new plans only)</div></div>
+          <div class="step-item"><div class="step-num">6</div><div class="step-text">Surface cross-cutting specs as context (new plans only)</div></div>
+          <div class="step-item"><div class="step-num skill">7</div><div class="step-text">Invoke <code>technical-planning</code> skill</div></div>
         </div>
       </div>
       <div class="detail-section">
@@ -1032,12 +1032,11 @@ const phases = {
           <div class="step-item"><div class="step-num">1</div><div class="step-text">Initialize plan (choose output format, create Plan Index File)</div></div>
           <div class="step-item"><div class="step-num">2</div><div class="step-text">Load planning principles</div></div>
           <div class="step-item"><div class="step-num">3</div><div class="step-text">Verify source material</div></div>
-          <div class="step-item"><div class="step-num">4</div><div class="step-text">Define phases</div></div>
-          <div class="step-item"><div class="step-num">5</div><div class="step-text">Define tasks (per phase)</div></div>
-          <div class="step-item"><div class="step-num">6</div><div class="step-text">Author tasks (full detail)</div></div>
-          <div class="step-item"><div class="step-num">7</div><div class="step-text">Resolve external dependencies</div></div>
-          <div class="step-item"><div class="step-num">8</div><div class="step-text">Plan review (traceability + integrity)</div></div>
-          <div class="step-item"><div class="step-num">9</div><div class="step-text">Conclude plan (<code>status: concluded</code>)</div></div>
+          <div class="step-item"><div class="step-num">4</div><div class="step-text">Plan construction (phases &rarr; tasks &rarr; author, nested loop)</div></div>
+          <div class="step-item"><div class="step-num">5</div><div class="step-text">Analyze task graph (dependency-grapher agent)</div></div>
+          <div class="step-item"><div class="step-num">6</div><div class="step-text">Resolve external dependencies</div></div>
+          <div class="step-item"><div class="step-num">7</div><div class="step-text">Plan review (traceability + integrity)</div></div>
+          <div class="step-item"><div class="step-num">8</div><div class="step-text">Conclude plan (<code>status: concluded</code>)</div></div>
         </div>
       </div>
     `
@@ -1052,7 +1051,7 @@ const phases = {
     cache: null,
     prerequisites: 'Concluded plan required',
     scenarios: ['no_plans','single_plan','multiple_plans'],
-    desc: 'Execute plans via strict TDD. Gates: external deps check, environment setup. Scope selection.',
+    desc: 'Execute plans via strict TDD. Three-section plan classification with unblock escape hatch. Gates: external deps, environment setup.',
     detailHTML: () => `
       <h2 style="color:var(--implementation)">Phase 5: Implementation</h2>
       <div class="detail-subtitle">/start-implementation &rarr; technical-implementation skill</div>
@@ -1095,25 +1094,15 @@ const phases = {
         </table>
       </div>
       <div class="detail-section">
-        <h3>Scope Selection</h3>
-        <ul>
-          <li>All phases</li>
-          <li>Specific phase</li>
-          <li>Specific task</li>
-          <li>Next available task</li>
-        </ul>
-      </div>
-      <div class="detail-section">
         <h3>Command Steps</h3>
         <div class="step-flow">
           <div class="step-item"><div class="step-num migration">0</div><div class="step-text">Run <code>/migrate</code></div></div>
           <div class="step-item"><div class="step-num discovery">1</div><div class="step-text">Run discovery script</div></div>
           <div class="step-item"><div class="step-num route">2</div><div class="step-text">Route based on scenario</div></div>
-          <div class="step-item"><div class="step-num gather">3</div><div class="step-text">Select plan</div></div>
+          <div class="step-item"><div class="step-num gather">3</div><div class="step-text">Present plans &amp; select (with unblock escape hatch)</div></div>
           <div class="step-item"><div class="step-num gate">4</div><div class="step-text"><strong>External dependencies gate</strong></div></div>
-          <div class="step-item"><div class="step-num gate">5</div><div class="step-text"><strong>Environment setup gate</strong></div></div>
-          <div class="step-item"><div class="step-num gather">6</div><div class="step-text">Scope selection</div></div>
-          <div class="step-item"><div class="step-num skill">7</div><div class="step-text">Invoke <code>technical-implementation</code> skill (strict TDD)</div></div>
+          <div class="step-item"><div class="step-num gate">5</div><div class="step-text"><strong>Environment setup gate</strong> (info gathering only)</div></div>
+          <div class="step-item"><div class="step-num skill">6</div><div class="step-text">Invoke <code>technical-implementation</code> skill (strict TDD)</div></div>
         </div>
       </div>
       <div class="detail-section">
@@ -1494,15 +1483,15 @@ const FLOWCHARTS = {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for /start-planning.' },
       { id: 'migrate', label: 'Run /migrate', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Step 0: Run migrations.' },
-      { id: 'discovery', label: 'Run discovery script', w: 180, h: 44, color: '#34d399', bg: 'rgba(52,211,153,0.15)', desc: 'Step 1: Run discovery-for-planning.sh. Scans specs (feature vs cross-cutting), counts ready specs.' },
-      { id: 'scenario', label: 'Scenario?', shape: 'diamond', w: 110, h: 110, color: '#fbbf24', bg: 'rgba(251,191,36,0.15)', desc: 'Step 2: Route based on scenario: no_specs, no_ready_specs, single_ready_spec, or multiple_ready_specs.' },
+      { id: 'discovery', label: 'Run discovery script', w: 180, h: 44, color: '#34d399', bg: 'rgba(52,211,153,0.15)', desc: 'Step 1: Run discovery-for-planning.sh. Scans specs (feature vs cross-cutting), counts ready specs, checks existing plans.' },
+      { id: 'scenario', label: 'Scenario?', shape: 'diamond', w: 110, h: 110, color: '#fbbf24', bg: 'rgba(251,191,36,0.15)', desc: 'Step 2: Route based on scenario: no_specs, nothing_actionable, or has_options.' },
       { id: 'stop-no-spec', label: 'STOP: No specs', shape: 'pill', w: 150, h: 40, color: '#f43f5e', bg: 'rgba(244,63,94,0.15)', desc: 'Terminal: No specifications found. Run /start-specification first.' },
-      { id: 'show-state', label: 'Show state (none ready)', w: 180, h: 44, color: '#f43f5e', bg: 'rgba(244,63,94,0.15)', desc: 'no_ready_specs: Specs exist but none ready. Show state and suggest completing in-progress specs.' },
-      { id: 'single', label: 'Auto-select spec', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'single_ready_spec: Only one spec ready for planning. Auto-select it.' },
-      { id: 'multi', label: 'ASK: Which spec?', w: 180, h: 44, color: '#a78bfa', bg: 'rgba(167,139,250,0.15)', desc: 'multiple_ready_specs: Present list of ready specs for user to choose.' },
-      { id: 'gather', label: 'ASK: Additional context', w: 180, h: 44, color: '#a78bfa', bg: 'rgba(167,139,250,0.15)', desc: 'Step 4: Gather additional context, priorities, or constraint changes.' },
-      { id: 'cross-cut', label: 'Surface cross-cutting specs', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 5: Read concluded cross-cutting specs and surface relevant ones as reference context for planning.' },
-      { id: 'skill', label: 'technical-planning', shape: 'pill', w: 150, h: 40, color: '#f97316', bg: 'rgba(249,115,22,0.15)', desc: 'Step 6: Invoke technical-planning skill. Handles format selection, phases, tasks, dependencies.', skillLink: 'skill-planning' },
+      { id: 'stop-none-ready', label: 'STOP: None actionable', shape: 'pill', w: 150, h: 40, color: '#f43f5e', bg: 'rgba(244,63,94,0.15)', desc: 'nothing_actionable: Specs exist but none actionable. Show state and suggest completing in-progress specs.' },
+      { id: 'present', label: 'Present options', w: 180, h: 44, color: '#a78bfa', bg: 'rgba(167,139,250,0.15)', desc: 'Step 3: Present available specs (+new, ▶continue, >review) and not plannable specs. Single auto-selects, multiple asks.' },
+      { id: 'plan-state', label: 'Existing plan?', shape: 'diamond', w: 120, h: 120, color: '#fbbf24', bg: 'rgba(251,191,36,0.15)', desc: 'Step 4: Route by plan state. New plan gathers context first; existing plan skips straight to skill invocation.' },
+      { id: 'gather', label: 'ASK: Additional context', w: 180, h: 44, color: '#a78bfa', bg: 'rgba(167,139,250,0.15)', desc: 'Step 5: Gather additional context, priorities, or constraint changes. Only for new plans.' },
+      { id: 'cross-cut', label: 'Surface cross-cutting specs', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 6: Read concluded cross-cutting specs and surface relevant ones as reference context for planning. Only for new plans.' },
+      { id: 'skill', label: 'technical-planning', shape: 'pill', w: 150, h: 40, color: '#f97316', bg: 'rgba(249,115,22,0.15)', desc: 'Step 7: Invoke technical-planning skill. Handles format selection, phases, tasks, dependencies.', skillLink: 'skill-planning' },
       { id: 'end', label: 'planning/{topic}.md', shape: 'pill', w: 150, h: 40, color: 'var(--planning)', bg: 'var(--planning-bg)', desc: 'Output: docs/workflow/planning/{topic}.md with phases, tasks, and acceptance criteria.' },
     ],
     connections: [
@@ -1510,11 +1499,11 @@ const FLOWCHARTS = {
       { from: 'migrate', to: 'discovery' },
       { from: 'discovery', to: 'scenario' },
       { from: 'scenario', to: 'stop-no-spec', type: 'no', label: 'no specs' },
-      { from: 'scenario', to: 'show-state', label: 'none ready' },
-      { from: 'scenario', to: 'single', label: 'single' },
-      { from: 'scenario', to: 'multi', label: 'multiple' },
-      { from: 'single', to: 'gather' },
-      { from: 'multi', to: 'gather' },
+      { from: 'scenario', to: 'stop-none-ready', label: 'none actionable' },
+      { from: 'scenario', to: 'present', type: 'yes', label: 'has options' },
+      { from: 'present', to: 'plan-state' },
+      { from: 'plan-state', to: 'gather', type: 'no', label: 'new' },
+      { from: 'plan-state', to: 'skill', type: 'yes', label: 'exists' },
       { from: 'gather', to: 'cross-cut' },
       { from: 'cross-cut', to: 'skill', type: 'transition' },
       { from: 'skill', to: 'end' },
@@ -1527,9 +1516,10 @@ const FLOWCHARTS = {
       { id: 'discovery', label: 'Run discovery script', w: 180, h: 44, color: '#34d399', bg: 'rgba(52,211,153,0.15)', desc: 'Step 1: Run discovery-for-implementation-and-review.sh. Scans plans, implementation tracking, dependencies, and environment setup.' },
       { id: 'scenario', label: 'Plans?', shape: 'diamond', w: 120, h: 120, color: '#f43f5e', bg: 'rgba(244,63,94,0.15)', desc: 'Step 2: Route on scenario — no_plans, single_plan, or multiple_plans.' },
       { id: 'stop-no-plan', label: 'STOP: No plans', shape: 'pill', w: 150, h: 40, color: '#f43f5e', bg: 'rgba(244,63,94,0.15)', desc: 'Terminal: No plans found. Run /start-planning first.' },
-      { id: 'present', label: 'Present plans', w: 200, h: 44, color: '#a78bfa', bg: 'rgba(167,139,250,0.15)', desc: 'Step 3: Classify plans into Implementable (▶ in-progress, + new), Implemented (> completed), and Not implementable (· blocked/not concluded). Number selectable entries.' },
+      { id: 'present', label: 'Present plans', w: 200, h: 44, color: '#a78bfa', bg: 'rgba(167,139,250,0.15)', desc: 'Step 3: Classify plans into Implementable (▶ in-progress, + new), Implemented (> completed), and Not implementable (· blocked/not concluded). Number selectable entries. Includes unblock escape hatch for externally satisfied deps.' },
       { id: 'select', label: 'Select plan', shape: 'diamond', w: 110, h: 110, color: '#fbbf24', bg: 'rgba(251,191,36,0.15)', desc: 'Single implementable = auto-select, otherwise ask user. Implemented plans can be re-selected.' },
-      { id: 'gate-deps', label: 'Ext deps OK?', shape: 'diamond', w: 120, h: 120, color: '#f43f5e', bg: 'rgba(244,63,94,0.15)', desc: 'Step 4: Confirm external dependencies satisfied. Pre-analyzed by discovery script.' },
+      { id: 'unblock', label: 'ASK: Unblock dep', w: 180, h: 44, color: '#a78bfa', bg: 'rgba(167,139,250,0.15)', desc: 'User requests unblock: identify plan and dep, confirm, mark satisfied_externally in frontmatter, commit, re-present.' },
+      { id: 'gate-deps', label: 'Ext deps OK?', shape: 'diamond', w: 120, h: 120, color: '#f43f5e', bg: 'rgba(244,63,94,0.15)', desc: 'Step 4: Confirm external dependencies satisfied. Pre-analyzed by discovery script. Escape hatch: mark as satisfied externally.' },
       { id: 'block-deps', label: 'BLOCK: Deps missing', w: 180, h: 44, color: '#f43f5e', bg: 'rgba(244,63,94,0.15)', desc: 'Dependencies blocking. Show unresolved and incomplete. Offer: implement first, mark satisfied externally, or run /link-dependencies.' },
       { id: 'escape', label: 'Mark satisfied externally', w: 180, h: 44, color: '#a78bfa', bg: 'rgba(167,139,250,0.15)', desc: 'Escape hatch: User says dep was implemented outside workflow. Update plan frontmatter, re-check.' },
       { id: 'gate-env', label: 'Env setup?', shape: 'diamond', w: 110, h: 110, color: '#fbbf24', bg: 'rgba(251,191,36,0.15)', desc: 'Step 5: Check environment setup. Info gathering only — does not execute setup.' },
@@ -1545,6 +1535,8 @@ const FLOWCHARTS = {
       { from: 'scenario', to: 'stop-no-plan', type: 'no', label: 'no plans' },
       { from: 'scenario', to: 'present', type: 'yes', label: 'exist' },
       { from: 'present', to: 'select' },
+      { from: 'select', to: 'unblock', label: 'unblock' },
+      { from: 'unblock', to: 'present', type: 'backloop' },
       { from: 'select', to: 'gate-deps' },
       { from: 'gate-deps', to: 'block-deps', type: 'no', label: 'blocked' },
       { from: 'block-deps', to: 'escape' },
@@ -1747,12 +1739,11 @@ const FLOWCHARTS = {
       { id: 'load-existing', label: 'Load existing plan', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Continue: load existing plan and output format adapter.' },
       { id: 'principles', label: 'Load principles', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 2: Load planning-principles.md. Internalize constraints.' },
       { id: 'verify', label: 'Verify source material', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 3: Verify specification is complete. Check cross-cutting references.' },
-      { id: 'phases', label: 'Define phases', w: 180, h: 44, color: '#fbbf24', bg: 'rgba(251,191,36,0.15)', desc: 'Step 4: Break spec into implementation phases with acceptance criteria.' },
-      { id: 'tasks', label: 'Define tasks', w: 180, h: 44, color: '#fbbf24', bg: 'rgba(251,191,36,0.15)', desc: 'Step 5: Break each phase into concrete tasks with edge cases.' },
-      { id: 'author', label: 'Author tasks', w: 180, h: 44, color: '#fbbf24', bg: 'rgba(251,191,36,0.15)', desc: 'Step 6: Write full detail — acceptance criteria, test guidance, implementation notes.' },
-      { id: 'deps', label: 'Resolve ext deps', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 7: Identify external dependencies. Mark unresolved for /link-dependencies.' },
-      { id: 'review', label: 'Plan review', w: 180, h: 44, color: '#fbbf24', bg: 'rgba(251,191,36,0.15)', desc: 'Step 8: Review for traceability, structural integrity, completeness.' },
-      { id: 'conclude', label: 'Conclude plan', w: 180, h: 44, color: '#fbbf24', bg: 'rgba(251,191,36,0.12)', desc: 'Step 9: Set status: concluded. All tasks must be authored.' },
+      { id: 'plan-construction', label: 'Plan construction', w: 200, h: 44, color: '#fbbf24', bg: 'rgba(251,191,36,0.15)', desc: 'Step 4: Nested loop — define phases, define tasks per phase, author each task. Commits after each phase completes.' },
+      { id: 'analyze-graph', label: 'Analyze task graph', w: 200, h: 44, color: '#fbbf24', bg: 'rgba(251,191,36,0.15)', desc: 'Step 5: Invoke planning-dependency-grapher agent. Analyze task dependencies, detect cycles, assign priorities. User approves changes.' },
+      { id: 'deps', label: 'Resolve ext deps', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 6: Identify external dependencies. Match to tasks in other plans if possible. Mark unresolved for /link-dependencies.' },
+      { id: 'review', label: 'Plan review', w: 180, h: 44, color: '#fbbf24', bg: 'rgba(251,191,36,0.15)', desc: 'Step 7: Two-part review — traceability (spec ↔ plan) and integrity (structure, quality, dependencies). User resolves findings.' },
+      { id: 'conclude', label: 'Conclude plan', w: 180, h: 44, color: '#fbbf24', bg: 'rgba(251,191,36,0.12)', desc: 'Step 8: Set status: concluded. All tasks must be authored.' },
       { id: 'end', label: 'planning/{topic}.md', shape: 'pill', w: 150, h: 40, color: 'var(--planning)', bg: 'var(--planning-bg)', desc: 'Output: Plan index + authored tasks in chosen output format.' },
     ],
     connections: [
@@ -1764,10 +1755,9 @@ const FLOWCHARTS = {
       { from: 'load-existing', to: 'principles' },
       { from: 'init', to: 'principles' },
       { from: 'principles', to: 'verify' },
-      { from: 'verify', to: 'phases' },
-      { from: 'phases', to: 'tasks' },
-      { from: 'tasks', to: 'author' },
-      { from: 'author', to: 'deps' },
+      { from: 'verify', to: 'plan-construction' },
+      { from: 'plan-construction', to: 'analyze-graph' },
+      { from: 'analyze-graph', to: 'deps' },
       { from: 'deps', to: 'review' },
       { from: 'review', to: 'conclude' },
       { from: 'conclude', to: 'end' },
@@ -1958,14 +1948,14 @@ const FLOWCHART_DESCS = {
   },
   planning: {
     summary: 'Transform specifications into phased implementation plans with tasks and acceptance criteria.',
-    body: `<p>Discovery classifies into 4 scenarios based on spec availability. After selection, cross-cutting specifications are surfaced as additional context for the planning skill.</p>
-<p>The <strong>technical-planning</strong> skill runs a 10-step process: resume detection, format selection, planning principles, source verification, phase design, task design, task authoring, dependency resolution, plan review, and conclusion. Supports multiple output formats for different team workflows.</p>`,
+    body: `<p>Discovery classifies into 3 scenarios: <strong>no_specs</strong>, <strong>nothing_actionable</strong>, or <strong>has_options</strong>. After selection, a plan-state check routes new plans through context gathering and cross-cutting spec surfacing, while existing plans skip straight to the skill.</p>
+<p>The <strong>technical-planning</strong> skill runs a 9-step process: resume detection, initialisation, planning principles, source verification, plan construction (phases → tasks → authoring in a nested loop), task graph analysis (dependency-grapher agent), external dependency resolution, plan review (traceability + integrity), and conclusion.</p>`,
     meta: { output: 'docs/workflow/planning/{topic}.md', skill: 'technical-planning', discovery: 'discovery-for-planning.sh' }
   },
   implementation: {
     summary: 'Discover plans, classify readiness, gate on dependencies, and hand off to agent-based implementation.',
-    body: `<p>Discovery classifies plans into three sections: <strong>Implementable</strong> (▶ in-progress or + ready to start), <strong>Implemented</strong> (> completed), and <strong>Not implementable</strong> (· blocked deps or plan not concluded). Two gates follow selection: <strong>external dependencies</strong> (pre-analyzed, with escape hatch for externally satisfied deps) and <strong>environment setup</strong> (info gathering only).</p>
-<p>Hands off to the <strong>technical-implementation</strong> skill, which dispatches executor and reviewer agents per task with a configurable approval gate (gated or auto mode).</p>`,
+    body: `<p>Discovery classifies plans into three sections: <strong>Implementable</strong> (▶ in-progress or + ready to start), <strong>Implemented</strong> (> completed), and <strong>Not implementable</strong> (· blocked deps or plan not concluded). Plan presentation includes an <strong>unblock escape hatch</strong> — users can mark blocked deps as externally satisfied without leaving the selection step. Two gates follow: <strong>external dependencies</strong> (confirmation) and <strong>environment setup</strong> (info gathering only, does not execute setup).</p>
+<p>Hands off to the <strong>technical-implementation</strong> skill, which dispatches executor and reviewer agents per task with a configurable approval gate (gated or auto mode). Scope selection is handled within the skill, not the command.</p>`,
     meta: { output: 'Code changes (tracked in plan)', skill: 'technical-implementation', discovery: 'discovery-for-implementation-and-review.sh' }
   },
   review: {
@@ -2005,10 +1995,10 @@ const FLOWCHART_DESCS = {
     meta: { output: 'docs/workflow/specification/{topic}.md', complexity: 'Collaborative skill' }
   },
   'skill-planning': {
-    summary: 'The planning skill — a 10-step process from resume detection through to plan conclusion.',
-    body: `<p>Steps: <strong>Resume detection</strong> (existing plan? spec changes?) → <strong>Initialise</strong> (choose output format, create plan index) → <strong>Load principles</strong> → <strong>Verify source material</strong> → <strong>Define phases</strong> → <strong>Define tasks</strong> (per phase) → <strong>Author tasks</strong> (full detail with acceptance criteria) → <strong>Resolve dependencies</strong> → <strong>Plan review</strong> (traceability + integrity) → <strong>Conclude</strong>.</p>
-<p>Phase and task design use specialised subagents for thorough analysis. External dependencies are identified and can be wired up later via <code>/link-dependencies</code>.</p>`,
-    meta: { output: 'docs/workflow/planning/{topic}.md', complexity: '10-step skill' }
+    summary: 'The planning skill — a 9-step process from resume detection through to plan conclusion.',
+    body: `<p>Steps: <strong>Resume detection</strong> (existing plan? spec changes?) → <strong>Initialise</strong> (choose output format, create plan index) → <strong>Load principles</strong> → <strong>Verify source material</strong> → <strong>Plan construction</strong> (nested loop: phases → tasks → authoring, commits per phase) → <strong>Analyze task graph</strong> (dependency-grapher agent detects cycles, assigns priorities) → <strong>Resolve external dependencies</strong> → <strong>Plan review</strong> (traceability + integrity, two-part) → <strong>Conclude</strong>.</p>
+<p>Plan construction and task graph analysis use specialised subagents for thorough analysis. External dependencies are identified and can be wired up later via <code>/link-dependencies</code>.</p>`,
+    meta: { output: 'docs/workflow/planning/{topic}.md', complexity: '9-step skill' }
   },
   'skill-implementation': {
     summary: 'The implementation skill — agent-based TDD with per-task executor, reviewer, and approval gate.',
