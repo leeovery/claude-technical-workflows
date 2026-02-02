@@ -6,22 +6,26 @@ This file is used by the graphing agent after all tasks have been authored. The 
 
 ## Priority
 
-Add a `priority` field to frontmatter:
+| Value | Level |
+|-------|-------|
+| `1` | Urgent |
+| `2` | High |
+| `3` | Medium |
+| `4` | Low |
+
+Lower number = higher priority.
+
+### Setting Priority
+
+Add or update the `priority` field in frontmatter:
 
 ```yaml
 priority: 2
 ```
 
-| Priority | Value | When to Use |
-|----------|-------|-------------|
-| Urgent | `1` | Must be done first within its phase |
-| High | `2` | Important — do before normal priority |
-| Medium | `3` | Standard priority |
-| Low | `4` | Can be deferred within the phase |
-| Lowest | `5` | Lowest — defer if possible |
-| No priority | `0` | Unset (default if omitted) |
+### Removing Priority
 
-Lower number = higher priority. `0` means no priority — it sorts after `5`, not before `1`. If omitted, priority is determined by sequence ordering within the phase.
+Remove the `priority` field from frontmatter entirely.
 
 ## Dependencies
 

@@ -5,8 +5,17 @@
 
 ## Priority
 
-<!-- How to assign priority. Document levels and how to set them -->
-{Priority mechanism — levels available, how to assign, what happens if omitted}
+<!-- Document available levels, how to set, and how to remove -->
+
+{Priority levels table}
+
+### Setting Priority
+
+{How to set or update priority on a task}
+
+### Removing Priority
+
+{How to remove priority from a task}
 
 ## Dependencies
 

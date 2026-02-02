@@ -64,7 +64,7 @@ Instructions for establishing priority and dependencies across tasks. This file 
 
 Must include:
 
-- **Priority** — how to set task priority. Document available levels and how to assign them.
+- **Priority** — available levels, how to set priority on a task, and how to remove it.
 - **Dependencies** — how to declare that one task depends on another. Must support multiple dependencies per task.
   - **Adding a Dependency**
   - **Removing a Dependency**

@@ -6,22 +6,33 @@ This file is used by the graphing agent after all tasks have been authored. The 
 
 ## Priority
 
-Linear has native priority levels:
+Linear uses fixed numeric priority values (0–4). The API normalises these to the workspace's display labels.
 
-| Priority | Linear Value | When to Use |
-|----------|-------------|-------------|
-| Urgent | 1 | Must be done first within its phase |
-| High | 2 | Important — do before normal priority |
-| Medium | 3 | Standard priority (default) |
-| Low | 4 | Can be deferred within the phase |
-| No priority | 0 | Unset |
+| Value | Level |
+|-------|-------|
+| `1` | Urgent |
+| `2` | High |
+| `3` | Medium |
+| `4` | Low |
+| `0` | No priority |
 
-Set priority via MCP:
+Lower number = higher priority. `0` means unset.
+
+### Setting Priority
 
 ```
 linear_updateIssue(
   issueId: "{issue_id}",
   priority: {priority_level}
+)
+```
+
+### Removing Priority
+
+```
+linear_updateIssue(
+  issueId: "{issue_id}",
+  priority: 0
 )
 ```
 
