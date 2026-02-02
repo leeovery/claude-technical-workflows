@@ -33,9 +33,11 @@ The agent returns a structured report:
 STATUS: complete | blocked | failed
 TASK: {task name}
 SUMMARY: {2-5 lines — commentary, decisions made, anything off-script}
-TEST_RESULTS: {all passing | failures — details}
-ISSUES: {any concerns, blockers, or deviations discovered}
+TEST_RESULTS: {all passing | failures — details only if failures}
+ISSUES: {blockers or deviations — omit if none}
 ```
 
-- `complete`: all acceptance criteria met, all tests passing
+- `complete`: all acceptance criteria met, tests passing
 - `blocked` or `failed`: ISSUES explains why and what decision is needed
+
+Keep the report minimal. "All passing" is sufficient for TEST_RESULTS when nothing failed. ISSUES can be omitted entirely on a clean run.
