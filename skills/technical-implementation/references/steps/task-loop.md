@@ -71,7 +71,7 @@ Re-invoke the executor with the user's comments added to the task context. Retur
 
 1. Load **[invoke-reviewer.md](invoke-reviewer.md)** and follow its instructions. Pass the executor's result.
 2. **STOP.** Do not proceed until the reviewer has returned its result.
-3. Route on VERDICT:
+3. On receipt of result, route on VERDICT:
    - `needs-changes` → **Review Changes**
    - `approved` → **D. Task Gate**
 
