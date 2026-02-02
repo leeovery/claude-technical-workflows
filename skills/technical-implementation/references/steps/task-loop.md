@@ -4,22 +4,24 @@
 
 ---
 
-Flat loop over tasks. The plan adapter (loaded in Step 2) provides instructions for reading tasks from and writing progress to the plan. Every iteration must be followed fully — do not abbreviate or skip steps based on previous iterations.
+Follow these stages sequentially, one task at a time: retrieve a task from the plan (delegating to the plan adapter for ordering and extraction), run it through execution, review, gating, and commit, then repeat until all tasks are done.
+
+Every iteration must follow stages A through E fully — do not abbreviate, skip, or compress stages based on previous iterations.
 
 ```
-Retrieve next task
-│
-└─ Loop:
-    ├─ Execute task → invoke-executor.md
-    ├─ Review task → invoke-reviewer.md
-    ├─ Task gate (gated → prompt user / auto → announce)
-    ├─ Update progress + commit
-    └─ Retrieve next task → repeat until done
+A. Retrieve next task
+B. Execute task → invoke-executor.md
+   → Executor Blocked (conditional)
+C. Review task → invoke-reviewer.md
+   → Review Changes (conditional)
+D. Task gate (gated → prompt user / auto → announce)
+E. Update progress + commit
+→ loop back to A until done
 ```
 
 ---
 
-## Retrieve Next Task
+## A. Retrieve Next Task
 
 1. Follow the plan adapter's Reading instructions to determine the next available task.
 2. If no available tasks remain → skip to **When All Tasks Are Complete**.
@@ -27,13 +29,13 @@ Retrieve next task
 
 ---
 
-## Execute Task
+## B. Execute Task
 
 1. Load **[invoke-executor.md](invoke-executor.md)** and follow its instructions. Pass the normalised task content.
 2. **STOP.** Do not proceed until the executor has returned its result.
 3. Route on STATUS:
    - `blocked` or `failed` → **Executor Blocked**
-   - `complete` → **Review Task**
+   - `complete` → **C. Review Task**
 
 ---
 
@@ -53,11 +55,11 @@ Present the executor's ISSUES to the user:
 
 #### If `retry`
 
-Re-invoke the executor with the user's comments added to the task context. Return to **Execute Task** with the new result.
+Re-invoke the executor with the user's comments added to the task context. Return to **B. Execute Task** with the new result.
 
 #### If `skip`
 
-→ Proceed to **Update Progress and Commit** (mark task as skipped).
+→ Proceed to **E. Update Progress and Commit** (mark task as skipped).
 
 #### If `stop`
 
@@ -65,13 +67,13 @@ Re-invoke the executor with the user's comments added to the task context. Retur
 
 ---
 
-## Review Task
+## C. Review Task
 
 1. Load **[invoke-reviewer.md](invoke-reviewer.md)** and follow its instructions. Pass the executor's result.
 2. **STOP.** Do not proceed until the reviewer has returned its result.
 3. Route on VERDICT:
    - `needs-changes` → **Review Changes**
-   - `approved` → **Task Gate**
+   - `approved` → **D. Task Gate**
 
 ---
 
@@ -92,13 +94,13 @@ Present the reviewer's findings to the user:
 
 **STOP.** Wait for user choice.
 
-- **`y`/`yes`**: Re-invoke executor with the reviewer's notes added, then return to **Execute Task** and follow the instructions as written.
-- **`skip`**: → Proceed to **Task Gate**.
-- **Comment**: Re-invoke executor with the user's notes, then return to **Execute Task** and follow the instructions as written.
+- **`y`/`yes`**: Re-invoke executor with the reviewer's notes added, then return to **B. Execute Task** and follow the instructions as written.
+- **`skip`**: → Proceed to **D. Task Gate**.
+- **Comment**: Re-invoke executor with the user's notes, then return to **B. Execute Task** and follow the instructions as written.
 
 ---
 
-## Task Gate
+## D. Task Gate
 
 After the reviewer approves a task, check the `task_gate_mode` field in the implementation tracking file.
 
@@ -118,9 +120,9 @@ Present a summary and wait for user input:
 
 **STOP.** Wait for user input.
 
-- **`y`/`yes`**: → Proceed to **Update Progress and Commit**.
-- **`auto`**: Note that `task_gate_mode` should be updated to `auto` during the commit step. → Proceed to **Update Progress and Commit**.
-- **Comment**: Re-invoke executor with the user's notes added, then return to **Execute Task** and follow the instructions as written.
+- **`y`/`yes`**: → Proceed to **E. Update Progress and Commit**.
+- **`auto`**: Note that `task_gate_mode` should be updated to `auto` during the commit step. → Proceed to **E. Update Progress and Commit**.
+- **Comment**: Re-invoke executor with the user's notes added, then return to **B. Execute Task** and follow the instructions as written.
 
 ### If `task_gate_mode: auto`
 
@@ -128,11 +130,11 @@ Announce the result (one line, no stop):
 
 > **Task {id}: {Task Name} — approved** (phase {N}: {phase name}, {brief summary}). Committing.
 
-→ Proceed to **Update Progress and Commit**.
+→ Proceed to **E. Update Progress and Commit**.
 
 ---
 
-## Update Progress and Commit
+## E. Update Progress and Commit
 
 **Update task progress in the plan** — follow the plan adapter's Implementation section for instructions on how to mark the task complete.
 
@@ -155,7 +157,7 @@ Code, tests, plan progress, and tracking file — one commit per approved task.
 
 This is the end of this iteration.
 
-→ Proceed to **Retrieve Next Task** and follow the instructions as written.
+→ Proceed to **A. Retrieve Next Task** and follow the instructions as written.
 
 ---
 
