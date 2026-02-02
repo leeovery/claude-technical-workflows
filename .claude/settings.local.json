@@ -7,7 +7,8 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(git checkout:*)",
-      "Bash(gh issue view:*)"
+      "Bash(gh issue view:*)",
+      "Bash(gh pr create --title \"Normalise output format adapters into structured directories\" --body \"$\\(cat <<''EOF''\n## Summary\n\n- Replace monolithic `output-{format}.md` files with per-concern directories \\(6 files each: about, authoring, reading, updating, dependencies, frontmatter\\)\n- Drop beads and backlog-md formats, keeping local-markdown and linear\n- Add `create-output-format` dev-time skill for scaffolding new formats with contract, canonical task spec, and templates\n- Standardise task fields to canonical names \\(Problem, Solution, Outcome, Do, Acceptance Criteria, Tests, Edge Cases, Context, Spec Reference\\)\n- Update all consumers \\(planning, implementation, view-plan, link-dependencies\\) to load per-concern files\n- Update CLAUDE.md, README.md, and workflow-explorer.html\n\n## Test plan\n\n- [ ] Verify `grep -r \"output-local-markdown|output-beads|output-linear|output-backlog\" skills/ commands/` returns zero hits\n- [ ] Verify each format directory has exactly 6 files\n- [ ] Verify canonical field names are consistent across both authoring.md files\n- [ ] Run `/start-planning` with local-markdown format to confirm adapter loading works\n- [ ] Run `/view-plan` to confirm reading.md path is resolved\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\nEOF\n\\)\")"
     ],
     "deny": [],
     "ask": []
