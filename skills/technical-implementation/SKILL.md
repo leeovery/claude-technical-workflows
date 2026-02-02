@@ -219,5 +219,6 @@ Commit: `impl({topic}): complete implementation`
 - **[steps/task-loop.md](references/steps/task-loop.md)** — Task execution loop, task gates, tracking, commits
 - **[steps/invoke-executor.md](references/steps/invoke-executor.md)** — How to invoke the executor agent
 - **[steps/invoke-reviewer.md](references/steps/invoke-reviewer.md)** — How to invoke the reviewer agent
+- **[task-normalisation.md](references/task-normalisation.md)** — Normalised task shape for agent invocation
 - **[tdd-workflow.md](references/tdd-workflow.md)** — TDD cycle (passed to executor agent)
 - **[code-quality.md](references/code-quality.md)** — Quality standards (passed to executor agent)

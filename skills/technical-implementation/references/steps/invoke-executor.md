@@ -16,8 +16,7 @@ Invoke `implementation-task-executor` with these file paths:
 2. **code-quality.md**: `.claude/skills/technical-implementation/references/code-quality.md`
 3. **Specification path**: from the plan's frontmatter (if available)
 4. **Project skill paths**: from `project_skills` in the implementation tracking file
-5. **Task content**: verbatim — no summarisation, no rewriting
-6. **Phase context** (informational): which phase this task belongs to (e.g., Phase 2: Authentication) and what's been built so far — not a workflow state, just context for the executor to understand where this task fits
+5. **Task content**: normalised task content (see [task-normalisation.md](../task-normalisation.md))
 
 On **re-invocation after review feedback**, also include:
 - **User-approved review notes**: verbatim or as modified by the user

@@ -21,15 +21,15 @@ Retrieve next task
 
 ## Retrieve Next Task
 
-1. Follow the plan adapter's Reading instructions to determine the next incomplete task.
-2. Extract the task content verbatim from the plan.
-3. If no incomplete tasks remain → skip to **When All Tasks Are Complete**.
+1. Follow the plan adapter's Reading instructions to determine the next available task.
+2. If no available tasks remain → skip to **When All Tasks Are Complete**.
+3. Normalise the task content following **[task-normalisation.md](../task-normalisation.md)**.
 
 ---
 
 ## Execute Task
 
-1. Load **[invoke-executor.md](invoke-executor.md)** and follow its instructions. Pass the task content verbatim.
+1. Load **[invoke-executor.md](invoke-executor.md)** and follow its instructions. Pass the normalised task content.
 2. **STOP.** Do not proceed until the executor has returned its result.
 3. Route on STATUS:
    - `blocked` or `failed` → **Executor Blocked**
