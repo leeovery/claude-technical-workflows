@@ -16,8 +16,8 @@ Before writing anything, interview the user to understand the format. Use AskUse
 
 Gather all of the following. If the user provided some upfront (e.g., in their initial message), skip those questions.
 
-1. **Tool/system name** — What is the external tool or system? (e.g., Linear, Jira, Notion, Tick)
-2. **Format key** — A kebab-case identifier for directory naming (e.g., `linear`, `jira`, `notion`). Suggest one based on the tool name; confirm with user.
+1. **Tool/system name** — What is the external tool or system?
+2. **Format key** — A kebab-case identifier for directory naming. Suggest one based on the tool name; confirm with user.
 3. **Why this format** — What's the motivation? Why would someone choose this over local markdown? What are the benefits?
 4. **How tasks are stored** — Where do tasks live? (API, database, files, etc.) How are they created, read, updated?
 5. **How to interact** — What's the interface? (MCP server, REST API, CLI tool, filesystem) What are the specific commands or calls?
