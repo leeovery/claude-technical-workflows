@@ -10,44 +10,32 @@ Scaffold a new output format adapter for the technical-planning workflow. Each f
 
 ## Step 1: Gather Information
 
-Before writing anything, interview the user to understand the format. Use AskUserQuestion for each area where information is missing or unclear.
+Before writing anything, understand the tool. Ask the user for:
 
-### Required Information
+1. **What is the tool/system called?**
+2. **Documentation links** — official docs, API references, MCP server docs, anything relevant
 
-Gather all of the following. If the user provided some upfront (e.g., in their initial message), skip those questions.
+If the user provided these upfront, skip straight to research.
 
-1. **Tool/system name** — What is the external tool or system?
-2. **Format key** — A kebab-case identifier for directory naming. Suggest one based on the tool name; confirm with user.
-3. **Why this format** — What's the motivation? Why would someone choose this over local markdown? What are the benefits?
-4. **How tasks are stored** — Where do tasks live? (API, database, files, etc.) How are they created, read, updated?
-5. **How to interact** — What's the interface? (MCP server, REST API, CLI tool, filesystem) What are the specific commands or calls?
-6. **Setup requirements** — What needs to be installed or configured? (accounts, API keys, MCP servers, CLI tools)
-7. **Documentation** — Links to official docs, API references, MCP server documentation. Ask for anything that would help understand the system's capabilities and constraints.
-8. **Dependencies and limitations** — Does it support blocking/dependency relationships between tasks? Any known limitations?
+### Research
 
-### Research Documentation
+Fetch and read all provided documentation using WebFetch. From the docs, establish:
 
-If the user provides documentation links:
+- How tasks are stored (API, database, files, etc.)
+- How to interact with it (MCP server, REST API, CLI tool, filesystem)
+- How to create, read, update, and query tasks
+- Whether it supports blocking/dependency relationships
+- What setup or configuration is required
+- Benefits and trade-offs vs simpler approaches
+- Any constraints or limitations
 
-1. Fetch and read each link using WebFetch
-2. Extract information relevant to task storage: creating, reading, updating, querying, dependencies
-3. Note any constraints or limitations that affect how the format adapter should work
-4. Summarise what you've learned and confirm your understanding with the user before proceeding
+### Clarify Gaps
 
-If the user doesn't have links, ask if they can point you to docs. If no docs are available, proceed with what the user can describe directly — but flag gaps where documentation would help.
+Present what you've learned as a summary and ask the user to confirm or correct. Use AskUserQuestion to clarify anything the documentation didn't cover or left ambiguous — motivation for choosing this format, preferred interface if multiple exist, setup specifics, etc.
 
-### Confirm Understanding
+Suggest a kebab-case format key based on the tool name and confirm with the user.
 
-Before moving to scaffolding, present a brief summary of what you've gathered:
-
-- **Format**: {name} (`{format-key}`)
-- **Storage**: {where tasks live}
-- **Interface**: {how to interact — MCP/API/CLI/etc.}
-- **Setup**: {what's required}
-- **Dependencies**: {supported/not supported/limited}
-- **Key constraints**: {any limitations to be aware of}
-
-Ask the user to confirm or correct. Do not proceed until confirmed.
+Do not proceed until the user confirms your understanding.
 
 ## Step 2: Understand the Contract
 
