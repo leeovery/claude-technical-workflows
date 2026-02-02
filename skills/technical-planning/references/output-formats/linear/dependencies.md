@@ -1,48 +1,50 @@
 # Linear: Dependencies
 
-## Within-Plan Dependencies
+Linear natively supports blocking relationships between issues, both within a project and across projects. The same mechanism works regardless of which project an issue belongs to.
 
-Linear natively supports blocking relationships between issues in the same project. Use "Blocked by" relationships to enforce task ordering beyond phase/priority.
+## Adding Dependencies
 
-To create a within-plan dependency via MCP:
+**Task A is blocked by Task B:**
 
 ```
 linear_createIssueRelation(
-  issueId: "{blocked_issue_id}",
-  relatedIssueId: "{blocking_issue_id}",
+  issueId: "{task_a_id}",
+  relatedIssueId: "{task_b_id}",
   type: "blocks"
 )
 ```
 
-## Cross-Topic Dependencies
+Linear handles both directions automatically — creating a "blocks" relation from B to A also makes A show as "blocked by" B. A task can have multiple blocking relationships.
 
-Linear supports blocking relationships across projects. The same mechanism works regardless of which project an issue belongs to.
+## Removing Dependencies
 
-## Creating Dependencies
-
-Via MCP or the Linear UI:
-
-1. Identify the dependent issue (the one that's blocked)
-2. Create a "Blocked by" relationship to the blocking issue
-3. Linear will show the issue as blocked until the dependency is complete
+Delete the issue relation via MCP:
 
 ```
-linear_createIssueRelation(
-  issueId: "{blocked_issue_id}",
-  relatedIssueId: "{blocking_issue_id}",
-  type: "blocks"
-)
+linear_deleteIssueRelation(issueRelationId: "{relation_id}")
+```
+
+To find the relation ID, query the issue's relations first:
+
+```
+linear_getIssue(issueId: "{task_a_id}")
+# Look for the relation in the issue's relations list
 ```
 
 ## Querying Dependencies
 
 ### Find Blocked Tasks
 
-Query project issues and check for blockers:
-
 ```
 linear_getIssues(projectId: "{project_id}")
 # Filter issues where blockedByIssues is non-empty
+```
+
+### Find Tasks That Block Others
+
+```
+linear_getIssue(issueId: "{issue_id}")
+# Check the blockingIssues field in the response
 ```
 
 ### Check if a Dependency is Resolved
@@ -61,5 +63,3 @@ linear_getIssue(issueId: "{blocking_issue_id}")
 Query all project issues, filter to those where:
 - State is not "completed" or "cancelled"
 - `blockedByIssues` is empty OR all blocking issues have `state.type === "completed"`
-
-These are the tasks ready to work on.

@@ -1,29 +1,40 @@
 # {Format Name}: Dependencies
 
-<!-- Instructions for expressing and querying blocking relationships -->
+<!-- Instructions for expressing and querying blocking relationships between tasks -->
 
-## Within-Plan Dependencies
+## Adding Dependencies
 
-<!-- How tasks within the same plan can block each other -->
-{Format-specific mechanism for task-to-task blocking within a plan, or "Not natively supported. Task ordering is determined by phase and sequence."}
+<!-- How to create a blocking relationship. Must support both directions and multiple per task -->
+
+**Task A is blocked by Task B:**
+
+{How to express this in the format}
+
+**Task A blocks Task C:**
+
+{How to express this — may be automatic (like Linear) or require updating both sides (like local markdown)}
+
+## Removing Dependencies
+
+<!-- How to remove a blocking relationship -->
+
+{How to remove a dependency link between two tasks}
 
 ## Cross-Topic Dependencies
 
-<!-- How to express dependencies between tasks in different plans -->
-{Format-specific mechanism for cross-plan dependencies}
+<!-- Does the same mechanism work across plans/projects, or are there differences? -->
 
-## Creating Dependencies
-
-<!-- How to wire up a blocking relationship -->
-{Format-specific instructions for creating a dependency link}
+{Whether cross-topic dependencies use the same mechanism or require different handling}
 
 ## Querying Dependencies
 
-<!-- How to find blocked tasks and determine unblocked work -->
-
 ### Find Blocked Tasks
 
-{How to identify tasks that are waiting on dependencies}
+{How to find tasks that are waiting on other tasks}
+
+### Find Tasks That Block Others
+
+{How to find tasks that other tasks depend on}
 
 ### Check if a Dependency is Resolved
 

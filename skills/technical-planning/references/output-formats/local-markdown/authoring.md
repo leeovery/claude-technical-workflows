@@ -64,14 +64,16 @@ tags: [edge-case, needs-info]
 
 ### Dependencies (optional)
 
-Add a `depends_on` field to frontmatter to express within-plan blocking:
+Add `depends_on` and/or `blocks` fields to frontmatter:
 
 ```yaml
 depends_on:
   - {topic}-1-2
+blocks:
+  - {topic}-2-1
 ```
 
-See [dependencies.md](dependencies.md) for full details.
+See [dependencies.md](dependencies.md) for full details on adding, removing, and querying.
 
 ## Flagging
 

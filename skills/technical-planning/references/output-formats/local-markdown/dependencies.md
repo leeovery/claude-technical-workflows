@@ -1,18 +1,43 @@
 # Local Markdown: Dependencies
 
-## Within-Plan Dependencies
+Local markdown has no native dependency engine. Dependencies are stored as frontmatter fields on task files and checked manually during task selection.
 
-Not natively supported. Task ordering is determined by phase and sequence. If a task within the same plan must wait on another, note it in the task description — but there is no enforced blocking mechanism.
+## Adding Dependencies
+
+Add task IDs to the `depends_on` (blocked by) and/or `blocks` fields in the task's frontmatter. A task can have multiple entries in each field.
+
+**Task A is blocked by Task B** — add to Task A:
+
+```yaml
+depends_on:
+  - {topic}-1-2
+  - {topic}-1-3
+```
+
+**Task A blocks Task C** — add to Task A:
+
+```yaml
+blocks:
+  - {topic}-2-1
+```
+
+Both fields are optional. When setting a relationship, update both sides to keep them consistent:
+
+1. Add `{task-b}` to Task A's `depends_on`
+2. Add `{task-a}` to Task B's `blocks`
+
+## Removing Dependencies
+
+Remove the task ID from the relevant field. If the field becomes empty, remove it entirely.
+
+When removing, update both sides:
+
+1. Remove `{task-b}` from Task A's `depends_on`
+2. Remove `{task-a}` from Task B's `blocks`
 
 ## Cross-Topic Dependencies
 
-Reference tasks by their task ID (e.g., `billing-1-2`). The task file is at `docs/workflow/planning/{topic}/{task-id}.md`.
-
-No format-level blocking mechanism — local markdown has no native dependency graph. Dependencies are tracked as references and checked manually.
-
-## Creating Dependencies
-
-Add a `depends_on` field to the task frontmatter:
+The same mechanism works across topics. Reference tasks by their full task ID — the task file is at `docs/workflow/planning/{topic}/{task-id}.md`.
 
 ```yaml
 depends_on:
@@ -24,10 +49,14 @@ depends_on:
 
 ### Find Blocked Tasks
 
-Search task files for `depends_on` in frontmatter:
-
 ```bash
 grep -rl "depends_on:" docs/workflow/planning/{topic}/
+```
+
+### Find Tasks That Block Others
+
+```bash
+grep -rl "blocks:" docs/workflow/planning/{topic}/
 ```
 
 ### Check if a Dependency is Resolved
@@ -35,11 +64,11 @@ grep -rl "depends_on:" docs/workflow/planning/{topic}/
 Read the referenced task file and check its status:
 
 ```bash
-grep "status:" docs/workflow/planning/billing-system/billing-1-2.md
+grep "status:" docs/workflow/planning/{topic}/{task-id}.md
 ```
 
 A dependency is resolved when `status: completed`.
 
 ### Find Unblocked Work
 
-For each pending task with `depends_on`, check all referenced tasks. If all are `completed`, the task is unblocked.
+For each pending task with `depends_on`, check all referenced tasks. If all are `completed`, the task is unblocked and ready to work on.

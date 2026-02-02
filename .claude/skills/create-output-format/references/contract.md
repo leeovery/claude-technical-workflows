@@ -65,7 +65,7 @@ Instructions for expressing and querying blocking relationships.
 
 Must include:
 
-- **Within-Plan Dependencies** — how tasks within the same plan can block each other (if supported by the format, or explicitly state it's not supported)
-- **Cross-Topic Dependencies** — how to express dependencies between tasks in different plans
-- **Creating Dependencies** — how to wire up a blocking relationship
-- **Querying Dependencies** — how to find blocked tasks, check if blockers are resolved, and determine unblocked work
+- **Adding Dependencies** — how to create a blocking relationship between two tasks, in both directions (blocks / blocked by). Must support multiple dependencies per task.
+- **Removing Dependencies** — how to remove a blocking relationship
+- **Cross-Topic Dependencies** — whether the same mechanism works across plans, or if there are differences
+- **Querying Dependencies** — how to find blocked tasks, find tasks that block others, check if a dependency is resolved, and find unblocked work
