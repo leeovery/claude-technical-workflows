@@ -38,19 +38,19 @@ Stored in frontmatter. Defaults to `pending` if omitted.
 Add a `priority` field to frontmatter:
 
 ```yaml
-priority: high
+priority: 2
 ```
 
-| Priority | Meaning |
-|----------|---------|
-| `0` | No priority (default if omitted) |
-| `1` | Urgent — must be done first within its phase |
-| `2` | High |
-| `3` | Medium |
-| `4` | Low |
-| `5` | Lowest — can be deferred within the phase |
+| Priority | Value | When to Use |
+|----------|-------|-------------|
+| Urgent | `1` | Must be done first within its phase |
+| High | `2` | Important — do before normal priority |
+| Medium | `3` | Standard priority |
+| Low | `4` | Can be deferred within the phase |
+| Lowest | `5` | Lowest — defer if possible |
+| No priority | `0` | Unset (default if omitted) |
 
-Lower number = higher priority. If omitted, priority is determined by sequence ordering within the phase.
+Lower number = higher priority. `0` means no priority — it sorts after `5`, not before `1`. If omitted, priority is determined by sequence ordering within the phase.
 
 ### Phase Grouping
 

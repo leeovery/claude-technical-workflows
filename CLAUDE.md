@@ -46,14 +46,26 @@ commands/
 
 .claude/skills/
   create-output-format/      # Dev-time skill: scaffold new output format adapters
+  skill-creator/             # Dev-time skill: guide for creating effective skills
 
 agents/
-  chain-verifier.md          # Parallel chain verification for review phase
+  chain-verifier.md                # Parallel chain verification for review phase
+  implementation-task-executor.md  # TDD executor for single plan tasks
+  implementation-task-reviewer.md  # Post-task review for spec conformance
+  planning-phase-designer.md       # Design phases from specification
+  planning-task-designer.md        # Break phases into task lists
+  planning-task-author.md          # Write full task detail
 
 scripts/
-  migrate.sh                 # Migration orchestrator
-  specification-discovery.sh # Discovery script for specification command
-  migrations/                # Individual migration scripts (numbered)
+  migrate.sh                              # Migration orchestrator
+  discovery-for-discussion.sh             # Discovery script for discussion command
+  discovery-for-specification.sh          # Discovery script for specification command
+  discovery-for-planning.sh               # Discovery script for planning command
+  discovery-for-implementation-and-review.sh  # Discovery script for implementation/review
+  migrations/                             # Individual migration scripts (numbered)
+
+tests/
+  scripts/                   # Shell script tests for discovery and migrations
 ```
 
 ## Command Architecture

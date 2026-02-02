@@ -243,6 +243,7 @@ skills/                              # Input-agnostic processors
 └── technical-review/                # Validate against artefacts
 
 commands/                            # Input layer (gather context → invoke skills)
+├── migrate.md                       # Keep workflow files in sync with system design
 ├── start-feature.md                 # Standalone: spec from inline context
 ├── link-dependencies.md             # Standalone: wire cross-topic deps
 └── workflow/                        # Sequential workflow commands
@@ -256,12 +257,27 @@ commands/                            # Input layer (gather context → invoke sk
     └── view-plan.md                 # View plan tasks
 
 agents/
-└── chain-verifier.md                # Parallel task verification for review
+├── chain-verifier.md                # Parallel task verification for review
+├── implementation-task-executor.md  # TDD executor for single plan tasks
+├── implementation-task-reviewer.md  # Post-task review for spec conformance
+├── planning-phase-designer.md       # Design phases from specification
+├── planning-task-designer.md        # Break phases into task lists
+└── planning-task-author.md          # Write full task detail
+
+.claude/skills/                      # Dev-time skills (not part of workflow)
+├── create-output-format/            # Scaffold new output format adapters
+└── skill-creator/                   # Guide for creating effective skills
 
 scripts/                             # Helper scripts for commands
 ├── migrate.sh                       # Migration orchestrator
-├── specification-discovery.sh       # Discovery for specification command
+├── discovery-for-discussion.sh      # Discovery for discussion command
+├── discovery-for-specification.sh   # Discovery for specification command
+├── discovery-for-planning.sh        # Discovery for planning command
+├── discovery-for-implementation-and-review.sh  # Discovery for impl/review
 └── migrations/                      # Individual migration scripts (numbered)
+
+tests/
+└── scripts/                         # Shell script tests for discovery and migrations
 ```
 
 ## Skills
@@ -326,9 +342,14 @@ See `/start-feature` as an example: it provides inline context to the specificat
 
 Subagents that skills can spawn for parallel task execution.
 
-| Agent                                          | Used By          | Description                                                                                                                                                                                              |
-|------------------------------------------------|------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [**chain-verifier**](agents/chain-verifier.md) | technical-review | Verifies a single plan task was implemented correctly. Checks implementation, tests (not under/over-tested), and code quality. Multiple chain-verifiers run in parallel to verify ALL tasks efficiently. |
+| Agent | Used By | Description |
+|-------|---------|-------------|
+| [**chain-verifier**](agents/chain-verifier.md) | technical-review | Verifies a single plan task was implemented correctly. Checks implementation, tests, and code quality. Multiple run in parallel. |
+| [**implementation-task-executor**](agents/implementation-task-executor.md) | technical-implementation | Implements a single plan task via strict TDD. |
+| [**implementation-task-reviewer**](agents/implementation-task-reviewer.md) | technical-implementation | Reviews a completed task for spec conformance, acceptance criteria, and architectural quality. |
+| [**planning-phase-designer**](agents/planning-phase-designer.md) | technical-planning | Designs implementation phases from a specification. |
+| [**planning-task-designer**](agents/planning-task-designer.md) | technical-planning | Breaks a single phase into a task list with edge cases. |
+| [**planning-task-author**](agents/planning-task-author.md) | technical-planning | Writes full detail for a single plan task. |
 
 ## Requirements
 
