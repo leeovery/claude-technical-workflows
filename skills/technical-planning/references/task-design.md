@@ -102,9 +102,9 @@ Ask: "Can I write a test for this task that passes without any other task being 
 
 ---
 
-## Task Template (Canonical Format)
+## Task Template
 
-These field names are the standard across all output format adapters. Every format's authoring instructions map to these fields.
+This is the canonical task format. The planning skill owns task content — output format adapters only define where/how this content is stored.
 
 Every task should follow this structure:
 

@@ -11,7 +11,7 @@
 To read a specific task:
 
 1. Query Linear MCP for the issue by ID: `linear_getIssue(issueId: "{issue_id}")`
-2. The issue description contains the full task detail using canonical field names
+2. The issue description contains the full task detail
 
 ## Next Incomplete Task
 

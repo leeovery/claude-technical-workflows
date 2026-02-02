@@ -25,7 +25,7 @@ Invoke `planning-task-author` with these file paths:
 
 ### Present the Output
 
-The agent returns complete task detail using the canonical field names in the format's structure. Present it to the user **exactly as it will be written** — what the user sees is what gets logged.
+The agent returns complete task detail following the task template from task-design.md. Present it to the user **exactly as it will be written** — what the user sees is what gets logged.
 
 After presenting, ask:
 

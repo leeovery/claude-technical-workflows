@@ -10,7 +10,7 @@
 
 To read a specific task, read the file at `docs/workflow/planning/{topic}/{task-id}.md`.
 
-The task file is self-contained with all instructional content: Problem, Solution, Outcome, Do, Acceptance Criteria, Tests, Edge Cases, Context, and Spec Reference.
+The task file is self-contained — it has frontmatter (id, phase, status) and a description body with all instructional content.
 
 ## Next Incomplete Task
 

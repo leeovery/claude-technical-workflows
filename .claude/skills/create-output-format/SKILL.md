@@ -20,8 +20,6 @@ Before creating a new format, ensure you have:
 
 Read **[references/contract.md](references/contract.md)** — this defines the 6-file interface every format must implement.
 
-Read **[references/canonical-task.md](references/canonical-task.md)** — this defines the standardised task field names all formats must use.
-
 ## Step 2: Create the Format Directory
 
 Create the directory at:
@@ -72,7 +70,7 @@ Verify:
 
 - [ ] Directory contains exactly 6 files: about.md, authoring.md, reading.md, updating.md, dependencies.md, frontmatter.md
 - [ ] All `{placeholder}` tokens have been replaced
-- [ ] Task fields in authoring.md match the canonical fields from canonical-task.md
+- [ ] Authoring.md describes where/how to store task content (not what the content is — that's the planning skill's concern)
 - [ ] Reading.md provides clear instructions for extracting next task
 - [ ] Updating.md provides clear instructions for marking tasks complete
 - [ ] Frontmatter.md defines both Plan Index and task frontmatter schemas

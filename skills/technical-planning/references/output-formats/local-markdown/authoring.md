@@ -98,9 +98,11 @@ status: draft
 | YYYY-MM-DD *(use today's actual date)* | Created from specification |
 ```
 
-## Task Writing
+## Task Storage
 
-Each authored task is written to `{topic}/{task-id}.md` using canonical field names:
+Each authored task is written to `{topic}/{task-id}.md`. The planning skill provides the task title and description content; this format wraps it in a file with frontmatter.
+
+**File structure:**
 
 ```markdown
 ---
@@ -110,36 +112,12 @@ status: pending
 created: YYYY-MM-DD  # Use today's actual date
 ---
 
-# {Task Name}
+# {Task Title}
 
-**Problem**: {Why this task exists — include rationale from specification}
-
-**Solution**: {What we're building — the high-level approach}
-
-**Outcome**: {What success looks like — the verifiable end state}
-
-**Do**:
-- {Specific implementation steps}
-- {File locations and method names where helpful}
-
-**Acceptance Criteria**:
-- [ ] {Pass/fail criterion}
-- [ ] {Pass/fail criterion}
-
-**Tests**:
-- `"{test name}"`
-- `"{test name}"`
-
-**Edge Cases**:
-- {Boundary conditions for this task}
-
-**Context**:
-> {Relevant decisions and constraints from specification}
-
-**Spec Reference**: `docs/workflow/specification/{topic}.md`
+{Task description content — provided by the planning skill}
 ```
 
-After writing:
+After storing:
 1. Update the task table in the Plan Index File: set `status: authored`
 2. Advance the `planning:` block in frontmatter to the next pending task (or next phase)
 

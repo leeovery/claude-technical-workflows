@@ -33,37 +33,11 @@ Phase 2: ...
 
 ### 3. Create Issues for Tasks
 
-For each task, create an issue and apply the appropriate phase label.
+For each task, create an issue and apply the appropriate phase label. The planning skill provides the task title and description content.
 
-**Title**: Clear action statement
+**Title**: Task title (provided by the planning skill)
 
-**Description** (use canonical field names):
-
-```markdown
-**Problem**: {Why this task exists}
-
-**Solution**: {What we're building}
-
-**Outcome**: {Verifiable end state}
-
-**Do**:
-- {Specific implementation steps}
-- {File locations and method names where helpful}
-
-**Acceptance Criteria**:
-- [ ] {Pass/fail criterion}
-
-**Tests**:
-- `"{test name}"`
-
-**Edge Cases**:
-- {Boundary conditions}
-
-**Context**:
-> {Spec decisions}
-
-**Spec Reference**: `docs/workflow/specification/{topic}.md`
-```
+**Description**: Task description content (provided by the planning skill)
 
 **Labels**:
 - **Required**: `phase-1`, `phase-2`, etc. - denotes which phase the task belongs to
@@ -171,21 +145,6 @@ The External Dependencies section tracks what this plan needs from other topics.
 After creating an issue via MCP:
 1. Update the task table in the Plan Index File: set `status: authored`
 2. Advance the `planning:` block in frontmatter to the next pending task
-
-## Issue Content Guidelines
-
-Issues should be **fully self-contained**. Include all context directly so humans and agents can execute without referencing other files.
-
-**Include in each issue**:
-- Problem and rationale (the "why" from the specification)
-- Solution and outcome (what we're building, what success looks like)
-- What to implement (specific files/methods)
-- Test names
-- Edge cases for this specific task
-- Relevant decisions and constraints
-- Any code examples for complex patterns
-
-The goal: anyone (Claude or human) could pick up the issue and execute it without opening another document.
 
 ## Flagging
 

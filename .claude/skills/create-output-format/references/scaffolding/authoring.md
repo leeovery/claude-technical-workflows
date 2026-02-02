@@ -1,6 +1,6 @@
 # {Format Name}: Authoring
 
-<!-- Instructions for creating plans and writing tasks during planning -->
+<!-- Instructions for creating plans and storing task content during planning -->
 
 ## Plan Index Template
 
@@ -18,44 +18,16 @@ Create `docs/workflow/planning/{topic}.md` with this structure:
 {body structure}
 ```
 
-## Task Writing
+## Task Storage
 
-<!-- How to create individual tasks. Must use canonical field names -->
-<!-- See canonical-task.md for field definitions -->
+<!-- Define WHERE and HOW task content is stored — not what's in it -->
+<!-- The planning skill decides task content; the format provides the container -->
 
-Each task uses the canonical field names:
+Each task has a **title** and **description** (content body). The planning skill provides both.
 
-```markdown
-### Task {id}: {name}
+{How to store a task in this format — file path, API call, etc.}
 
-**Problem**: {why this task exists}
-
-**Solution**: {what we're building}
-
-**Outcome**: {verifiable end state}
-
-**Do**:
-- {implementation steps}
-
-**Acceptance Criteria**:
-- [ ] {pass/fail criteria}
-
-**Tests**:
-- `"{test name}"`
-
-**Edge Cases**:
-- {boundary conditions}
-
-**Context**:
-> {spec decisions}
-
-**Spec Reference**: `docs/workflow/specification/{topic}.md`
-```
-
-<!-- Add format-specific instructions for WHERE to write the task -->
-{How to store the task in this format - file path, API call, etc.}
-
-After writing:
+After storing:
 1. {Step to update task table status to `authored`}
 2. {Step to advance `planning:` block in frontmatter}
 
@@ -65,13 +37,6 @@ After writing:
 When information is missing:
 
 {Format-specific flagging instructions}
-
-Add a **Needs Clarification** section to the task:
-
-```markdown
-**Needs Clarification**:
-- {open question}
-```
 
 ## Cleanup (Restart)
 

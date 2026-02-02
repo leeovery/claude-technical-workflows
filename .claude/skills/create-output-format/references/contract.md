@@ -29,12 +29,12 @@ Must include:
 
 ### authoring.md
 
-Instructions for creating plans and writing task detail during planning.
+Instructions for creating plans and storing task content during planning.
 
 Must include:
 
 - **Plan Index Template** — full template for `docs/workflow/planning/{topic}.md` including frontmatter and body structure
-- **Task Writing** — how to create individual tasks using canonical field names (see [canonical-task.md](canonical-task.md))
+- **Task Storage** — where and how to store task content (file path, API call, etc.). The planning skill decides task content; the format only defines the container (title + description).
 - **Flagging** — how to mark tasks as `[needs-info]` when information is missing
 - **Cleanup (Restart)** — how to delete all authored tasks for a topic (used during plan restart)
 
@@ -79,6 +79,6 @@ Must include:
 - **Task Frontmatter** — all fields with types, required/optional, descriptions (if tasks have frontmatter)
 - **Format-Specific Fields** — any fields unique to this format (e.g., `project_id` for Linear)
 
-## Canonical Task Fields
+## Task Content Responsibility
 
-All formats must use the standardised task field names defined in [canonical-task.md](canonical-task.md). The authoring.md file maps these fields to the format's storage mechanism (markdown sections, issue fields, API attributes, etc.).
+Output formats are **not responsible** for task content structure. The planning skill (via `task-design.md`) defines what goes in a task. Output formats define where/how that content is stored and retrieved. A task is essentially a title and a description — the format provides the container, the planning skill provides the content.
