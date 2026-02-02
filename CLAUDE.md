@@ -107,7 +107,7 @@ Commit docs frequently (natural breaks, before context refresh). Skills capture 
 Use the `/create-output-format` skill to scaffold a new format adapter. Each format is a directory of 5 files:
 
 ```
-.claude/skills/technical-planning/references/output-formats/{format}/
+skills/technical-planning/references/output-formats/{format}/
 ├── about.md        # Benefits, setup, output location
 ├── authoring.md    # Task storage, flagging, cleanup
 ├── reading.md      # Extracting tasks, next available task
@@ -120,8 +120,8 @@ The contract and scaffolding templates live in `.claude/skills/create-output-for
 ## Output Format References (IMPORTANT)
 
 **NEVER list output format names (linear, local-markdown, etc.) anywhere except:**
-- `.claude/skills/technical-planning/references/output-formats.md` - the authoritative list
-- `.claude/skills/technical-planning/references/output-formats/{format}/` - individual format directories
+- `skills/technical-planning/references/output-formats.md` - the authoritative list
+- `skills/technical-planning/references/output-formats/{format}/` - individual format directories
 
 **Why this matters:** Listing formats elsewhere creates maintenance dependencies. If a format is added or removed, we should only need to update the planning references - not hunt through skills, commands, or documentation.
 
