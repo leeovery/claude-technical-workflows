@@ -65,7 +65,7 @@ Instructions for expressing and querying blocking relationships.
 
 Must include:
 
-- **Adding Dependencies** — how to create a blocking relationship between two tasks, in both directions (blocks / blocked by). Must support multiple dependencies per task.
-- **Removing Dependencies** — how to remove a blocking relationship
+- **Adding a Dependency** — how to declare that one task depends on another. Must support multiple dependencies per task.
+- **Removing a Dependency** — how to remove a dependency
 - **Cross-Topic Dependencies** — whether the same mechanism works across plans, or if there are differences
-- **Querying Dependencies** — how to find blocked tasks, find tasks that block others, check if a dependency is resolved, and find unblocked work
+- **Querying Dependencies** — how to find tasks with dependencies, check if a dependency is resolved, and find unblocked work

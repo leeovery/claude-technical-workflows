@@ -19,4 +19,4 @@ Edit the task file directly:
 - **Description**: Edit the body content below the title
 - **Priority**: Set or change the `priority:` field in frontmatter
 - **Tags**: Set or change the `tags:` field in frontmatter
-- **Dependencies**: Set or change the `depends_on:` field in frontmatter
+- **Dependencies**: See [dependencies.md](dependencies.md)

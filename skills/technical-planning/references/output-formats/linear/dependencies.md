@@ -1,22 +1,22 @@
 # Linear: Dependencies
 
-Linear natively supports blocking relationships between issues, both within a project and across projects. The same mechanism works regardless of which project an issue belongs to.
+Linear natively supports blocking relationships between issues, both within a project and across projects.
 
-## Adding Dependencies
+## Adding a Dependency
 
-**Task A is blocked by Task B:**
+To declare that one task depends on another (is blocked by it):
 
 ```
 linear_createIssueRelation(
-  issueId: "{task_a_id}",
-  relatedIssueId: "{task_b_id}",
+  issueId: "{dependent_issue_id}",
+  relatedIssueId: "{blocking_issue_id}",
   type: "blocks"
 )
 ```
 
-Linear handles both directions automatically — creating a "blocks" relation from B to A also makes A show as "blocked by" B. A task can have multiple blocking relationships.
+A task can have multiple dependencies. Call `linear_createIssueRelation` for each one.
 
-## Removing Dependencies
+## Removing a Dependency
 
 Delete the issue relation via MCP:
 
@@ -27,29 +27,24 @@ linear_deleteIssueRelation(issueRelationId: "{relation_id}")
 To find the relation ID, query the issue's relations first:
 
 ```
-linear_getIssue(issueId: "{task_a_id}")
+linear_getIssue(issueId: "{issue_id}")
 # Look for the relation in the issue's relations list
 ```
 
+## Cross-Topic Dependencies
+
+The same mechanism works across projects. Linear doesn't distinguish between within-project and cross-project blocking relationships.
+
 ## Querying Dependencies
 
-### Find Blocked Tasks
+### Find Tasks With Dependencies
 
 ```
 linear_getIssues(projectId: "{project_id}")
 # Filter issues where blockedByIssues is non-empty
 ```
 
-### Find Tasks That Block Others
-
-```
-linear_getIssue(issueId: "{issue_id}")
-# Check the blockingIssues field in the response
-```
-
 ### Check if a Dependency is Resolved
-
-Query the blocking issue and check its state:
 
 ```
 linear_getIssue(issueId: "{blocking_issue_id}")

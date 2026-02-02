@@ -14,6 +14,6 @@ To find the next task to implement:
 2. Filter to tasks where `status` is `pending` or `in-progress` (or missing — treat as `pending`)
 3. If any tasks have `depends_on`, exclude those with unresolved dependencies
 4. Order by phase number (from task ID: `{topic}-{phase}-{seq}`) — complete all earlier phases first
-5. Within a phase, order by `priority` if present (`urgent` > `high` > `normal` > `low`), then by sequence number
+5. Within a phase, order by `priority` if present (lower number = higher priority), then by sequence number
 6. The first match is the next task
 7. If no incomplete tasks remain, all tasks are complete.

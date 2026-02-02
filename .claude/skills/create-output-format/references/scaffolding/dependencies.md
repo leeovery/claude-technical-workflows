@@ -1,24 +1,20 @@
 # {Format Name}: Dependencies
 
-<!-- Instructions for expressing and querying blocking relationships between tasks -->
+<!-- Instructions for expressing and querying dependencies between tasks -->
 
-## Adding Dependencies
+## Adding a Dependency
 
-<!-- How to create a blocking relationship. Must support both directions and multiple per task -->
+<!-- How to declare that one task depends on another. Must support multiple per task -->
 
-**Task A is blocked by Task B:**
+{How to set a dependency — one task depends on / is blocked by another}
 
-{How to express this in the format}
+{How to set multiple dependencies on a single task}
 
-**Task A blocks Task C:**
+## Removing a Dependency
 
-{How to express this — may be automatic (like Linear) or require updating both sides (like local markdown)}
+<!-- How to remove a dependency -->
 
-## Removing Dependencies
-
-<!-- How to remove a blocking relationship -->
-
-{How to remove a dependency link between two tasks}
+{How to remove a dependency link}
 
 ## Cross-Topic Dependencies
 
@@ -28,13 +24,9 @@
 
 ## Querying Dependencies
 
-### Find Blocked Tasks
+### Find Tasks With Dependencies
 
-{How to find tasks that are waiting on other tasks}
-
-### Find Tasks That Block Others
-
-{How to find tasks that other tasks depend on}
+{How to find tasks that depend on other tasks}
 
 ### Check if a Dependency is Resolved
 
@@ -42,4 +34,4 @@
 
 ### Find Unblocked Work
 
-{How to find tasks that are ready to work on — no unresolved blockers}
+{How to find tasks that are ready to work on — no unresolved dependencies}

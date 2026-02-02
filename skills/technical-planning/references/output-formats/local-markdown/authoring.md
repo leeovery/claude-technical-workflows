@@ -43,12 +43,14 @@ priority: high
 
 | Priority | Meaning |
 |----------|---------|
-| `urgent` | Must be done first within its phase |
-| `high` | Important — do before normal priority |
-| `normal` | Standard priority (default if omitted) |
-| `low` | Can be deferred within the phase |
+| `0` | No priority (default if omitted) |
+| `1` | Urgent — must be done first within its phase |
+| `2` | High |
+| `3` | Medium |
+| `4` | Low |
+| `5` | Lowest — can be deferred within the phase |
 
-If omitted, priority is determined by sequence ordering within the phase.
+Lower number = higher priority. If omitted, priority is determined by sequence ordering within the phase.
 
 ### Phase Grouping
 
@@ -64,16 +66,14 @@ tags: [edge-case, needs-info]
 
 ### Dependencies (optional)
 
-Add `depends_on` and/or `blocks` fields to frontmatter:
+Add a `depends_on` field to frontmatter:
 
 ```yaml
 depends_on:
   - {topic}-1-2
-blocks:
-  - {topic}-2-1
 ```
 
-See [dependencies.md](dependencies.md) for full details on adding, removing, and querying.
+See [dependencies.md](dependencies.md) for full details.
 
 ## Flagging
 
