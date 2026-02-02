@@ -46,6 +46,7 @@ Instructions for extracting tasks and determining work order.
 
 Must include:
 
+- **Listing Tasks** — how to retrieve all tasks for a plan. Returns summary-level information (id, title, status, phase, priority, dependencies) suitable for building a task graph or overview. Format-specific filtering and query capabilities may be documented here.
 - **Extracting a Task** — how to read full task detail including all properties
 - **Next Available Task** — how to determine the next task to work on. Document how the format uses status, priority, dependencies, and phase ordering to determine sequence.
 

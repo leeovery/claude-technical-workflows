@@ -2,6 +2,13 @@
 
 <!-- Instructions for extracting tasks and determining work order -->
 
+## Listing Tasks
+
+<!-- How to retrieve all tasks for a plan with summary-level data -->
+To retrieve all tasks:
+
+{Format-specific instructions for listing all tasks with id, title, status, phase, priority, and dependencies. Document any native filtering or query capabilities the format supports.}
+
 ## Extracting a Task
 
 <!-- How to read full task detail including all properties -->

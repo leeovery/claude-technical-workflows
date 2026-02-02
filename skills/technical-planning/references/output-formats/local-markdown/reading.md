@@ -1,5 +1,15 @@
 # Local Markdown: Reading
 
+## Listing Tasks
+
+To retrieve all tasks for a plan:
+
+1. List all `.md` files in `docs/workflow/planning/{topic}/` (excluding the Plan Index)
+2. Read each file's frontmatter to extract: `id`, `phase`, `status`, `priority`, `depends_on`
+3. Read the first heading for the task title
+
+This provides the summary-level data needed for graphing, progress overview, or any operation that needs the full task set.
+
 ## Extracting a Task
 
 To read a specific task, read the file at `docs/workflow/planning/{topic}/{task-id}.md`.

@@ -1,5 +1,17 @@
 # Linear: Reading
 
+## Listing Tasks
+
+To retrieve all tasks for a plan:
+
+```
+linear_getIssues(projectId: "{project_id}")
+```
+
+Each issue in the response includes: id, title, state (status), priority, labels (phase grouping), and blocking relationships (`blockedByIssues`, `blockingIssues`).
+
+Use label filters to narrow by phase, or priority/state filters to scope the query further — Linear's API supports these natively.
+
 ## Extracting a Task
 
 Query Linear MCP for the issue by ID:
