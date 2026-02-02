@@ -109,8 +109,7 @@ Present a summary and wait for user input:
 > **Task {id}: {Task Name} — approved**
 >
 > Phase: {phase number} — {phase name}
-> Built: {brief summary of what was implemented}
-> Files: {list of files changed}
+> {executor's SUMMARY — brief commentary, decisions, implementation notes}
 >
 > **Options:**
 > - **`y`/`yes`** — Approve, commit, continue to next task

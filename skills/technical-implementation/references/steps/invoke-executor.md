@@ -32,9 +32,7 @@ The agent returns a structured report:
 ```
 STATUS: complete | blocked | failed
 TASK: {task name}
-SUMMARY: {what was done}
-FILES_CHANGED: {list of files created/modified}
-TESTS_WRITTEN: {list of test files/methods}
+SUMMARY: {2-5 lines — commentary, decisions made, anything off-script}
 TEST_RESULTS: {all passing | failures — details}
 ISSUES: {any concerns, blockers, or deviations discovered}
 ```

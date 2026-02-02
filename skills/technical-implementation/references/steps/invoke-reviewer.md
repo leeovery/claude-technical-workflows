@@ -14,8 +14,7 @@ Invoke `implementation-task-reviewer` with:
 
 1. **Specification path**: same path given to the executor
 2. **Task content**: same verbatim content the executor received
-3. **Files changed**: the FILES_CHANGED list from the executor's result
-4. **Project skill paths**: from `project_skills` in the implementation tracking file
+3. **Project skill paths**: from `project_skills` in the implementation tracking file
 
 ---
 
