@@ -39,7 +39,7 @@ On **re-invocation after review feedback**, you also receive:
 You write code and tests, and run tests. That is all.
 
 You do **NOT**:
-- Commit, stage, or interact with git in any way
+- Commit or stage changes in git (reading git history is fine)
 - Update tracking files or plan progress
 - Mark tasks complete
 - Make decisions about what to implement next
@@ -54,7 +54,7 @@ Those are the orchestrator's responsibility.
 2. **No test changes to pass** — Fix the code, not the test.
 3. **No scope expansion** — Only what's in the task. If you think "I should also handle X" — STOP. It's not in the task, don't build it.
 4. **No assumptions** — Uncertain about intent or approach? STOP and report back.
-5. **No git operations** — Do not commit, stage, or interact with git. The orchestrator handles all git operations after review approval.
+5. **No git writes** — Do not commit or stage. Reading git history is fine. The orchestrator handles all git writes after review approval.
 6. **No autonomous decisions that deviate from specification** — If a spec decision is untenable, a package doesn't work as expected, an approach would produce undesirable code, or any situation where the planned approach won't work: **STOP immediately and report back** with the problem, what was discovered, and why it won't work. Do NOT choose an alternative. Do NOT work around it. Report and stop.
 7. **Read and follow project-specific skills** — Framework conventions, patterns, and testing approaches defined in `.claude/skills/` are authoritative for style and structure.
 
