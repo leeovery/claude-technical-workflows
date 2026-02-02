@@ -120,7 +120,7 @@ Present a summary and wait for user input:
 
 - **`y`/`yes`**: → Proceed to **Update Progress and Commit**.
 - **`auto`**: Note that `task_gate_mode` should be updated to `auto` during the commit step. → Proceed to **Update Progress and Commit**.
-- **Comment**: Treat as a fix round — re-invoke executor with the user's notes, then re-invoke reviewer. Return to **Task Gate** after reviewer approves.
+- **Comment**: Re-invoke executor with the user's notes added, then return to **Execute Task** and follow the instructions as written.
 
 ### If `task_gate_mode: auto`
 
