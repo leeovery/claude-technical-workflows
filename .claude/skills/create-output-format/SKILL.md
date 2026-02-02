@@ -98,5 +98,5 @@ Verify:
 - [ ] Authoring.md includes a complete task creation example
 - [ ] Reading.md explains next-task ordering using status, priority, dependencies, and phase
 - [ ] Updating.md covers all status transitions and how to modify task properties
-- [ ] Graph.md covers priority levels and dependencies (within-plan and cross-topic)
+- [ ] Graph.md covers priority levels and adding/removing dependencies
 - [ ] Format is registered in output-formats.md

@@ -68,5 +68,3 @@ Must include:
 - **Dependencies** — how to declare that one task depends on another. Must support multiple dependencies per task.
   - **Adding a Dependency**
   - **Removing a Dependency**
-  - **Cross-Topic Dependencies** — whether the same mechanism works across plans, or if there are differences
-- **Querying** — how to find tasks with dependencies, check if a dependency is resolved, and find unblocked work

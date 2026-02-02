@@ -98,10 +98,10 @@ For each unresolved dependency:
 1. **Search for matching plan**: Does `docs/workflow/planning/{dependency-topic}.md` exist?
    - If no match: Mark as "no plan exists" - cannot resolve yet
 
-2. **If plan exists**: Load the format's dependencies reference
+2. **If plan exists**: Load the format's reading reference
    - Read `format:` from the dependency plan's frontmatter
-   - Load `.claude/skills/technical-planning/references/output-formats/{format}/graph.md`
-   - Follow the "Querying Dependencies" section to search for matching tasks
+   - Load `.claude/skills/technical-planning/references/output-formats/{format}/reading.md`
+   - Use the task extraction instructions to search for matching tasks
 
 3. **Handle ambiguous matches**:
    - If multiple tasks could satisfy the dependency, present options to user
@@ -116,7 +116,7 @@ For each resolved match:
 
 2. **Create dependency in output format**:
    - Load `.claude/skills/technical-planning/references/output-formats/{format}/graph.md`
-   - Follow the "Creating Dependencies" section to create the blocking relationship
+   - Follow the "Adding a Dependency" section to create the blocking relationship
 
 ## Step 6: Bidirectional Check
 

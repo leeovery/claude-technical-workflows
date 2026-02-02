@@ -23,23 +23,3 @@
 <!-- How to remove a dependency -->
 
 {How to remove a dependency link}
-
-### Cross-Topic Dependencies
-
-<!-- Does the same mechanism work across plans/projects, or are there differences? -->
-
-{Whether cross-topic dependencies use the same mechanism or require different handling}
-
-## Querying
-
-### Find Tasks With Dependencies
-
-{How to find tasks that depend on other tasks}
-
-### Check if a Dependency is Resolved
-
-{How to check whether a blocking task is complete}
-
-### Find Unblocked Work
-
-{How to find tasks that are ready to work on — no unresolved dependencies}
