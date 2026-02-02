@@ -9,7 +9,6 @@ Each task is written to `docs/workflow/planning/{topic}/{task-id}.md` — a mark
 id: {topic}-{phase}-{seq}
 phase: {phase-number}
 status: pending
-priority: normal
 created: YYYY-MM-DD
 ---
 
@@ -18,9 +17,13 @@ created: YYYY-MM-DD
 {Task description content}
 ```
 
+**Required**: title (`# {Task Title}`) and description (body content). Everything else supports the format's storage mechanics.
+
 ## Task Properties
 
 ### Status
+
+Stored in frontmatter. Defaults to `pending` if omitted.
 
 | Status | Meaning |
 |--------|---------|
@@ -30,32 +33,49 @@ created: YYYY-MM-DD
 | `skipped` | Task was deliberately skipped |
 | `cancelled` | Task is no longer needed |
 
-### Priority
+### Priority (optional)
+
+Add a `priority` field to frontmatter:
+
+```yaml
+priority: high
+```
 
 | Priority | Meaning |
 |----------|---------|
 | `urgent` | Must be done first within its phase |
 | `high` | Important — do before normal priority |
-| `normal` | Standard priority (default) |
+| `normal` | Standard priority (default if omitted) |
 | `low` | Can be deferred within the phase |
 
-Priority is set in frontmatter. Within a phase, tasks are ordered by priority first, then by sequence number.
+If omitted, priority is determined by sequence ordering within the phase.
 
 ### Phase Grouping
 
 Phases are encoded in the task ID: `{topic}-{phase}-{seq}`. The `phase` frontmatter field also stores the phase number for querying.
 
-### Labels / Tags
+### Labels / Tags (optional)
 
-No native label/tag system. Use a `tags` frontmatter field if additional categorisation is needed:
+Add a `tags` field to frontmatter if additional categorisation is needed:
 
 ```yaml
 tags: [edge-case, needs-info]
 ```
 
+### Dependencies (optional)
+
+Add a `depends_on` field to frontmatter to express within-plan blocking:
+
+```yaml
+depends_on:
+  - {topic}-1-2
+```
+
+See [dependencies.md](dependencies.md) for full details.
+
 ## Flagging
 
-In the task file, add a **Needs Clarification** section and optionally add `needs-info` to the `tags` field:
+In the task file, add a **Needs Clarification** section:
 
 ```markdown
 **Needs Clarification**:

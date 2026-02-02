@@ -17,5 +17,6 @@ Edit the task file directly:
 
 - **Title**: Change the `# {Title}` heading in the body
 - **Description**: Edit the body content below the title
-- **Priority**: Change the `priority:` field in frontmatter
-- **Tags**: Change the `tags:` field in frontmatter
+- **Priority**: Set or change the `priority:` field in frontmatter
+- **Tags**: Set or change the `tags:` field in frontmatter
+- **Dependencies**: Set or change the `depends_on:` field in frontmatter
