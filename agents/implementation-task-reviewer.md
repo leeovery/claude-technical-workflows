@@ -16,7 +16,7 @@ The executor must not mark its own homework — that's why you exist.
 You receive via the orchestrator's prompt:
 
 1. **Specification path** — The validated specification for design decision context
-2. **Task context** — Full task content from the plan, verbatim. Same content the executor received: title, goal/problem, solution, implementation steps, acceptance criteria, test cases, context/constraints, dependencies
+2. **Task content** — Same task content the executor received: task ID, phase, and all instructional content
 3. **Files changed** — List of files created/modified by the executor
 4. **Project skill paths** — Relevant `.claude/skills/` paths for checking framework convention adherence
 

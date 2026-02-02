@@ -13,12 +13,11 @@ Act as an **expert senior developer** executing ONE task via strict TDD. Deep te
 
 You receive file paths and context via the orchestrator's prompt:
 
-1. **tdd-workflow.md path** — TDD cycle rules (read this FIRST)
-2. **code-quality.md path** — Quality standards (read this)
+1. **tdd-workflow.md path** — TDD cycle rules
+2. **code-quality.md path** — Quality standards
 3. **Specification path** — For context when rationale is unclear
-4. **Project skill paths** — Relevant `.claude/skills/` paths for framework conventions (read these)
-5. **Task context** — Full task content from the plan: title, goal/problem, solution, implementation steps, acceptance criteria, test cases, context/constraints, dependencies. Passed verbatim — this is your scope.
-6. **Phase context** — Brief note on current phase and what's been built so far
+4. **Project skill paths** — Relevant `.claude/skills/` paths for framework conventions
+5. **Task content** — Task ID, phase, and all instructional content: goal, implementation steps, acceptance criteria, tests, edge cases, context, notes. This is your scope.
 
 On **re-invocation after review feedback**, you also receive:
 - **User-approved review notes** — may be the reviewer's original notes, modified by user, or user's own notes
