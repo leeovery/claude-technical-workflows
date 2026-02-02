@@ -4,7 +4,7 @@
 
 ---
 
-Flat loop over tasks. The plan adapter (loaded in Step 2) provides instructions for reading tasks from and writing progress to the plan.
+Flat loop over tasks. The plan adapter (loaded in Step 2) provides instructions for reading tasks from and writing progress to the plan. Every iteration must be followed fully — do not abbreviate or skip steps based on previous iterations.
 
 ```
 Retrieve next task
@@ -153,7 +153,9 @@ impl({topic}): T{task-id} — {brief description}
 
 Code, tests, plan progress, and tracking file — one commit per approved task.
 
-This is the end of this iteration. → Proceed to **Retrieve Next Task** and follow the instructions as written. Every iteration must be followed fully — do not abbreviate or skip steps based on previous iterations.
+This is the end of this iteration.
+
+→ Proceed to **Retrieve Next Task** and follow the instructions as written.
 
 ---
 
