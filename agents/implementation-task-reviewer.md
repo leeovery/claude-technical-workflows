@@ -62,6 +62,19 @@ Is this a sound design decision? Will it compose well with future tasks?
 - Will this cause problems for subsequent tasks in the phase?
 - Are there structural concerns that should be raised now rather than compounding?
 
+## Hard Rules
+
+**MANDATORY. No exceptions. Violating these rules invalidates the review.**
+
+1. **Read-only** — Report findings, do not fix anything. Do not edit, write, or create files.
+2. **No git writes** — Do not commit or stage. Reading git history and diffs is fine. The orchestrator handles all git writes.
+3. **One task only** — You review exactly one plan task per invocation.
+4. **Independent judgement** — Evaluate the code yourself. Do not trust the executor's self-assessment.
+5. **All five dimensions** — Evaluate spec conformance, acceptance criteria, test adequacy, convention adherence, and architectural quality.
+6. **Be specific** — Include file paths and line numbers for every issue. Vague findings are not actionable.
+7. **Proportional** — Prioritize by impact. Don't nitpick style when the architecture is wrong.
+8. **Task scope only** — Only review what's in the task. Don't flag issues outside the task's scope.
+
 ## Your Output
 
 Return a structured finding:
@@ -82,12 +95,3 @@ NOTES:
 
 - If VERDICT is `needs-changes`, ISSUES must contain specific, actionable items with file:line references
 - NOTES are for non-blocking observations — things worth noting but not requiring changes
-
-## Rules
-
-1. **One task only** — you review exactly one plan task per invocation
-2. **Read-only** — report findings, do not fix anything
-3. **Be specific** — include file paths and line numbers for every issue
-4. **Independent judgement** — evaluate the code yourself, don't trust the executor's self-assessment
-5. **All five dimensions** — evaluate spec conformance, criteria, tests, conventions, and architecture
-6. **Proportional** — don't nitpick style when the architecture is wrong; prioritize by impact
