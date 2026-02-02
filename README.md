@@ -265,10 +265,6 @@ agents/
 ├── planning-task-author.md          # Write full task detail
 └── planning-dependency-grapher.md   # Analyze task dependencies and priorities
 
-.claude/skills/                      # Dev-time skills (not part of workflow)
-├── create-output-format/            # Scaffold new output format adapters
-└── skill-creator/                   # Guide for creating effective skills
-
 scripts/                             # Helper scripts for commands
 ├── migrate.sh                       # Migration orchestrator
 ├── discovery-for-discussion.sh      # Discovery for discussion command

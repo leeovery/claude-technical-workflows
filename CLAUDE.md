@@ -47,6 +47,7 @@ commands/
 .claude/skills/
   create-output-format/      # Dev-time skill: scaffold new output format adapters
   skill-creator/             # Dev-time skill: guide for creating effective skills
+  update-workflow-explorer/  # Dev-time skill: sync workflow-explorer.html with source
 
 agents/
   review-task-verifier.md           # Verifies single task implementation for review
