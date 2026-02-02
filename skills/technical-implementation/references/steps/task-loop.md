@@ -90,9 +90,9 @@ Present the reviewer's findings to the user:
 
 **STOP.** Wait for user choice.
 
-- **`y`/`yes`**: Re-invoke executor with the reviewer's notes added, then return to the top of **B. Execute Task** and follow the instructions as written.
+- **`y`/`yes`**: → Return to the top of **B. Execute Task** and re-invoke the executor with the reviewer's notes added.
 - **`skip`**: → Proceed to **D. Task Gate**.
-- **Comment**: Re-invoke executor with the user's notes, then return to the top of **B. Execute Task** and follow the instructions as written.
+- **Comment**: → Return to the top of **B. Execute Task** and re-invoke the executor with the user's notes.
 
 ---
 
@@ -118,7 +118,7 @@ Present a summary and wait for user input:
 
 - **`y`/`yes`**: → Proceed to **E. Update Progress and Commit**.
 - **`auto`**: Note that `task_gate_mode` should be updated to `auto` during the commit step. → Proceed to **E. Update Progress and Commit**.
-- **Comment**: Re-invoke executor with the user's notes added, then return to the top of **B. Execute Task** and follow the instructions as written.
+- **Comment**: → Return to the top of **B. Execute Task** and re-invoke the executor with the user's notes added.
 
 ### If `task_gate_mode: auto`
 
