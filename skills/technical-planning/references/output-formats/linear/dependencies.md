@@ -2,9 +2,7 @@
 
 ## Dependency Format
 
-Cross-topic dependencies link issues between different Linear projects (different specifications/topics). This is how you express "billing depends on authentication being complete."
-
-Linear supports blocking relationships between issues, even across projects.
+Linear supports blocking relationships between issues, including across projects.
 
 ## Creating Dependencies
 
@@ -14,22 +12,9 @@ Via MCP or the Linear UI:
 2. Add a "Blocked by" relationship to the issue in the other project
 3. Linear will show this issue as blocked until the dependency is complete
 
-Also update the External Dependencies section in the Plan Index File:
-
-```markdown
-## External Dependencies
-
-- authentication: User context → {issue-id} (resolved)
-- payment-gateway: Payment processing (unresolved - not yet planned)
-```
-
 ## Querying Dependencies
 
-Use these queries to understand the dependency graph.
-
 ### Via MCP
-
-Query Linear for issues with blocking relationships:
 
 ```
 # Get all issues in a project

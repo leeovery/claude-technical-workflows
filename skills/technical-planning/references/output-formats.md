@@ -4,7 +4,7 @@
 
 ---
 
-Plans can be stored in different formats. Each format is a directory of 6 files split by concern (about, authoring, reading, updating, dependencies, frontmatter).
+Plans can be stored in different formats. Each format is a directory of 5 files split by concern (about, authoring, reading, updating, dependencies).
 
 **IMPORTANT**: Only offer formats listed below. Do not invent or suggest formats that don't have corresponding directories in the [output-formats/](output-formats/) directory.
 

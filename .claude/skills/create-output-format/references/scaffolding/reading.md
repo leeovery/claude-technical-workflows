@@ -1,12 +1,6 @@
 # {Format Name}: Reading
 
-<!-- Instructions for reading plans and extracting tasks during implementation -->
-
-## Reading the Plan Index
-
-<!-- How to read the plan overview, phases, and task tables -->
-1. Read `docs/workflow/planning/{topic}.md`
-2. {Format-specific steps to get the full plan view}
+<!-- Instructions for extracting tasks during implementation -->
 
 ## Extracting a Task
 

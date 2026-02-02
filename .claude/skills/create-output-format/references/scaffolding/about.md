@@ -21,24 +21,10 @@ Use this format when {describe the ideal use case}.
 
 ## Output Location
 
-<!-- Where plans and tasks are stored. Use a tree diagram -->
+<!-- Where tasks are stored. Use a tree diagram -->
 ```
 {path/structure/diagram}
 ```
 
 <!-- Brief explanation of the storage layout -->
 {Description of what lives where}
-
-## Resulting Structure
-
-<!-- Directory/entity layout after planning is complete -->
-After planning:
-
-```
-docs/workflow/
-├── discussion/{topic}.md
-├── specification/{topic}.md
-└── planning/
-    ├── {topic}.md                  # Plan Index File (format: {format-key})
-    └── {format-specific task storage}
-```

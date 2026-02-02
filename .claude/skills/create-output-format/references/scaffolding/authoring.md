@@ -1,22 +1,6 @@
 # {Format Name}: Authoring
 
-<!-- Instructions for creating plans and storing task content during planning -->
-
-## Plan Index Template
-
-Create `docs/workflow/planning/{topic}.md` with this structure:
-
-<!-- Include the full Plan Index template with frontmatter and body -->
-<!-- See frontmatter.md for the frontmatter schema -->
-```markdown
----
-{frontmatter fields - see frontmatter.md}
----
-
-# Plan: {Topic Name}
-
-{body structure}
-```
+<!-- Instructions for storing task content during planning -->
 
 ## Task Storage
 
@@ -26,13 +10,9 @@ Each task has a **title** and **description** (content body).
 
 {How to store a task in this format — file path, API call, etc.}
 
-After storing:
-1. {Step to update task table status to `authored`}
-2. {Step to advance `planning:` block in frontmatter}
-
 ## Flagging
 
-<!-- How to mark tasks as [needs-info] -->
+<!-- How to mark tasks as needing clarification -->
 When information is missing:
 
 {Format-specific flagging instructions}

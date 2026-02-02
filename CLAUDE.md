@@ -92,16 +92,15 @@ Commit docs frequently (natural breaks, before context refresh). Skills capture 
 
 ## Adding New Output Formats
 
-Use the `/create-output-format` skill to scaffold a new format adapter. Each format is a directory of 6 files:
+Use the `/create-output-format` skill to scaffold a new format adapter. Each format is a directory of 5 files:
 
 ```
 skills/technical-planning/references/output-formats/{format}/
 ├── about.md        # Benefits, setup, output location
-├── authoring.md    # Plan Index template, task writing, cleanup
-├── reading.md      # Reading plans, extracting tasks
-├── updating.md     # Marking complete/skipped, advancing progress
-├── dependencies.md # Cross-topic dependency format + querying
-└── frontmatter.md  # Plan Index + task frontmatter schemas
+├── authoring.md    # Task storage, flagging, cleanup
+├── reading.md      # Extracting tasks, next incomplete task
+├── updating.md     # Marking complete/skipped
+└── dependencies.md # Cross-topic dependency format + querying
 ```
 
 The contract and scaffolding templates live in `.claude/skills/create-output-format/references/`.

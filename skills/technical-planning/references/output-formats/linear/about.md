@@ -4,7 +4,7 @@
 
 ---
 
-Use this output format when you want **Linear as the source of truth** for plan management. The user can update tasks directly in Linear's UI, and implementation will query Linear for the current state.
+Use this output format when you want **Linear as the source of truth** for task management. Tasks are stored as Linear issues and can be updated directly in Linear's UI.
 
 ## Benefits
 
@@ -21,24 +21,22 @@ Check if Linear MCP is available by looking for Linear tools. If not configured,
 
 Ask the user: **Which team should own this project?**
 
-## Linear Structure Mapping
+## Structure Mapping
 
-| Planning Concept | Linear Entity |
-|------------------|---------------|
-| Specification/Topic | Project |
+| Concept | Linear Entity |
+|---------|---------------|
+| Topic | Project |
 | Phase | Label (e.g., `phase-1`, `phase-2`) |
 | Task | Issue |
-| Internal dependency | Issue blocking relationship (within project) |
-| Cross-topic dependency | Issue blocking relationship (across projects) |
+| Dependency | Issue blocking relationship |
 
-Each specification topic becomes its own Linear project. Cross-topic dependencies link issues between projects.
+Each topic becomes its own Linear project. Phases are represented as labels on issues.
 
 ## Output Location
 
-```
-docs/workflow/planning/
-└── {topic}.md                    # Plan Index File (pointer to Linear project)
+Tasks are stored as issues in a Linear project:
 
+```
 Linear:
 └── Project: {topic}
     ├── Issue: Task 1 [label: phase-1]
@@ -46,21 +44,4 @@ Linear:
     └── Issue: Task 3 [label: phase-2]
 ```
 
-The Plan Index File is a thin pointer to the Linear project. Linear is the source of truth for task detail and status.
-
-## Resulting Structure
-
-After planning:
-
-```
-docs/workflow/
-├── discussion/{topic}.md      # Discussion output
-├── specification/{topic}.md   # Specification output
-└── planning/{topic}.md        # Plan Index File (format: linear - pointer)
-
-Linear:
-└── Project: {topic}
-    ├── Issue: Task 1 [label: phase-1]
-    ├── Issue: Task 2 [label: phase-1]
-    └── Issue: Task 3 [label: phase-2]
-```
+Linear is the source of truth for task detail and status.
