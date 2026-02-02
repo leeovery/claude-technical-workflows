@@ -26,7 +26,6 @@ linear_createIssue(
   projectId: "{project_id}",
   title: "{Task title}",
   description: "{Task description content}",
-  priority: {priority_level},
   labelIds: ["{phase_label_id}", ...]
 )
 ```
@@ -44,20 +43,6 @@ Linear uses workflow states. Map to these states:
 | Completed | Done |
 | Skipped | Cancelled (add comment explaining why) |
 | Cancelled | Cancelled |
-
-### Priority
-
-Linear has native priority levels:
-
-| Priority | Linear Value | When to Use |
-|----------|-------------|-------------|
-| Urgent | 1 | Must be done first within its phase |
-| High | 2 | Important — do before normal priority |
-| Medium | 3 | Standard priority (default) |
-| Low | 4 | Can be deferred within the phase |
-| No priority | 0 | Unset |
-
-Set priority when creating the issue via MCP.
 
 ### Phase Grouping
 

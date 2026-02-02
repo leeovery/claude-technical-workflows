@@ -33,25 +33,6 @@ Stored in frontmatter. Defaults to `pending` if omitted.
 | `skipped` | Task was deliberately skipped |
 | `cancelled` | Task is no longer needed |
 
-### Priority (optional)
-
-Add a `priority` field to frontmatter:
-
-```yaml
-priority: 2
-```
-
-| Priority | Value | When to Use |
-|----------|-------|-------------|
-| Urgent | `1` | Must be done first within its phase |
-| High | `2` | Important — do before normal priority |
-| Medium | `3` | Standard priority |
-| Low | `4` | Can be deferred within the phase |
-| Lowest | `5` | Lowest — defer if possible |
-| No priority | `0` | Unset (default if omitted) |
-
-Lower number = higher priority. `0` means no priority — it sorts after `5`, not before `1`. If omitted, priority is determined by sequence ordering within the phase.
-
 ### Phase Grouping
 
 Phases are encoded in the task ID: `{topic}-{phase}-{seq}`. The `phase` frontmatter field also stores the phase number for querying.
@@ -63,17 +44,6 @@ Add a `tags` field to frontmatter if additional categorisation is needed:
 ```yaml
 tags: [edge-case, needs-info]
 ```
-
-### Dependencies (optional)
-
-Add a `depends_on` field to frontmatter:
-
-```yaml
-depends_on:
-  - {topic}-1-2
-```
-
-See [dependencies.md](dependencies.md) for full details.
 
 ## Flagging
 

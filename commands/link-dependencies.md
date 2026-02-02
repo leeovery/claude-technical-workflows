@@ -100,7 +100,7 @@ For each unresolved dependency:
 
 2. **If plan exists**: Load the format's dependencies reference
    - Read `format:` from the dependency plan's frontmatter
-   - Load `.claude/skills/technical-planning/references/output-formats/{format}/dependencies.md`
+   - Load `.claude/skills/technical-planning/references/output-formats/{format}/graph.md`
    - Follow the "Querying Dependencies" section to search for matching tasks
 
 3. **Handle ambiguous matches**:
@@ -115,7 +115,7 @@ For each resolved match:
    - Change the dependency's `state: unresolved` to `state: resolved` and add `task_id: {task-id}`
 
 2. **Create dependency in output format**:
-   - Load `.claude/skills/technical-planning/references/output-formats/{format}/dependencies.md`
+   - Load `.claude/skills/technical-planning/references/output-formats/{format}/graph.md`
    - Follow the "Creating Dependencies" section to create the blocking relationship
 
 ## Step 6: Bidirectional Check

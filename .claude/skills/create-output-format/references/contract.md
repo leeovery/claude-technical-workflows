@@ -10,7 +10,7 @@ Every output format adapter is a directory of 5 files, each serving a specific c
 | `authoring.md` | Creating tasks and setting their properties |
 | `reading.md` | Extracting tasks and determining work order |
 | `updating.md` | Modifying tasks — status, content, properties |
-| `dependencies.md` | Blocking relationships within and across plans |
+| `graph.md` | Task graph — priority and dependencies across tasks |
 
 ## File Specifications
 
@@ -28,14 +28,13 @@ Must include:
 
 ### authoring.md
 
-Instructions for creating tasks and setting their properties.
+Instructions for creating individual tasks. This file is used by the task authoring agent, which works on one task at a time in isolation. It must NOT contain priority or dependency information — those are set later by the graphing agent using graph.md.
 
 Must include:
 
 - **Task Storage** — how to create a task (file path, API call, etc.) with a complete example showing the full task template
-- **Task Properties** — what properties this format supports and how to set each one during creation. Common properties include:
+- **Task Properties** — properties set during authoring:
   - **Status** — available values and their meanings
-  - **Priority** — levels available and how to assign them
   - **Phase grouping** — how tasks are grouped into phases
   - **Labels/tags** — categorisation available beyond phases
 - **Flagging** — how to mark tasks as needing clarification
@@ -57,15 +56,17 @@ Instructions for modifying tasks.
 Must include:
 
 - **Status Transitions** — how to change task status. Document all supported statuses (e.g., complete, skipped, cancelled) and how to set each one.
-- **Updating Task Content** — how to modify a task's title, description, priority, or other properties after creation.
+- **Updating Task Content** — how to modify a task's title, description, or other properties after creation.
 
-### dependencies.md
+### graph.md
 
-Instructions for expressing and querying blocking relationships.
+Instructions for establishing priority and dependencies across tasks. This file is used by the graphing agent after all tasks have been authored. The agent receives the complete plan and uses this file to build the task execution graph.
 
 Must include:
 
-- **Adding a Dependency** — how to declare that one task depends on another. Must support multiple dependencies per task.
-- **Removing a Dependency** — how to remove a dependency
-- **Cross-Topic Dependencies** — whether the same mechanism works across plans, or if there are differences
-- **Querying Dependencies** — how to find tasks with dependencies, check if a dependency is resolved, and find unblocked work
+- **Priority** — how to set task priority. Document available levels and how to assign them.
+- **Dependencies** — how to declare that one task depends on another. Must support multiple dependencies per task.
+  - **Adding a Dependency**
+  - **Removing a Dependency**
+  - **Cross-Topic Dependencies** — whether the same mechanism works across plans, or if there are differences
+- **Querying** — how to find tasks with dependencies, check if a dependency is resolved, and find unblocked work

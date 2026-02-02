@@ -112,7 +112,7 @@ skills/technical-planning/references/output-formats/{format}/
 ├── authoring.md    # Task storage, flagging, cleanup
 ├── reading.md      # Extracting tasks, next available task
 ├── updating.md     # Marking complete/skipped
-└── dependencies.md # Cross-topic dependency format + querying
+└── graph.md        # Task graph — priority + dependencies
 ```
 
 The contract and scaffolding templates live in `.claude/skills/create-output-format/references/`.

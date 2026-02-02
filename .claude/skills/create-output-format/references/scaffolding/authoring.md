@@ -1,10 +1,11 @@
 # {Format Name}: Authoring
 
-<!-- Instructions for creating tasks and setting their properties -->
+<!-- Instructions for creating individual tasks in isolation -->
+<!-- This file is used by the task authoring agent — do NOT include priority or dependency info -->
 
 ## Task Storage
 
-<!-- How to create a task — show the full template with all properties -->
+<!-- How to create a task — show the full template -->
 
 {How to create a task in this format — file path, API call, MCP operation, etc.}
 
@@ -15,7 +16,7 @@
 
 ## Task Properties
 
-<!-- Document every property this format supports for tasks -->
+<!-- Properties set during authoring only — priority and dependencies are handled separately in graph.md -->
 
 ### Status
 
@@ -24,11 +25,6 @@
 | Status | Meaning |
 |--------|---------|
 | {status} | {meaning} |
-
-### Priority
-
-<!-- How to assign priority. If not supported, state that and explain how ordering is determined instead -->
-{Priority mechanism or "Priority is determined by phase and sequence ordering."}
 
 ### Phase Grouping
 

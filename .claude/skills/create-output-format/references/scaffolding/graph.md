@@ -1,8 +1,16 @@
-# {Format Name}: Dependencies
+# {Format Name}: Task Graph
 
-<!-- Instructions for expressing and querying dependencies between tasks -->
+<!-- Instructions for establishing priority and dependencies across tasks -->
+<!-- This file is used by the graphing agent after all tasks have been authored -->
 
-## Adding a Dependency
+## Priority
+
+<!-- How to assign priority. Document levels and how to set them -->
+{Priority mechanism — levels available, how to assign, what happens if omitted}
+
+## Dependencies
+
+### Adding a Dependency
 
 <!-- How to declare that one task depends on another. Must support multiple per task -->
 
@@ -10,19 +18,19 @@
 
 {How to set multiple dependencies on a single task}
 
-## Removing a Dependency
+### Removing a Dependency
 
 <!-- How to remove a dependency -->
 
 {How to remove a dependency link}
 
-## Cross-Topic Dependencies
+### Cross-Topic Dependencies
 
 <!-- Does the same mechanism work across plans/projects, or are there differences? -->
 
 {Whether cross-topic dependencies use the same mechanism or require different handling}
 
-## Querying Dependencies
+## Querying
 
 ### Find Tasks With Dependencies
 

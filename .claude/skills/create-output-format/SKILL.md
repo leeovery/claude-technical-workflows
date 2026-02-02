@@ -61,7 +61,7 @@ Using the information gathered in Step 1, write each of the 5 required files. Us
 | [authoring.md](references/scaffolding/authoring.md) | `{format}/authoring.md` |
 | [reading.md](references/scaffolding/reading.md) | `{format}/reading.md` |
 | [updating.md](references/scaffolding/updating.md) | `{format}/updating.md` |
-| [dependencies.md](references/scaffolding/dependencies.md) | `{format}/dependencies.md` |
+| [graph.md](references/scaffolding/graph.md) | `{format}/graph.md` |
 
 For each file:
 
@@ -91,12 +91,12 @@ adapter: [{format-key}/](output-formats/{format-key}/)
 
 Verify:
 
-- [ ] Directory contains exactly 5 files: about.md, authoring.md, reading.md, updating.md, dependencies.md
+- [ ] Directory contains exactly 5 files: about.md, authoring.md, reading.md, updating.md, graph.md
 - [ ] All `{placeholder}` tokens have been replaced
 - [ ] About.md includes a structure mapping table
-- [ ] Authoring.md documents task properties: status values, priority levels, phase grouping, labels
+- [ ] Authoring.md documents task properties: status, phase grouping, labels (NOT priority or dependencies)
 - [ ] Authoring.md includes a complete task creation example
 - [ ] Reading.md explains next-task ordering using status, priority, dependencies, and phase
 - [ ] Updating.md covers all status transitions and how to modify task properties
-- [ ] Dependencies.md covers within-plan and cross-topic dependencies (or explicitly states unsupported)
+- [ ] Graph.md covers priority levels and dependencies (within-plan and cross-topic)
 - [ ] Format is registered in output-formats.md
