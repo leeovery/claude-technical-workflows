@@ -33,7 +33,7 @@ E. Update progress + commit
 
 1. Load **[invoke-executor.md](invoke-executor.md)** and follow its instructions. Pass the normalised task content.
 2. **STOP.** Do not proceed until the executor has returned its result.
-3. Route on STATUS:
+3. On receipt of result, route on STATUS:
    - `blocked` or `failed` → **Executor Blocked**
    - `complete` → **C. Review Task**
 
