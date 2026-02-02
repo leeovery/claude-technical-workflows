@@ -6,7 +6,7 @@
 
 ## The Cycle
 
-RED → GREEN → REFACTOR → COMMIT
+RED → GREEN → REFACTOR
 
 Repeat for each task. **Never skip steps. Never reorder.**
 
@@ -64,9 +64,9 @@ If you think "I should also handle X" - STOP. Write a test for X first.
 
 Run tests after. If they fail, undo the refactor.
 
-## COMMIT: After Every Green
+## COMMIT: Orchestrator Responsibility
 
-Commit with descriptive message referencing the task. This is non-negotiable - it creates recovery points.
+The executor agent does NOT commit. Your responsibility ends at GREEN — all tests passing. The orchestrator commits after review approval, one commit per approved task covering code, tests, tracking, and plan progress.
 
 ## When Tests CAN Change
 
