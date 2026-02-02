@@ -87,22 +87,14 @@ Present the reviewer's findings to the user:
 > {NOTES from reviewer}
 >
 > - **`y`/`yes`** — Accept these notes and pass them to the executor to fix
-> - **`modify`** — Edit or add to the notes before passing to the executor
 > - **`skip`** — Override the reviewer and proceed as-is
+> - **Comment** — Modify or add to the notes before passing to the executor
 
 **STOP.** Wait for user choice.
 
-#### If `y`/`yes`
-
-Re-invoke executor with the reviewer's notes added, then return to **Execute Task** and follow the instructions as written.
-
-#### If `modify`
-
-Wait for the user's edited notes. Re-invoke executor with those notes, then return to **Execute Task** and follow the instructions as written.
-
-#### If `skip`
-
-→ Proceed to **Task Gate**.
+- **`y`/`yes`**: Re-invoke executor with the reviewer's notes added, then return to **Execute Task** and follow the instructions as written.
+- **`skip`**: → Proceed to **Task Gate**.
+- **Comment**: Re-invoke executor with the user's notes, then return to **Execute Task** and follow the instructions as written.
 
 ---
 
