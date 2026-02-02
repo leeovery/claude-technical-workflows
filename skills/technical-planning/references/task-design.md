@@ -140,7 +140,7 @@ Every task should follow this structure:
 > Relevant details from specification: code examples, architectural decisions,
 > data models, or constraints that inform implementation.
 
-**Spec Reference**: `docs/workflow/specification/{topic}.md`
+**Spec Reference**: `docs/workflow/specification/{topic}.md` (if specification was provided)
 ```
 
 ### Field Requirements
@@ -155,7 +155,7 @@ Every task should follow this structure:
 | Tests | Yes | At least one test name; include edge cases, not just happy path |
 | Edge Cases | When relevant | Boundary conditions, unusual inputs |
 | Context | When relevant | Only include when spec has details worth pulling forward |
-| Spec Reference | Yes | Path to specification for ambiguity resolution |
+| Spec Reference | When provided | Path to specification for ambiguity resolution. Include when a specification file was provided as input. Omit if planning from inline context or other non-file sources. |
 
 ### The Template as Quality Gate
 
