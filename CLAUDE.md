@@ -98,7 +98,7 @@ Use the `/create-output-format` skill to scaffold a new format adapter. Each for
 skills/technical-planning/references/output-formats/{format}/
 ├── about.md        # Benefits, setup, output location
 ├── authoring.md    # Task storage, flagging, cleanup
-├── reading.md      # Extracting tasks, next incomplete task
+├── reading.md      # Extracting tasks, next available task
 ├── updating.md     # Marking complete/skipped
 └── dependencies.md # Cross-topic dependency format + querying
 ```

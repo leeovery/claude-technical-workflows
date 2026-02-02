@@ -10,7 +10,7 @@ linear_getIssue(issueId: "{issue_id}")
 
 The response includes title, description, status, priority, labels, and blocking relationships.
 
-## Next Incomplete Task
+## Next Available Task
 
 To find the next task to implement:
 

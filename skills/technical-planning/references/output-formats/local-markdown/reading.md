@@ -6,7 +6,7 @@ To read a specific task, read the file at `docs/workflow/planning/{topic}/{task-
 
 The task file is self-contained — frontmatter holds id, phase, and status. The body contains the title and full description.
 
-## Next Incomplete Task
+## Next Available Task
 
 To find the next task to implement:
 

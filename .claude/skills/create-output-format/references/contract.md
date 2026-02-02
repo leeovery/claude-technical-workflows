@@ -48,7 +48,7 @@ Instructions for extracting tasks and determining work order.
 Must include:
 
 - **Extracting a Task** — how to read full task detail including all properties
-- **Next Incomplete Task** — how to determine the next task to work on. Document how the format uses status, priority, dependencies, and phase ordering to determine sequence.
+- **Next Available Task** — how to determine the next task to work on. Document how the format uses status, priority, dependencies, and phase ordering to determine sequence.
 
 ### updating.md
 

@@ -9,7 +9,7 @@ To read a specific task:
 
 {Format-specific instructions for locating and reading task content and properties}
 
-## Next Incomplete Task
+## Next Available Task
 
 <!-- How to determine the next task to implement, using all available signals -->
 To find the next task to implement:
