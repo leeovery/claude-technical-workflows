@@ -94,11 +94,11 @@ Present the reviewer's findings to the user:
 
 #### If `y`/`yes`
 
-Re-invoke executor with the reviewer's notes added, then re-invoke reviewer. If `approved`, proceed to **Task Gate**. If `needs-changes`, present to user again. No iteration cap — the user controls every cycle.
+Re-invoke executor with the reviewer's notes added, then return to **Execute Task** and follow the instructions as written.
 
 #### If `modify`
 
-Wait for the user's edited notes. Re-invoke executor with those notes, then re-invoke reviewer. Same loop as above.
+Wait for the user's edited notes. Re-invoke executor with those notes, then return to **Execute Task** and follow the instructions as written.
 
 #### If `skip`
 
