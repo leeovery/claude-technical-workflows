@@ -77,11 +77,3 @@ ISSUES: {any concerns, blockers, or deviations discovered}
 
 - If STATUS is `blocked` or `failed`, ISSUES **must** explain why and what decision is needed.
 - If STATUS is `complete`, all acceptance criteria must be met and all tests passing.
-
-## Rules
-
-1. **One task only** — you implement exactly one plan task per invocation
-2. **TDD is non-negotiable** — RED → GREEN → REFACTOR for every test
-3. **Task context is your scope** — don't look beyond what you were given
-4. **Report, don't decide** — when blocked, report the problem. Don't choose an alternative.
-5. **Project skills are authoritative** — follow framework conventions from `.claude/skills/`
