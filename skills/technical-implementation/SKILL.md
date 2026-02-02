@@ -215,7 +215,6 @@ Commit: `impl({topic}): complete implementation`
 ## References
 
 - **[environment-setup.md](references/environment-setup.md)** — Environment setup before implementation
-- **[plan-execution.md](references/plan-execution.md)** — Plan structure, specification referencing, problem handling, context refresh recovery
 - **[steps/task-loop.md](references/steps/task-loop.md)** — Task execution loop, task gates, tracking, commits
 - **[steps/invoke-executor.md](references/steps/invoke-executor.md)** — How to invoke the executor agent
 - **[steps/invoke-reviewer.md](references/steps/invoke-reviewer.md)** — How to invoke the reviewer agent
