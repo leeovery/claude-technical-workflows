@@ -1,13 +1,24 @@
 # {Format Name}: Updating
 
-<!-- Instructions for recording progress during implementation -->
+<!-- Instructions for modifying tasks -->
 
-## Mark Task Complete
+## Status Transitions
 
-<!-- How to update a task's status to completed -->
-{Format-specific instructions for marking a task done}
+<!-- How to change task status, with all supported statuses -->
 
-## Mark Task Skipped
+| Transition | How |
+|------------|-----|
+| Complete | {How to mark a task as done} |
+| Skipped | {How to mark a task as skipped} |
+| Cancelled | {How to mark a task as cancelled, or "Not supported — use skipped."} |
 
-<!-- How to record a skipped task -->
-{Format-specific instructions for marking a task skipped}
+## Updating Task Content
+
+<!-- How to modify a task after creation -->
+
+To update a task's properties:
+
+- **Title**: {how to change it}
+- **Description**: {how to change it}
+- **Priority**: {how to change it, or "Not supported."}
+- **Labels/tags**: {how to change them}

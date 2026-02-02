@@ -1,20 +1,22 @@
 # {Format Name}: Reading
 
-<!-- Instructions for extracting tasks during implementation -->
+<!-- Instructions for extracting tasks and determining work order -->
 
 ## Extracting a Task
 
-<!-- How to read full task detail for a specific task ID -->
+<!-- How to read full task detail including all properties -->
 To read a specific task:
 
-{Format-specific instructions for locating and reading task content}
+{Format-specific instructions for locating and reading task content and properties}
 
 ## Next Incomplete Task
 
-<!-- How to determine the next task to implement -->
+<!-- How to determine the next task to implement, using all available signals -->
 To find the next task to implement:
 
-1. {How to determine phase ordering}
-2. {How to check task status}
-3. {How to identify the next incomplete task}
-4. If no available tasks remain, all tasks are complete.
+1. {How to filter to incomplete tasks — status check}
+2. {How to exclude blocked tasks — dependency check}
+3. {How to order by phase}
+4. {How to order within a phase — priority, sequence, etc.}
+5. The first match is the next task.
+6. If no available tasks remain, all tasks are complete.

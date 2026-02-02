@@ -1,13 +1,16 @@
 # {Format Name}: Dependencies
 
-<!-- Instructions for expressing and querying cross-topic dependencies -->
+<!-- Instructions for expressing and querying blocking relationships -->
 
-## Dependency Format
+## Within-Plan Dependencies
 
-<!-- How dependencies are represented in this format -->
-Cross-topic dependencies link tasks between different plans. This is how you express "this feature depends on the billing system being implemented."
+<!-- How tasks within the same plan can block each other -->
+{Format-specific mechanism for task-to-task blocking within a plan, or "Not natively supported. Task ordering is determined by phase and sequence."}
 
-{Format-specific dependency representation}
+## Cross-Topic Dependencies
+
+<!-- How to express dependencies between tasks in different plans -->
+{Format-specific mechanism for cross-plan dependencies}
 
 ## Creating Dependencies
 
@@ -16,21 +19,16 @@ Cross-topic dependencies link tasks between different plans. This is how you exp
 
 ## Querying Dependencies
 
-<!-- Commands/instructions to find, check, and resolve dependencies -->
-Use these queries to understand the dependency graph.
+<!-- How to find blocked tasks and determine unblocked work -->
 
-### Find Plans With External Dependencies
+### Find Blocked Tasks
 
-{Format-specific query instructions}
+{How to identify tasks that are waiting on dependencies}
 
-### Find Dependencies on a Specific Topic
+### Check if a Dependency is Resolved
 
-{Format-specific query instructions}
+{How to check whether a blocking task is complete}
 
-### Check if a Task Exists
+### Find Unblocked Work
 
-{Format-specific query instructions}
-
-### Check if a Task is Complete
-
-{Format-specific query instructions}
+{How to find tasks that are ready to work on — no unresolved blockers}

@@ -10,6 +10,7 @@ Use this output format when you want **Linear as the source of truth** for task 
 
 - Visual tracking with real-time progress updates
 - Team collaboration with shared visibility
+- Native priority, estimation, and dependency support
 - Update tasks directly in Linear UI without editing markdown
 - Integrates with existing Linear workflows
 
@@ -39,9 +40,9 @@ Tasks are stored as issues in a Linear project:
 ```
 Linear:
 └── Project: {topic}
-    ├── Issue: Task 1 [label: phase-1]
-    ├── Issue: Task 2 [label: phase-1]
-    └── Issue: Task 3 [label: phase-2]
+    ├── Issue: Task 1 [label: phase-1, priority: urgent]
+    ├── Issue: Task 2 [label: phase-1, priority: normal]
+    └── Issue: Task 3 [label: phase-2, priority: high]
 ```
 
 Linear is the source of truth for task detail and status.

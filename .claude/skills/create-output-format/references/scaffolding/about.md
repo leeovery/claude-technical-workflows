@@ -19,6 +19,17 @@ Use this format when {describe the ideal use case}.
 <!-- Prerequisites, installation, configuration. "No external tools required." if none -->
 {Setup instructions or "No external tools required."}
 
+## Structure Mapping
+
+<!-- How workflow concepts map to this format's entities -->
+
+| Concept | {Format} Entity |
+|---------|-----------------|
+| Topic | {what represents a topic — project, directory, etc.} |
+| Phase | {what represents a phase — label, subdirectory, etc.} |
+| Task | {what represents a task — issue, file, ticket, etc.} |
+| Dependency | {what represents a blocking relationship} |
+
 ## Output Location
 
 <!-- Where tasks are stored. Use a tree diagram -->

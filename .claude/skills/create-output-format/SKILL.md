@@ -24,7 +24,9 @@ Fetch and read all provided documentation using WebFetch. From the docs, establi
 - How tasks are stored (API, database, files, etc.)
 - How to interact with it (MCP server, REST API, CLI tool, filesystem)
 - How to create, read, update, and query tasks
-- Whether it supports blocking/dependency relationships
+- What task properties are supported — status values, priority levels, labels/tags, estimation
+- Whether it supports blocking/dependency relationships (within a project and across projects)
+- How concepts map — what represents a project, a phase, a task, a dependency?
 - What setup or configuration is required
 - Benefits and trade-offs vs simpler approaches
 - Any constraints or limitations
@@ -91,8 +93,10 @@ Verify:
 
 - [ ] Directory contains exactly 5 files: about.md, authoring.md, reading.md, updating.md, dependencies.md
 - [ ] All `{placeholder}` tokens have been replaced
-- [ ] Authoring.md describes where/how to store task content with concrete operations
-- [ ] Reading.md provides clear instructions for extracting next task
-- [ ] Updating.md provides clear instructions for marking tasks complete
-- [ ] Dependencies.md describes dependency support (or explicitly states it's unsupported)
+- [ ] About.md includes a structure mapping table
+- [ ] Authoring.md documents task properties: status values, priority levels, phase grouping, labels
+- [ ] Authoring.md includes a complete task creation example
+- [ ] Reading.md explains next-task ordering using status, priority, dependencies, and phase
+- [ ] Updating.md covers all status transitions and how to modify task properties
+- [ ] Dependencies.md covers within-plan and cross-topic dependencies (or explicitly states unsupported)
 - [ ] Format is registered in output-formats.md

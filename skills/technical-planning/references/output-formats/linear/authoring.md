@@ -18,19 +18,67 @@ Create labels to denote phases (if they don't already exist):
 
 ## Task Storage
 
-For each task, create a Linear issue via MCP and apply the appropriate phase label.
+For each task, create a Linear issue via MCP:
 
-**Title**: Task title
+```
+linear_createIssue(
+  teamId: "{team_id}",
+  projectId: "{project_id}",
+  title: "{Task title}",
+  description: "{Task description content}",
+  priority: {priority_level},
+  labelIds: ["{phase_label_id}", ...]
+)
+```
 
-**Description**: Task description content
+## Task Properties
 
-**Labels**:
-- **Required**: `phase-1`, `phase-2`, etc.
-- **Optional**:
-  - `needs-info` — task requires additional information
-  - `edge-case` — edge case handling task
-  - `foundation` — setup/infrastructure task
-  - `refactor` — cleanup task
+### Status
+
+Linear uses workflow states. Map to these states:
+
+| Status | Linear State |
+|--------|-------------|
+| Pending | Todo (or Backlog) |
+| In Progress | In Progress |
+| Completed | Done |
+| Skipped | Cancelled (add comment explaining why) |
+| Cancelled | Cancelled |
+
+### Priority
+
+Linear has native priority levels:
+
+| Priority | Linear Value | When to Use |
+|----------|-------------|-------------|
+| Urgent | 1 | Must be done first within its phase |
+| High | 2 | Important — do before normal priority |
+| Medium | 3 | Standard priority (default) |
+| Low | 4 | Can be deferred within the phase |
+| No priority | 0 | Unset |
+
+Set priority when creating the issue via MCP.
+
+### Phase Grouping
+
+Apply phase labels to issues: `phase-1`, `phase-2`, etc. All issues in a phase share the same label.
+
+### Labels / Tags
+
+Beyond phase labels, apply optional labels for categorisation:
+
+- `needs-info` — task requires additional information
+- `edge-case` — edge case handling task
+- `foundation` — setup/infrastructure task
+- `refactor` — cleanup task
+
+### Estimation
+
+Linear supports estimation points on issues. Set via MCP if the team uses estimation:
+
+```
+linear_updateIssue(issueId: "{id}", estimate: {points})
+```
 
 ## Flagging
 

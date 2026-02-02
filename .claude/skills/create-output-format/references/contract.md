@@ -7,10 +7,10 @@ Every output format adapter is a directory of 5 files, each serving a specific c
 | File | Purpose |
 |------|---------|
 | `about.md` | Format identity, setup, and storage layout |
-| `authoring.md` | Storing tasks |
-| `reading.md` | Extracting tasks |
-| `updating.md` | Recording task progress |
-| `dependencies.md` | Cross-topic dependency management |
+| `authoring.md` | Creating tasks and setting their properties |
+| `reading.md` | Extracting tasks and determining work order |
+| `updating.md` | Modifying tasks — status, content, properties |
+| `dependencies.md` | Blocking relationships within and across plans |
 
 ## File Specifications
 
@@ -24,41 +24,48 @@ Must include:
 - **Benefits** — why choose this format
 - **Setup** — installation, configuration, prerequisites
 - **Output Location** — where tasks are stored
+- **Structure Mapping** — how workflow concepts (topic, phase, task) map to the format's entities
 
 ### authoring.md
 
-Instructions for storing task content.
+Instructions for creating tasks and setting their properties.
 
 Must include:
 
-- **Task Storage** — where and how to store a task (file path, API call, etc.). A task has a title and a description body — the format defines the container.
+- **Task Storage** — how to create a task (file path, API call, etc.) with a complete example showing the full task template
+- **Task Properties** — what properties this format supports and how to set each one during creation. Common properties include:
+  - **Status** — available values and their meanings
+  - **Priority** — levels available and how to assign them
+  - **Phase grouping** — how tasks are grouped into phases
+  - **Labels/tags** — categorisation available beyond phases
 - **Flagging** — how to mark tasks as needing clarification
 - **Cleanup (Restart)** — how to delete all authored tasks for a topic
 
 ### reading.md
 
-Instructions for extracting tasks.
+Instructions for extracting tasks and determining work order.
 
 Must include:
 
-- **Extracting a Task** — how to read full task detail for a specific task ID
-- **Next Incomplete Task** — how to determine the next task to work on (phase ordering, status checks)
+- **Extracting a Task** — how to read full task detail including all properties
+- **Next Incomplete Task** — how to determine the next task to work on. Document how the format uses status, priority, dependencies, and phase ordering to determine sequence.
 
 ### updating.md
 
-Instructions for recording progress.
+Instructions for modifying tasks.
 
 Must include:
 
-- **Mark Task Complete** — how to update a task's status to completed
-- **Mark Task Skipped** — how to record a skipped task
+- **Status Transitions** — how to change task status. Document all supported statuses (e.g., complete, skipped, cancelled) and how to set each one.
+- **Updating Task Content** — how to modify a task's title, description, priority, or other properties after creation.
 
 ### dependencies.md
 
-Instructions for expressing and querying cross-topic dependencies.
+Instructions for expressing and querying blocking relationships.
 
 Must include:
 
-- **Dependency Format** — how dependencies are represented
+- **Within-Plan Dependencies** — how tasks within the same plan can block each other (if supported by the format, or explicitly state it's not supported)
+- **Cross-Topic Dependencies** — how to express dependencies between tasks in different plans
 - **Creating Dependencies** — how to wire up a blocking relationship
-- **Querying Dependencies** — how to find, check, and resolve dependencies
+- **Querying Dependencies** — how to find blocked tasks, check if blockers are resolved, and determine unblocked work

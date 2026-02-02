@@ -1,17 +1,21 @@
 # Local Markdown: Updating
 
-## Mark Task Complete
+## Status Transitions
 
-Update the task file frontmatter at `docs/workflow/planning/{topic}/{task-id}.md`:
+Update the `status` field in the task file frontmatter at `docs/workflow/planning/{topic}/{task-id}.md`:
 
-```yaml
-status: completed
-```
+| Transition | Value |
+|------------|-------|
+| Complete | `status: completed` |
+| Skipped | `status: skipped` |
+| Cancelled | `status: cancelled` |
+| In Progress | `status: in-progress` |
 
-## Mark Task Skipped
+## Updating Task Content
 
-Update the task file frontmatter:
+Edit the task file directly:
 
-```yaml
-status: skipped
-```
+- **Title**: Change the `# {Title}` heading in the body
+- **Description**: Edit the body content below the title
+- **Priority**: Change the `priority:` field in frontmatter
+- **Tags**: Change the `tags:` field in frontmatter
