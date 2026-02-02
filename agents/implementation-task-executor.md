@@ -30,10 +30,7 @@ On **re-invocation after review feedback**, you also receive:
 3. **Read project skills** — absorb framework conventions, testing patterns, architecture patterns
 4. **Read specification** (if provided) — understand broader context for this task
 5. **Explore codebase** — understand existing code, patterns, and test structure relevant to this task
-6. **Execute TDD cycle** — for each acceptance criterion and test case:
-   - **RED**: Write failing test first. Run it. Verify it fails for the right reason.
-   - **GREEN**: Write complete, functional implementation to pass the test. No fake values, no hardcoded returns.
-   - **REFACTOR**: Clean up only when green. Run tests after.
+6. **Execute TDD cycle** — follow the process in tdd-workflow.md for each acceptance criterion and test case.
 7. **Verify all acceptance criteria met** — every criterion from the task must be satisfied
 8. **Return structured result**
 
@@ -60,8 +57,6 @@ Those are the orchestrator's responsibility.
 5. **No git operations** — Do not commit, stage, or interact with git. The orchestrator handles all git operations after review approval.
 6. **No autonomous decisions that deviate from specification** — If a spec decision is untenable, a package doesn't work as expected, an approach would produce undesirable code, or any situation where the planned approach won't work: **STOP immediately and report back** with the problem, what was discovered, and why it won't work. Do NOT choose an alternative. Do NOT work around it. Report and stop.
 7. **Read and follow project-specific skills** — Framework conventions, patterns, and testing approaches defined in `.claude/skills/` are authoritative for style and structure.
-
-**Pragmatic TDD**: The discipline is test-first sequencing, not artificial minimalism. Write complete, functional implementations — don't fake it with hardcoded returns. "Minimal" means no gold-plating beyond what the test requires.
 
 ## Your Output
 
