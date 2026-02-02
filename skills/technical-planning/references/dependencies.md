@@ -6,11 +6,11 @@
 
 ## Internal Dependencies
 
-Internal dependencies are dependencies within a single topic/epic - where one task depends on another task in the same plan. These are handled by the planning output format's native dependency system.
+Internal dependencies are dependencies within a single topic/epic — where one task depends on another task in the same plan.
 
-During planning, structure tasks in the correct order with appropriate dependencies so work proceeds logically. The output format manages these relationships and ensures tasks are worked in the right sequence.
+These are established during planning by the **Analyze Task Graph** step. After all tasks are authored, a dedicated agent analyzes the full plan, determines which tasks depend on which, assigns priorities based on graph position, and records both via the output format's `graph.md` instructions.
 
-See the relevant output format reference for how to create and query internal dependencies.
+The output format's `graph.md` reference documents how dependencies and priorities are stored and queried for each format.
 
 ## External Dependencies
 

@@ -185,23 +185,31 @@ Load **[steps/plan-construction.md](references/steps/plan-construction.md)** and
 
 ---
 
-## Step 5: Resolve External Dependencies
+## Step 5: Analyze Task Graph
 
-Load **[steps/resolve-dependencies.md](references/steps/resolve-dependencies.md)** and follow its instructions as written.
+Load **[steps/analyze-task-graph.md](references/steps/analyze-task-graph.md)** and follow its instructions as written.
 
 → Proceed to **Step 6**.
 
 ---
 
-## Step 6: Plan Review
+## Step 6: Resolve External Dependencies
 
-Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its instructions as written.
+Load **[steps/resolve-dependencies.md](references/steps/resolve-dependencies.md)** and follow its instructions as written.
 
 → Proceed to **Step 7**.
 
 ---
 
-## Step 7: Conclude the Plan
+## Step 7: Plan Review
+
+Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its instructions as written.
+
+→ Proceed to **Step 8**.
+
+---
+
+## Step 8: Conclude the Plan
 
 After the review is complete:
 

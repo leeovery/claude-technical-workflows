@@ -262,7 +262,8 @@ agents/
 ├── implementation-task-reviewer.md  # Post-task review for spec conformance
 ├── planning-phase-designer.md       # Design phases from specification
 ├── planning-task-designer.md        # Break phases into task lists
-└── planning-task-author.md          # Write full task detail
+├── planning-task-author.md          # Write full task detail
+└── planning-dependency-grapher.md   # Analyze task dependencies and priorities
 
 .claude/skills/                      # Dev-time skills (not part of workflow)
 ├── create-output-format/            # Scaffold new output format adapters
@@ -350,6 +351,7 @@ Subagents that skills can spawn for parallel task execution.
 | [**planning-phase-designer**](agents/planning-phase-designer.md) | technical-planning | Designs implementation phases from a specification. |
 | [**planning-task-designer**](agents/planning-task-designer.md) | technical-planning | Breaks a single phase into a task list with edge cases. |
 | [**planning-task-author**](agents/planning-task-author.md) | technical-planning | Writes full detail for a single plan task. |
+| [**planning-dependency-grapher**](agents/planning-dependency-grapher.md) | technical-planning | Analyzes authored tasks to establish internal dependencies and priorities. |
 
 ## Requirements
 

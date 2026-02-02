@@ -44,11 +44,10 @@ Read the plan end-to-end — carefully, as if you were about to implement it. Fo
    - Phase boundaries make sense (not arbitrary groupings)
 
 4. **Dependencies and Ordering**
-   - Phase ordering reflects actual dependencies
-   - Tasks within phases are ordered logically
-   - Cross-phase dependencies are explicit where they exist
-   - No circular dependencies
-   - An implementer can infer execution order from the plan structure
+   - Task dependencies are explicit and correct — each dependency reflects a genuine data or capability requirement
+   - No circular dependencies exist in the task graph
+   - Priority assignments reflect graph position — foundation tasks and tasks that unblock others are prioritised appropriately
+   - An implementer can determine execution order from the dependency graph and priorities alone
 
 5. **Task Self-Containment**
    - Each task contains all context needed for execution

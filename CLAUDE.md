@@ -55,6 +55,7 @@ agents/
   planning-phase-designer.md       # Design phases from specification
   planning-task-designer.md        # Break phases into task lists
   planning-task-author.md          # Write full task detail
+  planning-dependency-grapher.md   # Analyze task dependencies and priorities
 
 scripts/
   migrate.sh                              # Migration orchestrator
