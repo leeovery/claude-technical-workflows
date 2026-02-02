@@ -34,12 +34,10 @@ E. Update progress + commit
 1. Load **[invoke-executor.md](invoke-executor.md)** and follow its instructions. Pass the normalised task content.
 2. **STOP.** Do not proceed until the executor has returned its result.
 3. On receipt of result, route on STATUS:
-   - `blocked` or `failed` → **Executor Blocked**
-   - `complete` → **C. Review Task**
+   - `blocked` or `failed` → follow **Executor Blocked** below
+   - `complete` → proceed to **C. Review Task**
 
----
-
-## Executor Blocked
+### Executor Blocked
 
 Present the executor's ISSUES to the user:
 
@@ -55,7 +53,7 @@ Present the executor's ISSUES to the user:
 
 #### If `retry`
 
-Re-invoke the executor with the user's comments added to the task context. Return to **B. Execute Task** with the new result.
+Re-invoke the executor with the user's comments added to the task context. Return to the top of **B. Execute Task**.
 
 #### If `skip`
 
@@ -72,12 +70,10 @@ Re-invoke the executor with the user's comments added to the task context. Retur
 1. Load **[invoke-reviewer.md](invoke-reviewer.md)** and follow its instructions. Pass the executor's result.
 2. **STOP.** Do not proceed until the reviewer has returned its result.
 3. On receipt of result, route on VERDICT:
-   - `needs-changes` → **Review Changes**
-   - `approved` → **D. Task Gate**
+   - `needs-changes` → follow **Review Changes** below
+   - `approved` → proceed to **D. Task Gate**
 
----
-
-## Review Changes
+### Review Changes
 
 Present the reviewer's findings to the user:
 
@@ -94,9 +90,9 @@ Present the reviewer's findings to the user:
 
 **STOP.** Wait for user choice.
 
-- **`y`/`yes`**: Re-invoke executor with the reviewer's notes added, then return to **B. Execute Task** and follow the instructions as written.
+- **`y`/`yes`**: Re-invoke executor with the reviewer's notes added, then return to the top of **B. Execute Task** and follow the instructions as written.
 - **`skip`**: → Proceed to **D. Task Gate**.
-- **Comment**: Re-invoke executor with the user's notes, then return to **B. Execute Task** and follow the instructions as written.
+- **Comment**: Re-invoke executor with the user's notes, then return to the top of **B. Execute Task** and follow the instructions as written.
 
 ---
 
@@ -122,7 +118,7 @@ Present a summary and wait for user input:
 
 - **`y`/`yes`**: → Proceed to **E. Update Progress and Commit**.
 - **`auto`**: Note that `task_gate_mode` should be updated to `auto` during the commit step. → Proceed to **E. Update Progress and Commit**.
-- **Comment**: Re-invoke executor with the user's notes added, then return to **B. Execute Task** and follow the instructions as written.
+- **Comment**: Re-invoke executor with the user's notes added, then return to the top of **B. Execute Task** and follow the instructions as written.
 
 ### If `task_gate_mode: auto`
 
