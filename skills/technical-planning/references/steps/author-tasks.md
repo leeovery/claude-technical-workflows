@@ -21,7 +21,7 @@ Invoke `planning-task-author` with these file paths:
 5. **All approved phases**: the complete phase structure from the Plan Index File body
 6. **Task list for current phase**: the approved task table
 7. **Target task**: the task name, edge cases, and ID from the table
-8. **Output format authoring reference**: path to the format's `authoring.md` (e.g., `skills/technical-planning/references/output-formats/{format}/authoring.md`)
+8. **Output format authoring reference**: path to the format's `authoring.md` (e.g., `.claude/skills/technical-planning/references/output-formats/{format}/authoring.md`)
 
 ### Present the Output
 

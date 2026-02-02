@@ -48,7 +48,7 @@ Read **[references/contract.md](references/contract.md)** — this defines the 5
 Create the directory at:
 
 ```
-skills/technical-planning/references/output-formats/{format-key}/
+.claude/skills/technical-planning/references/output-formats/{format-key}/
 ```
 
 ## Step 4: Write the Files
@@ -72,7 +72,7 @@ For each file:
 
 ## Step 5: Register the Format
 
-Add an entry to `skills/technical-planning/references/output-formats.md` following the existing pattern:
+Add an entry to `.claude/skills/technical-planning/references/output-formats.md` following the existing pattern:
 
 ```markdown
 ### {Format Name}
