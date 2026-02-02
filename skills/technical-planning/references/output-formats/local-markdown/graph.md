@@ -6,14 +6,7 @@ This file is used by the graphing agent after all tasks have been authored. The 
 
 ## Priority
 
-| Value | Level |
-|-------|-------|
-| `1` | Urgent |
-| `2` | High |
-| `3` | Medium |
-| `4` | Low |
-
-Lower number = higher priority.
+Any positive integer. Lower number = higher priority. `0` means no priority (unset).
 
 ### Setting Priority
 
@@ -25,7 +18,7 @@ priority: 2
 
 ### Removing Priority
 
-Remove the `priority` field from frontmatter entirely.
+Set `priority: 0` or remove the `priority` field from frontmatter entirely.
 
 ## Dependencies
 
