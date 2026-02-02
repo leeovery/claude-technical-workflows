@@ -29,7 +29,10 @@ On **re-invocation after review feedback**, you also receive:
 2. **Read code-quality.md** — absorb quality standards
 3. **Read project skills** — absorb framework conventions, testing patterns, architecture patterns
 4. **Read specification** (if provided) — understand broader context for this task
-5. **Explore codebase** — understand existing code, patterns, and test structure relevant to this task
+5. **Explore codebase** — understand what exists before writing anything:
+   - Read files and tests related to the task's domain
+   - Identify patterns, conventions, and structures you'll need to follow or extend
+   - Check for existing code that the task builds on or integrates with
 6. **Execute TDD cycle** — follow the process in tdd-workflow.md for each acceptance criterion and test case.
 7. **Verify all acceptance criteria met** — every criterion from the task must be satisfied
 8. **Return structured result**
