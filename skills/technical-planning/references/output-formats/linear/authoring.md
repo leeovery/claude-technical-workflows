@@ -72,14 +72,6 @@ Beyond phase labels, apply optional labels for categorisation:
 - `foundation` — setup/infrastructure task
 - `refactor` — cleanup task
 
-### Estimation
-
-Linear supports estimation points on issues. Set via MCP if the team uses estimation:
-
-```
-linear_updateIssue(issueId: "{id}", estimate: {points})
-```
-
 ## Flagging
 
 When creating issues, if something is unclear:

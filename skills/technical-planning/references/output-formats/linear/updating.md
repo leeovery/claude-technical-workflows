@@ -23,4 +23,3 @@ Update issue properties via MCP:
 - **Description**: `linear_updateIssue(issueId: "{id}", description: "{new description}")`
 - **Priority**: `linear_updateIssue(issueId: "{id}", priority: {level})`
 - **Labels**: `linear_updateIssue(issueId: "{id}", labelIds: ["{label_id}", ...])`
-- **Estimation**: `linear_updateIssue(issueId: "{id}", estimate: {points})`

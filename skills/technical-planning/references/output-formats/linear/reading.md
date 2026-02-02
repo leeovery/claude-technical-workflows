@@ -8,7 +8,7 @@ Query Linear MCP for the issue by ID:
 linear_getIssue(issueId: "{issue_id}")
 ```
 
-The response includes title, description, status, priority, labels, estimation, and blocking relationships.
+The response includes title, description, status, priority, labels, and blocking relationships.
 
 ## Next Incomplete Task
 
