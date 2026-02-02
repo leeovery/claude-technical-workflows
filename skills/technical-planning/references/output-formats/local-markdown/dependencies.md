@@ -24,7 +24,7 @@ To wire up a dependency:
 
 ## Querying Dependencies
 
-Use these queries to understand the dependency graph for implementation blocking and `/link-dependencies`.
+Use these queries to understand the dependency graph.
 
 ### Find Plans With External Dependencies
 

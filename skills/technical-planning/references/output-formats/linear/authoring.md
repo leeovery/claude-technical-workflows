@@ -33,11 +33,11 @@ Phase 2: ...
 
 ### 3. Create Issues for Tasks
 
-For each task, create an issue and apply the appropriate phase label. The planning skill provides the task title and description content.
+For each task, create an issue and apply the appropriate phase label.
 
-**Title**: Task title (provided by the planning skill)
+**Title**: Task title
 
-**Description**: Task description content (provided by the planning skill)
+**Description**: Task description content
 
 **Labels**:
 - **Required**: `phase-1`, `phase-2`, etc. - denotes which phase the task belongs to

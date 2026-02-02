@@ -100,7 +100,7 @@ status: draft
 
 ## Task Storage
 
-Each authored task is written to `{topic}/{task-id}.md`. The planning skill provides the task title and description content; this format wraps it in a file with frontmatter.
+Each authored task is written to `{topic}/{task-id}.md` — a file with frontmatter, a title, and a description body.
 
 **File structure:**
 
@@ -114,7 +114,7 @@ created: YYYY-MM-DD  # Use today's actual date
 
 # {Task Title}
 
-{Task description content — provided by the planning skill}
+{Task description content}
 ```
 
 After storing:

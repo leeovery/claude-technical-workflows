@@ -70,7 +70,7 @@ Verify:
 
 - [ ] Directory contains exactly 6 files: about.md, authoring.md, reading.md, updating.md, dependencies.md, frontmatter.md
 - [ ] All `{placeholder}` tokens have been replaced
-- [ ] Authoring.md describes where/how to store task content (not what the content is — that's the planning skill's concern)
+- [ ] Authoring.md describes where/how to store task content
 - [ ] Reading.md provides clear instructions for extracting next task
 - [ ] Updating.md provides clear instructions for marking tasks complete
 - [ ] Frontmatter.md defines both Plan Index and task frontmatter schemas

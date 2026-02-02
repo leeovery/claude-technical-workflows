@@ -25,7 +25,7 @@ Also update the External Dependencies section in the Plan Index File:
 
 ## Querying Dependencies
 
-Use these queries to understand the dependency graph for implementation blocking and `/link-dependencies`.
+Use these queries to understand the dependency graph.
 
 ### Via MCP
 

@@ -2,8 +2,6 @@
 
 <!-- Replace {Format Name} with the display name of this format -->
 
-*Output format adapter for **[technical-planning](../../../../skills/technical-planning/SKILL.md)***
-
 ---
 
 <!-- One-line description of when to use this format -->

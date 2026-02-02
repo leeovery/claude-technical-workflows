@@ -20,10 +20,9 @@ Create `docs/workflow/planning/{topic}.md` with this structure:
 
 ## Task Storage
 
-<!-- Define WHERE and HOW task content is stored — not what's in it -->
-<!-- The planning skill decides task content; the format provides the container -->
+<!-- Define WHERE and HOW task content is stored -->
 
-Each task has a **title** and **description** (content body). The planning skill provides both.
+Each task has a **title** and **description** (content body).
 
 {How to store a task in this format — file path, API call, etc.}
 

@@ -17,7 +17,7 @@ Cross-topic dependencies link tasks between different plans. This is how you exp
 ## Querying Dependencies
 
 <!-- Commands/instructions to find, check, and resolve dependencies -->
-Use these queries to understand the dependency graph for implementation blocking and `/link-dependencies`.
+Use these queries to understand the dependency graph.
 
 ### Find Plans With External Dependencies
 
