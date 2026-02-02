@@ -53,7 +53,7 @@ Present the executor's ISSUES to the user:
 
 #### If `retry`
 
-→ Return to the top of **B. Execute Task**. Re-invoke the executor with the user's comments added to the task context.
+→ Return to the top of **B. Execute Task** and re-invoke the executor with the user's comments added to the task context.
 
 #### If `skip`
 
