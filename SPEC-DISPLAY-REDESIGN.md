@@ -859,7 +859,7 @@ Skills are workflow-agnostic. The handoff passes sources and output path to the 
 
 ## Related Files
 
-- `commands/workflow/start-specification.md` — the command to update
+- `skills/start-specification/SKILL.md` — the skill to refactor with progressive disclosure
 - `scripts/discovery-for-specification.sh` — discovery script
 - `skills/technical-specification/references/specification-guide.md` — spec guide with sources format
 - `scripts/migrations/004-sources-object-format.sh` — migration for sources tracking

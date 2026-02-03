@@ -1,11 +1,9 @@
 # Plan: Build start-specification Skill
 
-Implementation plan for converting the monolithic `commands/workflow/start-specification.md` (819 lines, old Steps 0-11) into a skill with progressive reference loading (`skills/start-specification/`).
+Implementation plan for refactoring the monolithic `skills/start-specification/SKILL.md` (857 lines, old Steps 0-11) into a skill with progressive reference loading via conditional reference files.
 
 **Source documents:**
-- `HANDOFF.md` — entry point
 - `SPEC-DISPLAY-REDESIGN.md` — design decisions, all 10 outputs, step structure
-- `SKILL-ARCHITECTURE-PLAN.md` — architecture, file breakdown, token analysis
 - `SPEC-FLOWS/01-08` — every path with exact prompts and user interactions
 
 ---
@@ -345,9 +343,9 @@ The current command's Step 6 (Analyze Discussions) has good analysis instruction
 
 **Source material:** SPEC-DISPLAY-REDESIGN.md Step 7 confirm formats + SPEC-FLOWS handoff texts.
 
-### 7. Remove Old Command
+### 7. Replace Monolithic SKILL.md
 
-Delete `commands/workflow/start-specification.md` once the skill is verified.
+Replace the monolithic `skills/start-specification/SKILL.md` with the new backbone + reference file structure once verified.
 
 ### 8. Test All 10 Outputs
 
@@ -419,14 +417,20 @@ This logic lives in `display-groupings.md` but the confirm format lives in `conf
 
 ---
 
-## What NOT to Build (Out of Scope)
+## Open Questions
 
-Per the handoff document, these are logged but separate:
+1. **Reference loading depth**: Can a reference file link to another reference file? (e.g., `analysis-flow.md` links to `display-groupings.md`). Needs verification — the entire architecture depends on this.
 
-- **Planning command superseded display** — `discovery-for-planning.sh` doesn't extract `superseded_by`. Separate task.
-- **Other workflow commands → skills** — Phase 2 of migration. Only start-specification now.
-- **Processing skill `user-invocable: false`** — Phase 4. Needs evaluation.
-- **Cleanup of design docs** — After implementation is verified.
+2. **Allowed-tools inheritance**: When a reference file is loaded, does it inherit the `allowed-tools` from the skill's frontmatter? The docs suggest tools are scoped to the skill, not individual files, so this should work.
+
+3. **Context budget**: Skill descriptions are loaded into a context budget (default 15,000 chars). With many skills, check we don't exceed this. The `SLASH_COMMAND_TOOL_CHAR_BUDGET` env var can increase it if needed.
+
+---
+
+## Out of Scope
+
+- **Planning skill superseded display** — `discovery-for-planning.sh` doesn't extract `superseded_by`. Separate task.
+- **Cleanup of design docs** — Remove root-level design docs after implementation is verified.
 
 ---
 
@@ -443,5 +447,5 @@ Before considering the skill complete:
 - [ ] confirm-and-handoff.md covers all 5+ confirm variants
 - [ ] Handoff format matches all variants from SPEC-FLOWS
 - [ ] Reference-to-reference linking verified (chain works)
-- [ ] `commands/workflow/start-specification.md` removed
+- [ ] Monolithic SKILL.md replaced with backbone + reference files
 - [ ] All 10 output paths manually walked through against SPEC-FLOWS

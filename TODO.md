@@ -1,4 +1,0 @@
-- Update commands to follow spec command in terms of allowed-tools, "---" separators, h2 for Steps and h4 for sub-steps, stop and wait for user input, tripwires, explicit path arrows, discovery scripts
-- Update skills to enforce frontmatter as the way to track name, date and status.
-- Update commands to read frontmatter to get status and date.
-- Add migrations for all update templates
