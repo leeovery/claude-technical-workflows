@@ -10,16 +10,16 @@
     FLOWCHARTS           — node/connection definitions per phase/skill/command (dagre-compatible: w/h, no x/y)
     OVERVIEW_NODES       — hand-positioned nodes for the top-level pipeline view
     OVERVIEW_CONNECTIONS — connections between overview nodes
-    phases               — metadata per phase (color, cmd, label, complexity, detailHTML, etc.)
+    phases               — metadata per phase (color, cmd, label, complexity, etc.)
     FLOWCHART_DESCS      — rich descriptions shown in the info bar
     SKILL_NEXT_PHASE     — maps skill flowchart keys to their next workflow phase (label, target, color)
     SOURCE_MAP           — maps flowchart keys to repo-relative source file paths for markdown viewer
 
   Navigation model:
-    Sidebar-driven. Three view functions + markdown viewer:
+    Sidebar-driven. Two view functions + markdown viewer + info panel:
       showOverview()        — pipeline view (OVERVIEW_NODES)
-      selectPhase(phase)    — flowchart view (FLOWCHARTS[phase]) or detail panel (utility commands)
-      closeDetail()         — dismiss the slide-over detail panel
+      selectPhase(phase)    — flowchart view (FLOWCHARTS[phase])
+      openInfoPanel()       — open info slide-over for current flowchart
       openMdViewer(key)     — open markdown viewer for a flowchart's source file
 
   Markdown viewer:
@@ -29,8 +29,8 @@
     In-memory _mdCache for fetched content. Opened via "Source" button in info bar or </> in tooltip.
 
   Layout:
-    CSS grid: 300px sidebar + flexible canvas area. Detail panel slides over canvas (absolute positioned).
-    Prompt bar spans below the canvas. Sidebar spans both rows.
+    CSS grid: 300px sidebar + flexible canvas area. Info panel slides over canvas (fixed positioned).
+    Canvas takes full height. Sidebar fixed overlay with margin push.
 
   Rendering:
     renderSVG() draws all views into <svg id="svg-canvas">.
@@ -59,16 +59,16 @@
   Conventions:
     - Clicking flowchart nodes with `desc` shows a tooltip; nodes with `skillLink` navigate to that skill's flowchart.
     - Overview nodes with `phase` are clickable and route to selectPhase().
-    - The prompt bar shows contextual info and is copy-able.
+    - The info panel (ⓘ button) shows contextual info for the current flowchart.
     - Skill flowcharts (except skill-review) have a `next` pill node at the end, always green (#34d399),
       connected from `end` via `type: 'transition'`, using `skillLink` for navigation.
     - SOURCE_MAP must be updated when source files are renamed or added.
 
   Key sections (search terms):
-    CSS:         "/* Info bar */"  "/* Markdown viewer */"  "/* View Source */"
+    CSS:         "/* Info panel */"  "/* Markdown viewer */"
     Data:        "const FLOWCHARTS"  "const SOURCE_MAP"  "const SKILL_NEXT_PHASE"  "const FLOWCHART_DESCS"
     Rendering:   "function renderSVG"  "function computeFlowchartLayout"
-    Interaction: "function showFcTooltip"  "function updatePrompt"  "function openMdViewer"
+    Interaction: "function showFcTooltip"  "function openInfoPanel"  "function openMdViewer"
 -->
 <html lang="en">
 <head>
@@ -125,7 +125,7 @@
   .layout {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr auto;
+    grid-template-rows: 1fr;
     height: 100vh;
   }
   /* Sidebar — fixed overlay, pushes content via margin */
@@ -155,6 +155,8 @@
     color: var(--text-dim);
     margin-bottom: 16px;
   }
+  .sidebar { scrollbar-width: none; }
+  .sidebar::-webkit-scrollbar { display: none; }
   .section-label {
     font-size: 10px;
     text-transform: uppercase;
@@ -162,50 +164,101 @@
     color: var(--text-dim);
     margin: 16px 0 8px;
     font-weight: 600;
-  }
-  /* Phase buttons in sidebar */
-  .phase-btn {
     display: flex;
     align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--surface2);
-    color: var(--text);
-    cursor: pointer;
-    font-size: 13px;
-    margin-bottom: 6px;
-    transition: all 0.15s;
-    text-align: left;
+    gap: 6px;
   }
-  .phase-btn:hover { border-color: var(--accent); }
-  .phase-btn.active { border-color: var(--accent); background: rgba(108,138,255,0.1); }
-  .phase-btn .dot {
-    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
-  }
-  .phase-btn .phase-name { font-weight: 600; }
-  .phase-btn .phase-cmd { font-size: 11px; color: var(--text-dim); font-family: monospace; }
+  .section-label.collapsible { cursor: pointer; user-select: none; }
+  .section-label.collapsible:hover { color: var(--text); }
+  .section-label .chevron { font-size: 8px; transition: transform 0.15s; display: inline-block; }
+  .section-label.collapsed .chevron { transform: rotate(-90deg); }
+  .collapsible-content { overflow: hidden; transition: max-height 0.25s ease; }
+  .collapsible-content.collapsed { max-height: 0 !important; }
 
-  /* Standalone/Utility buttons */
-  .cmd-btn {
-    display: block;
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--surface2);
-    color: var(--text);
-    cursor: pointer;
-    font-size: 12px;
-    margin-bottom: 4px;
-    text-align: left;
-    transition: all 0.15s;
-    font-family: monospace;
+  /* Timeline pipeline */
+  .tl-wrapper { position: relative; padding-left: 24px; }
+  .tl-group { position: relative; margin-bottom: 2px; }
+  .tl-group:not(:last-child)::after {
+    content: ''; position: absolute; left: -16px; top: 14px; bottom: -3px;
+    width: 2px; background: var(--border); z-index: 0;
   }
-  .cmd-btn:hover { border-color: var(--accent); }
-  .cmd-btn.active { border-color: var(--accent); background: rgba(108,138,255,0.1); }
+  .tl-group:not(:first-child)::before {
+    content: ''; position: absolute; left: -16px; top: -1px; height: 17px;
+    width: 2px; background: var(--border); z-index: 0;
+  }
+  .tl-dot {
+    position: absolute; left: -21px; top: 9px;
+    width: 12px; height: 12px; border-radius: 50%;
+    border: 2px solid var(--surface); z-index: 1;
+  }
+  .tl-cmd {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px;
+    background: var(--surface2); color: var(--text); cursor: pointer;
+    font-size: 13px; transition: all 0.15s; text-align: left; margin-bottom: 2px;
+  }
+  .tl-cmd:hover { border-color: var(--accent); }
+  .tl-cmd.active { border-color: var(--accent); background: rgba(108,138,255,0.1); }
+  .tl-cmd .name { font-weight: 600; font-size: 12px; flex: 1; }
+  .tl-skill {
+    display: flex; align-items: center; gap: 6px;
+    width: calc(100% - 16px); margin-left: 16px;
+    padding: 5px 8px; border: 1px solid var(--border); border-radius: 5px;
+    background: transparent; color: var(--text-dim); cursor: pointer;
+    font-size: 11px; font-family: monospace; margin-bottom: 4px; margin-top: 1px;
+    transition: all 0.15s; text-align: left; position: relative;
+  }
+  .tl-skill:hover { border-color: var(--accent); color: var(--text); background: var(--surface2); }
+  .tl-skill.active { border-color: var(--accent); color: var(--text); background: rgba(108,138,255,0.1); }
+  .tl-skill::before {
+    content: ''; position: absolute; left: -10px; top: 50%;
+    width: 7px; height: 1px; background: var(--border);
+  }
+  .tl-skill::after {
+    content: ''; position: absolute; left: -10px; top: -3px;
+    width: 1px; height: calc(50% + 3px); background: var(--border);
+  }
+  .tl-skill .skill-label { flex: 1; }
+
+  /* Badges */
+  .badge {
+    font-size: 8px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; padding: 2px 5px; border-radius: 3px; flex-shrink: 0;
+    font-family: -apple-system, system-ui, sans-serif;
+  }
+  .badge-cmd { background: rgba(108,138,255,0.15); color: var(--accent); }
+  .badge-skl { background: rgba(249,115,22,0.15); color: #f97316; }
+  .badge-agt { background: rgba(34,211,238,0.15); color: #22d3ee; }
+
+  /* Dropdown items */
+  .dropdown-btn {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px;
+    background: var(--surface2); color: var(--text); cursor: pointer;
+    font-size: 12px; margin-bottom: 4px; text-align: left;
+    transition: all 0.15s; font-family: monospace;
+  }
+  .dropdown-btn:hover { border-color: var(--accent); }
+  .dropdown-btn.active { border-color: var(--accent); background: rgba(108,138,255,0.1); }
+  .dropdown-btn .btn-label { flex: 1; }
+  .dropdown-subheading {
+    font-size: 9px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-dim); margin: 10px 0 6px; font-weight: 600; opacity: 0.7;
+  }
+  .dropdown-subheading:first-child { margin-top: 4px; }
+
+  /* Sidebar footer */
+  .sidebar-footer {
+    position: sticky; bottom: -16px;
+    margin: 20px -16px -16px; padding: 10px 16px 14px;
+    border-top: 1px solid var(--border); background: var(--surface);
+    text-align: center; font-size: 11px; color: var(--text-dim);
+    line-height: 1.6; z-index: 2;
+  }
+  .sidebar-footer a { color: var(--text-dim); text-decoration: none; transition: color 0.15s; }
+  .sidebar-footer a:hover { color: var(--accent); }
+  .sidebar-footer .repo-link { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; margin-bottom: 4px; }
+  .sidebar-footer .credit { font-size: 10px; opacity: 0.7; }
 
   /* Legend */
   .legend { margin-top: 16px; }
@@ -238,7 +291,7 @@
   .legend-shape-pill {
     width: 24px; height: 12px; border-radius: 6px; border: 1px solid;
   }
-  .cmd-btn.dimmed, .phase-btn.dimmed {
+  .nav-btn.dimmed {
     opacity: 0.35;
     pointer-events: none;
   }
@@ -263,16 +316,14 @@
   .sidebar-toggle:hover { border-color: var(--accent); }
 
   /* Sidebar collapse — fixed sidebar + margin push on content */
-  .layout .canvas-area,
-  .layout .prompt-bar {
+  .layout .canvas-area {
     margin-left: 300px;
     transition: margin-left 0.2s ease;
   }
   .layout.sidebar-collapsed .sidebar {
     transform: translateX(-300px);
   }
-  .layout.sidebar-collapsed .canvas-area,
-  .layout.sidebar-collapsed .prompt-bar {
+  .layout.sidebar-collapsed .canvas-area {
     margin-left: 0;
   }
 
@@ -290,8 +341,7 @@
 
   /* Mobile — pure overlay, no margin push */
   @media (max-width: 768px) {
-    .layout .canvas-area,
-    .layout .prompt-bar {
+    .layout .canvas-area {
       margin-left: 0;
     }
   }
@@ -308,256 +358,13 @@
     height: 100%;
   }
 
-  /* Info bar */
-  .prompt-bar {
-    grid-column: 1;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    padding: 16px 20px 40px;
-    height: 180px;
-    overflow-y: auto;
-  }
-  .prompt-bar .info-title {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 4px;
-  }
-  .prompt-bar .info-subtitle {
-    font-size: 11px;
-    color: var(--text-dim);
-    font-family: 'SF Mono', 'Fira Code', monospace;
-    margin-bottom: 10px;
-  }
-  .prompt-bar .info-body {
-    font-size: 12.5px;
-    color: var(--text-dim);
-    line-height: 1.6;
-  }
-  .prompt-bar .info-body p {
-    margin-bottom: 6px;
-  }
-  .prompt-bar .info-body strong {
-    color: var(--text);
-    font-weight: 600;
-  }
-  .prompt-bar .info-body code {
-    font-family: 'SF Mono', 'Fira Code', monospace;
-    font-size: 11px;
-    background: var(--surface2);
-    padding: 1px 5px;
-    border-radius: 3px;
-    color: var(--accent);
-  }
-  .prompt-bar .info-meta {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid var(--border);
-    font-size: 11px;
-    color: var(--text-dim);
-  }
-  .prompt-bar .info-meta span {
-    white-space: nowrap;
-  }
-  .prompt-bar .info-meta strong {
-    color: var(--text);
-    font-weight: 600;
-  }
 
-  /* Detail panel (overlays canvas) */
-  .detail-panel {
-    position: absolute;
-    top: 0; right: 0;
-    width: 420px;
-    height: 100%;
-    background: var(--surface);
-    border-left: 1px solid var(--border);
-    overflow-y: auto;
-    padding: 20px;
-    transform: translateX(100%);
-    transition: transform 0.2s ease;
-    z-index: 10;
-  }
-  .detail-panel.open { transform: translateX(0); }
-  .detail-close {
-    position: absolute;
-    top: 12px; right: 12px;
-    background: none; border: none;
-    color: var(--text-dim);
-    cursor: pointer;
-    font-size: 18px;
-  }
-  .detail-close:hover { color: var(--text); }
-  .detail-panel h2 {
-    font-size: 16px;
-    margin-bottom: 4px;
-  }
-  .detail-panel .detail-subtitle {
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-bottom: 16px;
-    font-family: monospace;
-  }
-  .detail-section {
-    margin-bottom: 16px;
-  }
-  .detail-section h3 {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-dim);
-    margin-bottom: 8px;
-    font-weight: 600;
-  }
-  .detail-section p, .detail-section li {
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--text);
-  }
-  .detail-section ul {
-    list-style: none;
-    padding: 0;
-  }
-  .detail-section li {
-    padding: 4px 0;
-    padding-left: 16px;
-    position: relative;
-  }
-  .detail-section li::before {
-    content: ''; position: absolute; left: 0; top: 11px;
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--accent);
-  }
 
-  /* Flow diagram elements */
-  .flow-box {
-    padding: 6px 10px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-    display: inline-block;
-    margin: 2px 0;
-  }
-
-  /* Routing table in detail panel */
-  .routing-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-    margin-top: 8px;
-  }
-  .routing-table th {
-    text-align: left;
-    padding: 6px 8px;
-    background: var(--surface2);
-    color: var(--text-dim);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 1px solid var(--border);
-  }
-  .routing-table td {
-    padding: 6px 8px;
-    border-bottom: 1px solid var(--border);
-    color: var(--text);
-    vertical-align: top;
-  }
-  .routing-table tr:last-child td { border-bottom: none; }
-  .scenario-tag {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-family: monospace;
-    font-weight: 600;
-  }
-  .tag-stop { background: rgba(244,63,94,0.2); color: #f87171; }
-  .tag-auto { background: rgba(52,211,153,0.2); color: #34d399; }
-  .tag-ask { background: rgba(251,191,36,0.2); color: #fbbf24; }
-  .tag-route { background: rgba(96,165,250,0.2); color: #60a5fa; }
-  .tag-gate { background: rgba(249,115,22,0.2); color: #f97316; }
-
-  /* Gate indicator */
-  .gate-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-    background: rgba(244,63,94,0.15);
-    color: #f87171;
-    margin: 2px 0;
-  }
-  .gate-badge::before {
-    content: ''; width:8px; height:8px; border-radius:50%;
-    background: #f43f5e; display: inline-block;
-  }
-
-  /* Step flow in detail */
-  .step-flow {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    margin-top: 8px;
-  }
-  .step-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 6px 0;
-    font-size: 12px;
-  }
-  .step-num {
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: 700;
-    flex-shrink: 0;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-  }
-  .step-num.migration { background: rgba(108,138,255,0.2); color: var(--accent); border-color: var(--accent); }
-  .step-num.discovery { background: rgba(52,211,153,0.2); color: #34d399; border-color: #34d399; }
-  .step-num.gate { background: rgba(244,63,94,0.2); color: #f87171; border-color: #f43f5e; }
-  .step-num.route { background: rgba(251,191,36,0.2); color: #fbbf24; border-color: #fbbf24; }
-  .step-num.gather { background: rgba(167,139,250,0.2); color: #a78bfa; border-color: #a78bfa; }
-  .step-num.skill { background: rgba(249,115,22,0.2); color: #f97316; border-color: #f97316; }
-  .step-text { line-height: 1.5; color: var(--text); }
-  .step-text code {
-    font-family: 'SF Mono', monospace;
-    font-size: 11px;
-    background: var(--surface2);
-    padding: 1px 5px;
-    border-radius: 3px;
-    color: var(--accent);
-  }
-
-  /* File path display */
-  .file-path {
-    font-family: 'SF Mono', monospace;
-    font-size: 11px;
-    color: var(--accent);
-    background: var(--surface2);
-    padding: 4px 8px;
-    border-radius: 4px;
-    display: inline-block;
-    margin: 2px 0;
-  }
 
   /* Zoom controls */
   .zoom-controls {
     position: absolute;
-    bottom: 16px; left: 16px;
+    bottom: 12px; left: 12px;
     display: flex;
     gap: 4px;
     z-index: 5;
@@ -575,6 +382,8 @@
     font-size: 16px;
   }
   .zoom-btn:hover { border-color: var(--accent); }
+  .zoom-btn-context { margin-left: 4px; }
+  .zoom-btn-context.disabled { opacity: 0.3; pointer-events: none; }
   @media (max-width: 768px) {
     .zoom-btn { width: 44px; height: 44px; font-size: 20px; }
     .zoom-controls { gap: 6px; }
@@ -640,6 +449,129 @@
     font-size: 12px;
     line-height: 1.5;
     color: var(--text-dim);
+  }
+
+  /* Info panel slide-over */
+  .info-panel-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.2);
+    z-index: 29;
+  }
+  .info-panel-backdrop.visible { display: block; }
+  .info-panel {
+    position: fixed;
+    top: 0; right: 0;
+    width: 420px;
+    height: 100vh;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    transform: translateX(100%);
+    transition: transform 0.2s ease;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    touch-action: pan-y;
+    overscroll-behavior: contain;
+  }
+  .info-panel.open { transform: translateX(0); }
+  .info-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .info-panel-title {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .info-panel-close {
+    background: none; border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 4px 8px;
+    flex-shrink: 0;
+  }
+  .info-panel-close:hover { color: var(--text); }
+  .info-panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px 40px;
+  }
+  .info-panel-body .info-subtitle {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    margin-bottom: 14px;
+  }
+  .info-panel-body .info-summary {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .info-panel-body .info-desc {
+    font-size: 12.5px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  .info-panel-body .info-desc p {
+    margin-bottom: 8px;
+  }
+  .info-panel-body .info-desc strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .info-panel-body .info-desc code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 11px;
+    background: var(--surface2);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+  .info-panel-body .info-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .info-panel-body .info-meta span {
+    white-space: nowrap;
+  }
+  .info-panel-body .info-meta strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .info-panel-source-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface2);
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    transition: all 0.15s;
+  }
+  .info-panel-source-btn:hover { border-color: var(--accent); color: var(--text); }
+  @media (max-width: 768px) {
+    .info-panel { width: 100%; }
   }
 
   /* Markdown viewer slide-over */
@@ -779,24 +711,6 @@
     .md-viewer { width: 100%; }
   }
 
-  /* View Source button in info bar */
-  .view-source-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 8px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: var(--surface2);
-    color: var(--text-dim);
-    cursor: pointer;
-    font-size: 11px;
-    font-family: 'SF Mono', 'Fira Code', monospace;
-    margin-left: auto;
-    flex-shrink: 0;
-  }
-  .view-source-btn:hover { border-color: var(--accent); color: var(--text); }
-
   /* Source button in tooltip */
   .fc-tooltip-source {
     position: absolute;
@@ -823,89 +737,107 @@
     <h1>Technical Workflows</h1>
     <div class="subtitle">Interactive architecture explorer</div>
 
-    <button class="nav-overview active" onclick="showOverview()" id="btn-overview">Overview</button>
+    <button class="nav-overview active nav-btn" onclick="showOverview()" id="btn-overview">Overview</button>
 
-    <div class="section-label">Workflow Phases</div>
-    <button class="phase-btn" onclick="selectPhase('research')" id="btn-research">
-      <div class="dot" style="background:var(--research)"></div>
-      <div><div class="phase-name">1. Research</div><div class="phase-cmd">/start-research</div></div>
-    </button>
-    <button class="phase-btn" onclick="selectPhase('discussion')" id="btn-discussion">
-      <div class="dot" style="background:var(--discussion)"></div>
-      <div><div class="phase-name">2. Discussion</div><div class="phase-cmd">/start-discussion</div></div>
-    </button>
-    <button class="phase-btn" onclick="selectPhase('specification')" id="btn-specification">
-      <div class="dot" style="background:var(--specification)"></div>
-      <div><div class="phase-name">3. Specification</div><div class="phase-cmd">/start-specification</div></div>
-    </button>
-    <button class="phase-btn" onclick="selectPhase('planning')" id="btn-planning">
-      <div class="dot" style="background:var(--planning)"></div>
-      <div><div class="phase-name">4. Planning</div><div class="phase-cmd">/start-planning</div></div>
-    </button>
-    <button class="phase-btn" onclick="selectPhase('implementation')" id="btn-implementation">
-      <div class="dot" style="background:var(--implementation)"></div>
-      <div><div class="phase-name">5. Implementation</div><div class="phase-cmd">/start-implementation</div></div>
-    </button>
-    <button class="phase-btn" onclick="selectPhase('review')" id="btn-review">
-      <div class="dot" style="background:var(--review)"></div>
-      <div><div class="phase-name">6. Review</div><div class="phase-cmd">/start-review</div></div>
-    </button>
-
-    <div class="section-label">Skills</div>
-    <button class="phase-btn" onclick="selectPhase('skill-research')" id="btn-skill-research">
-      <div class="dot" style="background:var(--research)"></div>
-      <div><div class="phase-name">Research</div><div class="phase-cmd">technical-research</div></div>
-    </button>
-    <button class="phase-btn" onclick="selectPhase('skill-discussion')" id="btn-skill-discussion">
-      <div class="dot" style="background:var(--discussion)"></div>
-      <div><div class="phase-name">Discussion</div><div class="phase-cmd">technical-discussion</div></div>
-    </button>
-    <button class="phase-btn" onclick="selectPhase('skill-specification')" id="btn-skill-specification">
-      <div class="dot" style="background:var(--specification)"></div>
-      <div><div class="phase-name">Specification</div><div class="phase-cmd">technical-specification</div></div>
-    </button>
-    <button class="phase-btn" onclick="selectPhase('skill-planning')" id="btn-skill-planning">
-      <div class="dot" style="background:var(--planning)"></div>
-      <div><div class="phase-name">Planning</div><div class="phase-cmd">technical-planning</div></div>
-    </button>
-    <button class="phase-btn" onclick="selectPhase('skill-implementation')" id="btn-skill-implementation">
-      <div class="dot" style="background:var(--implementation)"></div>
-      <div><div class="phase-name">Implementation</div><div class="phase-cmd">technical-implementation</div></div>
-    </button>
-    <button class="phase-btn" onclick="selectPhase('skill-review')" id="btn-skill-review">
-      <div class="dot" style="background:var(--review)"></div>
-      <div><div class="phase-name">Review</div><div class="phase-cmd">technical-review</div></div>
-    </button>
-
-    <div class="section-label">Standalone Commands</div>
-    <button class="cmd-btn" onclick="selectPhase('start-feature')" id="btn-start-feature">/start-feature</button>
-    <button class="cmd-btn" onclick="selectPhase('link-deps')" id="btn-link-deps">/link-dependencies</button>
-
-    <div class="section-label">Utility</div>
-    <button class="cmd-btn" onclick="selectPhase('status')" id="btn-status">/status</button>
-    <button class="cmd-btn" onclick="selectPhase('view-plan')" id="btn-view-plan">/view-plan</button>
-    <button class="cmd-btn" onclick="selectPhase('migrate')" id="btn-migrate">/migrate</button>
-
-    <div class="section-label">Legend</div>
-    <div class="legend legend-default" id="legend-default">
-      <div class="legend-item"><div class="legend-icon"><div class="legend-line" style="background:var(--accent)"></div></div> Phase flow</div>
-      <div class="legend-item"><div class="legend-icon"><div class="legend-line dashed" style="background:#818cf8"></div></div> Shortcut entry</div>
-      <div class="legend-item" style="font-size:10px;color:var(--text-dim);margin-top:6px">Click any phase to view its flowchart</div>
+    <div class="section-label collapsible" onclick="toggleSidebarSection(this)"><span class="chevron">▼</span> Workflow Pipeline</div>
+    <div class="collapsible-content" style="max-height:800px">
+      <div class="tl-wrapper">
+        <div class="tl-group"><div class="tl-dot" style="background:var(--research)"></div>
+          <button class="nav-btn tl-cmd" onclick="selectPhase('research',this)" id="btn-research"><span class="name">1. Research</span><span class="badge badge-cmd">cmd</span></button>
+          <button class="nav-btn tl-skill" onclick="selectPhase('skill-research',this)" id="btn-skill-research"><span class="skill-label">technical-research</span><span class="badge badge-skl">skl</span></button>
+        </div>
+        <div class="tl-group"><div class="tl-dot" style="background:var(--discussion)"></div>
+          <button class="nav-btn tl-cmd" onclick="selectPhase('discussion',this)" id="btn-discussion"><span class="name">2. Discussion</span><span class="badge badge-cmd">cmd</span></button>
+          <button class="nav-btn tl-skill" onclick="selectPhase('skill-discussion',this)" id="btn-skill-discussion"><span class="skill-label">technical-discussion</span><span class="badge badge-skl">skl</span></button>
+        </div>
+        <div class="tl-group"><div class="tl-dot" style="background:var(--specification)"></div>
+          <button class="nav-btn tl-cmd" onclick="selectPhase('specification',this)" id="btn-specification"><span class="name">3. Specification</span><span class="badge badge-cmd">cmd</span></button>
+          <button class="nav-btn tl-skill" onclick="selectPhase('skill-specification',this)" id="btn-skill-specification"><span class="skill-label">technical-specification</span><span class="badge badge-skl">skl</span></button>
+        </div>
+        <div class="tl-group"><div class="tl-dot" style="background:var(--planning)"></div>
+          <button class="nav-btn tl-cmd" onclick="selectPhase('planning',this)" id="btn-planning"><span class="name">4. Planning</span><span class="badge badge-cmd">cmd</span></button>
+          <button class="nav-btn tl-skill" onclick="selectPhase('skill-planning',this)" id="btn-skill-planning"><span class="skill-label">technical-planning</span><span class="badge badge-skl">skl</span></button>
+        </div>
+        <div class="tl-group"><div class="tl-dot" style="background:var(--implementation)"></div>
+          <button class="nav-btn tl-cmd" onclick="selectPhase('implementation',this)" id="btn-implementation"><span class="name">5. Implementation</span><span class="badge badge-cmd">cmd</span></button>
+          <button class="nav-btn tl-skill" onclick="selectPhase('skill-implementation',this)" id="btn-skill-implementation"><span class="skill-label">technical-implementation</span><span class="badge badge-skl">skl</span></button>
+        </div>
+        <div class="tl-group"><div class="tl-dot" style="background:var(--review)"></div>
+          <button class="nav-btn tl-cmd" onclick="selectPhase('review',this)" id="btn-review"><span class="name">6. Review</span><span class="badge badge-cmd">cmd</span></button>
+          <button class="nav-btn tl-skill" onclick="selectPhase('skill-review',this)" id="btn-skill-review"><span class="skill-label">technical-review</span><span class="badge badge-skl">skl</span></button>
+        </div>
+      </div>
     </div>
-    <div class="legend legend-flowchart" id="legend-flowchart" style="display:none">
-      <div class="legend-item"><div class="legend-icon"><div class="legend-shape-pill" style="background:rgba(108,138,255,0.15);border-color:var(--accent)"></div></div> Start / End</div>
-      <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--action-bg);border-color:var(--action)"></div></div> Action step</div>
-      <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--surface2);border-color:var(--text-dim)"></div></div> Support / utility</div>
-      <div class="legend-item"><div class="legend-icon"><div class="legend-shape-diamond" style="background:var(--routing-bg);border-color:var(--routing)"></div></div> Decision branch</div>
-      <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--gate-bg);border-color:var(--gate);border-radius:3px"></div></div> STOP / BLOCK</div>
-      <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--ask-bg);border-color:var(--ask)"></div></div> User interaction</div>
-      <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--discovery-bg);border-color:var(--discovery)"></div></div> Discovery script</div>
-      <div class="legend-item"><div class="legend-icon"><div class="legend-shape-pill" style="background:var(--skill-bg);border-color:var(--skill)"></div></div> Skill handoff</div>
-      <div class="legend-item"><div class="legend-icon"><div class="legend-shape-pill" style="background:var(--next-bg);border-color:var(--next)"></div></div> Next phase</div>
-      <div class="legend-item"><div class="legend-icon"><div class="legend-line" style="background:#34d399"></div></div> Yes branch</div>
-      <div class="legend-item"><div class="legend-icon"><div class="legend-line" style="background:#f43f5e"></div></div> No branch</div>
-      <div class="legend-item"><div class="legend-icon"><div class="legend-line dashed" style="background:repeating-linear-gradient(90deg, #f97316 0 6px, transparent 6px 10px)"></div></div> Skill transition</div>
-      <div class="legend-item"><div class="legend-icon"><div class="legend-line dashed" style="background:repeating-linear-gradient(90deg, #6b7280 0 6px, transparent 6px 10px)"></div></div> Back-loop</div>
+
+    <div class="section-label collapsible" onclick="toggleSidebarSection(this)"><span class="chevron">▼</span> Skills</div>
+    <div class="collapsible-content" style="max-height:1200px">
+      <div class="dropdown-subheading">Workflow Orchestrators</div>
+      <button class="nav-btn dropdown-btn" data-phase="research" onclick="selectPhase('research',this)"><span class="badge badge-skl">skl</span><span class="btn-label">start-research</span></button>
+      <button class="nav-btn dropdown-btn" data-phase="discussion" onclick="selectPhase('discussion',this)"><span class="badge badge-skl">skl</span><span class="btn-label">start-discussion</span></button>
+      <button class="nav-btn dropdown-btn" data-phase="specification" onclick="selectPhase('specification',this)"><span class="badge badge-skl">skl</span><span class="btn-label">start-specification</span></button>
+      <button class="nav-btn dropdown-btn" data-phase="planning" onclick="selectPhase('planning',this)"><span class="badge badge-skl">skl</span><span class="btn-label">start-planning</span></button>
+      <button class="nav-btn dropdown-btn" data-phase="implementation" onclick="selectPhase('implementation',this)"><span class="badge badge-skl">skl</span><span class="btn-label">start-implementation</span></button>
+      <button class="nav-btn dropdown-btn" data-phase="review" onclick="selectPhase('review',this)"><span class="badge badge-skl">skl</span><span class="btn-label">start-review</span></button>
+      <div class="dropdown-subheading">Workflow Skills</div>
+      <button class="nav-btn dropdown-btn" data-phase="skill-research" onclick="selectPhase('skill-research',this)"><span class="badge badge-skl">skl</span><span class="btn-label">technical-research</span></button>
+      <button class="nav-btn dropdown-btn" data-phase="skill-discussion" onclick="selectPhase('skill-discussion',this)"><span class="badge badge-skl">skl</span><span class="btn-label">technical-discussion</span></button>
+      <button class="nav-btn dropdown-btn" data-phase="skill-specification" onclick="selectPhase('skill-specification',this)"><span class="badge badge-skl">skl</span><span class="btn-label">technical-specification</span></button>
+      <button class="nav-btn dropdown-btn" data-phase="skill-planning" onclick="selectPhase('skill-planning',this)"><span class="badge badge-skl">skl</span><span class="btn-label">technical-planning</span></button>
+      <button class="nav-btn dropdown-btn" data-phase="skill-implementation" onclick="selectPhase('skill-implementation',this)"><span class="badge badge-skl">skl</span><span class="btn-label">technical-implementation</span></button>
+      <button class="nav-btn dropdown-btn" data-phase="skill-review" onclick="selectPhase('skill-review',this)"><span class="badge badge-skl">skl</span><span class="btn-label">technical-review</span></button>
+      <div class="dropdown-subheading">Standalone</div>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('start-feature',this)" id="btn-start-feature"><span class="badge badge-skl">skl</span><span class="btn-label">start-feature</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('link-deps',this)" id="btn-link-deps"><span class="badge badge-skl">skl</span><span class="btn-label">link-dependencies</span></button>
+      <div class="dropdown-subheading">Utility</div>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('status',this)" id="btn-status"><span class="badge badge-skl">skl</span><span class="btn-label">status</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('view-plan',this)" id="btn-view-plan"><span class="badge badge-skl">skl</span><span class="btn-label">view-plan</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('migrate',this)" id="btn-migrate"><span class="badge badge-skl">skl</span><span class="btn-label">migrate</span></button>
+    </div>
+
+    <div class="section-label collapsible" onclick="toggleSidebarSection(this)"><span class="chevron">▼</span> Agents</div>
+    <div class="collapsible-content" style="max-height:400px">
+      <div class="dropdown-subheading">Planning</div>
+      <button class="nav-btn dropdown-btn dimmed"><span class="badge badge-agt">agt</span><span class="btn-label">planning-phase-designer</span></button>
+      <button class="nav-btn dropdown-btn dimmed"><span class="badge badge-agt">agt</span><span class="btn-label">planning-task-designer</span></button>
+      <button class="nav-btn dropdown-btn dimmed"><span class="badge badge-agt">agt</span><span class="btn-label">planning-task-author</span></button>
+      <button class="nav-btn dropdown-btn dimmed"><span class="badge badge-agt">agt</span><span class="btn-label">planning-dependency-grapher</span></button>
+      <div class="dropdown-subheading">Implementation</div>
+      <button class="nav-btn dropdown-btn dimmed"><span class="badge badge-agt">agt</span><span class="btn-label">implementation-task-executor</span></button>
+      <button class="nav-btn dropdown-btn dimmed"><span class="badge badge-agt">agt</span><span class="btn-label">implementation-task-reviewer</span></button>
+      <div class="dropdown-subheading">Review</div>
+      <button class="nav-btn dropdown-btn dimmed"><span class="badge badge-agt">agt</span><span class="btn-label">review-task-verifier</span></button>
+    </div>
+
+    <div class="section-label collapsible" onclick="toggleSidebarSection(this)"><span class="chevron">▼</span> Legend</div>
+    <div class="collapsible-content" style="max-height:400px">
+      <div class="legend legend-default" id="legend-default">
+        <div class="legend-item"><div class="legend-icon"><div class="legend-line" style="background:var(--accent)"></div></div> Phase flow</div>
+        <div class="legend-item"><div class="legend-icon"><div class="legend-line dashed" style="background:#818cf8"></div></div> Shortcut entry</div>
+        <div class="legend-item" style="font-size:10px;color:var(--text-dim);margin-top:6px">Click any phase to view its flowchart</div>
+      </div>
+      <div class="legend legend-flowchart" id="legend-flowchart" style="display:none">
+        <div class="legend-item"><div class="legend-icon"><div class="legend-shape-pill" style="background:rgba(108,138,255,0.15);border-color:var(--accent)"></div></div> Start / End</div>
+        <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--action-bg);border-color:var(--action)"></div></div> Action step</div>
+        <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--surface2);border-color:var(--text-dim)"></div></div> Support / utility</div>
+        <div class="legend-item"><div class="legend-icon"><div class="legend-shape-diamond" style="background:var(--routing-bg);border-color:var(--routing)"></div></div> Decision branch</div>
+        <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--gate-bg);border-color:var(--gate);border-radius:3px"></div></div> STOP / BLOCK</div>
+        <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--ask-bg);border-color:var(--ask)"></div></div> User interaction</div>
+        <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--discovery-bg);border-color:var(--discovery)"></div></div> Discovery script</div>
+        <div class="legend-item"><div class="legend-icon"><div class="legend-shape-pill" style="background:var(--skill-bg);border-color:var(--skill)"></div></div> Skill handoff</div>
+        <div class="legend-item"><div class="legend-icon"><div class="legend-shape-pill" style="background:var(--next-bg);border-color:var(--next)"></div></div> Next phase</div>
+        <div class="legend-item"><div class="legend-icon"><div class="legend-line" style="background:#34d399"></div></div> Yes branch</div>
+        <div class="legend-item"><div class="legend-icon"><div class="legend-line" style="background:#f43f5e"></div></div> No branch</div>
+        <div class="legend-item"><div class="legend-icon"><div class="legend-line dashed" style="background:repeating-linear-gradient(90deg, #f97316 0 6px, transparent 6px 10px)"></div></div> Skill transition</div>
+        <div class="legend-item"><div class="legend-icon"><div class="legend-line dashed" style="background:repeating-linear-gradient(90deg, #6b7280 0 6px, transparent 6px 10px)"></div></div> Back-loop</div>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <a href="https://github.com/leeovery/claude-technical-workflows" target="_blank" rel="noopener" class="repo-link">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        claude-technical-workflows
+      </a>
+      <div class="credit">Created with ❤️ by <a href="https://github.com/leeovery" target="_blank" rel="noopener">Lee Overy</a></div>
     </div>
   </div>
 
@@ -916,20 +848,26 @@
   <div class="canvas-area" id="canvas-area">
     <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar"><svg style="width:12px;height:10px;flex-shrink:0" viewBox="0 0 12 10" fill="none"><rect y="0" width="12" height="1.5" rx="0.75" fill="currentColor"/><rect y="4.25" width="12" height="1.5" rx="0.75" fill="currentColor"/><rect y="8.5" width="12" height="1.5" rx="0.75" fill="currentColor"/></svg></button>
     <svg id="svg-canvas" xmlns="http://www.w3.org/2000/svg"></svg>
-    <div class="detail-panel" id="detail-panel">
-      <button class="detail-close" onclick="closeDetail()">&times;</button>
-      <div id="detail-content"></div>
-    </div>
     <div class="zoom-controls">
       <button class="zoom-btn" onclick="zoom(1.15)">+</button>
       <button class="zoom-btn" onclick="zoom(1/1.15)">&minus;</button>
       <button class="zoom-btn" onclick="resetZoom()" style="font-size:11px">Fit</button>
+      <button class="zoom-btn zoom-btn-context" id="btn-info" onclick="openInfoPanel()" title="Info" style="font-size:14px">&#9432;</button>
+      <button class="zoom-btn zoom-btn-context" id="btn-source" onclick="openMdViewerFromZoom()" title="View source" style="font-size:11px;font-family:'SF Mono','Fira Code',monospace">&lt;/&gt;</button>
     </div>
     <div class="tooltip" id="tooltip"></div>
     <div id="fc-tooltip">
       <button class="fc-tooltip-source" id="fc-tooltip-source" onclick="openMdViewerFromTooltip()" title="View source">&lt;/&gt;</button>
       <div id="fc-tooltip-title"></div>
       <div id="fc-tooltip-desc"></div>
+    </div>
+    <div class="info-panel-backdrop" id="info-panel-backdrop"></div>
+    <div class="info-panel" id="info-panel">
+      <div class="info-panel-header">
+        <div class="info-panel-title" id="info-panel-title"></div>
+        <button class="info-panel-close" onclick="closeInfoPanel()">&times;</button>
+      </div>
+      <div class="info-panel-body" id="info-panel-body"></div>
     </div>
     <div class="md-viewer-backdrop" id="md-viewer-backdrop"></div>
     <div class="md-viewer" id="md-viewer">
@@ -943,10 +881,6 @@
     </div>
   </div>
 
-  <!-- Info bar -->
-  <div class="prompt-bar" id="info-bar">
-    <div class="info-body">Click a phase or command to explore its logic paths, inputs, outputs, and routing.</div>
-  </div>
 </div>
 
 <script>
@@ -992,6 +926,13 @@ function openSidebar() {
 // Backdrop click closes sidebar
 document.getElementById('sidebar-backdrop').addEventListener('click', closeSidebar);
 
+// Collapsible sidebar sections
+function toggleSidebarSection(label) {
+  label.classList.toggle('collapsed');
+  const content = label.nextElementSibling;
+  content.classList.toggle('collapsed');
+}
+
 // Auto-collapse on mobile at load
 if (isMobile()) {
   document.querySelector('.layout').classList.add('sidebar-collapsed');
@@ -1025,38 +966,6 @@ const phases = {
     prerequisites: 'None',
     scenarios: null,
     desc: 'Explore ideas, feasibility, market and technical validation. No prerequisites, no discovery.',
-    detailHTML: () => `
-      <h2 style="color:var(--research)">Phase 1: Research</h2>
-      <div class="detail-subtitle">/start-research &rarr; technical-research skill</div>
-      <div class="detail-section">
-        <h3>Overview</h3>
-        <p>The simplest command. No discovery script, no prerequisites, no cache. Just gathers context through questions and invokes the skill.</p>
-      </div>
-      <div class="detail-section">
-        <h3>Command Steps</h3>
-        <div class="step-flow">
-          <div class="step-item"><div class="step-num migration">0</div><div class="step-text">Run <code>/migrate</code> (mandatory for all commands)</div></div>
-          <div class="step-item"><div class="step-num gather">1</div><div class="step-text">Ask: <strong>"What's on your mind?"</strong> &mdash; seed idea</div></div>
-          <div class="step-item"><div class="step-num gather">2</div><div class="step-text">Ask: <strong>"What do you already know?"</strong></div></div>
-          <div class="step-item"><div class="step-num gather">3</div><div class="step-text">Ask: <strong>"Where should we start?"</strong><br>Options: technical / market / business / open exploration</div></div>
-          <div class="step-item"><div class="step-num gather">4</div><div class="step-text">Ask: <strong>"Any constraints or context?"</strong></div></div>
-          <div class="step-item"><div class="step-num skill">5</div><div class="step-text">Invoke <code>technical-research</code> skill with gathered context</div></div>
-        </div>
-      </div>
-      <div class="detail-section">
-        <h3>Output</h3>
-        <div class="file-path">docs/workflow/research/exploration.md</div>
-        <p style="margin-top:6px;font-size:12px;color:var(--text-dim)">Starts as one file, splits as themes emerge. No frontmatter status &mdash; research never "concludes".</p>
-      </div>
-      <div class="detail-section">
-        <h3>Skill Behaviour</h3>
-        <ul>
-          <li>Acts as research partner across technical, product, business, market domains</li>
-          <li>Loop: Ask &rarr; Discuss &rarr; Document &rarr; Commit/push &rarr; Repeat</li>
-          <li>Uses <code>references/interview.md</code> for structured questioning</li>
-        </ul>
-      </div>
-    `
   },
   discussion: {
     color: '#60a5fa', bg: 'rgba(96,165,250,0.12)',
@@ -1069,61 +978,6 @@ const phases = {
     prerequisites: 'None (but can consume research)',
     scenarios: ['fresh','research_only','discussions_only','research_and_discussions'],
     desc: 'Capture architecture decisions, debates, and edge cases. Cache-aware research analysis.',
-    detailHTML: () => `
-      <h2 style="color:var(--discussion)">Phase 2: Discussion</h2>
-      <div class="detail-subtitle">/start-discussion &rarr; technical-discussion skill</div>
-      <div class="detail-section">
-        <h3>Overview</h3>
-        <p>Moderate complexity. Discovery script scans research files, existing discussions, and cache. Routes based on what exists.</p>
-      </div>
-      <div class="detail-section">
-        <h3>Discovery Script</h3>
-        <div class="file-path">scripts/discovery-for-discussion.sh</div>
-        <p style="margin-top:6px;font-size:12px">Scans <code>docs/workflow/research/</code> and <code>docs/workflow/discussion/</code>. Checks cache checksums. Outputs YAML with scenario classification.</p>
-      </div>
-      <div class="detail-section">
-        <h3>Scenario Routing</h3>
-        <table class="routing-table">
-          <tr><th>Scenario</th><th>Action</th></tr>
-          <tr><td><span class="scenario-tag tag-auto">fresh</span></td><td>Ask topic, skip to gather context</td></tr>
-          <tr><td><span class="scenario-tag tag-route">discussions_only</span></td><td>Present options: Continue / Fresh topic</td></tr>
-          <tr><td><span class="scenario-tag tag-route">research_only</span></td><td>Handle research analysis (cache-aware)</td></tr>
-          <tr><td><span class="scenario-tag tag-route">research_and_discussions</span></td><td>Handle research analysis (cache-aware)</td></tr>
-        </table>
-      </div>
-      <div class="detail-section">
-        <h3>Cache System</h3>
-        <div class="file-path">.cache/research-analysis.md</div>
-        <p style="margin-top:6px;font-size:12px">Checksums research files via md5. States: <code>valid</code> (use cached) / <code>stale</code> (re-analyze) / <code>none</code> (first run)</p>
-      </div>
-      <div class="detail-section">
-        <h3>Options Presented (varies)</h3>
-        <table class="routing-table">
-          <tr><th>Context</th><th>Menu Options</th></tr>
-          <tr><td>Research + Discussions</td><td>"From research" / "Continue discussion" / "Fresh topic" / "Refresh"</td></tr>
-          <tr><td>Only Research</td><td>"From research" / "Fresh topic" / "Refresh"</td></tr>
-          <tr><td>Only Discussions</td><td>"Continue discussion" / "Fresh topic"</td></tr>
-        </table>
-      </div>
-      <div class="detail-section">
-        <h3>Command Steps</h3>
-        <div class="step-flow">
-          <div class="step-item"><div class="step-num migration">0</div><div class="step-text">Run <code>/migrate</code></div></div>
-          <div class="step-item"><div class="step-num discovery">1</div><div class="step-text">Run discovery script &rarr; YAML output</div></div>
-          <div class="step-item"><div class="step-num route">2</div><div class="step-text">Route based on scenario</div></div>
-          <div class="step-item"><div class="step-num route">3</div><div class="step-text">Research analysis (if needed, cache-aware)</div></div>
-          <div class="step-item"><div class="step-num gather">4</div><div class="step-text">Present options menu</div></div>
-          <div class="step-item"><div class="step-num gather">5</div><div class="step-text">Handle user selection</div></div>
-          <div class="step-item"><div class="step-num gather">6</div><div class="step-text">Gather context (problem, constraints, codebase files)</div></div>
-          <div class="step-item"><div class="step-num skill">7</div><div class="step-text">Invoke <code>technical-discussion</code> skill</div></div>
-        </div>
-      </div>
-      <div class="detail-section">
-        <h3>Output</h3>
-        <div class="file-path">docs/workflow/discussion/{topic}.md</div>
-        <p style="margin-top:6px;font-size:12px;color:var(--text-dim)">Frontmatter status: in-progress &rarr; concluded. Per-question structure: Options &rarr; Journey &rarr; Decision.</p>
-      </div>
-    `
   },
   specification: {
     color: '#34d399', bg: 'rgba(52,211,153,0.12)',
@@ -1136,82 +990,6 @@ const phases = {
     prerequisites: 'Concluded discussions required',
     scenarios: ['1 concluded','multi+no specs+cache valid','multi+no specs+stale','multi+specs+cache valid','multi+specs+stale','multi+specs+no cache'],
     desc: 'The most complex command (820 lines, 11 steps). Analyzes discussion coupling, groups into features, builds validated specs.',
-    detailHTML: () => `
-      <h2 style="color:var(--specification)">Phase 3: Specification</h2>
-      <div class="detail-subtitle">/start-specification &rarr; technical-specification skill</div>
-      <div class="detail-section">
-        <h3>Overview</h3>
-        <p>The most complex command at 820 lines and 11 steps. Analyzes coupling between concluded discussions, groups them into coherent features, and builds validated specifications.</p>
-      </div>
-      <div class="detail-section">
-        <h3>Prerequisites Gate</h3>
-        <div class="gate-badge">No discussions &rarr; STOP</div><br>
-        <div class="gate-badge">No concluded discussions &rarr; STOP</div>
-      </div>
-      <div class="detail-section">
-        <h3>Discovery Script</h3>
-        <div class="file-path">scripts/discovery-for-specification.sh</div>
-        <p style="margin-top:6px;font-size:12px">Scans discussions (with <code>has_individual_spec</code> check), specifications (with sources as objects), cache with anchored names.</p>
-      </div>
-      <div class="detail-section">
-        <h3>Routing Matrix (Step 3)</h3>
-        <table class="routing-table">
-          <tr><th>Condition</th><th>Path</th></tr>
-          <tr><td><span class="scenario-tag tag-auto">1 concluded</span></td><td>Auto-select, skip to Step 9</td></tr>
-          <tr><td><span class="scenario-tag tag-route">Multi + no specs + cache valid</span></td><td>Show groupings from cache &rarr; Step 7</td></tr>
-          <tr><td><span class="scenario-tag tag-ask">Multi + no specs + stale/none</span></td><td>Gather context &rarr; Analyze &rarr; Steps 4-6</td></tr>
-          <tr><td><span class="scenario-tag tag-route">Multi + specs + cache valid</span></td><td>Offer: continue / groupings / re-analyze</td></tr>
-          <tr><td><span class="scenario-tag tag-ask">Multi + specs + stale</span></td><td>Offer: continue / assess</td></tr>
-          <tr><td><span class="scenario-tag tag-ask">Multi + specs + none</span></td><td>Offer: continue / assess</td></tr>
-        </table>
-      </div>
-      <div class="detail-section">
-        <h3>Analysis Engine (Step 6)</h3>
-        <ul>
-          <li>Reads ALL concluded discussions thoroughly</li>
-          <li>Analyzes coupling: data, behavioral, conceptual</li>
-          <li>Groups into coherent features/capabilities</li>
-          <li>Preserves anchored names (existing spec groupings must be reused)</li>
-          <li>Saves to cache with checksums</li>
-        </ul>
-      </div>
-      <div class="detail-section">
-        <h3>Grouping Options (Step 7)</h3>
-        <table class="routing-table">
-          <tr><th>Choice</th><th>Action</th></tr>
-          <tr><td>"Proceed as recommended"</td><td>Ask which grouping to spec</td></tr>
-          <tr><td>"Combine differently"</td><td>User describes groupings, handle impact on existing specs</td></tr>
-          <tr><td>"Single specification"</td><td>Use "unified" name</td></tr>
-          <tr><td>"Individual specifications"</td><td>Ask which discussion</td></tr>
-          <tr><td>"Refresh"</td><td>Delete cache, re-analyze</td></tr>
-        </table>
-      </div>
-      <div class="detail-section">
-        <h3>Command Steps</h3>
-        <div class="step-flow">
-          <div class="step-item"><div class="step-num migration">0</div><div class="step-text">Run <code>/migrate</code></div></div>
-          <div class="step-item"><div class="step-num discovery">1</div><div class="step-text">Run discovery script</div></div>
-          <div class="step-item"><div class="step-num gate">2</div><div class="step-text"><strong>Prerequisites gate</strong> (concluded discussions required)</div></div>
-          <div class="step-item"><div class="step-num route">3</div><div class="step-text">Route based on 6-condition matrix</div></div>
-          <div class="step-item"><div class="step-num gather">4</div><div class="step-text">Gather analysis context (project structure, relationships)</div></div>
-          <div class="step-item"><div class="step-num route">5</div><div class="step-text">Check cache status (valid / stale / none)</div></div>
-          <div class="step-item"><div class="step-num">6</div><div class="step-text">Analyze discussions (coupling engine)</div></div>
-          <div class="step-item"><div class="step-num gather">7</div><div class="step-text">Present grouping options</div></div>
-          <div class="step-item"><div class="step-num gather">8</div><div class="step-text">Handle selection (with existing spec impact analysis)</div></div>
-          <div class="step-item"><div class="step-num gather">9</div><div class="step-text">Confirm selection (sources, path, supersede info)</div></div>
-          <div class="step-item"><div class="step-num gather">10</div><div class="step-text">Gather additional context</div></div>
-          <div class="step-item"><div class="step-num skill">11</div><div class="step-text">Invoke <code>technical-specification</code> skill</div></div>
-        </div>
-      </div>
-      <div class="detail-section">
-        <h3>Skill Behaviour</h3>
-        <ul>
-          <li><strong>Collaborative, NOT autonomous</strong> &mdash; must wait for explicit user approval before writing</li>
-          <li>Process: Extract &rarr; Filter (validate) &rarr; Enrich (fill gaps) &rarr; Present &rarr; STOP &amp; WAIT &rarr; Log</li>
-          <li>Self-check before every write: Was this presented? Was it approved?</li>
-        </ul>
-      </div>
-    `
   },
   planning: {
     color: '#fbbf24', bg: 'rgba(251,191,36,0.12)',
@@ -1224,63 +1002,6 @@ const phases = {
     prerequisites: 'Concluded specifications required',
     scenarios: ['no_specs','nothing_actionable','has_options'],
     desc: 'Transform specs into phased implementation plans. Routes by plan state (new vs existing). Surfaces cross-cutting specs.',
-    detailHTML: () => `
-      <h2 style="color:var(--planning)">Phase 4: Planning</h2>
-      <div class="detail-subtitle">/start-planning &rarr; technical-planning skill</div>
-      <div class="detail-section">
-        <h3>Overview</h3>
-        <p>Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Routes by plan state &mdash; new plans gather context first, existing plans skip straight to the skill. Surfaces cross-cutting specifications as context.</p>
-      </div>
-      <div class="detail-section">
-        <h3>Discovery Script</h3>
-        <div class="file-path">scripts/discovery-for-planning.sh</div>
-        <p style="margin-top:6px;font-size:12px">Scans specs (separates feature vs cross-cutting by <code>type:</code> field). Counts ready specs (concluded + no existing plan). Tracks plan status for existing plans.</p>
-      </div>
-      <div class="detail-section">
-        <h3>Scenario Routing</h3>
-        <table class="routing-table">
-          <tr><th>Scenario</th><th>Action</th></tr>
-          <tr><td><span class="scenario-tag tag-stop">no_specs</span></td><td>STOP &mdash; run <code>/start-specification</code></td></tr>
-          <tr><td><span class="scenario-tag tag-gate">nothing_actionable</span></td><td>Show state, nothing ready to plan</td></tr>
-          <tr><td><span class="scenario-tag tag-route">has_options</span></td><td>Present options (single auto-selects, multiple asks)</td></tr>
-        </table>
-      </div>
-      <div class="detail-section">
-        <h3>Plan State Routing (Step 4)</h3>
-        <table class="routing-table">
-          <tr><th>State</th><th>Action</th></tr>
-          <tr><td>No existing plan</td><td>Gather context (Step 5) &rarr; cross-cutting (Step 6) &rarr; invoke skill</td></tr>
-          <tr><td>Existing plan</td><td>Skip context &rarr; invoke skill directly (Step 7)</td></tr>
-        </table>
-      </div>
-      <div class="detail-section">
-        <h3>Command Steps</h3>
-        <div class="step-flow">
-          <div class="step-item"><div class="step-num migration">0</div><div class="step-text">Run <code>/migrate</code></div></div>
-          <div class="step-item"><div class="step-num discovery">1</div><div class="step-text">Run discovery script</div></div>
-          <div class="step-item"><div class="step-num route">2</div><div class="step-text">Route based on scenario</div></div>
-          <div class="step-item"><div class="step-num gather">3</div><div class="step-text">Present state &amp; select spec (auto or ask)</div></div>
-          <div class="step-item"><div class="step-num route">4</div><div class="step-text">Route by plan state (new vs existing)</div></div>
-          <div class="step-item"><div class="step-num gather">5</div><div class="step-text">Gather additional context (new plans only)</div></div>
-          <div class="step-item"><div class="step-num">6</div><div class="step-text">Surface cross-cutting specs as context (new plans only)</div></div>
-          <div class="step-item"><div class="step-num skill">7</div><div class="step-text">Invoke <code>technical-planning</code> skill</div></div>
-        </div>
-      </div>
-      <div class="detail-section">
-        <h3>Skill: 9-Step Planning Process</h3>
-        <div class="step-flow">
-          <div class="step-item"><div class="step-num">0</div><div class="step-text">Resume detection (existing plan? spec changes?)</div></div>
-          <div class="step-item"><div class="step-num">1</div><div class="step-text">Initialize plan (choose output format, create Plan Index File)</div></div>
-          <div class="step-item"><div class="step-num">2</div><div class="step-text">Load planning principles</div></div>
-          <div class="step-item"><div class="step-num">3</div><div class="step-text">Verify source material</div></div>
-          <div class="step-item"><div class="step-num">4</div><div class="step-text">Plan construction (phases &rarr; tasks &rarr; author, nested loop)</div></div>
-          <div class="step-item"><div class="step-num">5</div><div class="step-text">Analyze task graph (dependency-grapher agent)</div></div>
-          <div class="step-item"><div class="step-num">6</div><div class="step-text">Resolve external dependencies</div></div>
-          <div class="step-item"><div class="step-num">7</div><div class="step-text">Plan review (traceability + integrity)</div></div>
-          <div class="step-item"><div class="step-num">8</div><div class="step-text">Conclude plan (<code>status: concluded</code>)</div></div>
-        </div>
-      </div>
-    `
   },
   implementation: {
     color: '#f97316', bg: 'rgba(249,115,22,0.12)',
@@ -1293,70 +1014,6 @@ const phases = {
     prerequisites: 'Concluded plan required',
     scenarios: ['no_plans','single_plan','multiple_plans'],
     desc: 'Execute plans via strict TDD. Three-section plan classification with unblock escape hatch. Gates: external deps, environment setup.',
-    detailHTML: () => `
-      <h2 style="color:var(--implementation)">Phase 5: Implementation</h2>
-      <div class="detail-subtitle">/start-implementation &rarr; technical-implementation skill</div>
-      <div class="detail-section">
-        <h3>Overview</h3>
-        <p>Execute implementation plans using strict TDD workflow with quality gates. Two blocking gates before work begins.</p>
-      </div>
-      <div class="detail-section">
-        <h3>Discovery Script (shared with Review)</h3>
-        <div class="file-path">scripts/discovery-for-implementation-and-review.sh</div>
-        <p style="margin-top:6px;font-size:12px">Scans plans, checks <code>environment-setup.md</code>. Outputs plan metadata + environment state.</p>
-      </div>
-      <div class="detail-section">
-        <h3>Scenario Routing</h3>
-        <table class="routing-table">
-          <tr><th>Scenario</th><th>Action</th></tr>
-          <tr><td><span class="scenario-tag tag-stop">no_plans</span></td><td>STOP &mdash; run <code>/start-planning</code></td></tr>
-          <tr><td><span class="scenario-tag tag-auto">single_plan</span></td><td>Auto-select</td></tr>
-          <tr><td><span class="scenario-tag tag-ask">multiple_plans</span></td><td>Ask which plan</td></tr>
-        </table>
-      </div>
-      <div class="detail-section">
-        <h3>Gate 1: External Dependencies</h3>
-        <div class="gate-badge">Blocks if unresolved dependencies exist</div>
-        <table class="routing-table" style="margin-top:8px">
-          <tr><th>Dependency State</th><th>Result</th></tr>
-          <tr><td>Unresolved</td><td><strong>BLOCK</strong> &mdash; offer: implement blocking deps / mark satisfied / run <code>/link-dependencies</code></td></tr>
-          <tr><td>Resolved</td><td>Check task completion in other plan</td></tr>
-          <tr><td>Satisfied externally</td><td>OK &mdash; proceed</td></tr>
-        </table>
-      </div>
-      <div class="detail-section">
-        <h3>Gate 2: Environment Setup</h3>
-        <div class="gate-badge">Checks environment-setup.md</div>
-        <table class="routing-table" style="margin-top:8px">
-          <tr><th>State</th><th>Result</th></tr>
-          <tr><td>Exists, "no special setup"</td><td>Skip</td></tr>
-          <tr><td>Exists with instructions</td><td>Note for handoff</td></tr>
-          <tr><td>Missing</td><td>Ask user, save to file</td></tr>
-        </table>
-      </div>
-      <div class="detail-section">
-        <h3>Command Steps</h3>
-        <div class="step-flow">
-          <div class="step-item"><div class="step-num migration">0</div><div class="step-text">Run <code>/migrate</code></div></div>
-          <div class="step-item"><div class="step-num discovery">1</div><div class="step-text">Run discovery script</div></div>
-          <div class="step-item"><div class="step-num route">2</div><div class="step-text">Route based on scenario</div></div>
-          <div class="step-item"><div class="step-num gather">3</div><div class="step-text">Present plans &amp; select (with unblock escape hatch)</div></div>
-          <div class="step-item"><div class="step-num gate">4</div><div class="step-text"><strong>External dependencies gate</strong></div></div>
-          <div class="step-item"><div class="step-num gate">5</div><div class="step-text"><strong>Environment setup gate</strong> (info gathering only)</div></div>
-          <div class="step-item"><div class="step-num skill">6</div><div class="step-text">Invoke <code>technical-implementation</code> skill (strict TDD)</div></div>
-        </div>
-      </div>
-      <div class="detail-section">
-        <h3>Skill: Strict TDD Rules</h3>
-        <ul>
-          <li>No code before tests</li>
-          <li>No test changes to make tests pass</li>
-          <li>No scope expansion beyond plan</li>
-          <li>Commit after every green</li>
-          <li>Ask user before moving to next phase</li>
-        </ul>
-      </div>
-    `
   },
   review: {
     color: '#f472b6', bg: 'rgba(244,114,182,0.12)',
@@ -1369,120 +1026,18 @@ const phases = {
     prerequisites: 'Implementation of a plan',
     scenarios: ['no_plans','single_plan','multiple_plans'],
     desc: 'Validate implementation against plan. Uses parallel review-task-verifier subagents (one per task).',
-    detailHTML: () => `
-      <h2 style="color:var(--review)">Phase 6: Review</h2>
-      <div class="detail-subtitle">/start-review &rarr; technical-review skill</div>
-      <div class="detail-section">
-        <h3>Overview</h3>
-        <p>Validate completed implementation against plan tasks and acceptance criteria. Uses parallel review-task-verifier subagents for efficiency. Does NOT fix code &mdash; only reviews.</p>
-      </div>
-      <div class="detail-section">
-        <h3>Discovery Script (shared with Implementation)</h3>
-        <div class="file-path">scripts/discovery-for-implementation-and-review.sh</div>
-      </div>
-      <div class="detail-section">
-        <h3>Scenario Routing</h3>
-        <table class="routing-table">
-          <tr><th>Scenario</th><th>Action</th></tr>
-          <tr><td><span class="scenario-tag tag-stop">no_plans</span></td><td>STOP &mdash; run <code>/start-planning</code></td></tr>
-          <tr><td><span class="scenario-tag tag-auto">single_plan</span></td><td>Auto-select</td></tr>
-          <tr><td><span class="scenario-tag tag-ask">multiple_plans</span></td><td>Ask which plan</td></tr>
-        </table>
-      </div>
-      <div class="detail-section">
-        <h3>Scope Selection</h3>
-        <ul>
-          <li>All changes since plan created</li>
-          <li>Specific directories / files</li>
-          <li>From git status</li>
-        </ul>
-      </div>
-      <div class="detail-section">
-        <h3>Command Steps</h3>
-        <div class="step-flow">
-          <div class="step-item"><div class="step-num migration">0</div><div class="step-text">Run <code>/migrate</code></div></div>
-          <div class="step-item"><div class="step-num discovery">1</div><div class="step-text">Run discovery script</div></div>
-          <div class="step-item"><div class="step-num route">2</div><div class="step-text">Route based on scenario</div></div>
-          <div class="step-item"><div class="step-num gather">3</div><div class="step-text">Select plan</div></div>
-          <div class="step-item"><div class="step-num gather">4</div><div class="step-text">Identify implementation scope</div></div>
-          <div class="step-item"><div class="step-num skill">5</div><div class="step-text">Invoke <code>technical-review</code> skill</div></div>
-        </div>
-      </div>
-      <div class="detail-section">
-        <h3>Skill: Parallel Chain Verification</h3>
-        <ul>
-          <li>Read plan &rarr; Read spec &rarr; Extract ALL tasks</li>
-          <li>Spawn <strong>parallel review-task-verifier subagents</strong> (Haiku model)</li>
-          <li>One verifier per task &mdash; all run simultaneously</li>
-          <li>Each checks: implementation exists, acceptance criteria met, test coverage, code quality</li>
-          <li>Aggregate findings into structured review</li>
-          <li>Output: approve / request changes / comments</li>
-        </ul>
-      </div>
-    `
   },
   'start-feature': {
     color: '#818cf8', bg: 'rgba(129,140,248,0.12)',
     label: 'Start Feature', cmd: '/start-feature',
     complexity: 'Shortcut',
     desc: 'Bypass phases 1-2. Gather feature context inline, invoke specification skill directly.',
-    detailHTML: () => `
-      <h2 style="color:#818cf8">Standalone: /start-feature</h2>
-      <div class="detail-subtitle">Shortcut &rarr; technical-specification skill</div>
-      <div class="detail-section">
-        <h3>Overview</h3>
-        <p>Bypasses Research and Discussion phases entirely. For adding features to existing projects where you already know what you're building.</p>
-      </div>
-      <div class="detail-section">
-        <h3>Flow</h3>
-        <div class="step-flow">
-          <div class="step-item"><div class="step-num gather">1</div><div class="step-text">Gather feature context (what, scope, constraints) &mdash; can skip if already provided</div></div>
-          <div class="step-item"><div class="step-num gather">2</div><div class="step-text">Suggest topic name for output file</div></div>
-          <div class="step-item"><div class="step-num gate">3</div><div class="step-text">Check naming conflicts in <code>docs/workflow/specification/</code></div></div>
-          <div class="step-item"><div class="step-num skill">4</div><div class="step-text">Invoke <code>technical-specification</code> skill with inline context</div></div>
-        </div>
-      </div>
-      <div class="detail-section">
-        <h3>Key Difference</h3>
-        <p>No discovery script. No migration step. No discussion document to reference. Context is provided inline instead of from previous phase files.</p>
-        <p style="margin-top:8px">Output is a standard specification file &mdash; continues to <code>/start-planning</code> normally.</p>
-      </div>
-    `
   },
   'link-deps': {
     color: '#94a3b8', bg: 'rgba(148,163,184,0.12)',
     label: 'Link Dependencies', cmd: '/link-dependencies',
     complexity: 'Cross-plan',
     desc: 'Wire up cross-topic dependencies across all plans.',
-    detailHTML: () => `
-      <h2 style="color:#94a3b8">Standalone: /link-dependencies</h2>
-      <div class="detail-subtitle">Cross-plan dependency wiring</div>
-      <div class="detail-section">
-        <h3>Overview</h3>
-        <p>Works across ALL plans. Requires 2+ plans with the same output format. Extracts external dependencies, matches unresolved deps to tasks in other plans, wires up bidirectional links.</p>
-      </div>
-      <div class="detail-section">
-        <h3>Flow</h3>
-        <div class="step-flow">
-          <div class="step-item"><div class="step-num discovery">1</div><div class="step-text">Discover all plans, extract metadata</div></div>
-          <div class="step-item"><div class="step-num gate">2</div><div class="step-text">Check output format consistency (must all match)</div></div>
-          <div class="step-item"><div class="step-num">3</div><div class="step-text">Extract External Dependencies from all plans</div></div>
-          <div class="step-item"><div class="step-num">4</div><div class="step-text">Match unresolved deps to tasks in other plans</div></div>
-          <div class="step-item"><div class="step-num">5</div><div class="step-text">Wire up matches (update plan index + output format)</div></div>
-          <div class="step-item"><div class="step-num">6</div><div class="step-text">Bidirectional check (reverse dependencies)</div></div>
-          <div class="step-item"><div class="step-num">7</div><div class="step-text">Report results &amp; commit</div></div>
-        </div>
-      </div>
-      <div class="detail-section">
-        <h3>Dependency States</h3>
-        <table class="routing-table">
-          <tr><th>State</th><th>Meaning</th></tr>
-          <tr><td><code>unresolved</code></td><td>Not yet matched to a task</td></tr>
-          <tr><td><code>resolved</code></td><td>Matched to task ID in another plan</td></tr>
-          <tr><td><code>satisfied externally</code></td><td>Manually marked as met</td></tr>
-        </table>
-      </div>
-    `
   },
   'status': {
     color: '#94a3b8', bg: 'rgba(148,163,184,0.12)',
@@ -1562,7 +1117,7 @@ function computeFlowchartLayout(key) {
 
   const fc = FLOWCHARTS[key];
   const g = new dagre.graphlib.Graph();
-  g.setGraph({ rankdir: 'TB', nodesep: 40, ranksep: 55, marginx: 30, marginy: 30 });
+  g.setGraph({ rankdir: 'TB', nodesep: 50, ranksep: 60, edgesep: 25, marginx: 30, marginy: 30 });
   g.setDefaultEdgeLabel(() => ({}));
 
   fc.nodes.forEach(n => {
@@ -1570,7 +1125,10 @@ function computeFlowchartLayout(key) {
   });
 
   fc.connections.forEach(c => {
-    g.setEdge(c.from, c.to, { label: c.label || '' });
+    const opts = { label: c.label || '' };
+    if (c.weight) opts.weight = c.weight;
+    if (c.minlen) opts.minlen = c.minlen;
+    g.setEdge(c.from, c.to, opts);
   });
 
   dagre.layout(g);
@@ -1685,11 +1243,11 @@ const FLOWCHARTS = {
       { from: 'start', to: 'migrate' },
       { from: 'migrate', to: 'discovery' },
       { from: 'discovery', to: 'gate-disc' },
+      { from: 'gate-disc', to: 'gate-concluded', type: 'yes', label: 'exist', weight: 2 },
       { from: 'gate-disc', to: 'stop-no-disc', type: 'no', label: 'none' },
-      { from: 'gate-disc', to: 'gate-concluded', type: 'yes', label: 'exist' },
+      { from: 'gate-concluded', to: 'count', type: 'yes', label: 'yes', weight: 2 },
       { from: 'gate-concluded', to: 'stop-no-conc', type: 'no', label: 'none' },
-      { from: 'gate-concluded', to: 'count', type: 'yes', label: 'yes' },
-      { from: 'count', to: 'auto-select', label: '1' },
+      { from: 'count', to: 'auto-select', label: 'one' },
       { from: 'count', to: 'multi-route', label: 'multi' },
       { from: 'multi-route', to: 'no-specs-cache', type: 'no', label: 'no specs' },
       { from: 'multi-route', to: 'specs-options', type: 'yes', label: 'specs exist' },
@@ -1732,9 +1290,9 @@ const FLOWCHARTS = {
       { from: 'start', to: 'migrate' },
       { from: 'migrate', to: 'discovery' },
       { from: 'discovery', to: 'scenario' },
+      { from: 'scenario', to: 'present', type: 'yes', label: 'has options', weight: 2 },
       { from: 'scenario', to: 'stop-no-spec', type: 'no', label: 'no specs' },
       { from: 'scenario', to: 'stop-none-ready', label: 'none actionable' },
-      { from: 'scenario', to: 'present', type: 'yes', label: 'has options' },
       { from: 'present', to: 'plan-state' },
       { from: 'plan-state', to: 'gather', type: 'no', label: 'new' },
       { from: 'plan-state', to: 'skill', type: 'yes', label: 'exists' },
@@ -1765,15 +1323,15 @@ const FLOWCHARTS = {
       { from: 'migrate', to: 'discovery' },
       { from: 'discovery', to: 'scenario' },
       { from: 'scenario', to: 'stop-no-plan', type: 'no', label: 'no plans' },
-      { from: 'scenario', to: 'present', type: 'yes', label: 'exist' },
-      { from: 'present', to: 'select' },
-      { from: 'select', to: 'unblock', label: 'unblock' },
+      { from: 'scenario', to: 'present', type: 'yes', label: 'exist', weight: 2 },
+      { from: 'present', to: 'select', weight: 2 },
+      { from: 'select', to: 'unblock', label: 'unblock', port: 'left' },
       { from: 'unblock', to: 'present', type: 'backloop' },
-      { from: 'select', to: 'gate-deps' },
-      { from: 'gate-deps', to: 'block-deps', type: 'no', label: 'blocked' },
+      { from: 'select', to: 'gate-deps', label: 'proceed', weight: 2, port: 'bottom' },
+      { from: 'gate-deps', to: 'block-deps', type: 'no', label: 'blocked', port: 'lower-left' },
       { from: 'block-deps', to: 'escape' },
       { from: 'escape', to: 'gate-deps', type: 'backloop' },
-      { from: 'gate-deps', to: 'gate-env', type: 'yes', label: 'ok' },
+      { from: 'gate-deps', to: 'gate-env', type: 'yes', label: 'ok', weight: 2, port: 'lower-right' },
       { from: 'gate-env', to: 'create-env', label: 'missing' },
       { from: 'gate-env', to: 'env-ok', label: 'exists' },
       { from: 'create-env', to: 'skill', type: 'transition' },
@@ -1797,8 +1355,8 @@ const FLOWCHARTS = {
       { from: 'start', to: 'migrate' },
       { from: 'migrate', to: 'discovery' },
       { from: 'discovery', to: 'scenario' },
+      { from: 'scenario', to: 'select', type: 'yes', label: 'exist', weight: 2 },
       { from: 'scenario', to: 'stop', type: 'no', label: 'none' },
-      { from: 'scenario', to: 'select', type: 'yes', label: 'exist' },
       { from: 'select', to: 'auto', label: 'single' },
       { from: 'select', to: 'ask', label: 'multiple' },
       { from: 'auto', to: 'scope' },
@@ -1843,10 +1401,10 @@ const FLOWCHARTS = {
     connections: [
       { from: 'start', to: 'discover' },
       { from: 'discover', to: 'gate-count' },
+      { from: 'gate-count', to: 'gate-format', type: 'yes', label: '>= 2', weight: 2 },
       { from: 'gate-count', to: 'stop-count', type: 'no', label: '< 2' },
-      { from: 'gate-count', to: 'gate-format', type: 'yes', label: '>= 2' },
+      { from: 'gate-format', to: 'extract', type: 'yes', label: 'match', weight: 2 },
       { from: 'gate-format', to: 'stop-format', type: 'no', label: 'mixed' },
-      { from: 'gate-format', to: 'extract', type: 'yes', label: 'match' },
       { from: 'extract', to: 'match' },
       { from: 'match', to: 'wire' },
       { from: 'wire', to: 'bidir' },
@@ -1908,7 +1466,7 @@ const FLOWCHARTS = {
       { from: 'capture', to: 'document' },
       { from: 'document', to: 'commit' },
       { from: 'commit', to: 'more' },
-      { from: 'more', to: 'engage', type: 'backloop', label: 'yes' },
+      { from: 'more', to: 'engage', type: 'backloop', label: 'yes', port: 'right' },
       { from: 'more', to: 'conclude', type: 'no', label: 'done' },
       { from: 'conclude', to: 'end' },
       { from: 'end', to: 'next', type: 'transition' },
@@ -1941,7 +1499,7 @@ const FLOWCHARTS = {
       { from: 'enrich', to: 'present' },
       { from: 'present', to: 'wait' },
       { from: 'wait', to: 'present', type: 'backloop', label: 'revise' },
-      { from: 'wait', to: 'log', type: 'yes', label: 'approved' },
+      { from: 'wait', to: 'log', type: 'yes', label: 'approved', weight: 2 },
       { from: 'log', to: 'more-topics' },
       { from: 'more-topics', to: 'extract', type: 'backloop', label: 'yes' },
       { from: 'more-topics', to: 'final-review', type: 'no', label: 'all done' },
@@ -2025,17 +1583,17 @@ const FLOWCHARTS = {
       // Enter task loop
       { from: 'init-track', to: 'retrieve', type: 'transition' },
       { from: 'retrieve', to: 'done-check' },
+      { from: 'done-check', to: 'executor', type: 'yes', label: 'has task', weight: 2 },
       { from: 'done-check', to: 'end', type: 'no', label: 'none left' },
-      { from: 'done-check', to: 'executor', type: 'yes', label: 'has task' },
       // B: Executor
       { from: 'executor', to: 'exec-result' },
-      { from: 'exec-result', to: 'reviewer', type: 'yes', label: 'complete' },
+      { from: 'exec-result', to: 'reviewer', type: 'yes', label: 'complete', weight: 2 },
       { from: 'exec-result', to: 'exec-blocked', type: 'no', label: 'blocked' },
       { from: 'exec-blocked', to: 'executor', type: 'backloop', label: 'retry' },
       { from: 'exec-blocked', to: 'commit', label: 'skip' },
       // C: Reviewer
       { from: 'reviewer', to: 'review-result' },
-      { from: 'review-result', to: 'gate', type: 'yes', label: 'approved' },
+      { from: 'review-result', to: 'gate', type: 'yes', label: 'approved', weight: 2 },
       { from: 'review-result', to: 'review-changes', type: 'no', label: 'needs changes' },
       { from: 'review-changes', to: 'executor', type: 'backloop', label: 'fix' },
       { from: 'review-changes', to: 'gate', label: 'skip' },
@@ -2097,8 +1655,8 @@ const FLOWCHARTS = {
     connections: [
       { from: 'start', to: 'migrate' },
       { from: 'migrate', to: 'gate-migrate' },
-      { from: 'gate-migrate', to: 'wait-review', type: 'yes', label: 'yes' },
       { from: 'gate-migrate', to: 'scan', type: 'no', label: 'no' },
+      { from: 'gate-migrate', to: 'wait-review', type: 'yes', label: 'yes' },
       { from: 'wait-review', to: 'scan' },
       { from: 'scan', to: 'present' },
       { from: 'present', to: 'suggest' },
@@ -2121,9 +1679,9 @@ const FLOWCHARTS = {
     ],
     connections: [
       { from: 'start', to: 'gate-plans' },
+      { from: 'gate-plans', to: 'count', type: 'yes', label: 'exist', weight: 2 },
       { from: 'gate-plans', to: 'stop', type: 'no', label: 'none' },
-      { from: 'gate-plans', to: 'count', type: 'yes', label: 'exist' },
-      { from: 'count', to: 'auto', label: '1' },
+      { from: 'count', to: 'auto', label: 'one' },
       { from: 'count', to: 'ask', label: 'multi' },
       { from: 'auto', to: 'read-index' },
       { from: 'ask', to: 'read-index' },
@@ -2145,8 +1703,8 @@ const FLOWCHARTS = {
     connections: [
       { from: 'start', to: 'run' },
       { from: 'run', to: 'updated' },
-      { from: 'updated', to: 'show-changes', type: 'yes', label: 'yes' },
       { from: 'updated', to: 'end-clean', type: 'no', label: 'no' },
+      { from: 'updated', to: 'show-changes', type: 'yes', label: 'yes' },
       { from: 'show-changes', to: 'end-updated' },
     ]
   }
@@ -2531,6 +2089,103 @@ function clipToDiamond(cx, cy, hw, hh, px, py) {
   return { x: cx + dx / sum, y: cy + dy / sum };
 }
 
+// Simple direction-based snap for incoming edges to diamonds.
+// Uses dominant axis: vertical → top/bottom vertex, horizontal → left/right vertex.
+function snapToDiamondPort(cx, cy, hw, hh, pt) {
+  const dx = pt.x - cx, dy = pt.y - cy;
+  if (Math.abs(dx) >= Math.abs(dy)) {
+    return dx >= 0 ? { x: cx + hw, y: cy } : { x: cx - hw, y: cy };
+  } else {
+    return dy >= 0 ? { x: cx, y: cy + hh } : { x: cx, y: cy - hh };
+  }
+}
+
+// Context-aware outgoing port assignment for diamond nodes.
+// Distributes outgoing edges across diamond ports based on count:
+//   1 down → bottom vertex
+//   2 down → lower-left midpoint + lower-right midpoint
+//   3 down → lower-left midpoint + bottom vertex + lower-right midpoint
+//   4 down → left vertex + lower-left + lower-right + right vertex
+//   5 down → left + lower-left + bottom + lower-right + right
+// Side edges (same rank, far horizontal) → left/right vertex.
+// Upward edges (backloop) → top vertex.
+function computeDiamondPorts(nodes, connections) {
+  const ports = {};
+  // Group outgoing edges by source diamond
+  const diamondOut = {};
+  connections.forEach(c => {
+    const from = nodes.find(n => n.id === c.from);
+    if (!from || from.shape !== 'diamond') return;
+    if (!diamondOut[c.from]) diamondOut[c.from] = [];
+    diamondOut[c.from].push(c);
+  });
+
+  for (const [nodeId, edges] of Object.entries(diamondOut)) {
+    const node = nodes.find(n => n.id === nodeId);
+    if (!node) continue;
+    const cx = node.x + node.w / 2, cy = node.y + node.h / 2;
+    const hw = node.w / 2, hh = node.h / 2;
+
+    // Classify by target position relative to diamond
+    // Edges can specify explicit port hints: 'left', 'right', 'top', 'bottom',
+    // 'lower-left', 'lower-right', 'upper-left', 'upper-right'
+    const portMap = {
+      'left': { x: cx - hw, y: cy }, 'right': { x: cx + hw, y: cy },
+      'top': { x: cx, y: cy - hh }, 'bottom': { x: cx, y: cy + hh },
+      'lower-left': { x: cx - hw / 2, y: cy + hh / 2 },
+      'lower-right': { x: cx + hw / 2, y: cy + hh / 2 },
+      'upper-left': { x: cx - hw / 2, y: cy - hh / 2 },
+      'upper-right': { x: cx + hw / 2, y: cy - hh / 2 },
+    };
+    const downEdges = [], upEdges = [];
+    edges.forEach(e => {
+      // Honor explicit port hint
+      if (e.port && portMap[e.port]) {
+        ports[e.from + '->' + e.to] = portMap[e.port];
+        return;
+      }
+      const to = nodes.find(n => n.id === e.to);
+      if (!to) return;
+      const toCx = to.x + to.w / 2, toCy = to.y + to.h / 2;
+      const dx = toCx - cx, dy = toCy - cy;
+      if (dy < -10) {
+        upEdges.push({ edge: e, dx, dy });
+      } else {
+        // Everything at same level or below → treat as downward.
+        // Sorting by dx distributes them across lower ports (left-to-right).
+        downEdges.push({ edge: e, dx, dy });
+      }
+    });
+
+    // Up edges → top vertex
+    upEdges.forEach(({ edge }) => {
+      ports[edge.from + '->' + edge.to] = { x: cx, y: cy - hh };
+    });
+
+    // Down edges → distribute across lower ports based on count
+    downEdges.sort((a, b) => a.dx - b.dx); // sort left-to-right
+    const ll = { x: cx - hw / 2, y: cy + hh / 2 }; // lower-left midpoint
+    const bb = { x: cx, y: cy + hh };                // bottom vertex
+    const lr = { x: cx + hw / 2, y: cy + hh / 2 };  // lower-right midpoint
+    const lv = { x: cx - hw, y: cy };                // left vertex
+    const rv = { x: cx + hw, y: cy };                // right vertex
+    let downPorts;
+    switch (downEdges.length) {
+      case 0: downPorts = []; break;
+      case 1: downPorts = [bb]; break;
+      case 2: downPorts = [ll, lr]; break;
+      case 3: downPorts = [ll, bb, lr]; break;
+      case 4: downPorts = [lv, ll, lr, rv]; break;
+      case 5: downPorts = [lv, ll, bb, lr, rv]; break;
+      default: downPorts = [lv, ll, bb, lr, rv]; break;
+    }
+    downEdges.forEach(({ edge }, i) => {
+      ports[edge.from + '->' + edge.to] = downPorts[Math.min(i, downPorts.length - 1)];
+    });
+  }
+  return ports;
+}
+
 function renderSVG() {
   const nodes = getNodes();
   const conns = getConnections();
@@ -2538,8 +2193,10 @@ function renderSVG() {
 
   // Get dagre edge points for flowchart view
   let fcEdgePoints = null;
+  let diamondPorts = null;
   if (isFlowchart && state.selectedFlowchart) {
     fcEdgePoints = computeFlowchartLayout(state.selectedFlowchart).edgePoints;
+    diamondPorts = computeDiamondPorts(nodes, conns);
   }
 
   // Calculate bounds — symmetric padding using actual min/max of all nodes
@@ -2557,8 +2214,27 @@ function renderSVG() {
     maxX = Math.max(maxX, n.x + n.w);
     maxY = Math.max(maxY, n.y + n.h);
   });
-  const pad = 40;
-  svg.setAttribute('viewBox', `${minX - pad} ${minY - pad} ${maxX - minX + pad * 2} ${maxY - minY + pad * 2}`);
+  const pad = 40; // base padding in SVG units (all sides)
+  // Scale-aware top/bottom clearance for UI overlays (burger menu, zoom controls).
+  // When height constrains the fit, we solve for the viewBox height that guarantees
+  // the desired screen-pixel clearance at the FINAL scale, not the pre-padding scale.
+  const rawW = maxX - minX + pad * 2;
+  const rawH = maxY - minY + pad * 2;
+  const canvasW = svg.clientWidth || 800;
+  const canvasH = svg.clientHeight || 600;
+  let extraTop = 0, extraBottom = 0;
+  if (rawH / canvasH > rawW / canvasW) {
+    // Height-constrained: viewBox height maps exactly to canvas height
+    const topClearPx = 48;
+    const bottomClearPx = 52;
+    const usableFrac = 1 - (topClearPx + bottomClearPx) / canvasH;
+    const finalH = rawH / usableFrac;
+    extraTop = Math.max(0, finalH * (topClearPx / canvasH) - pad);
+    extraBottom = Math.max(0, finalH * (bottomClearPx / canvasH) - pad);
+  }
+  const contentW = rawW;
+  const contentH = rawH + extraTop + extraBottom;
+  svg.setAttribute('viewBox', `${minX - pad} ${minY - pad - extraTop} ${contentW} ${contentH}`);
   svg.style.width = '100%';
   svg.style.height = '100%';
 
@@ -2661,15 +2337,29 @@ function renderSVG() {
         let endPt = pts[pts.length - 1];
 
         if (fromIsDiamond) {
-          startPt = clipToDiamond(fromCx, fromCy, from.w / 2, from.h / 2, pts[1] ? pts[1].x : endPt.x, pts[1] ? pts[1].y : endPt.y);
+          // Use pre-computed context-aware port for outgoing edges
+          const portKey = c.from + '->' + c.to;
+          if (diamondPorts && diamondPorts[portKey]) {
+            startPt = diamondPorts[portKey];
+          } else {
+            startPt = clipToDiamond(fromCx, fromCy, from.w / 2, from.h / 2, pts[1] ? pts[1].x : endPt.x, pts[1] ? pts[1].y : endPt.y);
+          }
         }
         if (toIsDiamond) {
+          // Use simple direction-based snap for incoming edges
           const prevPt = pts.length > 2 ? pts[pts.length - 2] : startPt;
           endPt = clipToDiamond(toCx, toCy, to.w / 2, to.h / 2, prevPt.x, prevPt.y);
+          endPt = snapToDiamondPort(toCx, toCy, to.w / 2, to.h / 2, endPt);
         }
 
-        // Build rounded polyline through dagre waypoints
-        const allPts = [startPt, ...pts.slice(1, -1), endPt];
+        // When an explicit port hint overrides dagre's exit point, discard
+        // dagre's intermediate waypoints — they were computed for a different
+        // exit direction and create kinks.  Draw a direct line instead.
+        // Skip dagre waypoints for port-hinted edges (they create kinks),
+        // but keep them for backloops which need waypoints to route around nodes.
+        const hasPortHint = c.port && c.type !== 'backloop' && diamondPorts && diamondPorts[c.from + '->' + c.to];
+        const midPts = hasPortHint ? [] : pts.slice(1, -1);
+        const allPts = [startPt, ...midPts, endPt];
         if (allPts.length === 2) {
           html += `<path d="M${allPts[0].x},${allPts[0].y} L${allPts[1].x},${allPts[1].y}" stroke="${strokeColor}" stroke-width="1.5" fill="none" stroke-dasharray="${dashArray}" marker-end="${marker}" opacity="0.6"/>`;
         } else {
@@ -2692,13 +2382,25 @@ function renderSVG() {
 
         // Label position along dagre path
         if (c.label && from.shape === 'diamond') {
-          // Position label near source diamond (~30% along path)
-          const totalLen = allPts.length - 1;
-          const fracIdx = totalLen * 0.3;
-          const lo = Math.floor(fracIdx), hi = Math.min(lo + 1, allPts.length - 1);
-          const t = fracIdx - lo;
-          sx = allPts[lo].x + (allPts[hi].x - allPts[lo].x) * t;
-          sy = allPts[lo].y + (allPts[hi].y - allPts[lo].y) * t;
+          // Position label near source diamond — dynamic distance based on
+          // edge direction and label width to prevent overlap
+          const segDx = allPts[1].x - allPts[0].x;
+          const segDy = allPts[1].y - allPts[0].y;
+          const segLen = Math.sqrt(segDx * segDx + segDy * segDy);
+          if (segLen > 1) {
+            const tw = c.label.length * 5.5 + 10; // label pill width
+            const horizBias = Math.abs(segDx) / segLen; // 0=vertical, 1=horizontal
+            const vertBias = Math.abs(segDy) / segLen;
+            // Horizontal edges need more distance for wide labels (tw/2 + gap)
+            // Vertical edges need less (just pill half-height + gap)
+            const minDist = horizBias * (tw / 2 + 8) + vertBias * 22;
+            const dist = Math.max(minDist, segLen * 0.3);
+            sx = allPts[0].x + (segDx / segLen) * dist;
+            sy = allPts[0].y + (segDy / segLen) * dist;
+          } else {
+            sx = allPts[0].x;
+            sy = allPts[0].y;
+          }
         } else if (allPts.length % 2 === 1) {
           const mi = Math.floor(allPts.length / 2);
           sx = allPts[mi].x; sy = allPts[mi].y;
@@ -2793,12 +2495,22 @@ function renderSVG() {
     if (n.shape === 'diamond') {
       const hw = n.w / 2, hh = n.h / 2;
       html += `<polygon points="${cx},${cy - hh} ${cx + hw},${cy} ${cx},${cy + hh} ${cx - hw},${cy}" fill="${n.bg}" stroke="${n.color}" stroke-width="${strokeW}" stroke-opacity="${strokeOpacity}"/>`;
-      // Text wrapping for diamonds: split long labels
+      // Text wrapping for diamonds: split long labels at nearest space to midpoint
       const label = n.label;
       if (label.length > 12) {
         const mid = Math.ceil(label.length / 2);
-        const spaceIdx = label.lastIndexOf(' ', mid);
-        const breakAt = spaceIdx > 3 ? spaceIdx : mid;
+        const spaceBefore = label.lastIndexOf(' ', mid);
+        const spaceAfter = label.indexOf(' ', mid);
+        let breakAt;
+        if (spaceBefore <= 0 && (spaceAfter < 0 || spaceAfter >= label.length - 1)) {
+          breakAt = mid;
+        } else if (spaceBefore <= 0) {
+          breakAt = spaceAfter;
+        } else if (spaceAfter < 0 || spaceAfter >= label.length - 1) {
+          breakAt = spaceBefore;
+        } else {
+          breakAt = (mid - spaceBefore <= spaceAfter - mid) ? spaceBefore : spaceAfter;
+        }
         const line1 = label.substring(0, breakAt);
         const line2 = label.substring(breakAt).trim();
         html += `<text x="${cx}" y="${cy - 4}" fill="${n.color}" font-size="11" font-weight="600" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">${line1}</text>`;
@@ -2922,17 +2634,94 @@ canvasArea.addEventListener('click', (e) => {
 // Close md-viewer via backdrop click
 document.getElementById('md-viewer-backdrop').addEventListener('click', closeMdViewer);
 
+// ── Info Panel ──
+document.getElementById('info-panel-backdrop').addEventListener('click', closeInfoPanel);
+
+function openInfoPanel() {
+  if (!state.selectedFlowchart) return;
+  const p = phases[state.selectedFlowchart];
+  const desc = FLOWCHART_DESCS[state.selectedFlowchart];
+  const name = p ? p.label : state.selectedFlowchart;
+  const cmd = p ? p.cmd : '/' + state.selectedFlowchart;
+
+  document.getElementById('info-panel-title').textContent = name;
+
+  let html = `<div class="info-subtitle">${cmd}</div>`;
+
+  if (desc && typeof desc === 'object') {
+    if (desc.summary) html += `<div class="info-summary">${desc.summary}</div>`;
+    if (desc.body) html += `<div class="info-desc">${desc.body}</div>`;
+    if (desc.meta) {
+      html += '<div class="info-meta">';
+      if (desc.meta.complexity) html += `<span><strong>Complexity:</strong> ${desc.meta.complexity}</span>`;
+      if (desc.meta.output) html += `<span><strong>Output:</strong> <code>${desc.meta.output}</code></span>`;
+      if (desc.meta.skill) html += `<span><strong>Skill:</strong> ${desc.meta.skill}</span>`;
+      if (desc.meta.discovery) html += `<span><strong>Discovery:</strong> ${desc.meta.discovery}</span>`;
+      if (desc.meta.cache) html += `<span><strong>Cache:</strong> ${desc.meta.cache}</span>`;
+      html += '</div>';
+    }
+  } else if (desc) {
+    html += `<div class="info-desc">${desc}</div>`;
+  } else if (p && p.desc) {
+    html += `<div class="info-desc">${p.desc}</div>`;
+  }
+
+  if (SOURCE_MAP[state.selectedFlowchart]) {
+    html += `<button class="info-panel-source-btn" onclick="openMdViewer('${state.selectedFlowchart}')">&lt;/&gt; View Source</button>`;
+  }
+
+  document.getElementById('info-panel-body').innerHTML = html;
+  document.getElementById('info-panel').classList.add('open');
+  document.getElementById('info-panel-backdrop').classList.add('visible');
+}
+
+function closeInfoPanel() {
+  document.getElementById('info-panel').classList.remove('open');
+  document.getElementById('info-panel-backdrop').classList.remove('visible');
+}
+
+function openMdViewerFromZoom() {
+  if (!state.selectedFlowchart || !SOURCE_MAP[state.selectedFlowchart]) return;
+  openMdViewer(state.selectedFlowchart);
+}
+
+function updateContextButtons() {
+  const hasFlowchart = !!state.selectedFlowchart;
+  const hasSource = hasFlowchart && !!SOURCE_MAP[state.selectedFlowchart];
+  const infoBtn = document.getElementById('btn-info');
+  const sourceBtn = document.getElementById('btn-source');
+  if (infoBtn) {
+    infoBtn.classList.toggle('disabled', !hasFlowchart);
+  }
+  if (sourceBtn) {
+    sourceBtn.classList.toggle('disabled', !hasSource);
+  }
+}
+
 // ── Interaction ──
+function highlightNavButtons(phase, clickedBtn) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if (!phase) return;
+  if (clickedBtn) {
+    // Highlight only the specific button that was clicked
+    clickedBtn.classList.add('active');
+  } else {
+    // Fallback: highlight by ID (for hash navigation, programmatic calls)
+    const byId = document.getElementById('btn-' + phase);
+    if (byId) byId.classList.add('active');
+  }
+}
+
 function showOverview() {
   state.view = 'overview';
   state.selectedPhase = null;
   state.selectedFlowchart = null;
 
-  document.querySelectorAll('.phase-btn, .cmd-btn, .nav-overview').forEach(b => b.classList.remove('active'));
+  highlightNavButtons(null);
   document.getElementById('btn-overview').classList.add('active');
 
-  document.getElementById('detail-panel').classList.remove('open');
   hideFcTooltip();
+  closeInfoPanel();
   closeMdViewer();
   _layoutCache = {};
 
@@ -2942,13 +2731,14 @@ function showOverview() {
   if (isMobile()) closeSidebar();
 
   if (!_navigatingFromHash) location.hash = 'overview';
-  updatePrompt();
+  updateContextButtons();
   resetZoom();
   renderSVG();
 }
 
-function selectPhase(phase) {
+function selectPhase(phase, clickedBtn) {
   if (isMobile()) closeSidebar();
+  closeInfoPanel();
   closeMdViewer();
   if (!_navigatingFromHash) location.hash = phase;
 
@@ -2958,46 +2748,26 @@ function selectPhase(phase) {
     state.selectedFlowchart = phase;
     state.selectedPhase = phase;
 
-    document.querySelectorAll('.phase-btn, .cmd-btn, .nav-overview').forEach(b => b.classList.remove('active'));
-    const btn = document.getElementById('btn-' + phase);
-    if (btn) btn.classList.add('active');
+    highlightNavButtons(phase, clickedBtn);
 
-    document.getElementById('detail-panel').classList.remove('open');
     hideFcTooltip();
     _layoutCache = {};
 
     document.getElementById('legend-default').style.display = 'none';
     document.getElementById('legend-flowchart').style.display = '';
 
-    updatePrompt();
+    updateContextButtons();
     resetZoom();
     renderSVG();
     return;
   }
 
-  // No flowchart — show detail panel (utility commands)
+  // No flowchart — just highlight sidebar
   state.selectedPhase = phase;
-  document.querySelectorAll('.phase-btn, .cmd-btn, .nav-overview').forEach(b => b.classList.remove('active'));
-  const btn = document.getElementById('btn-' + phase);
-  if (btn) btn.classList.add('active');
+  state.selectedFlowchart = null;
+  highlightNavButtons(phase, clickedBtn);
 
-  const data = phases[phase];
-  if (data && data.detailHTML) {
-    document.getElementById('detail-content').innerHTML = data.detailHTML();
-    document.getElementById('detail-panel').classList.add('open');
-  }
-  updatePrompt();
-  renderSVG();
-}
-
-function closeDetail() {
-  document.getElementById('detail-panel').classList.remove('open');
-  state.selectedPhase = null;
-  document.querySelectorAll('.phase-btn, .cmd-btn').forEach(b => b.classList.remove('active'));
-  if (state.view === 'overview') {
-    document.getElementById('btn-overview').classList.add('active');
-  }
-  updatePrompt();
+  updateContextButtons();
   renderSVG();
 }
 
@@ -3025,7 +2795,7 @@ function resetZoom() {
 
 // Mouse wheel zoom
 canvasArea.addEventListener('wheel', (e) => {
-  if (e.target.closest('.detail-panel') || e.target.closest('.md-viewer')) return;
+  if (e.target.closest('.md-viewer') || e.target.closest('.info-panel')) return;
   e.preventDefault();
   const factor = e.deltaY < 0 ? 1.03 : 1/1.03;
   zoom(factor);
@@ -3034,7 +2804,7 @@ canvasArea.addEventListener('wheel', (e) => {
 // Pan
 let isPanning = false, panStart = { x: 0, y: 0 }, vbStart = [0,0,0,0];
 canvasArea.addEventListener('mousedown', (e) => {
-  if (e.target.closest('.svg-node') || e.target.closest('.detail-panel') || e.target.closest('.md-viewer')) return;
+  if (e.target.closest('.svg-node') || e.target.closest('.md-viewer') || e.target.closest('.info-panel')) return;
   isPanning = true;
   panStart = { x: e.clientX, y: e.clientY };
   vbStart = svg.getAttribute('viewBox').split(' ').map(Number);
@@ -3066,7 +2836,7 @@ function touchMidpoint(t) {
 }
 
 canvasArea.addEventListener('touchstart', (e) => {
-  if (e.target.closest('.detail-panel') || e.target.closest('.zoom-controls') || e.target.closest('.md-viewer')) return;
+  if (e.target.closest('.zoom-controls') || e.target.closest('.md-viewer') || e.target.closest('.info-panel')) return;
   const t = e.touches;
   if (t.length === 2) {
     // Start pinch
@@ -3084,7 +2854,7 @@ canvasArea.addEventListener('touchstart', (e) => {
 }, { passive: true });
 
 canvasArea.addEventListener('touchmove', (e) => {
-  if (e.target.closest('.detail-panel') || e.target.closest('.zoom-controls') || e.target.closest('.md-viewer')) return;
+  if (e.target.closest('.zoom-controls') || e.target.closest('.md-viewer') || e.target.closest('.info-panel')) return;
   e.preventDefault();
   const t = e.touches;
   if (pinching && t.length === 2) {
@@ -3113,59 +2883,15 @@ canvasArea.addEventListener('touchend', (e) => {
   if (e.touches.length < 1) touchPanning = false;
 }, { passive: true });
 
-// ── Info Bar ──
-function updatePrompt() {
-  const bar = document.getElementById('info-bar');
-
-  if (state.view === 'flowchart' && state.selectedFlowchart) {
-    const p = phases[state.selectedFlowchart];
-    const desc = FLOWCHART_DESCS[state.selectedFlowchart];
-    const name = p ? p.label : state.selectedFlowchart;
-    const cmd = p ? p.cmd : '/' + state.selectedFlowchart;
-
-    const hasSource = !!SOURCE_MAP[state.selectedFlowchart];
-    const sourceBtn = hasSource ? ` <button class="view-source-btn" onclick="openMdViewer('${state.selectedFlowchart}')">&lt;/&gt; Source</button>` : '';
-
-    if (desc && typeof desc === 'object') {
-      let html = `<div class="info-title">${name}${sourceBtn}</div>`;
-      html += `<div class="info-subtitle">${cmd}</div>`;
-      html += `<div class="info-body">${desc.summary ? `<p><strong>${desc.summary}</strong></p>` : ''}${desc.body || ''}</div>`;
-      if (desc.meta) {
-        html += '<div class="info-meta">';
-        if (desc.meta.complexity) html += `<span><strong>Complexity:</strong> ${desc.meta.complexity}</span>`;
-        if (desc.meta.output) html += `<span><strong>Output:</strong> <code>${desc.meta.output}</code></span>`;
-        if (desc.meta.skill) html += `<span><strong>Skill:</strong> ${desc.meta.skill}</span>`;
-        if (desc.meta.discovery) html += `<span><strong>Discovery:</strong> ${desc.meta.discovery}</span>`;
-        if (desc.meta.cache) html += `<span><strong>Cache:</strong> ${desc.meta.cache}</span>`;
-        html += '</div>';
-      }
-      bar.innerHTML = html;
-    } else {
-      bar.innerHTML = `<div class="info-title">${name}${sourceBtn}</div><div class="info-subtitle">${cmd}</div><div class="info-body">${desc || ''}</div>`;
-    }
-    bar.scrollTop = 0;
-    return;
-  }
-
-  if (!state.selectedPhase) {
-    const msg = state.view === 'overview'
-      ? 'The 6-phase workflow pipeline. Click any phase to view its command flowchart.'
-      : 'Select a command or skill to view its flowchart, or click Overview to return.';
-    bar.innerHTML = `<div class="info-body">${msg}</div>`;
-    return;
-  }
-
-  const p = phases[state.selectedPhase];
-  if (!p) return;
-  bar.innerHTML = `<div class="info-title">${p.label}</div><div class="info-subtitle">${p.cmd}</div><div class="info-body">${p.desc || ''}</div>`;
-  bar.scrollTop = 0;
-}
-
 // ── Hash Navigation ──
 let _navigatingFromHash = false;
 
 function navigateFromHash() {
   const hash = location.hash.replace('#', '');
+  // Skip if we're already viewing this phase (avoids re-highlighting from programmatic hash changes)
+  const currentKey = state.selectedFlowchart || state.selectedPhase;
+  if (hash && hash === currentKey) return;
+  if ((!hash || hash === 'overview') && state.view === 'overview') return;
   _navigatingFromHash = true;
   if (!hash || hash === 'overview') {
     showOverview();
@@ -3184,8 +2910,8 @@ if (location.hash && location.hash !== '#' && location.hash !== '#overview') {
   navigateFromHash();
 } else {
   renderSVG();
-  updatePrompt();
   document.getElementById('btn-overview').classList.add('active');
+  updateContextButtons();
 }
 </script>
 </body>
