@@ -120,8 +120,11 @@ First, choose the Output Format.
 Present the recommendation:
 
 > "Existing plans use **{format}**. Use the same format for consistency?
-> - **yes** — use {format}
-> - **no** — see all available formats"
+>
+> · · ·
+>
+> - **`y`/`yes`** — Use {format}
+> - **`n`/`no`** — See all available formats"
 
 **STOP.** Wait for user choice. If declined, fall through to the full list below.
 
