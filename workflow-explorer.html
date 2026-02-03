@@ -52,17 +52,17 @@
     - var(--routing)   amber       — non-blocking decision diamonds
     - var(--gate)      red         — STOP/BLOCK nodes (hard-cornered rects), refresh-cache
     - var(--discovery) green       — discovery script execution
-    - var(--skill)     orange      — skill invocation pills (with skillLink)
-    - var(--next)      green       — next-phase navigation pills
+    - var(--skill)     orange      — skill invocation nodes (rect, with skillLink)
+    - var(--next)      blue        — next-phase navigation nodes (rect, command color, same shape as agent nodes)
     - var(--accent)    blue        — entry points, migrations, git commits
     - var(--{phase})   phase color — output artifact pills only (keeps phase identity)
 
   Conventions:
-    - Clicking flowchart nodes with `desc` shows a tooltip; nodes with `skillLink` navigate to that skill/agent's flowchart.
+    - Clicking flowchart nodes with `desc` shows a tooltip; nodes with `skillLink` show tooltip first with a navigation link.
     - Overview nodes with `phase` are clickable and route to selectPhase().
     - The info panel (ⓘ button) shows contextual info for the current flowchart.
-    - Skill flowcharts (except skill-review) have a `next` pill node at the end, always green (#34d399),
-      connected from `end` via `type: 'transition'`, using `skillLink` for navigation.
+    - Skill flowcharts (except skill-review) have a `next` rect node at the end, command blue (var(--next)),
+      connected from `end` via `type: 'transition'`, using `skillLink` for navigation. Badges (AGT/SKL/CMD) auto-render.
     - SOURCE_MAP must be updated when source files are renamed or added.
 
   Key sections (search terms):
@@ -112,8 +112,8 @@
     --discovery-bg: rgba(52,211,153,0.15);
     --skill: #f97316;
     --skill-bg: rgba(249,115,22,0.15);
-    --next: #34d399;
-    --next-bg: rgba(52,211,153,0.15);
+    --next: #6c8aff;
+    --next-bg: rgba(108,138,255,0.15);
     --agent: #22d3ee;
     --agent-bg: rgba(34,211,238,0.15);
   }
@@ -728,6 +728,247 @@
     display: none;
   }
   .fc-tooltip-source:hover { border-color: var(--accent); color: var(--text); }
+  .fc-tooltip-link {
+    display: none;
+    margin-top: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    cursor: pointer;
+    text-decoration: none;
+    opacity: 0.85;
+  }
+  .fc-tooltip-link:hover { opacity: 1; text-decoration: underline; }
+
+  /* ── Overview page (HTML, replaces SVG overview) ── */
+  .overview-page { display: none; }
+  .canvas-area.overview-active { overflow-y: auto; touch-action: auto; }
+  .canvas-area.overview-active #svg-canvas { display: none; }
+  .canvas-area.overview-active .zoom-controls { display: none; }
+  .canvas-area.overview-active .overview-page { display: flex; }
+
+  .overview-page {
+    flex-direction: column;
+    align-items: center;
+    padding: 72px 20px 80px;
+    line-height: 1.6;
+    min-height: 100%;
+  }
+
+  .overview-page .ov-hero {
+    max-width: 660px;
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .overview-page .ov-hero h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 18px;
+    color: var(--text);
+  }
+  .overview-page .ov-hero .ov-overview {
+    font-size: 1rem;
+    color: var(--text-dim);
+    line-height: 1.75;
+    margin-bottom: 24px;
+  }
+  .overview-page .ov-hint {
+    display: inline-block;
+    font-size: 0.84rem;
+    color: var(--text-dim);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 20px;
+  }
+  .overview-page .ov-hint code {
+    color: var(--accent);
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.82rem;
+  }
+
+  .ov-grid { position: relative; }
+  .ov-row {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+  }
+  .ov-arrow-h {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    flex-shrink: 0;
+  }
+  .ov-arrow-h svg { overflow: visible; }
+
+  /* Phase cards */
+  .ov-card {
+    position: relative;
+    width: 240px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top-width: 3px;
+    border-radius: 10px;
+    padding: 20px 18px 16px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.18s;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+  .ov-card[data-phase="research"]       { border-top-color: var(--research); }
+  .ov-card[data-phase="discussion"]      { border-top-color: var(--discussion); }
+  .ov-card[data-phase="specification"]   { border-top-color: var(--specification); }
+  .ov-card[data-phase="planning"]        { border-top-color: var(--planning); }
+  .ov-card[data-phase="implementation"]  { border-top-color: var(--implementation); }
+  .ov-card[data-phase="review"]          { border-top-color: var(--review); }
+
+  .ov-card[data-phase="research"]:hover       { border-color: var(--research);       box-shadow: 0 0 24px -4px rgba(167,139,250,0.25); transform: translateY(-2px); }
+  .ov-card[data-phase="discussion"]:hover      { border-color: var(--discussion);      box-shadow: 0 0 24px -4px rgba(96,165,250,0.25);  transform: translateY(-2px); }
+  .ov-card[data-phase="specification"]:hover   { border-color: var(--specification);   box-shadow: 0 0 24px -4px rgba(52,211,153,0.25);  transform: translateY(-2px); }
+  .ov-card[data-phase="planning"]:hover        { border-color: var(--planning);        box-shadow: 0 0 24px -4px rgba(251,191,36,0.25);  transform: translateY(-2px); }
+  .ov-card[data-phase="implementation"]:hover  { border-color: var(--implementation);  box-shadow: 0 0 24px -4px rgba(249,115,22,0.25);  transform: translateY(-2px); }
+  .ov-card[data-phase="review"]:hover          { border-color: var(--review);          box-shadow: 0 0 24px -4px rgba(244,114,182,0.25); transform: translateY(-2px); }
+
+  .ov-card .ov-watermark {
+    position: absolute;
+    top: 6px; right: 12px;
+    font-size: 64px; font-weight: 800;
+    color: var(--surface2);
+    line-height: 1;
+    pointer-events: none; user-select: none;
+  }
+  .ov-card .ov-phase-name {
+    font-size: 15px; font-weight: 650;
+    color: var(--text);
+    margin-bottom: 8px;
+    position: relative; z-index: 1;
+  }
+  .ov-card .ov-phase-desc {
+    font-size: 11.5px; line-height: 1.55;
+    color: var(--text-dim);
+    position: relative; z-index: 1;
+    flex: 1;
+  }
+
+  /* Badges */
+  .ov-badges {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 12px;
+    position: relative; z-index: 1;
+  }
+  .ov-badge {
+    display: inline-flex; align-items: center;
+    font-size: 10px;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    padding: 3px 8px;
+    border-radius: 5px;
+    white-space: nowrap;
+    line-height: 1.3;
+    border: 1px solid transparent;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .ov-badge-label {
+    color: var(--text-dim);
+    margin-right: 4px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    opacity: 0.7;
+  }
+  .ov-badge-command {
+    color: var(--accent);
+    background: rgba(108, 138, 255, 0.1);
+  }
+  .ov-badge-command.ov-badge-link {
+    cursor: pointer;
+  }
+  .ov-badge-command.ov-badge-link:hover {
+    background: rgba(108, 138, 255, 0.2);
+    border-color: rgba(108, 138, 255, 0.3);
+  }
+  .ov-badge-skill {
+    color: var(--implementation);
+    background: rgba(249, 115, 22, 0.1);
+  }
+  .ov-badge-skill.ov-badge-link {
+    cursor: pointer;
+  }
+  .ov-badge-skill.ov-badge-link:hover {
+    background: rgba(249, 115, 22, 0.2);
+    border-color: rgba(249, 115, 22, 0.3);
+  }
+  .ov-badge-output {
+    color: var(--specification);
+    background: rgba(52, 211, 153, 0.1);
+  }
+
+  /* Wrap connector */
+  .ov-connector-row {
+    width: 100%; height: 56px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .ov-connector-row svg {
+    position: absolute; top: 0;
+    left: 50%; transform: translateX(-50%);
+  }
+
+  /* Shortcut pill */
+  .ov-shortcut-area {
+    position: relative;
+    width: 100%; height: 48px;
+    margin-bottom: 8px;
+  }
+  .ov-shortcut-anchor {
+    position: absolute;
+    left: 696px; transform: translateX(-50%);
+    top: 0;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .ov-shortcut-pill {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface);
+    border: 1px solid rgba(129,140,248,0.3);
+    border-radius: 8px;
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    white-space: nowrap;
+  }
+  .ov-shortcut-pill:hover {
+    border-color: rgba(129,140,248,0.6);
+    box-shadow: 0 0 16px -4px rgba(129,140,248,0.2);
+    transform: translateY(-1px);
+  }
+  .ov-shortcut-pill .ov-pill-cmd {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 12px; color: #818cf8; font-weight: 600;
+  }
+  .ov-shortcut-pill .ov-pill-desc {
+    font-size: 11px; color: var(--text-dim); opacity: 0.7;
+  }
+  .ov-shortcut-arrow {
+    width: 1.5px; height: 12px;
+    margin-top: 4px;
+    background: repeating-linear-gradient(to bottom, rgba(129,140,248,0.5) 0 3px, transparent 3px 5px);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .ov-shortcut-arrow::after {
+    content: '';
+    position: absolute;
+    bottom: -5px; left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid rgba(129,140,248,0.5);
+  }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@dagrejs/dagre@1.1.4/dist/dagre.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked@15.0.6/marked.min.js"></script>
@@ -774,13 +1015,13 @@
 
     <div class="section-label collapsible" onclick="toggleSidebarSection(this)"><span class="chevron">▼</span> Skills</div>
     <div class="collapsible-content" style="max-height:1200px">
-      <div class="dropdown-subheading">Workflow Orchestrators</div>
-      <button class="nav-btn dropdown-btn" data-phase="research" onclick="selectPhase('research',this)"><span class="badge badge-skl">skl</span><span class="btn-label">start-research</span></button>
-      <button class="nav-btn dropdown-btn" data-phase="discussion" onclick="selectPhase('discussion',this)"><span class="badge badge-skl">skl</span><span class="btn-label">start-discussion</span></button>
-      <button class="nav-btn dropdown-btn" data-phase="specification" onclick="selectPhase('specification',this)"><span class="badge badge-skl">skl</span><span class="btn-label">start-specification</span></button>
-      <button class="nav-btn dropdown-btn" data-phase="planning" onclick="selectPhase('planning',this)"><span class="badge badge-skl">skl</span><span class="btn-label">start-planning</span></button>
-      <button class="nav-btn dropdown-btn" data-phase="implementation" onclick="selectPhase('implementation',this)"><span class="badge badge-skl">skl</span><span class="btn-label">start-implementation</span></button>
-      <button class="nav-btn dropdown-btn" data-phase="review" onclick="selectPhase('review',this)"><span class="badge badge-skl">skl</span><span class="btn-label">start-review</span></button>
+      <div class="dropdown-subheading">Workflow Commands</div>
+      <button class="nav-btn dropdown-btn" data-phase="research" onclick="selectPhase('research',this)"><span class="badge badge-cmd">cmd</span><span class="btn-label">start-research</span></button>
+      <button class="nav-btn dropdown-btn" data-phase="discussion" onclick="selectPhase('discussion',this)"><span class="badge badge-cmd">cmd</span><span class="btn-label">start-discussion</span></button>
+      <button class="nav-btn dropdown-btn" data-phase="specification" onclick="selectPhase('specification',this)"><span class="badge badge-cmd">cmd</span><span class="btn-label">start-specification</span></button>
+      <button class="nav-btn dropdown-btn" data-phase="planning" onclick="selectPhase('planning',this)"><span class="badge badge-cmd">cmd</span><span class="btn-label">start-planning</span></button>
+      <button class="nav-btn dropdown-btn" data-phase="implementation" onclick="selectPhase('implementation',this)"><span class="badge badge-cmd">cmd</span><span class="btn-label">start-implementation</span></button>
+      <button class="nav-btn dropdown-btn" data-phase="review" onclick="selectPhase('review',this)"><span class="badge badge-cmd">cmd</span><span class="btn-label">start-review</span></button>
       <div class="dropdown-subheading">Workflow Skills</div>
       <button class="nav-btn dropdown-btn" data-phase="skill-research" onclick="selectPhase('skill-research',this)"><span class="badge badge-skl">skl</span><span class="btn-label">technical-research</span></button>
       <button class="nav-btn dropdown-btn" data-phase="skill-discussion" onclick="selectPhase('skill-discussion',this)"><span class="badge badge-skl">skl</span><span class="btn-label">technical-discussion</span></button>
@@ -826,9 +1067,9 @@
         <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--gate-bg);border-color:var(--gate);border-radius:3px"></div></div> STOP / BLOCK</div>
         <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--ask-bg);border-color:var(--ask)"></div></div> User interaction</div>
         <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--discovery-bg);border-color:var(--discovery)"></div></div> Discovery script</div>
-        <div class="legend-item"><div class="legend-icon"><div class="legend-shape-pill" style="background:var(--skill-bg);border-color:var(--skill)"></div></div> Skill handoff</div>
+        <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--skill-bg);border-color:var(--skill)"></div></div> Skill handoff</div>
         <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--agent-bg);border-color:var(--agent)"></div></div> Agent invocation</div>
-        <div class="legend-item"><div class="legend-icon"><div class="legend-shape-pill" style="background:var(--next-bg);border-color:var(--next)"></div></div> Next phase</div>
+        <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--next-bg);border-color:var(--next)"></div></div> Next command</div>
         <div class="legend-item"><div class="legend-icon"><div class="legend-line" style="background:#34d399"></div></div> Yes branch</div>
         <div class="legend-item"><div class="legend-icon"><div class="legend-line" style="background:#f43f5e"></div></div> No branch</div>
         <div class="legend-item"><div class="legend-icon"><div class="legend-line dashed" style="background:repeating-linear-gradient(90deg, #f97316 0 6px, transparent 6px 10px)"></div></div> Skill transition</div>
@@ -851,6 +1092,112 @@
   <!-- Canvas -->
   <div class="canvas-area" id="canvas-area">
     <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar"><svg style="width:12px;height:10px;flex-shrink:0" viewBox="0 0 12 10" fill="none"><rect y="0" width="12" height="1.5" rx="0.75" fill="currentColor"/><rect y="4.25" width="12" height="1.5" rx="0.75" fill="currentColor"/><rect y="8.5" width="12" height="1.5" rx="0.75" fill="currentColor"/></svg></button>
+
+    <!-- Overview page (HTML, shown instead of SVG in overview mode) -->
+    <div class="overview-page" id="overview-page">
+      <section class="ov-hero">
+        <h1>Technical Workflow System</h1>
+        <p class="ov-overview">
+          A structured pipeline for turning ideas into verified production code.
+          Six phases guide you from early exploration through architecture decisions,
+          validated specifications, implementation planning, test-driven development,
+          and final review. Start anywhere &mdash; each phase builds on the artifacts of the previous.
+        </p>
+        <div class="ov-hint">
+          Run <code>/start-research</code> to begin exploring, or <code>/start-feature</code> to jump straight to specification.
+        </div>
+      </section>
+
+      <div class="ov-grid">
+        <div class="ov-shortcut-area">
+          <div class="ov-shortcut-anchor">
+            <div class="ov-shortcut-pill" onclick="selectPhase('start-feature')">
+              <span class="ov-pill-cmd">/start-feature</span>
+              <span class="ov-pill-desc">skip to spec</span>
+            </div>
+            <div class="ov-shortcut-arrow"></div>
+          </div>
+        </div>
+
+        <div class="ov-row">
+          <div class="ov-card" data-phase="research" onclick="selectPhase('research')">
+            <span class="ov-watermark">1</span>
+            <div class="ov-phase-name">Research</div>
+            <div class="ov-phase-desc">Explore ideas, feasibility, and validate concepts across technical and market domains</div>
+            <div class="ov-badges">
+              <span class="ov-badge ov-badge-command ov-badge-link" onclick="event.stopPropagation(); selectPhase('research')"><span class="ov-badge-label">cmd</span>/start-research</span>
+              <span class="ov-badge ov-badge-skill ov-badge-link" onclick="event.stopPropagation(); selectPhase('skill-research')"><span class="ov-badge-label">skill</span>technical-research</span>
+              <span class="ov-badge ov-badge-output"><span class="ov-badge-label">output</span>docs/workflow/research/</span>
+            </div>
+          </div>
+          <div class="ov-arrow-h"><svg width="48" height="12" viewBox="0 0 48 12"><line x1="4" y1="6" x2="38" y2="6" stroke="#8b90a0" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="4,3"/><polygon points="38,2 46,6 38,10" fill="#8b90a0" fill-opacity="0.4"/></svg></div>
+          <div class="ov-card" data-phase="discussion" onclick="selectPhase('discussion')">
+            <span class="ov-watermark">2</span>
+            <div class="ov-phase-name">Discussion</div>
+            <div class="ov-phase-desc">Capture architecture decisions, debates, edge cases, and their rationale</div>
+            <div class="ov-badges">
+              <span class="ov-badge ov-badge-command ov-badge-link" onclick="event.stopPropagation(); selectPhase('discussion')"><span class="ov-badge-label">cmd</span>/start-discussion</span>
+              <span class="ov-badge ov-badge-skill ov-badge-link" onclick="event.stopPropagation(); selectPhase('skill-discussion')"><span class="ov-badge-label">skill</span>technical-discussion</span>
+              <span class="ov-badge ov-badge-output"><span class="ov-badge-label">output</span>docs/workflow/discussion/</span>
+            </div>
+          </div>
+          <div class="ov-arrow-h"><svg width="48" height="12" viewBox="0 0 48 12"><line x1="4" y1="6" x2="38" y2="6" stroke="#8b90a0" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="4,3"/><polygon points="38,2 46,6 38,10" fill="#8b90a0" fill-opacity="0.4"/></svg></div>
+          <div class="ov-card" data-phase="specification" onclick="selectPhase('specification')">
+            <span class="ov-watermark">3</span>
+            <div class="ov-phase-name">Specification</div>
+            <div class="ov-phase-desc">Build validated specifications from discussions &mdash; filter hallucinations, enrich gaps</div>
+            <div class="ov-badges">
+              <span class="ov-badge ov-badge-command ov-badge-link" onclick="event.stopPropagation(); selectPhase('specification')"><span class="ov-badge-label">cmd</span>/start-specification</span>
+              <span class="ov-badge ov-badge-skill ov-badge-link" onclick="event.stopPropagation(); selectPhase('skill-specification')"><span class="ov-badge-label">skill</span>technical-specification</span>
+              <span class="ov-badge ov-badge-output"><span class="ov-badge-label">output</span>docs/workflow/specification/</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ov-connector-row">
+          <svg width="816" height="56" viewBox="0 0 816 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs><marker id="ov-arrow-wrap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><polygon points="0,0 8,4 0,8" fill="#8b90a0" fill-opacity="0.4"/></marker></defs>
+            <path d="M 696 0 L 696 18 Q 696 28 686 28 L 130 28 Q 120 28 120 38 L 120 56" stroke="#8b90a0" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="4,3" fill="none" marker-end="url(#ov-arrow-wrap)"/>
+          </svg>
+        </div>
+
+        <div class="ov-row">
+          <div class="ov-card" data-phase="planning" onclick="selectPhase('planning')">
+            <span class="ov-watermark">4</span>
+            <div class="ov-phase-name">Planning</div>
+            <div class="ov-phase-desc">Transform specs into phased plans with tasks, acceptance criteria, and dependencies</div>
+            <div class="ov-badges">
+              <span class="ov-badge ov-badge-command ov-badge-link" onclick="event.stopPropagation(); selectPhase('planning')"><span class="ov-badge-label">cmd</span>/start-planning</span>
+              <span class="ov-badge ov-badge-skill ov-badge-link" onclick="event.stopPropagation(); selectPhase('skill-planning')"><span class="ov-badge-label">skill</span>technical-planning</span>
+              <span class="ov-badge ov-badge-output"><span class="ov-badge-label">output</span>docs/workflow/planning/</span>
+            </div>
+          </div>
+          <div class="ov-arrow-h"><svg width="48" height="12" viewBox="0 0 48 12"><line x1="4" y1="6" x2="38" y2="6" stroke="#8b90a0" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="4,3"/><polygon points="38,2 46,6 38,10" fill="#8b90a0" fill-opacity="0.4"/></svg></div>
+          <div class="ov-card" data-phase="implementation" onclick="selectPhase('implementation')">
+            <span class="ov-watermark">5</span>
+            <div class="ov-phase-name">Implementation</div>
+            <div class="ov-phase-desc">Execute plan via agent-based TDD &mdash; executor and reviewer per task</div>
+            <div class="ov-badges">
+              <span class="ov-badge ov-badge-command ov-badge-link" onclick="event.stopPropagation(); selectPhase('implementation')"><span class="ov-badge-label">cmd</span>/start-implementation</span>
+              <span class="ov-badge ov-badge-skill ov-badge-link" onclick="event.stopPropagation(); selectPhase('skill-implementation')"><span class="ov-badge-label">skill</span>technical-implementation</span>
+              <span class="ov-badge ov-badge-output"><span class="ov-badge-label">output</span>committed code</span>
+            </div>
+          </div>
+          <div class="ov-arrow-h"><svg width="48" height="12" viewBox="0 0 48 12"><line x1="4" y1="6" x2="38" y2="6" stroke="#8b90a0" stroke-opacity="0.4" stroke-width="1.5" stroke-dasharray="4,3"/><polygon points="38,2 46,6 38,10" fill="#8b90a0" fill-opacity="0.4"/></svg></div>
+          <div class="ov-card" data-phase="review" onclick="selectPhase('review')">
+            <span class="ov-watermark">6</span>
+            <div class="ov-phase-name">Review</div>
+            <div class="ov-phase-desc">Verify implementation against plan using parallel verification agents</div>
+            <div class="ov-badges">
+              <span class="ov-badge ov-badge-command ov-badge-link" onclick="event.stopPropagation(); selectPhase('review')"><span class="ov-badge-label">cmd</span>/start-review</span>
+              <span class="ov-badge ov-badge-skill ov-badge-link" onclick="event.stopPropagation(); selectPhase('skill-review')"><span class="ov-badge-label">skill</span>technical-review</span>
+              <span class="ov-badge ov-badge-output"><span class="ov-badge-label">output</span>review verdicts</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <svg id="svg-canvas" xmlns="http://www.w3.org/2000/svg"></svg>
     <div class="zoom-controls">
       <button class="zoom-btn" onclick="zoom(1.15)">+</button>
@@ -864,6 +1211,7 @@
       <button class="fc-tooltip-source" id="fc-tooltip-source" onclick="openMdViewerFromTooltip()" title="View source">&lt;/&gt;</button>
       <div id="fc-tooltip-title"></div>
       <div id="fc-tooltip-desc"></div>
+      <a id="fc-tooltip-link" class="fc-tooltip-link" href="#" onclick="navigateFromTooltip(); return false;"></a>
     </div>
     <div class="info-panel-backdrop" id="info-panel-backdrop"></div>
     <div class="info-panel" id="info-panel">
@@ -1198,7 +1546,7 @@ const FLOWCHARTS = {
       { id: 'ask2', label: 'ASK: What do you know?', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 2: Understand current knowledge - any initial thoughts, research, or constraints.' },
       { id: 'ask3', label: 'ASK: Where to start?', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 3: Determine starting point - technical feasibility, market, business, or open exploration.' },
       { id: 'ask4', label: 'ASK: Constraints?', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 4: Gather final context - any constraints or context to know upfront.' },
-      { id: 'skill', label: 'Invoke research skill', shape: 'pill', w: 170, h: 40, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 5: Invoke the technical-research skill with all gathered context.', skillLink: 'skill-research' },
+      { id: 'skill', label: 'Invoke research skill', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 5: Invoke the technical-research skill with all gathered context.', skillLink: 'skill-research' },
     ],
     connections: [
       { from: 'start', to: 'migrate' },
@@ -1226,7 +1574,7 @@ const FLOWCHARTS = {
       { id: 'continue', label: 'Continue discussion', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'User chose to continue an existing discussion. Read existing doc first.' },
       { id: 'refresh', label: 'Refresh cache', w: 180, h: 44, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'User chose refresh: Delete cache file, return to Step 3 to re-analyze research.' },
       { id: 'gather', label: 'ASK: Context & constraints', w: 205, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 6: Gather context - core problem/decision, constraints, codebase files to review.' },
-      { id: 'skill', label: 'Invoke discussion skill', shape: 'pill', w: 180, h: 40, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 7: Invoke technical-discussion skill with gathered context.', skillLink: 'skill-discussion' },
+      { id: 'skill', label: 'Invoke discussion skill', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 7: Invoke technical-discussion skill with gathered context.', skillLink: 'skill-discussion' },
     ],
     connections: [
       { from: 'start', to: 'migrate' },
@@ -1276,7 +1624,7 @@ const FLOWCHARTS = {
       { id: 'individual', label: 'ASK: Which discussion?', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Individual specifications: 1:1 mapping. Ask which discussion to specify.' },
       { id: 'confirm', label: 'ASK: Confirm selection', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 9: Confirm selection - show sources, output path, supersede info. Wait for y/n.' },
       { id: 'add-ctx', label: 'ASK: Additional context', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 10: Gather additional context, priorities, constraints since discussion concluded.' },
-      { id: 'skill', label: 'Invoke specification skill', shape: 'pill', w: 205, h: 40, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 11: Invoke technical-specification skill with all gathered context.', skillLink: 'skill-specification' },
+      { id: 'skill', label: 'Invoke specification skill', w: 210, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 11: Invoke technical-specification skill with all gathered context.', skillLink: 'skill-specification' },
     ],
     connections: [
       { from: 'start', to: 'migrate' },
@@ -1323,7 +1671,7 @@ const FLOWCHARTS = {
       { id: 'plan-state', label: 'Existing plan?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 4: Route by plan state. New plan gathers context first; existing plan skips straight to skill invocation.' },
       { id: 'gather', label: 'ASK: Additional context', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 5: Gather additional context, priorities, or constraint changes. Only for new plans.' },
       { id: 'cross-cut', label: 'Surface cross-cutting specs', w: 215, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 6: Read concluded cross-cutting specs and surface relevant ones as reference context for planning. Only for new plans.' },
-      { id: 'skill', label: 'Invoke planning skill', shape: 'pill', w: 170, h: 40, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 7: Invoke technical-planning skill. Handles format selection, phases, tasks, dependencies.', skillLink: 'skill-planning' },
+      { id: 'skill', label: 'Invoke planning skill', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 7: Invoke technical-planning skill. Handles format selection, phases, tasks, dependencies.', skillLink: 'skill-planning' },
     ],
     connections: [
       { from: 'start', to: 'migrate' },
@@ -1355,7 +1703,7 @@ const FLOWCHARTS = {
       { id: 'gate-env', label: 'Env setup?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 5: Check environment setup. Info gathering only — does not execute setup.' },
       { id: 'create-env', label: 'ASK: Setup instructions', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Setup file missing: Ask user for setup instructions, save to environment-setup.md and commit.' },
       { id: 'env-ok', label: 'Environment noted', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Setup exists (no special setup or has instructions). Note for skill handoff.' },
-      { id: 'skill', label: 'Invoke implementation skill', shape: 'pill', w: 215, h: 40, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 6: Invoke technical-implementation skill with plan, format, spec, tracking state, deps, and env info.', skillLink: 'skill-implementation' },
+      { id: 'skill', label: 'Invoke implementation skill', w: 215, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 6: Invoke technical-implementation skill with plan, format, spec, tracking state, deps, and env info.', skillLink: 'skill-implementation' },
     ],
     connections: [
       { from: 'start', to: 'migrate' },
@@ -1388,7 +1736,7 @@ const FLOWCHARTS = {
       { id: 'auto', label: 'Auto-select single', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Only one plan. Auto-select it.' },
       { id: 'ask', label: 'ASK: Which plan?', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Multiple plans. Ask user which to review.' },
       { id: 'scope', label: 'ASK: Review scope', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 4: Choose scope - all changes since plan, specific dirs/files, or from git status.' },
-      { id: 'skill', label: 'Invoke review skill', shape: 'pill', w: 170, h: 40, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 5: Invoke technical-review skill. Reads plan, spec, extracts ALL tasks.', skillLink: 'skill-review' },
+      { id: 'skill', label: 'Invoke review skill', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 5: Invoke technical-review skill. Reads plan, spec, extracts ALL tasks.', skillLink: 'skill-review' },
     ],
     connections: [
       { from: 'start', to: 'migrate' },
@@ -1410,7 +1758,7 @@ const FLOWCHARTS = {
       { id: 'name', label: 'ASK: Suggest topic name', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 2: Suggest a topic name for the specification file based on feature description.' },
       { id: 'check', label: 'Name conflict?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 3: Check docs/workflow/specification/ for naming conflicts.' },
       { id: 'conflict', label: 'ASK: Append / rename / replace', w: 230, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Conflict found: Ask user to append to existing, choose different name, or replace.' },
-      { id: 'skill', label: 'Invoke specification skill', shape: 'pill', w: 205, h: 40, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 4: Invoke technical-specification skill with inline feature context (no discussion doc).', skillLink: 'skill-specification' },
+      { id: 'skill', label: 'Invoke specification skill', w: 210, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 4: Invoke technical-specification skill with inline feature context (no discussion doc).', skillLink: 'skill-specification' },
     ],
     connections: [
       { from: 'start', to: 'gather' },
@@ -1465,7 +1813,7 @@ const FLOWCHARTS = {
       { id: 'split', label: 'Themes emerging?', shape: 'diamond', w: 120, h: 120, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Over multiple sessions, topics may become distinct. Split if so.' },
       { id: 'split-files', label: 'Split into files', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Split exploration.md into semantic files (market-landscape.md, technical-feasibility.md, etc).' },
       { id: 'end', label: 'research/ output', shape: 'pill', w: 150, h: 40, color: 'var(--research)', bg: 'var(--research-bg)', desc: 'Output: docs/workflow/research/ files. Research never "concludes" — always open-ended.' },
-      { id: 'next', label: 'Next: /start-discussion', shape: 'pill', w: 180, h: 40, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'discussion' },
+      { id: 'next', label: 'Invoke /start-discussion', desc: 'Navigate to the discussion command to begin capturing architecture decisions from research output.', w: 200, h: 44, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'discussion' },
     ],
     connections: [
       { from: 'start', to: 'validate' },
@@ -1495,7 +1843,7 @@ const FLOWCHARTS = {
       { id: 'more', label: 'More topics?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Are there more topics to discuss?' },
       { id: 'conclude', label: 'Conclude discussion', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Set status: concluded. All decisions documented. Ready for specification.' },
       { id: 'end', label: 'discussion/{topic}.md', shape: 'pill', w: 175, h: 40, color: 'var(--discussion)', bg: 'var(--discussion-bg)', desc: 'Output: Concluded discussion document ready for specification phase.' },
-      { id: 'next', label: 'Next: /start-specification', shape: 'pill', w: 205, h: 40, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'specification' },
+      { id: 'next', label: 'Invoke /start-specification', desc: 'Navigate to the specification command to build a validated spec from concluded discussions.', w: 210, h: 44, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'specification' },
     ],
     connections: [
       { from: 'start', to: 'validate' },
@@ -1527,7 +1875,7 @@ const FLOWCHARTS = {
       { id: 'supersede', label: 'Supersede source specs', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'If sources included existing specs, mark them superseded_by new spec.' },
       { id: 'signoff', label: 'User sign-off', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Final user approval of the complete specification.' },
       { id: 'end', label: 'specification/{topic}.md', shape: 'pill', w: 190, h: 40, color: 'var(--specification)', bg: 'var(--specification-bg)', desc: 'Output: Validated, standalone specification — the golden document.' },
-      { id: 'next', label: 'Next: /start-planning', shape: 'pill', w: 180, h: 40, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'planning' },
+      { id: 'next', label: 'Invoke /start-planning', desc: 'Navigate to the planning command to create phased implementation tasks from the specification.', w: 200, h: 44, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'planning' },
     ],
     connections: [
       { from: 'start', to: 'validate' },
@@ -1537,10 +1885,10 @@ const FLOWCHARTS = {
       { from: 'filter', to: 'enrich' },
       { from: 'enrich', to: 'present' },
       { from: 'present', to: 'wait' },
-      { from: 'wait', to: 'present', type: 'backloop', label: 'revise' },
+      { from: 'wait', to: 'present', type: 'backloop', label: 'revise', port: 'upper-right' },
       { from: 'wait', to: 'log', type: 'yes', label: 'approved', weight: 2 },
       { from: 'log', to: 'more-topics' },
-      { from: 'more-topics', to: 'extract', type: 'backloop', label: 'yes' },
+      { from: 'more-topics', to: 'extract', type: 'backloop', label: 'yes', port: 'upper-right' },
       { from: 'more-topics', to: 'final-review', type: 'no', label: 'all done' },
       { from: 'final-review', to: 'supersede' },
       { from: 'supersede', to: 'signoff' },
@@ -1556,16 +1904,35 @@ const FLOWCHARTS = {
       { id: 'init', label: 'Initialize plan', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 1: Create plan index file. Choose output format.' },
       { id: 'load-existing', label: 'Load existing plan', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Continue: load existing plan and output format adapter.' },
       { id: 'principles', label: 'Load principles', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 2: Load planning-principles.md. Internalize constraints.' },
-      { id: 'verify', label: 'Verify source material', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 3: Verify specification is complete. Check cross-cutting references.' },
-      { id: 'plan-construction', label: 'Plan construction', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', desc: 'Step 4: Nested loop — invoke phase-designer, task-designer, and task-author agents. Commits after each phase completes.' },
-      { id: 'analyze-graph', label: 'Analyze task graph', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'planning-dependency-grapher', desc: 'Step 5: Invoke planning-dependency-grapher agent. Analyze task dependencies, detect cycles, assign priorities. User approves changes.' },
-      { id: 'deps', label: 'Resolve ext deps', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 6: Identify external dependencies. Match to tasks in other plans if possible. Mark unresolved for /link-dependencies.' },
-      { id: 'review', label: 'Plan review', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 7: Two-part review — traceability (spec ↔ plan) and integrity (structure, quality, dependencies). User resolves findings.' },
-      { id: 'conclude', label: 'Conclude plan', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 8: Set status: concluded. All tasks must be authored.' },
+      { id: 'verify', label: 'Verify source material', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 3: Verify specification files exist. Check cross-cutting references are accessible.' },
+      // Plan construction — Phase structure
+      { id: 'define-phases', label: 'Define phases', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'planning-phase-designer', desc: 'Step 4: Invoke planning-phase-designer agent to design phase structure from specification. If phases already exist (resume), present for review instead.' },
+      { id: 'approve-phases', label: 'ASK: Approve phases?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Present phase structure. User: approve (y), provide feedback (re-invokes phase-designer agent), or navigate to a specific position.' },
+      // Plan construction — Phase loop
+      { id: 'next-phase', label: 'Phases remain?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if unprocessed phases remain. Iterates through each phase in order. User can navigate to any phase at approval gates.' },
+      { id: 'define-tasks', label: 'A. Define tasks', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'planning-task-designer', desc: 'Step A: Invoke planning-task-designer agent to break current phase into tasks with edge cases. If task table exists (resume), present for review — user can approve or request changes (re-invokes agent).' },
+      { id: 'approve-tasks', label: 'ASK: Approve task list?', w: 210, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Present task list for the phase. User: approve (y), provide feedback (re-invokes task-designer agent), or navigate.' },
+      // Plan construction — Task loop
+      { id: 'next-task', label: 'Tasks remain?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check for pending tasks in current phase. Already-authored tasks are skipped with a brief summary. When all tasks are authored, phase is complete.' },
+      { id: 'author-task', label: 'B. Author task', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'planning-task-author', desc: 'Step B: Invoke planning-task-author agent to write full task detail (problem, solution, outcome, acceptance criteria, tests). Parallel authoring of independent tasks is allowed after the first task in a phase is approved.' },
+      { id: 'approve-task', label: 'ASK: Approve task?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Present authored task exactly as it will be written. User: approve (y — logs verbatim), provide feedback (re-invokes task-author agent), or navigate.' },
+      { id: 'log-task', label: 'Log task + commit', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Write task to output format adapter, mark as authored in plan index, advance planning position, commit.' },
+      // Post construction
+      { id: 'analyze-graph', label: 'Analyze task graph', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'planning-dependency-grapher', desc: 'Step 5: Invoke planning-dependency-grapher agent. Clears existing graph, analyzes all tasks, assigns priorities, detects cycles. User approves or requests changes (re-invokes agent).' },
+      { id: 'deps', label: 'Resolve ext deps', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 6: Document external dependencies from specification. Match to tasks in other plans if possible. Reverse-check other plans for deps on this topic. Mark unresolved for /link-dependencies.' },
+      // Review — Traceability
+      { id: 'traceability', label: 'Traceability review', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 7a: Two-direction check — Spec→Plan (completeness: every decision, requirement, edge case covered) and Plan→Spec (fidelity: anti-hallucination, everything traces back to spec). Creates tracking file.' },
+      { id: 'trace-finding', label: 'ASK: Approve fix?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Process findings one at a time. Present finding + proposed fix (update/add/remove task, add/remove phase). User: approve (y — applies verbatim), skip, or request changes. Commits after each.' },
+      // Review — Integrity
+      { id: 'integrity', label: 'Integrity review', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 7b: Standalone plan quality — task template compliance, vertical slicing, phase structure, dependency ordering, task self-containment, granularity, acceptance criteria quality, external dependencies.' },
+      { id: 'integ-finding', label: 'ASK: Approve fix?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Process findings one at a time (Critical/Important/Minor). Present finding + proposed fix. User: approve (y — applies verbatim), skip, or request changes. Commits after each. Tracking file deleted when complete.' },
+      // Conclusion
+      { id: 'conclude', label: 'Conclude plan', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 8: Set status: concluded. Checkpoint: all tasks must be authored before concluding.' },
       { id: 'end', label: 'planning/{topic}.md', shape: 'pill', w: 150, h: 40, color: 'var(--planning)', bg: 'var(--planning-bg)', desc: 'Output: Plan index + authored tasks in chosen output format.' },
-      { id: 'next', label: 'Next: /start-implementation', shape: 'pill', w: 210, h: 40, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'implementation' },
+      { id: 'next', label: 'Invoke /start-implementation', desc: 'Navigate to the implementation command to execute the plan via strict TDD.', w: 215, h: 44, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'implementation' },
     ],
     connections: [
+      // Setup flow
       { from: 'start', to: 'resume' },
       { from: 'resume', to: 'resume-choice', type: 'yes', label: 'exists' },
       { from: 'resume', to: 'init', type: 'no', label: 'new' },
@@ -1574,11 +1941,36 @@ const FLOWCHARTS = {
       { from: 'load-existing', to: 'principles' },
       { from: 'init', to: 'principles' },
       { from: 'principles', to: 'verify' },
-      { from: 'verify', to: 'plan-construction' },
-      { from: 'plan-construction', to: 'analyze-graph' },
+      // Plan construction — phase structure
+      { from: 'verify', to: 'define-phases' },
+      { from: 'define-phases', to: 'approve-phases' },
+      { from: 'approve-phases', to: 'define-phases', type: 'backloop', label: 'revise' },
+      { from: 'approve-phases', to: 'next-phase', type: 'yes', label: 'approved', weight: 2 },
+      // Plan construction — phase loop
+      { from: 'next-phase', to: 'define-tasks', type: 'yes', label: 'has phase', weight: 2 },
+      { from: 'next-phase', to: 'analyze-graph', type: 'no', label: 'all done' },
+      { from: 'define-tasks', to: 'approve-tasks' },
+      { from: 'approve-tasks', to: 'define-tasks', type: 'backloop', label: 'revise' },
+      { from: 'approve-tasks', to: 'next-task', type: 'yes', label: 'approved', weight: 2, toPort: 'upper-left' },
+      // Plan construction — task loop
+      { from: 'next-task', to: 'author-task', type: 'yes', label: 'pending', weight: 2, port: 'lower-left' },
+      { from: 'next-task', to: 'next-phase', type: 'backloop', label: 'phase done', port: 'upper-right' },
+      { from: 'author-task', to: 'approve-task' },
+      { from: 'approve-task', to: 'author-task', type: 'backloop', label: 'revise' },
+      { from: 'approve-task', to: 'log-task', type: 'yes', label: 'approved', weight: 2 },
+      { from: 'log-task', to: 'next-task', type: 'backloop', label: 'next task', toPort: 'lower-right' },
+      // Post construction
       { from: 'analyze-graph', to: 'deps' },
-      { from: 'deps', to: 'review' },
-      { from: 'review', to: 'conclude' },
+      // Review — traceability
+      { from: 'deps', to: 'traceability' },
+      { from: 'traceability', to: 'trace-finding' },
+      { from: 'trace-finding', to: 'traceability', type: 'backloop', label: 'more findings' },
+      { from: 'trace-finding', to: 'integrity', label: 'all processed' },
+      // Review — integrity
+      { from: 'integrity', to: 'integ-finding' },
+      { from: 'integ-finding', to: 'integrity', type: 'backloop', label: 'more findings' },
+      { from: 'integ-finding', to: 'conclude', label: 'all processed' },
+      // Conclusion
       { from: 'conclude', to: 'end' },
       { from: 'end', to: 'next', type: 'transition' },
     ]
@@ -1610,7 +2002,7 @@ const FLOWCHARTS = {
       { id: 'commit', label: 'E. Update + commit', w: 200, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Stage E: Update task in plan (via adapter), mirror to tracking file, commit all changes in one commit: code, tests, plan progress, tracking.' },
       // Completion
       { id: 'end', label: 'Implementation complete', shape: 'pill', w: 190, h: 40, color: 'var(--implementation)', bg: 'var(--implementation-bg)', desc: 'All tasks complete. Set tracking status: completed. Final commit.' },
-      { id: 'next', label: 'Next: /start-review', shape: 'pill', w: 180, h: 40, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'review' },
+      { id: 'next', label: 'Invoke /start-review', desc: 'Navigate to the review command to validate implementation against the plan and specification.', w: 200, h: 44, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'review' },
     ],
     connections: [
       // Setup flow
@@ -1632,10 +2024,10 @@ const FLOWCHARTS = {
       { from: 'exec-blocked', to: 'commit', label: 'skip' },
       // C: Reviewer
       { from: 'reviewer', to: 'review-result' },
-      { from: 'review-result', to: 'gate', type: 'yes', label: 'approved', weight: 2 },
+      { from: 'review-result', to: 'gate', type: 'yes', label: 'approved', weight: 2, toPort: 'upper-right' },
       { from: 'review-result', to: 'review-changes', type: 'no', label: 'needs changes' },
       { from: 'review-changes', to: 'executor', type: 'backloop', label: 'fix' },
-      { from: 'review-changes', to: 'gate', label: 'skip' },
+      { from: 'review-changes', to: 'gate', label: 'skip', toPort: 'upper-left' },
       // D: Task gate
       { from: 'gate', to: 'gate-prompt', label: 'gated' },
       { from: 'gate', to: 'commit', label: 'auto' },
@@ -1909,11 +2301,11 @@ const FLOWCHARTS = {
 
 // ── Next-phase navigation mapping for skill flowcharts ──
 const SKILL_NEXT_PHASE = {
-  'skill-research':       { label: 'Next: /start-discussion',       target: 'discussion',      color: 'var(--next)', bg: 'var(--next-bg)' },
-  'skill-discussion':     { label: 'Next: /start-specification',    target: 'specification',   color: 'var(--next)', bg: 'var(--next-bg)' },
-  'skill-specification':  { label: 'Next: /start-planning',         target: 'planning',        color: 'var(--next)', bg: 'var(--next-bg)' },
-  'skill-planning':       { label: 'Next: /start-implementation',   target: 'implementation',  color: 'var(--next)', bg: 'var(--next-bg)' },
-  'skill-implementation': { label: 'Next: /start-review',           target: 'review',          color: 'var(--next)', bg: 'var(--next-bg)' },
+  'skill-research':       { label: 'Invoke /start-discussion',       target: 'discussion',      color: 'var(--next)', bg: 'var(--next-bg)' },
+  'skill-discussion':     { label: 'Invoke /start-specification',    target: 'specification',   color: 'var(--next)', bg: 'var(--next-bg)' },
+  'skill-specification':  { label: 'Invoke /start-planning',         target: 'planning',        color: 'var(--next)', bg: 'var(--next-bg)' },
+  'skill-planning':       { label: 'Invoke /start-implementation',   target: 'implementation',  color: 'var(--next)', bg: 'var(--next-bg)' },
+  'skill-implementation': { label: 'Invoke /start-review',           target: 'review',          color: 'var(--next)', bg: 'var(--next-bg)' },
 };
 
 // Info bar descriptions — richer content per flowchart
@@ -1939,7 +2331,7 @@ const FLOWCHART_DESCS = {
   planning: {
     summary: 'Transform specifications into phased implementation plans with tasks and acceptance criteria.',
     body: `<p>Discovery classifies into 3 scenarios: <strong>no_specs</strong>, <strong>nothing_actionable</strong>, or <strong>has_options</strong>. After selection, a plan-state check routes new plans through context gathering and cross-cutting spec surfacing, while existing plans skip straight to the skill.</p>
-<p>The <strong>technical-planning</strong> skill runs a 9-step process: resume detection, initialisation, planning principles, source verification, plan construction (phases → tasks → authoring in a nested loop), task graph analysis (dependency-grapher agent), external dependency resolution, plan review (traceability + integrity), and conclusion.</p>`,
+<p>The <strong>technical-planning</strong> skill runs a structured process with three nested loops. <strong>Plan construction</strong> is the core: the <strong>planning-phase-designer</strong> agent designs the phase structure (user approval gate with revision loop), then for each phase the <strong>planning-task-designer</strong> agent breaks it into tasks (approval gate), then for each task the <strong>planning-task-author</strong> agent writes full detail (approval gate, logged on approval). After construction, the <strong>planning-dependency-grapher</strong> agent analyzes the task graph for dependencies and cycles. Finally, a two-part <strong>plan review</strong> — traceability (spec↔plan completeness and anti-hallucination) then integrity (structural quality) — processes findings one at a time with per-finding approval gates.</p>`,
     meta: { output: 'docs/workflow/planning/{topic}.md', skill: 'technical-planning', discovery: 'discovery-for-planning.sh' }
   },
   implementation: {
@@ -1985,10 +2377,12 @@ const FLOWCHART_DESCS = {
     meta: { output: 'docs/workflow/specification/{topic}.md', complexity: 'Collaborative skill' }
   },
   'skill-planning': {
-    summary: 'The planning skill — a 9-step process from resume detection through to plan conclusion.',
-    body: `<p>Steps: <strong>Resume detection</strong> (existing plan? spec changes?) → <strong>Initialise</strong> (choose output format, create plan index) → <strong>Load principles</strong> → <strong>Verify source material</strong> → <strong>Plan construction</strong> (nested loop: phases → tasks → authoring, commits per phase) → <strong>Analyze task graph</strong> (dependency-grapher agent detects cycles, assigns priorities) → <strong>Resolve external dependencies</strong> → <strong>Plan review</strong> (traceability + integrity, two-part) → <strong>Conclude</strong>.</p>
-<p>Plan construction and task graph analysis use specialised subagents for thorough analysis. External dependencies are identified and can be wired up later via <code>/link-dependencies</code>.</p>`,
-    meta: { output: 'docs/workflow/planning/{topic}.md', complexity: '9-step skill' }
+    summary: 'The planning skill — three nested loops with agent-driven phase design, task design, and task authoring.',
+    body: `<p>Setup: <strong>Resume detection</strong> (existing plan? continue/restart? spec-change detection) → <strong>Initialise</strong> (choose output format, create plan index) → <strong>Load principles</strong> → <strong>Verify source material</strong>.</p>
+<p><strong>Plan construction</strong> is a three-level nested loop. Outer: invoke <strong>planning-phase-designer</strong> agent → user approval gate (revise backloop). Middle: for each phase, invoke <strong>planning-task-designer</strong> agent → approval gate. Inner: for each task, invoke <strong>planning-task-author</strong> agent → approval gate → log task + commit. Independent tasks may be authored in parallel. User can navigate to any position at any approval gate.</p>
+<p>Post-construction: <strong>planning-dependency-grapher</strong> agent analyzes the full task graph (dependencies, priorities, cycle detection) → approval gate. <strong>External dependencies</strong> are matched to tasks in other plans or left unresolved for <code>/link-dependencies</code>.</p>
+<p><strong>Plan review</strong> runs two sequential reviews. <strong>Traceability</strong>: spec→plan completeness + plan→spec fidelity (anti-hallucination gate). <strong>Integrity</strong>: standalone structural quality (templates, slicing, dependencies, self-containment, criteria quality). Both create tracking files and process findings one-at-a-time with per-finding approval gates (approve/skip/revise).</p>`,
+    meta: { output: 'docs/workflow/planning/{topic}.md', complexity: 'Multi-loop skill', agents: 'phase-designer, task-designer, task-author, dependency-grapher' }
   },
   'skill-implementation': {
     summary: 'The implementation skill — agent-based TDD with per-task executor, reviewer, and approval gate.',
@@ -2593,10 +2987,24 @@ function renderSVG() {
           }
         }
         if (toIsDiamond) {
-          // Use simple direction-based snap for incoming edges
-          const prevPt = pts.length > 2 ? pts[pts.length - 2] : startPt;
-          endPt = clipToDiamond(toCx, toCy, to.w / 2, to.h / 2, prevPt.x, prevPt.y);
-          endPt = snapToDiamondPort(toCx, toCy, to.w / 2, to.h / 2, endPt);
+          if (c.toPort) {
+            // Explicit incoming port hint — use named position on target diamond
+            const thw = to.w / 2, thh = to.h / 2;
+            const toPortMap = {
+              'left': { x: toCx - thw, y: toCy }, 'right': { x: toCx + thw, y: toCy },
+              'top': { x: toCx, y: toCy - thh }, 'bottom': { x: toCx, y: toCy + thh },
+              'lower-left': { x: toCx - thw / 2, y: toCy + thh / 2 },
+              'lower-right': { x: toCx + thw / 2, y: toCy + thh / 2 },
+              'upper-left': { x: toCx - thw / 2, y: toCy - thh / 2 },
+              'upper-right': { x: toCx + thw / 2, y: toCy - thh / 2 },
+            };
+            endPt = toPortMap[c.toPort] || endPt;
+          } else {
+            // Use simple direction-based snap for incoming edges
+            const prevPt = pts.length > 2 ? pts[pts.length - 2] : startPt;
+            endPt = clipToDiamond(toCx, toCy, to.w / 2, to.h / 2, prevPt.x, prevPt.y);
+            endPt = snapToDiamondPort(toCx, toCy, to.w / 2, to.h / 2, endPt);
+          }
         }
 
         // When an explicit port hint overrides dagre's exit point, discard
@@ -2779,6 +3187,21 @@ function renderSVG() {
         html += `<text x="${cx}" y="${n.y + (n.h > 40 ? 35 : 27)}" fill="${n.color}" font-size="9" text-anchor="middle" opacity="0.6" font-family="SF Mono,monospace">${n.subtitle}</text>`;
       }
     }
+    // Badge for nodes with skillLink (AGT/SKL/CMD) — matches sidebar badge style
+    if (isFlowchart && n.skillLink && FLOWCHARTS[n.skillLink]) {
+      const lt = getLinkType(n.skillLink);
+      const badgeColors = {
+        agt: { bg: 'rgba(34,211,238,0.15)', fg: '#22d3ee', border: 'rgba(34,211,238,0.35)' },
+        skl: { bg: 'rgba(249,115,22,0.15)', fg: '#f97316', border: 'rgba(249,115,22,0.35)' },
+        cmd: { bg: 'rgba(108,138,255,0.15)', fg: '#6c8aff', border: 'rgba(108,138,255,0.35)' },
+      };
+      const bc = badgeColors[lt.badge] || badgeColors.cmd;
+      const bw = 26, bh = 14;
+      const bx = n.x + n.w - bw - 4;
+      const by = n.y + 4;
+      html += `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="3" fill="${bc.bg}" stroke="${bc.border}" stroke-width="0.75"/>`;
+      html += `<text x="${bx + bw/2}" y="${by + 10}" fill="${bc.fg}" font-size="7.5" font-weight="700" letter-spacing="0.5" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">${lt.badge.toUpperCase()}</text>`;
+    }
     html += `</g>`;
   });
 
@@ -2791,12 +3214,6 @@ function renderSVG() {
     if (isFlowchart && nodeId) {
       g.addEventListener('click', (e) => {
         e.stopPropagation();
-        // Check if this node has a skillLink — navigate to skill flowchart
-        const node = nodes.find(n => n.id === nodeId);
-        if (node && node.skillLink && FLOWCHARTS[node.skillLink]) {
-          selectPhase(node.skillLink);
-          return;
-        }
         showFcTooltip(nodeId, g);
       });
     } else if (phase) {
@@ -2806,11 +3223,27 @@ function renderSVG() {
 }
 
 // ── Flowchart Tooltip ──
+function getLinkType(key) {
+  if (key.startsWith('skill-')) return { type: 'skl', label: 'Go to skill \u2192', badge: 'skl' };
+  const p = phases[key];
+  if (p && p.cmd && p.cmd.startsWith('/')) return { type: 'cmd', label: 'Go to command \u2192', badge: 'cmd' };
+  return { type: 'agt', label: 'Go to agent \u2192', badge: 'agt' };
+}
+
+function navigateFromTooltip() {
+  const tooltip = document.getElementById('fc-tooltip');
+  const target = tooltip.dataset.skillLink;
+  if (target && FLOWCHARTS[target]) {
+    hideFcTooltip();
+    selectPhase(target);
+  }
+}
+
 function showFcTooltip(nodeId, gEl) {
   const tooltip = document.getElementById('fc-tooltip');
   const nodes = getNodes();
   const node = nodes.find(n => n.id === nodeId);
-  if (!node || !node.desc) {
+  if (!node || (!node.desc && !node.skillLink)) {
     hideFcTooltip();
     return;
   }
@@ -2822,13 +3255,25 @@ function showFcTooltip(nodeId, gEl) {
   }
 
   document.getElementById('fc-tooltip-title').textContent = node.label;
-  document.getElementById('fc-tooltip-desc').textContent = node.desc;
+  document.getElementById('fc-tooltip-desc').textContent = node.desc || '';
   tooltip.style.borderColor = node.color;
   tooltip.dataset.nodeId = nodeId;
 
   // Show/hide source button based on whether flowchart has a source file
   const sourceBtn = document.getElementById('fc-tooltip-source');
   sourceBtn.style.display = (state.selectedFlowchart && SOURCE_MAP[state.selectedFlowchart]) ? 'inline-block' : 'none';
+
+  // Show/hide navigation link for skillLink nodes
+  const linkEl = document.getElementById('fc-tooltip-link');
+  if (node.skillLink && FLOWCHARTS[node.skillLink]) {
+    const lt = getLinkType(node.skillLink);
+    linkEl.textContent = lt.label;
+    linkEl.style.display = 'block';
+    tooltip.dataset.skillLink = node.skillLink;
+  } else {
+    linkEl.style.display = 'none';
+    tooltip.dataset.skillLink = '';
+  }
 
   // Position tooltip close to the clicked node (prefer above, fallback below/side)
   const svgRect = svg.getBoundingClientRect();
@@ -2842,7 +3287,8 @@ function showFcTooltip(nodeId, gEl) {
 
   const canvasRect = canvasArea.getBoundingClientRect();
   const tooltipW = 300;
-  const tooltipH = 80; // estimated
+  const hasLink = node.skillLink && FLOWCHARTS[node.skillLink];
+  const tooltipH = hasLink ? 100 : 80; // estimated — taller when nav link is shown
 
   // Center horizontally on the node
   let left = nodeCenterScreenX - canvasRect.left - tooltipW / 2;
@@ -2979,8 +3425,9 @@ function showOverview() {
 
   if (!_navigatingFromHash) location.hash = 'overview';
   updateContextButtons();
-  resetZoom();
-  renderSVG();
+
+  // Show HTML overview, hide SVG canvas
+  canvasArea.classList.add('overview-active');
 }
 
 function selectPhase(phase, clickedBtn) {
@@ -2988,6 +3435,9 @@ function selectPhase(phase, clickedBtn) {
   closeInfoPanel();
   closeMdViewer();
   if (!_navigatingFromHash) location.hash = phase;
+
+  // Hide HTML overview, show SVG canvas
+  canvasArea.classList.remove('overview-active');
 
   // If it has a flowchart, show it
   if (FLOWCHARTS[phase]) {
@@ -3042,6 +3492,7 @@ function resetZoom() {
 
 // Mouse wheel zoom
 canvasArea.addEventListener('wheel', (e) => {
+  if (state.view === 'overview') return;
   if (e.target.closest('.md-viewer') || e.target.closest('.info-panel')) return;
   e.preventDefault();
   const factor = e.deltaY < 0 ? 1.03 : 1/1.03;
@@ -3051,6 +3502,7 @@ canvasArea.addEventListener('wheel', (e) => {
 // Pan
 let isPanning = false, panStart = { x: 0, y: 0 }, vbStart = [0,0,0,0];
 canvasArea.addEventListener('mousedown', (e) => {
+  if (state.view === 'overview') return;
   if (e.target.closest('.svg-node') || e.target.closest('.md-viewer') || e.target.closest('.info-panel')) return;
   isPanning = true;
   panStart = { x: e.clientX, y: e.clientY };
@@ -3083,6 +3535,7 @@ function touchMidpoint(t) {
 }
 
 canvasArea.addEventListener('touchstart', (e) => {
+  if (state.view === 'overview') return;
   if (e.target.closest('.zoom-controls') || e.target.closest('.md-viewer') || e.target.closest('.info-panel')) return;
   const t = e.touches;
   if (t.length === 2) {
@@ -3101,6 +3554,7 @@ canvasArea.addEventListener('touchstart', (e) => {
 }, { passive: true });
 
 canvasArea.addEventListener('touchmove', (e) => {
+  if (state.view === 'overview') return;
   if (e.target.closest('.zoom-controls') || e.target.closest('.md-viewer') || e.target.closest('.info-panel')) return;
   e.preventDefault();
   const t = e.touches;
@@ -3156,7 +3610,8 @@ window.addEventListener('hashchange', navigateFromHash);
 if (location.hash && location.hash !== '#' && location.hash !== '#overview') {
   navigateFromHash();
 } else {
-  renderSVG();
+  // Show HTML overview on initial load
+  canvasArea.classList.add('overview-active');
   document.getElementById('btn-overview').classList.add('active');
   updateContextButtons();
 }

@@ -106,7 +106,7 @@ Follow the conventions documented in the file header (lines 1-41):
 - `var(--gate)` red — STOP/BLOCK terminal nodes (hard-cornered `stop` shape), cache refresh
 - `var(--discovery)` green — discovery script execution
 - `var(--skill)` orange — skill invocation pills (with `skillLink`)
-- `var(--next)` green — next-phase navigation pills
+- `var(--next)` blue — next-phase navigation nodes (rect, command color, same shape as agent nodes)
 - `var(--accent)` blue — entry points, migrations, git commits
 - `var(--{phase})` phase color — END output artifacts only (keeps phase identity)
 
@@ -115,10 +115,10 @@ Follow the conventions documented in the file header (lines 1-41):
 - `desc` — tooltip text describing what the node does
 
 **Next-phase nodes (skill flowcharts only):**
-- Every skill flowchart except `skill-review` has a `next` pill node at the end
-- Node: `{ id: 'next', label: 'Next: /start-{phase}', shape: 'pill', w: 180, h: 40, color: '#34d399', bg: 'rgba(52,211,153,0.15)', skillLink: NEXT_PHASE_KEY }`
+- Every skill flowchart except `skill-review` has a `next` rect node at the end
+- Node: `{ id: 'next', label: 'Invoke /start-{phase}', desc: '...', w: 200, h: 44, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: NEXT_PHASE_KEY }`
 - Connection: `{ from: 'end', to: 'next', type: 'transition' }`
-- All next nodes use consistent green (`#34d399`) regardless of target phase
+- All next nodes use consistent command blue (`var(--next)`) regardless of target phase
 - `SKILL_NEXT_PHASE` mapping must stay in sync
 
 **SOURCE_MAP maintenance:**
