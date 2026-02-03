@@ -55,7 +55,7 @@ Present the executor's ISSUES to the user:
 
 #### If `retry`
 
-→ Return to the top of **B. Execute Task** and re-invoke the executor with the user's comments added to the task context.
+→ Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the user's comments.
 
 #### If `skip`
 
@@ -94,9 +94,9 @@ Present the reviewer's findings to the user:
 
 **STOP.** Wait for user choice.
 
-- **`y`/`yes`**: → Return to the top of **B. Execute Task** and re-invoke the executor with the reviewer's notes added.
+- **`y`/`yes`**: → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the reviewer's notes.
 - **`skip`**: → Proceed to **D. Task Gate**.
-- **Comment**: → Return to the top of **B. Execute Task** and re-invoke the executor with the user's notes.
+- **Comment**: → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the user's notes.
 
 ---
 
@@ -124,7 +124,7 @@ Present a summary and wait for user input:
 
 - **`y`/`yes`**: → Proceed to **E. Update Progress and Commit**.
 - **`auto`**: Note that `task_gate_mode` should be updated to `auto` during the commit step. → Proceed to **E. Update Progress and Commit**.
-- **Comment**: → Return to the top of **B. Execute Task** and re-invoke the executor with the user's notes added.
+- **Comment**: → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the user's notes.
 
 ### If `task_gate_mode: auto`
 
