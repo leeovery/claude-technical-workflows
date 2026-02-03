@@ -159,7 +159,9 @@ UPDATED FILES:
 If any files were updated:
 
 ```
-Shall I commit these dependency updates? (y/n)
+· · ·
+
+Shall I commit these dependency updates? (**`y`/`yes`** or **`n`/`no`**)
 ```
 
 If yes, commit with message:

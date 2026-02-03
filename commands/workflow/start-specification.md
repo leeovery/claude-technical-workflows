@@ -204,6 +204,8 @@ Check `cache.status` from discovery to determine which options to present.
 ##### If `cache.status: "valid"`
 
 ```
+· · ·
+
 What would you like to do?
 
 1. **Continue an existing specification** - Resume work on a spec in progress
@@ -218,6 +220,8 @@ Which approach?
 ##### If `cache.status: "stale"`
 
 ```
+· · ·
+
 What would you like to do?
 
 Note: A previous grouping analysis exists but is now outdated - discussion documents have changed since it was created. Re-analysis is required, but existing specification names will be preserved where groupings overlap.
@@ -233,6 +237,8 @@ Which approach?
 ##### If `cache.status: "none"`
 
 ```
+· · ·
+
 What would you like to do?
 
 1. **Continue an existing specification** - Resume work on a spec in progress
@@ -468,6 +474,8 @@ Coupling: {explanation}
 
 ---
 
+· · ·
+
 How would you like to proceed?
 
 1. **Proceed as recommended** - I'll ask which to start with
@@ -475,7 +483,7 @@ How would you like to proceed?
 3. **Single specification** - Consolidate ALL into one unified spec
 4. **Individual specifications** - Create 1:1 specs (I'll ask which to start)
 
-(Enter 'refresh' to re-analyze)
+(Enter **`r`/`refresh`** to re-analyze)
 ```
 
 **Status Legend:**
@@ -556,6 +564,8 @@ This reorganization affects multiple existing specifications:
 - {spec-2} (sources: {topics})
 
 Moving discussions between established specifications requires deleting the affected specs and re-processing. The source material in your discussions is preserved.
+
+· · ·
 
 Options:
 1. **Delete affected specs and proceed** - Remove {spec-1}, {spec-2} and create fresh specs for your new groupings

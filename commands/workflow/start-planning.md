@@ -149,6 +149,8 @@ Omit either section entirely if it has no entries.
 
 **If multiple actionable items:**
 ```
+· · ·
+
 Select a specification (enter number):
 ```
 
@@ -164,6 +166,8 @@ Auto-selecting: {topic} (only actionable specification)
 **If nothing actionable:**
 ```
 No plannable specifications.
+
+· · ·
 
 To proceed:
 - Complete any in-progress specifications with /start-specification

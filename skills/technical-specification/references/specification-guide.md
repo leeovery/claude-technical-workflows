@@ -78,6 +78,8 @@ Present your understanding to the user **in the format it would appear in the sp
 
 Then present two explicit choices:
 
+> · · ·
+>
 > **To proceed:**
 > - **`y`/`yes`** — Approved. I'll add the above to the specification **verbatim** (exactly as shown, no modifications).
 > - **Or tell me what to change.**
@@ -516,6 +518,8 @@ For each item, follow the **same workflow as the main specification process**:
    >
    > [content exactly as it would appear]
    >
+   > · · ·
+   >
    > **To proceed:**
    > - **`y`/`yes`** — Approved. I'll add the above to the specification **verbatim**.
    > - **Or tell me what to change.**
@@ -645,6 +649,8 @@ For each item:
    > "Here's what I'll add to the specification:
    >
    > [content exactly as it would appear]
+   >
+   > · · ·
    >
    > **To proceed:**
    > - **`y`/`yes`** — Approved. I'll add the above to the specification **verbatim**.

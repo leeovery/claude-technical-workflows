@@ -193,6 +193,8 @@ Show Not implementable section only (with unblock hint above).
 ```
 No implementable plans.
 
+· · ·
+
 To proceed:
 - Complete blocking dependencies first
 - Or finish plans still in progress with /start-planning
@@ -202,6 +204,8 @@ To proceed:
 
 **Otherwise (multiple selectable plans, or implemented plans exist):**
 ```
+· · ·
+
 Select a plan (enter number):
 ```
 
@@ -249,6 +253,8 @@ UNRESOLVED (not yet planned):
 INCOMPLETE (planned but not implemented):
 - {topic}: task {task_id} not yet completed
   -> This task must be completed first.
+
+· · ·
 
 OPTIONS:
 1. Implement the blocking dependencies first

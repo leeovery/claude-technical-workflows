@@ -151,8 +151,10 @@ If `project_skills` is populated in the tracking file, present for confirmation:
 > - `{skill-name}` — {path}
 > - ...
 >
+> · · ·
+>
 > - **`y`/`yes`** — Keep these, proceed
-> - **`change`** — Add or remove skills"
+> - **`c`/`change`** — Add or remove skills"
 
 **STOP.** Wait for user choice.
 
