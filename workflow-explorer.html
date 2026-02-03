@@ -45,7 +45,8 @@
     Connection types map to colors + arrow markers (yes=green, no=red, transition=orange dashed, backloop=gray dashed).
 
   Node color system (type-based, not phase-based — CSS vars in :root):
-    - var(--action)    sky blue    — primary work steps (validate, extract, invoke agents, etc.)
+    - var(--action)    sky blue    — primary work steps (validate, extract, etc.)
+    - var(--agent)     cyan        — agent invocation nodes (with optional skillLink to agent flowchart)
     - var(--text-dim)  gray        — utility/support steps (read existing, load format, etc.)
     - var(--ask)       purple      — user interaction nodes
     - var(--routing)   amber       — non-blocking decision diamonds
@@ -57,7 +58,7 @@
     - var(--{phase})   phase color — output artifact pills only (keeps phase identity)
 
   Conventions:
-    - Clicking flowchart nodes with `desc` shows a tooltip; nodes with `skillLink` navigate to that skill's flowchart.
+    - Clicking flowchart nodes with `desc` shows a tooltip; nodes with `skillLink` navigate to that skill/agent's flowchart.
     - Overview nodes with `phase` are clickable and route to selectPhase().
     - The info panel (ⓘ button) shows contextual info for the current flowchart.
     - Skill flowcharts (except skill-review) have a `next` pill node at the end, always green (#34d399),
@@ -113,6 +114,8 @@
     --skill-bg: rgba(249,115,22,0.15);
     --next: #34d399;
     --next-bg: rgba(52,211,153,0.15);
+    --agent: #22d3ee;
+    --agent-bg: rgba(34,211,238,0.15);
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
@@ -797,15 +800,15 @@
     <div class="section-label collapsible" onclick="toggleSidebarSection(this)"><span class="chevron">▼</span> Agents</div>
     <div class="collapsible-content" style="max-height:400px">
       <div class="dropdown-subheading">Planning</div>
-      <button class="nav-btn dropdown-btn dimmed"><span class="badge badge-agt">agt</span><span class="btn-label">planning-phase-designer</span></button>
-      <button class="nav-btn dropdown-btn dimmed"><span class="badge badge-agt">agt</span><span class="btn-label">planning-task-designer</span></button>
-      <button class="nav-btn dropdown-btn dimmed"><span class="badge badge-agt">agt</span><span class="btn-label">planning-task-author</span></button>
-      <button class="nav-btn dropdown-btn dimmed"><span class="badge badge-agt">agt</span><span class="btn-label">planning-dependency-grapher</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('planning-phase-designer',this)" id="btn-planning-phase-designer"><span class="badge badge-agt">agt</span><span class="btn-label">planning-phase-designer</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('planning-task-designer',this)" id="btn-planning-task-designer"><span class="badge badge-agt">agt</span><span class="btn-label">planning-task-designer</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('planning-task-author',this)" id="btn-planning-task-author"><span class="badge badge-agt">agt</span><span class="btn-label">planning-task-author</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('planning-dependency-grapher',this)" id="btn-planning-dependency-grapher"><span class="badge badge-agt">agt</span><span class="btn-label">planning-dependency-grapher</span></button>
       <div class="dropdown-subheading">Implementation</div>
-      <button class="nav-btn dropdown-btn dimmed"><span class="badge badge-agt">agt</span><span class="btn-label">implementation-task-executor</span></button>
-      <button class="nav-btn dropdown-btn dimmed"><span class="badge badge-agt">agt</span><span class="btn-label">implementation-task-reviewer</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('implementation-task-executor',this)" id="btn-implementation-task-executor"><span class="badge badge-agt">agt</span><span class="btn-label">implementation-task-executor</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('implementation-task-reviewer',this)" id="btn-implementation-task-reviewer"><span class="badge badge-agt">agt</span><span class="btn-label">implementation-task-reviewer</span></button>
       <div class="dropdown-subheading">Review</div>
-      <button class="nav-btn dropdown-btn dimmed"><span class="badge badge-agt">agt</span><span class="btn-label">review-task-verifier</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('review-task-verifier',this)" id="btn-review-task-verifier"><span class="badge badge-agt">agt</span><span class="btn-label">review-task-verifier</span></button>
     </div>
 
     <div class="section-label collapsible" onclick="toggleSidebarSection(this)"><span class="chevron">▼</span> Legend</div>
@@ -824,6 +827,7 @@
         <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--ask-bg);border-color:var(--ask)"></div></div> User interaction</div>
         <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--discovery-bg);border-color:var(--discovery)"></div></div> Discovery script</div>
         <div class="legend-item"><div class="legend-icon"><div class="legend-shape-pill" style="background:var(--skill-bg);border-color:var(--skill)"></div></div> Skill handoff</div>
+        <div class="legend-item"><div class="legend-icon"><div class="legend-shape" style="background:var(--agent-bg);border-color:var(--agent)"></div></div> Agent invocation</div>
         <div class="legend-item"><div class="legend-icon"><div class="legend-shape-pill" style="background:var(--next-bg);border-color:var(--next)"></div></div> Next phase</div>
         <div class="legend-item"><div class="legend-icon"><div class="legend-line" style="background:#34d399"></div></div> Yes branch</div>
         <div class="legend-item"><div class="legend-icon"><div class="legend-line" style="background:#f43f5e"></div></div> No branch</div>
@@ -1080,6 +1084,41 @@ const phases = {
   'skill-review': {
     color: '#f472b6', bg: 'rgba(244,114,182,0.12)',
     label: 'Review Skill', cmd: 'technical-review',
+  },
+  'planning-phase-designer': {
+    color: '#fbbf24', bg: 'rgba(251,191,36,0.12)',
+    label: 'Phase Designer',
+    desc: 'Subagent that designs implementation phases from a specification. Invoked during plan construction.',
+  },
+  'planning-task-designer': {
+    color: '#fbbf24', bg: 'rgba(251,191,36,0.12)',
+    label: 'Task Designer',
+    desc: 'Subagent that breaks phases into task lists with edge cases. Invoked during plan construction.',
+  },
+  'planning-task-author': {
+    color: '#fbbf24', bg: 'rgba(251,191,36,0.12)',
+    label: 'Task Author',
+    desc: 'Subagent that writes full task detail in the chosen output format. Invoked during plan construction.',
+  },
+  'planning-dependency-grapher': {
+    color: '#fbbf24', bg: 'rgba(251,191,36,0.12)',
+    label: 'Dependency Grapher',
+    desc: 'Subagent that analyzes task dependencies, detects cycles, and assigns priorities.',
+  },
+  'implementation-task-executor': {
+    color: '#f97316', bg: 'rgba(249,115,22,0.12)',
+    label: 'Task Executor',
+    desc: 'Subagent that implements a single task via strict TDD. Returns structured completion report.',
+  },
+  'implementation-task-reviewer': {
+    color: '#f97316', bg: 'rgba(249,115,22,0.12)',
+    label: 'Task Reviewer',
+    desc: 'Subagent that independently reviews a task for spec conformance and code quality.',
+  },
+  'review-task-verifier': {
+    color: '#f472b6', bg: 'rgba(244,114,182,0.12)',
+    label: 'Task Verifier',
+    desc: 'Subagent that verifies a single task implementation against plan and spec. Spawned in parallel.',
   },
 };
 
@@ -1518,8 +1557,8 @@ const FLOWCHARTS = {
       { id: 'load-existing', label: 'Load existing plan', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Continue: load existing plan and output format adapter.' },
       { id: 'principles', label: 'Load principles', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 2: Load planning-principles.md. Internalize constraints.' },
       { id: 'verify', label: 'Verify source material', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 3: Verify specification is complete. Check cross-cutting references.' },
-      { id: 'plan-construction', label: 'Plan construction', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 4: Nested loop — define phases, define tasks per phase, author each task. Commits after each phase completes.' },
-      { id: 'analyze-graph', label: 'Analyze task graph', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 5: Invoke planning-dependency-grapher agent. Analyze task dependencies, detect cycles, assign priorities. User approves changes.' },
+      { id: 'plan-construction', label: 'Plan construction', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', desc: 'Step 4: Nested loop — invoke phase-designer, task-designer, and task-author agents. Commits after each phase completes.' },
+      { id: 'analyze-graph', label: 'Analyze task graph', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'planning-dependency-grapher', desc: 'Step 5: Invoke planning-dependency-grapher agent. Analyze task dependencies, detect cycles, assign priorities. User approves changes.' },
       { id: 'deps', label: 'Resolve ext deps', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 6: Identify external dependencies. Match to tasks in other plans if possible. Mark unresolved for /link-dependencies.' },
       { id: 'review', label: 'Plan review', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 7: Two-part review — traceability (spec ↔ plan) and integrity (structure, quality, dependencies). User resolves findings.' },
       { id: 'conclude', label: 'Conclude plan', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 8: Set status: concluded. All tasks must be authored.' },
@@ -1557,11 +1596,11 @@ const FLOWCHARTS = {
       { id: 'retrieve', label: 'A. Retrieve next task', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Stage A: Use plan adapter to get next available task. Normalise task content for agent invocation.' },
       { id: 'done-check', label: 'Tasks remain?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if any tasks remain. If none, proceed to completion.' },
       // Task loop — Stage B
-      { id: 'executor', label: 'B. Invoke executor', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Stage B: Dispatch executor agent with TDD workflow, code quality refs, spec, project skills, and normalised task. Agent implements via strict TDD and returns STATUS report.' },
+      { id: 'executor', label: 'B. Invoke executor', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-task-executor', desc: 'Stage B: Dispatch executor agent with TDD workflow, code quality refs, spec, project skills, and normalised task. Agent implements via strict TDD and returns STATUS report.' },
       { id: 'exec-result', label: 'Executor result?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route on executor STATUS: complete → review, blocked/failed → present to user.' },
       { id: 'exec-blocked', label: 'Executor blocked', shape: 'stop', w: 180, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Present executor ISSUES to user. Options: retry (with comments), skip task, or stop implementation entirely.' },
       // Task loop — Stage C
-      { id: 'reviewer', label: 'C. Invoke reviewer', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Stage C: Dispatch reviewer agent (opus) with spec, task content, project skills. Independent verification — no access to executor context.' },
+      { id: 'reviewer', label: 'C. Invoke reviewer', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-task-reviewer', desc: 'Stage C: Dispatch reviewer agent (opus) with spec, task content, project skills. Independent verification — no access to executor context.' },
       { id: 'review-result', label: 'Reviewer verdict?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route on VERDICT: approved → task gate, needs-changes → present findings to user.' },
       { id: 'review-changes', label: 'Review: needs changes', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Present reviewer ISSUES and NOTES. Options: accept notes (re-invoke executor), skip reviewer (proceed as-is), or add own comments.' },
       // Task loop — Stage D
@@ -1615,7 +1654,7 @@ const FLOWCHARTS = {
       { id: 'read-plan', label: 'Read plan', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Read the plan — all phases, tasks, and acceptance criteria.' },
       { id: 'read-spec', label: 'Read specification', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'If available, read specification for design context.' },
       { id: 'extract', label: 'Extract ALL tasks', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'List every task from every phase. Verify all, not a sample.' },
-      { id: 'spawn', label: 'Spawn task verifiers', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Launch parallel review-task-verifier subagents (haiku). One per task.' },
+      { id: 'spawn', label: 'Spawn task verifiers', w: 180, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'review-task-verifier', desc: 'Launch parallel review-task-verifier subagents (haiku). One per task.' },
       { id: 'v1', label: 'Verify task 1', w: 140, h: 44, color: 'var(--action)', bg: 'rgba(56,189,248,0.08)', desc: 'Check: implementation, acceptance criteria, tests, code quality.' },
       { id: 'v2', label: 'Verify task 2', w: 140, h: 44, color: 'var(--action)', bg: 'rgba(56,189,248,0.08)', desc: 'Same checks, different task. Runs in parallel.' },
       { id: 'vn', label: 'Verify task N', w: 140, h: 44, color: 'var(--action)', bg: 'rgba(56,189,248,0.08)', desc: 'One per task. All run simultaneously.' },
@@ -1706,6 +1745,164 @@ const FLOWCHARTS = {
       { from: 'updated', to: 'end-clean', type: 'no', label: 'no' },
       { from: 'updated', to: 'show-changes', type: 'yes', label: 'yes' },
       { from: 'show-changes', to: 'end-updated' },
+    ]
+  },
+  // ── Agent Flowcharts ──
+  'planning-phase-designer': {
+    nodes: [
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Invoked by technical-planning skill during plan construction.' },
+      { id: 'read-refs', label: 'Read spec ingestion', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read specification ingestion protocol and full spec. Also reads cross-cutting specs if referenced.' },
+      { id: 'read-principles', label: 'Read design principles', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read phase design principles and task design principles reference files.' },
+      { id: 'design', label: 'Design phases', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Design implementation phase structure. Define goals, acceptance criteria, and sequencing.' },
+      { id: 'amend', label: 'Amendment?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if prior output + feedback exists (amendment round). If so, revise instead of starting fresh.' },
+      { id: 'revise', label: 'Revise phases', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Read prior output and feedback, then revise the phase design accordingly.' },
+      { id: 'end', label: 'Phase structure', shape: 'pill', w: 180, h: 40, color: 'var(--planning)', bg: 'var(--planning-bg)', desc: 'Output: human-readable phase summary with goals and acceptance criteria.' },
+    ],
+    connections: [
+      { from: 'start', to: 'read-refs' },
+      { from: 'read-refs', to: 'read-principles' },
+      { from: 'read-principles', to: 'amend' },
+      { from: 'amend', to: 'revise', type: 'yes', label: 'yes' },
+      { from: 'amend', to: 'design', type: 'no', label: 'no', weight: 2 },
+      { from: 'revise', to: 'end' },
+      { from: 'design', to: 'end' },
+    ]
+  },
+  'planning-task-designer': {
+    nodes: [
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Invoked by technical-planning skill during plan construction.' },
+      { id: 'read-refs', label: 'Read spec ingestion', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read specification ingestion protocol, full spec, cross-cutting specs, and approved phases.' },
+      { id: 'read-principles', label: 'Read task principles', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read task design principles reference file.' },
+      { id: 'design', label: 'Design task list', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Break target phase into individual tasks with edge cases for each.' },
+      { id: 'amend', label: 'Amendment?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if prior output + feedback exists (amendment round). If so, revise instead of starting fresh.' },
+      { id: 'revise', label: 'Revise tasks', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Read prior output and feedback, then revise the task list accordingly.' },
+      { id: 'end', label: 'Task list', shape: 'pill', w: 180, h: 40, color: 'var(--planning)', bg: 'var(--planning-bg)', desc: 'Output: task table with IDs, names, edge cases, and status.' },
+    ],
+    connections: [
+      { from: 'start', to: 'read-refs' },
+      { from: 'read-refs', to: 'read-principles' },
+      { from: 'read-principles', to: 'amend' },
+      { from: 'amend', to: 'revise', type: 'yes', label: 'yes' },
+      { from: 'amend', to: 'design', type: 'no', label: 'no', weight: 2 },
+      { from: 'revise', to: 'end' },
+      { from: 'design', to: 'end' },
+    ]
+  },
+  'planning-task-author': {
+    nodes: [
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Invoked by technical-planning skill during plan construction.' },
+      { id: 'read-refs', label: 'Read spec ingestion', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read specification ingestion protocol, full spec, and cross-cutting specs.' },
+      { id: 'read-template', label: 'Read task template', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read task design template, phases, and task list for context.' },
+      { id: 'read-format', label: 'Read format adapter', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Load the output format adapter (authoring.md) for the plan\'s chosen format.' },
+      { id: 'author', label: 'Author task detail', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Write complete task in output format structure: problem, solution, outcome, acceptance criteria, tests, context.' },
+      { id: 'amend', label: 'Amendment?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if prior output + feedback exists (amendment round). If so, revise instead of starting fresh.' },
+      { id: 'revise', label: 'Revise task', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Read prior output and feedback, then revise the authored task accordingly.' },
+      { id: 'end', label: 'Authored task', shape: 'pill', w: 180, h: 40, color: 'var(--planning)', bg: 'var(--planning-bg)', desc: 'Output: complete task detail in exact output format adapter structure.' },
+    ],
+    connections: [
+      { from: 'start', to: 'read-refs' },
+      { from: 'read-refs', to: 'read-template' },
+      { from: 'read-template', to: 'read-format' },
+      { from: 'read-format', to: 'amend' },
+      { from: 'amend', to: 'revise', type: 'yes', label: 'yes' },
+      { from: 'amend', to: 'author', type: 'no', label: 'no', weight: 2 },
+      { from: 'revise', to: 'end' },
+      { from: 'author', to: 'end' },
+    ]
+  },
+  'planning-dependency-grapher': {
+    nodes: [
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Invoked by technical-planning skill after plan construction.' },
+      { id: 'read-format', label: 'Read format refs', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read reading.md and graph.md format adapter references.' },
+      { id: 'read-index', label: 'Read plan index', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read the plan index file to understand plan structure.' },
+      { id: 'list-tasks', label: 'List authored tasks', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Enumerate all authored task files from the plan.' },
+      { id: 'clear', label: 'Clear existing graph', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Clear any existing dependency graph data before re-analysis.' },
+      { id: 'analyze', label: 'Analyze dependencies', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Read every task. Extract produces/requires. Match produces→requires across all tasks. Identify data, capability, and infrastructure dependencies.' },
+      { id: 'priorities', label: 'Assign priorities', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Classify tasks as bottleneck, foundation, or leaf based on dependency analysis.' },
+      { id: 'cycles', label: 'Cycles detected?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if the dependency graph contains circular dependencies.' },
+      { id: 'stop-cycles', label: 'STOP: Report cycles', shape: 'stop', w: 180, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Cycles found — report cycle chains and do NOT apply changes.' },
+      { id: 'apply', label: 'Apply graph changes', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Write dependency and priority data back to tasks using the graph format adapter.' },
+      { id: 'end', label: 'Dependency graph', shape: 'pill', w: 180, h: 40, color: 'var(--planning)', bg: 'var(--planning-bg)', desc: 'Output: structured summary with dependencies, priorities, and status.' },
+    ],
+    connections: [
+      { from: 'start', to: 'read-format' },
+      { from: 'read-format', to: 'read-index' },
+      { from: 'read-index', to: 'list-tasks' },
+      { from: 'list-tasks', to: 'clear' },
+      { from: 'clear', to: 'analyze' },
+      { from: 'analyze', to: 'priorities' },
+      { from: 'priorities', to: 'cycles' },
+      { from: 'cycles', to: 'stop-cycles', type: 'yes', label: 'yes' },
+      { from: 'cycles', to: 'apply', type: 'no', label: 'no', weight: 2 },
+      { from: 'apply', to: 'end' },
+    ]
+  },
+  'implementation-task-executor': {
+    nodes: [
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Invoked by technical-implementation skill for a single task.' },
+      { id: 'read-refs', label: 'Read TDD + quality refs', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read TDD workflow reference and code quality standards. Read project skills and specification.' },
+      { id: 'explore', label: 'Explore codebase', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Explore the codebase to understand existing patterns, conventions, and relevant code.' },
+      { id: 'write-test', label: 'Write failing test', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'TDD red phase: write a test for the next acceptance criterion. Test must fail.' },
+      { id: 'implement', label: 'Implement to pass', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'TDD green phase: write minimal implementation to make the test pass.' },
+      { id: 'verify', label: 'Verify tests pass', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Run tests to confirm everything passes. Refactor if needed (TDD refactor phase).' },
+      { id: 'more', label: 'More criteria?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if there are more acceptance criteria / test cases to implement.' },
+      { id: 'report', label: 'Build report', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Compile structured completion report: status, files changed, tests written, test results.' },
+      { id: 'end', label: 'STATUS report', shape: 'pill', w: 180, h: 40, color: 'var(--implementation)', bg: 'var(--implementation-bg)', desc: 'Output: structured report (complete/blocked/failed) with files, tests, and issues.' },
+    ],
+    connections: [
+      { from: 'start', to: 'read-refs' },
+      { from: 'read-refs', to: 'explore' },
+      { from: 'explore', to: 'write-test' },
+      { from: 'write-test', to: 'implement' },
+      { from: 'implement', to: 'verify' },
+      { from: 'verify', to: 'more' },
+      { from: 'more', to: 'write-test', type: 'backloop', label: 'yes', port: 'right' },
+      { from: 'more', to: 'report', type: 'no', label: 'no', weight: 2 },
+      { from: 'report', to: 'end' },
+    ]
+  },
+  'implementation-task-reviewer': {
+    nodes: [
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Invoked by technical-implementation skill after each task.' },
+      { id: 'read-spec', label: 'Read specification', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read the specification to understand the broader requirement and constraints.' },
+      { id: 'read-skills', label: 'Read project skills', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Load project skills to understand conventions and patterns.' },
+      { id: 'check-diff', label: 'Check unstaged changes', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Run git diff/status to identify all changed files from the executor.' },
+      { id: 'read-files', label: 'Read changed files', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read the full content of all changed files for review.' },
+      { id: 'evaluate', label: 'Evaluate 5 dimensions', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Evaluate: spec conformance, acceptance criteria, test adequacy, convention adherence, architectural quality.' },
+      { id: 'verdict', label: 'Verdict?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Determine verdict: approved or needs-changes based on evaluation.' },
+      { id: 'report', label: 'Build review report', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Compile structured review with file:line references for any issues found.' },
+      { id: 'end', label: 'VERDICT report', shape: 'pill', w: 180, h: 40, color: 'var(--implementation)', bg: 'var(--implementation-bg)', desc: 'Output: structured verdict (approved/needs-changes) with issues and notes.' },
+    ],
+    connections: [
+      { from: 'start', to: 'read-spec' },
+      { from: 'read-spec', to: 'read-skills' },
+      { from: 'read-skills', to: 'check-diff' },
+      { from: 'check-diff', to: 'read-files' },
+      { from: 'read-files', to: 'evaluate' },
+      { from: 'evaluate', to: 'verdict' },
+      { from: 'verdict', to: 'report' },
+      { from: 'report', to: 'end' },
+    ]
+  },
+  'review-task-verifier': {
+    nodes: [
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Spawned in parallel by technical-review skill (one per task).' },
+      { id: 'read-task', label: 'Understand task', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read the task: what it does, acceptance criteria, and expected tests.' },
+      { id: 'load-spec', label: 'Load spec context', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Load the broader specification context: requirements, constraints, edge cases.' },
+      { id: 'verify-impl', label: 'Verify implementation', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Check: implementation exists, matches acceptance criteria, aligns with spec.' },
+      { id: 'verify-tests', label: 'Verify tests', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Check: tests are adequate (not over/under), edge cases covered, tests pass.' },
+      { id: 'check-quality', label: 'Check code quality', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Check conventions, SOLID, DRY, complexity, idioms, readability, security, performance.' },
+      { id: 'compile', label: 'Compile findings', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Aggregate results into structured finding with blocking issues and non-blocking notes.' },
+      { id: 'end', label: 'Task finding', shape: 'pill', w: 180, h: 40, color: 'var(--review)', bg: 'var(--review-bg)', desc: 'Output: structured finding (complete/incomplete/issues) with implementation, tests, and quality assessment.' },
+    ],
+    connections: [
+      { from: 'start', to: 'read-task' },
+      { from: 'read-task', to: 'load-spec' },
+      { from: 'load-spec', to: 'verify-impl' },
+      { from: 'verify-impl', to: 'verify-tests' },
+      { from: 'verify-tests', to: 'check-quality' },
+      { from: 'check-quality', to: 'compile' },
+      { from: 'compile', to: 'end' },
     ]
   }
 };
@@ -1823,6 +2020,49 @@ const FLOWCHART_DESCS = {
 <p>Runs automatically as <strong>Step 0 of every workflow command</strong>. If files were updated, shows changes and waits for user review via git diff. Delete the log file to force re-running all migrations.</p>`,
     meta: { complexity: 'System' }
   },
+  'planning-phase-designer': {
+    summary: 'Design implementation phases from a specification — goals, sequencing, and acceptance criteria.',
+    body: `<p>Reads the specification via ingestion protocol, then loads phase and task design principles. Designs a phased implementation structure with clear goals and acceptance criteria for each phase.</p>
+<p>Supports <strong>amendment rounds</strong> — if prior output and feedback are provided, the agent revises its design rather than starting fresh. Output is a human-readable phase summary.</p>`,
+    meta: { model: 'Opus', invokedBy: 'technical-planning', complexity: 'Subagent' }
+  },
+  'planning-task-designer': {
+    summary: 'Break a single phase into concrete tasks with edge cases and dependencies.',
+    body: `<p>Reads the specification, approved phases, and task design principles. For the target phase, produces a detailed task list with edge cases identified per task.</p>
+<p>Supports <strong>amendment rounds</strong> — revises task list based on feedback when prior output exists. Output is a task table with IDs, names, edge cases, and status.</p>`,
+    meta: { model: 'Opus', invokedBy: 'technical-planning', complexity: 'Subagent' }
+  },
+  'planning-task-author': {
+    summary: 'Author full task detail in the plan\'s output format — problem, solution, acceptance criteria, tests.',
+    body: `<p>Reads specification, task template, phases, task list, and the <strong>output format adapter</strong> (authoring.md). Writes complete task detail in the exact format structure: problem, solution, outcome, do/don\'t, acceptance criteria, tests, and context.</p>
+<p>Supports <strong>amendment rounds</strong>. Format-aware — adapts to whichever output format the plan uses.</p>`,
+    meta: { model: 'Opus', invokedBy: 'technical-planning', complexity: 'Subagent' }
+  },
+  'planning-dependency-grapher': {
+    summary: 'Analyze task dependencies, detect circular references, and assign priority classifications.',
+    body: `<p>Reads format adapters (reading.md + graph.md), then the plan index and all authored task files. <strong>Clears existing graph data</strong> before re-analysis to ensure a clean state.</p>
+<p>For each task, extracts what it produces and requires, then matches across all tasks to build a dependency graph. Classifies tasks as <strong>bottleneck</strong>, <strong>foundation</strong>, or <strong>leaf</strong>. If <strong>cycles are detected</strong>, reports the cycle chain and does NOT apply changes — a hard stop. Otherwise, writes dependency and priority data back to tasks.</p>`,
+    meta: { model: 'Opus', invokedBy: 'technical-planning', complexity: 'Subagent' }
+  },
+  'implementation-task-executor': {
+    summary: 'Implement a single task via strict TDD — red/green/refactor cycle per acceptance criterion.',
+    body: `<p>Reads TDD workflow, code quality standards, project skills, and specification. Explores the codebase first to understand existing patterns.</p>
+<p>Executes a <strong>strict TDD loop</strong> per acceptance criterion: <strong>write failing test → implement to pass → verify → repeat</strong>. Has hard stops for scope expansion, uncertainty, and untenable spec decisions — reports back rather than making autonomous choices.</p>
+<p>Returns a structured <strong>STATUS report</strong> (complete/blocked/failed) with files changed, tests written, and results.</p>`,
+    meta: { model: 'Opus', invokedBy: 'technical-implementation', complexity: 'Subagent' }
+  },
+  'implementation-task-reviewer': {
+    summary: 'Independently review a task across 5 dimensions — no access to executor context.',
+    body: `<p>Reads the specification, project skills, then checks unstaged changes via git diff/status and reads all changed files. <strong>Independent from the executor</strong> — no shared context.</p>
+<p>Evaluates across <strong>5 dimensions</strong>: spec conformance, acceptance criteria coverage, test adequacy, convention adherence, and architectural quality. Produces a structured verdict (<strong>approved</strong> or <strong>needs-changes</strong>) with file:line references for any issues.</p>`,
+    meta: { model: 'Opus', invokedBy: 'technical-implementation', complexity: 'Subagent' }
+  },
+  'review-task-verifier': {
+    summary: 'Verify a single task\'s implementation, tests, and code quality against the plan and spec.',
+    body: `<p>Spawned <strong>in parallel</strong> (one per task) by the technical-review skill. Reads the task details, then loads the broader specification context.</p>
+<p>Three verification stages: <strong>implementation</strong> (exists, matches criteria, aligns with spec), <strong>tests</strong> (adequate coverage, edge cases, not over/under-tested), and <strong>code quality</strong> (conventions, SOLID, DRY, complexity, security, performance). Compiles a structured finding with blocking issues and non-blocking notes.</p>`,
+    meta: { model: 'Opus', invokedBy: 'technical-review', complexity: 'Subagent' }
+  },
 };
 
 // ── Source File Mapping (flowchart key → repo-relative path) ──
@@ -1846,6 +2086,13 @@ const SOURCE_MAP = {
   'status':               'commands/workflow/status.md',
   'view-plan':            'commands/workflow/view-plan.md',
   'migrate':              'commands/migrate.md',
+  'planning-phase-designer':      'agents/planning-phase-designer.md',
+  'planning-task-designer':       'agents/planning-task-designer.md',
+  'planning-task-author':         'agents/planning-task-author.md',
+  'planning-dependency-grapher':  'agents/planning-dependency-grapher.md',
+  'implementation-task-executor': 'agents/implementation-task-executor.md',
+  'implementation-task-reviewer': 'agents/implementation-task-reviewer.md',
+  'review-task-verifier':         'agents/review-task-verifier.md',
 };
 
 // ── Markdown Viewer ──

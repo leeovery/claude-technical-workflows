@@ -13,7 +13,7 @@ Audit `workflow-explorer.html` and sync its flowchart data with the actual comma
 Check `$ARGUMENTS` for user-provided context about what changed.
 
 - **Context given** (e.g. "I just updated the implementation skill") → narrow to affected flowchart keys using the source mapping below
-- **No context** → full audit of all 17 flowchart keys
+- **No context** → full audit of all 24 flowchart keys
 - **Ambiguous** → ASK user to confirm scope before proceeding
 
 ## Step 1: Read Source Files
@@ -41,6 +41,13 @@ For each in-scope flowchart key, read its source file(s) and extract the logical
 | `status` | `commands/workflow/status.md` |
 | `view-plan` | `commands/workflow/view-plan.md` |
 | `migrate` | `commands/migrate.md` |
+| `planning-phase-designer` | `agents/planning-phase-designer.md` |
+| `planning-task-designer` | `agents/planning-task-designer.md` |
+| `planning-task-author` | `agents/planning-task-author.md` |
+| `planning-dependency-grapher` | `agents/planning-dependency-grapher.md` |
+| `implementation-task-executor` | `agents/implementation-task-executor.md` |
+| `implementation-task-reviewer` | `agents/implementation-task-reviewer.md` |
+| `review-task-verifier` | `agents/review-task-verifier.md` |
 
 Use parallel reads (Task tool with Explore agents or multiple Read calls) to gather sources efficiently.
 
@@ -91,7 +98,8 @@ Follow the conventions documented in the file header (lines 1-41):
 - `backloop` — gray dashed (retry/loop-back flows)
 
 **Color conventions (type-based, NOT phase-based — use CSS vars):**
-- `var(--action)` sky blue — primary work steps (validate, extract, invoke agents, etc.)
+- `var(--action)` sky blue — primary work steps (validate, extract, etc.)
+- `var(--agent)` cyan — agent invocation nodes (with optional `skillLink` to agent flowchart)
 - `var(--text-dim)` gray — utility/support steps (read existing, load format, etc.)
 - `var(--ask)` purple — user-interaction nodes
 - `var(--routing)` amber — decision diamonds (all diamonds use this)
@@ -103,7 +111,7 @@ Follow the conventions documented in the file header (lines 1-41):
 - `var(--{phase})` phase color — END output artifacts only (keeps phase identity)
 
 **Node properties:**
-- `skillLink` — on nodes that should navigate to a skill flowchart on click
+- `skillLink` — on nodes that should navigate to a skill or agent flowchart on click
 - `desc` — tooltip text describing what the node does
 
 **Next-phase nodes (skill flowcharts only):**
