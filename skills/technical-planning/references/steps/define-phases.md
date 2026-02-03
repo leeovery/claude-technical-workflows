@@ -59,6 +59,8 @@ Present the phase structure to the user.
 
 > **Phase Structure**
 >
+> · · ·
+>
 > **To proceed:**
 > - **`y`/`yes`** — Approved. I'll proceed to task breakdown.
 > - **Or tell me what to change** — reorder, split, merge, add, edit, or remove phases.

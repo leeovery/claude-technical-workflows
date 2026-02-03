@@ -149,6 +149,8 @@ Omit either section entirely if it has no entries.
 
 **If multiple actionable items:**
 ```
+· · ·
+
 Select a specification (enter number):
 ```
 
@@ -165,12 +167,14 @@ Auto-selecting: {topic} (only actionable specification)
 ```
 No plannable specifications.
 
-To proceed:
-- Complete any in-progress specifications with /start-specification
-- Or create a new specification first
+Before you can start planning:
+- Complete any in-progress specifications with /start-specification, or
+- Create a new specification first
+
+Then re-run /start-planning.
 ```
 
-**STOP.** Wait for user response before ending.
+**STOP.** This workflow cannot continue — do not proceed.
 
 → Based on user choice, proceed to **Step 4**.
 

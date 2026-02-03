@@ -79,8 +79,10 @@ Load **[spec-change-detection.md](references/spec-change-detection.md)** to chec
 >
 > {spec change summary from spec-change-detection.md}
 >
-> - **`continue`** — Walk through the plan from the start. You can review, amend, or navigate at any point — including straight to the leading edge.
-> - **`restart`** — Erase all planning work for this topic and start fresh. This deletes the Plan Index File and any Authored Tasks. Other topics are unaffected."
+> · · ·
+>
+> - **`c`/`continue`** — Walk through the plan from the start. You can review, amend, or navigate at any point — including straight to the leading edge.
+> - **`r`/`restart`** — Erase all planning work for this topic and start fresh. This deletes the Plan Index File and any Authored Tasks. Other topics are unaffected."
 
 **STOP.** Wait for user response.
 
@@ -118,8 +120,11 @@ First, choose the Output Format.
 Present the recommendation:
 
 > "Existing plans use **{format}**. Use the same format for consistency?
-> - **yes** — use {format}
-> - **no** — see all available formats"
+>
+> · · ·
+>
+> - **`y`/`yes`** — Use {format}
+> - **`n`/`no`** — See all available formats"
 
 **STOP.** Wait for user choice. If declined, fall through to the full list below.
 

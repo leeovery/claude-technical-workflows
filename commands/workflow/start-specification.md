@@ -204,6 +204,8 @@ Check `cache.status` from discovery to determine which options to present.
 ##### If `cache.status: "valid"`
 
 ```
+· · ·
+
 What would you like to do?
 
 1. **Continue an existing specification** - Resume work on a spec in progress
@@ -218,6 +220,8 @@ Which approach?
 ##### If `cache.status: "stale"`
 
 ```
+· · ·
+
 What would you like to do?
 
 Note: A previous grouping analysis exists but is now outdated - discussion documents have changed since it was created. Re-analysis is required, but existing specification names will be preserved where groupings overlap.
@@ -233,6 +237,8 @@ Which approach?
 ##### If `cache.status: "none"`
 
 ```
+· · ·
+
 What would you like to do?
 
 1. **Continue an existing specification** - Resume work on a spec in progress
@@ -468,6 +474,8 @@ Coupling: {explanation}
 
 ---
 
+· · ·
+
 How would you like to proceed?
 
 1. **Proceed as recommended** - I'll ask which to start with
@@ -475,7 +483,7 @@ How would you like to proceed?
 3. **Single specification** - Consolidate ALL into one unified spec
 4. **Individual specifications** - Create 1:1 specs (I'll ask which to start)
 
-(Enter 'refresh' to re-analyze)
+- **`r`/`refresh`** — Re-analyze discussions
 ```
 
 **Status Legend:**
@@ -557,6 +565,8 @@ This reorganization affects multiple existing specifications:
 
 Moving discussions between established specifications requires deleting the affected specs and re-processing. The source material in your discussions is preserved.
 
+· · ·
+
 Options:
 1. **Delete affected specs and proceed** - Remove {spec-1}, {spec-2} and create fresh specs for your new groupings
 2. **Reconsider** - Adjust your groupings to affect fewer specs
@@ -602,7 +612,11 @@ Check if `docs/workflow/specification/unified.md` already exists.
 
 This will consolidate ALL {N} concluded discussions into a single specification.
 
-Proceed with unified specification? (y/n)
+· · ·
+
+Proceed with unified specification?
+- **`y`/`yes`** — Proceed
+- **`n`/`no`** — Cancel
 ```
 
 **STOP.** Wait for user to confirm, then proceed to **Step 9** with all discussions as sources.
@@ -655,7 +669,11 @@ Output: docs/workflow/specification/{grouping-name}.md
 After completion:
 - specification/{topic-c}.md will be marked as superseded
 
-Proceed? (y/n)
+· · ·
+
+Proceed?
+- **`y`/`yes`** — Proceed
+- **`n`/`no`** — Go back
 ```
 
 #### If creating a NEW grouped specification (no existing specs)
@@ -670,7 +688,11 @@ Sources:
 
 Output: docs/workflow/specification/{grouping-name}.md
 
-Proceed? (y/n)
+· · ·
+
+Proceed?
+- **`y`/`yes`** — Proceed
+- **`n`/`no`** — Go back
 ```
 
 #### If CONTINUING an existing grouped specification
@@ -684,7 +706,11 @@ Sources:
 - docs/workflow/discussion/{topic-a}.md
 - docs/workflow/discussion/{topic-b}.md
 
-Proceed? (y/n)
+· · ·
+
+Proceed?
+- **`y`/`yes`** — Proceed
+- **`n`/`no`** — Go back
 ```
 
 #### If creating/continuing an INDIVIDUAL specification
@@ -697,7 +723,11 @@ Sources:
 
 Output: docs/workflow/specification/{topic}.md
 
-Proceed? (y/n)
+· · ·
+
+Proceed?
+- **`y`/`yes`** — Proceed
+- **`n`/`no`** — Go back
 ```
 
 **STOP.** Wait for user confirmation.

@@ -38,6 +38,8 @@ The natural task order is already correct. Present this to the user:
 >
 > {notes from agent output}"
 
+> · · ·
+>
 > **To proceed:**
 > - **`y`/`yes`** — Confirmed.
 > - **Or tell me what to change.**
@@ -70,6 +72,8 @@ Dependencies and priorities have already been written to the task files. Present
 >
 > {any notes from agent output}"
 
+> · · ·
+>
 > **To proceed:**
 > - **`y`/`yes`** — Approved.
 > - **Or tell me what to change.**

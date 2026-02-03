@@ -45,9 +45,11 @@ Present the executor's ISSUES to the user:
 >
 > {executor's ISSUES content}
 >
-> - **`retry`** — Re-invoke the executor with your comments (provide below)
-> - **`skip`** — Skip this task and move to the next
-> - **`stop`** — Stop implementation entirely
+> · · ·
+>
+> - **`r`/`retry`** — Re-invoke the executor with your comments (provide below)
+> - **`s`/`skip`** — Skip this task and move to the next
+> - **`t`/`stop`** — Stop implementation entirely
 
 **STOP.** Wait for user choice.
 
@@ -84,8 +86,10 @@ Present the reviewer's findings to the user:
 > Notes (non-blocking):
 > {NOTES from reviewer}
 >
+> · · ·
+>
 > - **`y`/`yes`** — Accept these notes and pass them to the executor to fix
-> - **`skip`** — Override the reviewer and proceed as-is
+> - **`s`/`skip`** — Override the reviewer and proceed as-is
 > - **Comment** — Modify or add to the notes before passing to the executor
 
 **STOP.** Wait for user choice.
@@ -109,9 +113,11 @@ Present a summary and wait for user input:
 > Phase: {phase number} — {phase name}
 > {executor's SUMMARY — brief commentary, decisions, implementation notes}
 >
+> · · ·
+>
 > **Options:**
 > - **`y`/`yes`** — Approve, commit, continue to next task
-> - **`auto`** — Approve this and all future reviewer-approved tasks automatically
+> - **`a`/`auto`** — Approve this and all future reviewer-approved tasks automatically
 > - **Comment** — Feedback the reviewer missed (triggers a fix round)
 
 **STOP.** Wait for user input.
