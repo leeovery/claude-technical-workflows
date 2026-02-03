@@ -10,7 +10,7 @@ Invoke the **technical-specification** skill for this conversation with inline f
 
 Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
-This command is for **feature mode** - a streamlined path to specification when you already know what you're building and don't need formal discussion documentation.
+This skill is for **feature mode** - a streamlined path to specification when you already know what you're building and don't need formal discussion documentation.
 
 ## Step 1: Gather Feature Context
 
