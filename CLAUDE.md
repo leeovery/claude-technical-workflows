@@ -19,6 +19,7 @@ Claude Code skills package for structured technical discussion and planning work
 
 ```
 skills/
+  # Processing skills (model-invocable — do the work)
   technical-research/        # Phase 1: Explore and validate ideas
   technical-discussion/      # Phase 2: Document discussions
   technical-specification/   # Phase 3: Build validated specifications
@@ -26,23 +27,18 @@ skills/
   technical-implementation/  # Phase 5: Execute via TDD
   technical-review/          # Phase 6: Validate against artifacts
 
-commands/
-  migrate.md                       # Keep workflow files in sync with system design
-
-  # Standalone commands (flexible input)
-  start-feature.md                 # Create spec directly from inline context
-  link-dependencies.md             # Link dependencies across topics
-
-  # Workflow commands (sequential, expect previous phase files)
-  workflow/
-    start-research.md              # Begin research exploration
-    start-discussion.md            # Begin technical discussions
-    start-specification.md         # Begin specification building
-    start-planning.md              # Begin implementation planning
-    start-implementation.md        # Begin implementing a plan
-    start-review.md                # Begin review
-    status.md                      # Show workflow status and next steps
-    view-plan.md                   # View plan tasks and progress
+  # Entry-point skills (user-invocable — gather context, invoke processing skills)
+  migrate/                   # Keep workflow files in sync with system design
+  start-feature/             # Create spec directly from inline context
+  link-dependencies/         # Link dependencies across topics
+  start-research/            # Begin research exploration
+  start-discussion/          # Begin technical discussions
+  start-specification/       # Begin specification building
+  start-planning/            # Begin implementation planning
+  start-implementation/      # Begin implementing a plan
+  start-review/              # Begin review
+  status/                    # Show workflow status and next steps
+  view-plan/                 # View plan tasks and progress
 
 .claude/skills/
   create-output-format/      # Dev-time skill: scaffold new output format adapters
@@ -60,9 +56,9 @@ agents/
 
 scripts/
   migrate.sh                              # Migration orchestrator
-  discovery-for-discussion.sh             # Discovery script for discussion command
-  discovery-for-specification.sh          # Discovery script for specification command
-  discovery-for-planning.sh               # Discovery script for planning command
+  discovery-for-discussion.sh             # Discovery script for discussion skill
+  discovery-for-specification.sh          # Discovery script for specification skill
+  discovery-for-planning.sh              # Discovery script for planning skill
   discovery-for-implementation-and-review.sh  # Discovery script for implementation/review
   migrations/                             # Individual migration scripts (numbered)
 
@@ -70,29 +66,31 @@ tests/
   scripts/                   # Shell script tests for discovery and migrations
 ```
 
-## Command Architecture
+## Skill Architecture
 
-**Workflow commands** (in `commands/workflow/`) are part of the sequential workflow system. They expect files from previous phases and pass content to skills.
+Skills are organised in two tiers:
 
-**Standalone commands** (no prefix) can be used independently. They gather inputs flexibly (inline, files, or prompts) and pass to skills.
+**Entry-point skills** (`/start-*`, `/status`, `/migrate`, etc.) are user-invocable. They gather context from files, prompts, or inline input, then invoke a processing skill. They have `disable-model-invocation: true` in their frontmatter (except `/migrate`, which other skills invoke).
 
-**Skills are input-agnostic** - they receive inputs and process them without knowing where the inputs came from. Commands are responsible for gathering inputs.
+**Processing skills** (`technical-*`) are model-invocable. They receive inputs and process them without knowing where the inputs came from. Entry-point skills are responsible for gathering inputs.
 
-### Keeping Skills Workflow-Agnostic (IMPORTANT)
+**Standalone entry points** (e.g., `/start-feature`) can invoke processing skills directly without requiring previous phase files.
 
-Skills should **never hardcode references** to specific workflow phases (e.g., "the research phase", "after discussion"). This allows skills to be invoked from different entry points - whether via the six-phase workflow commands or standalone commands like `/start-feature`.
+### Keeping Processing Skills Workflow-Agnostic (IMPORTANT)
 
-**In skills, avoid:**
+Processing skills should **never hardcode references** to specific workflow phases (e.g., "the research phase", "after discussion"). This allows them to be invoked from different entry points — whether via workflow skills or standalone skills like `/start-feature`.
+
+**In processing skills, avoid:**
 - "The research, discussion, and specification phases..."
 - "After completing discussion, you should..."
 - "Proceed to the planning phase..."
 
-**In skills, prefer:**
+**In processing skills, prefer:**
 - "The specification contains validated decisions..."
 - "Planning is complete when..."
 - Reference inputs generically (specification, plan) not how they were created
 
-**Commands set context; skills process inputs.** If workflow-specific language is needed, it belongs in the command that invokes the skill, not in the skill itself.
+**Entry-point skills set context; processing skills process inputs.** If workflow-specific language is needed, it belongs in the entry-point skill, not in the processing skill.
 
 ## Key Conventions
 
@@ -125,7 +123,7 @@ The contract and scaffolding templates live in `.claude/skills/create-output-for
 - `skills/technical-planning/references/output-formats.md` - the authoritative list
 - `skills/technical-planning/references/output-formats/{format}/` - individual format directories
 
-**Why this matters:** Listing formats elsewhere creates maintenance dependencies. If a format is added or removed, we should only need to update the planning references - not hunt through skills, commands, or documentation.
+**Why this matters:** Listing formats elsewhere creates maintenance dependencies. If a format is added or removed, we should only need to update the planning references - not hunt through other skills or documentation.
 
 **How other phases reference formats:**
 - Plans include a `format:` field in their frontmatter
@@ -135,7 +133,7 @@ This keeps format knowledge centralized in the planning phase where it belongs.
 
 ## Migrations
 
-The `/migrate` command keeps workflow files in sync with the current system design. It runs automatically at the start of every workflow command (Step 0).
+The `/migrate` skill keeps workflow files in sync with the current system design. It runs automatically at the start of every workflow skill (Step 0).
 
 **How it works:**
 - `scripts/migrate.sh` runs all migration scripts in `scripts/migrations/` in numeric order

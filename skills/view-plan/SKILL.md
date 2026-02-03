@@ -1,5 +1,7 @@
 ---
-description: View a plan's tasks and progress, regardless of output format.
+name: view-plan
+description: "View a plan's tasks and progress, regardless of output format."
+disable-model-invocation: true
 ---
 
 Display a readable summary of a plan's phases, tasks, and status.

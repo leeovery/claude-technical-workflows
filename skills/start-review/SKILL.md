@@ -1,5 +1,7 @@
 ---
-description: Start a review session from an existing plan and implementation. Discovers available plans, validates implementation exists, and invokes the technical-review skill.
+name: start-review
+description: "Start a review session from an existing plan and implementation. Discovers available plans, validates implementation exists, and invokes the technical-review skill."
+disable-model-invocation: true
 allowed-tools: Bash(.claude/scripts/discovery-for-implementation-and-review.sh)
 ---
 
@@ -40,7 +42,7 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 **This step is mandatory. You must complete it before proceeding.**
 
-Invoke the `/migrate` command and assess its output.
+Invoke the `/migrate` skill and assess its output.
 
 **If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
 
@@ -153,9 +155,9 @@ If they choose specific directories/files, ask them to specify.
 
 ## Step 5: Invoke the Skill
 
-After completing the steps above, this command's purpose is fulfilled.
+After completing the steps above, this skill's purpose is fulfilled.
 
-Invoke the [technical-review](../../skills/technical-review/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
+Invoke the [technical-review](../technical-review/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
 **Example handoff:**
 ```

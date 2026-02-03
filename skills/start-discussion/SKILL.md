@@ -1,5 +1,7 @@
 ---
-description: Start a technical discussion. Discovers research and existing discussions, offers multiple entry paths, and invokes the technical-discussion skill.
+name: start-discussion
+description: "Start a technical discussion. Discovers research and existing discussions, offers multiple entry paths, and invokes the technical-discussion skill."
+disable-model-invocation: true
 allowed-tools: Bash(.claude/scripts/discovery-for-discussion.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/research-analysis.md)
 ---
 
@@ -40,7 +42,7 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 **This step is mandatory. You must complete it before proceeding.**
 
-Invoke the `/migrate` command and assess its output.
+Invoke the `/migrate` skill and assess its output.
 
 **If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
 
@@ -354,9 +356,9 @@ What would you like to focus on in this session?
 
 ## Step 7: Invoke the Skill
 
-After completing the steps above, this command's purpose is fulfilled.
+After completing the steps above, this skill's purpose is fulfilled.
 
-Invoke the [technical-discussion](../../skills/technical-discussion/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
+Invoke the [technical-discussion](../technical-discussion/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
 **Example handoff (from research):**
 ```

@@ -1,5 +1,7 @@
 ---
-description: Start a feature specification directly, skipping formal discussion documentation. For adding features to existing projects where you already know what you're building.
+name: start-feature
+description: "Start a feature specification directly, skipping formal discussion documentation. For adding features to existing projects where you already know what you're building."
+disable-model-invocation: true
 ---
 
 Invoke the **technical-specification** skill for this conversation with inline feature context.
@@ -8,7 +10,7 @@ Invoke the **technical-specification** skill for this conversation with inline f
 
 Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
-This command is for **feature mode** - a streamlined path to specification when you already know what you're building and don't need formal discussion documentation.
+This skill is for **feature mode** - a streamlined path to specification when you already know what you're building and don't need formal discussion documentation.
 
 ## Step 1: Gather Feature Context
 
@@ -55,7 +57,7 @@ If a specification with the same name exists, inform the user and ask how to pro
 
 ## Step 4: Invoke Specification Skill
 
-Pass the gathered context to the technical-specification skill:
+Pass the gathered context to the [technical-specification](../technical-specification/SKILL.md) skill:
 
 ```
 Feature specification for: {topic}
