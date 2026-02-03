@@ -193,14 +193,14 @@ Show Not implementable section only (with unblock hint above).
 ```
 No implementable plans.
 
-· · ·
+Before you can start implementation:
+- Complete blocking dependencies first, or
+- Finish plans still in progress with /start-planning
 
-To proceed:
-- Complete blocking dependencies first
-- Or finish plans still in progress with /start-planning
+Then re-run /start-implementation.
 ```
 
-**STOP.** Wait for user response.
+**STOP.** This workflow cannot continue — do not proceed.
 
 **Otherwise (multiple selectable plans, or implemented plans exist):**
 ```
