@@ -48,7 +48,7 @@ Context refresh (compaction) summarizes the conversation, losing procedural deta
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
 2. **Check task progress in the plan** — use the plan adapter's instructions to read the plan's current state. Also read the implementation tracking file and any other working documents for additional context.
-3. **Check `task_gate_mode`** in the tracking file — if `auto`, the user previously opted out of per-task gates for this session.
+3. **Check `task_gate_mode` and `fix_gate_mode`** in the tracking file — if `auto`, the user previously opted out of per-task or per-fix gates for this session.
 4. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 5. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 
@@ -143,7 +143,7 @@ Store the selected skill paths — they will be persisted to the tracking file i
 
 #### If `docs/workflow/implementation/{topic}.md` already exists
 
-Reset `task_gate_mode` to `gated` in the tracking file before proceeding (fresh session = fresh gate).
+Reset `task_gate_mode` and `fix_gate_mode` to `gated` in the tracking file before proceeding (fresh session = fresh gates).
 
 If `project_skills` is populated in the tracking file, present for confirmation:
 
@@ -174,6 +174,7 @@ plan: ../planning/{topic}.md
 format: {format from plan}
 status: in-progress
 task_gate_mode: gated
+fix_gate_mode: gated
 project_skills: []
 current_phase: 1
 current_task: ~

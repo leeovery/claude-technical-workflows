@@ -32,9 +32,12 @@ CONVENTIONS: {followed | violations — list}
 ARCHITECTURE: {sound | concerns — details}
 ISSUES:
 - {specific issue with file:line reference}
+  FIX: {recommended approach}
+  ALTERNATIVE: {other valid approach with tradeoff — optional}
+  CONFIDENCE: {high | medium | low}
 NOTES:
 - {non-blocking observations}
 ```
 
 - `approved`: task passes all five review dimensions
-- `needs-changes`: ISSUES contains specific, actionable items
+- `needs-changes`: ISSUES contains specific, actionable items with fix recommendations and confidence levels
