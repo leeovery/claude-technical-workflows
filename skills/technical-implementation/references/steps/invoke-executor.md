@@ -10,7 +10,7 @@ This step invokes the `implementation-task-executor` agent (`.claude/agents/impl
 
 ## Invoke the Agent
 
-Invoke `implementation-task-executor` with these file paths:
+**Every invocation** — initial or re-attempt — includes these file paths:
 
 1. **tdd-workflow.md**: `.claude/skills/technical-implementation/references/tdd-workflow.md`
 2. **code-quality.md**: `.claude/skills/technical-implementation/references/code-quality.md`
@@ -18,9 +18,11 @@ Invoke `implementation-task-executor` with these file paths:
 4. **Project skill paths**: from `project_skills` in the implementation tracking file
 5. **Task content**: normalised task content (see [task-normalisation.md](../task-normalisation.md))
 
-On **re-invocation after review feedback**, also include:
-- **User-approved review notes**: verbatim or as modified by the user
-- **Specific issues to address**: the ISSUES from the review
+**Re-attempts after review feedback** additionally include:
+6. **User-approved review notes**: verbatim or as modified by the user
+7. **Specific issues to address**: the ISSUES from the review
+
+The executor is stateless — each invocation starts fresh with no memory of previous attempts. Always pass the full task content so the executor can see what was asked, what was done, and what needs fixing.
 
 ---
 

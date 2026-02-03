@@ -19,9 +19,11 @@ You receive file paths and context via the orchestrator's prompt:
 4. **Project skill paths** — Relevant `.claude/skills/` paths for framework conventions
 5. **Task content** — Task ID, phase, and all instructional content: goal, implementation steps, acceptance criteria, tests, edge cases, context, notes. This is your scope.
 
-On **re-invocation after review feedback**, you also receive:
-- **User-approved review notes** — may be the reviewer's original notes, modified by user, or user's own notes
-- **Specific issues to address**
+On **re-invocation after review feedback**, you receive all of the above, plus:
+6. **User-approved review notes** — may be the reviewer's original notes, modified by user, or user's own notes
+7. **Specific issues to address**
+
+You are stateless — each invocation starts fresh. The full task content is always provided so you can see what was asked, what was done, and what needs fixing.
 
 ## Your Process
 
