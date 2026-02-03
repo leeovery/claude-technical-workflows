@@ -18,7 +18,7 @@
   <a href="https://leeovery.github.io/claude-technical-workflows/"><strong>Open the Interactive Workflow Explorer</strong></a>
 </p>
 
-> **Workflow Explorer** — A visual, interactive guide to every phase, skill, and command in this toolkit. See how commands route to skills, trace decision logic through flowcharts, and understand the full pipeline at a glance. No install required — runs in your browser.
+> **Workflow Explorer** — A visual, interactive guide to every phase and skill in this toolkit. Trace decision logic through flowcharts and understand the full pipeline at a glance. No install required — runs in your browser.
 
 ---
 
@@ -34,7 +34,7 @@ Research → Discussion → Specification → Planning → Implementation → Re
 
 **Why this matters:** Complex features benefit from thorough discussion before implementation. This toolkit documents the *what* and *why* before diving into the *how*, preserving architectural decisions, edge cases, and the reasoning behind choices that would otherwise be lost.
 
-**Flexible entry points:** Need the full workflow? Start at Research or Discussion and progress through each phase. Already know what you're building? Jump straight to Specification with `/start-feature`. Skills are input-agnostic - commands gather context and feed it to them.
+**Flexible entry points:** Need the full workflow? Start at Research or Discussion and progress through each phase. Already know what you're building? Jump straight to Specification with `/start-feature`. Entry-point skills gather context and feed it to processing skills.
 
 > [!NOTE]
 > **Work in progress.** The workflow is being refined through real-world usage. Expect updates as patterns evolve.
@@ -69,47 +69,47 @@ Research → Discussion → Specification → Planning → Implementation → Re
 
 Start with `/start-research` or `/start-discussion` and follow the flow. Each phase outputs files that the next phase consumes.
 
-**2. Standalone Commands** - Jump directly to a skill with flexible inputs:
+**2. Standalone Skills** - Jump directly to a processing skill with flexible inputs:
 
-| Command | What it does |
-|---------|-------------|
+| Skill | What it does |
+|-------|-------------|
 | `/start-feature` | Create a spec directly from inline context (skip research/discussion) |
 
-*More standalone commands coming soon.*
+*More standalone skills coming soon.*
 
-### The Command/Skill Architecture
+### The Two-Tier Skill Architecture
 
-**Skills are input-agnostic.** They don't know or care where their inputs came from: a discussion document, inline context, or external sources. They just process what they receive.
+**Processing skills** (`technical-*`) are input-agnostic. They don't know or care where their inputs came from: a discussion document, inline context, or external sources. They just process what they receive.
 
-**Commands are the input layer.** They gather context (from files, prompts, or inline) and pass it to skills. This separation means:
+**Entry-point skills** (`/start-*`, `/status`, etc.) are the input layer. They gather context (from files, prompts, or inline) and pass it to processing skills. This separation means:
 
-- The same skill can be invoked from different entry points
-- You can create custom commands that feed skills in new ways
-- Skills remain reusable without coupling to specific workflows
+- The same processing skill can be invoked from different entry points
+- You can create custom entry-point skills that feed processing skills in new ways
+- Processing skills remain reusable without coupling to specific workflows
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                        COMMANDS                             │
-│  (gather inputs from files, prompts, inline context)        │
+│                    ENTRY-POINT SKILLS                        │
+│  (gather inputs from files, prompts, inline context)         │
 ├─────────────────────────────────────────────────────────────┤
-│  /start-specification   /start-feature   (your custom)  │
-│         │                       │                 │         │
-│         └───────────┬───────────┘                 │         │
-│                     ▼                             ▼         │
+│  /start-specification   /start-feature   (your custom)      │
+│         │                       │                 │          │
+│         └───────────┬───────────┘                 │          │
+│                     ▼                             ▼          │
 ├─────────────────────────────────────────────────────────────┤
-│                         SKILLS                              │
-│  (process inputs without knowing their source)              │
+│                    PROCESSING SKILLS                         │
+│  (process inputs without knowing their source)               │
 ├─────────────────────────────────────────────────────────────┤
-│           technical-specification skill                     │
-│           technical-planning skill                          │
-│           technical-implementation skill                    │
-│           etc.                                              │
+│           technical-specification skill                      │
+│           technical-planning skill                           │
+│           technical-implementation skill                     │
+│           etc.                                               │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Workflow Commands
+### Workflow Skills
 
-| Phase          | Command                 |
+| Phase          | Skill                   |
 |----------------|-------------------------|
 | Research       | `/start-research`       |
 | Discussion     | `/start-discussion`     |
@@ -118,7 +118,7 @@ Start with `/start-research` or `/start-discussion` and follow the flow. Each ph
 | Implementation | `/start-implementation` |
 | Review         | `/start-review`         |
 
-Run the command directly or ask Claude to run it. Each gathers context from previous phase outputs and passes it to the skill.
+Run the skill directly or ask Claude to run it. Each gathers context from previous phase outputs and passes it to the processing skill.
 
 ## Installation
 
@@ -234,27 +234,27 @@ Research starts with `exploration.md` and splits into topic files as themes emer
 ### Package Structure
 
 ```
-skills/                              # Input-agnostic processors
+skills/
+├── # Processing skills (model-invocable)
 ├── technical-research/              # Explore and validate ideas
 ├── technical-discussion/            # Document discussions
 ├── technical-specification/         # Build validated specifications
 ├── technical-planning/              # Create implementation plans
 ├── technical-implementation/        # Execute via TDD
-└── technical-review/                # Validate against artefacts
-
-commands/                            # Input layer (gather context → invoke skills)
-├── migrate.md                       # Keep workflow files in sync with system design
-├── start-feature.md                 # Standalone: spec from inline context
-├── link-dependencies.md             # Standalone: wire cross-topic deps
-└── workflow/                        # Sequential workflow commands
-    ├── start-research.md            # Begin research
-    ├── start-discussion.md          # Begin discussions
-    ├── start-specification.md       # Begin specification
-    ├── start-planning.md            # Begin planning
-    ├── start-implementation.md      # Begin implementation
-    ├── start-review.md              # Begin review
-    ├── status.md                    # Show workflow status
-    └── view-plan.md                 # View plan tasks
+├── technical-review/                # Validate against artefacts
+│
+├── # Entry-point skills (user-invocable)
+├── migrate/                         # Keep workflow files in sync with system design
+├── start-feature/                   # Standalone: spec from inline context
+├── link-dependencies/               # Standalone: wire cross-topic deps
+├── start-research/                  # Begin research
+├── start-discussion/                # Begin discussions
+├── start-specification/             # Begin specification
+├── start-planning/                  # Begin planning
+├── start-implementation/            # Begin implementation
+├── start-review/                    # Begin review
+├── status/                          # Show workflow status
+└── view-plan/                       # View plan tasks
 
 agents/
 ├── review-task-verifier.md           # Verifies single task implementation for review
@@ -265,11 +265,11 @@ agents/
 ├── planning-task-author.md          # Write full task detail
 └── planning-dependency-grapher.md   # Analyze task dependencies and priorities
 
-scripts/                             # Helper scripts for commands
+scripts/                             # Helper scripts for skills
 ├── migrate.sh                       # Migration orchestrator
-├── discovery-for-discussion.sh      # Discovery for discussion command
-├── discovery-for-specification.sh   # Discovery for specification command
-├── discovery-for-planning.sh        # Discovery for planning command
+├── discovery-for-discussion.sh      # Discovery for discussion skill
+├── discovery-for-specification.sh   # Discovery for specification skill
+├── discovery-for-planning.sh        # Discovery for planning skill
 ├── discovery-for-implementation-and-review.sh  # Discovery for impl/review
 └── migrations/                      # Individual migration scripts (numbered)
 
@@ -279,7 +279,9 @@ tests/
 
 ## Skills
 
-Skills are **input-agnostic processors**: they receive inputs and process them without knowing where the inputs came from. This makes them reusable across different commands and workflows.
+### Processing Skills
+
+Processing skills are **input-agnostic**: they receive inputs and process them without knowing where the inputs came from. This makes them reusable across different entry points and workflows.
 
 | Skill                                                            | Description                                                                                                                                                                                                  |
 |------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -290,48 +292,48 @@ Skills are **input-agnostic processors**: they receive inputs and process them w
 | [**technical-implementation**](skills/technical-implementation/) | Execute implementation plans using strict TDD workflow. Writes tests first, implements to pass, commits frequently, and gates phases on user approval.                                                       |
 | [**technical-review**](skills/technical-review/)                 | Review completed implementation against specification requirements and plan acceptance criteria. Uses parallel subagents for efficient chain verification. Produces structured feedback without fixing code. |
 
-## Commands
+### Entry-Point Skills
 
-Commands are the input layer: they gather context and pass it to skills. Two types:
+Entry-point skills are the input layer: they gather context and pass it to processing skills.
 
-### Workflow Commands
+#### Workflow Skills
 
-Sequential commands in `commands/workflow/`. They expect files from previous phases and pass content to skills.
+Sequential skills that expect files from previous phases and pass content to processing skills.
 
-| Command                                                                              | Description                                                                                                                                                                                                |
-|--------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [**/start-research**](commands/workflow/start-research.md)                  | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion.                                                                                     |
-| [**/start-discussion**](commands/workflow/start-discussion.md)              | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation.                                                               |
-| [**/start-specification**](commands/workflow/start-specification.md)        | Start a specification session from existing discussion(s). Automatically analyses multiple discussions for natural groupings and consolidates them into unified specifications.                            |
-| [**/start-planning**](commands/workflow/start-planning.md)                  | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (local markdown, Linear). |
-| [**/start-implementation**](commands/workflow/start-implementation.md)      | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
-| [**/start-review**](commands/workflow/start-review.md)                      | Start reviewing completed work. Validates implementation against plan tasks and acceptance criteria.                                                                                                        |
+| Skill                                                                        | Description                                                                                                                                                                                                |
+|------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [**/start-research**](skills/start-research/)                                | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion.                                                                                     |
+| [**/start-discussion**](skills/start-discussion/)                            | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation.                                                               |
+| [**/start-specification**](skills/start-specification/)                      | Start a specification session from existing discussion(s). Automatically analyses multiple discussions for natural groupings and consolidates them into unified specifications.                            |
+| [**/start-planning**](skills/start-planning/)                                | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (local markdown, Linear). |
+| [**/start-implementation**](skills/start-implementation/)                    | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
+| [**/start-review**](skills/start-review/)                                    | Start reviewing completed work. Validates implementation against plan tasks and acceptance criteria.                                                                                                        |
 
-### Utility Commands
+#### Utility Skills
 
 Helpers for navigating and maintaining the workflow.
 
-| Command                                                                              | Description                                                                                                                                 |
-|--------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| [**/migrate**](commands/migrate.md)                                         | Keep workflow files in sync with the current system design. Runs automatically at the start of every workflow command.                      |
-| [**/status**](commands/workflow/status.md)                                  | Show workflow status - what topics exist at each phase, and suggested next steps.                                                           |
-| [**/view-plan**](commands/workflow/view-plan.md)                            | View a plan's tasks and progress, regardless of output format.                                                                              |
+| Skill                                                                        | Description                                                                                                                                 |
+|------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| [**/migrate**](skills/migrate/)                                              | Keep workflow files in sync with the current system design. Runs automatically at the start of every workflow skill.                        |
+| [**/status**](skills/status/)                                                | Show workflow status - what topics exist at each phase, and suggested next steps.                                                           |
+| [**/view-plan**](skills/view-plan/)                                          | View a plan's tasks and progress, regardless of output format.                                                                              |
 
-### Standalone Commands
+#### Standalone Skills
 
-Independent commands that gather inputs flexibly (inline context, files, or prompts) and invoke skills directly. Use these when you want skill capabilities without the full workflow structure.
+Independent skills that gather inputs flexibly (inline context, files, or prompts) and invoke processing skills directly. Use these when you want capabilities without the full workflow structure.
 
-| Command                                                 | Description                                                                                                                                 |
+| Skill                                                   | Description                                                                                                                                 |
 |---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| [**/start-feature**](commands/start-feature.md)         | Create a specification directly from inline context. Invokes the specification skill without requiring a discussion document.              |
-| [**/link-dependencies**](commands/link-dependencies.md) | Link external dependencies across topics. Scans plans and wires up unresolved cross-topic dependencies.                                    |
+| [**/start-feature**](skills/start-feature/)              | Create a specification directly from inline context. Invokes the specification skill without requiring a discussion document.              |
+| [**/link-dependencies**](skills/link-dependencies/)      | Link external dependencies across topics. Scans plans and wires up unresolved cross-topic dependencies.                                    |
 
-### Creating Custom Commands
+### Creating Custom Skills
 
-Since skills are input-agnostic, you can create your own commands that feed them in new ways. A command just needs to:
+Since processing skills are input-agnostic, you can create your own entry-point skills that feed them in new ways. An entry-point skill just needs to:
 
-1. Gather the inputs the skill expects
-2. Invoke the skill with those inputs
+1. Gather the inputs the processing skill expects
+2. Invoke the processing skill with those inputs
 
 See `/start-feature` as an example: it provides inline context to the specification skill instead of a discussion document.
 
