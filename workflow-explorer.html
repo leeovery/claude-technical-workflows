@@ -252,6 +252,7 @@
     position: relative;
     overflow: hidden;
     background: var(--bg);
+    touch-action: none;
   }
   .canvas-area svg {
     width: 100%;
@@ -523,6 +524,10 @@
     font-size: 16px;
   }
   .zoom-btn:hover { border-color: var(--accent); }
+  @media (max-width: 768px) {
+    .zoom-btn { width: 44px; height: 44px; font-size: 20px; }
+    .zoom-controls { gap: 6px; }
+  }
 
   /* Overview nav button */
   .nav-overview {
@@ -2554,6 +2559,68 @@ window.addEventListener('mouseup', () => {
   isPanning = false;
   canvasArea.style.cursor = '';
 });
+
+// ── Touch: single-finger pan + two-finger pinch-to-zoom ──
+let touchPanning = false, touchPanStart = { x: 0, y: 0 }, touchVbStart = [0,0,0,0];
+let pinching = false, pinchStartDist = 0, pinchVbStart = [0,0,0,0], pinchMid = { x: 0, y: 0 };
+
+function touchDist(t) {
+  const dx = t[1].clientX - t[0].clientX;
+  const dy = t[1].clientY - t[0].clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+function touchMidpoint(t) {
+  return { x: (t[0].clientX + t[1].clientX) / 2, y: (t[0].clientY + t[1].clientY) / 2 };
+}
+
+canvasArea.addEventListener('touchstart', (e) => {
+  if (e.target.closest('.detail-panel') || e.target.closest('.zoom-controls')) return;
+  const t = e.touches;
+  if (t.length === 2) {
+    // Start pinch
+    touchPanning = false;
+    pinching = true;
+    pinchStartDist = touchDist(t);
+    pinchVbStart = svg.getAttribute('viewBox').split(' ').map(Number);
+    pinchMid = touchMidpoint(t);
+  } else if (t.length === 1 && !e.target.closest('.svg-node')) {
+    // Start pan
+    touchPanning = true;
+    touchPanStart = { x: t[0].clientX, y: t[0].clientY };
+    touchVbStart = svg.getAttribute('viewBox').split(' ').map(Number);
+  }
+}, { passive: true });
+
+canvasArea.addEventListener('touchmove', (e) => {
+  if (e.target.closest('.detail-panel') || e.target.closest('.zoom-controls')) return;
+  e.preventDefault();
+  const t = e.touches;
+  if (pinching && t.length === 2) {
+    const dist = touchDist(t);
+    const factor = dist / pinchStartDist;
+    const newW = pinchVbStart[2] / factor;
+    const newH = pinchVbStart[3] / factor;
+    // Zoom toward pinch midpoint
+    const svgRect = canvasArea.getBoundingClientRect();
+    const mx = pinchMid.x - svgRect.left;
+    const my = pinchMid.y - svgRect.top;
+    const ratioX = mx / svgRect.width;
+    const ratioY = my / svgRect.height;
+    const newX = pinchVbStart[0] + (pinchVbStart[2] - newW) * ratioX;
+    const newY = pinchVbStart[1] + (pinchVbStart[3] - newH) * ratioY;
+    svg.setAttribute('viewBox', `${newX} ${newY} ${newW} ${newH}`);
+  } else if (touchPanning && t.length === 1) {
+    const dx = (t[0].clientX - touchPanStart.x) * (touchVbStart[2] / canvasArea.clientWidth);
+    const dy = (t[0].clientY - touchPanStart.y) * (touchVbStart[3] / canvasArea.clientHeight);
+    svg.setAttribute('viewBox', `${touchVbStart[0] - dx} ${touchVbStart[1] - dy} ${touchVbStart[2]} ${touchVbStart[3]}`);
+  }
+}, { passive: false });
+
+canvasArea.addEventListener('touchend', (e) => {
+  if (e.touches.length < 2) pinching = false;
+  if (e.touches.length < 1) touchPanning = false;
+}, { passive: true });
 
 // ── Info Bar ──
 function updatePrompt() {
