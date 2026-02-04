@@ -82,7 +82,7 @@ TESTS_WRITTEN: {list of test files/methods}
 TEST_RESULTS: {all passing | failures — details}
 ISSUES: {any concerns, blockers, or deviations discovered}
 INTEGRATION_NOTES:
-- {3-5 concise bullet points anchored to concrete file paths — e.g., "Created `ValidationHelper` in `src/helpers/validation.ts` — use for all input validation". Reference what exists and where, not abstract descriptions}
+- {3-5 concise bullet points: key patterns, helpers, conventions, interface decisions established by this task. Anchor to concrete file paths where applicable (e.g., "Created `ValidationHelper` in `src/helpers/validation.ts` — use for all input validation"), but high-level observations without a specific file reference are also valuable}
 ```
 
 - If STATUS is `blocked` or `failed`, ISSUES **must** explain why and what decision is needed.

@@ -39,7 +39,7 @@ SUMMARY: {2-5 lines — commentary, decisions made, anything off-script}
 TEST_RESULTS: {all passing | failures — details only if failures}
 ISSUES: {blockers or deviations — omit if none}
 INTEGRATION_NOTES:
-- {3-5 bullets anchored to file paths — what exists, where, and why}
+- {3-5 bullets: patterns, helpers, conventions established — anchor to file paths where applicable}
 ```
 
 - `complete`: all acceptance criteria met, tests passing
