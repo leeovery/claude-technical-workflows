@@ -21,6 +21,7 @@ This step invokes the `implementation-polish` agent (`.claude/agents/implementat
 7. **Project skill paths**: from `project_skills` in the implementation tracking file
 
 **Re-invocation after user feedback** additionally includes:
+
 8. **User feedback**: the user's comments on what to change or focus on
 
 The polish agent is stateless — each invocation starts fresh. Always pass all inputs.

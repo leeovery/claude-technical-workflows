@@ -22,6 +22,7 @@ You receive file paths and context via the orchestrator's prompt:
 7. **Project skill paths** — Framework conventions
 
 On **re-invocation after user feedback**, additionally include:
+
 8. **User feedback** — the user's comments on what to change or focus on
 
 ## Your Process
