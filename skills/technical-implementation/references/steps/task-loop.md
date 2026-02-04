@@ -26,7 +26,7 @@ E. Update progress + commit
 1. Follow the format's **reading.md** instructions to determine the next available task.
 2. If no available tasks remain → skip to **When All Tasks Are Complete**.
 3. Normalise the task content following **[task-normalisation.md](../task-normalisation.md)**.
-4. Reset the **fix attempt counter** to `0` for this task.
+4. Reset `fix_attempts` to `0` in the implementation tracking file.
 
 ---
 
@@ -78,7 +78,7 @@ Present the executor's ISSUES to the user:
 
 ### Review Changes
 
-Increment the **fix attempt counter** for this task.
+Increment `fix_attempts` in the implementation tracking file.
 
 Check the `fix_gate_mode` field in the implementation tracking file.
 
@@ -109,7 +109,7 @@ Present the reviewer's findings and fix analysis to the user:
 
 #### If `fix_gate_mode: auto`
 
-**Tripwire check:** If the fix attempt counter has reached **3**, the executor and reviewer have failed to converge. Override `fix_gate_mode` and escalate to the user:
+**Tripwire check:** If `fix_attempts` has reached **3**, the executor and reviewer have failed to converge. Override `fix_gate_mode` and escalate to the user:
 
 > **Review for Task {id}: {Task Name} — needs changes (attempt {N}, escalated)**
 >
