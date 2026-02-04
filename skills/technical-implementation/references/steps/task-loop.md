@@ -26,6 +26,7 @@ E. Update progress + commit
 1. Follow the format's **reading.md** instructions to determine the next available task.
 2. If no available tasks remain → skip to **When All Tasks Are Complete**.
 3. Normalise the task content following **[task-normalisation.md](../task-normalisation.md)**.
+4. Reset the **fix attempt counter** to `0` for this task.
 
 ---
 
@@ -77,13 +78,15 @@ Present the executor's ISSUES to the user:
 
 ### Review Changes
 
+Increment the **fix attempt counter** for this task.
+
 Check the `fix_gate_mode` field in the implementation tracking file.
 
-#### If `fix_gate_mode: gated`
+#### If `fix_gate_mode: gated` (or tripwire triggered — see below)
 
 Present the reviewer's findings and fix analysis to the user:
 
-> **Review for Task {id}: {Task Name} — needs changes**
+> **Review for Task {id}: {Task Name} — needs changes** (attempt {N})
 >
 > {ISSUES from reviewer, including FIX, ALTERNATIVE, and CONFIDENCE for each}
 >
@@ -106,9 +109,17 @@ Present the reviewer's findings and fix analysis to the user:
 
 #### If `fix_gate_mode: auto`
 
-Announce the fix round (one line, no stop):
+**Tripwire check:** If the fix attempt counter has reached **3**, the executor and reviewer have failed to converge. Override `fix_gate_mode` and escalate to the user:
 
-> **Review for Task {id}: {Task Name} — needs changes** ({N} issues, fix analysis included). Re-invoking executor.
+> **Review for Task {id}: {Task Name} — needs changes (attempt {N}, escalated)**
+>
+> The executor and reviewer have not converged after {N} attempts. Presenting for human review.
+
+→ Follow the **gated** path above.
+
+**Otherwise** (counter < 3), announce the fix round (one line, no stop):
+
+> **Review for Task {id}: {Task Name} — needs changes** (attempt {N}/{max 3}, fix analysis included). Re-invoking executor.
 
 → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the reviewer's notes (including fix analysis).
 
