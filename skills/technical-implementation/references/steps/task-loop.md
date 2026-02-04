@@ -80,11 +80,23 @@ Present the executor's ISSUES to the user:
 
 Increment `fix_attempts` in the implementation tracking file.
 
-Check the `fix_gate_mode` field in the implementation tracking file.
+#### Auto-proceed (no user interaction)
 
-#### If `fix_gate_mode: gated` (or tripwire triggered — see below)
+If `fix_gate_mode: auto` **and** `fix_attempts < 3`:
 
-Present the reviewer's findings and fix analysis to the user:
+> **Review for Task {id}: {Task Name} — needs changes** (attempt {N}/{max 3}, fix analysis included). Re-invoking executor.
+
+→ Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the reviewer's notes (including fix analysis).
+
+#### Present to user (all other cases)
+
+This applies when `fix_gate_mode: gated`, **or** when `fix_attempts` has reached **3** (tripwire — the executor and reviewer have failed to converge, regardless of gate mode).
+
+If tripwire triggered, prepend:
+
+> The executor and reviewer have not converged after {N} attempts. Escalating for human review.
+
+Present the reviewer's findings and fix analysis:
 
 > **Review for Task {id}: {Task Name} — needs changes** (attempt {N})
 >
@@ -106,22 +118,6 @@ Present the reviewer's findings and fix analysis to the user:
 - **`auto`**: Note that `fix_gate_mode` should be updated to `auto` during the next commit step. → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the reviewer's notes (including fix analysis).
 - **`skip`**: → Proceed to **D. Task Gate**.
 - **Comment**: → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content, the reviewer's notes, and the user's commentary.
-
-#### If `fix_gate_mode: auto`
-
-**Tripwire check:** If `fix_attempts` has reached **3**, the executor and reviewer have failed to converge. Override `fix_gate_mode` and escalate to the user:
-
-> **Review for Task {id}: {Task Name} — needs changes (attempt {N}, escalated)**
->
-> The executor and reviewer have not converged after {N} attempts. Presenting for human review.
-
-→ Follow the **gated** path above.
-
-**Otherwise** (counter < 3), announce the fix round (one line, no stop):
-
-> **Review for Task {id}: {Task Name} — needs changes** (attempt {N}/{max 3}, fix analysis included). Re-invoking executor.
-
-→ Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the reviewer's notes (including fix analysis).
 
 ---
 
