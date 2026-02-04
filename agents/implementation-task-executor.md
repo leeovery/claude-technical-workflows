@@ -76,7 +76,7 @@ Return a structured completion report:
 ```
 STATUS: complete | blocked | failed
 TASK: {task name}
-SUMMARY: {what was done, decisions made, and any judgment calls where the plan was ambiguous — e.g., observable behaviors you chose that weren't explicitly specified (logging, warnings, error messages for cases the plan didn't address)}
+SUMMARY: {what was done}
 FILES_CHANGED: {list of files created/modified}
 TESTS_WRITTEN: {list of test files/methods}
 TEST_RESULTS: {all passing | failures — details}

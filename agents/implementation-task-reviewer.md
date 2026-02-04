@@ -62,7 +62,6 @@ Is this a sound design decision? Will it compose well with future tasks?
 - Are there coupling or abstraction concerns?
 - Will this cause problems for subsequent tasks in the phase?
 - Are there structural concerns that should be raised now rather than compounding?
-- Does the code produce any user-visible output (warnings, errors, log messages) that the plan doesn't explicitly require? Unspecified observable behavior is a common source of bugs when cases that should be silent share a code path with cases that should log.
 
 ### 6. Codebase Cohesion
 Does the new code integrate well with the existing codebase? If integration context exists from prior tasks, check against established patterns.
