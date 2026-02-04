@@ -34,7 +34,7 @@ You are stateless — each invocation starts fresh. The full task content is alw
 3. **Read project skills** — absorb framework conventions, testing patterns, architecture patterns
 4. **Read specification** (if provided) — understand broader context for this task
 5. **Explore codebase** — you are weaving into an existing canvas, not creating isolated patches:
-   - If an integration context file was provided, read it first to understand patterns, conventions, and helpers established by prior tasks
+   - If an integration context file was provided, read it first — identify helpers, patterns, and conventions you must reuse before writing anything new
    - Skim the plan file to understand the task landscape — what's been built, what's coming, where your task fits. Use this for awareness, not to build ahead (YAGNI still applies)
    - Read files and tests related to the task's domain
    - Search for existing helpers, utilities, and abstractions that solve similar problems — reuse, don't duplicate
@@ -82,7 +82,7 @@ TESTS_WRITTEN: {list of test files/methods}
 TEST_RESULTS: {all passing | failures — details}
 ISSUES: {any concerns, blockers, or deviations discovered}
 INTEGRATION_NOTES:
-- {3-5 concise bullet points: key patterns, helpers, conventions, interface decisions established by this task — factual, for future task context}
+- {3-5 concise bullet points anchored to concrete file paths — e.g., "Created `ValidationHelper` in `src/helpers/validation.ts` — use for all input validation". Reference what exists and where, not abstract descriptions}
 ```
 
 - If STATUS is `blocked` or `failed`, ISSUES **must** explain why and what decision is needed.
