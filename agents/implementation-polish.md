@@ -30,7 +30,7 @@ On **re-invocation after user feedback**, additionally include:
 3. **Read project skills** — absorb framework conventions
 4. **Read the plan file** — understand the full scope of what was built
 5. **Read the integration context file** — understand patterns, helpers, and conventions from all tasks
-6. **Identify implementation scope** — use `git diff --name-only HEAD~$(git log --oneline -- . | head -20 | wc -l)..HEAD` or similar git commands to find all files changed during implementation. Read and understand the full implemented codebase.
+6. **Identify implementation scope** — find all files changed during implementation. Use git history, the plan's task list, and the integration context to build a complete picture of what was touched. Read and understand the full implemented codebase.
 7. **Begin discovery-fix loop** — minimum 2 cycles, maximum 5 (see below)
 8. **Return structured report**
 
@@ -46,50 +46,52 @@ If a cycle discovers no actionable issues, it still counts toward the minimum. T
 
 ### Discovery — Fixed Analysis Passes
 
-These are universal concerns. Always dispatch all three in parallel via Task tool:
+These are universal concerns. Dispatch all three in parallel as general-purpose sub-agents via Task tool. Each sub-agent receives the list of changed files (from step 6) and a focused analysis prompt. They read the files, analyze, and return structured findings.
+
+Craft a prompt for each sub-agent that includes:
+- The list of implementation files to analyze
+- The specific analysis focus (below)
+- Instruction to return findings as a structured list with file:line references
 
 #### 1. Code Cleanup
 
-Unused imports/variables/code, naming quality (abbreviation overuse, unclear names), formatting consistency across the implementation.
+Analyze all implementation files for: unused imports/variables/dead code, naming quality (abbreviation overuse, unclear names, inconsistent naming across files), formatting inconsistencies across the implementation. Compare naming conventions between files written by different tasks — flag drift.
 
 #### 2. Structural Cohesion
 
-DRY violations across task boundaries, class responsibilities (too much in one class, or too many tiny classes), design patterns now obvious with the full picture, over/under-engineering.
+Analyze all implementation files for: duplicated logic across task boundaries that should be extracted, class/module responsibilities (too much in one class, or unnecessarily fragmented across many), design patterns that are now obvious with the full picture but weren't visible to individual task executors, over-engineering (abstractions nobody uses) or under-engineering (raw code that should be extracted).
 
 #### 3. Cross-Task Integration
 
-Shared code paths with incorrectly merged behavior, workflow seams where tasks connect, interface mismatches between producer and consumer, integration test gaps.
+Analyze all implementation files for: shared code paths where multiple tasks contributed behavior — verify the merged result is correct, workflow seams where one task's output feeds another's input — verify the handoff works, interface mismatches between producer and consumer (type mismatches, missing fields, wrong assumptions), gaps in integration test coverage for cross-task workflows.
 
 ### Discovery — Dynamic Analysis Passes
 
-After fixed passes, read the codebase and understand the language, framework, and project conventions. Dispatch additional targeted passes based on what you find. Examples: language-specific idiom checks, convention consistency across early and late tasks, deeper investigation into areas flagged by fixed passes.
+After fixed passes return, review their findings and the codebase. Dispatch additional targeted sub-agents based on what you find. Examples: language-specific idiom checks, convention consistency across early and late tasks, deeper investigation into areas flagged by fixed passes. Each dynamic sub-agent receives the relevant file subset and a focused analysis prompt, same as fixed passes.
 
 ### Fix Cycle — Reusing Executor and Reviewer
 
 Within each cycle, after synthesizing findings:
 
-1. Craft a task description covering the prioritized fixes needed
+1. Craft a task description covering the prioritized fixes needed. Include the following **test rules** in every task description passed to the executor — these constrain what test changes are permitted during polish:
+   - Write NEW integration tests for cross-task workflows — yes
+   - Modify existing tests for mechanical changes (renames, moves) — yes
+   - Modify existing tests semantically (different behavior) — no. If a refactor breaks existing tests, the refactor is wrong. Revert it.
 2. Dispatch the **executor** (via Task tool, subagent_type `claude-technical-workflows:implementation-task-executor`) with:
-   - The crafted task description as task content
+   - The crafted task description (including test rules) as task content
    - tdd-workflow.md path
    - code-quality.md path
    - Specification path (if available)
    - Project skill paths
    - Plan file path
    - Integration context file path
-3. Dispatch the **reviewer** (via Task tool, subagent_type `claude-technical-workflows:implementation-task-reviewer`) to independently verify the executor's work, with:
+3. Dispatch the **reviewer** (via Task tool, subagent_type `claude-technical-workflows:implementation-task-reviewer`) to independently verify the executor's work. Include the test rules in the reviewer's prompt so it can flag violations. Pass:
    - Specification path
-   - The same task description used for the executor
+   - The same task description used for the executor (including test rules)
    - Project skill paths
    - Integration context file path
 4. If reviewer approves → cycle complete
 5. If reviewer returns `needs-changes` → re-dispatch executor with reviewer feedback (same as the normal fix loop). Maximum 3 fix attempts per cycle before moving on.
-
-### Test Rules for Polish
-
-- **Write NEW integration tests** for cross-task workflows — yes
-- **Modify existing tests for mechanical changes** (renames, moves) — yes
-- **Modify existing tests semantically** (different behavior) — no. If a refactor breaks existing tests, the refactor is wrong. Revert it.
 
 ## Hard Rules
 
