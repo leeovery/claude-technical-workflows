@@ -74,27 +74,51 @@ After fixed passes return, review their findings and the codebase. Dispatch addi
 
 ### Fix Cycle — Reusing Executor and Reviewer
 
-Within each cycle, after synthesizing findings:
+Within each cycle, after synthesizing findings, follow stages A through D sequentially.
 
-1. Craft a task description covering the prioritized fixes needed. Include the following **test rules** in every task description passed to the executor — these constrain what test changes are permitted during polish:
-   - Write NEW integration tests for cross-task workflows — yes
-   - Modify existing tests for mechanical changes (renames, moves) — yes
-   - Modify existing tests semantically (different behavior) — no. If a refactor breaks existing tests, the refactor is wrong. Revert it.
-2. Invoke the `implementation-task-executor` agent (`.claude/agents/implementation-task-executor.md`) with:
-   - The crafted task description (including test rules) as task content
-   - tdd-workflow.md path
-   - code-quality.md path
-   - Specification path (if available)
-   - Project skill paths
-   - Plan file path
-   - Integration context file path
-3. Invoke the `implementation-task-reviewer` agent (`.claude/agents/implementation-task-reviewer.md`) to independently verify the executor's work. Include the test rules in the reviewer's prompt so it can flag violations. Pass:
-   - Specification path
-   - The same task description used for the executor (including test rules)
-   - Project skill paths
-   - Integration context file path
-4. If reviewer approves → cycle complete
-5. If reviewer returns `needs-changes` → re-dispatch executor with reviewer feedback (same as the normal fix loop). Maximum 3 fix attempts per cycle before moving on.
+#### A. Craft Task Description
+
+Craft a task description covering the prioritized fixes needed. Include the following **test rules** in the task description — these constrain what test changes are permitted during polish:
+- Write NEW integration tests for cross-task workflows — yes
+- Modify existing tests for mechanical changes (renames, moves) — yes
+- Modify existing tests semantically (different behavior) — no. If a refactor breaks existing tests, the refactor is wrong. Revert it.
+
+→ Proceed to **B. Invoke Executor**.
+
+#### B. Invoke Executor
+
+Invoke the `implementation-task-executor` agent (`.claude/agents/implementation-task-executor.md`) with:
+- The crafted task description (including test rules) as task content
+- tdd-workflow.md path
+- code-quality.md path
+- Specification path (if available)
+- Project skill paths
+- Plan file path
+- Integration context file path
+
+**STOP.** Do not proceed until the executor has returned its result.
+
+On receipt of result, route on STATUS:
+- `blocked` or `failed` → report back as part of the polish report (SKIPPED section)
+- `complete` → proceed to **C. Invoke Reviewer**
+
+#### C. Invoke Reviewer
+
+Invoke the `implementation-task-reviewer` agent (`.claude/agents/implementation-task-reviewer.md`) to independently verify the executor's work. Include the test rules in the reviewer's prompt so it can flag violations. Pass:
+- Specification path
+- The same task description used for the executor (including test rules)
+- Project skill paths
+- Integration context file path
+
+**STOP.** Do not proceed until the reviewer has returned its result.
+
+On receipt of result, route on VERDICT:
+- `approved` → proceed to **D. Cycle Complete**
+- `needs-changes` → return to **B. Invoke Executor** with the reviewer's feedback. Maximum 3 fix attempts per cycle before moving on.
+
+#### D. Cycle Complete
+
+This fix cycle is done. Return to the top of the discovery-fix loop for the next cycle.
 
 ## Hard Rules
 
