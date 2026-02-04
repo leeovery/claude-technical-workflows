@@ -10,11 +10,36 @@ Audit `workflow-explorer.html` and sync its flowchart data with the actual comma
 
 ## Step 0: Determine Scope
 
+### 0a: Check for explicit context
+
 Check `$ARGUMENTS` for user-provided context about what changed.
 
 - **Context given** (e.g. "I just updated the implementation skill") → narrow to affected flowchart keys using the source mapping below
-- **No context** → full audit of all 24 flowchart keys
 - **Ambiguous** → ASK user to confirm scope before proceeding
+
+If explicit context was given, skip 0b and proceed to Step 1 with the narrowed scope.
+
+### 0b: Detect git context
+
+If no explicit context was given, check the git state:
+
+1. **Branch check** — run `git branch --show-current`. If not on `main`/`master`, note the feature branch name.
+2. **Changed files** — run `git diff main --name-only` (branch changes) and `git diff --name-only` + `git diff --cached --name-only` (uncommitted/staged changes). Combine into a single list of changed files.
+3. **Cross-reference** — match changed files against the source mapping below. Identify which flowchart keys are affected.
+
+If changed source files are detected, present findings to the user:
+
+> I'm on branch `{branch}` with changes to these source files:
+> - `{file}` → flowchart key(s): `{key}`
+> - ...
+>
+> **Options:**
+> 1. **Scope to these changes** — audit only the affected flowchart keys (recommended if this branch represents all recent work)
+> 2. **Full audit** — audit all flowchart keys regardless of git state
+
+Wait for user confirmation before proceeding.
+
+If no changed source files are detected (on main with clean tree), proceed with a full audit.
 
 ## Step 1: Read Source Files
 
