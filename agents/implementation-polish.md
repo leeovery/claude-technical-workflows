@@ -17,19 +17,21 @@ You receive file paths and context via the orchestrator's prompt:
 2. **tdd-workflow.md path** — TDD cycle rules (passed to executor)
 3. **Specification path** — What was intended — design decisions and rationale
 4. **Plan file path** — What was built — the full task landscape
-5. **Integration context file path** — Accumulated decisions and patterns from every task
-6. **Project skill paths** — Framework conventions
+5. **Plan format reading.md path** — How to read tasks from the plan (format-specific adapter)
+6. **Integration context file path** — Accumulated decisions and patterns from every task
+7. **Project skill paths** — Framework conventions
 
 On **re-invocation after user feedback**, additionally include:
-7. **User feedback** — the user's comments on what to change or focus on
+8. **User feedback** — the user's comments on what to change or focus on
 
 ## Your Process
 
 1. **Read code-quality.md** — absorb quality standards
 2. **Read specification** (if provided) — understand design intent
 3. **Read project skills** — absorb framework conventions
-4. **Read the plan file** — understand the full scope of what was built
-5. **Read the integration context file** — understand patterns, helpers, and conventions from all tasks
+4. **Read the plan format's reading.md** — understand how to retrieve tasks from the plan
+5. **Read the plan** — follow the reading adapter's instructions to retrieve all completed tasks. Understand the full scope: phases, tasks, acceptance criteria, what was built
+6. **Read the integration context file** — understand patterns, helpers, and conventions from all tasks
 6. **Identify implementation scope** — find all files changed during implementation. Use git history, the plan's task list, and the integration context to build a complete picture of what was touched. Read and understand the full implemented codebase.
 7. **Begin discovery-fix loop** — minimum 2 cycles, maximum 5 (see below)
 8. **Return structured report**
