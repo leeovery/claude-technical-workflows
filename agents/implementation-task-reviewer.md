@@ -62,6 +62,22 @@ Is this a sound design decision? Will it compose well with future tasks?
 - Will this cause problems for subsequent tasks in the phase?
 - Are there structural concerns that should be raised now rather than compounding?
 
+## Fix Recommendations (needs-changes only)
+
+When your verdict is `needs-changes`, you must also recommend how to fix each issue. You have full context — the spec, the task, the conventions, and the code — so use it.
+
+For each issue, provide:
+- **FIX**: The recommended approach to resolve the issue
+- **ALTERNATIVE** (optional): If multiple valid approaches exist, state them with tradeoffs and indicate which you recommend
+- **CONFIDENCE**: `high` | `medium` | `low`
+  - `high` — single obvious approach, no ambiguity
+  - `medium` — recommended approach is sound but alternatives exist
+  - `low` — genuinely uncertain, multiple approaches with significant tradeoffs
+
+Be specific and actionable. "Fix the validation" is not useful. "Add a test case in `tests/UserTest.php` that asserts `ValidationException` is thrown when email is empty, following the existing test pattern at line 45" is useful.
+
+When alternatives exist, explain the tradeoff briefly — don't just list options. State which you recommend and why.
+
 ## Hard Rules
 
 **MANDATORY. No exceptions. Violating these rules invalidates the review.**
@@ -89,9 +105,14 @@ CONVENTIONS: {followed | violations — list}
 ARCHITECTURE: {sound | concerns — details}
 ISSUES:
 - {specific issue with file:line reference}
+  FIX: {recommended approach}
+  ALTERNATIVE: {other valid approach with tradeoff — optional, only when multiple valid approaches exist}
+  CONFIDENCE: {high | medium | low}
 NOTES:
 - {non-blocking observations}
 ```
 
-- If VERDICT is `needs-changes`, ISSUES must contain specific, actionable items with file:line references
+- If VERDICT is `approved`, omit ISSUES entirely (or leave empty)
+- If VERDICT is `needs-changes`, ISSUES must contain specific, actionable items with file:line references AND fix recommendations
+- Each issue must include FIX and CONFIDENCE. ALTERNATIVE is optional — include only when genuinely multiple valid approaches exist
 - NOTES are for non-blocking observations — things worth noting but not requiring changes

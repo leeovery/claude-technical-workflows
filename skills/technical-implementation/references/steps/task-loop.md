@@ -13,7 +13,7 @@ A. Retrieve next task
 B. Execute task → invoke-executor.md
    → Executor Blocked (conditional)
 C. Review task → invoke-reviewer.md
-   → Review Changes (conditional)
+   → Review Changes with fix analysis (conditional, fix_gate_mode)
 D. Task gate (gated → prompt user / auto → announce)
 E. Update progress + commit
 → loop back to A until done
@@ -26,6 +26,7 @@ E. Update progress + commit
 1. Follow the format's **reading.md** instructions to determine the next available task.
 2. If no available tasks remain → skip to **When All Tasks Are Complete**.
 3. Normalise the task content following **[task-normalisation.md](../task-normalisation.md)**.
+4. Reset `fix_attempts` to `0` in the implementation tracking file.
 
 ---
 
@@ -77,26 +78,44 @@ Present the executor's ISSUES to the user:
 
 ### Review Changes
 
-Present the reviewer's findings to the user:
+Increment `fix_attempts` in the implementation tracking file.
 
-> **Review for Task {id}: {Task Name} — needs changes**
+#### If `fix_gate_mode: auto` and `fix_attempts < 3`
+
+Announce the fix round (one line, no stop):
+
+> **Review for Task {id}: {Task Name} — needs changes** (attempt {N}/{max 3}, fix analysis included). Re-invoking executor.
+
+→ Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the reviewer's notes (including fix analysis).
+
+#### If `fix_gate_mode: gated`, or `fix_attempts >= 3`
+
+If `fix_attempts >= 3`, the executor and reviewer have failed to converge. Prepend:
+
+> The executor and reviewer have not converged after {N} attempts. Escalating for human review.
+
+Present the reviewer's findings and fix analysis to the user:
+
+> **Review for Task {id}: {Task Name} — needs changes** (attempt {N})
 >
-> {ISSUES from reviewer}
+> {ISSUES from reviewer, including FIX, ALTERNATIVE, and CONFIDENCE for each}
 >
 > Notes (non-blocking):
 > {NOTES from reviewer}
 >
 > · · ·
 >
-> - **`y`/`yes`** — Accept these notes and pass them to the executor to fix
+> - **`y`/`yes`** — Accept the review and fix analysis, pass to executor
+> - **`a`/`auto`** — Accept and auto-approve future fix analyses
 > - **`s`/`skip`** — Override the reviewer and proceed as-is
-> - **Comment** — Modify or add to the notes before passing to the executor
+> - **Comment** — Any commentary, adjustments, alternative approaches, or questions before passing to executor
 
 **STOP.** Wait for user choice.
 
-- **`y`/`yes`**: → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the reviewer's notes.
+- **`y`/`yes`**: → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the reviewer's notes (including fix analysis).
+- **`auto`**: Note that `fix_gate_mode` should be updated to `auto` during the next commit step. → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the reviewer's notes (including fix analysis).
 - **`skip`**: → Proceed to **D. Task Gate**.
-- **Comment**: → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the user's notes.
+- **Comment**: → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content, the reviewer's notes, and the user's commentary.
 
 ---
 
@@ -145,9 +164,10 @@ Announce the result (one line, no stop):
 - Update `current_phase` if phase changed
 - Update `current_task` to the next task (or `~` if done)
 - Update `updated` to today's date
-- If user chose `auto` this turn: update `task_gate_mode: auto`
+- If user chose `auto` at the task gate this turn: update `task_gate_mode: auto`
+- If user chose `auto` at the fix gate this turn: update `fix_gate_mode: auto`
 
-The tracking file is a derived view for discovery scripts and cross-topic dependency resolution — not a decision-making input during implementation (except `task_gate_mode`).
+The tracking file is a derived view for discovery scripts and cross-topic dependency resolution — not a decision-making input during implementation (except `task_gate_mode` and `fix_gate_mode`).
 
 **Commit all changes** in a single commit:
 
