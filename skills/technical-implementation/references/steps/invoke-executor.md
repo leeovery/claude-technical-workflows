@@ -35,7 +35,7 @@ The agent returns a structured report:
 ```
 STATUS: complete | blocked | failed
 TASK: {task name}
-SUMMARY: {2-5 lines — commentary, decisions made, anything off-script}
+SUMMARY: {2-5 lines — commentary, decisions made, judgment calls where plan was ambiguous}
 TEST_RESULTS: {all passing | failures — details only if failures}
 ISSUES: {blockers or deviations — omit if none}
 INTEGRATION_NOTES:

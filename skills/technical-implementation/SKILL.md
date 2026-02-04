@@ -205,11 +205,29 @@ Integration context will accumulate in `docs/workflow/implementation/{topic}-con
 
 Load **[steps/task-loop.md](references/steps/task-loop.md)** and follow its instructions as written.
 
-→ After the loop completes, proceed to **Step 6**.
+→ After the loop completes (all tasks done), proceed to **Step 6**. If the task loop exits early (user chose `stop`), implementation is incomplete — do not run the smoke test or mark complete.
 
 ---
 
-## Step 6: Mark Implementation Complete
+## Step 6: Integration Smoke Test
+
+Before marking complete, verify the implemented features work together. This catches cross-task issues that individual task reviews cannot — bugs that only surface when multiple tasks interact.
+
+1. **Run the full test suite** — confirm all tests still pass after all tasks are complete
+2. **Exercise primary workflows** — run the main user-facing commands or entry points end-to-end (e.g., init → create → list → update). Use the specification to identify the key workflows
+3. **Check for unexpected output** — warnings, errors, or log messages that shouldn't appear during normal operation
+
+If issues are found:
+- Present findings to the user with specific details (command run, output observed, expected behavior)
+- **STOP.** Wait for user decision — this may require a fix, a plan amendment, or acceptance as-is
+
+If no issues are found:
+
+→ Proceed to **Step 7**.
+
+---
+
+## Step 7: Mark Implementation Complete
 
 Update the tracking file (`docs/workflow/implementation/{topic}.md`):
 - Set `status: completed`

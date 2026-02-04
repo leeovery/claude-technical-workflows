@@ -64,7 +64,7 @@ Present the executor's ISSUES to the user:
 
 #### If `stop`
 
-→ Return to the skill for **Step 6**.
+→ Return to the skill — implementation stopped early.
 
 ---
 
