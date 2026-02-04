@@ -77,7 +77,7 @@ Within each cycle, after synthesizing findings:
    - Write NEW integration tests for cross-task workflows — yes
    - Modify existing tests for mechanical changes (renames, moves) — yes
    - Modify existing tests semantically (different behavior) — no. If a refactor breaks existing tests, the refactor is wrong. Revert it.
-2. Dispatch the **executor** (via Task tool, subagent_type `claude-technical-workflows:implementation-task-executor`) with:
+2. Invoke the `implementation-task-executor` agent (`.claude/agents/implementation-task-executor.md`) with:
    - The crafted task description (including test rules) as task content
    - tdd-workflow.md path
    - code-quality.md path
@@ -85,7 +85,7 @@ Within each cycle, after synthesizing findings:
    - Project skill paths
    - Plan file path
    - Integration context file path
-3. Dispatch the **reviewer** (via Task tool, subagent_type `claude-technical-workflows:implementation-task-reviewer`) to independently verify the executor's work. Include the test rules in the reviewer's prompt so it can flag violations. Pass:
+3. Invoke the `implementation-task-reviewer` agent (`.claude/agents/implementation-task-reviewer.md`) to independently verify the executor's work. Include the test rules in the reviewer's prompt so it can flag violations. Pass:
    - Specification path
    - The same task description used for the executor (including test rules)
    - Project skill paths
