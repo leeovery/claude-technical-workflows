@@ -2,7 +2,7 @@
 name: start-planning
 description: "Start a planning session from an existing specification. Discovers available specifications, gathers context, and invokes the technical-planning skill."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/scripts/discovery-for-planning.sh)
+allowed-tools: Bash(../../scripts/discovery-for-planning.sh)
 ---
 
 Invoke the **technical-planning** skill for this conversation.
@@ -55,7 +55,7 @@ Invoke the `/migrate` skill and assess its output.
 Run the discovery script to gather current state:
 
 ```bash
-.claude/scripts/discovery-for-planning.sh
+../../scripts/discovery-for-planning.sh
 ```
 
 This outputs structured YAML. Parse it to understand:

@@ -4,7 +4,7 @@
 
 ---
 
-This step uses the `planning-phase-designer` agent (`.claude/agents/planning-phase-designer.md`) to define or review the phase structure. Whether phases are being designed for the first time or reviewed from a previous session, the process converges on the same approval gate.
+This step uses the `planning-phase-designer` agent (`../../../../agents/planning-phase-designer.md`) to define or review the phase structure. Whether phases are being designed for the first time or reviewed from a previous session, the process converges on the same approval gate.
 
 ---
 
@@ -30,11 +30,11 @@ Orient the user:
 
 Invoke `planning-phase-designer` with these file paths:
 
-1. **read-specification.md**: `.claude/skills/technical-planning/references/read-specification.md`
+1. **read-specification.md**: `../read-specification.md`
 2. **Specification**: path from the Plan Index File's `specification:` field
 3. **Cross-cutting specs**: paths from the Plan Index File's `cross_cutting_specs:` field (if any)
-4. **phase-design.md**: `.claude/skills/technical-planning/references/phase-design.md`
-5. **task-design.md**: `.claude/skills/technical-planning/references/task-design.md`
+4. **phase-design.md**: `../phase-design.md`
+5. **task-design.md**: `../task-design.md`
 
 The agent returns a complete phase structure. Write it directly to the Plan Index File body.
 

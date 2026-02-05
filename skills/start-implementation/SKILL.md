@@ -2,7 +2,7 @@
 name: start-implementation
 description: "Start an implementation session from an existing plan. Discovers available plans, checks environment setup, and invokes the technical-implementation skill."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/scripts/discovery-for-implementation-and-review.sh)
+allowed-tools: Bash(../../scripts/discovery-for-implementation-and-review.sh)
 ---
 
 Invoke the **technical-implementation** skill for this conversation.
@@ -55,7 +55,7 @@ Invoke the `/migrate` skill and assess its output.
 Run the discovery script to gather current state:
 
 ```bash
-.claude/scripts/discovery-for-implementation-and-review.sh
+../../scripts/discovery-for-implementation-and-review.sh
 ```
 
 This outputs structured YAML. Parse it to understand:

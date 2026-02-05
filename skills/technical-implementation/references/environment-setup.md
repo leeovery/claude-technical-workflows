@@ -55,7 +55,7 @@ If the environment setup document contains only "No special setup required" (or 
 Some plan formats require specific tools. Check the plan's `format` field and load the format's about file for setup instructions:
 
 ```
-.claude/skills/technical-planning/references/output-formats/{format}/about.md
+../../technical-planning/references/output-formats/{format}/about.md
 ```
 
 Each format's about.md contains prerequisites and installation instructions.

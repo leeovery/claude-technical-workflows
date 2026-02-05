@@ -25,7 +25,7 @@ Read the plan file from `docs/workflow/planning/{topic}.md` and check the `forma
 Load the format's reading reference:
 
 ```
-.claude/skills/technical-planning/references/output-formats/{format}/reading.md
+../technical-planning/references/output-formats/{format}/reading.md
 ```
 
 This file contains instructions for reading plans in that format.

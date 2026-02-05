@@ -4,7 +4,7 @@
 
 ---
 
-This step invokes the `implementation-task-executor` agent (`.claude/agents/implementation-task-executor.md`) to implement one task.
+This step invokes the `implementation-task-executor` agent (`../../../../agents/implementation-task-executor.md`) to implement one task.
 
 ---
 
@@ -12,8 +12,8 @@ This step invokes the `implementation-task-executor` agent (`.claude/agents/impl
 
 **Every invocation** — initial or re-attempt — includes these file paths:
 
-1. **tdd-workflow.md**: `.claude/skills/technical-implementation/references/tdd-workflow.md`
-2. **code-quality.md**: `.claude/skills/technical-implementation/references/code-quality.md`
+1. **tdd-workflow.md**: `../tdd-workflow.md`
+2. **code-quality.md**: `../code-quality.md`
 3. **Specification path**: from the plan's frontmatter (if available)
 4. **Project skill paths**: from `project_skills` in the implementation tracking file
 5. **Task content**: normalised task content (see [task-normalisation.md](../task-normalisation.md))

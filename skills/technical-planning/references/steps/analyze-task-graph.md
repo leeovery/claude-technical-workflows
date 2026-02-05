@@ -4,7 +4,7 @@
 
 ---
 
-This step uses the `planning-dependency-grapher` agent (`.claude/agents/planning-dependency-grapher.md`) to analyze all authored tasks, establish internal dependencies, assign priorities, and detect cycles. You invoke the agent, present its output, and handle the approval gate.
+This step uses the `planning-dependency-grapher` agent (`../../../../agents/planning-dependency-grapher.md`) to analyze all authored tasks, establish internal dependencies, assign priorities, and detect cycles. You invoke the agent, present its output, and handle the approval gate.
 
 ---
 

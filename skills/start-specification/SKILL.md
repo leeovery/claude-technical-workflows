@@ -2,7 +2,7 @@
 name: start-specification
 description: "Start a specification session from existing discussions. Discovers available discussions, offers consolidation assessment for multiple discussions, and invokes the technical-specification skill."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/scripts/discovery-for-specification.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/discussion-consolidation-analysis.md)
+allowed-tools: Bash(../../scripts/discovery-for-specification.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/discussion-consolidation-analysis.md)
 ---
 
 Invoke the **technical-specification** skill for this conversation.
@@ -55,7 +55,7 @@ Invoke the `/migrate` skill and assess its output.
 Run the discovery script to gather current state:
 
 ```bash
-.claude/scripts/discovery-for-specification.sh
+../../scripts/discovery-for-specification.sh
 ```
 
 This outputs structured YAML. Parse it to understand:

@@ -4,7 +4,7 @@
 
 ---
 
-This step invokes the `implementation-polish` agent (`.claude/agents/implementation-polish.md`) to perform holistic quality analysis and orchestrate fixes after all tasks are complete.
+This step invokes the `implementation-polish` agent (`../../../../agents/implementation-polish.md`) to perform holistic quality analysis and orchestrate fixes after all tasks are complete.
 
 ---
 
@@ -12,11 +12,11 @@ This step invokes the `implementation-polish` agent (`.claude/agents/implementat
 
 **Every invocation** includes these file paths:
 
-1. **code-quality.md**: `.claude/skills/technical-implementation/references/code-quality.md`
-2. **tdd-workflow.md**: `.claude/skills/technical-implementation/references/tdd-workflow.md`
+1. **code-quality.md**: `../code-quality.md`
+2. **tdd-workflow.md**: `../tdd-workflow.md`
 3. **Specification path**: from the plan's frontmatter (if available)
 4. **Plan file path**: the implementation plan
-5. **Plan format reading.md**: `.claude/skills/technical-planning/references/output-formats/{format}/reading.md` (format from plan frontmatter)
+5. **Plan format reading.md**: `../../../technical-planning/references/output-formats/{format}/reading.md` (format from plan frontmatter)
 6. **Integration context file**: `docs/workflow/implementation/{topic}-context.md`
 7. **Project skill paths**: from `project_skills` in the implementation tracking file
 

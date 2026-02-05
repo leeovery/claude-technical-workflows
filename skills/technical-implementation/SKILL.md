@@ -8,8 +8,8 @@ user-invocable: false
 
 Orchestrate implementation by dispatching **executor** and **reviewer** agents per task. Each agent invocation starts fresh — flat context, no accumulated state.
 
-- **Executor** (`.claude/agents/implementation-task-executor.md`) — implements one task via strict TDD
-- **Reviewer** (`.claude/agents/implementation-task-reviewer.md`) — independently verifies the task (opus)
+- **Executor** (`../../agents/implementation-task-executor.md`) — implements one task via strict TDD
+- **Reviewer** (`../../agents/implementation-task-reviewer.md`) — independently verifies the task (opus)
 
 The orchestrator owns: plan reading, task extraction, agent invocation, git operations, tracking, task gates.
 
@@ -101,7 +101,7 @@ Save their instructions to `docs/workflow/environment-setup.md` (or "No special 
 
 1. Read the plan from the provided location (typically `docs/workflow/planning/{topic}.md`)
 2. Plans can be stored in various formats. The `format` field in the plan's frontmatter identifies which format this plan uses.
-3. Load the format's per-concern adapter files from `.claude/skills/technical-planning/references/output-formats/{format}/`:
+3. Load the format's per-concern adapter files from `../technical-planning/references/output-formats/{format}/`:
    - **reading.md** — how to read tasks from the plan
    - **updating.md** — how to write progress to the plan
 4. If no `format` field exists, ask the user which format the plan uses.

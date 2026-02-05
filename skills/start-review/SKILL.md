@@ -2,7 +2,7 @@
 name: start-review
 description: "Start a review session from an existing plan and implementation. Discovers available plans, validates implementation exists, and invokes the technical-review skill."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/scripts/discovery-for-implementation-and-review.sh)
+allowed-tools: Bash(../../scripts/discovery-for-implementation-and-review.sh)
 ---
 
 Invoke the **technical-review** skill for this conversation.
@@ -55,7 +55,7 @@ Invoke the `/migrate` skill and assess its output.
 Run the discovery script to gather current state:
 
 ```bash
-.claude/scripts/discovery-for-implementation-and-review.sh
+../../scripts/discovery-for-implementation-and-review.sh
 ```
 
 This outputs structured YAML. Parse it to understand:

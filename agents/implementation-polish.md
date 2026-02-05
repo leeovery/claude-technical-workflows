@@ -127,7 +127,7 @@ Craft a task description covering the prioritized fixes. Include the following *
 - Modify existing tests for mechanical changes (renames, moves) — yes
 - Modify existing tests semantically (different behavior) — no. If a refactor breaks existing tests, the refactor is wrong. Revert it.
 
-Invoke the `implementation-task-executor` agent (`.claude/agents/implementation-task-executor.md`) with:
+Invoke the `implementation-task-executor` agent (`implementation-task-executor.md`) with:
 - The crafted task description (including test rules) as task content
 - tdd-workflow.md path
 - code-quality.md path
@@ -144,7 +144,7 @@ On receipt of result, route on STATUS:
 
 ### F. Invoke Reviewer
 
-Invoke the `implementation-task-reviewer` agent (`.claude/agents/implementation-task-reviewer.md`) to independently verify the executor's work. Include the test rules in the reviewer's prompt so it can flag violations. Pass:
+Invoke the `implementation-task-reviewer` agent (`implementation-task-reviewer.md`) to independently verify the executor's work. Include the test rules in the reviewer's prompt so it can flag violations. Pass:
 - Specification path
 - The same task description used for the executor (including test rules)
 - Project skill paths
