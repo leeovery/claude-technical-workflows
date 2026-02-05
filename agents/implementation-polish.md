@@ -68,15 +68,19 @@ Build a definitive list of implementation files. This list is passed to analysis
 
 ## Step 3: Discovery-Fix Loop
 
-Execute a minimum of **2** and maximum of **5** discovery-fix cycles. Each cycle follows stages A through F sequentially.
+Execute discovery-fix cycles. Minimum **2** cycles, maximum **5** cycles. Each cycle follows stages A through G sequentially. Always start at **A. Cycle Gate**.
 
-Track the current cycle number. After each cycle, check:
-- If cycle count < 2 → next cycle (minimum not met)
-- If cycle count >= 2 and last discovery found zero actionable issues → exit loop, proceed to **Step 4**
-- If cycle count >= 5 → exit loop, proceed to **Step 4**
-- Otherwise → next cycle
+### A. Cycle Gate
 
-### A. Dispatch Fixed Analysis Passes
+Increment the cycle count.
+
+If cycle count > 5 → exit loop, proceed to **Step 4**.
+
+If cycle count > 2 and the previous cycle's discovery found zero actionable issues → exit loop, proceed to **Step 4**.
+
+Otherwise → proceed to **B. Dispatch Fixed Analysis Passes**.
+
+### B. Dispatch Fixed Analysis Passes
 
 Dispatch all three analysis sub-agents **in parallel** via Task tool. Each sub-agent receives:
 - The list of implementation files (from Step 2)
@@ -94,29 +98,29 @@ Analyze all implementation files for: shared code paths where multiple tasks con
 
 **STOP.** Do not proceed until all three sub-agents have returned their findings.
 
-→ Proceed to **B. Dispatch Dynamic Analysis Passes**.
+→ Proceed to **C. Dispatch Dynamic Analysis Passes**.
 
-### B. Dispatch Dynamic Analysis Passes
+### C. Dispatch Dynamic Analysis Passes
 
-Review the findings from the fixed passes and the codebase. Based on what you find — language, framework, project conventions, areas flagged by fixed passes — dispatch additional targeted sub-agents for deeper analysis. Examples: language-specific idiom checks, convention consistency across early and late tasks, deeper investigation into specific areas.
+Review the findings from the fixed passes and the codebase. Based on what you find — language, framework, project conventions, areas flagged by fixed passes — determine whether additional targeted analysis is needed.
 
-Each dynamic sub-agent receives the relevant file subset and a focused analysis prompt, same as fixed passes.
+If no dynamic passes are needed → proceed to **D. Synthesize Findings**.
+
+If dynamic passes are needed, dispatch sub-agents for deeper analysis. Examples: language-specific idiom checks, convention consistency across early and late tasks, deeper investigation into specific areas. Each dynamic sub-agent receives the relevant file subset and a focused analysis prompt, same as fixed passes.
 
 **STOP.** Do not proceed until all dynamic sub-agents have returned their findings.
 
-If no dynamic passes are needed, proceed immediately.
+→ Proceed to **D. Synthesize Findings**.
 
-→ Proceed to **C. Synthesize Findings**.
-
-### C. Synthesize Findings
+### D. Synthesize Findings
 
 Collect findings from all analysis passes (fixed and dynamic). Deduplicate, discard low-value nitpicks, and prioritize by impact.
 
-If no actionable findings remain → skip to **F. Cycle Complete** (no fix needed this cycle).
+If no actionable findings remain → proceed to **G. Cycle Complete** (no fix needed this cycle).
 
-If actionable findings exist → proceed to **D. Invoke Executor**.
+If actionable findings exist → proceed to **E. Invoke Executor**.
 
-### D. Invoke Executor
+### E. Invoke Executor
 
 Craft a task description covering the prioritized fixes. Include the following **test rules** in the task description — these constrain what test changes the executor may make during polish:
 - Write NEW integration tests for cross-task workflows — yes
@@ -135,10 +139,10 @@ Invoke the `implementation-task-executor` agent (`.claude/agents/implementation-
 **STOP.** Do not proceed until the executor has returned its result.
 
 On receipt of result, route on STATUS:
-- `blocked` or `failed` → record in SKIPPED with the executor's ISSUES. Proceed to **F. Cycle Complete**.
-- `complete` → proceed to **E. Invoke Reviewer**.
+- `blocked` or `failed` → record in SKIPPED with the executor's ISSUES. Proceed to **G. Cycle Complete**.
+- `complete` → proceed to **F. Invoke Reviewer**.
 
-### E. Invoke Reviewer
+### F. Invoke Reviewer
 
 Invoke the `implementation-task-reviewer` agent (`.claude/agents/implementation-task-reviewer.md`) to independently verify the executor's work. Include the test rules in the reviewer's prompt so it can flag violations. Pass:
 - Specification path
@@ -149,12 +153,14 @@ Invoke the `implementation-task-reviewer` agent (`.claude/agents/implementation-
 **STOP.** Do not proceed until the reviewer has returned its result.
 
 On receipt of result, route on VERDICT:
-- `approved` → proceed to **F. Cycle Complete**
-- `needs-changes` → return to **D. Invoke Executor** with the reviewer's feedback. Maximum 3 fix attempts per cycle — if not converged after 3, record remaining issues in SKIPPED and proceed to **F. Cycle Complete**.
+- `approved` → proceed to **G. Cycle Complete**
+- `needs-changes` → return to **E. Invoke Executor** with the reviewer's feedback. Maximum 3 fix attempts per cycle — if not converged after 3, record remaining issues in SKIPPED and proceed to **G. Cycle Complete**.
 
-### F. Cycle Complete
+### G. Cycle Complete
 
-Record what was discovered and fixed this cycle. Return to the top of **Step 3** and evaluate the cycle count to determine whether to continue or exit.
+Record what was discovered and fixed this cycle.
+
+→ Return to **A. Cycle Gate**.
 
 ---
 
