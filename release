@@ -206,9 +206,9 @@ Output:"
     prompt_file=$(mktemp)
     echo "$prompt" > "$prompt_file"
 
-    # Call Claude with timeout
+    # Call Claude with timeout (pipe content, don't pass as argument - avoids CLI hangs)
     local claude_output
-    if claude_output=$(timeout 60 claude -p "$(cat "$prompt_file")" 2>/dev/null); then
+    if claude_output=$(timeout 60 bash -c "cat '$prompt_file' | claude -p" 2>/dev/null); then
         rm -f "$prompt_file"
         echo "$claude_output"
     else
