@@ -209,7 +209,81 @@ Load **[steps/task-loop.md](references/steps/task-loop.md)** and follow its inst
 
 ---
 
-## Step 6: Mark Implementation Complete
+## Step 6: Polish
+
+If the task loop exited early (user chose `stop`), skip to **Step 7**.
+
+**Git checkpoint** — ensure a clean working tree before invoking the polish agent. Run `git status`. If there are unstaged changes or untracked files, commit them:
+
+```
+impl({topic}): pre-polish checkpoint
+```
+
+This ensures all prior work is safely committed. The polish agent makes no git operations — all its changes will exist as unstaged modifications. If the user discards polish, the working tree resets cleanly to this checkpoint.
+
+**Invoke the polish agent:**
+
+1. Load **[steps/invoke-polish.md](references/steps/invoke-polish.md)** and follow its instructions.
+2. **STOP.** Do not proceed until the polish agent has returned its result.
+3. Route on STATUS:
+   - `blocked` → present SUMMARY to the user, ask how to proceed
+   - `complete` → present the report below
+
+> **Implementation polish complete** ({N} cycles)
+>
+> {SUMMARY}
+>
+> Findings:
+> {DISCOVERY}
+>
+> Fixes applied:
+> {FIXES_APPLIED}
+>
+> Integration tests added:
+> {TESTS_ADDED}
+>
+> Skipped (not addressed):
+> {SKIPPED}
+>
+> Test results: {TEST_RESULTS}
+>
+> · · ·
+>
+> - **`y`/`yes`** — Approve and commit polish changes
+> - **`s`/`skip`** — Discard polish changes, mark complete as-is
+> - **Comment** — Feedback (re-invokes polish agent with your notes)
+
+**STOP.** Wait for user input.
+
+#### If `yes`
+
+Commit all polish changes:
+
+```
+impl({topic}): polish — {brief description}
+```
+
+→ Proceed to **Step 7**.
+
+#### If `skip`
+
+Discard all polish changes. Reset the working tree to the pre-polish checkpoint:
+
+```
+git checkout . && git clean -fd
+```
+
+This is safe because the checkpoint commit captured all prior work. Only polish-created changes are discarded. Gitignored files are untouched.
+
+→ Proceed to **Step 7**.
+
+#### If comment
+
+→ Re-invoke the polish agent with the user's feedback. Return to the top of **Step 6** (after the git checkpoint — do not re-checkpoint).
+
+---
+
+## Step 7: Mark Implementation Complete
 
 Update the tracking file (`docs/workflow/implementation/{topic}.md`):
 - Set `status: completed`
@@ -226,6 +300,7 @@ Commit: `impl({topic}): complete implementation`
 - **[steps/task-loop.md](references/steps/task-loop.md)** — Task execution loop, task gates, tracking, commits
 - **[steps/invoke-executor.md](references/steps/invoke-executor.md)** — How to invoke the executor agent
 - **[steps/invoke-reviewer.md](references/steps/invoke-reviewer.md)** — How to invoke the reviewer agent
+- **[steps/invoke-polish.md](references/steps/invoke-polish.md)** — How to invoke the polish agent
 - **[task-normalisation.md](references/task-normalisation.md)** — Normalised task shape for agent invocation
 - **[tdd-workflow.md](references/tdd-workflow.md)** — TDD cycle (passed to executor agent)
 - **[code-quality.md](references/code-quality.md)** — Quality standards (passed to executor agent)
