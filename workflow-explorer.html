@@ -44,6 +44,17 @@
     Node shapes: pill = start/end, diamond = decision, stop = hard-cornered terminal (STOP/BLOCK), rect = action step.
     Connection types map to colors + arrow markers (yes=green, no=red, transition=orange dashed, backloop=gray dashed).
 
+  Diamond edge routing (IMPORTANT):
+    Dagre calculates waypoints to route edges around obstacles. However, adding a `port` hint (e.g., port: 'lower-left')
+    causes the rendering code to DISCARD dagre's waypoints and draw a straight line instead (see hasPortHint check in renderSVG).
+    This is intentional for simple direct edges but breaks edges that need to route around intermediate nodes.
+
+    Rules:
+    - Do NOT add `port` hints to edges that need to route around obstacles (e.g., "no" paths that skip multiple nodes)
+    - The automatic port assignment in computeDiamondPorts() distributes edges based on target node x-positions (left-to-right)
+    - `type: 'backloop'` edges are exempt — they always keep dagre's waypoints regardless of port hints
+    - Use `weight: 2` on the main flow path to influence dagre's node placement (heavier = more direct routing)
+
   Node color system (type-based, not phase-based — CSS vars in :root):
     - var(--action)    sky blue    — primary work steps (validate, extract, etc.)
     - var(--agent)     cyan        — agent invocation nodes (with optional skillLink to agent flowchart)
@@ -2041,6 +2052,7 @@ const FLOWCHARTS = {
       { id: 'polish-checkpoint', label: 'Git checkpoint', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Step 6: Commit any uncommitted changes before polish. Creates a safe rollback point.' },
       { id: 'polish', label: 'Invoke polish agent', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-polish', desc: 'Step 6: Dispatch implementation-polish agent for holistic quality pass. 2-5 discovery-fix cycles via executor/reviewer.' },
       { id: 'polish-result', label: 'Polish result?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route on STATUS: complete → present report, blocked → present issues.' },
+      { id: 'polish-blocked', label: 'Present issues', w: 160, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Polish blocked: present SUMMARY explaining what decision is needed. Ask user how to proceed.' },
       { id: 'polish-gate', label: 'ASK: Approve polish?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Present polish report. Options: approve (y), skip/discard (s), or comment (re-invoke with feedback).' },
       // Completion
       { id: 'end', label: 'Implementation complete', shape: 'pill', w: 190, h: 40, color: 'var(--implementation)', bg: 'var(--implementation-bg)', desc: 'Step 7: All tasks + polish complete. Set tracking status: completed. Final commit.' },
@@ -2082,11 +2094,11 @@ const FLOWCHARTS = {
       // Step 6: Polish
       { from: 'polish-checkpoint', to: 'polish' },
       { from: 'polish', to: 'polish-result' },
-      { from: 'polish-result', to: 'polish-gate', type: 'yes', label: 'complete' },
-      { from: 'polish-result', to: 'polish-gate', type: 'no', label: 'blocked' },
-      { from: 'polish-gate', to: 'end', type: 'yes', label: 'approve' },
-      { from: 'polish-gate', to: 'end', label: 'skip' },
+      { from: 'polish-result', to: 'polish-blocked', type: 'no', label: 'blocked' },
+      { from: 'polish-result', to: 'polish-gate', type: 'yes', label: 'complete', weight: 2 },
+      { from: 'polish-blocked', to: 'polish-gate' },
       { from: 'polish-gate', to: 'polish', type: 'backloop', label: 'comment' },
+      { from: 'polish-gate', to: 'end', label: 'approve / skip' },
       // Next phase
       { from: 'end', to: 'next', type: 'transition' },
     ]
@@ -2368,26 +2380,26 @@ const FLOWCHARTS = {
       { from: 'read-context', to: 'identify-scope' },
       // Step 3: Enter loop
       { from: 'identify-scope', to: 'cycle-gate', type: 'transition' },
-      { from: 'cycle-gate', to: 'fixed-analysis', type: 'yes', label: 'continue' },
       { from: 'cycle-gate', to: 'report', type: 'no', label: 'exit' },
+      { from: 'cycle-gate', to: 'fixed-analysis', type: 'yes', label: 'continue', weight: 2 },
       // B: Fixed analysis
       { from: 'fixed-analysis', to: 'dynamic-check' },
       // C: Dynamic analysis
-      { from: 'dynamic-check', to: 'dynamic-analysis', type: 'yes', label: 'yes' },
       { from: 'dynamic-check', to: 'synthesize', type: 'no', label: 'no' },
+      { from: 'dynamic-check', to: 'dynamic-analysis', type: 'yes', label: 'yes', weight: 2 },
       { from: 'dynamic-analysis', to: 'synthesize' },
       // D: Synthesize
       { from: 'synthesize', to: 'findings-check' },
-      { from: 'findings-check', to: 'executor', type: 'yes', label: 'yes' },
       { from: 'findings-check', to: 'cycle-complete', type: 'no', label: 'no' },
+      { from: 'findings-check', to: 'executor', type: 'yes', label: 'yes', weight: 2 },
       // E: Executor
       { from: 'executor', to: 'exec-result' },
-      { from: 'exec-result', to: 'reviewer', type: 'yes', label: 'complete' },
       { from: 'exec-result', to: 'cycle-complete', type: 'no', label: 'blocked' },
+      { from: 'exec-result', to: 'reviewer', type: 'yes', label: 'complete', weight: 2 },
       // F: Reviewer
       { from: 'reviewer', to: 'review-result' },
-      { from: 'review-result', to: 'cycle-complete', type: 'yes', label: 'approved' },
       { from: 'review-result', to: 'executor', type: 'backloop', label: 'needs changes' },
+      { from: 'review-result', to: 'cycle-complete', type: 'yes', label: 'approved', weight: 2 },
       // G: Cycle complete → loop back
       { from: 'cycle-complete', to: 'cycle-gate', type: 'backloop' },
       // Step 4: Report
@@ -3636,6 +3648,8 @@ canvasArea.addEventListener('mousedown', (e) => {
   panStart = { x: e.clientX, y: e.clientY };
   vbStart = svg.getAttribute('viewBox').split(' ').map(Number);
   canvasArea.style.cursor = 'grabbing';
+  canvasArea.style.userSelect = 'none';
+  e.preventDefault();
 });
 window.addEventListener('mousemove', (e) => {
   if (!isPanning) return;
@@ -3646,6 +3660,7 @@ window.addEventListener('mousemove', (e) => {
 window.addEventListener('mouseup', () => {
   isPanning = false;
   canvasArea.style.cursor = '';
+  canvasArea.style.userSelect = '';
 });
 
 // ── Touch: single-finger pan + two-finger pinch-to-zoom ──
