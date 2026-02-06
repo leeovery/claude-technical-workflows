@@ -8,7 +8,10 @@
       "Bash(git push:*)",
       "Bash(git checkout:*)",
       "Bash(gh issue view:*)",
-      "Bash(/usr/bin/diff:*)"
+      "Bash(/usr/bin/diff:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr diff:*)"
     ],
     "deny": [],
     "ask": []
