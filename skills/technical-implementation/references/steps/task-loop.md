@@ -169,27 +169,13 @@ Announce the result (one line, no stop):
 
 The tracking file is a derived view for discovery scripts and cross-topic dependency resolution — not a decision-making input during implementation (except `task_gate_mode` and `fix_gate_mode`).
 
-**Append integration context** — extract INTEGRATION_NOTES from the executor's final output and COHESION_NOTES from the reviewer's output. Append both to `docs/workflow/implementation/{topic}-context.md`:
-
-```
-## T{task-id}: {task name}
-
-### Integration (executor)
-{INTEGRATION_NOTES content}
-
-### Cohesion (reviewer)
-{COHESION_NOTES content}
-```
-
-Create the file if it doesn't exist. This is mechanical text extraction and file append — the same as extracting STATUS to route on. Use outputs from the final approved iteration only.
-
 **Commit all changes** in a single commit:
 
 ```
 impl({topic}): T{task-id} — {brief description}
 ```
 
-Code, tests, plan progress, tracking file, and integration context — one commit per approved task.
+Code, tests, plan progress, and tracking file — one commit per approved task.
 
 This is the end of this iteration.
 

@@ -196,8 +196,6 @@ After creating the file, populate `project_skills` with the paths confirmed in S
 
 Commit: `impl({topic}): start implementation`
 
-Integration context will accumulate in `docs/workflow/implementation/{topic}-context.md` as tasks complete. This file is created automatically during the task loop — no initialisation needed here.
-
 → Proceed to **Step 5**.
 
 ---
@@ -305,4 +303,4 @@ Commit: `impl({topic}): complete implementation`
 - **[task-normalisation.md](references/task-normalisation.md)** — Normalised task shape for agent invocation
 - **[tdd-workflow.md](references/tdd-workflow.md)** — TDD cycle (passed to executor agent)
 - **[code-quality.md](references/code-quality.md)** — Quality standards (passed to executor agent)
-- **Integration context** — `docs/workflow/implementation/{topic}-context.md` — accumulated notes from completed tasks (created during task loop)
+

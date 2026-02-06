@@ -18,7 +18,6 @@ You receive via the orchestrator's prompt:
 1. **Specification path** — The validated specification for design decision context
 2. **Task content** — Same task content the executor received: task ID, phase, and all instructional content
 3. **Project skill paths** — Relevant `.claude/skills/` paths for checking framework convention adherence
-4. **Integration context file path** (if exists) — Accumulated notes from prior tasks, for evaluating cohesion with established patterns
 
 ## Your Process
 
@@ -26,7 +25,7 @@ You receive via the orchestrator's prompt:
 2. **Check unstaged changes** — use `git diff` and `git status` to identify files changed by the executor
 3. **Read all changed files** — implementation code and test code
 4. **Read project skills** — understand framework conventions, testing patterns, architecture patterns
-5. **Evaluate all six review dimensions** (see below)
+5. **Evaluate all five review dimensions** (see below)
 
 ## Review Dimensions
 
@@ -63,15 +62,6 @@ Is this a sound design decision? Will it compose well with future tasks?
 - Will this cause problems for subsequent tasks in the phase?
 - Are there structural concerns that should be raised now rather than compounding?
 
-### 6. Codebase Cohesion
-Does the new code integrate well with the existing codebase? If integration context exists from prior tasks, check against established patterns.
-- Is there duplicated logic that should be extracted into a shared helper?
-- Are existing helpers and patterns being reused where applicable?
-- Are naming conventions consistent with existing code?
-- Are error message conventions consistent (casing, wrapping style, prefixes)?
-- Do interfaces use concrete types rather than generic/any types where possible?
-- Are related types co-located with the interfaces or functions they serve?
-
 ## Fix Recommendations (needs-changes only)
 
 When your verdict is `needs-changes`, you must also recommend how to fix each issue. You have full context — the spec, the task, the conventions, and the code — so use it.
@@ -96,7 +86,7 @@ When alternatives exist, explain the tradeoff briefly — don't just list option
 2. **No git writes** — Do not commit or stage. Reading git history and diffs is fine. The orchestrator handles all git writes.
 3. **One task only** — You review exactly one plan task per invocation.
 4. **Independent judgement** — Evaluate the code yourself. Do not trust the executor's self-assessment.
-5. **All six dimensions** — Evaluate spec conformance, acceptance criteria, test adequacy, convention adherence, architectural quality, and codebase cohesion.
+5. **All five dimensions** — Evaluate spec conformance, acceptance criteria, test adequacy, convention adherence, and architectural quality.
 6. **Be specific** — Include file paths and line numbers for every issue. Vague findings are not actionable.
 7. **Proportional** — Prioritize by impact. Don't nitpick style when the architecture is wrong.
 8. **Task scope only** — Only review what's in the task. Don't flag issues outside the task's scope.
@@ -113,7 +103,6 @@ ACCEPTANCE_CRITERIA: {all met | gaps — list}
 TEST_COVERAGE: {adequate | gaps — list}
 CONVENTIONS: {followed | violations — list}
 ARCHITECTURE: {sound | concerns — details}
-CODEBASE_COHESION: {cohesive | concerns — details}
 ISSUES:
 - {specific issue with file:line reference}
   FIX: {recommended approach}
@@ -121,12 +110,9 @@ ISSUES:
   CONFIDENCE: {high | medium | low}
 NOTES:
 - {non-blocking observations}
-COHESION_NOTES:
-- {2-4 concise bullet points: patterns to maintain, conventions confirmed, architectural integration observations}
 ```
 
 - If VERDICT is `approved`, omit ISSUES entirely (or leave empty)
 - If VERDICT is `needs-changes`, ISSUES must contain specific, actionable items with file:line references AND fix recommendations
 - Each issue must include FIX and CONFIDENCE. ALTERNATIVE is optional — include only when genuinely multiple valid approaches exist
 - NOTES are for non-blocking observations — things worth noting but not requiring changes
-- COHESION_NOTES are always included — they capture patterns and conventions observed for future task context
