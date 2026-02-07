@@ -15,7 +15,6 @@ Invoke `implementation-task-reviewer` with:
 1. **Specification path**: same path given to the executor
 2. **Task content**: same normalised task content the executor received
 3. **Project skill paths**: from `project_skills` in the implementation tracking file
-4. **Integration context file** (if exists): `docs/workflow/implementation/{topic}-context.md` — for checking cohesion with established patterns
 
 ---
 
@@ -31,7 +30,6 @@ ACCEPTANCE_CRITERIA: {all met | gaps — list}
 TEST_COVERAGE: {adequate | gaps — list}
 CONVENTIONS: {followed | violations — list}
 ARCHITECTURE: {sound | concerns — details}
-CODEBASE_COHESION: {cohesive | concerns — details}
 ISSUES:
 - {specific issue with file:line reference}
   FIX: {recommended approach}
@@ -39,9 +37,7 @@ ISSUES:
   CONFIDENCE: {high | medium | low}
 NOTES:
 - {non-blocking observations}
-COHESION_NOTES:
-- {2-4 bullets: patterns to maintain, conventions confirmed, integration quality}
 ```
 
-- `approved`: task passes all six review dimensions
+- `approved`: task passes all five review dimensions
 - `needs-changes`: ISSUES contains specific, actionable items with fix recommendations and confidence levels

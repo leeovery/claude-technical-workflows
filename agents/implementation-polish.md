@@ -20,12 +20,11 @@ You receive file paths and context via the orchestrator's prompt:
 3. **Specification path** — What was intended — design decisions and rationale
 4. **Plan file path** — What was built — the full task landscape
 5. **Plan format reading.md path** — How to read tasks from the plan (format-specific adapter)
-6. **Integration context file path** — Accumulated decisions and patterns from every task
-7. **Project skill paths** — Framework conventions
+6. **Project skill paths** — Framework conventions
 
 On **re-invocation after user feedback**, additionally include:
 
-8. **User feedback** — the user's comments on what to change or focus on
+7. **User feedback** — the user's comments on what to change or focus on
 
 ## Hard Rules
 
@@ -50,7 +49,6 @@ Read and absorb the following. Do not write any code or dispatch any agents duri
 3. **Read project skills** — absorb framework conventions
 4. **Read the plan format's reading.md** — understand how to retrieve tasks from the plan
 5. **Read the plan** — follow the reading adapter's instructions to retrieve all completed tasks. Understand the full scope: phases, tasks, acceptance criteria, what was built
-6. **Read the integration context file** — understand patterns, helpers, and conventions from all tasks
 
 → Proceed to **Step 2**.
 
@@ -58,7 +56,7 @@ Read and absorb the following. Do not write any code or dispatch any agents duri
 
 ## Step 2: Identify Implementation Scope
 
-Find all files changed during implementation. Use git history, the plan's task list, and the integration context to build a complete picture of what was touched. Read and understand the full implemented codebase.
+Find all files changed during implementation. Use git history and the plan's task list to build a complete picture of what was touched. Read and understand the full implemented codebase.
 
 Build a definitive list of implementation files. This list is passed to analysis sub-agents in subsequent steps.
 
@@ -133,8 +131,6 @@ Invoke the `implementation-task-executor` agent (`implementation-task-executor.m
 - code-quality.md path
 - Specification path (if available)
 - Project skill paths
-- Plan file path
-- Integration context file path
 
 **STOP.** Do not proceed until the executor has returned its result.
 
@@ -148,7 +144,6 @@ Invoke the `implementation-task-reviewer` agent (`implementation-task-reviewer.m
 - Specification path
 - The same task description used for the executor (including test rules)
 - Project skill paths
-- Integration context file path
 
 **STOP.** Do not proceed until the reviewer has returned its result.
 

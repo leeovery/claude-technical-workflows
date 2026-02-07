@@ -17,12 +17,11 @@ This step invokes the `implementation-polish` agent (`../../../../agents/impleme
 3. **Specification path**: from the plan's frontmatter (if available)
 4. **Plan file path**: the implementation plan
 5. **Plan format reading.md**: `../../../technical-planning/references/output-formats/{format}/reading.md` (format from plan frontmatter)
-6. **Integration context file**: `docs/workflow/implementation/{topic}-context.md`
-7. **Project skill paths**: from `project_skills` in the implementation tracking file
+6. **Project skill paths**: from `project_skills` in the implementation tracking file
 
 **Re-invocation after user feedback** additionally includes:
 
-8. **User feedback**: the user's comments on what to change or focus on
+7. **User feedback**: the user's comments on what to change or focus on
 
 The polish agent is stateless — each invocation starts fresh. Always pass all inputs.
 
