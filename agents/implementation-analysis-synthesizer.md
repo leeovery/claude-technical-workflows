@@ -15,11 +15,9 @@ You receive via the orchestrator's prompt:
 
 1. **Findings file paths** — paths to all analysis agent output files
 2. **Task normalization reference path** — canonical task template
-3. **Plan format authoring adapter path** — how to create tasks in the plan format
-4. **Plan path** — the implementation plan
-5. **Topic name** — the implementation topic
-6. **Next phase number** — orchestrator-calculated phase number for new tasks
-7. **Specification path** — the validated specification
+3. **Topic name** — the implementation topic
+4. **Cycle number** — which analysis cycle this is
+5. **Specification path** — the validated specification
 
 ## Your Process
 

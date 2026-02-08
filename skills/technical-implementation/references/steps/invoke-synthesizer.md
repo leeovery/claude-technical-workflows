@@ -19,11 +19,13 @@ Pass via the orchestrator's prompt:
    - `{topic}-analysis-standards.md`
    - `{topic}-analysis-architecture.md`
 2. **Task normalization reference path** — `../task-normalisation.md`
-3. **Plan format authoring adapter path** — `../../../technical-planning/references/output-formats/{format}/authoring.md` (format from plan frontmatter)
-4. **Plan path** — the implementation plan path
-5. **Topic name** — the implementation topic
-6. **Next phase number** — calculated by orchestrator: max existing phase + 1 (read from plan via reading adapter)
-7. **Specification path** — from the plan's frontmatter (if available)
+3. **Topic name** — the implementation topic
+4. **Cycle number** — the current analysis cycle number
+5. **Specification path** — from the plan's frontmatter (if available)
+
+**Re-invocation after user feedback** additionally includes:
+6. **User feedback** — the user's comments on proposed tasks
+7. **Previous report path** — the report from the previous synthesis
 
 ---
 
