@@ -246,84 +246,9 @@ Load **[steps/task-loop.md](references/steps/task-loop.md)** and follow its inst
 
 If the task loop exited early (user chose `stop`), skip to **Step 8**.
 
-**Git checkpoint** — ensure a clean working tree before analysis. Run `git status`. If there are unstaged changes or untracked files, commit them:
+Load **[steps/analysis-loop.md](references/steps/analysis-loop.md)** and follow its instructions as written.
 
-```
-impl({topic}): pre-analysis checkpoint
-```
-
-### 7A. Dispatch Analysis Agents
-
-Load **[steps/invoke-analysis.md](references/steps/invoke-analysis.md)** and follow its instructions. Dispatch all 3 analysis agents in parallel.
-
-**STOP.** Wait for all agents to return.
-
-### 7B. Dispatch Synthesis Agent
-
-Load **[steps/invoke-synthesizer.md](references/steps/invoke-synthesizer.md)** and invoke the synthesizer. Pass the current `analysis_cycle + 1` as the cycle number.
-
-**STOP.** Wait for the synthesizer to return.
-
-### 7C. Present Findings
-
-Read the report from `docs/workflow/implementation/{topic}-analysis-report.md`.
-
-If zero proposed tasks:
-
-> "Analysis cycle {N}: no issues found."
-
-→ Proceed to **Step 8**.
-
-Otherwise, present grouped findings conversationally:
-
-> **Analysis cycle {N}: {K} proposed tasks**
->
-> {For each proposed task:}
-> **{number}. {title}** ({severity})
-> Sources: {agents}
-> {Problem summary}
-> {Solution summary}
->
-> · · ·
->
-> - **`a`/`all`** — Approve all, add to plan
-> - **`1,3,5`** — Approve specific tasks by number
-> - **`n`/`none`** — Skip, mark complete as-is
-> - **Comment** — Feedback
-
-**STOP.** Wait for user input.
-
-#### If `none`
-
-→ Proceed to **Step 8**.
-
-### 7D. Create Tasks in Plan
-
-For approved tasks:
-
-1. Calculate the next phase number: read the plan via the reading adapter and find the max existing phase, then add 1.
-2. Use the plan format's **authoring.md** adapter to create task files for the new phase.
-3. Commit:
-
-```
-impl({topic}): add analysis phase {N} ({K} tasks)
-```
-
-### 7E. Re-enter Task Loop
-
-Return to **Step 6**. The task loop picks up the new phase via the reading adapter.
-
-After the loop completes, increment `analysis_cycle` in the tracking file.
-
-### 7F. Cycle Gate
-
-If `analysis_cycle >= max_analysis_cycles` (default 3):
-
-> "Max analysis cycles reached. Proceeding to completion."
-
-→ Proceed to **Step 8**.
-
-Otherwise → return to **7A** for the next cycle.
+→ After the loop completes (or exits), proceed to **Step 8**.
 
 ---
 
@@ -343,6 +268,7 @@ Commit: `impl({topic}): complete implementation`
 - **[environment-setup.md](references/environment-setup.md)** — Environment setup before implementation
 - **[linter-setup.md](references/linter-setup.md)** — Linter discovery and configuration
 - **[steps/task-loop.md](references/steps/task-loop.md)** — Task execution loop, task gates, tracking, commits
+- **[steps/analysis-loop.md](references/steps/analysis-loop.md)** — Analysis and refinement cycle
 - **[steps/invoke-executor.md](references/steps/invoke-executor.md)** — How to invoke the executor agent
 - **[steps/invoke-reviewer.md](references/steps/invoke-reviewer.md)** — How to invoke the reviewer agent
 - **[steps/invoke-analysis.md](references/steps/invoke-analysis.md)** — How to invoke analysis agents
