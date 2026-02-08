@@ -2,7 +2,7 @@
 name: start-discussion
 description: "Start a technical discussion. Discovers research and existing discussions, offers multiple entry paths, and invokes the technical-discussion skill."
 disable-model-invocation: true
-allowed-tools: Bash(../../scripts/discovery-for-discussion.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/research-analysis.md)
+allowed-tools: Bash(./scripts/discovery.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/research-analysis.md)
 ---
 
 Invoke the **technical-discussion** skill for this conversation.
@@ -55,7 +55,7 @@ Invoke the `/migrate` skill and assess its output.
 Run the discovery script to gather current state:
 
 ```bash
-../../scripts/discovery-for-discussion.sh
+./scripts/discovery.sh
 ```
 
 This outputs structured YAML. Parse it to understand:

@@ -82,7 +82,7 @@ Key observation: `analysis-flow.md` always feeds into `display-groupings.md`, an
 name: start-specification
 description: "Start a specification session from concluded discussions. Discovers available discussions, offers consolidation assessment for multiple discussions, and invokes the technical-specification skill."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/scripts/discovery-for-specification.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/discussion-consolidation-analysis.md)
+allowed-tools: Bash(./scripts/discovery.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/discussion-consolidation-analysis.md)
 ---
 ```
 
@@ -281,7 +281,7 @@ This lets SKILL.md routing use clean conditionals like `concluded_count == 1` an
 
 Add the explicit counts and boolean helpers to `current_state`. This is a prerequisite for the routing logic in SKILL.md.
 
-**Files:** `scripts/discovery-for-specification.sh`
+**Files:** `skills/start-specification/scripts/discovery.sh`
 
 ### 2. Create Skill Directory Structure
 

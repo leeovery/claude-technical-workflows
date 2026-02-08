@@ -28,15 +28,23 @@ skills/
   technical-review/          # Phase 6: Validate against artifacts
 
   # Entry-point skills (user-invocable — gather context, invoke processing skills)
+  # Each entry-point skill with a discovery script has a scripts/ subdirectory
   migrate/                   # Keep workflow files in sync with system design
+    scripts/migrate.sh       #   Migration orchestrator
+    scripts/migrations/      #   Individual migration scripts (numbered)
   start-feature/             # Create spec directly from inline context
   link-dependencies/         # Link dependencies across topics
   start-research/            # Begin research exploration
   start-discussion/          # Begin technical discussions
+    scripts/discovery.sh     #   Discovery script
   start-specification/       # Begin specification building
+    scripts/discovery.sh     #   Discovery script
   start-planning/            # Begin implementation planning
+    scripts/discovery.sh     #   Discovery script
   start-implementation/      # Begin implementing a plan
+    scripts/discovery.sh     #   Discovery script
   start-review/              # Begin review
+    scripts/discovery.sh     #   Discovery script
   status/                    # Show workflow status and next steps
   view-plan/                 # View plan tasks and progress
 
@@ -53,14 +61,6 @@ agents/
   planning-task-designer.md        # Break phases into task lists
   planning-task-author.md          # Write full task detail
   planning-dependency-grapher.md   # Analyze task dependencies and priorities
-
-scripts/
-  migrate.sh                              # Migration orchestrator
-  discovery-for-discussion.sh             # Discovery script for discussion skill
-  discovery-for-specification.sh          # Discovery script for specification skill
-  discovery-for-planning.sh              # Discovery script for planning skill
-  discovery-for-implementation-and-review.sh  # Discovery script for implementation/review
-  migrations/                             # Individual migration scripts (numbered)
 
 tests/
   scripts/                   # Shell script tests for discovery and migrations
@@ -136,13 +136,13 @@ This keeps format knowledge centralized in the planning phase where it belongs.
 The `/migrate` skill keeps workflow files in sync with the current system design. It runs automatically at the start of every workflow skill (Step 0).
 
 **How it works:**
-- `scripts/migrate.sh` runs all migration scripts in `scripts/migrations/` in numeric order
+- `skills/migrate/scripts/migrate.sh` runs all migration scripts in `skills/migrate/scripts/migrations/` in numeric order
 - Each migration is idempotent - safe to run multiple times
 - Progress is tracked in `docs/workflow/.cache/migrations.log`
 - Delete the log file to force re-running all migrations
 
 **Adding new migrations:**
-1. Create `scripts/migrations/NNN-description.sh` (e.g., `002-spec-frontmatter.sh`)
+1. Create `skills/migrate/scripts/migrations/NNN-description.sh` (e.g., `002-spec-frontmatter.sh`)
 2. The script will be run automatically in numeric order
 3. Use helper functions: `is_migrated`, `record_migration`, `report_update`, `report_skip`
 

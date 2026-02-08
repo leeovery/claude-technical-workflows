@@ -12,7 +12,7 @@
   "scripts": {
     "postinstall": "claude-manager add",
     "preuninstall": "npx --yes --package=@leeovery/claude-manager claude-manager remove",
-    "test:scripts:discovery": "bash tests/scripts/test-discovery-for-discussion.sh && bash tests/scripts/test-discovery-for-specification.sh && bash tests/scripts/test-discovery-for-planning.sh && bash tests/scripts/test-discovery-for-implementation-and-review.sh",
+    "test:scripts:discovery": "bash tests/scripts/test-discovery-for-discussion.sh && bash tests/scripts/test-discovery-for-specification.sh && bash tests/scripts/test-discovery-for-planning.sh && bash tests/scripts/test-discovery-for-implementation.sh && bash tests/scripts/test-discovery-for-review.sh",
     "test:scripts:migration": "bash tests/scripts/test-migration-001.sh && bash tests/scripts/test-migration-002.sh && bash tests/scripts/test-migration-003.sh"
   },
   "dependencies": {
@@ -22,7 +22,6 @@
     "skills",
     "commands",
     "agents",
-    "hooks",
-    "scripts"
+    "hooks"
   ]
 }

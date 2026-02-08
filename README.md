@@ -265,14 +265,6 @@ agents/
 ├── planning-task-author.md          # Write full task detail
 └── planning-dependency-grapher.md   # Analyze task dependencies and priorities
 
-scripts/                             # Helper scripts for skills
-├── migrate.sh                       # Migration orchestrator
-├── discovery-for-discussion.sh      # Discovery for discussion skill
-├── discovery-for-specification.sh   # Discovery for specification skill
-├── discovery-for-planning.sh        # Discovery for planning skill
-├── discovery-for-implementation-and-review.sh  # Discovery for impl/review
-└── migrations/                      # Individual migration scripts (numbered)
-
 tests/
 └── scripts/                         # Shell script tests for discovery and migrations
 ```
