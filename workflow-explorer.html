@@ -2189,7 +2189,7 @@ const FLOWCHARTS = {
   'migrate': {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for /migrate.' },
-      { id: 'run', label: 'Run migrate.sh', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Execute scripts/migrate.sh — runs all numbered migration scripts in order. Idempotent.' },
+      { id: 'run', label: 'Run migrate.sh', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Execute skills/migrate/scripts/migrate.sh — runs all numbered migration scripts in order. Idempotent.' },
       { id: 'updated', label: 'Files updated?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if any migration scripts modified workflow files.' },
       { id: 'show-changes', label: 'Show changes + review', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Display changed files and wait for user to review via git diff.' },
       { id: 'end-updated', label: 'Changes applied', shape: 'pill', w: 150, h: 40, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Migration complete — files were updated.' },
@@ -2541,7 +2541,7 @@ const FLOWCHART_DESCS = {
   },
   'migrate': {
     summary: 'Migration orchestrator — keeps workflow files in sync with the current system design.',
-    body: `<p>Executes <code>scripts/migrate.sh</code>, which runs all numbered scripts in <code>scripts/migrations/</code> in order. Each migration is idempotent — safe to run multiple times. Progress is tracked in <code>docs/workflow/.cache/migrations.log</code>.</p>
+    body: `<p>Executes <code>skills/migrate/scripts/migrate.sh</code>, which runs all numbered scripts in <code>skills/migrate/scripts/migrations/</code> in order. Each migration is idempotent — safe to run multiple times. Progress is tracked in <code>docs/workflow/.cache/migrations.log</code>.</p>
 <p>Runs automatically as <strong>Step 0 of every workflow command</strong>. If files were updated, shows changes and waits for user review via git diff. Delete the log file to force re-running all migrations.</p>`,
     meta: { complexity: 'System' }
   },

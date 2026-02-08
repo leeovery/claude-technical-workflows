@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# Discovers the current state of plans for /start-implementation and /start-review commands.
+# Discovers the current state of plans for /start-implementation command.
 #
-# Outputs structured YAML that the commands can consume directly.
+# Outputs structured YAML that the command can consume directly.
 #
 
 set -eo pipefail

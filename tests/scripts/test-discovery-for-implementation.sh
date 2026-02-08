@@ -1,13 +1,13 @@
 #!/bin/bash
 #
-# Tests the discovery-for-implementation-and-review.sh script against various workflow states.
+# Tests the discovery script for /start-implementation against various workflow states.
 # Creates temporary fixtures and validates YAML output.
 #
 
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DISCOVERY_SCRIPT="$SCRIPT_DIR/../../scripts/discovery-for-implementation-and-review.sh"
+DISCOVERY_SCRIPT="$SCRIPT_DIR/../../skills/start-implementation/scripts/discovery.sh"
 
 # Colors for output
 RED='\033[0;31m'

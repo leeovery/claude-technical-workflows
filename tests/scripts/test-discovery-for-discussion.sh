@@ -7,7 +7,7 @@
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DISCOVERY_SCRIPT="$SCRIPT_DIR/../../scripts/discovery-for-discussion.sh"
+DISCOVERY_SCRIPT="$SCRIPT_DIR/../../skills/start-discussion/scripts/discovery.sh"
 
 # Colors for output
 RED='\033[0;31m'
