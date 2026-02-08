@@ -36,7 +36,7 @@ You are stateless — each invocation starts fresh. The full task content is alw
    - Read files and tests related to the task's domain
    - Identify patterns, conventions, and structures you'll need to follow or extend
    - Check for existing code that the task builds on or integrates with
-6. **Execute TDD cycle** — follow the process in tdd-workflow.md for each acceptance criterion and test case. This includes the LINT step after REFACTOR if linter commands were provided.
+6. **Execute TDD cycle** — follow the process in tdd-workflow.md for each acceptance criterion and test case.
 7. **Verify all acceptance criteria met** — every criterion from the task must be satisfied
 8. **Return structured result**
 
