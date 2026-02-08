@@ -105,8 +105,8 @@ Save their instructions to `docs/workflow/environment-setup.md` (or "No special 
    - **reading.md** — how to read tasks from the plan
    - **updating.md** — how to write progress to the plan
 4. If no `format` field exists, ask the user which format the plan uses.
-5. These adapter files apply during Step 5 (task loop) and Step 6 (analysis).
-6. Also load the format's **authoring.md** adapter — needed in Step 6 if analysis tasks are created.
+5. These adapter files apply during Step 6 (task loop) and Step 7 (analysis).
+6. Also load the format's **authoring.md** adapter — needed in Step 7 if analysis tasks are created.
 
 → Proceed to **Step 3**.
 
@@ -120,7 +120,7 @@ Save their instructions to `docs/workflow/environment-setup.md` (or "No special 
 No project skills found. Proceeding without project-specific conventions.
 ```
 
-→ Proceed to **Step 3.5**.
+→ Proceed to **Step 4**.
 
 #### If project skills exist
 
@@ -135,13 +135,13 @@ Scan `.claude/skills/` for project-specific skill directories. Present findings:
 
 **STOP.** Wait for user to confirm which skills are relevant.
 
-Store the selected skill paths — they will be persisted to the tracking file in Step 4.
+Store the selected skill paths — they will be persisted to the tracking file in Step 5.
 
-→ Proceed to **Step 3.5**.
+→ Proceed to **Step 4**.
 
 ---
 
-## Step 3.5: Linter Discovery
+## Step 4: Linter Discovery
 
 Load **[linter-setup.md](references/linter-setup.md)** and follow its discovery process to identify project linters.
 
@@ -165,11 +165,11 @@ Present findings to the user:
 - **`change`**: Adjust based on user input, re-present for confirmation.
 - **`skip`**: Store empty linters array.
 
-→ Proceed to **Step 4**.
+→ Proceed to **Step 5**.
 
 ---
 
-## Step 4: Initialize Implementation Tracking
+## Step 5: Initialize Implementation Tracking
 
 #### If `docs/workflow/implementation/{topic}.md` already exists
 
@@ -193,7 +193,7 @@ If `project_skills` is populated in the tracking file, present for confirmation:
 - **`y`/`yes`**: Proceed with the persisted paths.
 - **`change`**: Re-run discovery (Step 3), update `project_skills` in the tracking file.
 
-→ Proceed to **Step 5**.
+→ Proceed to **Step 6**.
 
 #### If no tracking file exists
 
@@ -226,25 +226,25 @@ completed: ~
 Implementation started.
 ```
 
-After creating the file, populate `project_skills` with the paths confirmed in Step 3 (empty array if none) and `linters` with the commands confirmed in Step 3.5 (empty array if skipped).
+After creating the file, populate `project_skills` with the paths confirmed in Step 3 (empty array if none) and `linters` with the commands confirmed in Step 4 (empty array if skipped).
 
 Commit: `impl({topic}): start implementation`
 
-→ Proceed to **Step 5**.
+→ Proceed to **Step 6**.
 
 ---
 
-## Step 5: Task Loop
+## Step 6: Task Loop
 
 Load **[steps/task-loop.md](references/steps/task-loop.md)** and follow its instructions as written.
 
-→ After the loop completes, proceed to **Step 6**.
+→ After the loop completes, proceed to **Step 7**.
 
 ---
 
-## Step 6: Analysis and Refinement
+## Step 7: Analysis and Refinement
 
-If the task loop exited early (user chose `stop`), skip to **Step 7**.
+If the task loop exited early (user chose `stop`), skip to **Step 8**.
 
 **Git checkpoint** — ensure a clean working tree before analysis. Run `git status`. If there are unstaged changes or untracked files, commit them:
 
@@ -252,19 +252,19 @@ If the task loop exited early (user chose `stop`), skip to **Step 7**.
 impl({topic}): pre-analysis checkpoint
 ```
 
-### 6A. Dispatch Analysis Agents
+### 7A. Dispatch Analysis Agents
 
 Load **[steps/invoke-analysis.md](references/steps/invoke-analysis.md)** and follow its instructions. Dispatch all 3 analysis agents in parallel.
 
 **STOP.** Wait for all agents to return.
 
-### 6B. Dispatch Synthesis Agent
+### 7B. Dispatch Synthesis Agent
 
 Load **[steps/invoke-synthesizer.md](references/steps/invoke-synthesizer.md)** and invoke the synthesizer. Pass the current `analysis_cycle + 1` as the cycle number.
 
 **STOP.** Wait for the synthesizer to return.
 
-### 6C. Present Findings
+### 7C. Present Findings
 
 Read the report from `docs/workflow/implementation/{topic}-analysis-report.md`.
 
@@ -272,7 +272,7 @@ If zero proposed tasks:
 
 > "Analysis cycle {N}: no issues found."
 
-→ Proceed to **Step 7**.
+→ Proceed to **Step 8**.
 
 Otherwise, present grouped findings conversationally:
 
@@ -295,9 +295,9 @@ Otherwise, present grouped findings conversationally:
 
 #### If `none`
 
-→ Proceed to **Step 7**.
+→ Proceed to **Step 8**.
 
-### 6D. Create Tasks in Plan
+### 7D. Create Tasks in Plan
 
 For approved tasks:
 
@@ -309,25 +309,25 @@ For approved tasks:
 impl({topic}): add analysis phase {N} ({K} tasks)
 ```
 
-### 6E. Re-enter Task Loop
+### 7E. Re-enter Task Loop
 
-Return to **Step 5**. The task loop picks up the new phase via the reading adapter.
+Return to **Step 6**. The task loop picks up the new phase via the reading adapter.
 
 After the loop completes, increment `analysis_cycle` in the tracking file.
 
-### 6F. Cycle Gate
+### 7F. Cycle Gate
 
 If `analysis_cycle >= max_analysis_cycles` (default 3):
 
 > "Max analysis cycles reached. Proceeding to completion."
 
-→ Proceed to **Step 7**.
+→ Proceed to **Step 8**.
 
-Otherwise → return to **6A** for the next cycle.
+Otherwise → return to **7A** for the next cycle.
 
 ---
 
-## Step 7: Mark Implementation Complete
+## Step 8: Mark Implementation Complete
 
 Update the tracking file (`docs/workflow/implementation/{topic}.md`):
 - Set `status: completed`
