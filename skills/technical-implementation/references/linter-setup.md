@@ -37,15 +37,3 @@ Each entry has:
 - **command** — the exact shell command to run (including flags)
 
 If the user skips linter setup, store an empty array: `linters: []`
-
-## Execution Protocol
-
-During the TDD cycle's LINT step (after REFACTOR):
-
-1. Run each linter command sequentially
-2. If issues found: fix them
-3. Re-run the linter to confirm clean
-4. Re-run tests to confirm no regressions
-5. If a linter fix breaks tests: revert the fix and note it in your report
-
-If `linters` is empty, skip the LINT step entirely.
