@@ -2,7 +2,7 @@
 name: start-discussion
 description: "Start a technical discussion. Discovers research and existing discussions, offers multiple entry paths, and invokes the technical-discussion skill."
 disable-model-invocation: true
-allowed-tools: Bash(./scripts/discovery.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/research-analysis.md)
+allowed-tools: Bash(.claude/skills/start-discussion/scripts/discovery.sh), Bash(./scripts/discovery.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/research-analysis.md)
 ---
 
 Invoke the **technical-discussion** skill for this conversation.
@@ -50,15 +50,19 @@ Invoke the `/migrate` skill and assess its output.
 
 ---
 
-## Step 1: Run Discovery Script
+## Step 1: Discovery State
 
-Run the discovery script to gather current state:
+!`.claude/skills/start-discussion/scripts/discovery.sh`
+
+If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
 
 ```bash
 ./scripts/discovery.sh
 ```
 
-This outputs structured YAML. Parse it to understand:
+If YAML content is already displayed, it has been run on your behalf.
+
+Parse the discovery output to understand:
 
 **From `research` section:**
 - `exists` - whether research files exist

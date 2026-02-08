@@ -2,7 +2,7 @@
 name: start-review
 description: "Start a review session from an existing plan and implementation. Discovers available plans, validates implementation exists, and invokes the technical-review skill."
 disable-model-invocation: true
-allowed-tools: Bash(./scripts/discovery.sh)
+allowed-tools: Bash(.claude/skills/start-review/scripts/discovery.sh), Bash(./scripts/discovery.sh)
 ---
 
 Invoke the **technical-review** skill for this conversation.
@@ -50,15 +50,19 @@ Invoke the `/migrate` skill and assess its output.
 
 ---
 
-## Step 1: Run Discovery Script
+## Step 1: Discovery State
 
-Run the discovery script to gather current state:
+!`.claude/skills/start-review/scripts/discovery.sh`
+
+If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
 
 ```bash
 ./scripts/discovery.sh
 ```
 
-This outputs structured YAML. Parse it to understand:
+If YAML content is already displayed, it has been run on your behalf.
+
+Parse the discovery output to understand:
 
 **From `plans` section:**
 - `exists` - whether any plans exist
