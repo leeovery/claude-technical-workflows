@@ -49,7 +49,7 @@ Context refresh (compaction) summarizes the conversation, losing procedural deta
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
 2. **Check task progress in the plan** — use the plan adapter's instructions to read the plan's current state. Also read the implementation tracking file and any other working documents for additional context.
-3. **Check `task_gate_mode`, `fix_gate_mode`, and `fix_attempts`** in the tracking file — if gates are `auto`, the user previously opted out. If `fix_attempts` > 0, you're mid-fix-loop for the current task.
+3. **Check `task_gate_mode`, `fix_gate_mode`, `fix_attempts`, and `analysis_cycle`** in the tracking file — if gates are `auto`, the user previously opted out. If `fix_attempts` > 0, you're mid-fix-loop for the current task. If `analysis_cycle` > 0, you've completed analysis cycles — check for findings files on disk (`{topic}-analysis-*.md`) to determine mid-analysis state.
 4. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 5. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 
@@ -105,7 +105,8 @@ Save their instructions to `docs/workflow/environment-setup.md` (or "No special 
    - **reading.md** — how to read tasks from the plan
    - **updating.md** — how to write progress to the plan
 4. If no `format` field exists, ask the user which format the plan uses.
-5. These adapter files apply during Step 5 (task loop).
+5. These adapter files apply during Step 5 (task loop) and Step 6 (analysis).
+6. Also load the format's **authoring.md** adapter — needed in Step 6 if analysis tasks are created.
 
 → Proceed to **Step 3**.
 
@@ -119,7 +120,7 @@ Save their instructions to `docs/workflow/environment-setup.md` (or "No special 
 No project skills found. Proceeding without project-specific conventions.
 ```
 
-→ Proceed to **Step 4**.
+→ Proceed to **Step 3.5**.
 
 #### If project skills exist
 
@@ -136,6 +137,34 @@ Scan `.claude/skills/` for project-specific skill directories. Present findings:
 
 Store the selected skill paths — they will be persisted to the tracking file in Step 4.
 
+→ Proceed to **Step 3.5**.
+
+---
+
+## Step 3.5: Linter Discovery
+
+Load **[linter-setup.md](references/linter-setup.md)** and follow its discovery process to identify project linters.
+
+Present findings to the user:
+
+> **Linter discovery:**
+> - {tool} — `{command}` (installed / not installed)
+> - ...
+>
+> Recommendations: {any suggested tools with install commands}
+>
+> · · ·
+>
+> - **`y`/`yes`** — Approve these linter commands
+> - **`c`/`change`** — Modify the linter list
+> - **`s`/`skip`** — Skip linter setup (no linting during TDD)
+
+**STOP.** Wait for user choice.
+
+- **`yes`**: Store the approved linter commands for the tracking file.
+- **`change`**: Adjust based on user input, re-present for confirmation.
+- **`skip`**: Store empty linters array.
+
 → Proceed to **Step 4**.
 
 ---
@@ -144,7 +173,9 @@ Store the selected skill paths — they will be persisted to the tracking file i
 
 #### If `docs/workflow/implementation/{topic}.md` already exists
 
-Reset `task_gate_mode` and `fix_gate_mode` to `gated`, and `fix_attempts` to `0`, in the tracking file before proceeding (fresh session = fresh gates).
+Reset `task_gate_mode` and `fix_gate_mode` to `gated`, `fix_attempts` to `0`, and `analysis_cycle` to `0` in the tracking file before proceeding (fresh session = fresh gates/cycles).
+
+If `linters` is populated in the tracking file, present for confirmation (same pattern as project skills below).
 
 If `project_skills` is populated in the tracking file, present for confirmation:
 
@@ -177,6 +208,9 @@ status: in-progress
 task_gate_mode: gated
 fix_gate_mode: gated
 fix_attempts: 0
+linters: []
+analysis_cycle: 0
+max_analysis_cycles: 3
 project_skills: []
 current_phase: 1
 current_task: ~
@@ -192,7 +226,7 @@ completed: ~
 Implementation started.
 ```
 
-After creating the file, populate `project_skills` with the paths confirmed in Step 3 (empty array if none).
+After creating the file, populate `project_skills` with the paths confirmed in Step 3 (empty array if none) and `linters` with the commands confirmed in Step 3.5 (empty array if skipped).
 
 Commit: `impl({topic}): start implementation`
 
@@ -208,77 +242,88 @@ Load **[steps/task-loop.md](references/steps/task-loop.md)** and follow its inst
 
 ---
 
-## Step 6: Polish
+## Step 6: Analysis and Refinement
 
 If the task loop exited early (user chose `stop`), skip to **Step 7**.
 
-**Git checkpoint** — ensure a clean working tree before invoking the polish agent. Run `git status`. If there are unstaged changes or untracked files, commit them:
+**Git checkpoint** — ensure a clean working tree before analysis. Run `git status`. If there are unstaged changes or untracked files, commit them:
 
 ```
-impl({topic}): pre-polish checkpoint
+impl({topic}): pre-analysis checkpoint
 ```
 
-This ensures all prior work is safely committed. The polish agent makes no git operations — all its changes will exist as unstaged modifications. If the user discards polish, the working tree resets cleanly to this checkpoint.
+### 6A. Dispatch Analysis Agents
 
-**Invoke the polish agent:**
+Load **[steps/invoke-analysis.md](references/steps/invoke-analysis.md)** and follow its instructions. Dispatch all 3 analysis agents in parallel.
 
-1. Load **[steps/invoke-polish.md](references/steps/invoke-polish.md)** and follow its instructions.
-2. **STOP.** Do not proceed until the polish agent has returned its result.
-3. Route on STATUS:
-   - `blocked` → present SUMMARY to the user, ask how to proceed
-   - `complete` → present the report below
+**STOP.** Wait for all agents to return.
 
-> **Implementation polish complete** ({N} cycles)
+### 6B. Dispatch Synthesis Agent
+
+Load **[steps/invoke-synthesizer.md](references/steps/invoke-synthesizer.md)** and invoke the synthesizer. Pass the current `analysis_cycle + 1` as the cycle number.
+
+**STOP.** Wait for the synthesizer to return.
+
+### 6C. Present Findings
+
+Read the report from `docs/workflow/implementation/{topic}-analysis-report.md`.
+
+If zero proposed tasks:
+
+> "Analysis cycle {N}: no issues found."
+
+→ Proceed to **Step 7**.
+
+Otherwise, present grouped findings conversationally:
+
+> **Analysis cycle {N}: {K} proposed tasks**
 >
-> {SUMMARY}
->
-> Findings:
-> {DISCOVERY}
->
-> Fixes applied:
-> {FIXES_APPLIED}
->
-> Integration tests added:
-> {TESTS_ADDED}
->
-> Skipped (not addressed):
-> {SKIPPED}
->
-> Test results: {TEST_RESULTS}
+> {For each proposed task:}
+> **{number}. {title}** ({severity})
+> Sources: {agents}
+> {Problem summary}
+> {Solution summary}
 >
 > · · ·
 >
-> - **`y`/`yes`** — Approve and commit polish changes
-> - **`s`/`skip`** — Discard polish changes, mark complete as-is
-> - **Comment** — Feedback (re-invokes polish agent with your notes)
+> - **`a`/`all`** — Approve all, add to plan
+> - **`1,3,5`** — Approve specific tasks by number
+> - **`n`/`none`** — Skip, mark complete as-is
+> - **Comment** — Feedback
 
 **STOP.** Wait for user input.
 
-#### If `yes`
-
-Commit all polish changes:
-
-```
-impl({topic}): polish — {brief description}
-```
+#### If `none`
 
 → Proceed to **Step 7**.
 
-#### If `skip`
+### 6D. Create Tasks in Plan
 
-Discard all polish changes. Reset the working tree to the pre-polish checkpoint:
+For approved tasks:
+
+1. Calculate the next phase number: read the plan via the reading adapter and find the max existing phase, then add 1.
+2. Use the plan format's **authoring.md** adapter to create task files for the new phase.
+3. Commit:
 
 ```
-git checkout . && git clean -fd
+impl({topic}): add analysis phase {N} ({K} tasks)
 ```
 
-This is safe because the checkpoint commit captured all prior work. Only polish-created changes are discarded. Gitignored files are untouched.
+### 6E. Re-enter Task Loop
+
+Return to **Step 5**. The task loop picks up the new phase via the reading adapter.
+
+After the loop completes, increment `analysis_cycle` in the tracking file.
+
+### 6F. Cycle Gate
+
+If `analysis_cycle >= max_analysis_cycles` (default 3):
+
+> "Max analysis cycles reached. Proceeding to completion."
 
 → Proceed to **Step 7**.
 
-#### If comment
-
-→ Re-invoke the polish agent with the user's feedback. Return to the top of **Step 6** (after the git checkpoint — do not re-checkpoint).
+Otherwise → return to **6A** for the next cycle.
 
 ---
 
@@ -296,10 +341,12 @@ Commit: `impl({topic}): complete implementation`
 ## References
 
 - **[environment-setup.md](references/environment-setup.md)** — Environment setup before implementation
+- **[linter-setup.md](references/linter-setup.md)** — Linter discovery and configuration
 - **[steps/task-loop.md](references/steps/task-loop.md)** — Task execution loop, task gates, tracking, commits
 - **[steps/invoke-executor.md](references/steps/invoke-executor.md)** — How to invoke the executor agent
 - **[steps/invoke-reviewer.md](references/steps/invoke-reviewer.md)** — How to invoke the reviewer agent
-- **[steps/invoke-polish.md](references/steps/invoke-polish.md)** — How to invoke the polish agent
+- **[steps/invoke-analysis.md](references/steps/invoke-analysis.md)** — How to invoke analysis agents
+- **[steps/invoke-synthesizer.md](references/steps/invoke-synthesizer.md)** — How to invoke the synthesis agent
 - **[task-normalisation.md](references/task-normalisation.md)** — Normalised task shape for agent invocation
 - **[tdd-workflow.md](references/tdd-workflow.md)** — TDD cycle (passed to executor agent)
 - **[code-quality.md](references/code-quality.md)** — Quality standards (passed to executor agent)
