@@ -135,47 +135,17 @@ Scan `.claude/skills/` for project-specific skill directories. Present findings:
 
 **STOP.** Wait for user to confirm which skills are relevant.
 
-Store the selected skill paths — they will be persisted to the tracking file in Step 5.
+Store the selected skill paths — they will be persisted to the tracking file in Step 4.
 
 → Proceed to **Step 4**.
 
 ---
 
-## Step 4: Linter Discovery
-
-Load **[linter-setup.md](references/linter-setup.md)** and follow its discovery process to identify project linters.
-
-Present findings to the user:
-
-> **Linter discovery:**
-> - {tool} — `{command}` (installed / not installed)
-> - ...
->
-> Recommendations: {any suggested tools with install commands}
->
-> · · ·
->
-> - **`y`/`yes`** — Approve these linter commands
-> - **`c`/`change`** — Modify the linter list
-> - **`s`/`skip`** — Skip linter setup (no linting during TDD)
-
-**STOP.** Wait for user choice.
-
-- **`yes`**: Store the approved linter commands for the tracking file.
-- **`change`**: Adjust based on user input, re-present for confirmation.
-- **`skip`**: Store empty linters array.
-
-→ Proceed to **Step 5**.
-
----
-
-## Step 5: Initialize Implementation Tracking
+## Step 4: Initialize Implementation Tracking
 
 #### If `docs/workflow/implementation/{topic}.md` already exists
 
 Reset `task_gate_mode` and `fix_gate_mode` to `gated`, `fix_attempts` to `0`, and `analysis_cycle` to `0` in the tracking file before proceeding (fresh session = fresh gates/cycles).
-
-If `linters` is populated in the tracking file, present for confirmation (same pattern as project skills below).
 
 If `project_skills` is populated in the tracking file, present for confirmation:
 
@@ -193,7 +163,7 @@ If `project_skills` is populated in the tracking file, present for confirmation:
 - **`y`/`yes`**: Proceed with the persisted paths.
 - **`change`**: Re-run discovery (Step 3), update `project_skills` in the tracking file.
 
-→ Proceed to **Step 6**.
+→ Proceed to **Step 5**.
 
 #### If no tracking file exists
 
@@ -226,9 +196,39 @@ completed: ~
 Implementation started.
 ```
 
-After creating the file, populate `project_skills` with the paths confirmed in Step 3 (empty array if none) and `linters` with the commands confirmed in Step 4 (empty array if skipped).
+After creating the file, populate `project_skills` with the paths confirmed in Step 3 (empty array if none).
 
 Commit: `impl({topic}): start implementation`
+
+→ Proceed to **Step 5**.
+
+---
+
+## Step 5: Linter Discovery
+
+Load **[linter-setup.md](references/linter-setup.md)** and follow its discovery process to identify project linters.
+
+If `linters` is already populated in the tracking file, present the existing configuration for confirmation (same pattern as project skills in Step 4). If confirmed, skip discovery and proceed.
+
+Otherwise, present discovery findings to the user:
+
+> **Linter discovery:**
+> - {tool} — `{command}` (installed / not installed)
+> - ...
+>
+> Recommendations: {any suggested tools with install commands}
+>
+> · · ·
+>
+> - **`y`/`yes`** — Approve these linter commands
+> - **`c`/`change`** — Modify the linter list
+> - **`s`/`skip`** — Skip linter setup (no linting during TDD)
+
+**STOP.** Wait for user choice.
+
+- **`yes`**: Store the approved linter commands in the tracking file.
+- **`change`**: Adjust based on user input, re-present for confirmation.
+- **`skip`**: Store empty linters array.
 
 → Proceed to **Step 6**.
 
