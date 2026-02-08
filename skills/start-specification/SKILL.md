@@ -2,7 +2,7 @@
 name: start-specification
 description: "Start a specification session from existing discussions. Discovers available discussions, offers consolidation assessment for multiple discussions, and invokes the technical-specification skill."
 disable-model-invocation: true
-allowed-tools: Bash(./scripts/discovery.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/discussion-consolidation-analysis.md)
+allowed-tools: Bash(.claude/skills/start-specification/scripts/discovery.sh), Bash(./scripts/discovery.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/discussion-consolidation-analysis.md)
 ---
 
 Invoke the **technical-specification** skill for this conversation.
@@ -50,15 +50,19 @@ Invoke the `/migrate` skill and assess its output.
 
 ---
 
-## Step 1: Run Discovery Script
+## Step 1: Discovery State
 
-Run the discovery script to gather current state:
+!`.claude/skills/start-specification/scripts/discovery.sh`
+
+If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
 
 ```bash
 ./scripts/discovery.sh
 ```
 
-This outputs structured YAML. Parse it to understand:
+If YAML content is already displayed, it has been run on your behalf.
+
+Parse the discovery output to understand:
 
 **From `discussions` array:**
 - Each discussion's name, status, and whether it has an individual specification
