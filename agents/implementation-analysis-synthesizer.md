@@ -20,13 +20,13 @@ You receive via the orchestrator's prompt:
 
 ## Your Process
 
-1. **Read all findings files** from `docs/workflow/implementation/{topic}/` — look for `analysis-duplication-c{N}.md`, `analysis-standards-c{N}.md`, and `analysis-architecture-c{N}.md` (where {N} is the cycle number)
+1. **Read all findings files** from `docs/workflow/implementation/{topic}/` — look for `analysis-duplication-c{cycle}.md`, `analysis-standards-c{cycle}.md`, and `analysis-architecture-c{cycle}.md` (where {N} is the cycle number)
 2. **Deduplicate** — same issue found by multiple agents → one finding, note all sources
 3. **Group related findings** — multiple findings about the same pattern become one task (e.g., 3 duplication findings about the same helper pattern = 1 "extract helper" task)
 4. **Filter** — discard low-severity findings unless they cluster into a pattern. Never discard high-severity.
 5. **Normalize** — convert each group into a task using the canonical task template (Problem / Solution / Outcome / Do / Acceptance Criteria / Tests)
-6. **Write report** — output to `docs/workflow/implementation/{topic}/analysis-report-c{N}.md`
-7. **Write staging file** — if actionable tasks exist, write to `docs/workflow/implementation/{topic}/analysis-tasks-c{N}.md` with `status: pending` for each task
+6. **Write report** — output to `docs/workflow/implementation/{topic}/analysis-report-c{cycle}.md`
+7. **Write staging file** — if actionable tasks exist, write to `docs/workflow/implementation/{topic}/analysis-tasks-c{cycle}.md` with `status: pending` for each task
 
 ## Report Format
 

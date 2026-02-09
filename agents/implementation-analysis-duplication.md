@@ -34,7 +34,7 @@ You receive via the orchestrator's prompt:
 3. **Read specification** — understand design intent
 4. **Read all implementation files** — build a mental map of the full codebase
 5. **Analyze for duplication** — compare patterns across files, identify extraction candidates
-6. **Write findings** to `docs/workflow/implementation/{topic}/analysis-duplication-c{N}.md`
+6. **Write findings** to `docs/workflow/implementation/{topic}/analysis-duplication-c{cycle}.md`
 
 ## Hard Rules
 
@@ -48,7 +48,7 @@ You receive via the orchestrator's prompt:
 
 ## Output File Format
 
-Write to `docs/workflow/implementation/{topic}/analysis-duplication-c{N}.md`:
+Write to `docs/workflow/implementation/{topic}/analysis-duplication-c{cycle}.md`:
 
 ```
 AGENT: duplication

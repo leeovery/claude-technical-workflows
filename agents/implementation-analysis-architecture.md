@@ -35,7 +35,7 @@ You receive via the orchestrator's prompt:
 3. **Read specification** — understand design intent and boundaries
 4. **Read all implementation files** — understand the full picture
 5. **Analyze architecture** — evaluate how the pieces compose as a whole
-6. **Write findings** to `docs/workflow/implementation/{topic}/analysis-architecture-c{N}.md`
+6. **Write findings** to `docs/workflow/implementation/{topic}/analysis-architecture-c{cycle}.md`
 
 ## Hard Rules
 
@@ -49,7 +49,7 @@ You receive via the orchestrator's prompt:
 
 ## Output File Format
 
-Write to `docs/workflow/implementation/{topic}/analysis-architecture-c{N}.md`:
+Write to `docs/workflow/implementation/{topic}/analysis-architecture-c{cycle}.md`:
 
 ```
 AGENT: architecture

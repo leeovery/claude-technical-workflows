@@ -34,7 +34,7 @@ You receive via the orchestrator's prompt:
 3. **Read code-quality.md** — understand quality standards
 4. **Read all implementation files** — map each file back to its spec requirements
 5. **Compare implementation against spec** — check every decision point
-6. **Write findings** to `docs/workflow/implementation/{topic}/analysis-standards-c{N}.md`
+6. **Write findings** to `docs/workflow/implementation/{topic}/analysis-standards-c{cycle}.md`
 
 ## Hard Rules
 
@@ -48,7 +48,7 @@ You receive via the orchestrator's prompt:
 
 ## Output File Format
 
-Write to `docs/workflow/implementation/{topic}/analysis-standards-c{N}.md`:
+Write to `docs/workflow/implementation/{topic}/analysis-standards-c{cycle}.md`:
 
 ```
 AGENT: standards

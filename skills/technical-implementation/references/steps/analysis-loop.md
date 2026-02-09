@@ -109,7 +109,7 @@ impl({topic}): analysis cycle {N} — synthesis
 
 ## E. Approval Gate
 
-Read the staging file from `docs/workflow/implementation/{topic}/analysis-tasks-c{N}.md`.
+Read the staging file from `docs/workflow/implementation/{topic}/analysis-tasks-c{cycle}.md`.
 
 Present an overview:
 
