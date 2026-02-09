@@ -22,9 +22,9 @@ F. Create tasks in plan → invoke-task-writer.md
 
 Increment `analysis_cycle` in the implementation tracking file.
 
-If `analysis_cycle > max_analysis_cycles` (default 3):
+If `analysis_cycle > 3`:
 
-> **Analysis cycle {N} — exceeds configured maximum ({max_analysis_cycles}).**
+> **Analysis cycle {N} — this is beyond the standard 3 cycles.**
 >
 > · · ·
 >
@@ -36,7 +36,7 @@ If `analysis_cycle > max_analysis_cycles` (default 3):
 - **`skip`**: → Return to the skill for **Step 8**.
 - **`proceed`**: → Continue to **B. Git Checkpoint**.
 
-→ If `analysis_cycle <= max_analysis_cycles`, proceed to **B. Git Checkpoint**.
+→ If `analysis_cycle <= 3`, proceed to **B. Git Checkpoint**.
 
 ---
 

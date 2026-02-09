@@ -135,7 +135,6 @@ fix_gate_mode: gated
 fix_attempts: 0
 linters: []
 analysis_cycle: 0
-max_analysis_cycles: 3
 project_skills: []
 current_phase: 1
 current_task: ~
