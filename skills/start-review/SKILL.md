@@ -142,11 +142,9 @@ Ask the user what code to review:
 
 What code should I review?
 
-1. All changes since the plan was created
-2. Specific directories or files
-3. Let me identify from git status
-
-Which approach?
+- **`a`/`all`** — All changes since the plan was created
+- **`g`/`git`** — Identify from git status
+- Specific directories or files — tell me which
 ```
 
 **STOP.** Wait for user response.
