@@ -232,10 +232,10 @@ Discussions:
 
 How would you like to proceed?
 
+- **`r`/`refresh`** — Force fresh research analysis
 - From research — pick a topic number above (e.g., "1" or "research 1")
 - Continue discussion — name one above (e.g., "continue {topic}")
 - Fresh topic — describe what you want to discuss
-- **`r`/`refresh`** — Force fresh research analysis
 ```
 
 **If ONLY research exists:**
@@ -244,9 +244,9 @@ How would you like to proceed?
 
 How would you like to proceed?
 
+- **`r`/`refresh`** — Force fresh research analysis
 - From research — pick a topic number above (e.g., "1" or "research 1")
 - Fresh topic — describe what you want to discuss
-- **`r`/`refresh`** — Force fresh research analysis
 ```
 
 **If ONLY discussions exist:**

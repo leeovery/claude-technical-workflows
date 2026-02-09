@@ -230,9 +230,12 @@ If any are relevant:
 Note: The following cross-cutting specifications are still in-progress:
   · {rate-limiting} - in-progress
 
-These may contain architectural decisions relevant to this plan. You can:
-- Continue planning without them
-- Stop and complete them first (/start-specification)
+These may contain architectural decisions relevant to this plan.
+
+· · ·
+
+- **`c`/`continue`** — Plan without them
+- **`s`/`stop`** — Complete them first (/start-specification)
 ```
 
 **STOP.** Wait for user response.

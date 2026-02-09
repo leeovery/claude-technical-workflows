@@ -262,10 +262,9 @@ INCOMPLETE (planned but not implemented):
 
 · · ·
 
-OPTIONS:
-1. Implement the blocking dependencies first
-2. Mark a dependency as "satisfied externally" if it was implemented outside this workflow
-3. Run /link-dependencies to wire up any recently completed plans
+- **`i`/`implement`** — Implement the blocking dependencies first
+- **`l`/`link`** — Run /link-dependencies to wire up recently completed plans
+- Mark as "satisfied externally" — tell me which dependency was implemented outside this workflow
 ```
 
 **STOP.** Wait for user response.
