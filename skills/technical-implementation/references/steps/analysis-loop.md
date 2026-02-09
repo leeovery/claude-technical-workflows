@@ -38,7 +38,7 @@ If `analysis_cycle > max_analysis_cycles` (default 3):
 - **`skip`**: → Return to the skill for **Step 8**.
 - **`proceed`**: → Continue to **B. Git Checkpoint**.
 
-If `analysis_cycle <= max_analysis_cycles` → proceed to **B. Git Checkpoint**.
+→ If `analysis_cycle <= max_analysis_cycles`, proceed to **B. Git Checkpoint**.
 
 ---
 
@@ -46,7 +46,7 @@ If `analysis_cycle <= max_analysis_cycles` → proceed to **B. Git Checkpoint**.
 
 Ensure a clean working tree before analysis. Run `git status`.
 
-If the working tree is clean → proceed to **C. Dispatch Analysis Agents**.
+→ If the working tree is clean, proceed to **C. Dispatch Analysis Agents**.
 
 If there are unstaged changes or untracked files, categorize them:
 
