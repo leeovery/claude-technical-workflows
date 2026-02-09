@@ -1,7 +1,7 @@
 ---
 name: migrate
 description: "Run migrations to keep workflow files in sync with the current system design. This skill is mandatory before running any workflow skill."
-allowed-tools: Bash(./scripts/migrate.sh)
+allowed-tools: Bash(.claude/skills/migrate/scripts/migrate.sh)
 ---
 
 # Migrate
@@ -13,7 +13,7 @@ Keeps your workflow files up to date with how the system is designed to work. Ru
 Run the migration script:
 
 ```bash
-./scripts/migrate.sh
+.claude/skills/migrate/scripts/migrate.sh
 ```
 
 ### If files were updated

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Claude Code skills package for structured technical discussion and planning workflows. Distributed via Composer as `leeovery/claude-technical-workflows`.
+Claude Code skills package for structured technical discussion and planning workflows. Installed via npm as `@leeovery/claude-technical-workflows`.
 
 ## Six-Phase Workflow
 
