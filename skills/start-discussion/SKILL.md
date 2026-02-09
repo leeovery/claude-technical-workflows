@@ -232,10 +232,9 @@ Discussions:
 
 How would you like to proceed?
 
-1. **From research** — Pick a topic number above (e.g., "1" or "research 1")
-2. **Continue discussion** — Name one above (e.g., "continue {topic}")
-3. **Fresh topic** — Describe what you want to discuss
-
+- From research — pick a topic number above (e.g., "1" or "research 1")
+- Continue discussion — name one above (e.g., "continue {topic}")
+- Fresh topic — describe what you want to discuss
 - **`r`/`refresh`** — Force fresh research analysis
 ```
 
@@ -245,9 +244,8 @@ How would you like to proceed?
 
 How would you like to proceed?
 
-1. **From research** — Pick a topic number above (e.g., "1" or "research 1")
-2. **Fresh topic** — Describe what you want to discuss
-
+- From research — pick a topic number above (e.g., "1" or "research 1")
+- Fresh topic — describe what you want to discuss
 - **`r`/`refresh`** — Force fresh research analysis
 ```
 
@@ -257,8 +255,8 @@ How would you like to proceed?
 
 How would you like to proceed?
 
-1. **Continue discussion** — Name one above (e.g., "continue {topic}")
-2. **Fresh topic** — Describe what you want to discuss
+- Continue discussion — name one above (e.g., "continue {topic}")
+- Fresh topic — describe what you want to discuss
 ```
 
 **STOP.** Wait for user response before proceeding.

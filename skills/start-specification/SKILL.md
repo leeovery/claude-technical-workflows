@@ -214,11 +214,9 @@ Check `cache.status` from discovery to determine which options to present.
 
 What would you like to do?
 
-1. **Continue an existing specification** - Resume work on a spec in progress
-2. **Select from groupings** - Choose from previously analyzed groupings ({cache.generated})
-3. **Re-analyze groupings** - Fresh analysis of discussion relationships
-
-Which approach?
+- Continue an existing specification — resume work on a spec in progress
+- Select from groupings — choose from previously analyzed groupings ({cache.generated})
+- Re-analyze groupings — fresh analysis of discussion relationships
 ```
 
 **STOP.** Wait for user response.
@@ -232,10 +230,8 @@ What would you like to do?
 
 Note: A previous grouping analysis exists but is now outdated - discussion documents have changed since it was created. Re-analysis is required, but existing specification names will be preserved where groupings overlap.
 
-1. **Continue an existing specification** - Resume work on a spec in progress
-2. **Assess for groupings** - Re-analyze discussions for combinations
-
-Which approach?
+- Continue an existing specification — resume work on a spec in progress
+- Assess for groupings — re-analyze discussions for combinations
 ```
 
 **STOP.** Wait for user response.
@@ -247,10 +243,8 @@ Which approach?
 
 What would you like to do?
 
-1. **Continue an existing specification** - Resume work on a spec in progress
-2. **Assess for groupings** - Analyze discussions for combinations
-
-Which approach?
+- Continue an existing specification — resume work on a spec in progress
+- Assess for groupings — analyze discussions for combinations
 ```
 
 **STOP.** Wait for user response.
@@ -484,11 +478,10 @@ Coupling: {explanation}
 
 How would you like to proceed?
 
-1. **Proceed as recommended** - I'll ask which to start with
-2. **Combine differently** - Tell me your preferred groupings
-3. **Single specification** - Consolidate ALL into one unified spec
-4. **Individual specifications** - Create 1:1 specs (I'll ask which to start)
-
+- Proceed as recommended — I'll ask which to start with
+- Combine differently — tell me your preferred groupings
+- Single specification — consolidate ALL into one unified spec
+- Individual specifications — create 1:1 specs (I'll ask which to start)
 - **`r`/`refresh`** — Re-analyze discussions
 ```
 
@@ -574,10 +567,8 @@ Moving discussions between established specifications requires deleting the affe
 · · ·
 
 Options:
-1. **Delete affected specs and proceed** - Remove {spec-1}, {spec-2} and create fresh specs for your new groupings
-2. **Reconsider** - Adjust your groupings to affect fewer specs
-
-Which approach?
+- Delete affected specs and proceed — remove {spec-1}, {spec-2} and create fresh specs for your new groupings
+- Reconsider — adjust your groupings to affect fewer specs
 ```
 
 **STOP.** Wait for user choice.
