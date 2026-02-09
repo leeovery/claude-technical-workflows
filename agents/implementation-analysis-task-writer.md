@@ -26,6 +26,31 @@ You receive via the orchestrator's prompt:
 3. **Calculate next phase number** — max existing phase + 1
 4. **Read the authoring adapter** — understand how to create tasks in this format
 5. **Create tasks in the plan** — follow the authoring adapter's instructions for each approved task, using the topic name to scope tasks to this plan (e.g., directory paths, task ID prefixes, project association)
+6. **Update the Plan Index File** — append the new phase and task table to the Plan Index File body (see below)
+
+## Update the Plan Index File
+
+The Plan Index File (`docs/workflow/planning/{topic}.md`) is the single source of truth for planning progress. After creating task files, you **must** append the new phase and task table to its body.
+
+Append at the end of the Plan Index File body:
+
+```markdown
+### Phase {N}: Analysis ({cycle description})
+status: approved
+
+**Goal**: Address findings from implementation analysis cycle {N}.
+
+#### Tasks
+| ID | Name | Edge Cases | Status |
+|----|------|------------|--------|
+| {topic}-{phase}-1 | {Task Title} | — | authored |
+| {topic}-{phase}-2 | {Task Title} | — | authored |
+```
+
+- Use `status: approved` for the phase (it's pre-approved by the user in the approval gate)
+- Use `authored` for each task status (the task files are fully written)
+- Use `—` for edge cases (analysis tasks don't have separate edge case annotations)
+- Task IDs must match the IDs used in the created task files
 
 ## Hard Rules
 
@@ -33,7 +58,7 @@ You receive via the orchestrator's prompt:
 
 1. **Approved only** — only create tasks with `status: approved`. Never create tasks that are `pending` or `skipped`.
 2. **No content modifications** — create tasks exactly as they appear in the staging file. Do not rewrite, reorder, or embellish.
-3. **No git writes** — do not commit or stage. Writing plan task files/entries are your only writes.
+3. **No git writes** — do not commit or stage. Writing plan task files/entries and updating the Plan Index File are your only writes.
 4. **Authoring adapter is authoritative** — follow its instructions for task file structure, naming, and format.
 
 ## Your Output
