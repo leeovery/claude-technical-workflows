@@ -4,9 +4,7 @@
 
 ---
 
-Run one analysis cycle: check the cycle gate, checkpoint, analyze the implementation, synthesize findings, present for approval, and create plan tasks. Each cycle follows stages A through F sequentially. Always start at **A. Cycle Gate**.
-
-After this loop completes with new tasks, the skill returns to Step 6 (task loop) to execute them, then re-enters this loop for the next cycle.
+Each cycle follows stages A through F sequentially. Always start at **A. Cycle Gate**.
 
 ```
 A. Cycle gate (check analysis_cycle, warn if over limit)

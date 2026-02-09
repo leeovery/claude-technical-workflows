@@ -4,9 +4,7 @@
 
 ---
 
-Follow these stages sequentially, one task at a time: retrieve a task from the plan (delegating to the plan adapter for ordering and extraction), run it through execution, review, gating, and commit, then repeat until all tasks are done.
-
-Every iteration must follow stages A through E fully — do not abbreviate, skip, or compress stages based on previous iterations.
+Follow stages A through E sequentially for each task. Do not abbreviate, skip, or compress stages based on previous iterations.
 
 ```
 A. Retrieve next task
