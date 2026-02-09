@@ -128,5 +128,3 @@ What we chose, why, the deciding factor, trade-offs accepted, confidence level.
 - Major questions concluded with rationale
 - Trade-offs understood
 - Path forward clear
-
-**When complete**: Update frontmatter `status: concluded` to signal ready for specification.
