@@ -186,8 +186,8 @@
   .section-label.collapsible:hover { color: var(--text); }
   .section-label .chevron { font-size: 8px; transition: transform 0.15s; display: inline-block; }
   .section-label.collapsed .chevron { transform: rotate(-90deg); }
-  .collapsible-content { overflow: hidden; transition: max-height 0.25s ease; }
-  .collapsible-content.collapsed { max-height: 0 !important; }
+  .collapsible-content { overflow: hidden; }
+  .collapsible-content.collapsed { display: none; }
 
   /* Timeline pipeline */
   .tl-wrapper { position: relative; padding-left: 24px; }
@@ -1030,7 +1030,7 @@
     <button class="nav-overview active nav-btn" onclick="showOverview()" id="btn-overview">Overview</button>
 
     <div class="section-label collapsible" onclick="toggleSidebarSection(this)"><span class="chevron">▼</span> Workflow Pipeline</div>
-    <div class="collapsible-content" style="max-height:800px">
+    <div class="collapsible-content">
       <div class="tl-wrapper">
         <div class="tl-group"><div class="tl-dot" style="background:var(--research)"></div>
           <button class="nav-btn tl-cmd" onclick="selectPhase('research',this)" id="btn-research"><span class="name">1. Research</span><span class="badge badge-cmd">cmd</span></button>
@@ -1060,7 +1060,7 @@
     </div>
 
     <div class="section-label collapsible" onclick="toggleSidebarSection(this)"><span class="chevron">▼</span> Skills</div>
-    <div class="collapsible-content" style="max-height:1200px">
+    <div class="collapsible-content">
       <div class="dropdown-subheading">Workflow Commands</div>
       <button class="nav-btn dropdown-btn" data-phase="research" onclick="selectPhase('research',this)"><span class="badge badge-cmd">cmd</span><span class="btn-label">start-research</span></button>
       <button class="nav-btn dropdown-btn" data-phase="discussion" onclick="selectPhase('discussion',this)"><span class="badge badge-cmd">cmd</span><span class="btn-label">start-discussion</span></button>
@@ -1085,7 +1085,7 @@
     </div>
 
     <div class="section-label collapsible" onclick="toggleSidebarSection(this)"><span class="chevron">▼</span> Agents</div>
-    <div class="collapsible-content" style="max-height:400px">
+    <div class="collapsible-content">
       <div class="dropdown-subheading">Planning</div>
       <button class="nav-btn dropdown-btn" onclick="selectPhase('planning-phase-designer',this)" id="btn-planning-phase-designer"><span class="badge badge-agt">agt</span><span class="btn-label">planning-phase-designer</span></button>
       <button class="nav-btn dropdown-btn" onclick="selectPhase('planning-task-designer',this)" id="btn-planning-task-designer"><span class="badge badge-agt">agt</span><span class="btn-label">planning-task-designer</span></button>
@@ -1094,13 +1094,17 @@
       <div class="dropdown-subheading">Implementation</div>
       <button class="nav-btn dropdown-btn" onclick="selectPhase('implementation-task-executor',this)" id="btn-implementation-task-executor"><span class="badge badge-agt">agt</span><span class="btn-label">implementation-task-executor</span></button>
       <button class="nav-btn dropdown-btn" onclick="selectPhase('implementation-task-reviewer',this)" id="btn-implementation-task-reviewer"><span class="badge badge-agt">agt</span><span class="btn-label">implementation-task-reviewer</span></button>
-      <button class="nav-btn dropdown-btn" onclick="selectPhase('implementation-polish',this)" id="btn-implementation-polish"><span class="badge badge-agt">agt</span><span class="btn-label">implementation-polish</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('implementation-analysis-duplication',this)" id="btn-implementation-analysis-duplication"><span class="badge badge-agt">agt</span><span class="btn-label">analysis-duplication</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('implementation-analysis-standards',this)" id="btn-implementation-analysis-standards"><span class="badge badge-agt">agt</span><span class="btn-label">analysis-standards</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('implementation-analysis-architecture',this)" id="btn-implementation-analysis-architecture"><span class="badge badge-agt">agt</span><span class="btn-label">analysis-architecture</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('implementation-analysis-synthesizer',this)" id="btn-implementation-analysis-synthesizer"><span class="badge badge-agt">agt</span><span class="btn-label">analysis-synthesizer</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('implementation-analysis-task-writer',this)" id="btn-implementation-analysis-task-writer"><span class="badge badge-agt">agt</span><span class="btn-label">analysis-task-writer</span></button>
       <div class="dropdown-subheading">Review</div>
       <button class="nav-btn dropdown-btn" onclick="selectPhase('review-task-verifier',this)" id="btn-review-task-verifier"><span class="badge badge-agt">agt</span><span class="btn-label">review-task-verifier</span></button>
     </div>
 
     <div class="section-label collapsible" onclick="toggleSidebarSection(this)"><span class="chevron">▼</span> Legend</div>
-    <div class="collapsible-content" style="max-height:400px">
+    <div class="collapsible-content">
       <div class="legend legend-default" id="legend-default">
         <div class="legend-item"><div class="legend-icon"><div class="legend-line" style="background:var(--accent)"></div></div> Phase flow</div>
         <div class="legend-item"><div class="legend-icon"><div class="legend-line dashed" style="background:#818cf8"></div></div> Shortcut entry</div>
@@ -1509,6 +1513,31 @@ const phases = {
     color: '#f97316', bg: 'rgba(249,115,22,0.12)',
     label: 'Task Reviewer',
     desc: 'Subagent that independently reviews a task for spec conformance and code quality.',
+  },
+  'implementation-analysis-duplication': {
+    color: '#f97316', bg: 'rgba(249,115,22,0.12)',
+    label: 'Analysis: Duplication',
+    desc: 'Analysis agent that hunts for cross-file duplication, near-duplicate logic, and extraction candidates.',
+  },
+  'implementation-analysis-standards': {
+    color: '#f97316', bg: 'rgba(249,115,22,0.12)',
+    label: 'Analysis: Standards',
+    desc: 'Analysis agent that checks spec conformance and project convention compliance.',
+  },
+  'implementation-analysis-architecture': {
+    color: '#f97316', bg: 'rgba(249,115,22,0.12)',
+    label: 'Analysis: Architecture',
+    desc: 'Analysis agent that evaluates API surface quality, module structure, and seam quality.',
+  },
+  'implementation-analysis-synthesizer': {
+    color: '#f97316', bg: 'rgba(249,115,22,0.12)',
+    label: 'Analysis: Synthesizer',
+    desc: 'Synthesizes findings from 3 analysis agents into deduplicated, normalized tasks for approval.',
+  },
+  'implementation-analysis-task-writer': {
+    color: '#f97316', bg: 'rgba(249,115,22,0.12)',
+    label: 'Analysis: Task Writer',
+    desc: 'Creates plan tasks from approved analysis findings using the format authoring adapter.',
   },
   'review-task-verifier': {
     color: '#f472b6', bg: 'rgba(244,114,182,0.12)',
@@ -2024,52 +2053,55 @@ const FLOWCHARTS = {
   },
   'skill-implementation': {
     nodes: [
-      // Orchestrator setup (Steps 1-4)
+      // Orchestrator setup (Steps 1-5)
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry: technical-implementation skill receives plan, env info, and tracking state.' },
-      { id: 'validate', label: 'Validate inputs', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 1: Verify plan content and output format field in frontmatter.' },
-      { id: 'env-setup', label: 'Environment setup', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 1: Run setup commands from environment-setup.md. Sequential, exactly as written.' },
-      { id: 'read-plan', label: 'Read plan + adapter', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 2: Load plan, read format field, load output format adapter for reading/writing tasks.' },
-      { id: 'skills-disc', label: 'Project skills discovery', w: 195, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 3: Scan .claude/skills/ for project-specific conventions. ASK user which to pass to agents.' },
-      { id: 'init-track', label: 'Init tracking file', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 4: Create/resume docs/workflow/implementation/{topic}/tracking.md. Reset gate modes to gated on fresh session.' },
-      // Task loop — Stage A
-      { id: 'retrieve', label: 'A. Retrieve next task', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Stage A: Use plan adapter to get next available task. Normalise task content for agent invocation.' },
-      { id: 'done-check', label: 'Tasks remain?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if any tasks remain. If none, proceed to polish step.' },
-      // Task loop — Stage B
-      { id: 'executor', label: 'B. Invoke executor', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-task-executor', desc: 'Stage B: Dispatch executor agent with TDD workflow, code quality refs, spec, project skills, plan, context file, and normalised task. Agent implements via strict TDD and returns STATUS report.' },
+      { id: 'env-setup', label: '1. Environment setup', w: 195, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 1: Run setup commands from environment-setup.md. Sequential, exactly as written.' },
+      { id: 'read-plan', label: '2. Read plan + adapter', w: 195, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 2: Load plan, read format field, load output format adapters (reading, updating, authoring).' },
+      { id: 'init-track', label: '3. Init tracking file', w: 195, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 3: Create/resume docs/workflow/implementation/{topic}/tracking.md. Reset gate modes and cycles on fresh session.' },
+      { id: 'skills-disc', label: '4. Project skills', w: 195, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 4: Scan .claude/skills/ for project-specific conventions. ASK user which to pass to agents.' },
+      { id: 'linter-disc', label: '5. Linter discovery', w: 195, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 5: Identify project linters via linter-setup.md. ASK user to approve/modify/skip. Store commands in tracking file.' },
+      // Task loop (Step 6) — Stages A-E
+      { id: 'retrieve', label: 'A. Retrieve next task', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Task loop Stage A: Use plan adapter to get next available task. Normalise task content for agent invocation.' },
+      { id: 'done-check', label: 'Tasks remain?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if any tasks remain. If none, exit loop.' },
+      { id: 'executor', label: 'B. Invoke executor', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-task-executor', desc: 'Task loop Stage B: Dispatch executor agent with TDD workflow, code quality refs, spec, project skills, linter commands, and normalised task.' },
       { id: 'exec-result', label: 'Executor result?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route on executor STATUS: complete → review, blocked/failed → present to user.' },
       { id: 'exec-blocked', label: 'Executor blocked', shape: 'stop', w: 180, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Present executor ISSUES to user. Options: retry (with comments), skip task, or stop implementation entirely.' },
-      // Task loop — Stage C
-      { id: 'reviewer', label: 'C. Invoke reviewer', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-task-reviewer', desc: 'Stage C: Dispatch reviewer agent (opus) with spec, task content, project skills, context file. Independent verification — 6 dimensions including codebase cohesion. Returns fix recommendations.' },
+      { id: 'reviewer', label: 'C. Invoke reviewer', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-task-reviewer', desc: 'Task loop Stage C: Dispatch reviewer agent (opus). Independent verification — 6 dimensions including codebase cohesion.' },
       { id: 'review-result', label: 'Reviewer verdict?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route on VERDICT: approved → task gate, needs-changes → check fix_gate_mode.' },
       { id: 'fix-gate', label: 'fix_gate_mode?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check fix_gate_mode. Auto (attempts < 3) = re-invoke executor. Gated or attempts >= 3 = present to user.' },
       { id: 'review-changes', label: 'ASK: Fix analysis', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Present reviewer ISSUES with FIX/ALTERNATIVE/CONFIDENCE. Options: accept (y), auto-approve future (a), skip (s), or comment.' },
-      // Task loop — Stage D
-      { id: 'gate', label: 'D. Task gate', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Stage D: Check task_gate_mode. Gated = present summary, wait for user (y/auto/comment). Auto = announce and proceed.' },
+      { id: 'gate', label: 'D. Task gate', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Task loop Stage D: Check task_gate_mode. Gated = present summary. Auto = announce and proceed.' },
       { id: 'gate-prompt', label: 'ASK: Approve task?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Gated mode: Present task summary. Options: approve (y), switch to auto mode, or comment (triggers executor fix round).' },
-      // Task loop — Stage E
-      { id: 'commit', label: 'E. Update + commit', w: 200, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Stage E: Update task in plan (via adapter), mirror to tracking file, append context notes, commit all changes in one commit.' },
-      // Step 6: Polish
-      { id: 'polish-checkpoint', label: 'Git checkpoint', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Step 6: Commit any uncommitted changes before polish. Creates a safe rollback point.' },
-      { id: 'polish', label: 'Invoke polish agent', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-polish', desc: 'Step 6: Dispatch implementation-polish agent for holistic quality pass. 2-5 discovery-fix cycles via executor/reviewer.' },
-      { id: 'polish-result', label: 'Polish result?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route on STATUS: complete → present report, blocked → present issues.' },
-      { id: 'polish-blocked', label: 'Present issues', w: 160, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Polish blocked: present SUMMARY explaining what decision is needed. Ask user how to proceed.' },
-      { id: 'polish-gate', label: 'ASK: Approve polish?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Present polish report. Options: approve (y), skip/discard (s), or comment (re-invoke with feedback).' },
-      // Completion
-      { id: 'end', label: 'Implementation complete', shape: 'pill', w: 190, h: 40, color: 'var(--implementation)', bg: 'var(--implementation-bg)', desc: 'Step 7: All tasks + polish complete. Set tracking status: completed. Final commit.' },
+      { id: 'commit', label: 'E. Update + commit', w: 200, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Task loop Stage E: Update task in plan (via adapter), mirror to tracking file, append context notes, commit.' },
+      // Exit routing
+      { id: 'exit-route', label: 'Early stop?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'If user chose stop during task loop, skip analysis and go to completion. Otherwise proceed to analysis.' },
+      // Analysis loop (Step 7) — Stages A-F
+      { id: 'a-cycle-gate', label: 'A. Cycle gate', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Analysis Stage A: Increment analysis_cycle. If > 3, warn user and ask whether to skip or proceed.' },
+      { id: 'b-checkpoint', label: 'B. Git checkpoint', w: 195, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Analysis Stage B: Ensure clean working tree. Commit any uncommitted implementation files.' },
+      { id: 'c-duplication', label: 'C. Duplication', w: 160, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-analysis-duplication', desc: 'Analysis agent: hunt for cross-file duplication, near-duplicate logic, extraction candidates.' },
+      { id: 'c-standards', label: 'C. Standards', w: 160, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-analysis-standards', desc: 'Analysis agent: check spec conformance, project skill compliance, missing validations.' },
+      { id: 'c-architecture', label: 'C. Architecture', w: 160, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-analysis-architecture', desc: 'Analysis agent: evaluate API surface, module structure, seam quality, over/under-engineering.' },
+      { id: 'd-synthesizer', label: 'D. Synthesizer', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-analysis-synthesizer', desc: 'Analysis Stage D: Deduplicate, group, and normalize findings into tasks. Writes staging file.' },
+      { id: 'd-result', label: 'Tasks proposed?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route on synthesizer STATUS: tasks_proposed → approval gate, clean → completion.' },
+      { id: 'e-approval', label: 'E. Approve tasks', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Analysis Stage E: Present each proposed task one at a time. User approves, skips, or comments per task.' },
+      { id: 'e-result', label: 'Any approved?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'If any tasks approved, create them in the plan. If all skipped, proceed to completion.' },
+      { id: 'f-task-writer', label: 'F. Create plan tasks', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', desc: 'Analysis Stage F: Invoke task-writer agent to create approved tasks in the plan as a new phase. Commit.', skillLink: 'implementation-analysis-task-writer' },
+      // Completion (Step 8)
+      { id: 'end', label: 'Implementation complete', shape: 'pill', w: 190, h: 40, color: 'var(--implementation)', bg: 'var(--implementation-bg)', desc: 'Step 8: Set tracking status: completed. Final commit.' },
       { id: 'next', label: 'Invoke /start-review', desc: 'Navigate to the review command to validate implementation against the plan and specification.', w: 200, h: 44, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'review' },
     ],
     connections: [
-      // Setup flow
-      { from: 'start', to: 'validate' },
-      { from: 'validate', to: 'env-setup' },
+      // Setup flow (Steps 1-5)
+      { from: 'start', to: 'env-setup' },
       { from: 'env-setup', to: 'read-plan' },
-      { from: 'read-plan', to: 'skills-disc' },
-      { from: 'skills-disc', to: 'init-track' },
-      // Enter task loop
-      { from: 'init-track', to: 'retrieve', type: 'transition' },
+      { from: 'read-plan', to: 'init-track' },
+      { from: 'init-track', to: 'skills-disc' },
+      { from: 'skills-disc', to: 'linter-disc' },
+      // Enter task loop (Step 6)
+      { from: 'linter-disc', to: 'retrieve', type: 'transition' },
       { from: 'retrieve', to: 'done-check' },
       { from: 'done-check', to: 'executor', type: 'yes', label: 'has task', weight: 2 },
-      { from: 'done-check', to: 'polish-checkpoint', type: 'no', label: 'none left' },
+      { from: 'done-check', to: 'exit-route', type: 'no', label: 'none left' },
       // B: Executor
       { from: 'executor', to: 'exec-result' },
       { from: 'exec-result', to: 'reviewer', type: 'yes', label: 'complete', weight: 2 },
@@ -2089,16 +2121,27 @@ const FLOWCHARTS = {
       { from: 'gate', to: 'commit', label: 'auto' },
       { from: 'gate-prompt', to: 'commit', type: 'yes', label: 'approve' },
       { from: 'gate-prompt', to: 'executor', type: 'backloop', label: 'comment' },
-      // E: Commit and loop
+      // E: Commit and loop back
       { from: 'commit', to: 'retrieve', type: 'backloop', label: 'next task' },
-      // Step 6: Polish
-      { from: 'polish-checkpoint', to: 'polish' },
-      { from: 'polish', to: 'polish-result' },
-      { from: 'polish-result', to: 'polish-blocked', type: 'no', label: 'blocked' },
-      { from: 'polish-result', to: 'polish-gate', type: 'yes', label: 'complete', weight: 2 },
-      { from: 'polish-blocked', to: 'polish-gate' },
-      { from: 'polish-gate', to: 'polish', type: 'backloop', label: 'comment' },
-      { from: 'polish-gate', to: 'end', label: 'approve / skip' },
+      // Exit routing
+      { from: 'exit-route', to: 'end', type: 'no', label: 'early stop' },
+      { from: 'exit-route', to: 'a-cycle-gate', type: 'yes', label: 'normal', weight: 2 },
+      // Analysis loop (Step 7) — Stages A-F
+      { from: 'a-cycle-gate', to: 'end', type: 'no', label: 'skip' },
+      { from: 'a-cycle-gate', to: 'b-checkpoint', type: 'yes', label: 'proceed', weight: 2 },
+      { from: 'b-checkpoint', to: 'c-duplication' },
+      { from: 'b-checkpoint', to: 'c-standards' },
+      { from: 'b-checkpoint', to: 'c-architecture' },
+      { from: 'c-duplication', to: 'd-synthesizer' },
+      { from: 'c-standards', to: 'd-synthesizer' },
+      { from: 'c-architecture', to: 'd-synthesizer' },
+      { from: 'd-synthesizer', to: 'd-result' },
+      { from: 'd-result', to: 'end', type: 'no', label: 'clean' },
+      { from: 'd-result', to: 'e-approval', type: 'yes', label: 'tasks', weight: 2 },
+      { from: 'e-approval', to: 'e-result' },
+      { from: 'e-result', to: 'end', type: 'no', label: 'all skipped' },
+      { from: 'e-result', to: 'f-task-writer', type: 'yes', label: 'approved', weight: 2 },
+      { from: 'f-task-writer', to: 'retrieve', type: 'backloop', label: 'new tasks → Step 6' },
       // Next phase
       { from: 'end', to: 'next', type: 'transition' },
     ]
@@ -2298,9 +2341,10 @@ const FLOWCHARTS = {
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Invoked by technical-implementation skill for a single task.' },
       { id: 'read-refs', label: 'Read TDD + quality refs', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read TDD workflow reference and code quality standards. Read project skills and specification.' },
       { id: 'explore', label: 'Explore codebase', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Explore the codebase to understand existing patterns, conventions, and relevant code.' },
-      { id: 'write-test', label: 'Write failing test', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'TDD red phase: write a test for the next acceptance criterion. Test must fail.' },
-      { id: 'implement', label: 'Implement to pass', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'TDD green phase: write minimal implementation to make the test pass.' },
-      { id: 'verify', label: 'Verify tests pass', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Run tests to confirm everything passes. Refactor if needed (TDD refactor phase).' },
+      { id: 'write-test', label: 'RED: Write failing test', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'TDD red phase: write a test for the next acceptance criterion. Test must fail for the right reason.' },
+      { id: 'implement', label: 'GREEN: Implement', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'TDD green phase: write complete, functional implementation to make the test pass.' },
+      { id: 'refactor', label: 'REFACTOR', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'TDD refactor phase: remove duplication, improve naming, extract methods. Run tests after — if they fail, undo.' },
+      { id: 'lint', label: 'LINT', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Run configured linter commands (if any). Fix issues, re-run to confirm clean, re-run tests. Revert if tests break.' },
       { id: 'more', label: 'More criteria?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if there are more acceptance criteria / test cases to implement.' },
       { id: 'report', label: 'Build report', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Compile structured completion report: status, files changed, tests written, test results.' },
       { id: 'end', label: 'STATUS report', shape: 'pill', w: 180, h: 40, color: 'var(--implementation)', bg: 'var(--implementation-bg)', desc: 'Output: structured report (complete/blocked/failed) with files, tests, and issues.' },
@@ -2310,8 +2354,9 @@ const FLOWCHARTS = {
       { from: 'read-refs', to: 'explore' },
       { from: 'explore', to: 'write-test' },
       { from: 'write-test', to: 'implement' },
-      { from: 'implement', to: 'verify' },
-      { from: 'verify', to: 'more' },
+      { from: 'implement', to: 'refactor' },
+      { from: 'refactor', to: 'lint' },
+      { from: 'lint', to: 'more' },
       { from: 'more', to: 'write-test', type: 'backloop', label: 'yes', port: 'right' },
       { from: 'more', to: 'report', type: 'no', label: 'no', weight: 2 },
       { from: 'report', to: 'end' },
@@ -2342,68 +2387,112 @@ const FLOWCHARTS = {
       { from: 'report', to: 'end' },
     ]
   },
-  'implementation-polish': {
+  'implementation-analysis-duplication': {
     nodes: [
-      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Invoked by technical-implementation skill after all tasks complete (Step 6).' },
-      // Step 1: Absorb context
-      { id: 'read-quality', label: 'Read code quality', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 1: Read code-quality.md to absorb quality standards.' },
-      { id: 'read-spec', label: 'Read specification', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 1: Read specification to understand design intent.' },
-      { id: 'read-skills', label: 'Read project skills', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 1: Read project skills for framework conventions.' },
-      { id: 'read-plan', label: 'Read plan (via adapter)', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 1: Read plan format adapter, then retrieve all completed tasks.' },
-      { id: 'read-context', label: 'Read integration context', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 1: Read accumulated context from all tasks.' },
-      // Step 2: Identify scope
-      { id: 'identify-scope', label: 'Identify impl scope', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 2: Find all files changed during implementation. Build definitive file list.' },
-      // Step 3: Discovery-fix loop
-      { id: 'cycle-gate', label: 'A. Cycle gate', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Stage A: Increment cycle. Exit if >5 or (>2 and no findings). Minimum 2 cycles required.' },
-      { id: 'fixed-analysis', label: 'B. Fixed analysis (3x)', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', desc: 'Stage B: Dispatch 3 sub-agents in parallel: code cleanup, structural cohesion, cross-task integration.' },
-      { id: 'dynamic-check', label: 'Dynamic needed?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Stage C: Based on findings + codebase, determine if additional targeted analysis needed.' },
-      { id: 'dynamic-analysis', label: 'C. Dynamic analysis', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', desc: 'Stage C: Dispatch targeted sub-agents for deeper analysis (language idioms, convention drift, etc.).' },
-      { id: 'synthesize', label: 'D. Synthesize findings', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Stage D: Deduplicate, discard nitpicks, prioritize by impact.' },
-      { id: 'findings-check', label: 'Actionable?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Stage D: Check if actionable findings remain after filtering.' },
-      { id: 'executor', label: 'E. Invoke executor', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-task-executor', desc: 'Stage E: Dispatch executor with fix task (includes test rules: new integration tests yes, semantic test changes no).' },
-      { id: 'exec-result', label: 'Executor result?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Stage E: Route on STATUS. Blocked → record in SKIPPED.' },
-      { id: 'reviewer', label: 'F. Invoke reviewer', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-task-reviewer', desc: 'Stage F: Dispatch reviewer to verify executor work. Include test rules for violation checking.' },
-      { id: 'review-result', label: 'Reviewer verdict?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Stage F: Route on VERDICT. Needs-changes → re-invoke executor (max 3 attempts).' },
-      { id: 'cycle-complete', label: 'G. Cycle complete', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Stage G: Record what was discovered and fixed. Return to cycle gate.' },
-      // Step 4: Return report
-      { id: 'report', label: 'Build polish report', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 4: Compile report: cycles, discovery, fixes applied, tests added, skipped issues.' },
-      { id: 'end', label: 'STATUS report', shape: 'pill', w: 180, h: 40, color: 'var(--implementation)', bg: 'var(--implementation-bg)', desc: 'Output: structured report (complete/blocked) with findings, fixes, and test results.' },
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Invoked in parallel by technical-implementation during analysis cycle.' },
+      { id: 'read-quality', label: 'Read code quality', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read code-quality.md to understand quality standards.' },
+      { id: 'read-skills', label: 'Read project skills', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read project skills for framework conventions and existing patterns.' },
+      { id: 'read-spec', label: 'Read specification', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read specification to understand design intent.' },
+      { id: 'read-files', label: 'Read implementation files', w: 210, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read all implementation files to build a full mental map of the codebase.' },
+      { id: 'analyze', label: 'Analyze for duplication', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Compare patterns across files. Find near-duplicates, extraction candidates, copy-paste drift.' },
+      { id: 'write', label: 'Write findings file', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Write findings to {topic}/analysis-duplication.md with severity, files, description, recommendation.' },
+      { id: 'end', label: 'STATUS report', shape: 'pill', w: 180, h: 40, color: 'var(--implementation)', bg: 'var(--implementation-bg)', desc: 'Output: findings | clean, with count and summary.' },
     ],
     connections: [
-      // Step 1: Absorb context
       { from: 'start', to: 'read-quality' },
-      { from: 'read-quality', to: 'read-spec' },
-      { from: 'read-spec', to: 'read-skills' },
-      { from: 'read-skills', to: 'read-plan' },
-      { from: 'read-plan', to: 'read-context' },
-      // Step 2: Identify scope
-      { from: 'read-context', to: 'identify-scope' },
-      // Step 3: Enter loop
-      { from: 'identify-scope', to: 'cycle-gate', type: 'transition' },
-      { from: 'cycle-gate', to: 'report', type: 'no', label: 'exit' },
-      { from: 'cycle-gate', to: 'fixed-analysis', type: 'yes', label: 'continue', weight: 2 },
-      // B: Fixed analysis
-      { from: 'fixed-analysis', to: 'dynamic-check' },
-      // C: Dynamic analysis
-      { from: 'dynamic-check', to: 'synthesize', type: 'no', label: 'no' },
-      { from: 'dynamic-check', to: 'dynamic-analysis', type: 'yes', label: 'yes', weight: 2 },
-      { from: 'dynamic-analysis', to: 'synthesize' },
-      // D: Synthesize
-      { from: 'synthesize', to: 'findings-check' },
-      { from: 'findings-check', to: 'cycle-complete', type: 'no', label: 'no' },
-      { from: 'findings-check', to: 'executor', type: 'yes', label: 'yes', weight: 2 },
-      // E: Executor
-      { from: 'executor', to: 'exec-result' },
-      { from: 'exec-result', to: 'cycle-complete', type: 'no', label: 'blocked' },
-      { from: 'exec-result', to: 'reviewer', type: 'yes', label: 'complete', weight: 2 },
-      // F: Reviewer
-      { from: 'reviewer', to: 'review-result' },
-      { from: 'review-result', to: 'executor', type: 'backloop', label: 'needs changes' },
-      { from: 'review-result', to: 'cycle-complete', type: 'yes', label: 'approved', weight: 2 },
-      // G: Cycle complete → loop back
-      { from: 'cycle-complete', to: 'cycle-gate', type: 'backloop' },
-      // Step 4: Report
-      { from: 'report', to: 'end' },
+      { from: 'read-quality', to: 'read-skills' },
+      { from: 'read-skills', to: 'read-spec' },
+      { from: 'read-spec', to: 'read-files' },
+      { from: 'read-files', to: 'analyze' },
+      { from: 'analyze', to: 'write' },
+      { from: 'write', to: 'end' },
+    ]
+  },
+  'implementation-analysis-standards': {
+    nodes: [
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Invoked in parallel by technical-implementation during analysis cycle.' },
+      { id: 'read-quality', label: 'Read code quality', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read code-quality.md to understand quality standards.' },
+      { id: 'read-skills', label: 'Read project skills', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read project skills — MUST DO/MUST NOT DO rules are primary targets.' },
+      { id: 'read-spec', label: 'Read specification', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read specification — the specification advocate\'s primary reference.' },
+      { id: 'read-files', label: 'Read implementation files', w: 210, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read all implementation files to check conformance.' },
+      { id: 'analyze', label: 'Analyze for standards drift', w: 210, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Check spec conformance, project skill compliance, spec-vs-convention conflicts, missing validations.' },
+      { id: 'write', label: 'Write findings file', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Write findings to {topic}/analysis-standards.md with severity, files, description, recommendation.' },
+      { id: 'end', label: 'STATUS report', shape: 'pill', w: 180, h: 40, color: 'var(--implementation)', bg: 'var(--implementation-bg)', desc: 'Output: findings | clean, with count and summary.' },
+    ],
+    connections: [
+      { from: 'start', to: 'read-quality' },
+      { from: 'read-quality', to: 'read-skills' },
+      { from: 'read-skills', to: 'read-spec' },
+      { from: 'read-spec', to: 'read-files' },
+      { from: 'read-files', to: 'analyze' },
+      { from: 'analyze', to: 'write' },
+      { from: 'write', to: 'end' },
+    ]
+  },
+  'implementation-analysis-architecture': {
+    nodes: [
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Invoked in parallel by technical-implementation during analysis cycle.' },
+      { id: 'read-quality', label: 'Read code quality', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read code-quality.md to understand quality standards.' },
+      { id: 'read-skills', label: 'Read project skills', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read project skills for architectural patterns and conventions.' },
+      { id: 'read-spec', label: 'Read specification', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read specification for intended architecture and design decisions.' },
+      { id: 'read-files', label: 'Read implementation files', w: 210, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read all implementation files as an architect who didn\'t write the code.' },
+      { id: 'analyze', label: 'Analyze architecture', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Evaluate API surface quality, module structure, seam quality between task boundaries, over/under-engineering.' },
+      { id: 'write', label: 'Write findings file', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Write findings to {topic}/analysis-architecture.md with severity, files, description, recommendation.' },
+      { id: 'end', label: 'STATUS report', shape: 'pill', w: 180, h: 40, color: 'var(--implementation)', bg: 'var(--implementation-bg)', desc: 'Output: findings | clean, with count and summary.' },
+    ],
+    connections: [
+      { from: 'start', to: 'read-quality' },
+      { from: 'read-quality', to: 'read-skills' },
+      { from: 'read-skills', to: 'read-spec' },
+      { from: 'read-spec', to: 'read-files' },
+      { from: 'read-files', to: 'analyze' },
+      { from: 'analyze', to: 'write' },
+      { from: 'write', to: 'end' },
+    ]
+  },
+  'implementation-analysis-synthesizer': {
+    nodes: [
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Invoked by technical-implementation after all 3 analysis agents return.' },
+      { id: 'read-findings', label: 'Read all findings files', w: 210, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Locate and read analysis-duplication.md, analysis-standards.md, analysis-architecture.md from the topic directory.' },
+      { id: 'dedup', label: 'Deduplicate findings', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Same issue from multiple agents → one finding, noting all sources.' },
+      { id: 'group', label: 'Group related findings', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Multiple findings about the same pattern become one task (e.g., 3 duplication findings = 1 extract helper task).' },
+      { id: 'filter', label: 'Filter by severity', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Discard low-severity unless they cluster. Never discard high-severity.' },
+      { id: 'normalize', label: 'Normalize into tasks', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Convert each group into a task using canonical template: Problem/Solution/Outcome/Do/AC/Tests.' },
+      { id: 'write-report', label: 'Write analysis report', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Write summary report to {topic}/analysis-report.md with discarded findings.' },
+      { id: 'has-tasks', label: 'Tasks to propose?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if any actionable tasks remain after filtering.' },
+      { id: 'write-staging', label: 'Write staging file', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Write tasks to {topic}/analysis-tasks.md with status: pending for each task.' },
+      { id: 'end', label: 'STATUS report', shape: 'pill', w: 180, h: 40, color: 'var(--implementation)', bg: 'var(--implementation-bg)', desc: 'Output: tasks_proposed (with count) or clean.' },
+    ],
+    connections: [
+      { from: 'start', to: 'read-findings' },
+      { from: 'read-findings', to: 'dedup' },
+      { from: 'dedup', to: 'group' },
+      { from: 'group', to: 'filter' },
+      { from: 'filter', to: 'normalize' },
+      { from: 'normalize', to: 'write-report' },
+      { from: 'write-report', to: 'has-tasks' },
+      { from: 'has-tasks', to: 'end', type: 'no', label: 'clean' },
+      { from: 'has-tasks', to: 'write-staging', type: 'yes', label: 'yes', weight: 2 },
+      { from: 'write-staging', to: 'end' },
+    ]
+  },
+  'implementation-analysis-task-writer': {
+    nodes: [
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Invoked by technical-implementation after user approves analysis tasks.' },
+      { id: 'read-staging', label: 'Read staging file', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Extract all tasks with status: approved from the staging file.' },
+      { id: 'read-plan', label: 'Read plan (via adapter)', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Use reading adapter to determine max existing phase number.' },
+      { id: 'calc-phase', label: 'Calculate next phase', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Next phase = max existing phase + 1.' },
+      { id: 'read-authoring', label: 'Read authoring adapter', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Understand how to create tasks in this plan format.' },
+      { id: 'create', label: 'Create tasks in plan', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Follow authoring adapter instructions to create each approved task. No content modifications.' },
+      { id: 'end', label: 'STATUS report', shape: 'pill', w: 180, h: 40, color: 'var(--implementation)', bg: 'var(--implementation-bg)', desc: 'Output: complete, with tasks created count and phase number.' },
+    ],
+    connections: [
+      { from: 'start', to: 'read-staging' },
+      { from: 'read-staging', to: 'read-plan' },
+      { from: 'read-plan', to: 'calc-phase' },
+      { from: 'calc-phase', to: 'read-authoring' },
+      { from: 'read-authoring', to: 'create' },
+      { from: 'create', to: 'end' },
     ]
   },
   'review-task-verifier': {
@@ -2515,10 +2604,10 @@ const FLOWCHART_DESCS = {
     meta: { output: 'docs/workflow/planning/{topic}.md', complexity: 'Multi-loop skill', agents: 'phase-designer, task-designer, task-author, dependency-grapher' }
   },
   'skill-implementation': {
-    summary: 'The implementation skill — agent-based TDD with per-task executor, reviewer, approval gates, and holistic polish.',
-    body: `<p>Orchestrator dispatches <strong>two agents per task</strong>: an <strong>executor</strong> (implements via strict TDD) and an independent <strong>reviewer</strong> (verifies correctness, opus model). Neither agent sees the other's context. Integration notes accumulate in a context file for cross-task awareness.</p>
-<p>Five-stage task cycle: <strong>A.</strong> Retrieve next task → <strong>B.</strong> Invoke executor (blocked? → user decides: retry/skip/stop) → <strong>C.</strong> Invoke reviewer (needs changes? → <strong>fix_gate_mode</strong> controls: auto re-invokes executor, gated presents findings with fix analysis) → <strong>D.</strong> Task gate (<strong>task_gate_mode</strong>: gated waits for approval, auto announces only) → <strong>E.</strong> Update plan + append context + commit. Loop until all tasks done.</p>
-<p>After task loop: <strong>Step 6 Polish</strong> — git checkpoint, invoke <strong>implementation-polish</strong> agent for holistic quality pass (2-5 discovery-fix cycles), user approval gate (approve/skip/comment), then final completion commit.</p>`,
+    summary: 'The implementation skill — agent-based TDD with per-task executor/reviewer, linting, and analysis cycle.',
+    body: `<p>Orchestrator dispatches <strong>two agents per task</strong>: an <strong>executor</strong> (implements via strict TDD with RED→GREEN→REFACTOR→LINT cycle) and an independent <strong>reviewer</strong> (verifies correctness, opus model). Neither agent sees the other's context.</p>
+<p><strong>Task loop</strong> (Step 6): Five stages per task — <strong>A.</strong> Retrieve next task → <strong>B.</strong> Invoke executor (blocked? → user decides: retry/skip/stop) → <strong>C.</strong> Invoke reviewer (needs changes? → <strong>fix_gate_mode</strong> controls: auto re-invokes executor, gated presents findings with fix analysis) → <strong>D.</strong> Task gate (<strong>task_gate_mode</strong>: gated waits for approval, auto announces only) → <strong>E.</strong> Update plan + commit. Loop until all tasks done.</p>
+<p><strong>Analysis loop</strong> (Step 7): After task loop, dispatch <strong>3 analysis agents in parallel</strong> (duplication, standards, architecture) → <strong>synthesizer</strong> deduplicates and normalizes into tasks → user approves/skips each task individually → approved tasks are added to the plan as a new phase → <strong>re-enter task loop</strong>. Up to 3 cycles, user prompted to continue beyond that.</p>`,
     meta: { complexity: 'Agent-based TDD' }
   },
   'skill-review': {
@@ -2570,9 +2659,9 @@ const FLOWCHART_DESCS = {
     meta: { model: 'Opus', invokedBy: 'technical-planning', complexity: 'Subagent' }
   },
   'implementation-task-executor': {
-    summary: 'Implement a single task via strict TDD — red/green/refactor cycle per acceptance criterion.',
+    summary: 'Implement a single task via strict TDD — RED/GREEN/REFACTOR/LINT cycle per acceptance criterion.',
     body: `<p>Reads TDD workflow, code quality standards, project skills, and specification. Explores the codebase first to understand existing patterns.</p>
-<p>Executes a <strong>strict TDD loop</strong> per acceptance criterion: <strong>write failing test → implement to pass → verify → repeat</strong>. Has hard stops for scope expansion, uncertainty, and untenable spec decisions — reports back rather than making autonomous choices.</p>
+<p>Executes a <strong>strict TDD loop</strong> per acceptance criterion: <strong>RED</strong> (write failing test) → <strong>GREEN</strong> (implement to pass) → <strong>REFACTOR</strong> (improve code, run tests) → <strong>LINT</strong> (run configured linters, fix issues, revert if tests break). Has hard stops for scope expansion, uncertainty, and untenable spec decisions — reports back rather than making autonomous choices.</p>
 <p>Returns a structured <strong>STATUS report</strong> (complete/blocked/failed) with files changed, tests written, and results.</p>`,
     meta: { model: 'Opus', invokedBy: 'technical-implementation', complexity: 'Subagent' }
   },
@@ -2589,12 +2678,40 @@ const FLOWCHART_DESCS = {
 <p>Three verification stages: <strong>implementation</strong> (exists, matches criteria, aligns with spec), <strong>tests</strong> (adequate coverage, edge cases, not over/under-tested), and <strong>code quality</strong> (conventions, SOLID, DRY, complexity, security, performance). Compiles a structured finding with blocking issues and non-blocking notes.</p>`,
     meta: { model: 'Opus', invokedBy: 'technical-review', complexity: 'Subagent' }
   },
-  'implementation-polish': {
-    summary: 'Holistic quality pass over completed implementation — discovers cross-task issues and orchestrates fixes via executor/reviewer.',
-    body: `<p>Invoked after all tasks complete. Reads code quality standards, specification, project skills, plan (via format adapter), and integration context. Identifies all files changed during implementation.</p>
-<p>Runs a <strong>discovery-fix loop</strong> (minimum 2, maximum 5 cycles). Each cycle: <strong>A.</strong> Cycle gate (check count) → <strong>B.</strong> Dispatch 3 fixed analysis sub-agents in parallel (code cleanup, structural cohesion, cross-task integration) → <strong>C.</strong> Optional dynamic analysis passes → <strong>D.</strong> Synthesize findings → <strong>E.</strong> Invoke executor with fix task → <strong>F.</strong> Invoke reviewer to verify → <strong>G.</strong> Loop back.</p>
-<p>Stays within <strong>plan scope only</strong> — does not flag missing features that belong to other plans. Orchestrates fixes through executor/reviewer (no direct code changes). Test rules: new integration tests yes, mechanical test updates yes, semantic test changes no.</p>`,
-    meta: { model: 'Opus', invokedBy: 'technical-implementation', complexity: 'Subagent' }
+  'implementation-analysis-duplication': {
+    summary: 'Hunt for cross-file duplication, near-duplicate logic, and extraction candidates.',
+    body: `<p>Analyses code that was independently written by separate task executors who couldn't see each other's work. Read-only — writes only a findings file.</p>
+<p>Focus areas: <strong>cross-file repeated patterns</strong>, <strong>near-duplicate logic</strong> (slightly different implementations of the same concept), <strong>helper extraction candidates</strong> (inline code that should be shared), and <strong>copy-paste drift</strong> across task boundaries.</p>
+<p>Proportional analysis — three similar lines is not worth flagging, but three similar 20-line blocks is. Plan scope only.</p>`,
+    meta: { model: 'Opus', invokedBy: 'technical-implementation', tools: 'Read, Write, Glob, Grep, Bash', complexity: 'Analysis agent' }
+  },
+  'implementation-analysis-standards': {
+    summary: 'The specification\'s advocate — find where implementation drifts from what was decided.',
+    body: `<p>Analyses the implementation as the specification's advocate. Read-only — writes only a findings file.</p>
+<p>Focus areas: <strong>spec conformance</strong> (does the code match what was specified?), <strong>project skill compliance</strong> (MUST DO/MUST NOT DO rules), <strong>spec-vs-convention conflicts</strong> (when spec conflicts with language idiom, which won?), and <strong>missing validations/constraints</strong> from spec.</p>
+<p>Plan scope only — does not flag pre-existing drift in code that wasn't part of this implementation.</p>`,
+    meta: { model: 'Opus', invokedBy: 'technical-implementation', tools: 'Read, Write, Glob, Grep, Bash', complexity: 'Analysis agent' }
+  },
+  'implementation-analysis-architecture': {
+    summary: 'Review the completed implementation as an architect who didn\'t write it.',
+    body: `<p>Reviews the implementation from an architectural perspective. Read-only — writes only a findings file.</p>
+<p>Focus areas: <strong>API surface quality</strong>, <strong>package/module structure</strong>, <strong>integration test gaps</strong> for cross-task workflows, <strong>seam quality</strong> between task boundaries, and <strong>over/under-engineering</strong>.</p>
+<p>Proportional and plan-scoped — focuses on high-impact issues, not cosmetic preferences.</p>`,
+    meta: { model: 'Opus', invokedBy: 'technical-implementation', tools: 'Read, Write, Glob, Grep, Bash', complexity: 'Analysis agent' }
+  },
+  'implementation-analysis-synthesizer': {
+    summary: 'Synthesize findings from 3 analysis agents into deduplicated, normalized tasks for user approval.',
+    body: `<p>Locates findings files from the 3 analysis agents by convention (topic directory), reads them, then performs multi-step synthesis.</p>
+<p><strong>Process</strong>: deduplicate (same issue from multiple agents → one finding) → group related findings into single tasks → filter by severity (never discard high) → normalize into canonical task template (Problem/Solution/Outcome/Do/AC/Tests).</p>
+<p>Writes two outputs: an <strong>analysis report</strong> (summary + discarded findings) and a <strong>staging file</strong> (proposed tasks with <code>status: pending</code>) for the orchestrator to present to the user.</p>`,
+    meta: { model: 'Opus', invokedBy: 'technical-implementation', tools: 'Read, Write, Glob, Grep', complexity: 'Synthesis agent' }
+  },
+  'implementation-analysis-task-writer': {
+    summary: 'Create plan tasks from approved analysis findings using the format\'s authoring adapter.',
+    body: `<p>Invoked after the user approves analysis tasks. Reads the staging file, extracts tasks with <code>status: approved</code>, determines the next phase number, and creates tasks in the plan.</p>
+<p>Uses the plan format's <strong>authoring adapter</strong> to create tasks in the correct format (local-markdown file creation, Linear API calls, etc.). The topic name scopes tasks to the correct plan.</p>
+<p>Hard rules: approved only, no content modifications, no git writes (orchestrator commits), authoring adapter is authoritative.</p>`,
+    meta: { model: 'Opus', invokedBy: 'technical-implementation', tools: 'Read, Write, Edit, Glob, Grep, Bash', complexity: 'Task creation agent' }
   },
 };
 
@@ -2625,7 +2742,11 @@ const SOURCE_MAP = {
   'planning-dependency-grapher':  'agents/planning-dependency-grapher.md',
   'implementation-task-executor': 'agents/implementation-task-executor.md',
   'implementation-task-reviewer': 'agents/implementation-task-reviewer.md',
-  'implementation-polish':        'agents/implementation-polish.md',
+  'implementation-analysis-duplication':  'agents/implementation-analysis-duplication.md',
+  'implementation-analysis-standards':   'agents/implementation-analysis-standards.md',
+  'implementation-analysis-architecture':'agents/implementation-analysis-architecture.md',
+  'implementation-analysis-synthesizer': 'agents/implementation-analysis-synthesizer.md',
+  'implementation-analysis-task-writer': 'agents/implementation-analysis-task-writer.md',
   'review-task-verifier':         'agents/review-task-verifier.md',
 };
 
