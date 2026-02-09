@@ -22,28 +22,27 @@ This captures all files touched by implementation commits for the topic.
 
 ## Dispatch All Three Agents
 
-Dispatch **all three in parallel** via the Task tool. Each agent receives the same base inputs:
+Dispatch **all three in parallel** via the Task tool. Each agent receives the same inputs:
 
 1. **Implementation files** — the file list from scope identification
 2. **Specification path** — from the plan's frontmatter (if available)
 3. **Project skill paths** — from `project_skills` in the implementation tracking file
 4. **code-quality.md path** — `../code-quality.md`
-5. **Output file path** — each agent writes its own findings file
+5. **Topic name** — the implementation topic
+
+Each agent knows its own output path convention and writes findings independently.
 
 ### Agent 1: Duplication
 
 - **Agent path**: `../../../../agents/implementation-analysis-duplication.md`
-- **Output file path**: `docs/workflow/implementation/{topic}-analysis-duplication.md`
 
 ### Agent 2: Standards
 
 - **Agent path**: `../../../../agents/implementation-analysis-standards.md`
-- **Output file path**: `docs/workflow/implementation/{topic}-analysis-standards.md`
 
 ### Agent 3: Architecture
 
 - **Agent path**: `../../../../agents/implementation-analysis-architecture.md`
-- **Output file path**: `docs/workflow/implementation/{topic}-analysis-architecture.md`
 
 ---
 

@@ -13,22 +13,20 @@ You receive the paths to analysis findings files written by the analysis agents.
 
 You receive via the orchestrator's prompt:
 
-1. **Findings file paths** — paths to all analysis agent output files
-2. **Task normalization reference path** — canonical task template
-3. **Topic name** — the implementation topic
-4. **Cycle number** — which analysis cycle this is
-5. **Specification path** — the validated specification
-6. **Staging file path** — where to write the proposed tasks
+1. **Task normalization reference path** — canonical task template
+2. **Topic name** — the implementation topic
+3. **Cycle number** — which analysis cycle this is
+4. **Specification path** — the validated specification
 
 ## Your Process
 
-1. **Read all findings files** — absorb output from every analysis agent
+1. **Read all findings files** from `docs/workflow/implementation/` — look for `{topic}-analysis-duplication.md`, `{topic}-analysis-standards.md`, and `{topic}-analysis-architecture.md`
 2. **Deduplicate** — same issue found by multiple agents → one finding, note all sources
 3. **Group related findings** — multiple findings about the same pattern become one task (e.g., 3 duplication findings about the same helper pattern = 1 "extract helper" task)
 4. **Filter** — discard low-severity findings unless they cluster into a pattern. Never discard high-severity.
 5. **Normalize** — convert each group into a task using the canonical task template (Problem / Solution / Outcome / Do / Acceptance Criteria / Tests)
 6. **Write report** — output to `docs/workflow/implementation/{topic}-analysis-report.md`
-7. **Write staging file** — if actionable tasks exist, write them to the staging file path with `status: pending` for each task
+7. **Write staging file** — if actionable tasks exist, write to `docs/workflow/implementation/{topic}-analysis-tasks.md` with `status: pending` for each task
 
 ## Report Format
 

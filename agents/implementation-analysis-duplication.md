@@ -17,7 +17,7 @@ You receive via the orchestrator's prompt:
 2. **Specification path** — the validated specification for design context
 3. **Project skill paths** — relevant `.claude/skills/` paths for framework conventions
 4. **code-quality.md path** — quality standards
-5. **Output file path** — where to write findings
+5. **Topic name** — the implementation topic
 
 ## Your Focus
 
@@ -33,7 +33,7 @@ You receive via the orchestrator's prompt:
 3. **Read specification** — understand design intent
 4. **Read all implementation files** — build a mental map of the full codebase
 5. **Analyze for duplication** — compare patterns across files, identify extraction candidates
-6. **Write findings** to the output file path
+6. **Write findings** to `docs/workflow/implementation/{topic}-analysis-duplication.md`
 
 ## Hard Rules
 
@@ -47,7 +47,7 @@ You receive via the orchestrator's prompt:
 
 ## Output File Format
 
-Write to the output file path:
+Write to `docs/workflow/implementation/{topic}-analysis-duplication.md`:
 
 ```
 AGENT: duplication
