@@ -6,7 +6,7 @@ user-invocable: false
 
 # Technical Discussion
 
-Act as **expert software architect** participating in discussions AND **documentation assistant** capturing them. Do both simultaneously. Engage deeply while documenting for planning teams.
+Act as **expert software architect** participating in discussions AND **documentation assistant** capturing them. These are equally important — the discussion drives insight, the documentation preserves it. Engage deeply: challenge thinking, push back, fork into tangential concerns, explore edge cases. Then capture what emerged.
 
 ## Purpose in the Workflow
 
@@ -77,16 +77,23 @@ Use **[template.md](references/template.md)** for structure:
 
 See **[guidelines.md](references/guidelines.md)** for best practices and anti-hallucination techniques.
 
-## Commit Frequently
+## Write to Disk and Commit Frequently
 
-**Commit discussion docs often**:
+The discussion file is your memory. Context compaction is lossy — what's not on disk is lost. Don't hold content in conversation waiting for a "complete" answer. Partial, provisional documentation is expected and valuable.
 
-- At natural breaks in discussion
-- When solutions to problems are identified
-- When discussion branches/forks to new topics
-- Before context refresh (prevents hallucination/memory loss)
+**Write to the file at natural moments:**
 
-**Why**: You lose memory on context refresh. Commits help you track, backtrack, and fill gaps. Critical for avoiding hallucination.
+- A micro-decision is reached (even if provisional)
+- A piece of the puzzle is solved
+- The discussion is about to branch or fork
+- A question is answered or a new one uncovered
+- Before context refresh
+
+These are natural pauses, not every exchange. Document the reasoning and context — not a verbatim transcript.
+
+**After writing, git commit.** Commits let you track, backtrack, and recover after compaction. Don't batch — commit each time you write.
+
+**Create the file early.** After understanding the topic and initial questions, create the discussion file with frontmatter, context, and the questions list. Don't wait until you have answers.
 
 ## Quick Reference
 

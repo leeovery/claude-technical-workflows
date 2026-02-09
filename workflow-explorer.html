@@ -1913,8 +1913,8 @@ const FLOWCHARTS = {
       { id: 'validate', label: 'Validate inputs', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Verify source material and topic name. Stop if missing.' },
       { id: 'init', label: 'Initialize document', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Create discussion/{topic}.md with YAML frontmatter. Set status: active.' },
       { id: 'engage', label: 'Engage on topic', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Present topic for discussion. Ask probing questions one at a time.' },
-      { id: 'capture', label: 'Capture decisions', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Record options considered, journey of exploration, final decision, and rationale.' },
-      { id: 'document', label: 'Document to file', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Log decisions to the discussion document. Verbatim — no embellishment.' },
+      { id: 'capture', label: 'Capture decisions', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Record options considered, journey of exploration, and decisions (even provisional ones) with rationale.' },
+      { id: 'document', label: 'Write to disk', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Write reasoning and context to the discussion file. Not a verbatim transcript — capture the journey, not the dialogue.' },
       { id: 'commit', label: 'Commit & push', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Commit at natural breaks. Never batch — context refresh loses unpushed work.' },
       { id: 'more', label: 'More topics?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Are there more topics to discuss?' },
       { id: 'conclude', label: 'Conclude discussion', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Set status: concluded. All decisions documented. Ready for specification.' },
@@ -2585,8 +2585,8 @@ const FLOWCHART_DESCS = {
   },
   'skill-discussion': {
     summary: 'The discussion skill — captures decisions, debates, and edge cases through structured dialogue.',
-    body: `<p>Engages as an expert architect and meeting assistant. The core loop: <strong>Engage → Capture decisions → Document → Commit → Repeat</strong> until the discussion is concluded.</p>
-<p>Each question is structured as <strong>Options → Journey → Decision</strong>. The skill documents competing solutions and why choices were made, capturing the full reasoning trail. Frontmatter status progresses from <code>in-progress</code> to <code>concluded</code>.</p>`,
+    body: `<p>Engages as an expert architect and meeting assistant. The core loop: <strong>Engage → Capture decisions → Write to disk → Commit → Repeat</strong> until the discussion is concluded. Writes happen at natural pauses — partial and provisional documentation is expected and valuable.</p>
+<p>Each question is structured as <strong>Options → Journey → Decision</strong>. The skill documents competing solutions and why choices were made, capturing the full reasoning trail. The file on disk is the defence against context compaction — what's not written is lost. Frontmatter status progresses from <code>in-progress</code> to <code>concluded</code>.</p>`,
     meta: { output: 'docs/workflow/discussion/{topic}.md', complexity: 'Looping skill' }
   },
   'skill-specification': {
