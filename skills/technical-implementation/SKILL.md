@@ -248,8 +248,8 @@ If the task loop exited early (user chose `stop`), skip to **Step 8**.
 
 Load **[steps/analysis-loop.md](references/steps/analysis-loop.md)** and follow its instructions as written.
 
-→ If new tasks were created in the plan, return to **Step 6** (the task loop picks them up).
-→ If no tasks were created (no findings, user declined, or cycle gate skipped), proceed to **Step 8**.
+- If new tasks were created in the plan → return to **Step 6**.
+- If no tasks were created → proceed to **Step 8**.
 
 ---
 
