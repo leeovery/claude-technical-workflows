@@ -95,6 +95,36 @@ These are natural pauses, not every exchange. Document the reasoning and context
 
 **Create the file early.** After understanding the topic and initial questions, create the discussion file with frontmatter, context, and the questions list. Don't wait until you have answers.
 
+## Concluding a Discussion
+
+When the user is ready to conclude the discussion:
+
+1. Update frontmatter `status: concluded`
+2. Final commit
+3. Check for remaining in-progress discussions in `docs/workflow/discussion/`
+
+**If other in-progress discussions exist:**
+
+```
+Discussion concluded: {topic}
+
+Remaining in-progress discussions:
+- {topic-1}
+- {topic-2}
+
+To continue, clear your context and run `/start-discussion` to pick up the next topic.
+```
+
+**If no in-progress discussions remain:**
+
+```
+Discussion concluded: {topic}
+
+All discussions are now concluded.
+```
+
+**Do not offer to continue with another discussion in this session.** Each discussion benefits from a fresh context — continuing risks compaction-related information loss and reduced attention. Always advise the user to clear context first.
+
 ## Quick Reference
 
 - **Approach**: **[meeting-assistant.md](references/meeting-assistant.md)** - Dual role, workflow
