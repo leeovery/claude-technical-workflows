@@ -4,7 +4,7 @@
 
 ---
 
-This step invokes the synthesis agent to read analysis findings, synthesize them into tasks, and create those tasks in the plan.
+This step invokes the synthesis agent to read analysis findings, deduplicate, and write normalized tasks to a staging file for user approval.
 
 ---
 
@@ -22,24 +22,23 @@ Pass via the orchestrator's prompt:
 3. **Topic name** — the implementation topic
 4. **Cycle number** — the current analysis cycle number
 5. **Specification path** — from the plan's frontmatter (if available)
-6. **Plan path** — the implementation plan path
-7. **Plan format reading adapter path** — `../../../technical-planning/references/output-formats/{format}/reading.md`
-8. **Plan format authoring adapter path** — `../../../technical-planning/references/output-formats/{format}/authoring.md`
+6. **Staging file path** — `docs/workflow/implementation/{topic}-analysis-tasks.md`
 
 ---
 
 ## Expected Result
 
-The agent writes a report to `docs/workflow/implementation/{topic}-analysis-report.md` and creates tasks in the plan if actionable findings exist.
+The agent writes:
+- A report to `docs/workflow/implementation/{topic}-analysis-report.md` (audit trail)
+- A staging file to `docs/workflow/implementation/{topic}-analysis-tasks.md` (if actionable tasks exist)
 
 Returns a brief status:
 
 ```
-STATUS: tasks_created | clean
-TASKS_CREATED: {N}
-PHASE: {phase number, if tasks created}
+STATUS: tasks_proposed | clean
+TASKS_PROPOSED: {N}
 SUMMARY: {1-2 sentences}
 ```
 
-- `tasks_created`: new tasks added to the plan — orchestrator should commit and route to task loop
+- `tasks_proposed`: tasks written to staging file — orchestrator should present for approval
 - `clean`: no actionable findings — orchestrator should proceed to completion

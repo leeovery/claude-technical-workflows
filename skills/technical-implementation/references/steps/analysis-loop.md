@@ -4,7 +4,7 @@
 
 ---
 
-Run one analysis cycle: check the cycle gate, checkpoint, analyze the implementation, and synthesize findings into plan tasks. Each cycle follows stages A through D sequentially. Always start at **A. Cycle Gate**.
+Run one analysis cycle: check the cycle gate, checkpoint, analyze the implementation, synthesize findings, present for approval, and create plan tasks. Each cycle follows stages A through F sequentially. Always start at **A. Cycle Gate**.
 
 After this loop completes with new tasks, the skill returns to Step 6 (task loop) to execute them, then re-enters this loop for the next cycle.
 
@@ -13,6 +13,8 @@ A. Cycle gate (check analysis_cycle, warn if over limit)
 B. Git checkpoint
 C. Dispatch analysis agents → invoke-analysis.md
 D. Dispatch synthesis agent → invoke-synthesizer.md
+E. Approval gate (present tasks, approve/skip/comment)
+F. Create tasks in plan → invoke-task-writer.md
 → Route on result
 ```
 
@@ -91,7 +93,81 @@ Load **[invoke-synthesizer.md](invoke-synthesizer.md)** and follow its instructi
 
 → If `STATUS: clean`, return to the skill for **Step 8**.
 
-→ If `STATUS: tasks_created`, commit and return to the skill:
+→ If `STATUS: tasks_proposed`, proceed to **E. Approval Gate**.
+
+---
+
+## E. Approval Gate
+
+Read the staging file from `docs/workflow/implementation/{topic}-analysis-tasks.md`.
+
+Present an overview:
+
+> **Analysis cycle {N}: {K} proposed tasks**
+>
+> 1. {title} ({severity})
+> 2. {title} ({severity})
+> ...
+
+Then present each task with `status: pending` individually:
+
+> **Task {current}/{total}: {title}** ({severity})
+> Sources: {sources}
+>
+> **Problem**: {problem}
+> **Solution**: {solution}
+> **Outcome**: {outcome}
+>
+> **Do**:
+> {steps}
+>
+> **Acceptance Criteria**:
+> {criteria}
+>
+> **Tests**:
+> {tests}
+>
+> · · ·
+>
+> - **`a`/`approve`** — Approve this task
+> - **`s`/`skip`** — Skip this task
+> - **Comment** — Revise based on feedback
+
+**STOP.** Wait for user input.
+
+#### If `approve`
+
+Update `status: approved` in the staging file.
+
+→ Present the next pending task, or proceed to routing below if all tasks processed.
+
+#### If `skip`
+
+Update `status: skipped` in the staging file.
+
+→ Present the next pending task, or proceed to routing below if all tasks processed.
+
+#### If comment
+
+Revise the task content in the staging file based on the user's feedback. Re-present this task.
+
+---
+
+After all tasks processed:
+
+→ If any tasks have `status: approved`, proceed to **F. Create Tasks in Plan**.
+
+→ If all tasks were skipped, return to the skill for **Step 8**.
+
+---
+
+## F. Create Tasks in Plan
+
+Load **[invoke-task-writer.md](invoke-task-writer.md)** and follow its instructions.
+
+**STOP.** Do not proceed until the task writer has returned.
+
+Commit:
 
 ```
 impl({topic}): add analysis phase {N} ({K} tasks)

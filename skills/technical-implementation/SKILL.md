@@ -275,6 +275,7 @@ Commit: `impl({topic}): complete implementation`
 - **[steps/invoke-reviewer.md](references/steps/invoke-reviewer.md)** — How to invoke the reviewer agent
 - **[steps/invoke-analysis.md](references/steps/invoke-analysis.md)** — How to invoke analysis agents
 - **[steps/invoke-synthesizer.md](references/steps/invoke-synthesizer.md)** — How to invoke the synthesis agent
+- **[steps/invoke-task-writer.md](references/steps/invoke-task-writer.md)** — How to invoke the task writer agent
 - **[task-normalisation.md](references/task-normalisation.md)** — Normalised task shape for agent invocation
 - **[tdd-workflow.md](references/tdd-workflow.md)** — TDD cycle (passed to executor agent)
 - **[code-quality.md](references/code-quality.md)** — Quality standards (passed to executor agent)
