@@ -6,7 +6,7 @@
 
 ## The Cycle
 
-RED → GREEN → REFACTOR
+RED → GREEN → REFACTOR → LINT
 
 Repeat for each task. **Never skip steps. Never reorder.**
 
@@ -63,6 +63,17 @@ If you think "I should also handle X" - STOP. Write a test for X first.
 **Don't**: Touch code outside current task, optimize prematurely
 
 Run tests after. If they fail, undo the refactor.
+
+## LINT: After Refactor
+
+If linter commands are configured (passed by the orchestrator):
+1. Run each linter command
+2. If issues found: fix them
+3. Re-run linter to confirm clean
+4. Re-run tests to confirm no regressions
+5. If a linter fix breaks tests: revert the fix and note it in your report
+
+If no linters configured, skip this step.
 
 ## COMMIT: Orchestrator Responsibility
 

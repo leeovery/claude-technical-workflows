@@ -49,7 +49,7 @@ Context refresh (compaction) summarizes the conversation, losing procedural deta
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
 2. **Check task progress in the plan** — use the plan adapter's instructions to read the plan's current state. Also read the implementation tracking file and any other working documents for additional context.
-3. **Check `task_gate_mode`, `fix_gate_mode`, and `fix_attempts`** in the tracking file — if gates are `auto`, the user previously opted out. If `fix_attempts` > 0, you're mid-fix-loop for the current task.
+3. **Check `task_gate_mode`, `fix_gate_mode`, `fix_attempts`, and `analysis_cycle`** in the tracking file — if gates are `auto`, the user previously opted out. If `fix_attempts` > 0, you're mid-fix-loop for the current task. If `analysis_cycle` > 0, you've completed analysis cycles — check for findings files on disk (`analysis-*.md` in `{topic}/`) to determine mid-analysis state.
 4. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 5. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 
@@ -105,78 +105,36 @@ Save their instructions to `docs/workflow/environment-setup.md` (or "No special 
    - **reading.md** — how to read tasks from the plan
    - **updating.md** — how to write progress to the plan
 4. If no `format` field exists, ask the user which format the plan uses.
-5. These adapter files apply during Step 5 (task loop).
+5. These adapter files apply during Step 6 (task loop) and Step 7 (analysis).
+6. Also load the format's **authoring.md** adapter — needed in Step 7 if analysis tasks are created.
 
 → Proceed to **Step 3**.
 
 ---
 
-## Step 3: Project Skills Discovery
+## Step 3: Initialize Implementation Tracking
 
-#### If `.claude/skills/` does not exist or is empty
+#### If `docs/workflow/implementation/{topic}/tracking.md` already exists
 
-```
-No project skills found. Proceeding without project-specific conventions.
-```
+Reset `task_gate_mode` and `fix_gate_mode` to `gated`, `fix_attempts` to `0`, and `analysis_cycle` to `0` (fresh session = fresh gates/cycles).
 
 → Proceed to **Step 4**.
-
-#### If project skills exist
-
-Scan `.claude/skills/` for project-specific skill directories. Present findings:
-
-> Found these project skills that may be relevant to implementation:
-> - `{skill-name}` — {brief description}
-> - `{skill-name}` — {brief description}
-> - ...
->
-> Which of these should I pass to the implementation agents? (all / list / none)
-
-**STOP.** Wait for user to confirm which skills are relevant.
-
-Store the selected skill paths — they will be persisted to the tracking file in Step 4.
-
-→ Proceed to **Step 4**.
-
----
-
-## Step 4: Initialize Implementation Tracking
-
-#### If `docs/workflow/implementation/{topic}.md` already exists
-
-Reset `task_gate_mode` and `fix_gate_mode` to `gated`, and `fix_attempts` to `0`, in the tracking file before proceeding (fresh session = fresh gates).
-
-If `project_skills` is populated in the tracking file, present for confirmation:
-
-> "Previous session used these project skills:
-> - `{skill-name}` — {path}
-> - ...
->
-> · · ·
->
-> - **`y`/`yes`** — Keep these, proceed
-> - **`c`/`change`** — Add or remove skills"
-
-**STOP.** Wait for user choice.
-
-- **`y`/`yes`**: Proceed with the persisted paths.
-- **`change`**: Re-run discovery (Step 3), update `project_skills` in the tracking file.
-
-→ Proceed to **Step 5**.
 
 #### If no tracking file exists
 
-Create `docs/workflow/implementation/{topic}.md`:
+Create `docs/workflow/implementation/{topic}/tracking.md`:
 
 ```yaml
 ---
 topic: {topic}
-plan: ../planning/{topic}.md
+plan: ../../planning/{topic}.md
 format: {format from plan}
 status: in-progress
 task_gate_mode: gated
 fix_gate_mode: gated
 fix_attempts: 0
+linters: []
+analysis_cycle: 0
 project_skills: []
 current_phase: 1
 current_task: ~
@@ -192,99 +150,114 @@ completed: ~
 Implementation started.
 ```
 
-After creating the file, populate `project_skills` with the paths confirmed in Step 3 (empty array if none).
-
 Commit: `impl({topic}): start implementation`
+
+→ Proceed to **Step 4**.
+
+---
+
+## Step 4: Project Skills Discovery
+
+#### If `project_skills` is populated in the tracking file
+
+Present the existing configuration for confirmation:
+
+> "Previous session used these project skills:
+> - `{skill-name}` — {path}
+> - ...
+>
+> · · ·
+>
+> - **`y`/`yes`** — Keep these, proceed
+> - **`c`/`change`** — Re-discover and choose skills"
+
+**STOP.** Wait for user choice.
+
+- **`yes`**: → Proceed to **Step 5**.
+- **`change`**: Clear `project_skills` and fall through to discovery below.
+
+#### If `.claude/skills/` does not exist or is empty
+
+```
+No project skills found. Proceeding without project-specific conventions.
+```
+
+→ Proceed to **Step 5**.
+
+#### If project skills exist
+
+Scan `.claude/skills/` for project-specific skill directories. Present findings:
+
+> Found these project skills that may be relevant to implementation:
+> - `{skill-name}` — {brief description}
+> - `{skill-name}` — {brief description}
+> - ...
+>
+> Which of these should I pass to the implementation agents? (all / list / none)
+
+**STOP.** Wait for user to confirm which skills are relevant.
+
+Store the selected skill paths in the tracking file.
 
 → Proceed to **Step 5**.
 
 ---
 
-## Step 5: Task Loop
+## Step 5: Linter Discovery
 
-Load **[steps/task-loop.md](references/steps/task-loop.md)** and follow its instructions as written.
+Load **[linter-setup.md](references/linter-setup.md)** and follow its discovery process to identify project linters.
 
-→ After the loop completes, proceed to **Step 6**.
+If `linters` is already populated in the tracking file, present the existing configuration for confirmation (same pattern as project skills in Step 4). If confirmed, skip discovery and proceed.
 
----
+Otherwise, present discovery findings to the user:
 
-## Step 6: Polish
-
-If the task loop exited early (user chose `stop`), skip to **Step 7**.
-
-**Git checkpoint** — ensure a clean working tree before invoking the polish agent. Run `git status`. If there are unstaged changes or untracked files, commit them:
-
-```
-impl({topic}): pre-polish checkpoint
-```
-
-This ensures all prior work is safely committed. The polish agent makes no git operations — all its changes will exist as unstaged modifications. If the user discards polish, the working tree resets cleanly to this checkpoint.
-
-**Invoke the polish agent:**
-
-1. Load **[steps/invoke-polish.md](references/steps/invoke-polish.md)** and follow its instructions.
-2. **STOP.** Do not proceed until the polish agent has returned its result.
-3. Route on STATUS:
-   - `blocked` → present SUMMARY to the user, ask how to proceed
-   - `complete` → present the report below
-
-> **Implementation polish complete** ({N} cycles)
+> **Linter discovery:**
+> - {tool} — `{command}` (installed / not installed)
+> - ...
 >
-> {SUMMARY}
->
-> Findings:
-> {DISCOVERY}
->
-> Fixes applied:
-> {FIXES_APPLIED}
->
-> Integration tests added:
-> {TESTS_ADDED}
->
-> Skipped (not addressed):
-> {SKIPPED}
->
-> Test results: {TEST_RESULTS}
+> Recommendations: {any suggested tools with install commands}
 >
 > · · ·
 >
-> - **`y`/`yes`** — Approve and commit polish changes
-> - **`s`/`skip`** — Discard polish changes, mark complete as-is
-> - **Comment** — Feedback (re-invokes polish agent with your notes)
+> - **`y`/`yes`** — Approve these linter commands
+> - **`c`/`change`** — Modify the linter list
+> - **`s`/`skip`** — Skip linter setup (no linting during TDD)
 
-**STOP.** Wait for user input.
+**STOP.** Wait for user choice.
 
-#### If `yes`
+- **`yes`**: Store the approved linter commands in the tracking file.
+- **`change`**: Adjust based on user input, re-present for confirmation.
+- **`skip`**: Store empty linters array.
 
-Commit all polish changes:
-
-```
-impl({topic}): polish — {brief description}
-```
-
-→ Proceed to **Step 7**.
-
-#### If `skip`
-
-Discard all polish changes. Reset the working tree to the pre-polish checkpoint:
-
-```
-git checkout . && git clean -fd
-```
-
-This is safe because the checkpoint commit captured all prior work. Only polish-created changes are discarded. Gitignored files are untouched.
-
-→ Proceed to **Step 7**.
-
-#### If comment
-
-→ Re-invoke the polish agent with the user's feedback. Return to the top of **Step 6** (after the git checkpoint — do not re-checkpoint).
+→ Proceed to **Step 6**.
 
 ---
 
-## Step 7: Mark Implementation Complete
+## Step 6: Task Loop
 
-Update the tracking file (`docs/workflow/implementation/{topic}.md`):
+Load **[steps/task-loop.md](references/steps/task-loop.md)** and follow its instructions as written.
+
+After the loop completes:
+
+→ If the task loop exited early (user chose `stop`), proceed to **Step 8**.
+
+→ Otherwise, proceed to **Step 7**.
+
+---
+
+## Step 7: Analysis Loop
+
+Load **[steps/analysis-loop.md](references/steps/analysis-loop.md)** and follow its instructions as written.
+
+→ If new tasks were created in the plan, return to **Step 6**.
+
+→ If no tasks were created, proceed to **Step 8**.
+
+---
+
+## Step 8: Mark Implementation Complete
+
+Update the tracking file (`docs/workflow/implementation/{topic}/tracking.md`):
 - Set `status: completed`
 - Set `completed: YYYY-MM-DD` (use today's actual date)
 - Update `updated` date
@@ -296,10 +269,14 @@ Commit: `impl({topic}): complete implementation`
 ## References
 
 - **[environment-setup.md](references/environment-setup.md)** — Environment setup before implementation
+- **[linter-setup.md](references/linter-setup.md)** — Linter discovery and configuration
 - **[steps/task-loop.md](references/steps/task-loop.md)** — Task execution loop, task gates, tracking, commits
+- **[steps/analysis-loop.md](references/steps/analysis-loop.md)** — Analysis and refinement cycle
 - **[steps/invoke-executor.md](references/steps/invoke-executor.md)** — How to invoke the executor agent
 - **[steps/invoke-reviewer.md](references/steps/invoke-reviewer.md)** — How to invoke the reviewer agent
-- **[steps/invoke-polish.md](references/steps/invoke-polish.md)** — How to invoke the polish agent
+- **[steps/invoke-analysis.md](references/steps/invoke-analysis.md)** — How to invoke analysis agents
+- **[steps/invoke-synthesizer.md](references/steps/invoke-synthesizer.md)** — How to invoke the synthesis agent
+- **[steps/invoke-task-writer.md](references/steps/invoke-task-writer.md)** — How to invoke the task writer agent
 - **[task-normalisation.md](references/task-normalisation.md)** — Normalised task shape for agent invocation
 - **[tdd-workflow.md](references/tdd-workflow.md)** — TDD cycle (passed to executor agent)
 - **[code-quality.md](references/code-quality.md)** — Quality standards (passed to executor agent)

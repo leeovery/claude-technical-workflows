@@ -17,10 +17,11 @@ This step invokes the `implementation-task-executor` agent (`../../../../agents/
 3. **Specification path**: from the plan's frontmatter (if available)
 4. **Project skill paths**: from `project_skills` in the implementation tracking file
 5. **Task content**: normalised task content (see [task-normalisation.md](../task-normalisation.md))
+6. **Linter commands**: from `linters` in the implementation tracking file (if configured)
 
 **Re-attempts after review feedback** additionally include:
-6. **User-approved review notes**: verbatim or as modified by the user
-7. **Specific issues to address**: the ISSUES from the review
+7. **User-approved review notes**: verbatim or as modified by the user
+8. **Specific issues to address**: the ISSUES from the review
 
 The executor is stateless — each invocation starts fresh with no memory of previous attempts. Always pass the full task content so the executor can see what was asked, what was done, and what needs fixing.
 
