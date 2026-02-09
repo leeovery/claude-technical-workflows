@@ -2030,7 +2030,7 @@ const FLOWCHARTS = {
       { id: 'env-setup', label: 'Environment setup', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 1: Run setup commands from environment-setup.md. Sequential, exactly as written.' },
       { id: 'read-plan', label: 'Read plan + adapter', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 2: Load plan, read format field, load output format adapter for reading/writing tasks.' },
       { id: 'skills-disc', label: 'Project skills discovery', w: 195, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 3: Scan .claude/skills/ for project-specific conventions. ASK user which to pass to agents.' },
-      { id: 'init-track', label: 'Init tracking file', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 4: Create/resume docs/workflow/implementation/{topic}.md. Reset gate modes to gated on fresh session.' },
+      { id: 'init-track', label: 'Init tracking file', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 4: Create/resume docs/workflow/implementation/{topic}/tracking.md. Reset gate modes to gated on fresh session.' },
       // Task loop — Stage A
       { id: 'retrieve', label: 'A. Retrieve next task', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Stage A: Use plan adapter to get next available task. Normalise task content for agent invocation.' },
       { id: 'done-check', label: 'Tasks remain?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if any tasks remain. If none, proceed to polish step.' },

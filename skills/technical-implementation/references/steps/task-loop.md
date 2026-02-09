@@ -157,7 +157,7 @@ Announce the result (one line, no stop):
 
 **Update task progress in the plan** — follow the format's **updating.md** instructions to mark the task complete.
 
-**Mirror to implementation tracking file** (`docs/workflow/implementation/{topic}.md`):
+**Mirror to implementation tracking file** (`docs/workflow/implementation/{topic}/tracking.md`):
 - Append the task ID to `completed_tasks`
 - Update `current_phase` if phase changed
 - Update `current_task` to the next task (or `~` if done)

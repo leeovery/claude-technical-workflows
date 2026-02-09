@@ -49,7 +49,7 @@ Context refresh (compaction) summarizes the conversation, losing procedural deta
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
 2. **Check task progress in the plan** — use the plan adapter's instructions to read the plan's current state. Also read the implementation tracking file and any other working documents for additional context.
-3. **Check `task_gate_mode`, `fix_gate_mode`, `fix_attempts`, and `analysis_cycle`** in the tracking file — if gates are `auto`, the user previously opted out. If `fix_attempts` > 0, you're mid-fix-loop for the current task. If `analysis_cycle` > 0, you've completed analysis cycles — check for findings files on disk (`{topic}-analysis-*.md`) to determine mid-analysis state.
+3. **Check `task_gate_mode`, `fix_gate_mode`, `fix_attempts`, and `analysis_cycle`** in the tracking file — if gates are `auto`, the user previously opted out. If `fix_attempts` > 0, you're mid-fix-loop for the current task. If `analysis_cycle` > 0, you've completed analysis cycles — check for findings files on disk (`analysis-*.md` in `{topic}/`) to determine mid-analysis state.
 4. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 5. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 
@@ -114,7 +114,7 @@ Save their instructions to `docs/workflow/environment-setup.md` (or "No special 
 
 ## Step 3: Initialize Implementation Tracking
 
-#### If `docs/workflow/implementation/{topic}.md` already exists
+#### If `docs/workflow/implementation/{topic}/tracking.md` already exists
 
 Reset `task_gate_mode` and `fix_gate_mode` to `gated`, `fix_attempts` to `0`, and `analysis_cycle` to `0` (fresh session = fresh gates/cycles).
 
@@ -122,12 +122,12 @@ Reset `task_gate_mode` and `fix_gate_mode` to `gated`, `fix_attempts` to `0`, an
 
 #### If no tracking file exists
 
-Create `docs/workflow/implementation/{topic}.md`:
+Create `docs/workflow/implementation/{topic}/tracking.md`:
 
 ```yaml
 ---
 topic: {topic}
-plan: ../planning/{topic}.md
+plan: ../../planning/{topic}.md
 format: {format from plan}
 status: in-progress
 task_gate_mode: gated
@@ -257,7 +257,7 @@ Load **[steps/analysis-loop.md](references/steps/analysis-loop.md)** and follow 
 
 ## Step 8: Mark Implementation Complete
 
-Update the tracking file (`docs/workflow/implementation/{topic}.md`):
+Update the tracking file (`docs/workflow/implementation/{topic}/tracking.md`):
 - Set `status: completed`
 - Set `completed: YYYY-MM-DD` (use today's actual date)
 - Update `updated` date

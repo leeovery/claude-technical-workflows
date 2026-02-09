@@ -97,7 +97,7 @@ Load **[invoke-synthesizer.md](invoke-synthesizer.md)** and follow its instructi
 
 ## E. Approval Gate
 
-Read the staging file from `docs/workflow/implementation/{topic}-analysis-tasks.md`.
+Read the staging file from `docs/workflow/implementation/{topic}/analysis-tasks.md`.
 
 Present an overview:
 
