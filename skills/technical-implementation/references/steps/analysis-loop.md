@@ -79,6 +79,8 @@ impl({topic}): pre-analysis checkpoint
 
 Load **[invoke-analysis.md](invoke-analysis.md)** and follow its instructions.
 
+**STOP.** Do not proceed until all agents have returned.
+
 → Proceed to **D. Dispatch Synthesis Agent**.
 
 ---
@@ -86,6 +88,8 @@ Load **[invoke-analysis.md](invoke-analysis.md)** and follow its instructions.
 ## D. Dispatch Synthesis Agent
 
 Load **[invoke-synthesizer.md](invoke-synthesizer.md)** and follow its instructions.
+
+**STOP.** Do not proceed until the synthesizer has returned.
 
 → Proceed to **E. Present Findings**.
 
