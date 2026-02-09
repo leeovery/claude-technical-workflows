@@ -112,58 +112,13 @@ Save their instructions to `docs/workflow/environment-setup.md` (or "No special 
 
 ---
 
-## Step 3: Project Skills Discovery
-
-#### If `.claude/skills/` does not exist or is empty
-
-```
-No project skills found. Proceeding without project-specific conventions.
-```
-
-→ Proceed to **Step 4**.
-
-#### If project skills exist
-
-Scan `.claude/skills/` for project-specific skill directories. Present findings:
-
-> Found these project skills that may be relevant to implementation:
-> - `{skill-name}` — {brief description}
-> - `{skill-name}` — {brief description}
-> - ...
->
-> Which of these should I pass to the implementation agents? (all / list / none)
-
-**STOP.** Wait for user to confirm which skills are relevant.
-
-Store the selected skill paths — they will be persisted to the tracking file in Step 4.
-
-→ Proceed to **Step 4**.
-
----
-
-## Step 4: Initialize Implementation Tracking
+## Step 3: Initialize Implementation Tracking
 
 #### If `docs/workflow/implementation/{topic}.md` already exists
 
-Reset `task_gate_mode` and `fix_gate_mode` to `gated`, `fix_attempts` to `0`, and `analysis_cycle` to `0` in the tracking file before proceeding (fresh session = fresh gates/cycles).
+Reset `task_gate_mode` and `fix_gate_mode` to `gated`, `fix_attempts` to `0`, and `analysis_cycle` to `0` (fresh session = fresh gates/cycles).
 
-If `project_skills` is populated in the tracking file, present for confirmation:
-
-> "Previous session used these project skills:
-> - `{skill-name}` — {path}
-> - ...
->
-> · · ·
->
-> - **`y`/`yes`** — Keep these, proceed
-> - **`c`/`change`** — Add or remove skills"
-
-**STOP.** Wait for user choice.
-
-- **`y`/`yes`**: Proceed with the persisted paths.
-- **`change`**: Re-run discovery (Step 3), update `project_skills` in the tracking file.
-
-→ Proceed to **Step 5**.
+→ Proceed to **Step 4**.
 
 #### If no tracking file exists
 
@@ -196,9 +151,54 @@ completed: ~
 Implementation started.
 ```
 
-After creating the file, populate `project_skills` with the paths confirmed in Step 3 (empty array if none).
-
 Commit: `impl({topic}): start implementation`
+
+→ Proceed to **Step 4**.
+
+---
+
+## Step 4: Project Skills Discovery
+
+#### If `project_skills` is populated in the tracking file
+
+Present the existing configuration for confirmation:
+
+> "Previous session used these project skills:
+> - `{skill-name}` — {path}
+> - ...
+>
+> · · ·
+>
+> - **`y`/`yes`** — Keep these, proceed
+> - **`c`/`change`** — Re-discover and choose skills"
+
+**STOP.** Wait for user choice.
+
+- **`yes`**: → Proceed to **Step 5**.
+- **`change`**: Clear `project_skills` and fall through to discovery below.
+
+#### If `.claude/skills/` does not exist or is empty
+
+```
+No project skills found. Proceeding without project-specific conventions.
+```
+
+→ Proceed to **Step 5**.
+
+#### If project skills exist
+
+Scan `.claude/skills/` for project-specific skill directories. Present findings:
+
+> Found these project skills that may be relevant to implementation:
+> - `{skill-name}` — {brief description}
+> - `{skill-name}` — {brief description}
+> - ...
+>
+> Which of these should I pass to the implementation agents? (all / list / none)
+
+**STOP.** Wait for user to confirm which skills are relevant.
+
+Store the selected skill paths in the tracking file.
 
 → Proceed to **Step 5**.
 
