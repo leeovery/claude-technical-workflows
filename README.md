@@ -44,18 +44,11 @@ Research → Discussion → Specification → Planning → Implementation → Re
 
 ### Quick Install
 
-**Marketplace** (cached globally):
-```
-/plugin marketplace add leeovery/claude-plugins-marketplace
-/plugin install claude-technical-workflows@claude-plugins-marketplace
-```
-
-**npm** (copied to your repo):
 ```bash
 npm install -D @leeovery/claude-technical-workflows
 ```
 
-See [Installation](#installation) for details and trade-offs.
+See [Installation](#installation) for details.
 
 ## How do I use it?
 
@@ -122,21 +115,11 @@ Run the skill directly or ask Claude to run it. Each gathers context from previo
 
 ## Installation
 
-| Method          | Where files live                    | Best for                                        |
-|-----------------|-------------------------------------|-------------------------------------------------|
-| **Marketplace** | `~/.claude/plugins/` (global cache) | Quick setup, don't need files in repo           |
-| **npm**         | `.claude/` in your project          | Ownership, version control, Claude Code for Web |
+| Method  | Where files live           | Best for                                        |
+|---------|----------------------------|-------------------------------------------------|
+| **npm** | `.claude/` in your project | Ownership, version control, Claude Code for Web |
 
-### Option 1: Claude Marketplace
-
-```
-/plugin marketplace add leeovery/claude-plugins-marketplace
-/plugin install claude-technical-workflows@claude-plugins-marketplace
-```
-
-Skills are cached globally. They won't be available in Claude Code for Web since files aren't in your repository.
-
-### Option 2: npm
+### npm
 
 ```bash
 npm install -D @leeovery/claude-technical-workflows
