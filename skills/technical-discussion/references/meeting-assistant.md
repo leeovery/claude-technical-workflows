@@ -74,16 +74,15 @@ Who affected, problem solved, what enabled.
 
 Example: "200 enterprise users + sales get performant experience. Enables Q1 renewals."
 
-## Commit Often
+## Write and Commit Often
 
-**Git commit discussion docs frequently:**
+The file on disk is the work product. Context compaction will destroy conversation detail — the file is your defense against that.
 
-- Natural breaks in discussion
-- When problems solved
-- When discussion forks to new topics
-- Before context refresh
+**Write to the file at natural pauses** — when a micro-decision lands, a question is resolved (even provisionally), or the discussion is about to fork. Don't wait for finality. Partial documentation is expected.
 
-**Why**: Memory loss on context refresh causes hallucination. Commits help track, backtrack, fill gaps.
+**Then git commit.** Each write should be followed by a commit. This creates recovery points against context loss.
+
+**Don't transcribe** — capture the reasoning, options, and outcome. Keep it contextual, not verbatim.
 
 ## Principles
 

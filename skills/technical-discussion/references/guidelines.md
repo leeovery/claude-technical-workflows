@@ -55,13 +55,18 @@ Best practices for documenting discussions. For DOCUMENTATION only - no plans or
 **False Paths**: What didn't work, why
 **Impact**: Who benefits, what enabled
 
-## Update as Discussing
+## Write to Disk as Discussing
+
+At natural pauses — not every exchange, but when something meaningful has been concluded, explored, or uncovered — update the file on disk:
 
 - Check off answered questions
 - Add options as explored
-- Document false paths immediately
-- Record decisions with rationale
+- Document false paths when identified
+- Record decisions (even provisional ones) with rationale
+- Capture new questions as they emerge
 - Keep "Current Thinking" updated
+
+Then commit. The file is the source of truth, not the conversation.
 
 ## Common Pitfalls
 
