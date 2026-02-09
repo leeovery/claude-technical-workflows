@@ -4,7 +4,7 @@
 
 ---
 
-This step invokes the synthesis agent to deduplicate, group, and normalize analysis findings into proposed plan tasks.
+This step invokes the synthesis agent to read analysis findings, synthesize them into tasks, and create those tasks in the plan.
 
 ---
 
@@ -22,35 +22,24 @@ Pass via the orchestrator's prompt:
 3. **Topic name** — the implementation topic
 4. **Cycle number** — the current analysis cycle number
 5. **Specification path** — from the plan's frontmatter (if available)
-
-**Re-invocation after user feedback** additionally includes:
-6. **User feedback** — the user's comments on proposed tasks
-7. **Previous report path** — the report from the previous synthesis
+6. **Plan path** — the implementation plan path
+7. **Plan format reading adapter path** — `../../../technical-planning/references/output-formats/{format}/reading.md`
+8. **Plan format authoring adapter path** — `../../../technical-planning/references/output-formats/{format}/authoring.md`
 
 ---
 
 ## Expected Result
 
-The agent writes a consolidated report to:
+The agent writes a report to `docs/workflow/implementation/{topic}-analysis-report.md` and creates tasks in the plan if actionable findings exist.
+
+Returns a brief status:
 
 ```
-docs/workflow/implementation/{topic}-analysis-report.md
+STATUS: tasks_created | clean
+TASKS_CREATED: {N}
+PHASE: {phase number, if tasks created}
+SUMMARY: {1-2 sentences}
 ```
 
-Report structure:
-
-```yaml
----
-topic: {topic}
-cycle: {N}
-total_findings: {N}
-deduplicated_findings: {N}
-proposed_tasks: {N}
----
-```
-
-Followed by:
-- **Proposed Tasks** — each with full task content (Problem/Solution/Outcome/Do/AC/Tests), source agents, and severity
-- **Discarded Findings** — each with reason for discarding
-
-The orchestrator reads this report after the synthesizer returns to present findings to the user.
+- `tasks_created`: new tasks added to the plan — orchestrator should commit and route to task loop
+- `clean`: no actionable findings — orchestrator should proceed to completion

@@ -4,7 +4,7 @@
 
 ---
 
-Run one analysis cycle: check the cycle gate, analyze the implementation, synthesize findings, present to user, and create plan tasks if approved. Each cycle follows stages A through F sequentially. Always start at **A. Cycle Gate**.
+Run one analysis cycle: check the cycle gate, checkpoint, analyze the implementation, and synthesize findings into plan tasks. Each cycle follows stages A through D sequentially. Always start at **A. Cycle Gate**.
 
 After this loop completes with new tasks, the skill returns to Step 6 (task loop) to execute them, then re-enters this loop for the next cycle.
 
@@ -13,9 +13,7 @@ A. Cycle gate (check analysis_cycle, warn if over limit)
 B. Git checkpoint
 C. Dispatch analysis agents → invoke-analysis.md
 D. Dispatch synthesis agent → invoke-synthesizer.md
-E. Present findings (user gate)
-F. Create tasks in plan → invoke-task-writer.md
-→ Return to skill
+→ Route on result
 ```
 
 ---
@@ -91,59 +89,9 @@ Load **[invoke-synthesizer.md](invoke-synthesizer.md)** and follow its instructi
 
 **STOP.** Do not proceed until the synthesizer has returned.
 
-→ Proceed to **E. Present Findings**.
+→ If `STATUS: clean`, return to the skill for **Step 8**.
 
----
-
-## E. Present Findings
-
-Read the report from `docs/workflow/implementation/{topic}-analysis-report.md`.
-
-If zero proposed tasks:
-
-> "Analysis cycle {N}: no issues found."
-
-→ Return to the skill for **Step 8**.
-
-Otherwise, present grouped findings conversationally:
-
-> **Analysis cycle {N}: {K} proposed tasks**
->
-> {For each proposed task:}
-> **{number}. {title}** ({severity})
-> Sources: {agents}
-> {Problem summary}
-> {Solution summary}
->
-> · · ·
->
-> - **`a`/`all`** — Approve all, add to plan
-> - **`1,3,5`** — Approve specific tasks by number
-> - **`n`/`none`** — Skip, mark complete as-is
-> - **Comment** — Feedback (re-invokes synthesizer with your notes)
-
-**STOP.** Wait for user input.
-
-#### If `none`
-
-→ Return to the skill for **Step 8**.
-
-#### If comment
-
-Re-invoke the synthesizer with the user's feedback and the previous report. Return to the top of **E. Present Findings** when the synthesizer returns.
-
-#### If `all` or specific numbers
-
-→ Proceed to **F. Create Tasks in Plan**.
-
----
-
-## F. Create Tasks in Plan
-
-1. Calculate the next phase number: read the plan via the reading adapter and find the max existing phase, then add 1.
-2. Load **[invoke-task-writer.md](invoke-task-writer.md)** and follow its instructions. Pass the approved task content from the report.
-3. **STOP.** Do not proceed until the task writer has returned.
-4. Commit:
+→ If `STATUS: tasks_created`, commit and return to the skill:
 
 ```
 impl({topic}): add analysis phase {N} ({K} tasks)

@@ -28,47 +28,27 @@ Dispatch **all three in parallel** via the Task tool. Each agent receives the sa
 2. **Specification path** — from the plan's frontmatter (if available)
 3. **Project skill paths** — from `project_skills` in the implementation tracking file
 4. **code-quality.md path** — `../code-quality.md`
+5. **Output file path** — each agent writes its own findings file
 
 ### Agent 1: Duplication
 
 - **Agent path**: `../../../../agents/implementation-analysis-duplication.md`
-- **Output file**: `docs/workflow/implementation/{topic}-analysis-duplication.md`
+- **Output file path**: `docs/workflow/implementation/{topic}-analysis-duplication.md`
 
 ### Agent 2: Standards
 
 - **Agent path**: `../../../../agents/implementation-analysis-standards.md`
-- **Output file**: `docs/workflow/implementation/{topic}-analysis-standards.md`
+- **Output file path**: `docs/workflow/implementation/{topic}-analysis-standards.md`
 
 ### Agent 3: Architecture
 
 - **Agent path**: `../../../../agents/implementation-analysis-architecture.md`
-- **Output file**: `docs/workflow/implementation/{topic}-analysis-architecture.md`
+- **Output file path**: `docs/workflow/implementation/{topic}-analysis-architecture.md`
 
 ---
 
 ## Wait for Completion
 
-**STOP.** Do not proceed until all three agents have returned their findings.
+**STOP.** Do not proceed until all three agents have returned.
 
-Write each agent's output to its respective file in `docs/workflow/implementation/`.
-
-If any agent fails (error, timeout), record the failure and continue with the remaining agents' findings. Do not re-invoke failed agents — proceed with whatever findings are available.
-
----
-
-## Expected Output
-
-Each agent returns a structured report:
-
-```
-AGENT: {name}
-FINDINGS:
-- FINDING: {title}
-  SEVERITY: high | medium | low
-  FILES: {file:line, file:line}
-  DESCRIPTION: {what's wrong}
-  RECOMMENDATION: {what to do about it}
-SUMMARY: {1-3 sentences}
-```
-
-Or `FINDINGS: none` if no issues were found.
+Each agent writes its findings to its own output file and returns a brief status. If any agent fails (error, timeout), record the failure and continue — the synthesizer works with whatever findings files are available.
