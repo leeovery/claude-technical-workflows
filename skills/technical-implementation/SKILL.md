@@ -242,7 +242,7 @@ Load **[steps/task-loop.md](references/steps/task-loop.md)** and follow its inst
 
 ---
 
-## Step 7: Analysis and Refinement
+## Step 7: Analysis Loop
 
 If the task loop exited early (user chose `stop`), skip to **Step 8**.
 
