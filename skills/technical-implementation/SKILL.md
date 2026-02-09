@@ -238,13 +238,15 @@ Otherwise, present discovery findings to the user:
 
 Load **[steps/task-loop.md](references/steps/task-loop.md)** and follow its instructions as written.
 
-→ After the loop completes, proceed to **Step 7**.
+After the loop completes:
+
+→ If the task loop exited early (user chose `stop`), proceed to **Step 8**.
+
+→ Otherwise, proceed to **Step 7**.
 
 ---
 
 ## Step 7: Analysis Loop
-
-If the task loop exited early (user chose `stop`), skip to **Step 8**.
 
 Load **[steps/analysis-loop.md](references/steps/analysis-loop.md)** and follow its instructions as written.
 
