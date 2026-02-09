@@ -77,9 +77,7 @@ impl({topic}): pre-analysis checkpoint
 
 ## C. Dispatch Analysis Agents
 
-Load **[invoke-analysis.md](invoke-analysis.md)** and follow its instructions. Dispatch all 3 analysis agents in parallel.
-
-**STOP.** Do not proceed until all agents have returned.
+Load **[invoke-analysis.md](invoke-analysis.md)** and follow its instructions.
 
 → Proceed to **D. Dispatch Synthesis Agent**.
 
@@ -87,9 +85,7 @@ Load **[invoke-analysis.md](invoke-analysis.md)** and follow its instructions. D
 
 ## D. Dispatch Synthesis Agent
 
-Load **[invoke-synthesizer.md](invoke-synthesizer.md)** and invoke the synthesizer.
-
-**STOP.** Do not proceed until the synthesizer has returned.
+Load **[invoke-synthesizer.md](invoke-synthesizer.md)** and follow its instructions.
 
 → Proceed to **E. Present Findings**.
 
