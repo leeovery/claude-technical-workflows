@@ -79,6 +79,12 @@ Load **[invoke-analysis.md](invoke-analysis.md)** and follow its instructions.
 
 **STOP.** Do not proceed until all agents have returned.
 
+Commit the analysis findings:
+
+```
+impl({topic}): analysis cycle {N} — findings
+```
+
 → Proceed to **D. Dispatch Synthesis Agent**.
 
 ---
@@ -89,6 +95,12 @@ Load **[invoke-synthesizer.md](invoke-synthesizer.md)** and follow its instructi
 
 **STOP.** Do not proceed until the synthesizer has returned.
 
+Commit the synthesis output:
+
+```
+impl({topic}): analysis cycle {N} — synthesis
+```
+
 → If `STATUS: clean`, return to the skill for **Step 8**.
 
 → If `STATUS: tasks_proposed`, proceed to **E. Approval Gate**.
@@ -97,7 +109,7 @@ Load **[invoke-synthesizer.md](invoke-synthesizer.md)** and follow its instructi
 
 ## E. Approval Gate
 
-Read the staging file from `docs/workflow/implementation/{topic}/analysis-tasks.md`.
+Read the staging file from `docs/workflow/implementation/{topic}/analysis-tasks-c{cycle-number}.md`.
 
 Present an overview:
 
@@ -155,7 +167,15 @@ After all tasks processed:
 
 → If any tasks have `status: approved`, proceed to **F. Create Tasks in Plan**.
 
-→ If all tasks were skipped, return to the skill for **Step 8**.
+→ If all tasks were skipped:
+
+Commit the staging file updates:
+
+```
+impl({topic}): analysis cycle {N} — tasks skipped
+```
+
+Return to the skill for **Step 8**.
 
 ---
 
@@ -165,7 +185,7 @@ Load **[invoke-task-writer.md](invoke-task-writer.md)** and follow its instructi
 
 **STOP.** Do not proceed until the task writer has returned.
 
-Commit:
+Commit all analysis and plan changes (staging file, plan tasks, Plan Index File):
 
 ```
 impl({topic}): add analysis phase {N} ({K} tasks)

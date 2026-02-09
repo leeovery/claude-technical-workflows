@@ -18,6 +18,7 @@ You receive via the orchestrator's prompt:
 3. **Project skill paths** — relevant `.claude/skills/` paths for framework conventions
 4. **code-quality.md path** — quality standards
 5. **Topic name** — the implementation topic
+6. **Cycle number** — which analysis cycle this is (used in output file naming)
 
 ## Your Focus
 
@@ -33,7 +34,7 @@ You receive via the orchestrator's prompt:
 3. **Read specification** — understand design intent
 4. **Read all implementation files** — build a mental map of the full codebase
 5. **Analyze for duplication** — compare patterns across files, identify extraction candidates
-6. **Write findings** to `docs/workflow/implementation/{topic}/analysis-duplication.md`
+6. **Write findings** to `docs/workflow/implementation/{topic}/analysis-duplication-c{cycle-number}.md`
 
 ## Hard Rules
 
@@ -47,7 +48,7 @@ You receive via the orchestrator's prompt:
 
 ## Output File Format
 
-Write to `docs/workflow/implementation/{topic}/analysis-duplication.md`:
+Write to `docs/workflow/implementation/{topic}/analysis-duplication-c{cycle-number}.md`:
 
 ```
 AGENT: duplication

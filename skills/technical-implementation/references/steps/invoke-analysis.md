@@ -29,6 +29,7 @@ Dispatch **all three in parallel** via the Task tool. Each agent receives the sa
 3. **Project skill paths** — from `project_skills` in the implementation tracking file
 4. **code-quality.md path** — `../code-quality.md`
 5. **Topic name** — the implementation topic
+6. **Cycle number** — the current analysis cycle number (from `analysis_cycle` in the tracking file)
 
 Each agent knows its own output path convention and writes findings independently.
 
