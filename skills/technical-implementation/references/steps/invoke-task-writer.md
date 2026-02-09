@@ -14,10 +14,11 @@ This step invokes the task writer agent to create plan tasks from approved analy
 
 Pass via the orchestrator's prompt:
 
-1. **Staging file path** — `docs/workflow/implementation/{topic}/analysis-tasks.md`
-2. **Plan path** — the implementation plan path
-3. **Plan format reading adapter path** — `../../../technical-planning/references/output-formats/{format}/reading.md`
-4. **Plan format authoring adapter path** — `../../../technical-planning/references/output-formats/{format}/authoring.md`
+1. **Topic name** — the implementation topic
+2. **Staging file path** — `docs/workflow/implementation/{topic}/analysis-tasks.md`
+3. **Plan path** — the implementation plan path
+4. **Plan format reading adapter path** — `../../../technical-planning/references/output-formats/{format}/reading.md`
+5. **Plan format authoring adapter path** — `../../../technical-planning/references/output-formats/{format}/authoring.md`
 
 ---
 

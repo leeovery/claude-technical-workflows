@@ -13,10 +13,11 @@ You receive the path to a staging file containing approved analysis tasks. Your 
 
 You receive via the orchestrator's prompt:
 
-1. **Staging file path** — path to the staging file with approved tasks
-2. **Plan path** — the implementation plan path
-3. **Plan format reading adapter path** — how to read tasks from the plan (for determining next phase number)
-4. **Plan format authoring adapter path** — how to create tasks in the plan
+1. **Topic name** — the implementation topic (used to scope tasks to the correct plan)
+2. **Staging file path** — path to the staging file with approved tasks
+3. **Plan path** — the implementation plan path
+4. **Plan format reading adapter path** — how to read tasks from the plan (for determining next phase number)
+5. **Plan format authoring adapter path** — how to create tasks in the plan
 
 ## Your Process
 
@@ -24,7 +25,7 @@ You receive via the orchestrator's prompt:
 2. **Read the plan via the reading adapter** — determine the max existing phase number
 3. **Calculate next phase number** — max existing phase + 1
 4. **Read the authoring adapter** — understand how to create tasks in this format
-5. **Create tasks in the plan** — follow the authoring adapter's instructions for each approved task
+5. **Create tasks in the plan** — follow the authoring adapter's instructions for each approved task, using the topic name to scope tasks to this plan (e.g., directory paths, task ID prefixes, project association)
 
 ## Hard Rules
 
