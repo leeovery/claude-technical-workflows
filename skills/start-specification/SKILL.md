@@ -110,17 +110,3 @@ Based on discovery state, load exactly ONE reference file:
 
 → Load **[display-specs-menu.md](references/display-specs-menu.md)** and follow its instructions.
 
----
-
-## References
-
-- [display-blocks.md](references/display-blocks.md) — Block scenarios (no discussions / none concluded)
-- [display-single.md](references/display-single.md) — Single concluded discussion (routes by spec coverage)
-  - [display-single-no-spec.md](references/display-single-no-spec.md) — No spec exists
-  - [display-single-has-spec.md](references/display-single-has-spec.md) — Individual spec exists
-  - [display-single-grouped.md](references/display-single-grouped.md) — Covered by grouped spec
-- [display-analyze.md](references/display-analyze.md) — Multiple discussions, no specs, prompt for analysis
-- [display-groupings.md](references/display-groupings.md) — Show groupings from cache
-- [display-specs-menu.md](references/display-specs-menu.md) — Existing specs menu with analysis option
-- [analysis-flow.md](references/analysis-flow.md) — Context gathering, coupling analysis, cache
-- [confirm-and-handoff.md](references/confirm-and-handoff.md) — Confirm selection, invoke skill
