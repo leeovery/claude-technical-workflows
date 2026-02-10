@@ -33,17 +33,23 @@ before they can be included in a specification.
 
 ### Cache-Aware Message
 
-**If cache status is `"none"`:**
+#### If cache status is "none"
+
 ```
 ---
 These discussions will be analyzed for natural groupings to determine
 how they should be organized into specifications. Results are cached
 and reused until discussions change.
 
-Proceed with analysis? (y/n)
+· · · · · · · · · · · ·
+Proceed with analysis?
+- **`y`/`yes`**
+- **`n`/`no`**
+· · · · · · · · · · · ·
 ```
 
-**If cache status is `"stale"`:**
+#### If cache status is "stale"
+
 ```
 ---
 A previous grouping analysis exists but is outdated — discussions
@@ -52,12 +58,16 @@ have changed since it was created.
 These discussions will be re-analyzed for natural groupings. Results
 are cached and reused until discussions change.
 
-Proceed with analysis? (y/n)
+· · · · · · · · · · · ·
+Proceed with analysis?
+- **`y`/`yes`**
+- **`n`/`no`**
+· · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
 
-## If User Confirms (y)
+#### If user confirms (y)
 
 If cache is stale, delete it first:
 ```bash
@@ -66,7 +76,7 @@ rm docs/workflow/.cache/discussion-consolidation-analysis.md
 
 Load **[analysis-flow.md](analysis-flow.md)** and follow its instructions.
 
-## If User Declines (n)
+#### If user declines (n)
 
 ```
 Understood. You can run /start-discussion to continue working on

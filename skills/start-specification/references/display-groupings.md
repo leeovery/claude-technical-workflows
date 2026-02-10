@@ -24,6 +24,17 @@ For each grouping, check if a grouped specification exists:
   - If NOT found → status is `pending` (new source not yet in spec)
 - Spec status: show actual status with extraction count `({X} of {Y} sources extracted)`
 
+**Regressed sources:** After processing the grouping's discussions, check the spec's
+`sources` array from discovery. For any source where `discussion_status` is neither
+`concluded` nor `not-found`, and the source is not already in the grouping:
+- Add it to the discussion tree with status `(extracted, reopened)`
+
+These represent sources that were incorporated but whose discussions have since
+regressed to in-progress. Sources with `discussion_status: "not-found"` (deleted
+discussions) are silently skipped — there is nothing actionable.
+
+**Extraction count:** Y = count of unique discussions in (spec sources ∪ grouping members). X = count of those with `incorporated` status in spec sources. This ensures regressed sources that dropped out of the grouping still count toward Y.
+
 **If NO grouped spec exists:**
 - For each discussion: status is `ready`
 - Spec status: `none`
@@ -73,6 +84,7 @@ Key:
     extracted — content has been incorporated into the specification
     pending   — listed as source but content not yet extracted
     ready     — concluded and available to be specified
+    reopened  — was extracted but discussion has regressed to in-progress
 
   Spec status:
     none        — no specification file exists yet
@@ -94,7 +106,8 @@ Numbered menu with verb logic per grouping:
 - No spec exists → **Start** "{Name}" — {N} ready discussions
 - Spec is `in-progress` with pending sources → **Continue** "{Name}" — {N} source(s) pending extraction
 - Spec is `in-progress` with all extracted → **Continue** "{Name}" — all sources extracted
-- Spec is `concluded` → **Refine** "{Name}" — concluded spec
+- Spec is `concluded` with no pending sources → **Refine** "{Name}" — concluded spec
+- Spec is `concluded` with pending sources → **Continue** "{Name}" — {N} new source(s) to extract
 
 After the per-grouping items, add meta options:
 
@@ -115,20 +128,25 @@ After the per-grouping items, add meta options:
 ```
 
 ```
-Enter choice (1-{max}):
+· · · · · · · · · · · ·
+Select an option (enter number):
 ```
 
 **STOP.** Wait for user response.
 
 ## Menu Routing
 
-**If user picks a grouping** → Load **[confirm-and-handoff.md](confirm-and-handoff.md)** and follow its instructions.
+#### If user picks a grouping
 
-**If user picks "Unify all":**
+→ Load **[confirm-and-handoff.md](confirm-and-handoff.md)** and follow its instructions.
+
+#### If user picks "Unify all"
+
 1. Update the cache: rewrite `docs/workflow/.cache/discussion-consolidation-analysis.md` with a single "Unified" grouping containing all concluded discussions. Keep the same checksum, update the generated timestamp. Add note: `Custom groupings confirmed by user (unified).`
 2. Load **[confirm-and-handoff.md](confirm-and-handoff.md)** with spec name "Unified" and all concluded discussions as sources.
 
-**If user picks "Re-analyze":**
+#### If user picks "Re-analyze"
+
 1. Delete the cache:
 ```bash
 rm docs/workflow/.cache/discussion-consolidation-analysis.md

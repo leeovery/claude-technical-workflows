@@ -12,7 +12,8 @@ Present the confirmation based on what was selected.
 
 - No spec exists → **"Creating"**
 - Spec is `in-progress` → **"Continuing"**
-- Spec is `concluded` → **"Refining"**
+- Spec is `concluded` with pending sources → **"Continuing"**
+- Spec is `concluded` with all sources extracted → **"Refining"**
 
 ### Creating a New Spec (no existing spec)
 
@@ -25,7 +26,11 @@ Sources:
 
 Output: docs/workflow/specification/{kebab-case-name}.md
 
-Proceed? (y/n)
+· · · · · · · · · · · ·
+Proceed?
+- **`y`/`yes`**
+- **`n`/`no`**
+· · · · · · · · · · · ·
 ```
 
 ### Creating a New Spec That Supersedes Individual Specs
@@ -44,7 +49,11 @@ Output: docs/workflow/specification/{kebab-case-name}.md
 After completion:
   specification/{discussion-name}.md → marked as superseded
 
-Proceed? (y/n)
+· · · · · · · · · · · ·
+Proceed?
+- **`y`/`yes`**
+- **`n`/`no`**
+· · · · · · · · · · · ·
 ```
 
 ### Continuing a Spec With Pending Sources
@@ -60,7 +69,11 @@ Sources to extract:
 Previously extracted (for reference):
   • {discussion-name}
 
-Proceed? (y/n)
+· · · · · · · · · · · ·
+Proceed?
+- **`y`/`yes`**
+- **`n`/`no`**
+· · · · · · · · · · · ·
 ```
 
 ### Continuing a Spec With All Sources Extracted
@@ -74,7 +87,31 @@ All sources extracted:
   • {discussion-name}
   • {discussion-name}
 
-Proceed? (y/n)
+· · · · · · · · · · · ·
+Proceed?
+- **`y`/`yes`**
+- **`n`/`no`**
+· · · · · · · · · · · ·
+```
+
+### Continuing a Concluded Spec With New Sources
+
+```
+Continuing specification: {Title Case Name}
+
+Existing: docs/workflow/specification/{kebab-case-name}.md (concluded)
+
+New sources to extract:
+  • {discussion-name} (pending)
+
+Previously extracted (for reference):
+  • {discussion-name}
+
+· · · · · · · · · · · ·
+Proceed?
+- **`y`/`yes`**
+- **`n`/`no`**
+· · · · · · · · · · · ·
 ```
 
 ### Refining a Concluded Spec
@@ -87,7 +124,11 @@ Existing: docs/workflow/specification/{kebab-case-name}.md (concluded)
 All sources extracted:
   • {discussion-name}
 
-Proceed? (y/n)
+· · · · · · · · · · · ·
+Proceed?
+- **`y`/`yes`**
+- **`n`/`no`**
+· · · · · · · · · · · ·
 ```
 
 ### Unify All (with existing specs to supersede)
@@ -106,7 +147,11 @@ Existing specifications to incorporate:
 
 Output: docs/workflow/specification/unified.md
 
-Proceed? (y/n)
+· · · · · · · · · · · ·
+Proceed?
+- **`y`/`yes`**
+- **`n`/`no`**
+· · · · · · · · · · · ·
 ```
 
 ### Unify All (no existing specs)
@@ -121,16 +166,20 @@ Sources:
 
 Output: docs/workflow/specification/unified.md
 
-Proceed? (y/n)
+· · · · · · · · · · · ·
+Proceed?
+- **`y`/`yes`**
+- **`n`/`no`**
+· · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
 
-## If User Confirms (y)
+## If user confirms (y)
 
 Proceed to **Step 2: Invoke Skill**.
 
-## If User Declines (n)
+## If user declines (n)
 
 **For single discussion (no menu to return to):**
 ```
@@ -200,6 +249,25 @@ Sources for reference:
 - docs/workflow/discussion/{discussion-name}.md
 
 Context: This specification already exists. Review and refine it based on the source discussions.
+
+---
+Invoke the technical-specification skill.
+```
+
+### Handoff: Continuing a Concluded Spec With New Sources
+
+```
+Specification session for: {Title Case Name}
+
+Continuing existing: docs/workflow/specification/{kebab-case-name}.md (concluded)
+
+New sources to extract:
+- docs/workflow/discussion/{new-discussion-name}.md
+
+Previously extracted (for reference):
+- docs/workflow/discussion/{existing-discussion-name}.md
+
+Context: This specification was previously concluded. New source discussions have been identified. Extract and incorporate their content while maintaining consistency with the existing specification.
 
 ---
 Invoke the technical-specification skill.

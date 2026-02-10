@@ -90,16 +90,20 @@ Otherwise, at least one concluded discussion exists. → Proceed to **Step 3**.
 
 Based on discovery state, load exactly ONE reference file:
 
-**If `concluded_count == 1`:**
+#### If concluded_count == 1
+
 → Load **[display-single.md](references/display-single.md)** and follow its instructions.
 
-**If `concluded_count >= 2` and cache status is `"valid"`:**
+#### If concluded_count >= 2 and cache status is "valid"
+
 → Load **[display-groupings.md](references/display-groupings.md)** and follow its instructions.
 
-**If `concluded_count >= 2` and `spec_count == 0` and cache status is `"none"` or `"stale"`:**
+#### If concluded_count >= 2, spec_count == 0, and cache is "none" or "stale"
+
 → Load **[display-analyze.md](references/display-analyze.md)** and follow its instructions.
 
-**If `concluded_count >= 2` and `spec_count >= 1` and cache status is `"none"` or `"stale"`:**
+#### If concluded_count >= 2, spec_count >= 1, and cache is "none" or "stale"
+
 → Load **[display-specs-menu.md](references/display-specs-menu.md)** and follow its instructions.
 
 ---

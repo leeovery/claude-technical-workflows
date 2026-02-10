@@ -26,7 +26,12 @@ For each non-superseded specification from discovery output, display as nested t
       └─ {source-name} (extracted)
 ```
 
-Determine discussion status from the spec's `sources` array: `incorporated` → `extracted`, `pending` → `pending`.
+Determine discussion status from the spec's `sources` array:
+- `incorporated` + `discussion_status: concluded` or `not-found` → `extracted`
+- `incorporated` + `discussion_status: other` (e.g. `in-progress`) → `extracted, reopened`
+- `pending` → `pending`
+
+Extraction count: X = sources with `status: incorporated`, Y = total source count from the spec's `sources` array.
 
 ### Unassigned Discussions
 
@@ -58,6 +63,7 @@ Key:
 
   Discussion status:
     extracted — content has been incorporated into the specification
+    reopened  — was extracted but discussion has regressed to in-progress
 
   Spec status:
     in-progress — specification work is ongoing
@@ -66,13 +72,15 @@ Key:
 
 ### Cache-Aware Message
 
-**If cache status is `"none"`:**
+#### If cache status is "none"
+
 ```
 ---
 No grouping analysis exists.
 ```
 
-**If cache status is `"stale"`:**
+#### If cache status is "stale"
+
 ```
 ---
 A previous grouping analysis exists but is outdated — discussions
@@ -87,25 +95,32 @@ have changed since it was created. Re-analysis is required.
    specification names are preserved. You can provide guidance
    in the next step.
 2. Continue "{Spec Name}" — in-progress
-3. Refine "{Spec Name}" — concluded
+3. Continue "{Spec Name}" — {N} source(s) pending extraction
+4. Refine "{Spec Name}" — concluded
+```
 
-Enter choice (1-{max}):
+```
+· · · · · · · · · · · ·
+Select an option (enter number):
 ```
 
 List "Analyze for groupings (recommended)" first, then one entry per existing non-superseded specification. Use verb logic:
 - Spec is `in-progress` → **Continue**
-- Spec is `concluded` → **Refine**
+- Spec is `concluded` with pending sources → **Continue** "{Name}" — {N} source(s) pending extraction
+- Spec is `concluded` with no pending sources → **Refine**
 
 **STOP.** Wait for user response.
 
 ## Menu Routing
 
-**If user picks "Analyze for groupings":**
+#### If user picks "Analyze for groupings"
+
 1. If cache is stale, delete it first:
 ```bash
 rm docs/workflow/.cache/discussion-consolidation-analysis.md
 ```
 2. Load **[analysis-flow.md](analysis-flow.md)** and follow its instructions.
 
-**If user picks "Continue" for a spec:**
+#### If user picks "Continue" or "Refine" for a spec
+
 Load **[confirm-and-handoff.md](confirm-and-handoff.md)** and follow its instructions. The selected spec and its sources become the context for confirmation.

@@ -46,16 +46,34 @@ extract_array_field() {
 }
 
 # Helper: Extract sources with status from object format
-# Outputs YAML-formatted source entries with name and status
-# Usage: extract_sources_with_status <file>
+# Outputs YAML-formatted source entries with name, status, and discussion_status
+# Usage: extract_sources_with_status <file> [discussion_dir]
 #
 # Note: This only handles the object format. Legacy simple array format
 # is converted by migration 004 before discovery runs.
 extract_sources_with_status() {
     local file="$1"
+    local discussion_dir="$2"
     local in_sources=false
     local current_name=""
     local current_status=""
+
+    # Helper: output a single source entry with discussion_status lookup
+    _emit_source() {
+        local name="$1"
+        local status="$2"
+        echo "      - name: \"$name\""
+        echo "        status: \"$status\""
+        if [ -n "$discussion_dir" ]; then
+            if [ -f "$discussion_dir/${name}.md" ]; then
+                local disc_status
+                disc_status=$(extract_field "$discussion_dir/${name}.md" "status")
+                echo "        discussion_status: \"${disc_status:-unknown}\""
+            else
+                echo "        discussion_status: \"not-found\""
+            fi
+        fi
+    }
 
     # Read frontmatter and parse sources block
     while IFS= read -r line; do
@@ -69,8 +87,7 @@ extract_sources_with_status() {
         if $in_sources && [[ "$line" =~ ^[a-z_]+: ]] && [[ ! "$line" =~ ^[[:space:]] ]]; then
             # Output last source if pending
             if [ -n "$current_name" ]; then
-                echo "      - name: \"$current_name\""
-                echo "        status: \"${current_status:-incorporated}\""
+                _emit_source "$current_name" "${current_status:-incorporated}"
             fi
             break
         fi
@@ -80,8 +97,7 @@ extract_sources_with_status() {
             if [[ "$line" =~ ^[[:space:]]*-[[:space:]]*name:[[:space:]]*(.+)$ ]]; then
                 # Output previous source if exists
                 if [ -n "$current_name" ]; then
-                    echo "      - name: \"$current_name\""
-                    echo "        status: \"${current_status:-incorporated}\""
+                    _emit_source "$current_name" "${current_status:-incorporated}"
                 fi
                 current_name="${BASH_REMATCH[1]}"
                 current_name=$(echo "$current_name" | sed 's/^"//' | sed 's/"$//' | xargs)
@@ -96,8 +112,7 @@ extract_sources_with_status() {
 
     # Output last source if pending (end of frontmatter)
     if [ -n "$current_name" ]; then
-        echo "      - name: \"$current_name\""
-        echo "        status: \"${current_status:-incorporated}\""
+        _emit_source "$current_name" "${current_status:-incorporated}"
     fi
 }
 
@@ -165,7 +180,7 @@ if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
         fi
 
         # Extract sources with status (handles both old and new format)
-        sources_output=$(extract_sources_with_status "$file")
+        sources_output=$(extract_sources_with_status "$file" "$DISCUSSION_DIR")
         if [ -n "$sources_output" ]; then
             echo "    sources:"
             echo "$sources_output"

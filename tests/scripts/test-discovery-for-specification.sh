@@ -325,6 +325,63 @@ EOF
 
 
 #
+# Test: Spec sources include discussion_status
+#
+test_spec_sources_discussion_status() {
+    echo -e "${YELLOW}Test: Spec sources include discussion_status${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/discussion"
+    mkdir -p "$TEST_DIR/docs/workflow/specification"
+
+    cat > "$TEST_DIR/docs/workflow/discussion/auth-flow.md" << 'EOF'
+---
+topic: auth-flow
+status: concluded
+date: 2026-01-20
+---
+
+# Discussion: Auth Flow
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/discussion/api-design.md" << 'EOF'
+---
+topic: api-design
+status: in-progress
+date: 2026-01-19
+---
+
+# Discussion: API Design
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/specification/combined.md" << 'EOF'
+---
+topic: combined
+status: in-progress
+type: feature
+date: 2026-01-21
+sources:
+  - name: auth-flow
+    status: incorporated
+  - name: api-design
+    status: incorporated
+  - name: deleted-topic
+    status: incorporated
+---
+
+# Specification: Combined
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'discussion_status: "concluded"' "auth-flow has discussion_status concluded"
+    assert_contains "$output" 'discussion_status: "in-progress"' "api-design has discussion_status in-progress (regressed)"
+    assert_contains "$output" 'discussion_status: "not-found"' "deleted-topic has discussion_status not-found"
+
+    echo ""
+}
+
+#
 # Test: Spec with superseded_by
 #
 test_spec_superseded() {
@@ -872,6 +929,7 @@ test_spec_with_hr_in_body
 test_spec_empty_sources
 test_discussion_with_hr_in_body
 test_spec_count_excludes_superseded
+test_spec_sources_discussion_status
 
 #
 # Summary
