@@ -56,4 +56,4 @@ Auto-proceed. Verb rule:
 - Spec is `concluded` with pending sources → **"Continuing"**
 - Spec is `concluded` with all sources extracted → **"Refining"**
 
-Load **[confirm-and-handoff.md](confirm-and-handoff.md)** and follow its instructions.
+→ Load **[confirm-and-handoff.md](confirm-and-handoff.md)** and follow its instructions.

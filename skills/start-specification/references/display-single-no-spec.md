@@ -49,4 +49,6 @@ Key:
 Automatically proceeding with "{Title Case Name}".
 ```
 
-Auto-proceed with verb **"Creating"**. Load **[confirm-and-handoff.md](confirm-and-handoff.md)** and follow its instructions.
+Auto-proceed with verb **"Creating"**.
+
+→ Load **[confirm-and-handoff.md](confirm-and-handoff.md)** and follow its instructions.
