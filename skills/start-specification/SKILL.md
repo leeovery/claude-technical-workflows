@@ -98,15 +98,15 @@ Based on discovery state, load exactly ONE reference file:
 
 → Load **[display-single.md](references/display-single.md)** and follow its instructions.
 
-#### If concluded_count >= 2 and cache status is "valid"
+#### If cache status is "valid"
 
 → Load **[display-groupings.md](references/display-groupings.md)** and follow its instructions.
 
-#### If concluded_count >= 2, spec_count == 0, and cache is "none" or "stale"
+#### If spec_count == 0 and cache is "none" or "stale"
 
 → Load **[display-analyze.md](references/display-analyze.md)** and follow its instructions.
 
-#### If concluded_count >= 2, spec_count >= 1, and cache is "none" or "stale"
+#### Otherwise
 
 → Load **[display-specs-menu.md](references/display-specs-menu.md)** and follow its instructions.
 
