@@ -4,7 +4,7 @@
 
 ---
 
-## Step 1: Gather Analysis Context
+## A. Gather Analysis Context
 
 ```
 Before analyzing, is there anything about how these discussions relate
@@ -20,7 +20,11 @@ Your context (or 'none'):
 
 **STOP.** Wait for user response. Note their input for the analysis.
 
-## Step 2: Analyze Discussions
+→ Proceed to **B. Analyze Discussions**.
+
+---
+
+## B. Analyze Discussions
 
 **This step is critical. You MUST read every concluded discussion document thoroughly.**
 
@@ -51,7 +55,11 @@ When forming groupings:
 - Only create new names for genuinely new groupings with no overlap
 - If an anchored spec's discussions are now scattered across multiple new groupings, note this as a **naming conflict** to present to the user
 
-## Step 3: Save to Cache
+→ Proceed to **C. Save to Cache**.
+
+---
+
+## C. Save to Cache
 
 Create the cache directory if needed:
 ```bash
@@ -92,6 +100,4 @@ discussion_files:
 {Note any naming conflicts with anchored specs here}
 ```
 
-## After Analysis
-
-Load **[display-groupings.md](display-groupings.md)** and follow its instructions to present the results.
+→ Load **[display-groupings.md](display-groupings.md)** and follow its instructions.
