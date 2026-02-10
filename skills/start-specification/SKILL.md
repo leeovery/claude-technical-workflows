@@ -210,13 +210,13 @@ Check `cache.status` from discovery to determine which options to present.
 ##### If `cache.status: "valid"`
 
 ```
-· · ·
-
+· · · · · · · · · · · ·
 What would you like to do?
 
 - **`c`/`continue`** — Resume work on a spec in progress
 - **`s`/`select`** — Choose from previously analyzed groupings ({cache.generated})
 - **`r`/`refresh`** — Fresh analysis of discussion relationships
+· · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
@@ -224,14 +224,14 @@ What would you like to do?
 ##### If `cache.status: "stale"`
 
 ```
-· · ·
-
+· · · · · · · · · · · ·
 What would you like to do?
 
 Note: A previous grouping analysis exists but is now outdated - discussion documents have changed since it was created. Re-analysis is required, but existing specification names will be preserved where groupings overlap.
 
 - **`c`/`continue`** — Resume work on a spec in progress
 - **`a`/`assess`** — Re-analyze discussions for combinations
+· · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
@@ -239,12 +239,12 @@ Note: A previous grouping analysis exists but is now outdated - discussion docum
 ##### If `cache.status: "none"`
 
 ```
-· · ·
-
+· · · · · · · · · · · ·
 What would you like to do?
 
 - **`c`/`continue`** — Resume work on a spec in progress
 - **`a`/`assess`** — Analyze discussions for combinations
+· · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
@@ -474,8 +474,7 @@ Coupling: {explanation}
 
 ---
 
-· · ·
-
+· · · · · · · · · · · ·
 How would you like to proceed?
 
 - **`p`/`proceed`** — As recommended (I'll ask which to start with)
@@ -483,6 +482,7 @@ How would you like to proceed?
 - **`i`/`individual`** — Create 1:1 specs (I'll ask which to start)
 - **`r`/`refresh`** — Re-analyze discussions
 - Combine differently — tell me your preferred groupings
+· · · · · · · · · · · ·
 ```
 
 **Status Legend:**
@@ -564,10 +564,10 @@ This reorganization affects multiple existing specifications:
 
 Moving discussions between established specifications requires deleting the affected specs and re-processing. The source material in your discussions is preserved.
 
-· · ·
-
+· · · · · · · · · · · ·
 - **`d`/`delete`** — Remove affected specs and create fresh ones for your new groupings
 - **`r`/`reconsider`** — Adjust your groupings to affect fewer specs
+· · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user choice.
@@ -608,11 +608,11 @@ Check if `docs/workflow/specification/unified.md` already exists.
 
 This will consolidate ALL {N} concluded discussions into a single specification.
 
-· · ·
-
+· · · · · · · · · · · ·
 Proceed with unified specification?
 - **`y`/`yes`** — Proceed
 - **`n`/`no`** — Cancel
+· · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user to confirm, then proceed to **Step 9** with all discussions as sources.
@@ -665,11 +665,11 @@ Output: docs/workflow/specification/{grouping-name}.md
 After completion:
 - specification/{topic-c}.md will be marked as superseded
 
-· · ·
-
+· · · · · · · · · · · ·
 Proceed?
 - **`y`/`yes`** — Proceed
 - **`n`/`no`** — Go back
+· · · · · · · · · · · ·
 ```
 
 #### If creating a NEW grouped specification (no existing specs)
@@ -684,11 +684,11 @@ Sources:
 
 Output: docs/workflow/specification/{grouping-name}.md
 
-· · ·
-
+· · · · · · · · · · · ·
 Proceed?
 - **`y`/`yes`** — Proceed
 - **`n`/`no`** — Go back
+· · · · · · · · · · · ·
 ```
 
 #### If CONTINUING an existing grouped specification
@@ -702,11 +702,11 @@ Sources:
 - docs/workflow/discussion/{topic-a}.md
 - docs/workflow/discussion/{topic-b}.md
 
-· · ·
-
+· · · · · · · · · · · ·
 Proceed?
 - **`y`/`yes`** — Proceed
 - **`n`/`no`** — Go back
+· · · · · · · · · · · ·
 ```
 
 #### If creating/continuing an INDIVIDUAL specification
@@ -719,11 +719,11 @@ Sources:
 
 Output: docs/workflow/specification/{topic}.md
 
-· · ·
-
+· · · · · · · · · · · ·
 Proceed?
 - **`y`/`yes`** — Proceed
 - **`n`/`no`** — Go back
+· · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user confirmation.

@@ -58,6 +58,10 @@ This process constructs a plan from a specification. A plan consists of:
 
 Follow every step in sequence. No steps are optional.
 
+## Output Formatting
+
+When announcing a new step, output `── ── ── ── ──` on its own line before the step heading.
+
 ---
 
 ## Step 0: Resume Detection
@@ -76,14 +80,14 @@ Note the current phase and task position from the `planning:` block.
 
 Load **[spec-change-detection.md](references/spec-change-detection.md)** to check whether the specification has changed since planning started. Then present the user with an informed choice:
 
-> "Found existing plan for **{topic}** (previously reached phase {N}, task {M}).
+> Found existing plan for **{topic}** (previously reached phase {N}, task {M}).
 >
 > {spec change summary from spec-change-detection.md}
 >
-> · · ·
->
+> · · · · · · · · · · · ·
 > - **`c`/`continue`** — Walk through the plan from the start. You can review, amend, or navigate at any point — including straight to the leading edge.
-> - **`r`/`restart`** — Erase all planning work for this topic and start fresh. This deletes the Plan Index File and any Authored Tasks. Other topics are unaffected."
+> - **`r`/`restart`** — Erase all planning work for this topic and start fresh. This deletes the Plan Index File and any Authored Tasks. Other topics are unaffected.
+> · · · · · · · · · · · ·
 
 **STOP.** Wait for user response.
 
@@ -120,12 +124,12 @@ First, choose the Output Format.
 
 Present the recommendation:
 
-> "Existing plans use **{format}**. Use the same format for consistency?
+> Existing plans use **{format}**. Use the same format for consistency?
 >
-> · · ·
->
+> · · · · · · · · · · · ·
 > - **`y`/`yes`** — Use {format}
-> - **`n`/`no`** — See all available formats"
+> - **`n`/`no`** — See all available formats
+> · · · · · · · · · · · ·
 
 **STOP.** Wait for user choice. If declined, fall through to the full list below.
 

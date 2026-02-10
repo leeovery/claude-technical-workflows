@@ -26,10 +26,10 @@ If `analysis_cycle > 3`:
 
 > **Analysis cycle {N} — this is beyond the standard 3 cycles.**
 >
-> · · ·
->
+> · · · · · · · · · · · ·
 > - **`s`/`skip`** — Skip analysis, proceed to completion
 > - **`p`/`proceed`** — Run analysis anyway
+> · · · · · · · · · · · ·
 
 **STOP.** Wait for user choice.
 
@@ -55,11 +55,11 @@ If there are unstaged changes or untracked files, categorize them:
 > - `{file}` ({status: modified/untracked})
 > - ...
 >
-> · · ·
->
+> · · · · · · · · · · · ·
 > - **`y`/`yes`** — Include all in the checkpoint commit
 > - **`s`/`skip`** — Exclude unexpected files, commit only implementation files
 > - **Comment** — Specify which to include
+> · · · · · · · · · · · ·
 
 **STOP.** Wait for user choice.
 
@@ -137,11 +137,11 @@ Then present each task with `status: pending` individually:
 > **Tests**:
 > {tests}
 >
-> · · ·
->
+> · · · · · · · · · · · ·
 > - **`a`/`approve`** — Approve this task
 > - **`s`/`skip`** — Skip this task
 > - **Comment** — Revise based on feedback
+> · · · · · · · · · · · ·
 
 **STOP.** Wait for user input.
 

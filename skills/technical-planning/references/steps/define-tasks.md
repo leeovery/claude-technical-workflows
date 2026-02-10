@@ -42,12 +42,12 @@ Present the task overview to the user.
 
 **STOP.** Ask:
 
-> · · ·
->
+> · · · · · · · · · · · ·
 > **To proceed:**
 > - **`y`/`yes`** — Approved.
 > - **Or tell me what to change** — reorder, split, merge, add, edit, or remove tasks.
 > - **Or navigate** — a different phase or task, or the leading edge.
+> · · · · · · · · · · · ·
 
 #### If the user provides feedback
 

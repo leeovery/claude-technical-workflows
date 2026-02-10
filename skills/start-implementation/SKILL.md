@@ -210,8 +210,7 @@ Then re-run /start-implementation.
 
 **Otherwise (multiple selectable plans, or implemented plans exist):**
 ```
-· · ·
-
+· · · · · · · · · · · ·
 Select a plan (enter number):
 ```
 
@@ -260,11 +259,11 @@ INCOMPLETE (planned but not implemented):
 - {topic}: task {task_id} not yet completed
   -> This task must be completed first.
 
-· · ·
-
+· · · · · · · · · · · ·
 - **`i`/`implement`** — Implement the blocking dependencies first
 - **`l`/`link`** — Run /link-dependencies to wire up recently completed plans
 - Mark as "satisfied externally" — tell me which dependency was implemented outside this workflow
+· · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
