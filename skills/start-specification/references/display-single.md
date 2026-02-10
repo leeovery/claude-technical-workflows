@@ -10,11 +10,13 @@ Convert discussion filename to title case (`auth-flow` → `Auth Flow`).
 
 ## Route by Spec Coverage
 
-#### If has_individual_spec is true
+Check if a spec covers this discussion — either by name match (`has_individual_spec`) or by listing it in a spec's `sources` array.
+
+#### If a spec covers this discussion and has a single source
 
 → Load **[display-single-has-spec.md](display-single-has-spec.md)** and follow its instructions.
 
-#### If any spec in the specifications array lists this discussion in its sources
+#### If a spec covers this discussion and has multiple sources
 
 → Load **[display-single-grouped.md](display-single-grouped.md)** and follow its instructions.
 
