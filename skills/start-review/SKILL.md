@@ -114,8 +114,7 @@ Available Plans:
   1. {topic-1} ({status}) - format: {format}, spec: {exists|missing}
   2. {topic-2} ({status}) - format: {format}, spec: {exists|missing}
 
-· · ·
-
+· · · · · · · · · · · ·
 Which plan would you like to review the implementation for? (Enter a number or name)
 ```
 
@@ -138,13 +137,13 @@ Auto-selecting: {topic} (only available plan)
 Ask the user what code to review:
 
 ```
-· · ·
-
+· · · · · · · · · · · ·
 What code should I review?
 
 - **`a`/`all`** — All changes since the plan was created
 - **`g`/`git`** — Identify from git status
 - Specific directories or files — tell me which
+· · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.

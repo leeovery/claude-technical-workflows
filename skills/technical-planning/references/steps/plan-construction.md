@@ -71,12 +71,12 @@ Present the task list to the user for review.
 
 > **Phase {N}: {Phase Name}** — {M} tasks.
 >
-> · · ·
->
+> · · · · · · · · · · · ·
 > **To proceed:**
 > - **`y`/`yes`** — Confirmed.
 > - **Or tell me what to change.**
 > - **Or navigate** — a different phase or task, or the leading edge.
+> · · · · · · · · · · · ·
 
 **STOP.** Wait for the user's response.
 

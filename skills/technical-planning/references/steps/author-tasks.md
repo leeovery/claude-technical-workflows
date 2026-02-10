@@ -31,12 +31,12 @@ After presenting, ask:
 
 > **Task {M} of {total}: {Task Name}**
 >
-> · · ·
->
+> · · · · · · · · · · · ·
 > **To proceed:**
 > - **`y`/`yes`** — Approved. I'll log it to the plan.
 > - **Or tell me what to change.**
 > - **Or navigate** — a different phase or task, or the leading edge.
+> · · · · · · · · · · · ·
 
 **STOP.** Wait for the user's response.
 

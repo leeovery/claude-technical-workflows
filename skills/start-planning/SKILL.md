@@ -155,8 +155,7 @@ Omit either section entirely if it has no entries.
 
 **If multiple actionable items:**
 ```
-· · ·
-
+· · · · · · · · · · · ·
 Select a specification (enter number):
 ```
 
@@ -232,10 +231,10 @@ Note: The following cross-cutting specifications are still in-progress:
 
 These may contain architectural decisions relevant to this plan.
 
-· · ·
-
+· · · · · · · · · · · ·
 - **`c`/`continue`** — Plan without them
 - **`s`/`stop`** — Complete them first (/start-specification)
+· · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.

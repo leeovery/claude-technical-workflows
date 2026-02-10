@@ -62,6 +62,10 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 1. **No autonomous decisions on spec deviations** — when the executor reports a blocker or spec deviation, present to user and STOP. Never resolve on the user's behalf.
 2. **All git operations are the orchestrator's responsibility** — agents never commit, stage, or interact with git.
 
+## Output Formatting
+
+When announcing a new step, output `── ── ── ── ──` on its own line before the step heading.
+
 ---
 
 ## Step 1: Environment Setup
@@ -162,14 +166,14 @@ Commit: `impl({topic}): start implementation`
 
 Present the existing configuration for confirmation:
 
-> "Previous session used these project skills:
+> Previous session used these project skills:
 > - `{skill-name}` — {path}
 > - ...
 >
-> · · ·
->
+> · · · · · · · · · · · ·
 > - **`y`/`yes`** — Keep these, proceed
-> - **`c`/`change`** — Re-discover and choose skills"
+> - **`c`/`change`** — Re-discover and choose skills
+> · · · · · · · · · · · ·
 
 **STOP.** Wait for user choice.
 
@@ -193,7 +197,11 @@ Scan `.claude/skills/` for project-specific skill directories. Present findings:
 > - `{skill-name}` — {brief description}
 > - ...
 >
-> Which of these should I pass to the implementation agents? (all / list / none)
+> · · · · · · · · · · · ·
+> - **`a`/`all`** — Use all listed skills
+> - **`n`/`none`** — Skip project skills
+> - **Or list the ones you want** — e.g. "golang-pro, react-patterns"
+> · · · · · · · · · · · ·
 
 **STOP.** Wait for user to confirm which skills are relevant.
 
@@ -217,11 +225,11 @@ Otherwise, present discovery findings to the user:
 >
 > Recommendations: {any suggested tools with install commands}
 >
-> · · ·
->
+> · · · · · · · · · · · ·
 > - **`y`/`yes`** — Approve these linter commands
 > - **`c`/`change`** — Modify the linter list
 > - **`s`/`skip`** — Skip linter setup (no linting during TDD)
+> · · · · · · · · · · · ·
 
 **STOP.** Wait for user choice.
 

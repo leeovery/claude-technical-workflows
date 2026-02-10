@@ -149,12 +149,12 @@ After presenting the finding and proposed fix, ask:
 
 > **Finding {N} of {total}: {Brief Title}**
 >
-> · · ·
->
+> · · · · · · · · · · · ·
 > **To proceed:**
 > - **`y`/`yes`** — Approved. I'll apply it to the plan verbatim.
 > - **`s`/`skip`** — Leave this as-is and move to the next finding.
 > - **Or tell me what to change.**
+> · · · · · · · · · · · ·
 
 **STOP.** Wait for the user's response.
 

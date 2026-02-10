@@ -43,11 +43,11 @@ Skip the resolution and reverse check — there is nothing to resolve against. D
 
 **STOP.** Present a summary of the dependency state: what was documented, what was resolved, what remains unresolved, and any reverse resolutions made.
 
-> · · ·
->
+> · · · · · · · · · · · ·
 > **To proceed:**
 > - **`y`/`yes`** — Approved. I'll proceed to plan review.
 > - **Or tell me what to change.**
+> · · · · · · · · · · · ·
 
 #### If the user provides feedback
 

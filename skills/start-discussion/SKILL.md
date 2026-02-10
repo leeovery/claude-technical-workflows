@@ -228,35 +228,35 @@ Discussions:
 
 **If research AND discussions exist:**
 ```
-· · ·
-
+· · · · · · · · · · · ·
 How would you like to proceed?
 
 - **`r`/`refresh`** — Force fresh research analysis
 - From research — pick a topic number above (e.g., "1" or "research 1")
 - Continue discussion — name one above (e.g., "continue {topic}")
 - Fresh topic — describe what you want to discuss
+· · · · · · · · · · · ·
 ```
 
 **If ONLY research exists:**
 ```
-· · ·
-
+· · · · · · · · · · · ·
 How would you like to proceed?
 
 - **`r`/`refresh`** — Force fresh research analysis
 - From research — pick a topic number above (e.g., "1" or "research 1")
 - Fresh topic — describe what you want to discuss
+· · · · · · · · · · · ·
 ```
 
 **If ONLY discussions exist:**
 ```
-· · ·
-
+· · · · · · · · · · · ·
 How would you like to proceed?
 
 - Continue discussion — name one above (e.g., "continue {topic}")
 - Fresh topic — describe what you want to discuss
+· · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response before proceeding.
