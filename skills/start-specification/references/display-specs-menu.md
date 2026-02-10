@@ -86,13 +86,15 @@ have changed since it was created. Re-analysis is required.
    All discussions are analyzed for natural groupings. Existing
    specification names are preserved. You can provide guidance
    in the next step.
-2. Continue "{Spec Name}" — {spec_status}
-3. Continue "{Spec Name}" — {spec_status}
+2. Continue "{Spec Name}" — in-progress
+3. Refine "{Spec Name}" — concluded
 
 Enter choice (1-{max}):
 ```
 
-List "Analyze for groupings (recommended)" first, then one "Continue" entry per existing non-superseded specification.
+List "Analyze for groupings (recommended)" first, then one entry per existing non-superseded specification. Use verb logic:
+- Spec is `in-progress` → **Continue**
+- Spec is `concluded` → **Refine**
 
 **STOP.** Wait for user response.
 
