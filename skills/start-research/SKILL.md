@@ -10,14 +10,14 @@ Invoke the **technical-research** skill for this conversation.
 
 This is **Phase 1** of the six-phase workflow:
 
-| Phase | Focus | You |
-|-------|-------|-----|
-| **1. Research** | EXPLORE - ideas, feasibility, market, business | ◀ HERE |
-| 2. Discussion | WHAT and WHY - decisions, architecture, edge cases | |
-| 3. Specification | REFINE - validate into standalone spec | |
-| 4. Planning | HOW - phases, tasks, acceptance criteria | |
-| 5. Implementation | DOING - tests first, then code | |
-| 6. Review | VALIDATING - check work against artifacts | |
+| Phase             | Focus                                              | You    |
+|-------------------|----------------------------------------------------|--------|
+| **1. Research**   | EXPLORE - ideas, feasibility, market, business     | ◀ HERE |
+| 2. Discussion     | WHAT and WHY - decisions, architecture, edge cases |        |
+| 3. Specification  | REFINE - validate into standalone spec             |        |
+| 4. Planning       | HOW - phases, tasks, acceptance criteria           |        |
+| 5. Implementation | DOING - tests first, then code                     |        |
+| 6. Review         | VALIDATING - check work against artifacts          |        |
 
 **Stay in your lane**: Explore freely. This is the time for broad thinking, feasibility checks, and learning. Surface options and tradeoffs — don't make decisions. When a topic converges toward a conclusion, that's a signal it's ready for discussion phase, not a cue to start deciding. Park it and move on.
 
@@ -43,95 +43,20 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 Invoke the `/migrate` skill and assess its output.
 
-**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
+**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1.
 
 **If no updates needed**: Proceed to Step 1.
 
 ---
 
-## Step 1: Get the Seed Idea
+## Step 1: Gather Context
 
-Ask:
-
-```
-What's on your mind?
-
-- What idea or topic do you want to explore?
-- What prompted this - a problem, opportunity, curiosity?
-```
-
-**STOP.** Wait for user response before proceeding.
+Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
 
 → Proceed to **Step 2**.
 
 ---
 
-## Step 2: Understand Current Knowledge
+## Step 2: Invoke the Skill
 
-Ask:
-
-```
-What do you already know?
-
-- Any initial thoughts or research you've done?
-- Constraints or context I should be aware of?
-```
-
-**STOP.** Wait for user response before proceeding.
-
-→ Proceed to **Step 3**.
-
----
-
-## Step 3: Determine Starting Point
-
-Ask:
-
-```
-Where should we start?
-
-- Technical feasibility? Market landscape? Business model?
-- Or just talk it through and see where it goes?
-```
-
-**STOP.** Wait for user response before proceeding.
-
-→ Proceed to **Step 4**.
-
----
-
-## Step 4: Gather Final Context
-
-Ask:
-
-```
-Any constraints or context I should know about upfront?
-
-(Or "none" if we're starting fresh)
-```
-
-**STOP.** Wait for user response before proceeding.
-
-→ Proceed to **Step 5**.
-
----
-
-## Step 5: Invoke the Skill
-
-After completing the steps above, this skill's purpose is fulfilled.
-
-Invoke the [technical-research](../technical-research/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
-
-**Example handoff:**
-```
-Research session for: {topic}
-Output: docs/workflow/research/exploration.md
-
-Context:
-- Prompted by: {problem, opportunity, or curiosity}
-- Already knows: {any initial thoughts or research, or "starting fresh"}
-- Starting point: {technical feasibility, market, business model, or "open exploration"}
-- Constraints: {any constraints mentioned, or "none"}
-
-Invoke the technical-research skill.
-```
+Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
