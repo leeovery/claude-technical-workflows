@@ -74,7 +74,7 @@ If cache is stale, delete it first:
 rm docs/workflow/.cache/discussion-consolidation-analysis.md
 ```
 
-Load **[analysis-flow.md](analysis-flow.md)** and follow its instructions.
+→ Load **[analysis-flow.md](analysis-flow.md)** and follow its instructions.
 
 #### If user declines (n)
 

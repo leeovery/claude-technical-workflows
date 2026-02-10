@@ -6,7 +6,7 @@
 
 Two terminal paths — the command stops and cannot proceed.
 
-## If no discussions exist (`has_discussions == false`)
+## If no discussions exist
 
 ```
 Specification Phase
@@ -22,7 +22,7 @@ Run /start-discussion to begin documenting technical decisions.
 
 **STOP.** Wait for user acknowledgment. Command ends here.
 
-## If discussions exist but none concluded (`has_concluded == false`)
+## If discussions exist but none concluded
 
 ```
 Specification Phase
