@@ -6,7 +6,7 @@
 
 Shows when multiple concluded discussions exist, specifications exist, and cache is none or stale. Displays existing specs from discovery frontmatter (NOT from cache), lists unassigned discussions, and offers analysis or continue options.
 
-## Display
+## A. Display
 
 ```
 Specification Overview
@@ -87,40 +87,46 @@ A previous grouping analysis exists but is outdated — discussions
 have changed since it was created. Re-analysis is required.
 ```
 
-## Menu
+→ Proceed to **B. Menu**.
+
+---
+
+## B. Menu
+
+List "Analyze for groupings (recommended)" first, then one entry per existing non-superseded specification. The verb depends on the spec's state:
+
+- Spec is `in-progress` → **Continue** "{Name}" — in-progress
+- Spec is `concluded` with pending sources → **Continue** "{Name}" — {N} source(s) pending extraction
+- Spec is `concluded` with no pending sources → **Refine** "{Name}" — concluded
+
+**Example assembled menu** (2 specs exist):
 
 ```
+· · · · · · · · · · · ·
 1. Analyze for groupings (recommended)
    All discussions are analyzed for natural groupings. Existing
    specification names are preserved. You can provide guidance
    in the next step.
-2. Continue "{Spec Name}" — in-progress
-3. Continue "{Spec Name}" — {N} source(s) pending extraction
-4. Refine "{Spec Name}" — concluded
-```
+2. Continue "Auth Flow" — in-progress
+3. Refine "Data Model" — concluded
 
-```
-· · · · · · · · · · · ·
 Select an option (enter number):
+· · · · · · · · · · · ·
 ```
-
-List "Analyze for groupings (recommended)" first, then one entry per existing non-superseded specification. Use verb logic:
-- Spec is `in-progress` → **Continue**
-- Spec is `concluded` with pending sources → **Continue** "{Name}" — {N} source(s) pending extraction
-- Spec is `concluded` with no pending sources → **Refine**
 
 **STOP.** Wait for user response.
 
-## Menu Routing
-
 #### If user picks "Analyze for groupings"
 
-1. If cache is stale, delete it first:
+If cache is stale, delete it first:
 ```bash
 rm docs/workflow/.cache/discussion-consolidation-analysis.md
 ```
-2. Load **[analysis-flow.md](analysis-flow.md)** and follow its instructions.
+
+→ Load **[analysis-flow.md](analysis-flow.md)** and follow its instructions.
 
 #### If user picks "Continue" or "Refine" for a spec
 
-Load **[confirm-and-handoff.md](confirm-and-handoff.md)** and follow its instructions. The selected spec and its sources become the context for confirmation.
+The selected spec and its sources become the context for confirmation.
+
+→ Load **[confirm-and-handoff.md](confirm-and-handoff.md)** and follow its instructions.

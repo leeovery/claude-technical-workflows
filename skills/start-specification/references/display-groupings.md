@@ -6,11 +6,15 @@
 
 Shows when cache is valid (directly from routing) or after analysis completes. This is the most content-rich display.
 
-## Load Groupings
+## A. Load Groupings
 
 Load groupings from `docs/workflow/.cache/discussion-consolidation-analysis.md`. Parse the `### {Name}` headings and their discussion lists.
 
-## Determine Discussion Status
+→ Proceed to **B. Determine Discussion Status**.
+
+---
+
+## B. Determine Discussion Status
 
 For each grouping, convert the name to kebab-case and check if a matching specification exists in the discovery `specifications` array.
 
@@ -38,7 +42,11 @@ discussions) are silently skipped — there is nothing actionable.
 
 For each discussion: status is `ready`. Spec status: `none`.
 
-## Display Format
+→ Proceed to **C. Display**.
+
+---
+
+## C. Display
 
 All items are first-class — every grouping (including single-discussion entries) is a numbered item.
 
@@ -99,7 +107,11 @@ Tip: To restructure groupings or pull a discussion into its own
 specification, choose "Re-analyze" and provide guidance.
 ```
 
-## Menu
+→ Proceed to **D. Menu**.
+
+---
+
+## D. Menu
 
 Present one numbered menu entry per grouping. The verb and description depend on the grouping's spec state:
 
@@ -133,8 +145,6 @@ Select an option (enter number):
 ```
 
 **STOP.** Wait for user response.
-
-## Menu Routing
 
 #### If user picks a grouping
 
