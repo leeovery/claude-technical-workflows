@@ -42,7 +42,9 @@ But write **complete, functional implementations** - don't artificially minimize
 
 **Derive tests from plan**: Task's micro acceptance becomes your first test. Edge cases become additional tests.
 
-**Write test names first**: List all test names before writing bodies. Confirm coverage matches acceptance criteria.
+**Assert precisely**: For mutation operations (create, update, delete, state transitions), don't just assert the return value — verify observable side effects independently. A test that checks "operation succeeded" but ignores whether timestamps updated, related records changed, or output structure is correct will miss regressions that only affect side effects. Assert structured output by parsing and checking fields/values, not by string matching the serialized form.
+
+**Write test names first**: List all test names before writing bodies. Confirm coverage matches acceptance criteria. Then consider: invalid input types, boundary values, zero/nil/empty inputs, single vs multiple items, and success alongside failure paths — add tests for any that are relevant and non-trivial.
 
 **No implementation code exists yet.** If you're tempted to "just sketch out the class first" - don't. The test comes first. Always.
 
