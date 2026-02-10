@@ -22,21 +22,25 @@ F. Create tasks in plan → invoke-task-writer.md
 
 Increment `analysis_cycle` in the implementation tracking file.
 
+→ If `analysis_cycle <= 3`, proceed directly to **B. Git Checkpoint**.
+
 If `analysis_cycle > 3`:
 
-> **Analysis cycle {N} — this is beyond the standard 3 cycles.**
+**Do NOT skip analysis autonomously.** This gate is an escape hatch for the user — not a signal to stop. The expected default is to continue running analysis until no issues are found. Present the choice and let the user decide.
+
+> **Analysis cycle {N}**
+>
+> Analysis has run {N-1} times so far. You can continue (recommended if issues were still found last cycle) or skip to completion.
 >
 > · · · · · · · · · · · ·
+> - **`p`/`proceed`** — Continue analysis *(default)*
 > - **`s`/`skip`** — Skip analysis, proceed to completion
-> - **`p`/`proceed`** — Run analysis anyway
 > · · · · · · · · · · · ·
 
-**STOP.** Wait for user choice.
+**STOP.** Wait for user choice. You MUST NOT choose on the user's behalf.
 
-- **`skip`**: → Return to the skill for **Step 8**.
 - **`proceed`**: → Continue to **B. Git Checkpoint**.
-
-→ If `analysis_cycle <= 3`, proceed to **B. Git Checkpoint**.
+- **`skip`**: → Return to the skill for **Step 8**.
 
 ---
 
