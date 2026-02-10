@@ -1,0 +1,109 @@
+# Display: Specs Menu
+
+*Reference for **[start-specification](../SKILL.md)***
+
+---
+
+Shows when multiple concluded discussions exist, specifications exist, and cache is none or stale. Displays existing specs from discovery frontmatter (NOT from cache), lists unassigned discussions, and offers analysis or continue options.
+
+## Display
+
+```
+Specification Overview
+
+{N} concluded discussions found. {M} specifications exist.
+
+Existing specifications:
+```
+
+For each non-superseded specification from discovery output, display as nested tree:
+
+```
+1. {Spec Title Case Name}
+   └─ Spec: {status} ({X} of {Y} sources extracted)
+   └─ Discussions:
+      ├─ {source-name} (extracted)
+      └─ {source-name} (extracted)
+```
+
+Determine discussion status from the spec's `sources` array: `incorporated` → `extracted`, `pending` → `pending`.
+
+### Unassigned Discussions
+
+List concluded discussions that are not in any specification's `sources` array:
+
+```
+Concluded discussions not in a specification:
+  • {discussion-name}
+  • {discussion-name}
+```
+
+### If in-progress discussions exist
+
+```
+---
+Discussions not ready for specification:
+These discussions are still in progress and must be concluded
+before they can be included in a specification.
+  · {discussion-name} (in-progress)
+```
+
+### Key/Legend
+
+Show only the statuses that appear in the current display.
+
+```
+---
+Key:
+
+  Discussion status:
+    extracted — content has been incorporated into the specification
+
+  Spec status:
+    in-progress — specification work is ongoing
+    concluded   — specification is complete
+```
+
+### Cache-Aware Message
+
+**If cache status is `"none"`:**
+```
+---
+No grouping analysis exists.
+```
+
+**If cache status is `"stale"`:**
+```
+---
+A previous grouping analysis exists but is outdated — discussions
+have changed since it was created. Re-analysis is required.
+```
+
+## Menu
+
+```
+1. Analyze for groupings (recommended)
+   All discussions are analyzed for natural groupings. Existing
+   specification names are preserved. You can provide guidance
+   in the next step.
+2. Continue "{Spec Name}" — {spec_status}
+3. Continue "{Spec Name}" — {spec_status}
+
+Enter choice (1-{max}):
+```
+
+List "Analyze for groupings (recommended)" first, then one "Continue" entry per existing non-superseded specification.
+
+**STOP.** Wait for user response.
+
+## Menu Routing
+
+**If user picks "Analyze for groupings":**
+1. If cache is stale, delete it first:
+```bash
+rm docs/workflow/.cache/discussion-consolidation-analysis.md
+```
+2. Load **[analysis-flow.md](analysis-flow.md)** and follow its instructions.
+
+**If user picks "Continue" for a spec:**
+Load **[confirm-and-handoff.md](confirm-and-handoff.md)** and follow its instructions. The selected spec and its sources become the context for confirmation.

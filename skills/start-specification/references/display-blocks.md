@@ -1,0 +1,42 @@
+# Display: Block Scenarios
+
+*Reference for **[start-specification](../SKILL.md)***
+
+---
+
+Two terminal paths — the command stops and cannot proceed.
+
+## If no discussions exist (`has_discussions == false`)
+
+```
+Specification Phase
+
+No discussions found.
+
+The specification phase requires concluded discussions to work from.
+Discussions capture the technical decisions, edge cases, and rationale
+that specifications are built upon.
+
+Run /start-discussion to begin documenting technical decisions.
+```
+
+**STOP.** Wait for user acknowledgment. Command ends here.
+
+## If discussions exist but none concluded (`has_concluded == false`)
+
+```
+Specification Phase
+
+No concluded discussions found.
+
+The following discussions are still in progress:
+  · {discussion-name} (in-progress)
+  · {discussion-name} (in-progress)
+
+Specifications can only be created from concluded discussions.
+Run /start-discussion to continue working on a discussion.
+```
+
+List all in-progress discussions from discovery output.
+
+**STOP.** Wait for user acknowledgment. Command ends here.

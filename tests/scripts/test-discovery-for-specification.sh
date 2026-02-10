@@ -94,7 +94,13 @@ test_fresh_state() {
     assert_contains "$output" 'specifications:' "Has specifications section"
     assert_contains "$output" '\[\]  # No specifications found' "Specifications empty"
     assert_contains "$output" 'status: "none"' "Cache status is none"
-    assert_contains "$output" 'concluded_discussion_count: 0' "Concluded count is 0"
+    assert_contains "$output" 'concluded_count: 0' "Concluded count is 0"
+    assert_contains "$output" 'discussion_count: 0' "Discussion count is 0"
+    assert_contains "$output" 'in_progress_count: 0' "In-progress count is 0"
+    assert_contains "$output" 'spec_count: 0' "Spec count is 0"
+    assert_contains "$output" 'has_discussions: false' "has_discussions is false"
+    assert_contains "$output" 'has_concluded: false' "has_concluded is false"
+    assert_contains "$output" 'has_specs: false' "has_specs is false"
 
     echo ""
 }
@@ -134,7 +140,13 @@ EOF
     assert_contains "$output" 'status: "in-progress"' "Found in-progress status"
     assert_contains "$output" 'status: "concluded"' "Found concluded status"
     assert_contains "$output" 'has_individual_spec: false' "No individual spec exists"
-    assert_contains "$output" 'concluded_discussion_count: 1' "One concluded discussion"
+    assert_contains "$output" 'concluded_count: 1' "One concluded discussion"
+    assert_contains "$output" 'discussion_count: 2' "Two total discussions"
+    assert_contains "$output" 'in_progress_count: 1' "One in-progress discussion"
+    assert_contains "$output" 'spec_count: 0' "No specs"
+    assert_contains "$output" 'has_discussions: true' "has_discussions is true"
+    assert_contains "$output" 'has_concluded: true' "has_concluded is true"
+    assert_contains "$output" 'has_specs: false' "has_specs is false"
 
     echo ""
 }
@@ -773,7 +785,61 @@ EOF
     assert_contains "$output" 'status: "concluded"' "Status is concluded"
     assert_not_contains "$output" 'Decision Log' "No body content leaks into output"
     assert_not_contains "$output" 'Open Questions' "No body text leaks into output"
-    assert_contains "$output" 'concluded_discussion_count: 1' "Concluded count is 1"
+    assert_contains "$output" 'concluded_count: 1' "Concluded count is 1"
+
+    echo ""
+}
+
+#
+# Test: Spec count excludes superseded
+#
+test_spec_count_excludes_superseded() {
+    echo -e "${YELLOW}Test: Spec count excludes superseded${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/discussion"
+    mkdir -p "$TEST_DIR/docs/workflow/specification"
+
+    cat > "$TEST_DIR/docs/workflow/discussion/auth-flow.md" << 'EOF'
+---
+topic: auth-flow
+status: concluded
+date: 2026-01-20
+---
+
+# Discussion: Auth Flow
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/specification/auth-flow.md" << 'EOF'
+---
+topic: auth-flow
+status: superseded
+type: feature
+date: 2026-01-20
+superseded_by: auth-system
+---
+
+# Specification: Auth Flow (superseded)
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/specification/auth-system.md" << 'EOF'
+---
+topic: auth-system
+status: in-progress
+type: feature
+date: 2026-01-21
+sources:
+  - name: auth-flow
+    status: incorporated
+---
+
+# Specification: Auth System
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'spec_count: 1' "Spec count excludes superseded (1 active, 1 superseded)"
+    assert_contains "$output" 'has_specs: true' "has_specs is true (active spec exists)"
 
     echo ""
 }
@@ -805,6 +871,7 @@ test_spec_many_sources
 test_spec_with_hr_in_body
 test_spec_empty_sources
 test_discussion_with_hr_in_body
+test_spec_count_excludes_superseded
 
 #
 # Summary
