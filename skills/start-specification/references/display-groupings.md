@@ -101,28 +101,30 @@ specification, choose "Re-analyze" and provide guidance.
 
 ## Menu
 
-Numbered menu with verb logic per grouping:
+Present one numbered menu entry per grouping. The verb and description depend on the grouping's spec state:
+
 - No spec exists → **Start** "{Name}" — {N} ready discussions
 - Spec is `in-progress` with pending sources → **Continue** "{Name}" — {N} source(s) pending extraction
 - Spec is `in-progress` with all extracted → **Continue** "{Name}" — all sources extracted
 - Spec is `concluded` with no pending sources → **Refine** "{Name}" — concluded spec
 - Spec is `concluded` with pending sources → **Continue** "{Name}" — {N} new source(s) to extract
 
-After the per-grouping items, add meta options:
+After all grouping entries, append meta options:
 
-**Unify** (only when 2+ groupings exist):
-```
-{N+1}. Unify all into single specification
-   All discussions are combined into one specification{if specs exist: ". Existing
-   specifications are incorporated and superseded"} instead
-   of following the recommended groupings.
-```
+- **Unify all** (only when 2+ groupings exist) — all discussions combined into one specification instead of following the recommended groupings. If specs exist, note they will be incorporated and superseded.
+- **Re-analyze groupings** (always) — current groupings are discarded and rebuilt. If specs exist, existing names are preserved. User can provide guidance in the next step.
 
-**Re-analyze** (always):
+**Example assembled menu** (2 groupings, specs exist):
+
 ```
-{N+2}. Re-analyze groupings
-   Current groupings are discarded and rebuilt.{if specs exist: " Existing
-   specification names are preserved."} You can provide guidance
+1. Start "Auth Flow" — 2 ready discussions
+2. Continue "Data Model" — 1 source(s) pending extraction
+3. Unify all into single specification
+   All discussions are combined into one specification. Existing
+   specifications are incorporated and superseded.
+4. Re-analyze groupings
+   Current groupings are discarded and rebuilt. Existing
+   specification names are preserved. You can provide guidance
    in the next step.
 ```
 
@@ -141,13 +143,17 @@ Select an option (enter number):
 
 #### If user picks "Unify all"
 
-1. Update the cache: rewrite `docs/workflow/.cache/discussion-consolidation-analysis.md` with a single "Unified" grouping containing all concluded discussions. Keep the same checksum, update the generated timestamp. Add note: `Custom groupings confirmed by user (unified).`
-2. → Load **[confirm-and-handoff.md](confirm-and-handoff.md)** with spec name "Unified" and all concluded discussions as sources.
+Update the cache: rewrite `docs/workflow/.cache/discussion-consolidation-analysis.md` with a single "Unified" grouping containing all concluded discussions. Keep the same checksum, update the generated timestamp. Add note: `Custom groupings confirmed by user (unified).`
+
+Spec name: "Unified". Sources: all concluded discussions.
+
+→ Load **[confirm-and-handoff.md](confirm-and-handoff.md)** and follow its instructions.
 
 #### If user picks "Re-analyze"
 
-1. Delete the cache:
+Delete the cache:
 ```bash
 rm docs/workflow/.cache/discussion-consolidation-analysis.md
 ```
-2. → Load **[analysis-flow.md](analysis-flow.md)** and follow its instructions.
+
+→ Load **[analysis-flow.md](analysis-flow.md)** and follow its instructions.
