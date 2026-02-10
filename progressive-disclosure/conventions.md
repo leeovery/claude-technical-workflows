@@ -119,6 +119,95 @@ Not every skill needs all of these. Simple skills like `start-research` only nee
 
 ---
 
+## Interactive Formatting Conventions
+
+These conventions are established in `start-planning` and `start-implementation` and must be followed across all entry-point skills.
+
+### Choice Sections (y/n)
+
+For yes/no prompts, the question leads into the choices inside dotted line separators:
+
+```
+· · · · · · · · · · · ·
+Proceed with analysis?
+- **`y`/`yes`**
+- **`n`/`no`**
+· · · · · · · · · · · ·
+```
+
+When the question provides sufficient context, the shortcuts need no additional description.
+
+### Choice Sections (commands)
+
+For choices with named commands, use letter shortcuts with descriptions:
+
+```
+· · · · · · · · · · · ·
+- **`c`/`continue`** — Plan without them
+- **`s`/`stop`** — Complete them first (/start-specification)
+· · · · · · · · · · · ·
+```
+
+Rules:
+- First letter of the command as shortcut — disambiguate with second letter if first is taken
+- Commands (with shortcuts) come first, freeform prompts come second
+- Freeform prompts have no shortcut: `- Describe the issue — I'll help resolve it`
+
+### Numbered Menus
+
+Menu entries and prompt are wrapped together in dotted lines as a single interactive unit:
+
+```
+· · · · · · · · · · · ·
+1. Start "Auth Flow" — 2 ready discussions
+2. Continue "Data Model" — 1 source(s) pending extraction
+3. Re-analyze groupings
+
+Select an option (enter number):
+· · · · · · · · · · · ·
+```
+
+### Conditional Headings
+
+Use H4 for routing conditionals within steps. Do not use bold text for conditionals:
+
+```markdown
+#### If scenario is "no_specs"
+
+→ Load **[display-blocks.md](...)** and follow its instructions.
+
+#### Otherwise
+
+→ Proceed to **Step 3**.
+```
+
+Rules:
+- Lowercase after "If" (e.g., `#### If concluded_count == 1`)
+- Use `#### Otherwise` for else branches
+- No backtick-wrapped code in H4 headings — write conditions as plain text
+- Use "and" between conditions, not commas (reads more like code)
+- Drop implied conditions (e.g., if Step 2 already gates on concluded_count >= 1, Step 3 doesn't need to repeat `concluded_count >= 2` on every branch)
+
+### Routing Arrows
+
+Use `→` to mark load/proceed instructions:
+
+```markdown
+→ Load **[confirm-and-handoff.md](...)** and follow its instructions.
+```
+
+The arrow signals "this is a routing instruction" — it directs flow to another file or step.
+
+### STOP Convention
+
+```markdown
+**STOP.** Wait for user response.
+```
+
+Bold "STOP" with period, followed by the wait instruction.
+
+---
+
 ## Guiding Principle
 
 The backbone should read like a table of contents — you can scan it and understand the full flow without loading any reference files. Each Load directive is a clear handoff: "this step's detail lives here." The reference files are self-contained instructions for that step, loaded only when needed.
