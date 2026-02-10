@@ -42,10 +42,12 @@ Are all criteria genuinely met — not just self-reported?
 - Check for criteria that are technically met but miss the intent
 
 ### 3. Test Adequacy
-Do tests actually verify the criteria? Are edge cases covered?
+Do tests actually verify the criteria? Are assertions precise? Are edge cases covered?
 - Is there a test for each acceptance criterion?
 - Would the tests fail if the feature broke?
 - Are edge cases from the task's test cases covered?
+- **Assertion depth**: For mutation operations, do tests verify observable side effects — not just that the operation returned success? State changes should be asserted independently.
+- **Assertion precision**: When expected output is deterministic, do tests use exact comparison? Substring or partial matching masks formatting regressions and missing/extra content.
 - Flag both under-testing AND over-testing
 
 ### 4. Convention Adherence
@@ -61,6 +63,7 @@ Is this a sound design decision? Will it compose well with future tasks?
 - Are there coupling or abstraction concerns?
 - Will this cause problems for subsequent tasks in the phase?
 - Are there structural concerns that should be raised now rather than compounding?
+- Are concrete types used where data structures are known? Flag untyped escape hatches used where concrete types would be clearer and safer.
 
 ## Fix Recommendations (needs-changes only)
 
