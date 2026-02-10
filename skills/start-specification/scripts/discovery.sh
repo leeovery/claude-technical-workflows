@@ -46,16 +46,34 @@ extract_array_field() {
 }
 
 # Helper: Extract sources with status from object format
-# Outputs YAML-formatted source entries with name and status
-# Usage: extract_sources_with_status <file>
+# Outputs YAML-formatted source entries with name, status, and discussion_status
+# Usage: extract_sources_with_status <file> [discussion_dir]
 #
 # Note: This only handles the object format. Legacy simple array format
 # is converted by migration 004 before discovery runs.
 extract_sources_with_status() {
     local file="$1"
+    local discussion_dir="$2"
     local in_sources=false
     local current_name=""
     local current_status=""
+
+    # Helper: output a single source entry with discussion_status lookup
+    _emit_source() {
+        local name="$1"
+        local status="$2"
+        echo "      - name: \"$name\""
+        echo "        status: \"$status\""
+        if [ -n "$discussion_dir" ]; then
+            if [ -f "$discussion_dir/${name}.md" ]; then
+                local disc_status
+                disc_status=$(extract_field "$discussion_dir/${name}.md" "status")
+                echo "        discussion_status: \"${disc_status:-unknown}\""
+            else
+                echo "        discussion_status: \"not-found\""
+            fi
+        fi
+    }
 
     # Read frontmatter and parse sources block
     while IFS= read -r line; do
@@ -69,8 +87,7 @@ extract_sources_with_status() {
         if $in_sources && [[ "$line" =~ ^[a-z_]+: ]] && [[ ! "$line" =~ ^[[:space:]] ]]; then
             # Output last source if pending
             if [ -n "$current_name" ]; then
-                echo "      - name: \"$current_name\""
-                echo "        status: \"${current_status:-incorporated}\""
+                _emit_source "$current_name" "${current_status:-incorporated}"
             fi
             break
         fi
@@ -80,8 +97,7 @@ extract_sources_with_status() {
             if [[ "$line" =~ ^[[:space:]]*-[[:space:]]*name:[[:space:]]*(.+)$ ]]; then
                 # Output previous source if exists
                 if [ -n "$current_name" ]; then
-                    echo "      - name: \"$current_name\""
-                    echo "        status: \"${current_status:-incorporated}\""
+                    _emit_source "$current_name" "${current_status:-incorporated}"
                 fi
                 current_name="${BASH_REMATCH[1]}"
                 current_name=$(echo "$current_name" | sed 's/^"//' | sed 's/"$//' | xargs)
@@ -96,8 +112,7 @@ extract_sources_with_status() {
 
     # Output last source if pending (end of frontmatter)
     if [ -n "$current_name" ]; then
-        echo "      - name: \"$current_name\""
-        echo "        status: \"${current_status:-incorporated}\""
+        _emit_source "$current_name" "${current_status:-incorporated}"
     fi
 }
 
@@ -165,7 +180,7 @@ if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
         fi
 
         # Extract sources with status (handles both old and new format)
-        sources_output=$(extract_sources_with_status "$file")
+        sources_output=$(extract_sources_with_status "$file" "$DISCUSSION_DIR")
         if [ -n "$sources_output" ]; then
             echo "    sources:"
             echo "$sources_output"
@@ -249,17 +264,56 @@ if [ -d "$DISCUSSION_DIR" ] && [ -n "$(ls -A "$DISCUSSION_DIR" 2>/dev/null)" ]; 
     current_checksum=$(cat "$DISCUSSION_DIR"/*.md 2>/dev/null | md5sum | cut -d' ' -f1)
     echo "  discussions_checksum: \"$current_checksum\""
 
-    # Count concluded discussions
+    # Count discussions by status
+    discussion_count=0
     concluded_count=0
+    in_progress_count=0
     for file in "$DISCUSSION_DIR"/*.md; do
         [ -f "$file" ] || continue
+        discussion_count=$((discussion_count + 1))
         status=$(extract_field "$file" "status")
         if [ "$status" = "concluded" ]; then
             concluded_count=$((concluded_count + 1))
+        elif [ "$status" = "in-progress" ]; then
+            in_progress_count=$((in_progress_count + 1))
         fi
     done
-    echo "  concluded_discussion_count: $concluded_count"
+    echo "  discussion_count: $discussion_count"
+    echo "  concluded_count: $concluded_count"
+    echo "  in_progress_count: $in_progress_count"
+
+    # Count non-superseded specifications
+    spec_count=0
+    if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
+        for file in "$SPEC_DIR"/*.md; do
+            [ -f "$file" ] || continue
+            spec_status=$(extract_field "$file" "status")
+            if [ "$spec_status" != "superseded" ]; then
+                spec_count=$((spec_count + 1))
+            fi
+        done
+    fi
+    echo "  spec_count: $spec_count"
+
+    # Boolean helpers
+    echo "  has_discussions: true"
+    if [ "$concluded_count" -gt 0 ]; then
+        echo "  has_concluded: true"
+    else
+        echo "  has_concluded: false"
+    fi
+    if [ "$spec_count" -gt 0 ]; then
+        echo "  has_specs: true"
+    else
+        echo "  has_specs: false"
+    fi
 else
     echo "  discussions_checksum: null"
-    echo "  concluded_discussion_count: 0"
+    echo "  discussion_count: 0"
+    echo "  concluded_count: 0"
+    echo "  in_progress_count: 0"
+    echo "  spec_count: 0"
+    echo "  has_discussions: false"
+    echo "  has_concluded: false"
+    echo "  has_specs: false"
 fi

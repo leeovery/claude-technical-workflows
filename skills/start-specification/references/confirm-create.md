@@ -1,0 +1,73 @@
+# Confirm: Create Specification
+
+*Reference for **[confirm-and-handoff.md](confirm-and-handoff.md)***
+
+---
+
+#### If no source discussions have individual specs
+
+```
+Creating specification: {Title Case Name}
+
+Sources:
+  • {discussion-name}
+  • {discussion-name}
+
+Output: docs/workflow/specification/{kebab-case-name}.md
+
+· · · · · · · · · · · ·
+Proceed?
+- **`y`/`yes`**
+- **`n`/`no`**
+· · · · · · · · · · · ·
+```
+
+#### If any source discussion has an individual spec
+
+Note the supersession (`has_individual_spec: true`):
+
+```
+Creating specification: {Title Case Name}
+
+Sources:
+  • {discussion-name} (has individual spec — will be incorporated)
+  • {discussion-name}
+
+Output: docs/workflow/specification/{kebab-case-name}.md
+
+After completion:
+  specification/{discussion-name}.md → marked as superseded
+
+· · · · · · · · · · · ·
+Proceed?
+- **`y`/`yes`**
+- **`n`/`no`**
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If user confirms (y)
+
+#### If any source discussions have individual specs
+
+→ Load **[create-with-incorporation.md](handoffs/create-with-incorporation.md)** and follow its instructions.
+
+#### Otherwise
+
+→ Load **[create.md](handoffs/create.md)** and follow its instructions.
+
+#### If user declines (n)
+
+#### If single discussion (no menu to return to)
+
+```
+Understood. You can run /start-discussion to continue working on
+discussions, or re-run this command when ready.
+```
+
+Command ends.
+
+#### If groupings or specs menu
+
+Re-display the previous menu (the display that led to this confirmation). The user can make a different choice.

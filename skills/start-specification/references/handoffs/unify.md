@@ -1,0 +1,21 @@
+# Handoff: Unify All
+
+*Reference for **[confirm-unify.md](../confirm-unify.md)***
+
+---
+
+This skill's purpose is now fulfilled. Invoke the [technical-specification](../../../technical-specification/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded — it contains the instructions for how to proceed.
+
+```
+Specification session for: Unified
+
+Sources:
+- docs/workflow/discussion/{discussion-name}.md
+- docs/workflow/discussion/{discussion-name}.md
+...
+
+Output: docs/workflow/specification/unified.md
+
+---
+Invoke the technical-specification skill.
+```

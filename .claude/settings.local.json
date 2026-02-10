@@ -13,8 +13,7 @@
       "Bash(gh pr view:*)",
       "Bash(gh pr diff:*)",
       "Bash(wc:*)",
-      "Bash(chmod:*)",
-      "WebFetch(domain:api.github.com)"
+      "Bash(chmod:*)"
     ],
     "deny": [],
     "ask": []

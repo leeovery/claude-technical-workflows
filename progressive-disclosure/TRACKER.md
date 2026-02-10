@@ -11,12 +11,60 @@ Split monolithic `start-*` entry-point skills into backbone + reference files pa
 Ordered by complexity. Work through in order — simpler skills establish patterns for harder ones.
 
 - [x] **start-research** (62 lines) — Simple linear flow. 2 references: gather-context, invoke-skill. *(PR #96)*
+- [~] **start-specification** (851 lines → backbone + 10 reference files) — Complex: discovery + conditional routing + display redesign. *(PR #97 + ongoing refinement)*
 - [ ] **start-review** (173 lines) — Linear with discovery script
 - [ ] **start-planning** (290 lines) — Linear with discovery script + format selection
 - [ ] **start-implementation** (338 lines) — Linear with discovery script + plan reading + format loading
 - [ ] **start-discussion** (391 lines) — Linear with discovery script + topic creation/resume
-- [ ] **start-specification** (851 lines) — Complex: discovery + 10 output paths + conditional routing + display redesign. Planning docs: [start-specification/](start-specification/)
 - [ ] **start-feature** (82 lines) — Standalone entry point (no prior phase). May not need splitting at this size.
+
+---
+
+## start-specification Progress
+
+### Completed
+
+1. **Initial refactor** (PR #97) — split monolithic SKILL.md into backbone + 7 reference files
+2. **Spec source regression fixes** — 5 logic gaps identified and fixed:
+   - `discovery.sh`: added `discussion_status` enrichment to spec sources
+   - Regressed source detection (`extracted, reopened`) across display files
+   - Grouped spec coverage detection in single-discussion path
+   - Verb override: concluded + pending sources → "Continuing" (not "Refining")
+   - `not-found` discussion_status handling (silently skip, don't show as reopened)
+   - Extraction count formulas (groupings uses union, others use spec count)
+   - Not-ready sections on all display paths
+   - See [spec-source-regression-analysis.md](start-specification/spec-source-regression-analysis.md)
+3. **Formatting conventions aligned** with start-planning/start-implementation:
+   - Dotted line separators around choice sections
+   - Letter shortcuts for y/n prompts
+   - H4 conditional headings (replacing bold conditionals)
+   - Routing arrows (`→`) on load/proceed instructions
+   - Separated numbered menu prompts
+   - See [conventions.md](conventions.md) — Interactive Formatting section
+4. **display-single.md extracted** into progressive disclosure:
+   - Router: `display-single.md` (24 lines, pure routing)
+   - `display-single-no-spec.md` — no spec path
+   - `display-single-has-spec.md` — individual spec path
+   - `display-single-grouped.md` — grouped spec path
+5. **display-groupings.md refined**:
+   - Status determination: numbered list → H4 conditionals
+   - Menu section: clear intro, assembled example, consolidated meta options
+   - Routing: flattened numbered lists → plain instructions with arrows
+6. **SKILL.md routing simplified**:
+   - Step 2: H4 conditionals, "Otherwise" for else branch
+   - Step 3: dropped redundant `concluded_count >= 2`, final condition → "Otherwise"
+
+### Remaining — File-by-File Review
+
+Files that still need flow/formatting review to match the refined conventions:
+
+| File | Status | Notes |
+|------|--------|-------|
+| `display-specs-menu.md` | Needs review | Menu section similar to display-groupings — may need same clarity improvements. Routing needs flattening. |
+| `confirm-and-handoff.md` | Needs review | y/n formatting done. Check overall flow, heading structure, routing consistency. |
+| `display-analyze.md` | Needs review | y/n formatting done. Check flow, may benefit from routing arrow on analysis-flow load. |
+| `analysis-flow.md` | Needs review | Freeform prompt — check if formatting conventions apply. Check routing at end. |
+| `display-blocks.md` | Likely fine | Simple terminal paths, minimal content. Quick scan. |
 
 ---
 
@@ -29,3 +77,4 @@ Most skills are straightforward enough to split without advance planning. `start
 | start-specification | [plan.md](start-specification/plan.md) — implementation plan |
 | | [display-design.md](start-specification/display-design.md) — display format decisions, all 10 outputs |
 | | [flows/](start-specification/flows/) — flow-by-flow test cases for each output path |
+| | [spec-source-regression-analysis.md](start-specification/spec-source-regression-analysis.md) — regression gap analysis |
