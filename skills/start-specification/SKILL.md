@@ -86,7 +86,7 @@ Parse the discovery output to understand:
 
 #### Otherwise
 
-At least one concluded discussion exists. → Proceed to **Step 3**.
+→ Proceed to **Step 3**.
 
 ---
 
