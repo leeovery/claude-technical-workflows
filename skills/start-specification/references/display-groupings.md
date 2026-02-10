@@ -12,17 +12,16 @@ Load groupings from `docs/workflow/.cache/discussion-consolidation-analysis.md`.
 
 ## Determine Discussion Status
 
-For each grouping, check if a grouped specification exists:
-1. Convert the grouping name to kebab-case (lowercase, spaces to hyphens)
-2. Check if `docs/workflow/specification/{kebab-name}.md` exists in the discovery `specifications` array
-3. If it exists, get its `sources` array
+For each grouping, convert the name to kebab-case and check if a matching specification exists in the discovery `specifications` array.
 
-**If a grouped spec exists:**
-- For each discussion in the grouping:
-  - Look up in the spec's `sources` array (by `name` field)
-  - If found → use the source's `status` (`incorporated` → `extracted`, `pending` → `pending`)
-  - If NOT found → status is `pending` (new source not yet in spec)
-- Spec status: show actual status with extraction count `({X} of {Y} sources extracted)`
+#### If a matching spec exists
+
+For each discussion in the grouping:
+- Look up in the spec's `sources` array (by `name` field)
+- If found → use the source's `status` (`incorporated` → `extracted`, `pending` → `pending`)
+- If NOT found → status is `pending` (new source not yet in spec)
+
+Spec status: show actual status with extraction count `({X} of {Y} sources extracted)`.
 
 **Regressed sources:** After processing the grouping's discussions, check the spec's
 `sources` array from discovery. For any source where `discussion_status` is neither
@@ -35,9 +34,9 @@ discussions) are silently skipped — there is nothing actionable.
 
 **Extraction count:** Y = count of unique discussions in (spec sources ∪ grouping members). X = count of those with `incorporated` status in spec sources. This ensures regressed sources that dropped out of the grouping still count toward Y.
 
-**If NO grouped spec exists:**
-- For each discussion: status is `ready`
-- Spec status: `none`
+#### Otherwise
+
+For each discussion: status is `ready`. Spec status: `none`.
 
 ## Display Format
 
@@ -143,7 +142,7 @@ Select an option (enter number):
 #### If user picks "Unify all"
 
 1. Update the cache: rewrite `docs/workflow/.cache/discussion-consolidation-analysis.md` with a single "Unified" grouping containing all concluded discussions. Keep the same checksum, update the generated timestamp. Add note: `Custom groupings confirmed by user (unified).`
-2. Load **[confirm-and-handoff.md](confirm-and-handoff.md)** with spec name "Unified" and all concluded discussions as sources.
+2. → Load **[confirm-and-handoff.md](confirm-and-handoff.md)** with spec name "Unified" and all concluded discussions as sources.
 
 #### If user picks "Re-analyze"
 
@@ -151,4 +150,4 @@ Select an option (enter number):
 ```bash
 rm docs/workflow/.cache/discussion-consolidation-analysis.md
 ```
-2. Load **[analysis-flow.md](analysis-flow.md)** and follow its instructions.
+2. → Load **[analysis-flow.md](analysis-flow.md)** and follow its instructions.
