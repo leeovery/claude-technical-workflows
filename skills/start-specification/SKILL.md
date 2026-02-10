@@ -80,7 +80,7 @@ Parse the discovery output to understand:
 
 ## Step 2: Check Prerequisites
 
-If `has_concluded == false`, load **[display-blocks.md](references/display-blocks.md)** and follow its instructions. **STOP.**
+If `has_discussions == false` or `has_concluded == false`, load **[display-blocks.md](references/display-blocks.md)** and follow its instructions. **STOP.**
 
 Otherwise, at least one concluded discussion exists. → Proceed to **Step 3**.
 
