@@ -4,8 +4,6 @@
 
 ---
 
-## Confirm
-
 ```
 Refining specification: {Title Case Name}
 
@@ -23,11 +21,11 @@ Proceed?
 
 **STOP.** Wait for user response.
 
-## If user confirms (y)
+#### If user confirms (y)
 
 → Load **[continue.md](handoffs/continue.md)** and follow its instructions.
 
-## If user declines (n)
+#### If user declines (n)
 
 #### If single discussion (no menu to return to)
 

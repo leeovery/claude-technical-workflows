@@ -4,8 +4,6 @@
 
 ---
 
-## Confirm
-
 #### If no source discussions have individual specs
 
 ```
@@ -49,7 +47,7 @@ Proceed?
 
 **STOP.** Wait for user response.
 
-## If user confirms (y)
+#### If user confirms (y)
 
 #### If any source discussions have individual specs
 
@@ -59,7 +57,7 @@ Proceed?
 
 → Load **[create.md](handoffs/create.md)** and follow its instructions.
 
-## If user declines (n)
+#### If user declines (n)
 
 #### If single discussion (no menu to return to)
 

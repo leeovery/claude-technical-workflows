@@ -4,8 +4,6 @@
 
 ---
 
-## Confirm
-
 #### If existing specifications will be superseded
 
 ```
@@ -50,7 +48,7 @@ Proceed?
 
 **STOP.** Wait for user response.
 
-## If user confirms (y)
+#### If user confirms (y)
 
 #### If existing specifications will be superseded
 
@@ -60,6 +58,6 @@ Proceed?
 
 → Load **[unify.md](handoffs/unify.md)** and follow its instructions.
 
-## If user declines (n)
+#### If user declines (n)
 
 Re-display the previous menu (the display that led to this confirmation). The user can make a different choice.

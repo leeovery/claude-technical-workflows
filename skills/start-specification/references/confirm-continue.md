@@ -4,8 +4,6 @@
 
 ---
 
-## Confirm
-
 #### If spec is in-progress with pending sources
 
 ```
@@ -66,7 +64,7 @@ Proceed?
 
 **STOP.** Wait for user response.
 
-## If user confirms (y)
+#### If user confirms (y)
 
 #### If spec is concluded with pending sources
 
@@ -76,7 +74,7 @@ Proceed?
 
 → Load **[continue.md](handoffs/continue.md)** and follow its instructions.
 
-## If user declines (n)
+#### If user declines (n)
 
 #### If single discussion (no menu to return to)
 
