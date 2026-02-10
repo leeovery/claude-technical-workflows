@@ -13,11 +13,7 @@
       "Bash(gh pr view:*)",
       "Bash(gh pr diff:*)",
       "Bash(wc:*)",
-      "Bash(chmod:*)",
-      "WebFetch(domain:api.github.com)",
-      "Bash(git -C /Users/leeovery/Code/claude/claude-technical-workflows add skills/start-specification/SKILL.md)",
-      "Bash(git -C /Users/leeovery/Code/claude/claude-technical-workflows commit -m \"$\\(cat <<''EOF''\nstyle: simplify Step 2 otherwise block\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(git -C /Users/leeovery/Code/claude/claude-technical-workflows push)"
+      "Bash(chmod:*)"
     ],
     "deny": [],
     "ask": []
