@@ -41,7 +41,6 @@ Either way: Verify plan tasks were implemented, tested adequately, and meet qual
 - **Review scope** (required) - single, multi, or all
 - **Plan content** (required) - Tasks and acceptance criteria to verify against (one or more plans)
 - **Specification content** (optional) - Context for design decisions
-- **Implementation scope** (optional) - What code/files to review. Will identify from git if not specified.
 
 **Before proceeding**, verify the required input is available. If anything is missing, **STOP** — do not proceed until resolved.
 

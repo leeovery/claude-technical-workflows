@@ -208,40 +208,7 @@ Which plans to include? (Enter numbers separated by commas, e.g. 1,3)
 
 ---
 
-## Step 5: Identify Implementation Scope
-
-**For single scope:** Ask what code to review:
-
-```
-· · · · · · · · · · · ·
-What code should I review?
-
-- **`a`/`all`** — All changes since the plan was created
-- **`g`/`git`** — Identify from git status
-- Specific directories or files — tell me which
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-If they choose specific directories/files, ask them to specify.
-
-**For multi/all scope:** Default to all changes. Briefly confirm:
-
-```
-· · · · · · · · · · · ·
-For multi-plan review, defaulting to all implementation changes.
-Override with specific paths? (Enter paths or press enter to continue)
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-→ Proceed to **Step 6**.
-
----
-
-## Step 6: Invoke the Skill
+## Step 5: Invoke the Skill
 
 After completing the steps above, this skill's purpose is fulfilled.
 
@@ -255,7 +222,6 @@ Plan: docs/workflow/planning/{topic}.md
 Format: {format}
 Plan ID: {plan_id} (if applicable)
 Specification: {specification} (exists: {true|false})
-Implementation scope: {all changes | specific paths | from git status}
 
 Invoke the technical-review skill.
 ```
@@ -267,7 +233,6 @@ Review scope: {multi | all}
 Plans:
   - docs/workflow/planning/{topic-1}.md (format: {format}, spec: {spec})
   - docs/workflow/planning/{topic-2}.md (format: {format}, spec: {spec})
-Implementation scope: {all changes | specific paths}
 
 Invoke the technical-review skill.
 ```
