@@ -162,9 +162,3 @@ Load **[gather-context.md](references/gather-context.md)** and follow its instru
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
 
----
-
-## Notes
-
-- Ask questions clearly and wait for responses before proceeding
-- Discussion captures WHAT and WHY - don't jump to specifications or implementation
