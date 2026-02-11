@@ -4,16 +4,6 @@
 
 ---
 
-!`.claude/skills/start-discussion/scripts/discovery.sh`
-
-If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
-
-```bash
-.claude/skills/start-discussion/scripts/discovery.sh
-```
-
-If YAML content is already displayed, it has been run on your behalf.
-
 Parse the discovery output to understand:
 
 **From `research` section:**

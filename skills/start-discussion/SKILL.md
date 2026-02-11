@@ -52,6 +52,16 @@ Invoke the `/migrate` skill and assess its output.
 
 ## Step 1: Discovery State
 
+!`.claude/skills/start-discussion/scripts/discovery.sh`
+
+If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+
+```bash
+.claude/skills/start-discussion/scripts/discovery.sh
+```
+
+If YAML content is already displayed, it has been run on your behalf.
+
 Load **[discovery.md](references/discovery.md)** and follow its instructions as written.
 
 → Proceed to **Step 2**.
