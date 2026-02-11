@@ -104,9 +104,9 @@ Plans exist.
 
 ---
 
-## Step 3a: Review Scope
+## Step 3: Review Scope
 
-Present the scope selection. If only one implemented plan exists, auto-select single scope and proceed to Step 3b.
+Present the scope selection. If only one implemented plan exists, auto-select single scope and proceed to Step 4.
 
 ```
 · · · · · · · · · · · ·
@@ -122,17 +122,17 @@ What scope would you like to review?
 ```
 Auto-selecting single scope (only one implemented plan)
 ```
-→ Proceed directly to **Step 3b**.
+→ Proceed directly to **Step 4**.
 
 **If multiple implemented plans exist:**
 
 **STOP.** Wait for user response.
 
-→ Based on user choice, proceed to **Step 3b**.
+→ Based on user choice, proceed to **Step 4**.
 
 ---
 
-## Step 3b: Plan Selection
+## Step 4: Plan Selection
 
 **For single scope:** Present list of implemented plans, user picks one.
 
@@ -148,17 +148,17 @@ Which plan would you like to review? (Enter a number or name)
 
 Only show plans with implementation_status != "none".
 
-**If single plan auto-selected from Step 3a:**
+**If single plan auto-selected from Step 3:**
 ```
 Auto-selecting: {topic} (only implemented plan)
 ```
-→ Proceed directly to **Step 4**.
+→ Proceed directly to **Step 5**.
 
 **If multiple plans exist:**
 
 **STOP.** Wait for user response.
 
-→ Based on user choice, proceed to **Step 4**.
+→ Based on user choice, proceed to **Step 5**.
 
 **For multi scope:** Present list with multi-select.
 
@@ -177,15 +177,15 @@ Only show plans with implementation_status != "none".
 
 **STOP.** Wait for user response.
 
-→ Based on user choice, proceed to **Step 4**.
+→ Based on user choice, proceed to **Step 5**.
 
 **For all scope:** No selection needed — include all plans with implementation_status != "none".
 
-→ Proceed directly to **Step 4**.
+→ Proceed directly to **Step 5**.
 
 ---
 
-## Step 4: Identify Implementation Scope
+## Step 5: Identify Implementation Scope
 
 **For single scope:** Ask what code to review:
 
@@ -214,11 +214,11 @@ Override with specific paths? (Enter paths or press enter to continue)
 
 **STOP.** Wait for user response.
 
-→ Proceed to **Step 5**.
+→ Proceed to **Step 6**.
 
 ---
 
-## Step 5: Invoke the Skill
+## Step 6: Invoke the Skill
 
 After completing the steps above, this skill's purpose is fulfilled.
 
