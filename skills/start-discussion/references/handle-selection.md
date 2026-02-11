@@ -51,4 +51,4 @@ Delete the cache file:
 rm docs/workflow/.cache/research-analysis.md
 ```
 
-→ Return to **Step 3** to re-analyze, then back to **Step 4**.
+→ Return to **Step 3** to re-analyze.
