@@ -23,11 +23,12 @@ Research topics:
 Discussions:
   - {topic}.md (in-progress)
   - {topic}.md (concluded)
-```
 
-**Legend:**
-- `·` = undiscussed topic (potential new discussion)
-- `✓` = already has a corresponding discussion
+---
+Key:
+  · = undiscussed topic (potential new discussion)
+  ✓ = already has a corresponding discussion
+```
 
 **Then present the options based on what exists:**
 
