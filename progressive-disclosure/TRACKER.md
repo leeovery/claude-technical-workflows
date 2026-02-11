@@ -11,11 +11,11 @@ Split monolithic `start-*` entry-point skills into backbone + reference files pa
 Ordered by complexity. Work through in order — simpler skills establish patterns for harder ones.
 
 - [x] **start-research** (62 lines) — Simple linear flow. 2 references: gather-context, invoke-skill. *(PR #96)*
-- [~] **start-specification** (851 lines → backbone + 10 reference files) — Complex: discovery + conditional routing + display redesign. *(PR #97 + ongoing refinement)*
+- [x] **start-specification** (851 lines → backbone + 14 reference files) — Complex: discovery + conditional routing + display redesign. *(PR #97)*
 - [ ] **start-review** (173 lines) — Linear with discovery script
 - [ ] **start-planning** (290 lines) — Linear with discovery script + format selection
 - [ ] **start-implementation** (338 lines) — Linear with discovery script + plan reading + format loading
-- [ ] **start-discussion** (391 lines) — Linear with discovery script + topic creation/resume
+- [x] **start-discussion** (391 lines → backbone + 8 reference files) — Discovery inline, 3-path gather-context router. *(PR #99)*
 - [ ] **start-feature** (82 lines) — Standalone entry point (no prior phase). May not need splitting at this size.
 
 ---
@@ -54,17 +54,12 @@ Ordered by complexity. Work through in order — simpler skills establish patter
    - Step 2: H4 conditionals, "Otherwise" for else branch
    - Step 3: dropped redundant `concluded_count >= 2`, final condition → "Otherwise"
 
-### Remaining — File-by-File Review
-
-Files that still need flow/formatting review to match the refined conventions:
-
-| File | Status | Notes |
-|------|--------|-------|
-| `display-specs-menu.md` | Needs review | Menu section similar to display-groupings — may need same clarity improvements. Routing needs flattening. |
-| `confirm-and-handoff.md` | Needs review | y/n formatting done. Check overall flow, heading structure, routing consistency. |
-| `display-analyze.md` | Needs review | y/n formatting done. Check flow, may benefit from routing arrow on analysis-flow load. |
-| `analysis-flow.md` | Needs review | Freeform prompt — check if formatting conventions apply. Check routing at end. |
-| `display-blocks.md` | Likely fine | Simple terminal paths, minimal content. Quick scan. |
+7. **Remaining file reviews completed**:
+   - `display-specs-menu.md` — lettered phases, menu clarity, routing flattened
+   - `confirm-and-handoff.md` — extracted into progressive disclosure (4 confirm files)
+   - `display-analyze.md` — convention fixes applied
+   - `analysis-flow.md` — lettered phases added
+   - `display-blocks.md` — convention fixes applied
 
 ---
 

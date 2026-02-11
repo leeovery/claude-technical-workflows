@@ -1,0 +1,41 @@
+# Gather Context: Fresh Topic
+
+*Reference for **[start-discussion](../SKILL.md)***
+
+---
+
+Ask each question below **one at a time**. After each, **STOP** and wait for the user's response before proceeding.
+
+---
+
+## Core Problem
+
+```
+New discussion: {topic}
+
+What's the core problem or decision we need to work through?
+```
+
+**STOP.** Wait for user response before proceeding.
+
+---
+
+## Constraints
+
+```
+Any constraints or context I should know about?
+```
+
+**STOP.** Wait for user response before proceeding.
+
+---
+
+## Codebase
+
+```
+Are there specific files in the codebase I should review first?
+
+(Or "none" if not applicable)
+```
+
+**STOP.** Wait for user response before proceeding.
