@@ -15,7 +15,7 @@ Ordered by complexity. Work through in order — simpler skills establish patter
 - [ ] **start-review** (173 lines) — Linear with discovery script
 - [ ] **start-planning** (290 lines) — Linear with discovery script + format selection
 - [ ] **start-implementation** (338 lines) — Linear with discovery script + plan reading + format loading
-- [ ] **start-discussion** (391 lines) — Linear with discovery script + topic creation/resume
+- [x] **start-discussion** (391 lines → backbone + 8 reference files) — Discovery inline, 3-path gather-context router. *(PR #99)*
 - [ ] **start-feature** (82 lines) — Standalone entry point (no prior phase). May not need splitting at this size.
 
 ---
