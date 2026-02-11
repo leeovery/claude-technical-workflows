@@ -62,7 +62,31 @@ If the above shows a script invocation rather than YAML output, the dynamic cont
 
 If YAML content is already displayed, it has been run on your behalf.
 
-Load **[discovery.md](references/discovery.md)** and follow its instructions as written.
+Parse the discovery output to understand:
+
+**From `research` section:**
+- `exists` - whether research files exist
+- `files` - each research file's name and topic
+- `checksum` - current checksum of all research files
+
+**From `discussions` section:**
+- `exists` - whether discussion files exist
+- `files` - each discussion's name, status, and date
+- `counts.in_progress` and `counts.concluded` - totals for routing
+
+**From `cache` section:**
+- `status` - one of three values:
+  - `"valid"` - cache exists and checksums match (safe to load)
+  - `"stale"` - cache exists but research has changed (needs re-analysis)
+  - `"none"` - no cache file exists
+- `reason` - explanation of the status
+- `generated` - when the cache was created (null if none)
+- `research_files` - list of files that were analyzed
+
+**From `state` section:**
+- `scenario` - one of: `"fresh"`, `"research_only"`, `"discussions_only"`, `"research_and_discussions"`
+
+**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
 
 → Proceed to **Step 2**.
 
@@ -71,6 +95,18 @@ Load **[discovery.md](references/discovery.md)** and follow its instructions as 
 ## Step 2: Route Based on Scenario
 
 Use `state.scenario` from the discovery output to determine the path:
+
+#### If scenario is "research_only" or "research_and_discussions"
+
+Research exists and may need analysis.
+
+→ Proceed to **Step 3**.
+
+#### If scenario is "discussions_only"
+
+No research exists, but discussions do. Skip research analysis.
+
+→ Proceed to **Step 4**.
 
 #### If scenario is "fresh"
 
@@ -82,19 +118,11 @@ Starting fresh - no prior research or discussions found.
 What topic would you like to discuss?
 ```
 
-**STOP.** Wait for user response, then skip to **Step 6** (Gather Context) with their topic.
+**STOP.** Wait for user response.
 
-#### If scenario is "discussions_only"
+When user responds, proceed with their topic.
 
-No research exists, but discussions do. Skip research analysis.
-
-→ Proceed to **Step 4**.
-
-#### If scenario is "research_only" or "research_and_discussions"
-
-Research exists and may need analysis.
-
-→ Proceed to **Step 3**.
+→ Proceed to **Step 6**.
 
 ---
 
