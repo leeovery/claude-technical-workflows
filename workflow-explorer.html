@@ -1385,14 +1385,14 @@ const phases = {
   specification: {
     color: '#34d399', bg: 'rgba(52,211,153,0.12)',
     label: 'Specification', cmd: '/start-specification',
-    complexity: 'Most Complex', steps: 11,
+    complexity: 'Complex', steps: 7,
     output: 'docs/workflow/specification/{topic}.md',
     skill: 'technical-specification',
-    discovery: 'discovery-for-specification.sh',
+    discovery: 'discovery.sh',
     cache: '.cache/discussion-consolidation-analysis.md',
     prerequisites: 'Concluded discussions required',
-    scenarios: ['1 concluded','multi+no specs+cache valid','multi+no specs+stale','multi+specs+cache valid','multi+specs+stale','multi+specs+no cache'],
-    desc: 'The most complex command (820 lines, 11 steps). Analyzes discussion coupling, groups into features, builds validated specs.',
+    scenarios: ['single','multi+cache valid','multi+stale+no specs','multi+stale+specs'],
+    desc: 'Cache-first routing with progressive disclosure. Analyzes discussion coupling, groups into features, builds validated specs.',
   },
   planning: {
     color: '#fbbf24', bg: 'rgba(251,191,36,0.12)',
@@ -1680,28 +1680,26 @@ const FLOWCHARTS = {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for /start-specification.' },
       { id: 'migrate', label: 'Run /migrate', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Step 0: Run migrations.' },
-      { id: 'discovery', label: 'Run discovery script', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery-for-specification.sh. Scans discussions (with has_individual_spec check), specifications, and cache.' },
+      { id: 'discovery', label: 'Run discovery script', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery.sh. Scans discussions (with has_individual_spec check), specifications, and cache.' },
       { id: 'gate-disc', label: 'Discussions?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2 Gate: Do any discussions exist? If not, STOP.' },
       { id: 'stop-no-disc', label: 'STOP: No discussions', shape: 'stop', w: 170, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: No discussions found. User must run /start-discussion first.' },
       { id: 'gate-concluded', label: 'Concluded?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2 Gate: Are any discussions concluded? If not, STOP.' },
       { id: 'stop-no-conc', label: 'STOP: None concluded', shape: 'stop', w: 170, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: Discussions exist but none concluded. Complete discussion phase first.' },
-      { id: 'count', label: 'How many?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 3: Route based on concluded discussion count. 1 = auto-select, multiple = check specs/cache.' },
-      { id: 'auto-select', label: 'Auto-select single', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Only one concluded discussion. Auto-select it, skip to confirm.' },
-      { id: 'multi-route', label: 'Specs exist?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Multiple concluded: Do existing specifications exist? Routes to different options.' },
-      { id: 'no-specs-cache', label: 'Cache valid?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'No specs + multiple discussions: Check consolidation cache. Valid = show groupings, stale/none = gather context first.' },
-      { id: 'specs-options', label: 'ASK: Continue / Regroup', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Specs exist: Offer continue existing spec, select from groupings (if cache valid), or re-analyze.' },
-      { id: 'gather-ctx', label: 'Gather analysis context', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 4: Ask about project structure and topic relationships before analysis.' },
-      { id: 'analyze', label: 'Analyze discussions', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 6: Read ALL concluded discussions. Analyze coupling (data, behavioral, conceptual). Group into specs. Save to cache.' },
-      { id: 'show-groups', label: 'Present groupings', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 7: Present recommended groupings with full status info and 5 options.' },
-      { id: 'group-choice', label: 'Grouping choice?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 8: Route based on user grouping choice: proceed, combine, single, individual, or refresh.' },
-      { id: 'refresh', label: 'Refresh cache', w: 180, h: 44, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Delete cache, return to Step 6 (analyze discussions) for fresh analysis.' },
-      { id: 'proceed', label: 'ASK: Which grouping?', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Proceed as recommended: Ask which grouping to start with.' },
-      { id: 'combine', label: 'ASK: Custom groupings', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Combine differently: User describes groupings. Impact analysis if 2+ specs affected.' },
-      { id: 'single', label: 'Use "unified" name', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Single specification: Consolidate ALL discussions into one "unified" spec.' },
-      { id: 'individual', label: 'ASK: Which discussion?', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Individual specifications: 1:1 mapping. Ask which discussion to specify.' },
-      { id: 'confirm', label: 'ASK: Confirm selection', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 9: Confirm selection - show sources, output path, supersede info. Wait for y/n.' },
-      { id: 'add-ctx', label: 'ASK: Additional context', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 10: Gather additional context, priorities, constraints since discussion concluded.' },
-      { id: 'skill', label: 'Invoke specification skill', w: 210, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 11: Invoke technical-specification skill with all gathered context.', skillLink: 'skill-specification' },
+      { id: 'count', label: 'How many?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 3: Route based on concluded discussion count. 1 = auto-select, multiple = check cache.' },
+      { id: 'auto-select', label: 'Auto-select single', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Only one concluded discussion. Routes by spec coverage (no spec, individual spec, grouped spec) for display, then auto-proceeds to confirmation.' },
+      { id: 'cache-check', label: 'Cache valid?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Multiple concluded discussions: Check consolidation analysis cache. Valid = show groupings directly. Stale/none = check for existing specs.' },
+      { id: 'specs-check', label: 'Specs exist?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Cache stale/none: Do specifications already exist? Routes to different entry points.' },
+      { id: 'ask-analyze', label: 'Analyze?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'No specs exist, cache stale/none. Lists concluded discussions and asks user whether to proceed with coupling analysis.' },
+      { id: 'stop-decline', label: 'STOP: Declined', shape: 'stop', w: 150, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: User declined analysis. Can re-run /start-specification when ready.' },
+      { id: 'specs-menu', label: 'Present specs menu', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Specs exist but cache stale/none. Shows existing specs with extraction status and unassigned discussions. Menu: Analyze for groupings (recommended) + per-spec Continue/Refine.' },
+      { id: 'gather-ctx', label: 'ASK: Analysis context', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Before analyzing, ask about topic relationships — part of same feature, dependencies, topics that must stay separate.' },
+      { id: 'analyze', label: 'Analyze discussions', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read ALL concluded discussions. Analyze coupling (data, behavioral, conceptual). Group into specifications. Preserve anchored spec names. Save to cache.' },
+      { id: 'show-groups', label: 'Present groupings menu', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Display cached groupings with discussion status (extracted/pending/ready/reopened). Per-grouping menu items with verb (Start/Continue/Refine) plus Unify all and Re-analyze options.' },
+      { id: 'menu-choice', label: 'Menu choice?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route based on user menu selection from groupings display.' },
+      { id: 'unify', label: 'Unify all', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Combine ALL concluded discussions into one "Unified" specification. Only offered when 2+ groupings. Rewrites cache with single grouping.' },
+      { id: 'refresh', label: 'Re-analyze', w: 180, h: 44, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Delete cache. User can provide guidance for new groupings. Existing spec names are preserved.' },
+      { id: 'confirm', label: 'ASK: Confirm selection', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Show spec name, sources, output path, supersession info. Verb varies: Creating (new), Continuing (in-progress/pending), or Refining (concluded). Wait for y/n. Decline returns to previous menu.' },
+      { id: 'skill', label: 'Invoke specification skill', w: 210, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Invoke technical-specification skill with sources and output path.', skillLink: 'skill-specification' },
     ],
     connections: [
       { from: 'start', to: 'migrate' },
@@ -1712,28 +1710,33 @@ const FLOWCHARTS = {
       { from: 'gate-concluded', to: 'count', type: 'yes', label: 'yes', weight: 2 },
       { from: 'gate-concluded', to: 'stop-no-conc', type: 'no', label: 'none' },
       { from: 'count', to: 'auto-select', label: 'one' },
-      { from: 'count', to: 'multi-route', label: 'multi' },
-      { from: 'multi-route', to: 'no-specs-cache', type: 'no', label: 'no specs' },
-      { from: 'multi-route', to: 'specs-options', type: 'yes', label: 'specs exist' },
-      { from: 'no-specs-cache', to: 'show-groups', type: 'yes', label: 'valid' },
-      { from: 'no-specs-cache', to: 'gather-ctx', type: 'no', label: 'stale' },
-      { from: 'specs-options', to: 'show-groups' },
+      { from: 'count', to: 'cache-check', label: 'multi' },
+      // Cache-first routing
+      { from: 'cache-check', to: 'show-groups', type: 'yes', label: 'valid', weight: 2 },
+      { from: 'cache-check', to: 'specs-check', type: 'no', label: 'stale' },
+      // Specs-second routing
+      { from: 'specs-check', to: 'specs-menu', type: 'yes', label: 'specs exist' },
+      { from: 'specs-check', to: 'ask-analyze', type: 'no', label: 'no specs' },
+      // No-specs path
+      { from: 'ask-analyze', to: 'gather-ctx', type: 'yes', label: 'yes', weight: 2 },
+      { from: 'ask-analyze', to: 'stop-decline', type: 'no', label: 'no' },
+      // Specs-menu paths
+      { from: 'specs-menu', to: 'gather-ctx', label: 'analyze' },
+      { from: 'specs-menu', to: 'confirm', label: 'pick spec' },
+      // Analysis flow
       { from: 'gather-ctx', to: 'analyze' },
       { from: 'analyze', to: 'show-groups' },
-      { from: 'show-groups', to: 'group-choice' },
-      { from: 'group-choice', to: 'proceed', label: 'proceed' },
-      { from: 'group-choice', to: 'combine', label: 'combine' },
-      { from: 'group-choice', to: 'single', label: 'single' },
-      { from: 'group-choice', to: 'individual', label: 'individual' },
-      { from: 'group-choice', to: 'refresh', label: 'refresh' },
-      { from: 'refresh', to: 'analyze', type: 'backloop' },
-      { from: 'proceed', to: 'confirm' },
-      { from: 'combine', to: 'confirm' },
-      { from: 'single', to: 'confirm' },
-      { from: 'individual', to: 'confirm' },
+      // Groupings menu
+      { from: 'show-groups', to: 'menu-choice' },
+      { from: 'menu-choice', to: 'confirm', label: 'grouping', weight: 2 },
+      { from: 'menu-choice', to: 'unify', label: 'unify' },
+      { from: 'menu-choice', to: 'refresh', label: 're-analyze' },
+      { from: 'unify', to: 'confirm' },
+      { from: 'refresh', to: 'gather-ctx', type: 'backloop' },
+      // Single → confirm
       { from: 'auto-select', to: 'confirm' },
-      { from: 'confirm', to: 'add-ctx' },
-      { from: 'add-ctx', to: 'skill', type: 'transition' },
+      // Confirm → skill
+      { from: 'confirm', to: 'skill', type: 'transition' },
     ]
   },
   planning: {
@@ -2067,11 +2070,11 @@ const FLOWCHARTS = {
       { id: 'executor', label: 'B. Invoke executor', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-task-executor', desc: 'Task loop Stage B: Dispatch executor agent with TDD workflow, code quality refs, spec, project skills, linter commands, and normalised task.' },
       { id: 'exec-result', label: 'Executor result?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route on executor STATUS: complete → review, blocked/failed → present to user.' },
       { id: 'exec-blocked', label: 'Executor blocked', shape: 'stop', w: 180, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Present executor ISSUES to user. Options: retry (with comments), skip task, or stop implementation entirely.' },
-      { id: 'reviewer', label: 'C. Invoke reviewer', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-task-reviewer', desc: 'Task loop Stage C: Dispatch reviewer agent (opus). Independent verification — 6 dimensions including codebase cohesion.' },
-      { id: 'review-result', label: 'Reviewer verdict?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route on VERDICT: approved → task gate, needs-changes → check fix_gate_mode.' },
-      { id: 'fix-gate', label: 'fix_gate_mode?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check fix_gate_mode. Auto (attempts < 3) = re-invoke executor. Gated or attempts >= 3 = present to user.' },
+      { id: 'reviewer', label: 'C. Invoke reviewer', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-task-reviewer', desc: 'Task loop Stage C: Dispatch reviewer agent (opus). Independent verification — 5 dimensions: spec conformance, acceptance criteria, test adequacy, conventions, architecture.' },
+      { id: 'review-result', label: 'Reviewer verdict?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route on VERDICT: approved → task gate, needs-changes → human-in-the-loop fix gate.' },
+      { id: 'fix-gate', label: 'HITL: Fixes?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Human-in-the-loop gate for fixes. Auto (attempts < 3) = re-invoke executor automatically. Gated or attempts >= 3 = present to user for decision.' },
       { id: 'review-changes', label: 'ASK: Fix analysis', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Present reviewer ISSUES with FIX/ALTERNATIVE/CONFIDENCE. Options: accept (y), auto-approve future (a), skip (s), or comment.' },
-      { id: 'gate', label: 'D. Task gate', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Task loop Stage D: Check task_gate_mode. Gated = present summary. Auto = announce and proceed.' },
+      { id: 'gate', label: 'D. HITL: Task?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Task loop Stage D: Human-in-the-loop gate for task completion. Gated = present summary for approval. Auto = announce and proceed.' },
       { id: 'gate-prompt', label: 'ASK: Approve task?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Gated mode: Present task summary. Options: approve (y), switch to auto mode, or comment (triggers executor fix round).' },
       { id: 'commit', label: 'E. Update + commit', w: 200, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Task loop Stage E: Update task in plan (via adapter), mirror to tracking file, append context notes, commit.' },
       // Exit routing
@@ -2366,23 +2369,21 @@ const FLOWCHARTS = {
   'implementation-task-reviewer': {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Invoked by technical-implementation skill after each task.' },
-      { id: 'read-spec', label: 'Read specification', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read the specification to understand the broader requirement and constraints.' },
-      { id: 'read-skills', label: 'Read project skills', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Load project skills to understand conventions and patterns.' },
-      { id: 'read-context', label: 'Read integration context', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Load accumulated integration context from prior tasks for cohesion checking.' },
+      { id: 'read-spec', label: 'Read specification', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read the specification to understand the broader design intent and constraints.' },
       { id: 'check-diff', label: 'Check unstaged changes', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Run git diff/status to identify all changed files from the executor.' },
-      { id: 'read-files', label: 'Read changed files', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read the full content of all changed files for review.' },
-      { id: 'evaluate', label: 'Evaluate 6 dimensions', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Evaluate: spec conformance, acceptance criteria, test adequacy, convention adherence, architectural quality, codebase cohesion.' },
+      { id: 'read-files', label: 'Read changed files', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read the full content of all changed files — implementation and test code.' },
+      { id: 'read-skills', label: 'Read project skills', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Load project skills to understand framework conventions, testing patterns, and architecture patterns.' },
+      { id: 'evaluate', label: 'Evaluate 5 dimensions', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Evaluate: spec conformance, acceptance criteria, test adequacy, convention adherence, architectural quality.' },
       { id: 'verdict', label: 'Verdict?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Determine verdict: approved or needs-changes based on evaluation.' },
       { id: 'report', label: 'Build review + fix analysis', w: 210, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Compile structured review with file:line references. For needs-changes: include FIX/ALTERNATIVE/CONFIDENCE per issue.' },
-      { id: 'end', label: 'VERDICT report', shape: 'pill', w: 180, h: 40, color: 'var(--implementation)', bg: 'var(--implementation-bg)', desc: 'Output: structured verdict (approved/needs-changes) with issues, fix recommendations, and cohesion notes.' },
+      { id: 'end', label: 'VERDICT report', shape: 'pill', w: 180, h: 40, color: 'var(--implementation)', bg: 'var(--implementation-bg)', desc: 'Output: structured verdict (approved/needs-changes) with issues and fix recommendations.' },
     ],
     connections: [
       { from: 'start', to: 'read-spec' },
-      { from: 'read-spec', to: 'read-skills' },
-      { from: 'read-skills', to: 'read-context' },
-      { from: 'read-context', to: 'check-diff' },
+      { from: 'read-spec', to: 'check-diff' },
       { from: 'check-diff', to: 'read-files' },
-      { from: 'read-files', to: 'evaluate' },
+      { from: 'read-files', to: 'read-skills' },
+      { from: 'read-skills', to: 'evaluate' },
       { from: 'evaluate', to: 'verdict' },
       { from: 'verdict', to: 'report' },
       { from: 'report', to: 'end' },
@@ -2544,9 +2545,10 @@ const FLOWCHART_DESCS = {
   },
   specification: {
     summary: 'Analyse discussion coupling, group into features, and build validated specifications.',
-    body: `<p>The most complex command. Two prerequisite gates (discussions must exist and be concluded), a 6-condition routing matrix based on discussion count, existing specs, and cache state, plus 5 grouping options with a refresh loop.</p>
-<p>The coupling engine reads all concluded discussions and analyses <strong>data, behavioural, and conceptual coupling</strong> to recommend feature groupings. The <strong>technical-specification</strong> skill is collaborative — it extracts, filters hallucinations, enriches gaps, presents for approval, and waits for explicit sign-off before writing.</p>`,
-    meta: { output: 'docs/workflow/specification/{topic}.md', skill: 'technical-specification', discovery: 'discovery-for-specification.sh', cache: 'discussion-consolidation-analysis.md' }
+    body: `<p>Cache-first routing with progressive disclosure. Two prerequisite gates (discussions must exist and be concluded), then a priority chain: single discussion auto-selects, valid cache shows groupings directly, stale/none cache checks for existing specs before offering analysis.</p>
+<p>The <strong>analysis flow</strong> gathers context about topic relationships, reads all concluded discussions, analyses <strong>data, behavioural, and conceptual coupling</strong>, and caches the result. The <strong>groupings menu</strong> offers per-grouping actions (Start/Continue/Refine), Unify all, and Re-analyze. A separate <strong>specs menu</strong> appears when specs exist but cache is stale — showing existing specs alongside an analyze option.</p>
+<p>The <strong>technical-specification</strong> skill is collaborative — it extracts, filters hallucinations, enriches gaps, presents for approval, and waits for explicit sign-off before writing.</p>`,
+    meta: { output: 'docs/workflow/specification/{topic}.md', skill: 'technical-specification', discovery: 'discovery.sh', cache: 'discussion-consolidation-analysis.md' }
   },
   planning: {
     summary: 'Transform specifications into phased implementation plans with tasks and acceptance criteria.',
@@ -2607,7 +2609,7 @@ const FLOWCHART_DESCS = {
   'skill-implementation': {
     summary: 'The implementation skill — agent-based TDD with per-task executor/reviewer, linting, and analysis cycle.',
     body: `<p>Orchestrator dispatches <strong>two agents per task</strong>: an <strong>executor</strong> (implements via strict TDD with RED→GREEN→REFACTOR→LINT cycle) and an independent <strong>reviewer</strong> (verifies correctness, opus model). Neither agent sees the other's context.</p>
-<p><strong>Task loop</strong> (Step 6): Five stages per task — <strong>A.</strong> Retrieve next task → <strong>B.</strong> Invoke executor (blocked? → user decides: retry/skip/stop) → <strong>C.</strong> Invoke reviewer (needs changes? → <strong>fix_gate_mode</strong> controls: auto re-invokes executor, gated presents findings with fix analysis) → <strong>D.</strong> Task gate (<strong>task_gate_mode</strong>: gated waits for approval, auto announces only) → <strong>E.</strong> Update plan + commit. Loop until all tasks done.</p>
+<p><strong>Task loop</strong> (Step 6): Five stages per task — <strong>A.</strong> Retrieve next task → <strong>B.</strong> Invoke executor (blocked? → user decides: retry/skip/stop) → <strong>C.</strong> Invoke reviewer (needs changes? → <strong>HITL fix gate</strong> controls: auto re-invokes executor, gated presents findings with fix analysis) → <strong>D.</strong> HITL task gate (<strong>gated</strong> waits for approval, <strong>auto</strong> announces only) → <strong>E.</strong> Update plan + commit. Loop until all tasks done.</p>
 <p><strong>Analysis loop</strong> (Step 7): After task loop, dispatch <strong>3 analysis agents in parallel</strong> (duplication, standards, architecture) → <strong>synthesizer</strong> deduplicates and normalizes into tasks → user approves/skips each task individually → approved tasks are added to the plan as a new phase → <strong>re-enter task loop</strong>. Up to 3 cycles, user prompted to continue beyond that.</p>`,
     meta: { complexity: 'Agent-based TDD' }
   },
@@ -2667,9 +2669,9 @@ const FLOWCHART_DESCS = {
     meta: { model: 'Opus', invokedBy: 'technical-implementation', complexity: 'Subagent' }
   },
   'implementation-task-reviewer': {
-    summary: 'Independently review a task across 6 dimensions with fix recommendations — no access to executor context.',
-    body: `<p>Reads the specification, project skills, and integration context file, then checks unstaged changes via git diff/status and reads all changed files. <strong>Independent from the executor</strong> — no shared context.</p>
-<p>Evaluates across <strong>6 dimensions</strong>: spec conformance, acceptance criteria coverage, test adequacy, convention adherence, architectural quality, and <strong>codebase cohesion</strong> (DRY, naming consistency, helper reuse). Produces a structured verdict (<strong>approved</strong> or <strong>needs-changes</strong>) with file:line references.</p>
+    summary: 'Independently review a task across 5 dimensions with fix recommendations — no access to executor context.',
+    body: `<p>Reads the specification, then checks unstaged changes via git diff/status and reads all changed files. Loads project skills for convention checking. <strong>Independent from the executor</strong> — no shared context.</p>
+<p>Evaluates across <strong>5 dimensions</strong>: spec conformance, acceptance criteria coverage, test adequacy, convention adherence, and architectural quality. Produces a structured verdict (<strong>approved</strong> or <strong>needs-changes</strong>) with file:line references.</p>
 <p>When returning <strong>needs-changes</strong>, each issue includes <strong>FIX</strong> (recommended approach), optional <strong>ALTERNATIVE</strong> (when multiple valid approaches exist), and <strong>CONFIDENCE</strong> (high/medium/low) — giving visibility into the fix strategy before re-execution.</p>`,
     meta: { model: 'Opus', invokedBy: 'technical-implementation', complexity: 'Subagent' }
   },
