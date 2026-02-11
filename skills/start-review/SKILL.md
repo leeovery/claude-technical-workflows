@@ -104,9 +104,57 @@ Plans exist.
 
 ---
 
-## Step 3: Review Scope
+## Step 3: Present Plans and Select Scope
 
-Present the scope selection. If only one implemented plan exists, auto-select single scope and proceed to Step 4.
+Present all discovered plans with implementation status to help the user understand what's reviewable.
+
+**Present the full state:**
+
+```
+Review Phase
+
+Reviewable:
+  1. ✓ {topic-1} (completed) - format: {format}, spec: {exists|missing}
+  2. ▶ {topic-2} (in-progress) - format: {format}, spec: {exists|missing}
+
+Not reviewable:
+  · {topic-3} [no implementation]
+```
+
+**Formatting rules:**
+
+Reviewable (numbered, selectable):
+- **`✓`** — implementation_status: completed
+- **`▶`** — implementation_status: in-progress
+
+Not reviewable (not numbered, not selectable):
+- **`·`** — implementation_status: none
+
+Omit either section entirely if it has no entries.
+
+**Then route based on what's reviewable:**
+
+#### If no reviewable plans
+
+```
+No implemented plans found.
+
+The review phase requires at least one plan with an implementation.
+Please run /start-implementation first.
+```
+
+**STOP.** Wait for user to acknowledge before ending.
+
+#### If single reviewable plan
+
+```
+Auto-selecting: {topic} (only reviewable plan)
+Scope: single
+```
+
+→ Proceed directly to **Step 5**.
+
+#### If multiple reviewable plans
 
 ```
 · · · · · · · · · · · ·
@@ -118,14 +166,6 @@ What scope would you like to review?
 · · · · · · · · · · · ·
 ```
 
-**If only one implemented plan exists (auto-select):**
-```
-Auto-selecting single scope (only one implemented plan)
-```
-→ Proceed directly to **Step 4**.
-
-**If multiple implemented plans exist:**
-
 **STOP.** Wait for user response.
 
 → Based on user choice, proceed to **Step 4**.
@@ -134,54 +174,37 @@ Auto-selecting single scope (only one implemented plan)
 
 ## Step 4: Plan Selection
 
-**For single scope:** Present list of implemented plans, user picks one.
+This step only applies for `single` or `multi` scope chosen in Step 3.
 
-```
-Available Plans:
+#### If scope is "all"
 
-  1. {topic-1} ({status}) - format: {format}, impl: {implementation_status}, spec: {exists|missing}
-  2. {topic-2} ({status}) - format: {format}, impl: {implementation_status}, spec: {exists|missing}
+All reviewable plans are included. No selection needed.
 
-· · · · · · · · · · · ·
-Which plan would you like to review? (Enter a number or name)
-```
-
-Only show plans with implementation_status != "none".
-
-**If single plan auto-selected from Step 3:**
-```
-Auto-selecting: {topic} (only implemented plan)
-```
 → Proceed directly to **Step 5**.
 
-**If multiple plans exist:**
+#### If scope is "single"
+
+```
+· · · · · · · · · · · ·
+Which plan would you like to review? (Enter a number from Step 3)
+· · · · · · · · · · · ·
+```
 
 **STOP.** Wait for user response.
 
-→ Based on user choice, proceed to **Step 5**.
+→ Proceed to **Step 5**.
 
-**For multi scope:** Present list with multi-select.
+#### If scope is "multi"
 
 ```
-Available Plans:
-
-  1. {topic-1} ({status}) - impl: {implementation_status}
-  2. {topic-2} ({status}) - impl: {implementation_status}
-  3. {topic-3} ({status}) - impl: {implementation_status}
-
 · · · · · · · · · · · ·
 Which plans to include? (Enter numbers separated by commas, e.g. 1,3)
+· · · · · · · · · · · ·
 ```
-
-Only show plans with implementation_status != "none".
 
 **STOP.** Wait for user response.
 
-→ Based on user choice, proceed to **Step 5**.
-
-**For all scope:** No selection needed — include all plans with implementation_status != "none".
-
-→ Proceed directly to **Step 5**.
+→ Proceed to **Step 5**.
 
 ---
 
