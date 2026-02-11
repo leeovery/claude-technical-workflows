@@ -6,7 +6,28 @@
 
 Gather context based on the chosen path.
 
-#### If starting new discussion (from research or fresh)
+#### If starting from research
+
+Summarise the selected research topic in 2-5 lines, drawing from the source, summary, and key questions in the research analysis.
+
+```
+New discussion: {topic}
+
+Based on research: docs/workflow/research/{filename}.md (lines {start}-{end})
+
+{2-5 line summary of the topic and what needs discussing}
+
+· · · · · · · · · · · ·
+Do you have anything to add? Extra context, files, or additional
+research you'd like to include — drop them in now.
+
+- **`n`/`no`** — Continue as-is
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response before proceeding.
+
+#### If starting fresh topic
 
 ```
 New discussion: {topic}
