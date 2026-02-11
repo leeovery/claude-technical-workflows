@@ -13,10 +13,20 @@ This is **product review**, **feature review**, **test review**, AND **code revi
 ## Review Artifacts
 
 This skill reviews against available artifacts. Required:
-- **Plan** (the tasks and acceptance criteria)
+- **Plan(s)** (the tasks and acceptance criteria)
 
 Optional but helpful:
-- **Specification** (context for design decisions)
+- **Specification(s)** (context for design decisions)
+
+## Review Scopes
+
+This skill supports three review scopes:
+
+- **Single plan** — Review one plan's implementation (QA verification + product assessment)
+- **Multi-plan** — Review selected plans together (optional QA + cross-cutting product assessment)
+- **All plans** — Review all implemented plans (optional QA + full product assessment)
+
+The entry-point skill determines the scope and provides the plan(s).
 
 ## Purpose in the Workflow
 
@@ -24,11 +34,12 @@ This skill can be used:
 - **Sequentially**: After implementation of a planned feature
 - **Standalone** (Contract entry): To review any implementation against a plan
 
-Either way: Verify every plan task was implemented, tested adequately, and meets quality standards.
+Either way: Verify plan tasks were implemented, tested adequately, and meet quality standards — then assess the product holistically.
 
 ### What This Skill Needs
 
-- **Plan content** (required) - Tasks and acceptance criteria to verify against
+- **Review scope** (required) - single, multi, or all
+- **Plan content** (required) - Tasks and acceptance criteria to verify against (one or more plans)
 - **Specification content** (optional) - Context for design decisions
 - **Implementation scope** (optional) - What code/files to review. Will identify from git if not specified.
 
@@ -59,11 +70,20 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 ## Review Approach
 
+The review has two stages:
+
+**Stage 1: QA Verification** — Per-task correctness check
+**Stage 2: Product Assessment** — Holistic product evaluation
+
+Both stages contribute to the final review document.
+
+### Stage 1: QA Verification
+
 Start from the **plan** - it contains the granular tasks and acceptance criteria.
 
 Use the **specification** for context if available. If no specification exists, the plan is the source of truth for design decisions.
 
-Verify **all** tasks, not a sample.
+**For single-plan scope:** Verify **all** tasks, not a sample.
 
 ```
 Plan (tasks + acceptance criteria)
@@ -77,16 +97,25 @@ Plan (tasks + acceptance criteria)
 
 **Use parallel `review-task-verifier` subagents** to verify ALL plan tasks simultaneously. Each verifier checks one task for implementation, tests, and quality. This enables comprehensive review without sequential bottlenecks.
 
-## What You Verify (Per Task)
+**For multi-plan / all scope:** Per-task QA is optional since individual plans were presumably already reviewed during implementation. Offer the choice:
 
-### Implementation
+```
+These plans were already reviewed during implementation.
+Run per-task QA verification anyway? (y/n)
+```
+
+If yes, run task verifiers across all selected plans. If no (default), skip to Stage 2.
+
+#### What You Verify (Per Task)
+
+##### Implementation
 
 - Is the task implemented?
 - Does it match the acceptance criteria?
 - Does it align with spec context?
 - Any drift from what was planned?
 
-### Tests
+##### Tests
 
 Evaluate test coverage critically - both directions:
 
@@ -94,7 +123,7 @@ Evaluate test coverage critically - both directions:
 - **Not over-tested**: Are tests focused and necessary? No redundant or bloated checks?
 - Would the test fail if the feature broke?
 
-### Code Quality
+##### Code Quality
 
 Review as a senior architect would:
 
@@ -111,15 +140,32 @@ Review as a senior architect would:
 - **Security**: No obvious vulnerabilities
 - **Performance**: No obvious inefficiencies
 
+### Stage 2: Product Assessment
+
+After QA verification (or in place of it for multi/all scope), spawn a single `review-product-assessor` agent with the full scope context.
+
+**Provide to the assessor:**
+- All implementation files in scope
+- All relevant specifications
+- All relevant plans
+- Project skills (`.claude/skills/`)
+- Review scope indicator (single-plan / multi-plan / full-product)
+
+The assessor evaluates the implementation holistically — robustness, gaps, strengthening opportunities, and what's next. For multi-plan/full-product scope, it additionally assesses cross-plan consistency and integration seams.
+
+Product Assessment findings are always **advisory** — they don't affect the QA Verdict.
+
 ## Review Process
 
-1. **Read the plan** - Understand all phases, tasks, and acceptance criteria
-2. **Read the specification** - Load context for the feature being reviewed
-3. **Extract all tasks** - List every task from every phase
-4. **Spawn review-task-verifiers in parallel** - One subagent per task, all running simultaneously
-5. **Aggregate findings** - Collect reports from all review-task-verifiers
-6. **Check project skills** - Framework/language conventions
-7. **Produce review** - Structured feedback covering all tasks
+1. **Read plan(s) and specification(s)** for selected scope
+2. **Determine review mode** (single vs multi/all)
+3. **Stage 1: QA Verification**
+   - Single: Spawn review-task-verifiers in parallel for all tasks
+   - Multi/All: Skip or offer optional per-task QA
+4. **Stage 2: Product Assessment**
+   - Spawn review-product-assessor with full scope context
+5. **Aggregate findings** into review document
+6. **Present review** with QA Verdict + Product Assessment
 
 See **[review-checklist.md](references/review-checklist.md)** for detailed checklist.
 

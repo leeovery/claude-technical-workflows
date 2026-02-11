@@ -29,6 +29,7 @@ You receive via the orchestrator's prompt:
 - Over/under-engineering — are abstractions justified by usage? Is raw code crying out for structure?
 - Missed composition opportunities — are new abstractions independently implemented when they could be derived from existing ones? If two queries are logical inverses, one should be defined in terms of the other.
 - Type safety at boundaries — are interfaces or function signatures using untyped parameters when the concrete types are known? Runtime type checks inside implementations signal the signature should be more specific.
+- Design decision soundness — are there foundational choices that introduce unnecessary complexity or latent risk? Look for: layers that mirror each other when the domain type could own the transformation; correctness that depends on caller discipline rather than being self-contained; struct tags, type annotations, or interface contracts that would produce wrong results if used outside their current narrow context. Only flag decisions that create latent bugs, unnecessary indirection, or fragile assumptions — not merely different-but-working approaches.
 
 ## Your Process
 

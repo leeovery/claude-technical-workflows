@@ -116,6 +116,18 @@ For each phase:
 - Was anything in the plan not built? (missing scope)
 - Any unplanned files or features added?
 
+## Product Assessment
+
+After QA verification (or in place of it for multi/all scope), run the product
+assessment stage:
+
+1. Spawn `review-product-assessor` with the full implementation scope
+2. Provide: all specs, all plans, project skills, and scope indicator
+3. For multi-plan/full-product scope, include ALL implementation files across
+   selected plans — the assessor needs the full picture for cross-cutting analysis
+4. Aggregate findings into the Product Assessment section of the review
+5. Product Assessment findings are always advisory — they don't affect QA Verdict
+
 ## Common Issues
 
 **Incomplete task**: Task marked done but not fully implemented

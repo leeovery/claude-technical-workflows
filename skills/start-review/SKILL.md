@@ -71,6 +71,8 @@ Parse the discovery output to understand:
 
 **From `state` section:**
 - `scenario` - one of: `"no_plans"`, `"single_plan"`, `"multiple_plans"`
+- `implemented_count` - plans with implementation_status != "none"
+- `completed_count` - plans with implementation_status == "completed"
 
 **IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
 
@@ -102,25 +104,53 @@ Plans exist.
 
 ---
 
-## Step 3: Present Plans and Select
+## Step 3a: Review Scope
 
-Present all discovered plans to help the user make an informed choice.
+Present the scope selection. If only one implemented plan exists, auto-select single scope and proceed to Step 3b.
 
-**Present the full state:**
+```
+· · · · · · · · · · · ·
+What scope would you like to review?
+
+- **`s`/`single`** — Review one plan's implementation
+- **`m`/`multi`** — Review selected plans together (cross-cutting)
+- **`a`/`all`** — Review all implemented plans (full product)
+· · · · · · · · · · · ·
+```
+
+**If only one implemented plan exists (auto-select):**
+```
+Auto-selecting single scope (only one implemented plan)
+```
+→ Proceed directly to **Step 3b**.
+
+**If multiple implemented plans exist:**
+
+**STOP.** Wait for user response.
+
+→ Based on user choice, proceed to **Step 3b**.
+
+---
+
+## Step 3b: Plan Selection
+
+**For single scope:** Present list of implemented plans, user picks one.
 
 ```
 Available Plans:
 
-  1. {topic-1} ({status}) - format: {format}, spec: {exists|missing}
-  2. {topic-2} ({status}) - format: {format}, spec: {exists|missing}
+  1. {topic-1} ({status}) - format: {format}, impl: {implementation_status}, spec: {exists|missing}
+  2. {topic-2} ({status}) - format: {format}, impl: {implementation_status}, spec: {exists|missing}
 
 · · · · · · · · · · · ·
-Which plan would you like to review the implementation for? (Enter a number or name)
+Which plan would you like to review? (Enter a number or name)
 ```
 
-**If single plan exists (auto-select):**
+Only show plans with implementation_status != "none".
+
+**If single plan auto-selected from Step 3a:**
 ```
-Auto-selecting: {topic} (only available plan)
+Auto-selecting: {topic} (only implemented plan)
 ```
 → Proceed directly to **Step 4**.
 
@@ -130,11 +160,34 @@ Auto-selecting: {topic} (only available plan)
 
 → Based on user choice, proceed to **Step 4**.
 
+**For multi scope:** Present list with multi-select.
+
+```
+Available Plans:
+
+  1. {topic-1} ({status}) - impl: {implementation_status}
+  2. {topic-2} ({status}) - impl: {implementation_status}
+  3. {topic-3} ({status}) - impl: {implementation_status}
+
+· · · · · · · · · · · ·
+Which plans to include? (Enter numbers separated by commas, e.g. 1,3)
+```
+
+Only show plans with implementation_status != "none".
+
+**STOP.** Wait for user response.
+
+→ Based on user choice, proceed to **Step 4**.
+
+**For all scope:** No selection needed — include all plans with implementation_status != "none".
+
+→ Proceed directly to **Step 4**.
+
 ---
 
 ## Step 4: Identify Implementation Scope
 
-Ask the user what code to review:
+**For single scope:** Ask what code to review:
 
 ```
 · · · · · · · · · · · ·
@@ -150,6 +203,17 @@ What code should I review?
 
 If they choose specific directories/files, ask them to specify.
 
+**For multi/all scope:** Default to all changes. Briefly confirm:
+
+```
+· · · · · · · · · · · ·
+For multi-plan review, defaulting to all implementation changes.
+Override with specific paths? (Enter paths or press enter to continue)
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
 → Proceed to **Step 5**.
 
 ---
@@ -160,14 +224,27 @@ After completing the steps above, this skill's purpose is fulfilled.
 
 Invoke the [technical-review](../technical-review/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
-**Example handoff:**
+**Example handoff (single):**
 ```
 Review session for: {topic}
+Review scope: single
 Plan: docs/workflow/planning/{topic}.md
 Format: {format}
 Plan ID: {plan_id} (if applicable)
 Specification: {specification} (exists: {true|false})
-Scope: {all changes | specific paths | from git status}
+Implementation scope: {all changes | specific paths | from git status}
+
+Invoke the technical-review skill.
+```
+
+**Example handoff (multi/all):**
+```
+Review session for: {scope description}
+Review scope: {multi | all}
+Plans:
+  - docs/workflow/planning/{topic-1}.md (format: {format}, spec: {spec})
+  - docs/workflow/planning/{topic-2}.md (format: {format}, spec: {spec})
+Implementation scope: {all changes | specific paths}
 
 Invoke the technical-review skill.
 ```
