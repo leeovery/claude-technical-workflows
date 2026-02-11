@@ -9,7 +9,7 @@ Gather context based on the chosen path.
 #### If starting new discussion (from research or fresh)
 
 ```
-## New discussion: {topic}
+New discussion: {topic}
 
 Before we begin:
 
@@ -27,7 +27,7 @@ Before we begin:
 Read the existing discussion document first, then ask:
 
 ```
-## Continuing: {topic}
+Continuing: {topic}
 
 I've read the existing discussion.
 
