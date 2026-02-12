@@ -83,6 +83,8 @@ Parse the discovery output to understand:
 
 **IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
 
+**Silent processing**: Do NOT output your assessment of the discovery state. Parse it internally and proceed to the next step without narrating field values, routing decisions, or prerequisites. The first user-visible output should be the display content itself.
+
 → Proceed to **Step 2**.
 
 ---

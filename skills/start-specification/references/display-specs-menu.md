@@ -20,11 +20,13 @@ For each non-superseded specification from discovery output, display as nested t
 
 ```
 1. {Spec Title Case Name}
-   └─ Spec: {status} ({X} of {Y} sources extracted)
-   └─ Discussions:
-      ├─ {source-name} (extracted)
-      └─ {source-name} (extracted)
+    └─ Spec: {status} ({X} of {Y} sources extracted)
+    └─ Discussions:
+       ├─ {source-name} (extracted)
+       └─ {source-name} (extracted)
 ```
+
+Indentation: `└─` starts at column 4 (under the name text, not the number). Discussion entries start at column 7.
 
 Determine discussion status from the spec's `sources` array:
 - `incorporated` + `discussion_status: concluded` or `not-found` → `extracted`
@@ -46,7 +48,6 @@ Concluded discussions not in a specification:
 ### If in-progress discussions exist
 
 ```
----
 Discussions not ready for specification:
 These discussions are still in progress and must be concluded
 before they can be included in a specification.
@@ -55,10 +56,9 @@ before they can be included in a specification.
 
 ### Key/Legend
 
-Show only the statuses that appear in the current display.
+Show only the statuses that appear in the current display. No `---` separator before this section.
 
 ```
----
 Key:
 
   Discussion status:
@@ -72,17 +72,17 @@ Key:
 
 ### Cache-Aware Message
 
+No `---` separator before these messages.
+
 #### If cache status is "none"
 
 ```
----
 No grouping analysis exists.
 ```
 
 #### If cache status is "stale"
 
 ```
----
 A previous grouping analysis exists but is outdated — discussions
 have changed since it was created. Re-analysis is required.
 ```
@@ -104,15 +104,17 @@ List "Analyze for groupings (recommended)" first, then one entry per existing no
 ```
 · · · · · · · · · · · ·
 1. Analyze for groupings (recommended)
-   All discussions are analyzed for natural groupings. Existing
-   specification names are preserved. You can provide guidance
-   in the next step.
+   `All discussions are analyzed for natural groupings. Existing`
+   `specification names are preserved. You can provide guidance`
+   `in the next step.`
 2. Continue "Auth Flow" — in-progress
 3. Refine "Data Model" — concluded
 
 Select an option (enter number):
 · · · · · · · · · · · ·
 ```
+
+Menu descriptions are wrapped in backticks to visually distinguish them from the choice labels.
 
 **STOP.** Wait for user response.
 
