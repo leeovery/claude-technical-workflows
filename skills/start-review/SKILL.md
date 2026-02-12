@@ -30,6 +30,7 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 **CRITICAL**: This guidance is mandatory.
 
+- **Silent processing**: Do NOT narrate your internal reasoning. Never output discovery field values, routing decisions, cache status, or prerequisite checks. The first user-visible output must be the display content itself.
 - After each user interaction, STOP and wait for their response before proceeding
 - Never assume or anticipate user choices
 - Even if the user's initial prompt seems to answer a question, still confirm with them at the appropriate step
@@ -75,8 +76,6 @@ Parse the discovery output to understand:
 - `completed_count` - plans with implementation_status == "completed"
 
 **IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
-
-**Silent processing**: Do NOT output your assessment of the discovery state. Parse it internally and proceed to the next step without narrating field values, routing decisions, or prerequisites. The first user-visible output should be the display content itself.
 
 → Proceed to **Step 2**.
 

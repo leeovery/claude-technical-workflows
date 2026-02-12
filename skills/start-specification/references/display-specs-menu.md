@@ -20,13 +20,13 @@ For each non-superseded specification from discovery output, display as nested t
 
 ```
 1. {Spec Title Case Name}
-    └─ Spec: {status} ({X} of {Y} sources extracted)
-    └─ Discussions:
-       ├─ {source-name} (extracted)
-       └─ {source-name} (extracted)
+   └─ Spec: {status} ({X} of {Y} sources extracted)
+   └─ Discussions:
+      ├─ {source-name} (extracted)
+      └─ {source-name} (extracted)
 ```
 
-Indentation: `└─` starts at column 4 (under the name text, not the number). Discussion entries start at column 7.
+**Formatting is exact**: Output the tree structure exactly as shown above — preserve all indentation spaces and `├─`/`└─` characters. Do not flatten or compress the spacing.
 
 Determine discussion status from the spec's `sources` array:
 - `incorporated` + `discussion_status: concluded` or `not-found` → `extracted`

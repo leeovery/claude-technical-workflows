@@ -56,20 +56,18 @@ Specification Overview
 Recommended breakdown for specifications with their source discussions.
 
 1. {Grouping Name}
-    └─ Spec: {status} {(X of Y sources extracted) if applicable}
-    └─ Discussions:
-       ├─ {discussion-name} ({status})
-       └─ {discussion-name} ({status})
+   └─ Spec: {status} {(X of Y sources extracted) if applicable}
+   └─ Discussions:
+      ├─ {discussion-name} ({status})
+      └─ {discussion-name} ({status})
 
 2. {Grouping Name}
-    └─ Spec: none
-    └─ Discussions:
-       └─ {discussion-name} (ready)
+   └─ Spec: none
+   └─ Discussions:
+      └─ {discussion-name} (ready)
 ```
 
-Indentation: `└─` starts at column 4 (under the grouping name text, not the number). Discussion entries start at column 7.
-
-Use `├─` for all but the last discussion, `└─` for the last.
+**Formatting is exact**: Output the tree structure exactly as shown above — preserve all indentation spaces, blank lines between groupings, and `├─`/`└─` characters. Do not flatten or compress the spacing.
 
 ### If in-progress discussions exist
 
@@ -145,7 +143,7 @@ Select an option (enter number):
 · · · · · · · · · · · ·
 ```
 
-Menu descriptions are wrapped in backticks to visually distinguish them from the choice labels.
+**Formatting is exact**: Reproduce the menu exactly as shown above — descriptions are indented 3 spaces and wrapped in backticks.
 
 **STOP.** Wait for user response.
 
