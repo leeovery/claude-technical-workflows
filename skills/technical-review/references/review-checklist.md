@@ -118,8 +118,7 @@ For each phase:
 
 ## Product Assessment
 
-After QA verification (or in place of it for multi/all scope), run the product
-assessment stage:
+After QA verification, run the product assessment stage:
 
 1. Spawn `review-product-assessor` with the full implementation scope
 2. Provide: all specs, all plans, project skills, and scope indicator

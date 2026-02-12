@@ -96,36 +96,7 @@ Scan `.claude/skills/` for project-specific skill directories. Note which are re
 
 ---
 
-## Step 3: Route by Review Scope
-
-#### If scope is "single"
-
-Single plan — full QA verification followed by product assessment.
-
-→ Proceed to **Step 4**.
-
-#### If scope is "multi" or "all"
-
-Multiple plans — per-task QA is optional since individual plans were presumably already reviewed during implementation.
-
-```
-· · · · · · · · · · · ·
-These plans were already reviewed during implementation.
-Run per-task QA verification anyway?
-
-- **`y`/`yes`** — Run QA across all selected plans
-- **`n`/`no`** — Skip to product assessment (default)
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-- **`yes`**: → Proceed to **Step 4**.
-- **`no`**: → Proceed to **Step 5**.
-
----
-
-## Step 4: QA Verification
+## Step 3: QA Verification
 
 Spawn `review-task-verifier` subagents **in parallel** for ALL tasks across the selected plan(s). Each verifier checks one task for implementation, tests, and quality.
 
@@ -143,11 +114,11 @@ See **[review-checklist.md](references/review-checklist.md)** for detailed per-t
 - Collect all code quality concerns
 - Include specific file:line references
 
-→ Proceed to **Step 5**.
+→ Proceed to **Step 4**.
 
 ---
 
-## Step 5: Product Assessment
+## Step 4: Product Assessment
 
 Spawn a single `review-product-assessor` agent with the full scope context. This is a holistic evaluation — not task-by-task.
 
@@ -162,22 +133,22 @@ The assessor evaluates robustness, gaps, strengthening opportunities, and what's
 
 Product Assessment findings are always **advisory** — they don't affect the QA Verdict.
 
-→ Proceed to **Step 6**.
+→ Proceed to **Step 5**.
 
 ---
 
-## Step 6: Produce Review
+## Step 5: Produce Review
 
 Aggregate findings from both stages into a review document using the **[template.md](references/template.md)**.
 
 Write the review to `docs/workflow/review/{topic}.md` (single) or `docs/workflow/review/{scope-description}.md` (multi/all).
 
-**QA Verdict** (from Step 4, or "Skipped" if QA was skipped):
+**QA Verdict** (from Step 3):
 - **Approve** — All acceptance criteria met, no blocking issues
 - **Request Changes** — Missing requirements, broken functionality, inadequate tests
 - **Comments Only** — Minor suggestions, non-blocking observations
 
-**Product Assessment** (from Step 5) — always advisory, presented alongside the verdict.
+**Product Assessment** (from Step 4) — always advisory, presented alongside the verdict.
 
 Commit: `review({topic}): complete review`
 

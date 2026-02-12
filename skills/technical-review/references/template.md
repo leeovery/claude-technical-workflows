@@ -10,13 +10,12 @@
 # Implementation Review: {Topic / Product}
 
 **Scope**: Single Plan ({plan}) | Multi-Plan ({plans}) | Full Product
-**QA Verdict**: Approve | Request Changes | Comments Only | Skipped (multi/all)
+**QA Verdict**: Approve | Request Changes | Comments Only
 
 ## Summary
 [One paragraph overall assessment]
 
 ## QA Verification
-[Present if QA was run; omit or note "Skipped — individual plans already reviewed" for multi/all]
 
 ### Specification Compliance
 [Implementation aligns with specification / Note any deviations]
@@ -67,4 +66,3 @@
 
 **Comments Only**: Minor suggestions, style preferences, non-blocking observations
 
-**Skipped**: QA verification was skipped for multi/all scope (individual plans already reviewed)
