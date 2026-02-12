@@ -100,6 +100,8 @@ Scan `.claude/skills/` for project-specific skill directories. Note which are re
 
 Load **[invoke-task-verifiers.md](references/invoke-task-verifiers.md)** and follow its instructions as written.
 
+**STOP.** Do not proceed until ALL task verifiers have returned and findings are aggregated.
+
 → Proceed to **Step 4**.
 
 ---
@@ -107,6 +109,8 @@ Load **[invoke-task-verifiers.md](references/invoke-task-verifiers.md)** and fol
 ## Step 4: Product Assessment
 
 Load **[invoke-product-assessor.md](references/invoke-product-assessor.md)** and follow its instructions as written.
+
+**STOP.** Do not proceed until the product assessor has returned.
 
 → Proceed to **Step 5**.
 
