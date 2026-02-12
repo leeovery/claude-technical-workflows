@@ -24,7 +24,6 @@ List all concluded discussions from discovery output.
 ### If in-progress discussions exist
 
 ```
----
 Discussions not ready for specification:
 These discussions are still in progress and must be concluded
 before they can be included in a specification.
@@ -33,10 +32,11 @@ before they can be included in a specification.
 
 ### Cache-Aware Message
 
+No `---` separator before these messages.
+
 #### If cache status is "none"
 
 ```
----
 These discussions will be analyzed for natural groupings to determine
 how they should be organized into specifications. Results are cached
 and reused until discussions change.
@@ -51,7 +51,6 @@ Proceed with analysis?
 #### If cache status is "stale"
 
 ```
----
 A previous grouping analysis exists but is outdated — discussions
 have changed since it was created.
 
