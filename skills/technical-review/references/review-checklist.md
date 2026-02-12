@@ -4,61 +4,7 @@
 
 ---
 
-## Before Starting
-
-1. Read plan (from the location provided)
-   - If not found at expected path, ask user where the plan is
-2. Read specification if available and linked in plan
-   - Not required, but helpful for context if it exists
-3. Identify what code/files were changed
-4. Check for project-specific skills in `.claude/skills/`
-
-## Task-Based Review (Primary Approach)
-
-Review **every task** in the plan. Don't sample - verify all of them.
-
-### Extract All Tasks
-
-From the plan, list every task across all phases:
-- Note each task's description
-- Note each task's acceptance criteria
-- Note expected micro acceptance (test name)
-
-### Parallel Verification
-
-Spawn `review-task-verifier` subagents **in parallel** for ALL tasks:
-
-```
-Task 1 ──▶ [review-task-verifier] ──▶ Findings
-Task 2 ──▶ [review-task-verifier] ──▶ Findings
-Task 3 ──▶ [review-task-verifier] ──▶ Findings  (all running in parallel)
-Task 4 ──▶ [review-task-verifier] ──▶ Findings
-  ...
-Task N ──▶ [review-task-verifier] ──▶ Findings
-```
-
-**How to invoke each review-task-verifier:**
-
-Provide:
-- The specific task (with acceptance criteria)
-- Path to specification (for context)
-- Path to plan (for phase context)
-- Implementation scope (files/directories changed)
-
-**Each review-task-verifier checks:**
-1. Implementation exists and matches acceptance criteria
-2. Tests are adequate (not under-tested, not over-tested)
-3. Code quality is acceptable
-
-**Aggregate the findings:**
-
-Once all review-task-verifiers complete, synthesize their reports:
-- Collect all incomplete/failed tasks as blocking issues
-- Collect all test issues (under/over-tested)
-- Collect all code quality concerns
-- Include specific file:line references
-
-## Per-Task Verification Details
+## Per-Task Verification Criteria
 
 For each task, the review-task-verifier checks:
 

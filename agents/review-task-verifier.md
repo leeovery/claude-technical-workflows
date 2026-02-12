@@ -15,7 +15,8 @@ You receive:
 1. **Plan task**: A specific task with its acceptance criteria
 2. **Specification path**: For loading context about this task's feature/requirement
 3. **Plan path**: The full plan for additional context
-4. **Implementation scope**: Files or directories to check
+4. **Project skill paths**: Relevant `.claude/skills/` paths for framework conventions
+5. **Review checklist path**: Path to the review checklist (`skills/technical-review/references/review-checklist.md`) — read this for detailed verification criteria
 
 ## Your Task
 

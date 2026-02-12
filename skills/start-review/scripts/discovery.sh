@@ -45,6 +45,8 @@ echo ""
 echo "plans:"
 
 plan_count=0
+implemented_count=0
+completed_count=0
 
 if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
     echo "  exists: true"
@@ -73,6 +75,14 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
             spec_exists="true"
         fi
 
+        # Check implementation status
+        impl_tracking="docs/workflow/implementation/${name}/tracking.md"
+        impl_status="none"
+        if [ -f "$impl_tracking" ]; then
+            impl_status_val=$(extract_field "$impl_tracking" "status")
+            impl_status=${impl_status_val:-"in-progress"}
+        fi
+
         echo "    - name: \"$name\""
         echo "      topic: \"$topic\""
         echo "      status: \"$status\""
@@ -83,8 +93,15 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
         if [ -n "$plan_id" ]; then
             echo "      plan_id: \"$plan_id\""
         fi
+        echo "      implementation_status: \"$impl_status\""
 
         plan_count=$((plan_count + 1))
+        if [ "$impl_status" != "none" ]; then
+            implemented_count=$((implemented_count + 1))
+        fi
+        if [ "$impl_status" = "completed" ]; then
+            completed_count=$((completed_count + 1))
+        fi
     done
 
     echo "  count: $plan_count"
@@ -103,6 +120,8 @@ echo "state:"
 
 echo "  has_plans: $([ "$plan_count" -gt 0 ] && echo "true" || echo "false")"
 echo "  plan_count: $plan_count"
+echo "  implemented_count: $implemented_count"
+echo "  completed_count: $completed_count"
 
 # Determine workflow state for routing
 if [ "$plan_count" -eq 0 ]; then
