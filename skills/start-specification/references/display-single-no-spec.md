@@ -14,12 +14,12 @@ Specification Overview
 Single concluded discussion found.
 
 1. {Title Case Name}
-    └─ Spec: none
-    └─ Discussions:
-       └─ {discussion-name} (ready)
+   └─ Spec: none
+   └─ Discussions:
+      └─ {discussion-name} (ready)
 ```
 
-Indentation: `└─` starts at column 4 (under the name text, not the number). Discussion entries start at column 7.
+**Formatting is exact**: Output the tree structure exactly as shown above — preserve all indentation spaces and `├─`/`└─` characters. Do not flatten or compress the spacing.
 
 ### If in-progress discussions exist
 
