@@ -56,23 +56,24 @@ Specification Overview
 Recommended breakdown for specifications with their source discussions.
 
 1. {Grouping Name}
-   └─ Spec: {status} {(X of Y sources extracted) if applicable}
-   └─ Discussions:
-      ├─ {discussion-name} ({status})
-      └─ {discussion-name} ({status})
+    └─ Spec: {status} {(X of Y sources extracted) if applicable}
+    └─ Discussions:
+       ├─ {discussion-name} ({status})
+       └─ {discussion-name} ({status})
 
 2. {Grouping Name}
-   └─ Spec: none
-   └─ Discussions:
-      └─ {discussion-name} (ready)
+    └─ Spec: none
+    └─ Discussions:
+       └─ {discussion-name} (ready)
 ```
+
+Indentation: `└─` starts at column 4 (under the grouping name text, not the number). Discussion entries start at column 7.
 
 Use `├─` for all but the last discussion, `└─` for the last.
 
 ### If in-progress discussions exist
 
 ```
----
 Discussions not ready for specification:
 These discussions are still in progress and must be concluded
 before they can be included in a specification.
@@ -81,10 +82,9 @@ before they can be included in a specification.
 
 ### Key/Legend
 
-Show only the statuses that appear in the current display.
+Show only the statuses that appear in the current display. No `---` separator before this section.
 
 ```
----
 Key:
 
   Discussion status:
@@ -101,8 +101,9 @@ Key:
 
 ### Tip (show when 2+ groupings)
 
+No `---` separator before this section.
+
 ```
----
 Tip: To restructure groupings or pull a discussion into its own
 specification, choose "Re-analyze" and provide guidance.
 ```
@@ -133,16 +134,18 @@ After all grouping entries, append meta options:
 1. Start "Auth Flow" — 2 ready discussions
 2. Continue "Data Model" — 1 source(s) pending extraction
 3. Unify all into single specification
-   All discussions are combined into one specification. Existing
-   specifications are incorporated and superseded.
+   `All discussions are combined into one specification. Existing`
+   `specifications are incorporated and superseded.`
 4. Re-analyze groupings
-   Current groupings are discarded and rebuilt. Existing
-   specification names are preserved. You can provide guidance
-   in the next step.
+   `Current groupings are discarded and rebuilt. Existing`
+   `specification names are preserved. You can provide guidance`
+   `in the next step.`
 
 Select an option (enter number):
 · · · · · · · · · · · ·
 ```
+
+Menu descriptions are wrapped in backticks to visually distinguish them from the choice labels.
 
 **STOP.** Wait for user response.
 
