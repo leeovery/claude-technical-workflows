@@ -12,7 +12,7 @@ This step uses the `planning-dependency-grapher` agent (`../../../../agents/plan
 
 Orient the user:
 
-> "All tasks are authored. Now I'll analyze internal dependencies and priorities across the full plan."
+"All tasks are authored. Now I'll analyze internal dependencies and priorities across the full plan."
 
 Read **[output-formats.md](../output-formats.md)**, find the entry matching the `format:` field in the Plan Index File, and load the format's **[reading.md](../output-formats/{format}/reading.md)** and **[graph.md](../output-formats/{format}/graph.md)**.
 
@@ -34,15 +34,15 @@ The agent clears any existing dependencies/priorities, analyzes all tasks, and �
 
 The natural task order is already correct. Present as rendered markdown (not in a code block):
 
-> "I've analyzed all {M} tasks and the natural execution order is already correct — no explicit dependencies or priorities are needed.
->
-> {notes from agent output}"
+"I've analyzed all {M} tasks and the natural execution order is already correct — no explicit dependencies or priorities are needed.
 
-> · · · · · · · · · · · ·
-> **To proceed:**
-> - **`y`/`yes`** — Confirmed.
-> - **Or tell me what to change.**
-> · · · · · · · · · · · ·
+{notes from agent output}"
+
+· · · · · · · · · · · ·
+**To proceed:**
+- **`y`/`yes`** — Confirmed.
+- **Or tell me what to change.**
+· · · · · · · · · · · ·
 
 **Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
@@ -52,11 +52,11 @@ The natural task order is already correct. Present as rendered markdown (not in 
 
 No changes were applied. Present the cycle to the user:
 
-> "The dependency analysis found a circular dependency:
->
-> {cycle chain from agent output}
->
-> This must be resolved before continuing. The cycle usually means two tasks each assume the other is done first — one needs to be restructured or the dependency removed."
+"The dependency analysis found a circular dependency:
+
+{cycle chain from agent output}
+
+This must be resolved before continuing. The cycle usually means two tasks each assume the other is done first — one needs to be restructured or the dependency removed."
 
 **STOP.** Wait for the user to decide how to resolve. Options include adjusting task scope, merging tasks, or removing a dependency. Re-invoke the agent after changes.
 
@@ -64,21 +64,21 @@ No changes were applied. Present the cycle to the user:
 
 Dependencies and priorities have already been written to the task files. Present as rendered markdown (not in a code block):
 
-> "I've analyzed and applied dependencies and priorities across all {M} tasks:
->
-> **Dependencies** ({count} relationships):
-> {dependency list from agent output}
->
-> **Priorities**:
-> {priority list from agent output}
->
-> {any notes from agent output}"
+"I've analyzed and applied dependencies and priorities across all {M} tasks:
 
-> · · · · · · · · · · · ·
-> **To proceed:**
-> - **`y`/`yes`** — Approved.
-> - **Or tell me what to change.**
-> · · · · · · · · · · · ·
+**Dependencies** ({count} relationships):
+{dependency list from agent output}
+
+**Priorities**:
+{priority list from agent output}
+
+{any notes from agent output}"
+
+· · · · · · · · · · · ·
+**To proceed:**
+- **`y`/`yes`** — Approved.
+- **Or tell me what to change.**
+· · · · · · · · · · · ·
 
 **Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 

@@ -85,10 +85,10 @@ After both reviews:
 
 3. **Confirm with the user**:
 
-> "The plan has passed both reviews:
-> - **Traceability**: All specification content is covered; no hallucinated content
-> - **Integrity**: Plan structure, tasks, and dependencies are implementation-ready
->
-> Review is complete."
+"The plan has passed both reviews:
+- **Traceability**: All specification content is covered; no hallucinated content
+- **Integrity**: Plan structure, tasks, and dependencies are implementation-ready
+
+Review is complete."
 
 > **CHECKPOINT**: Do not confirm completion if tracking files still exist. They indicate incomplete review work.

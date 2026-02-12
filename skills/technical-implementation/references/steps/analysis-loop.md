@@ -28,14 +28,14 @@ If `analysis_cycle > 3`:
 
 **Do NOT skip analysis autonomously.** This gate is an escape hatch for the user — not a signal to stop. The expected default is to continue running analysis until no issues are found. Present the choice and let the user decide.
 
-> **Analysis cycle {N}**
->
-> Analysis has run {N-1} times so far. You can continue (recommended if issues were still found last cycle) or skip to completion.
->
-> · · · · · · · · · · · ·
-> - **`p`/`proceed`** — Continue analysis *(default)*
-> - **`s`/`skip`** — Skip analysis, proceed to completion
-> · · · · · · · · · · · ·
+**Analysis cycle {N}**
+
+Analysis has run {N-1} times so far. You can continue (recommended if issues were still found last cycle) or skip to completion.
+
+· · · · · · · · · · · ·
+- **`p`/`proceed`** — Continue analysis *(default)*
+- **`s`/`skip`** — Skip analysis, proceed to completion
+· · · · · · · · · · · ·
 
 **Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
@@ -57,15 +57,15 @@ If there are unstaged changes or untracked files, categorize them:
 - **Implementation files** (files touched by `impl({topic}):` commits) — stage these automatically.
 - **Unexpected files** (files not touched during implementation) — present to the user:
 
-> **Pre-analysis checkpoint — unexpected files detected:**
-> - `{file}` ({status: modified/untracked})
-> - ...
->
-> · · · · · · · · · · · ·
-> - **`y`/`yes`** — Include all in the checkpoint commit
-> - **`s`/`skip`** — Exclude unexpected files, commit only implementation files
-> - **Comment** — Specify which to include
-> · · · · · · · · · · · ·
+**Pre-analysis checkpoint — unexpected files detected:**
+- `{file}` ({status: modified/untracked})
+- ...
+
+· · · · · · · · · · · ·
+- **`y`/`yes`** — Include all in the checkpoint commit
+- **`s`/`skip`** — Exclude unexpected files, commit only implementation files
+- **Comment** — Specify which to include
+· · · · · · · · · · · ·
 
 **Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
@@ -121,35 +121,35 @@ Read the staging file from `docs/workflow/implementation/{topic}/analysis-tasks-
 
 Present an overview:
 
-> **Analysis cycle {N}: {K} proposed tasks**
->
-> 1. {title} ({severity})
-> 2. {title} ({severity})
-> ...
+**Analysis cycle {N}: {K} proposed tasks**
+
+1. {title} ({severity})
+2. {title} ({severity})
+...
 
 Then present each task with `status: pending` individually:
 
-> **Task {current}/{total}: {title}** ({severity})
-> Sources: {sources}
->
-> **Problem**: {problem}
-> **Solution**: {solution}
-> **Outcome**: {outcome}
->
-> **Do**:
-> {steps}
->
-> **Acceptance Criteria**:
-> {criteria}
->
-> **Tests**:
-> {tests}
->
-> · · · · · · · · · · · ·
-> - **`a`/`approve`** — Approve this task
-> - **`s`/`skip`** — Skip this task
-> - **Comment** — Revise based on feedback
-> · · · · · · · · · · · ·
+**Task {current}/{total}: {title}** ({severity})
+Sources: {sources}
+
+**Problem**: {problem}
+**Solution**: {solution}
+**Outcome**: {outcome}
+
+**Do**:
+{steps}
+
+**Acceptance Criteria**:
+{criteria}
+
+**Tests**:
+{tests}
+
+· · · · · · · · · · · ·
+- **`a`/`approve`** — Approve this task
+- **`s`/`skip`** — Skip this task
+- **Comment** — Revise based on feedback
+· · · · · · · · · · · ·
 
 **Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 

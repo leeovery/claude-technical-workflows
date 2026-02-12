@@ -31,13 +31,13 @@ Either way: dispatch agents per task — executor implements via TDD, reviewer v
 **Before proceeding**, verify all required inputs are available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.
 
 - **No plan provided?**
-  > "I need an implementation plan to execute. Could you point me to the plan file (e.g., `docs/workflow/planning/{topic}.md`)?"
+  "I need an implementation plan to execute. Could you point me to the plan file (e.g., `docs/workflow/planning/{topic}.md`)?"
 
 - **Plan has no `format` field in frontmatter?**
-  > "The plan at {path} doesn't specify an output format in its frontmatter. Which format does this plan use?"
+  "The plan at {path} doesn't specify an output format in its frontmatter. Which format does this plan use?"
 
 - **Plan status is not `concluded`?**
-  > "The plan at {path} has status '{status}' — it hasn't completed the review process. Should I proceed anyway, or should the plan be reviewed first?"
+  "The plan at {path} has status '{status}' — it hasn't completed the review process. Should I proceed anyway, or should the plan be reviewed first?"
 
 If no specification is available, the plan becomes the sole authority for design decisions.
 
@@ -91,7 +91,7 @@ Follow them. Complete ALL steps before proceeding.
 
 Ask:
 
-> "No environment setup document found. Are there any setup instructions I should follow before implementing?"
+"No environment setup document found. Are there any setup instructions I should follow before implementing?"
 
 **STOP.** Wait for user response.
 
@@ -166,14 +166,14 @@ Commit: `impl({topic}): start implementation`
 
 Present the existing configuration for confirmation:
 
-> Previous session used these project skills:
-> - `{skill-name}` — {path}
-> - ...
->
-> · · · · · · · · · · · ·
-> - **`y`/`yes`** — Keep these, proceed
-> - **`c`/`change`** — Re-discover and choose skills
-> · · · · · · · · · · · ·
+Previous session used these project skills:
+- `{skill-name}` — {path}
+- ...
+
+· · · · · · · · · · · ·
+- **`y`/`yes`** — Keep these, proceed
+- **`c`/`change`** — Re-discover and choose skills
+· · · · · · · · · · · ·
 
 **Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
@@ -194,16 +194,16 @@ No project skills found. Proceeding without project-specific conventions.
 
 Scan `.claude/skills/` for project-specific skill directories. Present findings:
 
-> Found these project skills that may be relevant to implementation:
-> - `{skill-name}` — {brief description}
-> - `{skill-name}` — {brief description}
-> - ...
->
-> · · · · · · · · · · · ·
-> - **`a`/`all`** — Use all listed skills
-> - **`n`/`none`** — Skip project skills
-> - **Or list the ones you want** — e.g. "golang-pro, react-patterns"
-> · · · · · · · · · · · ·
+Found these project skills that may be relevant to implementation:
+- `{skill-name}` — {brief description}
+- `{skill-name}` — {brief description}
+- ...
+
+· · · · · · · · · · · ·
+- **`a`/`all`** — Use all listed skills
+- **`n`/`none`** — Skip project skills
+- **Or list the ones you want** — e.g. "golang-pro, react-patterns"
+· · · · · · · · · · · ·
 
 **Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
@@ -223,17 +223,17 @@ If `linters` is already populated in the tracking file, present the existing con
 
 Otherwise, present discovery findings to the user:
 
-> **Linter discovery:**
-> - {tool} — `{command}` (installed / not installed)
-> - ...
->
-> Recommendations: {any suggested tools with install commands}
->
-> · · · · · · · · · · · ·
-> - **`y`/`yes`** — Approve these linter commands
-> - **`c`/`change`** — Modify the linter list
-> - **`s`/`skip`** — Skip linter setup (no linting during TDD)
-> · · · · · · · · · · · ·
+**Linter discovery:**
+- {tool} — `{command}` (installed / not installed)
+- ...
+
+Recommendations: {any suggested tools with install commands}
+
+· · · · · · · · · · · ·
+- **`y`/`yes`** — Approve these linter commands
+- **`c`/`change`** — Modify the linter list
+- **`s`/`skip`** — Skip linter setup (no linting during TDD)
+· · · · · · · · · · · ·
 
 **Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
