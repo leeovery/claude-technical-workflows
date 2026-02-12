@@ -98,21 +98,7 @@ Scan `.claude/skills/` for project-specific skill directories. Note which are re
 
 ## Step 3: QA Verification
 
-Spawn `review-task-verifier` subagents **in parallel** for ALL tasks across the selected plan(s). Each verifier checks one task for implementation, tests, and quality.
-
-See **[review-checklist.md](references/review-checklist.md)** for detailed per-task verification criteria and invocation instructions.
-
-**Provide to each verifier:**
-- The specific task (with acceptance criteria)
-- Path to specification (for context)
-- Path to plan (for phase context)
-- Project skills (if discovered in Step 2)
-
-**Aggregate findings** once all verifiers complete:
-- Collect all incomplete/failed tasks as blocking issues
-- Collect all test issues (under/over-tested)
-- Collect all code quality concerns
-- Include specific file:line references
+Load **[invoke-task-verifiers.md](references/invoke-task-verifiers.md)** and follow its instructions as written.
 
 → Proceed to **Step 4**.
 
@@ -120,18 +106,7 @@ See **[review-checklist.md](references/review-checklist.md)** for detailed per-t
 
 ## Step 4: Product Assessment
 
-Spawn a single `review-product-assessor` agent with the full scope context. This is a holistic evaluation — not task-by-task.
-
-**Provide to the assessor:**
-- All implementation files in scope
-- All relevant specifications
-- All relevant plans
-- Project skills (`.claude/skills/`)
-- Review scope indicator (single-plan / multi-plan / full-product)
-
-The assessor evaluates robustness, gaps, strengthening opportunities, and what's next. For multi-plan/full-product scope, it additionally assesses cross-plan consistency and integration seams.
-
-Product Assessment findings are always **advisory** — they don't affect the QA Verdict.
+Load **[invoke-product-assessor.md](references/invoke-product-assessor.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
 
@@ -165,5 +140,7 @@ You produce feedback. User decides what to do with it.
 
 ## References
 
+- **[invoke-task-verifiers.md](references/invoke-task-verifiers.md)** — How to dispatch QA verifier agents
+- **[invoke-product-assessor.md](references/invoke-product-assessor.md)** — How to dispatch the product assessor agent
 - **[template.md](references/template.md)** — Review output structure and verdict guidelines
-- **[review-checklist.md](references/review-checklist.md)** — Detailed per-task verification criteria and invocation instructions
+- **[review-checklist.md](references/review-checklist.md)** — Per-task verification criteria (read by agents), plan completion checks, writing feedback guidance
