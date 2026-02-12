@@ -697,7 +697,8 @@ external_dependencies: []
 # Plan: Core Features
 EOF
 
-cat > "$TEST_DIR/docs/workflow/implementation/core-features.md" << 'EOF'
+mkdir -p "$TEST_DIR/docs/workflow/implementation/core-features"
+cat > "$TEST_DIR/docs/workflow/implementation/core-features/tracking.md" << 'EOF'
 ---
 topic: core-features
 plan: ../planning/core-features.md
@@ -760,7 +761,8 @@ external_dependencies: []
 # Plan: User Auth
 EOF
 
-cat > "$TEST_DIR/docs/workflow/implementation/user-auth.md" << 'EOF'
+mkdir -p "$TEST_DIR/docs/workflow/implementation/user-auth"
+cat > "$TEST_DIR/docs/workflow/implementation/user-auth/tracking.md" << 'EOF'
 ---
 topic: user-auth
 plan: ../planning/user-auth.md
@@ -821,7 +823,8 @@ external_dependencies:
 # Plan: Billing
 EOF
 
-cat > "$TEST_DIR/docs/workflow/implementation/user-auth.md" << 'EOF'
+mkdir -p "$TEST_DIR/docs/workflow/implementation/user-auth"
+cat > "$TEST_DIR/docs/workflow/implementation/user-auth/tracking.md" << 'EOF'
 ---
 topic: user-auth
 plan: ../planning/user-auth.md
@@ -874,7 +877,8 @@ external_dependencies:
 # Plan: Billing
 EOF
 
-cat > "$TEST_DIR/docs/workflow/implementation/core-features.md" << 'EOF'
+mkdir -p "$TEST_DIR/docs/workflow/implementation/core-features"
+cat > "$TEST_DIR/docs/workflow/implementation/core-features/tracking.md" << 'EOF'
 ---
 topic: core-features
 plan: ../planning/core-features.md
@@ -967,7 +971,8 @@ external_dependencies: []
 # Plan: Feature D
 EOF
 
-cat > "$TEST_DIR/docs/workflow/implementation/feature-d.md" << 'EOF'
+mkdir -p "$TEST_DIR/docs/workflow/implementation/feature-d"
+cat > "$TEST_DIR/docs/workflow/implementation/feature-d/tracking.md" << 'EOF'
 ---
 topic: feature-d
 status: completed

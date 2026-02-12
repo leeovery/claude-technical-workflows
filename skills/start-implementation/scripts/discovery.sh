@@ -262,10 +262,10 @@ if [ -d "$IMPL_DIR" ] && [ -n "$(ls -A "$IMPL_DIR" 2>/dev/null)" ]; then
     echo "  exists: true"
     echo "  files:"
 
-    for file in "$IMPL_DIR"/*.md; do
+    for file in "$IMPL_DIR"/*/tracking.md; do
         [ -f "$file" ] || continue
 
-        impl_name=$(basename "$file" .md)
+        impl_name=$(basename "$(dirname "$file")")
         impl_status=$(extract_field "$file" "status")
         impl_status=${impl_status:-"unknown"}
         current_phase=$(extract_field "$file" "current_phase")
@@ -343,7 +343,7 @@ if [ "$plan_count" -gt 0 ] && [ -d "$PLAN_DIR" ]; then
             if [ "$dep_state" = "resolved" ] && [ -n "$dep_task_id" ]; then
                 has_resolved_deps=true
                 # Check if the dependency topic has a tracking file
-                tracking_file="$IMPL_DIR/${dep_topic}.md"
+                tracking_file="$IMPL_DIR/${dep_topic}/tracking.md"
                 task_completed=false
 
                 if [ -f "$tracking_file" ]; then
@@ -441,7 +441,7 @@ if [ "$plan_count" -gt 0 ] && [ -d "$PLAN_DIR" ]; then
                         is_ready=false
                         break
                     elif [ "$dep_state" = "resolved" ] && [ -n "$dep_task_id" ]; then
-                        tracking_file="$IMPL_DIR/${dep_topic}.md"
+                        tracking_file="$IMPL_DIR/${dep_topic}/tracking.md"
                         if [ -f "$tracking_file" ]; then
                             completed=$(extract_completed_tasks "$tracking_file")
                             if ! echo "$completed" | grep -qx "$dep_task_id" 2>/dev/null; then
