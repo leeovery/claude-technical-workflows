@@ -6,7 +6,7 @@
 
 Orient the user:
 
-> "All phases and tasks are written. Now I'll check for external dependencies — things this plan needs from other topics or systems."
+"All phases and tasks are written. Now I'll check for external dependencies — things this plan needs from other topics or systems."
 
 After all phases are detailed and written, handle external dependencies — things this plan needs from other topics or systems.
 
@@ -43,11 +43,11 @@ Skip the resolution and reverse check — there is nothing to resolve against. D
 
 **STOP.** Present a summary of the dependency state: what was documented, what was resolved, what remains unresolved, and any reverse resolutions made.
 
-> · · · · · · · · · · · ·
-> **To proceed:**
-> - **`y`/`yes`** — Approved. I'll proceed to plan review.
-> - **Or tell me what to change.**
-> · · · · · · · · · · · ·
+· · · · · · · · · · · ·
+**To proceed:**
+- **`y`/`yes`** — Approved. I'll proceed to plan review.
+- **Or tell me what to change.**
+· · · · · · · · · · · ·
 
 **Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 

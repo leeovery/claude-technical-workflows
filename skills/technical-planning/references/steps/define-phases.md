@@ -16,7 +16,7 @@ Read the Plan Index File. Check if phases already exist in the body.
 
 Orient the user:
 
-> "Phase structure already exists. I'll present it for your review."
+"Phase structure already exists. I'll present it for your review."
 
 Continue to **Review and Approve** below.
 
@@ -24,7 +24,7 @@ Continue to **Review and Approve** below.
 
 Orient the user:
 
-> "I'll delegate phase design to a specialist agent. It will read the full specification and propose a phase structure — how we break this into independently testable stages."
+"I'll delegate phase design to a specialist agent. It will read the full specification and propose a phase structure — how we break this into independently testable stages."
 
 ### Invoke the Agent
 
@@ -57,14 +57,14 @@ Present the phase structure to the user as rendered markdown (not in a code bloc
 
 **STOP.** Ask:
 
-> **Phase Structure**
->
-> · · · · · · · · · · · ·
-> **To proceed:**
-> - **`y`/`yes`** — Approved. I'll proceed to task breakdown.
-> - **Or tell me what to change** — reorder, split, merge, add, edit, or remove phases.
-> - **Or navigate** — a different phase or task, or the leading edge.
-> · · · · · · · · · · · ·
+**Phase Structure**
+
+· · · · · · · · · · · ·
+**To proceed:**
+- **`y`/`yes`** — Approved. I'll proceed to task breakdown.
+- **Or tell me what to change** — reorder, split, merge, add, edit, or remove phases.
+- **Or navigate** — a different phase or task, or the leading edge.
+· · · · · · · · · · · ·
 
 **Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 

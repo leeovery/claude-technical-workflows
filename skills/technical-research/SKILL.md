@@ -24,10 +24,10 @@ Either way: Explore feasibility (technical, business, market), validate assumpti
 **Before proceeding**, confirm the required input is clear. If anything is missing or unclear, **STOP** and resolve with the user.
 
 - **No topic provided?**
-  > "What would you like to research or explore? This could be a new idea, a technical concept, a market opportunity — anything you want to investigate."
+  "What would you like to research or explore? This could be a new idea, a technical concept, a market opportunity — anything you want to investigate."
 
 - **Topic is vague or could go many directions?**
-  > "You mentioned {topic}. That could cover a lot of ground — is there a specific angle you'd like to start with, or should I explore broadly?"
+  "You mentioned {topic}. That could cover a lot of ground — is there a specific angle you'd like to start with, or should I explore broadly?"
 
 ---
 
@@ -85,13 +85,13 @@ Watch for these signs that a thread is moving from exploration toward decision-m
 
 When you notice convergence, **flag it and give the user options**:
 
-> This thread seems to be converging — we've explored {topic} enough that the tradeoffs are clear and it's approaching decision territory.
->
-> · · · · · · · · · · · ·
-> - **`p`/`park`** — Mark as discussion-ready and move to another topic
-> - **`k`/`keep`** — Keep digging, there's more to understand
-> - Comment — your call
-> · · · · · · · · · · · ·
+This thread seems to be converging — we've explored {topic} enough that the tradeoffs are clear and it's approaching decision territory.
+
+· · · · · · · · · · · ·
+- **`p`/`park`** — Mark as discussion-ready and move to another topic
+- **`k`/`keep`** — Keep digging, there's more to understand
+- Comment — your call
+· · · · · · · · · · · ·
 
 **Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 

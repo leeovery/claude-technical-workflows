@@ -65,15 +65,15 @@ After completing your review:
 
 **Stage 1: Summary**
 
-> "I've completed the traceability review comparing the plan against the specification. I found [N] items:
->
-> 1. **[Brief title]** (Missing from plan | Hallucinated | Incomplete)
->    [2-4 line explanation: what's wrong, where in the spec/plan, why it matters]
->
-> 2. **[Brief title]** (Missing from plan | Hallucinated | Incomplete)
->    [2-4 line explanation]
->
-> Let's work through these one at a time, starting with #1."
+"I've completed the traceability review comparing the plan against the specification. I found [N] items:
+
+1. **[Brief title]** (Missing from plan | Hallucinated | Incomplete)
+   [2-4 line explanation: what's wrong, where in the spec/plan, why it matters]
+
+2. **[Brief title]** (Missing from plan | Hallucinated | Incomplete)
+   [2-4 line explanation]
+
+Let's work through these one at a time, starting with #1."
 
 **Stage 2: Process One Item at a Time**
 
@@ -83,15 +83,15 @@ Work through each finding **one at a time**. For each finding: present it, propo
 
 Show the finding with full detail:
 
-> **Finding {N} of {total}: {Brief Title}**
->
-> **Type**: Missing from plan | Hallucinated content | Incomplete coverage
->
-> **Spec Reference**: [Section/decision in the specification]
->
-> **Plan Reference**: [Phase/task in the plan, or "N/A" for missing content]
->
-> **Details**: [What's wrong and why it matters]
+**Finding {N} of {total}: {Brief Title}**
+
+**Type**: Missing from plan | Hallucinated content | Incomplete coverage
+
+**Spec Reference**: [Section/decision in the specification]
+
+**Plan Reference**: [Phase/task in the plan, or "N/A" for missing content]
+
+**Details**: [What's wrong and why it matters]
 
 ### Propose the Fix
 
@@ -101,60 +101,60 @@ State the action type explicitly so the user knows what's changing structurally:
 
 **Update a task** — change content within an existing task:
 
-> **Proposed fix — update Phase {N}, Task {M}:**
->
-> **Current:**
-> [The existing content as it appears in the plan]
->
-> **Proposed:**
-> [The replacement content]
+**Proposed fix — update Phase {N}, Task {M}:**
+
+**Current:**
+[The existing content as it appears in the plan]
+
+**Proposed:**
+[The replacement content]
 
 **Add content to a task** — insert into an existing task (e.g., missing acceptance criteria, edge case):
 
-> **Proposed fix — add to Phase {N}, Task {M}, {section}:**
->
-> [The exact content to be added, in plan format]
+**Proposed fix — add to Phase {N}, Task {M}, {section}:**
+
+[The exact content to be added, in plan format]
 
 **Remove content from a task** — strip content that shouldn't be there:
 
-> **Proposed fix — remove from Phase {N}, Task {M}, {section}:**
->
-> [The exact content to be removed]
+**Proposed fix — remove from Phase {N}, Task {M}, {section}:**
+
+[The exact content to be removed]
 
 **Add a new task** — a spec section has no plan coverage and needs its own task:
 
-> **Proposed fix — add new task to Phase {N}:**
->
-> [The complete task in plan format, using the task template]
+**Proposed fix — add new task to Phase {N}:**
+
+[The complete task in plan format, using the task template]
 
 **Remove a task** — an entire task is hallucinated with no spec backing:
 
-> **Proposed fix — remove Phase {N}, Task {M}: {Task Name}**
->
-> **Reason**: [Why this task has no specification basis]
+**Proposed fix — remove Phase {N}, Task {M}: {Task Name}**
+
+**Reason**: [Why this task has no specification basis]
 
 **Add a new phase** — a significant area of the specification has no plan coverage:
 
-> **Proposed fix — add new Phase {N}: {Phase Name}**
->
-> [Phase goal, acceptance criteria, and task overview]
+**Proposed fix — add new Phase {N}: {Phase Name}**
+
+[Phase goal, acceptance criteria, and task overview]
 
 **Remove a phase** — an entire phase is not backed by the specification:
 
-> **Proposed fix — remove Phase {N}: {Phase Name}**
->
-> **Reason**: [Why this phase has no specification basis]
+**Proposed fix — remove Phase {N}: {Phase Name}**
+
+**Reason**: [Why this phase has no specification basis]
 
 After presenting the finding and proposed fix, ask:
 
-> **Finding {N} of {total}: {Brief Title}**
->
-> · · · · · · · · · · · ·
-> **To proceed:**
-> - **`y`/`yes`** — Approved. I'll apply it to the plan verbatim.
-> - **`s`/`skip`** — Leave this as-is and move to the next finding.
-> - **Or tell me what to change.**
-> · · · · · · · · · · · ·
+**Finding {N} of {total}: {Brief Title}**
+
+· · · · · · · · · · · ·
+**To proceed:**
+- **`y`/`yes`** — Approved. I'll apply it to the plan verbatim.
+- **`s`/`skip`** — Leave this as-is and move to the next finding.
+- **Or tell me what to change.**
+· · · · · · · · · · · ·
 
 **Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
@@ -175,13 +175,13 @@ Apply the fix to the plan — as presented, using the output format adapter to d
 
 Confirm:
 
-> "Finding {N} of {total}: {Brief Title} — fixed."
+"Finding {N} of {total}: {Brief Title} — fixed."
 
 ### If Skipped
 
 Update the tracking file: mark resolution as "Skipped", note the reason.
 
-> "Finding {N} of {total}: {Brief Title} — skipped."
+"Finding {N} of {total}: {Brief Title} — skipped."
 
 ### Next Finding
 

@@ -40,15 +40,15 @@ E. Update progress + commit
 
 Present the executor's ISSUES to the user:
 
-> **Task {id}: {Task Name} — {blocked/failed}**
->
-> {executor's ISSUES content}
->
-> · · · · · · · · · · · ·
-> - **`r`/`retry`** — Re-invoke the executor with your comments (provide below)
-> - **`s`/`skip`** — Skip this task and move to the next
-> - **`t`/`stop`** — Stop implementation entirely
-> · · · · · · · · · · · ·
+**Task {id}: {Task Name} — {blocked/failed}**
+
+{executor's ISSUES content}
+
+· · · · · · · · · · · ·
+- **`r`/`retry`** — Re-invoke the executor with your comments (provide below)
+- **`s`/`skip`** — Skip this task and move to the next
+- **`t`/`stop`** — Stop implementation entirely
+· · · · · · · · · · · ·
 
 **Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
@@ -84,7 +84,7 @@ Increment `fix_attempts` in the implementation tracking file.
 
 Announce the fix round (one line, no stop):
 
-> **Review for Task {id}: {Task Name} — needs changes** (attempt {N}/{max 3}, fix analysis included). Re-invoking executor.
+**Review for Task {id}: {Task Name} — needs changes** (attempt {N}/{max 3}, fix analysis included). Re-invoking executor.
 
 → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the reviewer's notes (including fix analysis).
 
@@ -92,23 +92,23 @@ Announce the fix round (one line, no stop):
 
 If `fix_attempts >= 3`, the executor and reviewer have failed to converge. Prepend:
 
-> The executor and reviewer have not converged after {N} attempts. Escalating for human review.
+The executor and reviewer have not converged after {N} attempts. Escalating for human review.
 
 Present the reviewer's findings and fix analysis to the user:
 
-> **Review for Task {id}: {Task Name} — needs changes** (attempt {N})
->
-> {ISSUES from reviewer, including FIX, ALTERNATIVE, and CONFIDENCE for each}
->
-> Notes (non-blocking):
-> {NOTES from reviewer}
->
-> · · · · · · · · · · · ·
-> - **`y`/`yes`** — Accept the review and fix analysis, pass to executor
-> - **`a`/`auto`** — Accept and auto-approve future fix analyses
-> - **`s`/`skip`** — Override the reviewer and proceed as-is
-> - **Comment** — Any commentary, adjustments, alternative approaches, or questions before passing to executor
-> · · · · · · · · · · · ·
+**Review for Task {id}: {Task Name} — needs changes** (attempt {N})
+
+{ISSUES from reviewer, including FIX, ALTERNATIVE, and CONFIDENCE for each}
+
+Notes (non-blocking):
+{NOTES from reviewer}
+
+· · · · · · · · · · · ·
+- **`y`/`yes`** — Accept the review and fix analysis, pass to executor
+- **`a`/`auto`** — Accept and auto-approve future fix analyses
+- **`s`/`skip`** — Override the reviewer and proceed as-is
+- **Comment** — Any commentary, adjustments, alternative approaches, or questions before passing to executor
+· · · · · · · · · · · ·
 
 **Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
@@ -129,17 +129,17 @@ After the reviewer approves a task, check the `task_gate_mode` field in the impl
 
 Present a summary and wait for user input:
 
-> **Task {id}: {Task Name} — approved**
->
-> Phase: {phase number} — {phase name}
-> {executor's SUMMARY — brief commentary, decisions, implementation notes}
->
-> · · · · · · · · · · · ·
-> **Options:**
-> - **`y`/`yes`** — Approve, commit, continue to next task
-> - **`a`/`auto`** — Approve this and all future reviewer-approved tasks automatically
-> - **Comment** — Feedback the reviewer missed (triggers a fix round)
-> · · · · · · · · · · · ·
+**Task {id}: {Task Name} — approved**
+
+Phase: {phase number} — {phase name}
+{executor's SUMMARY — brief commentary, decisions, implementation notes}
+
+· · · · · · · · · · · ·
+**Options:**
+- **`y`/`yes`** — Approve, commit, continue to next task
+- **`a`/`auto`** — Approve this and all future reviewer-approved tasks automatically
+- **Comment** — Feedback the reviewer missed (triggers a fix round)
+· · · · · · · · · · · ·
 
 **Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
@@ -153,7 +153,7 @@ Present a summary and wait for user input:
 
 Announce the result (one line, no stop):
 
-> **Task {id}: {Task Name} — approved** (phase {N}: {phase name}, {brief summary}). Committing.
+**Task {id}: {Task Name} — approved** (phase {N}: {phase name}, {brief summary}). Committing.
 
 → Proceed to **E. Update Progress and Commit**.
 
@@ -189,6 +189,6 @@ This is the end of this iteration.
 
 ## When All Tasks Are Complete
 
-> "All tasks complete. {M} tasks implemented."
+"All tasks complete. {M} tasks implemented."
 
 → Return to the skill for **Step 7**.

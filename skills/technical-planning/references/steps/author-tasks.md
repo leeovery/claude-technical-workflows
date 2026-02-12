@@ -29,14 +29,14 @@ The agent returns complete task detail following the task template from task-des
 
 After presenting, ask:
 
-> **Task {M} of {total}: {Task Name}**
->
-> · · · · · · · · · · · ·
-> **To proceed:**
-> - **`y`/`yes`** — Approved. I'll log it to the plan.
-> - **Or tell me what to change.**
-> - **Or navigate** — a different phase or task, or the leading edge.
-> · · · · · · · · · · · ·
+**Task {M} of {total}: {Task Name}**
+
+· · · · · · · · · · · ·
+**To proceed:**
+- **`y`/`yes`** — Approved. I'll log it to the plan.
+- **Or tell me what to change.**
+- **Or navigate** — a different phase or task, or the leading edge.
+· · · · · · · · · · · ·
 
 **Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
@@ -65,6 +65,6 @@ Present the revised task in full. Ask the same choice again. Repeat until approv
 
 Confirm:
 
-> "Task {M} of {total}: {Task Name} — authored."
+"Task {M} of {total}: {Task Name} — authored."
 
 → Return to **Plan Construction**.
