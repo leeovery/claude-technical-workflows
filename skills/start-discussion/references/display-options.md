@@ -30,11 +30,12 @@ Key:
   ✓ = already has a corresponding discussion
 ```
 
+**Output in a fenced code block exactly as shown above.**
+
 **Then present the options based on what exists:**
 
 #### If research and discussions exist
 
-```
 · · · · · · · · · · · ·
 How would you like to proceed?
 
@@ -43,11 +44,9 @@ How would you like to proceed?
 - Continue discussion — name one above (e.g., "continue {topic}")
 - Fresh topic — describe what you want to discuss
 · · · · · · · · · · · ·
-```
 
 #### If only research exists
 
-```
 · · · · · · · · · · · ·
 How would you like to proceed?
 
@@ -55,17 +54,14 @@ How would you like to proceed?
 - From research — pick a topic number above (e.g., "1" or "research 1")
 - Fresh topic — describe what you want to discuss
 · · · · · · · · · · · ·
-```
 
 #### If only discussions exist
 
-```
 · · · · · · · · · · · ·
 How would you like to proceed?
 
 - Continue discussion — name one above (e.g., "continue {topic}")
 - Fresh topic — describe what you want to discuss
 · · · · · · · · · · · ·
-```
 
 **STOP.** Wait for user response before proceeding.

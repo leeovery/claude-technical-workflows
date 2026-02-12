@@ -22,4 +22,6 @@ research you'd like to include — drop them in now.
 · · · · · · · · · · · ·
 ```
 
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+
 **STOP.** Wait for user response before proceeding.

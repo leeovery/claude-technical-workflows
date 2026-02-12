@@ -40,13 +40,13 @@ No `---` separator before these messages.
 These discussions will be analyzed for natural groupings to determine
 how they should be organized into specifications. Results are cached
 and reused until discussions change.
+```
 
 · · · · · · · · · · · ·
 Proceed with analysis?
 - **`y`/`yes`**
 - **`n`/`no`**
 · · · · · · · · · · · ·
-```
 
 #### If cache status is "stale"
 
@@ -56,13 +56,13 @@ have changed since it was created.
 
 These discussions will be re-analyzed for natural groupings. Results
 are cached and reused until discussions change.
+```
 
 · · · · · · · · · · · ·
 Proceed with analysis?
 - **`y`/`yes`**
 - **`n`/`no`**
 · · · · · · · · · · · ·
-```
 
 **STOP.** Wait for user response.
 

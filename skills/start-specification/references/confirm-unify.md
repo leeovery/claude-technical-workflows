@@ -19,13 +19,13 @@ Existing specifications to incorporate:
   • {spec-name}.md → will be superseded
 
 Output: docs/workflow/specification/unified.md
+```
 
 · · · · · · · · · · · ·
 Proceed?
 - **`y`/`yes`**
 - **`n`/`no`**
 · · · · · · · · · · · ·
-```
 
 #### If no existing specifications
 
@@ -38,13 +38,13 @@ Sources:
   ...
 
 Output: docs/workflow/specification/unified.md
+```
 
 · · · · · · · · · · · ·
 Proceed?
 - **`y`/`yes`**
 - **`n`/`no`**
 · · · · · · · · · · · ·
-```
 
 **STOP.** Wait for user response.
 

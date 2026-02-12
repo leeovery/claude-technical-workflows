@@ -32,7 +32,7 @@ The agent clears any existing dependencies/priorities, analyzes all tasks, and �
 
 #### If the agent reports no changes needed (`STATUS: no-changes`)
 
-The natural task order is already correct. Present this to the user:
+The natural task order is already correct. Present as rendered markdown (not in a code block):
 
 > "I've analyzed all {M} tasks and the natural execution order is already correct — no explicit dependencies or priorities are needed.
 >
@@ -43,6 +43,8 @@ The natural task order is already correct. Present this to the user:
 > - **`y`/`yes`** — Confirmed.
 > - **Or tell me what to change.**
 > · · · · · · · · · · · ·
+
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
 **STOP.** Wait for the user's response.
 
@@ -60,7 +62,7 @@ No changes were applied. Present the cycle to the user:
 
 #### If the agent applied changes successfully (`STATUS: complete`)
 
-Dependencies and priorities have already been written to the task files. Present the summary:
+Dependencies and priorities have already been written to the task files. Present as rendered markdown (not in a code block):
 
 > "I've analyzed and applied dependencies and priorities across all {M} tasks:
 >
@@ -77,6 +79,8 @@ Dependencies and priorities have already been written to the task files. Present
 > - **`y`/`yes`** — Approved.
 > - **Or tell me what to change.**
 > · · · · · · · · · · · ·
+
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
 **STOP.** Wait for the user's response.
 

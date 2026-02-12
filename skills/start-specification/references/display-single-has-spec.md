@@ -21,7 +21,7 @@ Single concluded discussion found with existing specification.
       └─ {discussion-name} (extracted)
 ```
 
-**Formatting is exact**: Output the tree structure exactly as shown above — preserve all indentation spaces and `├─`/`└─` characters. Do not flatten or compress the spacing.
+**Output in a fenced code block exactly as shown above.**
 
 ### If in-progress discussions exist
 

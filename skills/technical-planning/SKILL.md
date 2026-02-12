@@ -89,6 +89,8 @@ Load **[spec-change-detection.md](references/spec-change-detection.md)** to chec
 > - **`r`/`restart`** — Erase all planning work for this topic and start fresh. This deletes the Plan Index File and any Authored Tasks. Other topics are unaffected.
 > · · · · · · · · · · · ·
 
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+
 **STOP.** Wait for user response.
 
 #### If `continue`
@@ -130,6 +132,8 @@ Present the recommendation:
 > - **`y`/`yes`** — Use {format}
 > - **`n`/`no`** — See all available formats
 > · · · · · · · · · · · ·
+
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
 **STOP.** Wait for user choice. If declined, fall through to the full list below.
 

@@ -14,13 +14,13 @@ Sources:
   • {discussion-name}
 
 Output: docs/workflow/specification/{kebab-case-name}.md
+```
 
 · · · · · · · · · · · ·
 Proceed?
 - **`y`/`yes`**
 - **`n`/`no`**
 · · · · · · · · · · · ·
-```
 
 #### If any source discussion has an individual spec
 
@@ -37,13 +37,13 @@ Output: docs/workflow/specification/{kebab-case-name}.md
 
 After completion:
   specification/{discussion-name}.md → marked as superseded
+```
 
 · · · · · · · · · · · ·
 Proceed?
 - **`y`/`yes`**
 - **`n`/`no`**
 · · · · · · · · · · · ·
-```
 
 **STOP.** Wait for user response.
 

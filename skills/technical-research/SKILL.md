@@ -93,6 +93,8 @@ When you notice convergence, **flag it and give the user options**:
 > - Comment — your call
 > · · · · · · · · · · · ·
 
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+
 **Never decide for the user.** Even if the answer seems obvious, flag it and ask.
 
 ### If the user parks it

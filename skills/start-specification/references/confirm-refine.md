@@ -11,13 +11,13 @@ Existing: docs/workflow/specification/{kebab-case-name}.md (concluded)
 
 All sources extracted:
   • {discussion-name}
+```
 
 · · · · · · · · · · · ·
 Proceed?
 - **`y`/`yes`**
 - **`n`/`no`**
 · · · · · · · · · · · ·
-```
 
 **STOP.** Wait for user response.
 
