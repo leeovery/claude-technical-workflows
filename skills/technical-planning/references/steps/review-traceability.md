@@ -95,7 +95,7 @@ Show the finding with full detail:
 
 ### Propose the Fix
 
-Present the proposed fix **in the format it will be written to the plan**. What the user sees is what gets applied — no changes between approval and writing.
+Present the proposed fix **in the format it will be written to the plan**, rendered as markdown (not in a code block). What the user sees is what gets applied — no changes between approval and writing.
 
 State the action type explicitly so the user knows what's changing structurally:
 
@@ -155,6 +155,8 @@ After presenting the finding and proposed fix, ask:
 > - **`s`/`skip`** — Leave this as-is and move to the next finding.
 > - **Or tell me what to change.**
 > · · · · · · · · · · · ·
+
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
 **STOP.** Wait for the user's response.
 

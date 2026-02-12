@@ -26,7 +26,7 @@ For each non-superseded specification from discovery output, display as nested t
       └─ {source-name} (extracted)
 ```
 
-**Formatting is exact**: Output the tree structure exactly as shown above — preserve all indentation spaces and `├─`/`└─` characters. Do not flatten or compress the spacing.
+**Output in a fenced code block exactly as shown above.**
 
 Determine discussion status from the spec's `sources` array:
 - `incorporated` + `discussion_status: concluded` or `not-found` → `extracted`
@@ -113,6 +113,8 @@ List "Analyze for groupings (recommended)" first, then one entry per existing no
 Select an option (enter number):
 · · · · · · · · · · · ·
 ```
+
+**Output in a fenced code block exactly as shown above.**
 
 Menu descriptions are wrapped in backticks to visually distinguish them from the choice labels.
 

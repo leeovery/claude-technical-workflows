@@ -37,6 +37,8 @@ If `analysis_cycle > 3`:
 > - **`s`/`skip`** — Skip analysis, proceed to completion
 > · · · · · · · · · · · ·
 
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+
 **STOP.** Wait for user choice. You MUST NOT choose on the user's behalf.
 
 - **`proceed`**: → Continue to **B. Git Checkpoint**.
@@ -64,6 +66,8 @@ If there are unstaged changes or untracked files, categorize them:
 > - **`s`/`skip`** — Exclude unexpected files, commit only implementation files
 > - **Comment** — Specify which to include
 > · · · · · · · · · · · ·
+
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
 **STOP.** Wait for user choice.
 
@@ -146,6 +150,8 @@ Then present each task with `status: pending` individually:
 > - **`s`/`skip`** — Skip this task
 > - **Comment** — Revise based on feedback
 > · · · · · · · · · · · ·
+
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
 **STOP.** Wait for user input.
 

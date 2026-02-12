@@ -67,7 +67,7 @@ After Step A returns with an approved task table, continue to **Author Tasks for
 
 #### If the phase has a task table
 
-Present the task list to the user for review.
+Present the task list to the user as rendered markdown (not in a code block).
 
 > **Phase {N}: {Phase Name}** — {M} tasks.
 >
@@ -77,6 +77,8 @@ Present the task list to the user for review.
 > - **Or tell me what to change.**
 > - **Or navigate** — a different phase or task, or the leading edge.
 > · · · · · · · · · · · ·
+
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
 **STOP.** Wait for the user's response.
 

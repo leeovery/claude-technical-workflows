@@ -49,6 +49,8 @@ Skip the resolution and reverse check — there is nothing to resolve against. D
 > - **Or tell me what to change.**
 > · · · · · · · · · · · ·
 
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+
 #### If the user provides feedback
 
 Incorporate feedback, re-present the updated dependency state, and ask again. Repeat until approved.

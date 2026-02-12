@@ -175,6 +175,8 @@ Present the existing configuration for confirmation:
 > - **`c`/`change`** — Re-discover and choose skills
 > · · · · · · · · · · · ·
 
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+
 **STOP.** Wait for user choice.
 
 - **`yes`**: → Proceed to **Step 5**.
@@ -203,6 +205,8 @@ Scan `.claude/skills/` for project-specific skill directories. Present findings:
 > - **Or list the ones you want** — e.g. "golang-pro, react-patterns"
 > · · · · · · · · · · · ·
 
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+
 **STOP.** Wait for user to confirm which skills are relevant.
 
 Store the selected skill paths in the tracking file.
@@ -230,6 +234,8 @@ Otherwise, present discovery findings to the user:
 > - **`c`/`change`** — Modify the linter list
 > - **`s`/`skip`** — Skip linter setup (no linting during TDD)
 > · · · · · · · · · · · ·
+
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
 **STOP.** Wait for user choice.
 

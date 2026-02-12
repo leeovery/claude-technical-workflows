@@ -168,6 +168,8 @@ Shall I commit these dependency updates?
 · · · · · · · · · · · ·
 ```
 
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+
 If yes, commit with message:
 ```
 Link cross-topic dependencies

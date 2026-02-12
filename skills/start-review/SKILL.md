@@ -7,6 +7,8 @@ allowed-tools: Bash(.claude/skills/start-review/scripts/discovery.sh)
 
 Invoke the **technical-review** skill for this conversation.
 
+> **⚠️ ZERO OUTPUT RULE**: Do not narrate your processing. Produce no output until a step or reference file explicitly specifies display content. No "proceeding with...", no discovery summaries, no routing decisions, no transition text. Your first output must be content explicitly called for by the instructions.
+
 ## Workflow Context
 
 This is **Phase 6** of the six-phase workflow:
@@ -30,7 +32,6 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 **CRITICAL**: This guidance is mandatory.
 
-- **Silent processing**: Do NOT narrate your internal reasoning. Never output discovery field values, routing decisions, cache status, or prerequisite checks. The first user-visible output must be the display content itself.
 - After each user interaction, STOP and wait for their response before proceeding
 - Never assume or anticipate user choices
 - Even if the user's initial prompt seems to answer a question, still confirm with them at the appropriate step
@@ -121,6 +122,8 @@ Reviewable:
 Not reviewable:
   · {topic-3} [no implementation]
 ```
+
+**Output in a fenced code block exactly as shown above.**
 
 **Formatting rules:**
 

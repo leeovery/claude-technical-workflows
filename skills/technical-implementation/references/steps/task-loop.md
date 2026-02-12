@@ -50,6 +50,8 @@ Present the executor's ISSUES to the user:
 > - **`t`/`stop`** — Stop implementation entirely
 > · · · · · · · · · · · ·
 
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+
 **STOP.** Wait for user choice.
 
 #### If `retry`
@@ -108,6 +110,8 @@ Present the reviewer's findings and fix analysis to the user:
 > - **Comment** — Any commentary, adjustments, alternative approaches, or questions before passing to executor
 > · · · · · · · · · · · ·
 
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+
 **STOP.** Wait for user choice.
 
 - **`y`/`yes`**: → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the reviewer's notes (including fix analysis).
@@ -136,6 +140,8 @@ Present a summary and wait for user input:
 > - **`a`/`auto`** — Approve this and all future reviewer-approved tasks automatically
 > - **Comment** — Feedback the reviewer missed (triggers a fix round)
 > · · · · · · · · · · · ·
+
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
 **STOP.** Wait for user input.
 

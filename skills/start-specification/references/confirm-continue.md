@@ -16,13 +16,13 @@ Sources to extract:
 
 Previously extracted (for reference):
   • {discussion-name}
+```
 
 · · · · · · · · · · · ·
 Proceed?
 - **`y`/`yes`**
 - **`n`/`no`**
 · · · · · · · · · · · ·
-```
 
 #### If spec is in-progress with all sources extracted
 
@@ -34,13 +34,13 @@ Existing: docs/workflow/specification/{kebab-case-name}.md (in-progress)
 All sources extracted:
   • {discussion-name}
   • {discussion-name}
+```
 
 · · · · · · · · · · · ·
 Proceed?
 - **`y`/`yes`**
 - **`n`/`no`**
 · · · · · · · · · · · ·
-```
 
 #### If spec is concluded with pending sources
 
@@ -54,13 +54,13 @@ New sources to extract:
 
 Previously extracted (for reference):
   • {discussion-name}
+```
 
 · · · · · · · · · · · ·
 Proceed?
 - **`y`/`yes`**
 - **`n`/`no`**
 · · · · · · · · · · · ·
-```
 
 **STOP.** Wait for user response.
 

@@ -67,7 +67,7 @@ Recommended breakdown for specifications with their source discussions.
       └─ {discussion-name} (ready)
 ```
 
-**Formatting is exact**: Output the tree structure exactly as shown above — preserve all indentation spaces, blank lines between groupings, and `├─`/`└─` characters. Do not flatten or compress the spacing.
+**Output in a fenced code block exactly as shown above.**
 
 ### If in-progress discussions exist
 
@@ -143,7 +143,7 @@ Select an option (enter number):
 · · · · · · · · · · · ·
 ```
 
-**Formatting is exact**: Reproduce the menu exactly as shown above — descriptions are indented 3 spaces and wrapped in backticks.
+**Output in a fenced code block exactly as shown above.** Every meta option (Unify, Re-analyze) MUST include its description lines.
 
 **STOP.** Wait for user response.
 
