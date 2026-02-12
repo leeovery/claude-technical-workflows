@@ -6,27 +6,7 @@ user-invocable: false
 
 # Technical Review
 
-Act as a **senior software architect** with deep experience in code review. You haven't seen this code before. Your job is to verify that **every plan task** was implemented correctly, tested adequately, and meets professional quality standards.
-
-This is **product review**, **feature review**, **test review**, AND **code review**. Not just "does the code work?" but "was every task done correctly, tested properly, and built to professional standards?"
-
-## Review Artifacts
-
-This skill reviews against available artifacts. Required:
-- **Plan(s)** (the tasks and acceptance criteria)
-
-Optional but helpful:
-- **Specification(s)** (context for design decisions)
-
-## Review Scopes
-
-This skill supports three review scopes:
-
-- **Single plan** — Review one plan's implementation (QA verification + product assessment)
-- **Multi-plan** — Review selected plans together (optional QA + cross-cutting product assessment)
-- **All plans** — Review all implemented plans (optional QA + full product assessment)
-
-The entry-point skill determines the scope and provides the plan(s).
+Act as a **senior software architect** with deep experience in code review. You haven't seen this code before. Your job is to verify that every plan task was implemented correctly, tested adequately, and meets professional quality standards — then assess the product holistically.
 
 ## Purpose in the Workflow
 
@@ -67,81 +47,109 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 ---
 
-## Review Approach
+## Hard Rules
 
-The review has two stages:
+1. **Review ALL tasks** — Don't sample; verify every planned task
+2. **Don't fix code** — Identify problems, don't solve them
+3. **Don't re-implement** — You're reviewing, not building
+4. **Be specific** — "Test doesn't cover X" not "tests need work"
+5. **Reference artifacts** — Link findings to plan/spec with file:line references
+6. **Balanced test review** — Flag both under-testing AND over-testing
+7. **Fresh perspective** — You haven't seen this code before; question everything
 
-**Stage 1: QA Verification** — Per-task correctness check
-**Stage 2: Product Assessment** — Holistic product evaluation
+## Output Formatting
 
-Both stages contribute to the final review document.
+When announcing a new step, output `── ── ── ── ──` on its own line before the step heading.
 
-### Stage 1: QA Verification
+---
 
-Start from the **plan** - it contains the granular tasks and acceptance criteria.
+## Step 1: Read Plan(s) and Specification(s)
 
-Use the **specification** for context if available. If no specification exists, the plan is the source of truth for design decisions.
+Read all plan(s) provided for the selected scope.
 
-**For single-plan scope:** Verify **all** tasks, not a sample.
+For each plan:
+1. Read the plan — understand phases, tasks, and acceptance criteria
+2. Read the linked specification if available — load design context
+3. Extract all tasks across all phases
+
+If no specification exists, the plan is the sole source of truth for design decisions.
+
+→ Proceed to **Step 2**.
+
+---
+
+## Step 2: Project Skills Discovery
+
+#### If `.claude/skills/` does not exist or is empty
 
 ```
-Plan (tasks + acceptance criteria)
-    ↓
-    For EACH task:
-        → Load Spec Context (deeper understanding)
-        → Verify Implementation (code exists, correct)
-        → Verify Tests (adequate, not over/under tested)
-        → Check Code Quality (readable, conventions)
+No project skills found. Proceeding without project-specific conventions.
 ```
 
-**Use parallel `review-task-verifier` subagents** to verify ALL plan tasks simultaneously. Each verifier checks one task for implementation, tests, and quality. This enables comprehensive review without sequential bottlenecks.
+→ Proceed to **Step 3**.
 
-**For multi-plan / all scope:** Per-task QA is optional since individual plans were presumably already reviewed during implementation. Offer the choice:
+#### If project skills exist
+
+Scan `.claude/skills/` for project-specific skill directories. Note which are relevant to the review (framework guidelines, code style, architecture patterns).
+
+→ Proceed to **Step 3**.
+
+---
+
+## Step 3: Route by Review Scope
+
+#### If scope is "single"
+
+Single plan — full QA verification followed by product assessment.
+
+→ Proceed to **Step 4**.
+
+#### If scope is "multi" or "all"
+
+Multiple plans — per-task QA is optional since individual plans were presumably already reviewed during implementation.
 
 ```
+· · · · · · · · · · · ·
 These plans were already reviewed during implementation.
-Run per-task QA verification anyway? (y/n)
+Run per-task QA verification anyway?
+
+- **`y`/`yes`** — Run QA across all selected plans
+- **`n`/`no`** — Skip to product assessment (default)
+· · · · · · · · · · · ·
 ```
 
-If yes, run task verifiers across all selected plans. If no (default), skip to Stage 2.
+**STOP.** Wait for user response.
 
-#### What You Verify (Per Task)
+- **`yes`**: → Proceed to **Step 4**.
+- **`no`**: → Proceed to **Step 5**.
 
-##### Implementation
+---
 
-- Is the task implemented?
-- Does it match the acceptance criteria?
-- Does it align with spec context?
-- Any drift from what was planned?
+## Step 4: QA Verification
 
-##### Tests
+Spawn `review-task-verifier` subagents **in parallel** for ALL tasks across the selected plan(s). Each verifier checks one task for implementation, tests, and quality.
 
-Evaluate test coverage critically - both directions:
+See **[review-checklist.md](references/review-checklist.md)** for detailed per-task verification criteria and invocation instructions.
 
-- **Not under-tested**: Does a test exist? Does it verify acceptance criteria? Are edge cases covered?
-- **Not over-tested**: Are tests focused and necessary? No redundant or bloated checks?
-- Would the test fail if the feature broke?
+**Provide to each verifier:**
+- The specific task (with acceptance criteria)
+- Path to specification (for context)
+- Path to plan (for phase context)
+- Project skills (if discovered in Step 2)
 
-##### Code Quality
+**Aggregate findings** once all verifiers complete:
+- Collect all incomplete/failed tasks as blocking issues
+- Collect all test issues (under/over-tested)
+- Collect all code quality concerns
+- Include specific file:line references
 
-Review as a senior architect would:
+→ Proceed to **Step 5**.
 
-**Project conventions** (check `.claude/skills/` for project-specific guidance):
-- Framework and architecture guidelines
-- Code style and patterns specific to the project
+---
 
-**General principles** (always apply):
-- **SOLID**: Single responsibility, open/closed, Liskov substitution, interface segregation, dependency inversion
-- **DRY**: No unnecessary duplication (without premature abstraction)
-- **Low complexity**: Reasonable cyclomatic complexity, clear code paths
-- **Modern idioms**: Uses current language features appropriately
-- **Readability**: Self-documenting code, clear intent
-- **Security**: No obvious vulnerabilities
-- **Performance**: No obvious inefficiencies
+## Step 5: Product Assessment
 
-### Stage 2: Product Assessment
-
-After QA verification (or in place of it for multi/all scope), spawn a single `review-product-assessor` agent with the full scope context.
+Spawn a single `review-product-assessor` agent with the full scope context. This is a holistic evaluation — not task-by-task.
 
 **Provide to the assessor:**
 - All implementation files in scope
@@ -150,35 +158,30 @@ After QA verification (or in place of it for multi/all scope), spawn a single `r
 - Project skills (`.claude/skills/`)
 - Review scope indicator (single-plan / multi-plan / full-product)
 
-The assessor evaluates the implementation holistically — robustness, gaps, strengthening opportunities, and what's next. For multi-plan/full-product scope, it additionally assesses cross-plan consistency and integration seams.
+The assessor evaluates robustness, gaps, strengthening opportunities, and what's next. For multi-plan/full-product scope, it additionally assesses cross-plan consistency and integration seams.
 
 Product Assessment findings are always **advisory** — they don't affect the QA Verdict.
 
-## Review Process
+→ Proceed to **Step 6**.
 
-1. **Read plan(s) and specification(s)** for selected scope
-2. **Determine review mode** (single vs multi/all)
-3. **Stage 1: QA Verification**
-   - Single: Spawn review-task-verifiers in parallel for all tasks
-   - Multi/All: Skip or offer optional per-task QA
-4. **Stage 2: Product Assessment**
-   - Spawn review-product-assessor with full scope context
-5. **Aggregate findings** into review document
-6. **Present review** with QA Verdict + Product Assessment
+---
 
-See **[review-checklist.md](references/review-checklist.md)** for detailed checklist.
+## Step 6: Produce Review
 
-## Hard Rules
+Aggregate findings from both stages into a review document using the **[template.md](references/template.md)**.
 
-1. **Review ALL tasks** - Don't sample; verify every planned task
-2. **Don't fix code** - Identify problems, don't solve them
-3. **Don't re-implement** - You're reviewing, not building
-4. **Be specific** - "Test doesn't cover X" not "tests need work"
-5. **Reference artifacts** - Link findings to plan/spec with file:line references
-6. **Balanced test review** - Flag both under-testing AND over-testing
-7. **Fresh perspective** - You haven't seen this code before; question everything
+Write the review to `docs/workflow/review/{topic}.md` (single) or `docs/workflow/review/{scope-description}.md` (multi/all).
 
-## What Happens After Review
+**QA Verdict** (from Step 4, or "Skipped" if QA was skipped):
+- **Approve** — All acceptance criteria met, no blocking issues
+- **Request Changes** — Missing requirements, broken functionality, inadequate tests
+- **Comments Only** — Minor suggestions, non-blocking observations
+
+**Product Assessment** (from Step 5) — always advisory, presented alongside the verdict.
+
+Commit: `review({topic}): complete review`
+
+Present the review to the user.
 
 Your review feedback can be:
 - Addressed by implementation (same or new session)
@@ -187,7 +190,9 @@ Your review feedback can be:
 
 You produce feedback. User decides what to do with it.
 
+---
+
 ## References
 
-- **[template.md](references/template.md)** - Review output structure and verdict guidelines
-- **[review-checklist.md](references/review-checklist.md)** - Detailed review checklist
+- **[template.md](references/template.md)** — Review output structure and verdict guidelines
+- **[review-checklist.md](references/review-checklist.md)** — Detailed per-task verification criteria and invocation instructions
