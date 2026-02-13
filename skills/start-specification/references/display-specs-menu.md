@@ -101,7 +101,6 @@ List "Analyze for groupings (recommended)" first, then one entry per existing no
 
 **Example assembled menu** (2 specs exist):
 
-```
 · · · · · · · · · · · ·
 1. Analyze for groupings (recommended)
    `All discussions are analyzed for natural groupings. Existing`
@@ -112,9 +111,8 @@ List "Analyze for groupings (recommended)" first, then one entry per existing no
 
 Select an option (enter number):
 · · · · · · · · · · · ·
-```
 
-**Output in a fenced code block exactly as shown above.**
+Do not wrap the above in a code block — output as raw markdown so bold styling renders.
 
 Menu descriptions are wrapped in backticks to visually distinguish them from the choice labels.
 

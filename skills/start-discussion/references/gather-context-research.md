@@ -6,7 +6,6 @@
 
 Summarise the selected research topic in 2-5 lines, drawing from the source, summary, and key questions in the research analysis.
 
-```
 New discussion: {topic}
 
 Based on research: docs/workflow/research/{filename}.md (lines {start}-{end})
@@ -20,8 +19,7 @@ research you'd like to include — drop them in now.
 - **`n`/`no`** — Continue as-is
 - Describe what you'd like to add
 · · · · · · · · · · · ·
-```
 
-**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+Do not wrap the above in a code block — output as raw markdown so bold styling renders.
 
 **STOP.** Wait for user response before proceeding.
