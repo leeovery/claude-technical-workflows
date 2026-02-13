@@ -84,7 +84,7 @@ Then, **separately from the content above** (clear visual break), present the ch
 - **Or tell me what to change.**
 · · · · · · · · · · · ·
 
-**Do not wrap content or choices in a code block** — both must render as styled markdown. The content and choices must be visually distinct (not run together).
+Content and choices must be visually distinct (not run together).
 
 > **CHECKPOINT**: After presenting, you MUST STOP and wait for the user's response. Do NOT proceed to logging. Do NOT present the next topic. WAIT.
 
