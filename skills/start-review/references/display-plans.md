@@ -43,6 +43,8 @@ The review phase requires at least one plan with an implementation.
 Please run /start-implementation first.
 ```
 
+**Output in a fenced code block exactly as shown above.**
+
 **STOP.** Wait for user to acknowledge before ending.
 
 #### If single reviewable plan
@@ -52,11 +54,12 @@ Auto-selecting: {topic} (only reviewable plan)
 Scope: single
 ```
 
+**Output in a fenced code block exactly as shown above.**
+
 → Proceed directly to **Step 5**.
 
 #### If multiple reviewable plans
 
-```
 · · · · · · · · · · · ·
 What scope would you like to review?
 
@@ -64,7 +67,8 @@ What scope would you like to review?
 - **`m`/`multi`** — Review selected plans together (cross-cutting)
 - **`a`/`all`** — Review all implemented plans (full product)
 · · · · · · · · · · · ·
-```
+
+Do not wrap the above in a code block — output as raw markdown so bold styling renders.
 
 **STOP.** Wait for user response.
 

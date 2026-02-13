@@ -96,6 +96,8 @@ No plans found in docs/workflow/planning/
 The review phase requires a completed implementation based on a plan. Please run /start-planning first to create a plan, then /start-implementation to build it.
 ```
 
+**Output in a fenced code block exactly as shown above.**
+
 **STOP.** Wait for user to acknowledge before ending.
 
 #### If scenario is "single_plan" or "multiple_plans"
