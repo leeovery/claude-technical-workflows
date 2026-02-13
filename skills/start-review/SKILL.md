@@ -106,107 +106,17 @@ Plans exist.
 
 ---
 
-## Step 3: Present Plans and Select Scope
+## Step 3: Display Plans
 
-Present all discovered plans with implementation status to help the user understand what's reviewable.
+Load **[display-plans.md](references/display-plans.md)** and follow its instructions as written.
 
-**Present the full state:**
-
-```
-Review Phase
-
-Reviewable:
-  1. ✓ {topic-1} (completed) - format: {format}, spec: {exists|missing}
-  2. ▶ {topic-2} (in-progress) - format: {format}, spec: {exists|missing}
-
-Not reviewable:
-  · {topic-3} [no implementation]
-```
-
-**Output in a fenced code block exactly as shown above.**
-
-**Formatting rules:**
-
-Reviewable (numbered, selectable):
-- **`✓`** — implementation_status: completed
-- **`▶`** — implementation_status: in-progress
-
-Not reviewable (not numbered, not selectable):
-- **`·`** — implementation_status: none
-
-Omit either section entirely if it has no entries.
-
-**Then route based on what's reviewable:**
-
-#### If no reviewable plans
-
-```
-No implemented plans found.
-
-The review phase requires at least one plan with an implementation.
-Please run /start-implementation first.
-```
-
-**STOP.** Wait for user to acknowledge before ending.
-
-#### If single reviewable plan
-
-```
-Auto-selecting: {topic} (only reviewable plan)
-Scope: single
-```
-
-→ Proceed directly to **Step 5**.
-
-#### If multiple reviewable plans
-
-```
-· · · · · · · · · · · ·
-What scope would you like to review?
-
-- **`s`/`single`** — Review one plan's implementation
-- **`m`/`multi`** — Review selected plans together (cross-cutting)
-- **`a`/`all`** — Review all implemented plans (full product)
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-→ Based on user choice, proceed to **Step 4**.
+→ Proceed to **Step 4**.
 
 ---
 
-## Step 4: Plan Selection
+## Step 4: Select Plans
 
-This step only applies for `single` or `multi` scope chosen in Step 3.
-
-#### If scope is "all"
-
-All reviewable plans are included. No selection needed.
-
-→ Proceed directly to **Step 5**.
-
-#### If scope is "single"
-
-```
-· · · · · · · · · · · ·
-Which plan would you like to review? (Enter a number from Step 3)
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-→ Proceed to **Step 5**.
-
-#### If scope is "multi"
-
-```
-· · · · · · · · · · · ·
-Which plans to include? (Enter numbers separated by commas, e.g. 1,3)
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
+Load **[select-plans.md](references/select-plans.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
 
@@ -214,29 +124,4 @@ Which plans to include? (Enter numbers separated by commas, e.g. 1,3)
 
 ## Step 5: Invoke the Skill
 
-After completing the steps above, this skill's purpose is fulfilled.
-
-Invoke the [technical-review](../technical-review/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
-
-**Example handoff (single):**
-```
-Review session for: {topic}
-Review scope: single
-Plan: docs/workflow/planning/{topic}.md
-Format: {format}
-Plan ID: {plan_id} (if applicable)
-Specification: {specification} (exists: {true|false})
-
-Invoke the technical-review skill.
-```
-
-**Example handoff (multi/all):**
-```
-Review session for: {scope description}
-Review scope: {multi | all}
-Plans:
-  - docs/workflow/planning/{topic-1}.md (format: {format}, spec: {spec})
-  - docs/workflow/planning/{topic-2}.md (format: {format}, spec: {spec})
-
-Invoke the technical-review skill.
-```
+Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

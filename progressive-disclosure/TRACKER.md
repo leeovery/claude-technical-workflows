@@ -12,7 +12,7 @@ Ordered by complexity. Work through in order — simpler skills establish patter
 
 - [x] **start-research** (62 lines) — Simple linear flow. 2 references: gather-context, invoke-skill. *(PR #96)*
 - [x] **start-specification** (851 lines → backbone + 14 reference files) — Complex: discovery + conditional routing + display redesign. *(PR #97)*
-- [ ] **start-review** (173 lines) — Linear with discovery script
+- [x] **start-review** (243 lines → backbone + 3 reference files) — Linear discovery + display/select/invoke extraction
 - [ ] **start-planning** (290 lines) — Linear with discovery script + format selection
 - [ ] **start-implementation** (338 lines) — Linear with discovery script + plan reading + format loading
 - [x] **start-discussion** (391 lines → backbone + 8 reference files) — Discovery inline, 3-path gather-context router. *(PR #99)*
