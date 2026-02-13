@@ -8,6 +8,8 @@ Prompted when multiple concluded discussions exist, no specifications exist, and
 
 ## Display
 
+**Output the next fenced block as a code block:**
+
 ```
 Specification Overview
 
@@ -23,6 +25,8 @@ List all concluded discussions from discovery output.
 
 ### If in-progress discussions exist
 
+**Output the next fenced block as a code block:**
+
 ```
 Discussions not ready for specification:
 These discussions are still in progress and must be concluded
@@ -36,19 +40,27 @@ No `---` separator before these messages.
 
 #### If cache status is "none"
 
+**Output the next fenced block as a code block:**
+
 ```
 These discussions will be analyzed for natural groupings to determine
 how they should be organized into specifications. Results are cached
 and reused until discussions change.
 ```
 
+**Output the next fenced block as markdown (not a code block):**
+
+```
 · · · · · · · · · · · ·
 Proceed with analysis?
 - **`y`/`yes`**
 - **`n`/`no`**
 · · · · · · · · · · · ·
+```
 
 #### If cache status is "stale"
+
+**Output the next fenced block as a code block:**
 
 ```
 A previous grouping analysis exists but is outdated — discussions
@@ -58,11 +70,15 @@ These discussions will be re-analyzed for natural groupings. Results
 are cached and reused until discussions change.
 ```
 
+**Output the next fenced block as markdown (not a code block):**
+
+```
 · · · · · · · · · · · ·
 Proceed with analysis?
 - **`y`/`yes`**
 - **`n`/`no`**
 · · · · · · · · · · · ·
+```
 
 **STOP.** Wait for user response.
 
@@ -76,6 +92,8 @@ rm docs/workflow/.cache/discussion-consolidation-analysis.md
 → Load **[analysis-flow.md](analysis-flow.md)** and follow its instructions.
 
 #### If user declines (n)
+
+**Output the next fenced block as a code block:**
 
 ```
 Understood. You can run /start-discussion to continue working on

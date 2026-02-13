@@ -8,6 +8,8 @@ Present all discovered plans with implementation status to help the user underst
 
 **Present the full state:**
 
+**Output the next fenced block as a code block:**
+
 ```
 Review Phase
 
@@ -18,8 +20,6 @@ Reviewable:
 Not reviewable:
   · {topic-3} [no implementation]
 ```
-
-**Output in a fenced code block exactly as shown above.**
 
 **Formatting rules:**
 
@@ -36,6 +36,8 @@ Omit either section entirely if it has no entries.
 
 #### If no reviewable plans
 
+**Output the next fenced block as a code block:**
+
 ```
 No implemented plans found.
 
@@ -43,22 +45,22 @@ The review phase requires at least one plan with an implementation.
 Please run /start-implementation first.
 ```
 
-**Output in a fenced code block exactly as shown above.**
-
 **STOP.** Wait for user to acknowledge before ending.
 
 #### If single reviewable plan
+
+**Output the next fenced block as a code block:**
 
 ```
 Auto-selecting: {topic} (only reviewable plan)
 Scope: single
 ```
 
-**Output in a fenced code block exactly as shown above.**
-
 → Proceed directly to **Step 5**.
 
 #### If multiple reviewable plans
+
+**Output the next fenced block as markdown (not a code block):**
 
 ```
 · · · · · · · · · · · ·
@@ -69,8 +71,6 @@ What scope would you like to review?
 - **`a`/`all`** — Review all implemented plans (full product)
 · · · · · · · · · · · ·
 ```
-
-**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
 **STOP.** Wait for user response.
 
