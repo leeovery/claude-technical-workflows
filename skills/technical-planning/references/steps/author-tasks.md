@@ -31,14 +31,16 @@ After presenting, ask:
 
 **Task {M} of {total}: {Task Name}**
 
+**Output the next fenced block as markdown (not a code block):**
+
+```
 · · · · · · · · · · · ·
 **To proceed:**
 - **`y`/`yes`** — Approved. I'll log it to the plan.
 - **Or tell me what to change.**
 - **Or navigate** — a different phase or task, or the leading edge.
 · · · · · · · · · · · ·
-
-**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+```
 
 **STOP.** Wait for the user's response.
 

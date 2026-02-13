@@ -32,12 +32,14 @@ If `analysis_cycle > 3`:
 
 Analysis has run {N-1} times so far. You can continue (recommended if issues were still found last cycle) or skip to completion.
 
+**Output the next fenced block as markdown (not a code block):**
+
+```
 · · · · · · · · · · · ·
 - **`p`/`proceed`** — Continue analysis *(default)*
 - **`s`/`skip`** — Skip analysis, proceed to completion
 · · · · · · · · · · · ·
-
-**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+```
 
 **STOP.** Wait for user choice. You MUST NOT choose on the user's behalf.
 
@@ -61,13 +63,15 @@ If there are unstaged changes or untracked files, categorize them:
 - `{file}` ({status: modified/untracked})
 - ...
 
+**Output the next fenced block as markdown (not a code block):**
+
+```
 · · · · · · · · · · · ·
 - **`y`/`yes`** — Include all in the checkpoint commit
 - **`s`/`skip`** — Exclude unexpected files, commit only implementation files
 - **Comment** — Specify which to include
 · · · · · · · · · · · ·
-
-**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+```
 
 **STOP.** Wait for user choice.
 
@@ -145,13 +149,15 @@ Sources: {sources}
 **Tests**:
 {tests}
 
+**Output the next fenced block as markdown (not a code block):**
+
+```
 · · · · · · · · · · · ·
 - **`a`/`approve`** — Approve this task
 - **`s`/`skip`** — Skip this task
 - **Comment** — Revise based on feedback
 · · · · · · · · · · · ·
-
-**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+```
 
 **STOP.** Wait for user input.
 

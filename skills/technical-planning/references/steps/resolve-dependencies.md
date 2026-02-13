@@ -43,13 +43,15 @@ Skip the resolution and reverse check — there is nothing to resolve against. D
 
 **STOP.** Present a summary of the dependency state: what was documented, what was resolved, what remains unresolved, and any reverse resolutions made.
 
+**Output the next fenced block as markdown (not a code block):**
+
+```
 · · · · · · · · · · · ·
 **To proceed:**
 - **`y`/`yes`** — Approved. I'll proceed to plan review.
 - **Or tell me what to change.**
 · · · · · · · · · · · ·
-
-**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+```
 
 #### If the user provides feedback
 

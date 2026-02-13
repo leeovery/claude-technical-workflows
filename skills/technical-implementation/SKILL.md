@@ -166,6 +166,9 @@ Commit: `impl({topic}): start implementation`
 
 Present the existing configuration for confirmation:
 
+**Output the next fenced block as markdown (not a code block):**
+
+```
 Previous session used these project skills:
 - `{skill-name}` — {path}
 - ...
@@ -174,8 +177,7 @@ Previous session used these project skills:
 - **`y`/`yes`** — Keep these, proceed
 - **`c`/`change`** — Re-discover and choose skills
 · · · · · · · · · · · ·
-
-**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+```
 
 **STOP.** Wait for user choice.
 
@@ -183,6 +185,8 @@ Previous session used these project skills:
 - **`change`**: Clear `project_skills` and fall through to discovery below.
 
 #### If `.claude/skills/` does not exist or is empty
+
+**Output the next fenced block as a code block:**
 
 ```
 No project skills found. Proceeding without project-specific conventions.
@@ -194,6 +198,9 @@ No project skills found. Proceeding without project-specific conventions.
 
 Scan `.claude/skills/` for project-specific skill directories. Present findings:
 
+**Output the next fenced block as markdown (not a code block):**
+
+```
 Found these project skills that may be relevant to implementation:
 - `{skill-name}` — {brief description}
 - `{skill-name}` — {brief description}
@@ -204,8 +211,7 @@ Found these project skills that may be relevant to implementation:
 - **`n`/`none`** — Skip project skills
 - **Or list the ones you want** — e.g. "golang-pro, react-patterns"
 · · · · · · · · · · · ·
-
-**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+```
 
 **STOP.** Wait for user to confirm which skills are relevant.
 
@@ -223,6 +229,9 @@ If `linters` is already populated in the tracking file, present the existing con
 
 Otherwise, present discovery findings to the user:
 
+**Output the next fenced block as markdown (not a code block):**
+
+```
 **Linter discovery:**
 - {tool} — `{command}` (installed / not installed)
 - ...
@@ -234,8 +243,7 @@ Recommendations: {any suggested tools with install commands}
 - **`c`/`change`** — Modify the linter list
 - **`s`/`skip`** — Skip linter setup (no linting during TDD)
 · · · · · · · · · · · ·
-
-**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+```
 
 **STOP.** Wait for user choice.
 

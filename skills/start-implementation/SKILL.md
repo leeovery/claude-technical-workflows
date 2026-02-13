@@ -108,6 +108,8 @@ Use `state.scenario` from the discovery output to determine the path:
 
 No plans exist yet.
 
+**Output the next fenced block as a code block:**
+
 ```
 No plans found in docs/workflow/planning/
 
@@ -144,6 +146,8 @@ A plan is **Not implementable** if:
 
 **Present the full state:**
 
+**Output the next fenced block as a code block:**
+
 ```
 Implementation Phase
 
@@ -158,8 +162,6 @@ Not implementable:
   · advanced-features [blocked: core-features task core-2-3 not completed]
   · reporting [planning]
 ```
-
-**Output in a fenced code block exactly as shown above.**
 
 **Formatting rules:**
 
@@ -185,6 +187,8 @@ Numbering is sequential across Implementable and Implemented. Omit any section e
 
 **If Not implementable section is shown**, append after the presentation:
 
+**Output the next fenced block as a code block:**
+
 ```
 If a blocked dependency has been resolved outside this workflow, name the plan and the dependency to unblock it.
 ```
@@ -192,6 +196,9 @@ If a blocked dependency has been resolved outside this workflow, name the plan a
 **Then prompt based on what's actionable:**
 
 **If single implementable plan and no implemented plans (auto-select):**
+
+**Output the next fenced block as a code block:**
+
 ```
 Auto-selecting: {topic} (only implementable plan)
 ```
@@ -199,6 +206,8 @@ Auto-selecting: {topic} (only implementable plan)
 
 **If nothing selectable (no implementable or implemented):**
 Show Not implementable section only (with unblock hint above).
+
+**Output the next fenced block as a code block:**
 
 ```
 No implementable plans.
@@ -213,6 +222,9 @@ Then re-run /start-implementation.
 **STOP.** This workflow cannot continue — do not proceed.
 
 **Otherwise (multiple selectable plans, or implemented plans exist):**
+
+**Output the next fenced block as markdown (not a code block):**
+
 ```
 · · · · · · · · · · · ·
 Select a plan (enter number):
@@ -242,6 +254,8 @@ After the plan is selected:
 
 #### If all deps satisfied (or no deps)
 
+**Output the next fenced block as a code block:**
+
 ```
 External dependencies satisfied.
 ```
@@ -251,6 +265,8 @@ External dependencies satisfied.
 #### If any deps are blocking
 
 This should not normally happen for plans classified as "Implementable" in Step 3. However, as an escape hatch:
+
+**Output the next fenced block as markdown (not a code block):**
 
 ```
 Missing dependencies:
@@ -292,12 +308,18 @@ If the user says a dependency has been implemented outside the workflow:
 Use the `environment` section from the discovery output:
 
 **If `setup_file_exists: true` and `requires_setup: false`:**
+
+**Output the next fenced block as a code block:**
+
 ```
 Environment: No special setup required.
 ```
 → Proceed to **Step 6**.
 
 **If `setup_file_exists: true` and `requires_setup: true`:**
+
+**Output the next fenced block as a code block:**
+
 ```
 Environment setup file found: docs/workflow/environment-setup.md
 ```
@@ -306,6 +328,9 @@ Environment setup file found: docs/workflow/environment-setup.md
 **If `setup_file_exists: false` or `requires_setup: unknown`:**
 
 Ask:
+
+**Output the next fenced block as a code block:**
+
 ```
 Are there any environment setup instructions I should follow before implementation?
 (Or "none" if no special setup is needed)

@@ -97,6 +97,8 @@ Use `state.scenario` from the discovery output to determine the path:
 
 No specifications exist yet.
 
+**Output the next fenced block as a code block:**
+
 ```
 No specifications found in docs/workflow/specification/
 
@@ -125,6 +127,8 @@ Present everything discovered to help the user make an informed choice.
 
 **Present the full state:**
 
+**Output the next fenced block as a code block:**
+
 ```
 Planning Phase
 
@@ -138,8 +142,6 @@ Not plannable specifications:
   · {caching-strategy} [cross-cutting, concluded]
   · {rate-limiting} [cross-cutting, in-progress]
 ```
-
-**Output in a fenced code block exactly as shown above.**
 
 **Formatting rules:**
 
@@ -158,6 +160,9 @@ Omit either section entirely if it has no entries.
 **Then prompt based on what's actionable:**
 
 **If multiple actionable items:**
+
+**Output the next fenced block as markdown (not a code block):**
+
 ```
 · · · · · · · · · · · ·
 Select a specification (enter number):
@@ -166,6 +171,9 @@ Select a specification (enter number):
 **STOP.** Wait for user response.
 
 **If single actionable item (auto-select):**
+
+**Output the next fenced block as a code block:**
+
 ```
 Auto-selecting: {topic} (only actionable specification)
 ```
@@ -173,6 +181,9 @@ Auto-selecting: {topic} (only actionable specification)
 → Proceed directly to **Step 4**.
 
 **If nothing actionable:**
+
+**Output the next fenced block as a code block:**
+
 ```
 No plannable specifications.
 
@@ -229,6 +240,8 @@ If any **in-progress** cross-cutting specifications exist, check whether they co
 
 If any are relevant:
 
+**Output the next fenced block as markdown (not a code block):**
+
 ```
 Note: The following cross-cutting specifications are still in-progress:
   · {rate-limiting} - in-progress
@@ -248,6 +261,8 @@ If the user chooses to stop, end here. If they choose to continue, proceed.
 ### 6b: Summarize concluded cross-cutting specs
 
 If any **concluded** cross-cutting specifications exist, identify which are relevant to the feature being planned and summarize for handoff:
+
+**Output the next fenced block as a code block:**
 
 ```
 Cross-cutting specifications to reference:

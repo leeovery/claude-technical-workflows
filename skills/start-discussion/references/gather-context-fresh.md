@@ -10,6 +10,8 @@ Ask each question below **one at a time**. After each, **STOP** and wait for the
 
 ## Core Problem
 
+**Output the next fenced block as a code block:**
+
 ```
 New discussion: {topic}
 
@@ -22,6 +24,8 @@ What's the core problem or decision we need to work through?
 
 ## Constraints
 
+**Output the next fenced block as a code block:**
+
 ```
 Any constraints or context I should know about?
 ```
@@ -31,6 +35,8 @@ Any constraints or context I should know about?
 ---
 
 ## Codebase
+
+**Output the next fenced block as a code block:**
 
 ```
 Are there specific files in the codebase I should review first?
