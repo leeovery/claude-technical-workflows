@@ -110,8 +110,6 @@ Plans exist.
 
 Load **[display-plans.md](references/display-plans.md)** and follow its instructions as written.
 
-**STOP.**
-
 → Proceed to **Step 4**.
 
 ---
@@ -119,8 +117,6 @@ Load **[display-plans.md](references/display-plans.md)** and follow its instruct
 ## Step 4: Select Plans
 
 Load **[select-plans.md](references/select-plans.md)** and follow its instructions as written.
-
-**STOP.**
 
 → Proceed to **Step 5**.
 
