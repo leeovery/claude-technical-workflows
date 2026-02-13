@@ -44,7 +44,7 @@ Present the executor's ISSUES to the user:
 
 {executor's ISSUES content}
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
@@ -105,7 +105,7 @@ Present the reviewer's findings and fix analysis to the user:
 Notes (non-blocking):
 {NOTES from reviewer}
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
@@ -138,7 +138,7 @@ Present a summary and wait for user input:
 Phase: {phase number} — {phase name}
 {executor's SUMMARY — brief commentary, decisions, implementation notes}
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·

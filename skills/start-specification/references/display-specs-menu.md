@@ -8,7 +8,7 @@ Shows when multiple concluded discussions exist, specifications exist, and cache
 
 ## A. Display
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Specification Overview
@@ -20,7 +20,7 @@ Existing specifications:
 
 For each non-superseded specification from discovery output, display as nested tree:
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 1. {Spec Title Case Name}
@@ -41,7 +41,7 @@ Extraction count: X = sources with `status: incorporated`, Y = total source coun
 
 List concluded discussions that are not in any specification's `sources` array:
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Concluded discussions not in a specification:
@@ -51,7 +51,7 @@ Concluded discussions not in a specification:
 
 ### If in-progress discussions exist
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Discussions not ready for specification:
@@ -64,7 +64,7 @@ before they can be included in a specification.
 
 Show only the statuses that appear in the current display. No `---` separator before this section.
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Key:
@@ -84,7 +84,7 @@ No `---` separator before these messages.
 
 #### If cache status is "none"
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 No grouping analysis exists.
@@ -92,7 +92,7 @@ No grouping analysis exists.
 
 #### If cache status is "stale"
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 A previous grouping analysis exists but is outdated — discussions
@@ -113,7 +113,7 @@ List "Analyze for groupings (recommended)" first, then one entry per existing no
 
 **Example assembled menu** (2 specs exist):
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·

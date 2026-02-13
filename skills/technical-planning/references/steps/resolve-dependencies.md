@@ -43,7 +43,7 @@ Skip the resolution and reverse check — there is nothing to resolve against. D
 
 **STOP.** Present a summary of the dependency state: what was documented, what was resolved, what remains unresolved, and any reverse resolutions made.
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·

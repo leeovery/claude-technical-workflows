@@ -97,7 +97,7 @@ Use `state.scenario` from the discovery output to determine the path:
 
 No specifications exist yet.
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 No specifications found in docs/workflow/specification/
@@ -127,7 +127,7 @@ Present everything discovered to help the user make an informed choice.
 
 **Present the full state:**
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Planning Phase
@@ -161,7 +161,7 @@ Omit either section entirely if it has no entries.
 
 **If multiple actionable items:**
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
@@ -172,7 +172,7 @@ Select a specification (enter number):
 
 **If single actionable item (auto-select):**
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Auto-selecting: {topic} (only actionable specification)
@@ -182,7 +182,7 @@ Auto-selecting: {topic} (only actionable specification)
 
 **If nothing actionable:**
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 No plannable specifications.
@@ -240,7 +240,7 @@ If any **in-progress** cross-cutting specifications exist, check whether they co
 
 If any are relevant:
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 Note: The following cross-cutting specifications are still in-progress:
@@ -262,7 +262,7 @@ If the user chooses to stop, end here. If they choose to continue, proceed.
 
 If any **concluded** cross-cutting specifications exist, identify which are relevant to the feature being planned and summarize for handoff:
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Cross-cutting specifications to reference:

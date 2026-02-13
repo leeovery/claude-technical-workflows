@@ -8,7 +8,7 @@ Prompted when multiple concluded discussions exist, no specifications exist, and
 
 ## Display
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Specification Overview
@@ -25,7 +25,7 @@ List all concluded discussions from discovery output.
 
 ### If in-progress discussions exist
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Discussions not ready for specification:
@@ -40,7 +40,7 @@ No `---` separator before these messages.
 
 #### If cache status is "none"
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 These discussions will be analyzed for natural groupings to determine
@@ -48,7 +48,7 @@ how they should be organized into specifications. Results are cached
 and reused until discussions change.
 ```
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
@@ -60,7 +60,7 @@ Proceed with analysis?
 
 #### If cache status is "stale"
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 A previous grouping analysis exists but is outdated — discussions
@@ -70,7 +70,7 @@ These discussions will be re-analyzed for natural groupings. Results
 are cached and reused until discussions change.
 ```
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
@@ -93,7 +93,7 @@ rm docs/workflow/.cache/discussion-consolidation-analysis.md
 
 #### If user declines (n)
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Understood. You can run /start-discussion to continue working on

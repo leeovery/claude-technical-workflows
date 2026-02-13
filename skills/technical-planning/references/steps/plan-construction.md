@@ -71,7 +71,7 @@ Present the task list to the user as rendered markdown (not in a code block).
 
 **Phase {N}: {Phase Name}** — {M} tasks.
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·

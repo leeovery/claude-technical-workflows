@@ -87,7 +87,7 @@ When you notice convergence, **flag it and give the user options**:
 
 This thread seems to be converging — we've explored {topic} enough that the tradeoffs are clear and it's approaching decision territory.
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·

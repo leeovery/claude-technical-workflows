@@ -50,7 +50,7 @@ For each discussion: status is `ready`. Spec status: `none`.
 
 All items are first-class — every grouping (including single-discussion entries) is a numbered item.
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Specification Overview
@@ -71,7 +71,7 @@ Recommended breakdown for specifications with their source discussions.
 
 ### If in-progress discussions exist
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Discussions not ready for specification:
@@ -84,7 +84,7 @@ before they can be included in a specification.
 
 Show only the statuses that appear in the current display. No `---` separator before this section.
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Key:
@@ -105,7 +105,7 @@ Key:
 
 No `---` separator before this section.
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Tip: To restructure groupings or pull a discussion into its own
@@ -133,7 +133,7 @@ After all grouping entries, append meta options:
 
 **Example assembled menu** (2 groupings, specs exist):
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·

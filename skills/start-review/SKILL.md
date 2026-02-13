@@ -90,7 +90,7 @@ Use `state.scenario` from the discovery output to determine the path:
 
 No plans exist yet.
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 No plans found in docs/workflow/planning/

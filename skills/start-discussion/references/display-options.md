@@ -8,7 +8,7 @@ Present everything discovered to help the user make an informed choice.
 
 **Present the full state:**
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Workflow Status: Discussion Phase
@@ -36,7 +36,7 @@ Key:
 
 #### If research and discussions exist
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
@@ -51,7 +51,7 @@ How would you like to proceed?
 
 #### If only research exists
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
@@ -65,7 +65,7 @@ How would you like to proceed?
 
 #### If only discussions exist
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·

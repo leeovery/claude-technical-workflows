@@ -32,7 +32,7 @@ If `analysis_cycle > 3`:
 
 Analysis has run {N-1} times so far. You can continue (recommended if issues were still found last cycle) or skip to completion.
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
@@ -63,7 +63,7 @@ If there are unstaged changes or untracked files, categorize them:
 - `{file}` ({status: modified/untracked})
 - ...
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
@@ -149,7 +149,7 @@ Sources: {sources}
 **Tests**:
 {tests}
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·

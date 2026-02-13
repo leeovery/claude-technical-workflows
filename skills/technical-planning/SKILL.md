@@ -84,7 +84,7 @@ Found existing plan for **{topic}** (previously reached phase {N}, task {M}).
 
 {spec change summary from spec-change-detection.md}
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
@@ -130,7 +130,7 @@ Present the recommendation:
 
 Existing plans use **{format}**. Use the same format for consistency?
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·

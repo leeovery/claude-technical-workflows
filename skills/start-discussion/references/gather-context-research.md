@@ -6,7 +6,7 @@
 
 Summarise the selected research topic in 2-5 lines, drawing from the source, summary, and key questions in the research analysis.
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 New discussion: {topic}

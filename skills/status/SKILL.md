@@ -33,7 +33,7 @@ docs/workflow/planning/
 
 Research is project-wide exploration. From discussion onwards, work is organised by **topic** - different topics may be at different stages.
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 ## Workflow Status
@@ -75,7 +75,7 @@ Keep suggestions brief - the user knows their project's dependencies better than
 
 If planning files exist, let the user know they can view plan details:
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 To view a plan's tasks and progress, use /view-plan

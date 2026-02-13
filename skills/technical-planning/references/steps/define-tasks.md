@@ -42,7 +42,7 @@ Present the task overview to the user as rendered markdown (not in a code block)
 
 **STOP.** Ask:
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·

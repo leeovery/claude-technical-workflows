@@ -31,7 +31,7 @@ After presenting, ask:
 
 **Task {M} of {total}: {Task Name}**
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·

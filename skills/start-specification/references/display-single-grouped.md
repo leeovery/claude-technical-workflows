@@ -15,7 +15,7 @@ Extraction count: X = sources with `status: incorporated`, Y = total source coun
 
 ## Display
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Specification Overview
@@ -31,7 +31,7 @@ Single concluded discussion found with existing multi-source specification.
 
 ### If in-progress discussions exist
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Discussions not ready for specification:
@@ -44,7 +44,7 @@ before they can be included in a specification.
 
 Show only the statuses that appear in the current display. No `---` separator before this section.
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Key:
@@ -61,7 +61,7 @@ Key:
 
 ## After Display
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Automatically proceeding with "{Spec Title Case Name}".

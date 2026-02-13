@@ -166,7 +166,7 @@ Commit: `impl({topic}): start implementation`
 
 Present the existing configuration for confirmation:
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 Previous session used these project skills:
@@ -186,7 +186,7 @@ Previous session used these project skills:
 
 #### If `.claude/skills/` does not exist or is empty
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 No project skills found. Proceeding without project-specific conventions.
@@ -198,7 +198,7 @@ No project skills found. Proceeding without project-specific conventions.
 
 Scan `.claude/skills/` for project-specific skill directories. Present findings:
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 Found these project skills that may be relevant to implementation:
@@ -229,7 +229,7 @@ If `linters` is already populated in the tracking file, present the existing con
 
 Otherwise, present discovery findings to the user:
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 **Linter discovery:**

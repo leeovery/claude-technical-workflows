@@ -6,7 +6,7 @@
 
 ## A. Gather Analysis Context
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Before analyzing, is there anything about how these discussions relate

@@ -518,7 +518,7 @@ For each item, follow the **same workflow as the main specification process**:
 
    [content as rendered markdown]
 
-   **Output the next fenced block as markdown (not a code block):**
+   > *Output the next fenced block as markdown (not a code block):*
 
    ```
    · · · · · · · · · · · ·
@@ -656,7 +656,7 @@ For each item:
 
    [content as rendered markdown]
 
-   **Output the next fenced block as markdown (not a code block):**
+   > *Output the next fenced block as markdown (not a code block):*
 
    ```
    · · · · · · · · · · · ·

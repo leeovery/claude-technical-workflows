@@ -171,7 +171,7 @@ After presenting the finding and proposed fix, ask:
 
 **Finding {N} of {total}: {Brief Title}**
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·

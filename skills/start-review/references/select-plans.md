@@ -14,7 +14,7 @@ All reviewable plans are included. No selection needed.
 
 #### If scope is "single"
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
@@ -28,7 +28,7 @@ Which plan would you like to review? (Enter a number from Step 3)
 
 #### If scope is "multi"
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·

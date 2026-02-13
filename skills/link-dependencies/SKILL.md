@@ -28,7 +28,7 @@ Scan the codebase for existing plans:
 
 **If no plans exist:**
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 No plans found in docs/workflow/planning/
@@ -40,7 +40,7 @@ Stop here.
 
 **If only one plan exists:**
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Only one plan found: {topic}
@@ -56,7 +56,7 @@ Compare the `format:` field across all discovered plans.
 
 **If plans use different output formats:**
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Mixed output formats detected:
@@ -83,7 +83,7 @@ For each plan, read the `external_dependencies` field from the frontmatter:
 
 3. **Build a summary**:
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Dependency Summary
@@ -139,7 +139,7 @@ For each plan that was a dependency target (i.e., other plans depend on it):
 
 Present a summary:
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Dependency Linking Complete
@@ -170,7 +170,7 @@ UPDATED FILES:
 
 If any files were updated:
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·

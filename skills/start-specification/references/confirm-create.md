@@ -6,7 +6,7 @@
 
 #### If no source discussions have individual specs
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Creating specification: {Title Case Name}
@@ -18,7 +18,7 @@ Sources:
 Output: docs/workflow/specification/{kebab-case-name}.md
 ```
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
@@ -32,7 +32,7 @@ Proceed?
 
 Note the supersession (`has_individual_spec: true`):
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Creating specification: {Title Case Name}
@@ -47,7 +47,7 @@ After completion:
   specification/{discussion-name}.md → marked as superseded
 ```
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
@@ -73,7 +73,7 @@ Proceed?
 
 #### If single discussion (no menu to return to)
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Understood. You can run /start-discussion to continue working on
