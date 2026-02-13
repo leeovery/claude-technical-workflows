@@ -127,6 +127,7 @@ After all grouping entries, append meta options:
 
 **Example assembled menu** (2 groupings, specs exist):
 
+```
 · · · · · · · · · · · ·
 1. Start "Auth Flow" — 2 ready discussions
 2. Continue "Data Model" — 1 source(s) pending extraction
@@ -140,8 +141,9 @@ After all grouping entries, append meta options:
 
 Select an option (enter number):
 · · · · · · · · · · · ·
+```
 
-Do not wrap the above in a code block — output as raw markdown so bold styling renders. Every meta option (Unify, Re-analyze) MUST include its description lines.
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders. Every meta option (Unify, Re-analyze) MUST include its description lines.
 
 **STOP.** Wait for user response.
 

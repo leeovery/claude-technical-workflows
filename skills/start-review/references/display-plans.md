@@ -60,6 +60,7 @@ Scope: single
 
 #### If multiple reviewable plans
 
+```
 · · · · · · · · · · · ·
 What scope would you like to review?
 
@@ -67,8 +68,9 @@ What scope would you like to review?
 - **`m`/`multi`** — Review selected plans together (cross-cutting)
 - **`a`/`all`** — Review all implemented plans (full product)
 · · · · · · · · · · · ·
+```
 
-Do not wrap the above in a code block — output as raw markdown so bold styling renders.
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
 **STOP.** Wait for user response.
 

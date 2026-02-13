@@ -14,11 +14,13 @@ All reviewable plans are included. No selection needed.
 
 #### If scope is "single"
 
+```
 · · · · · · · · · · · ·
 Which plan would you like to review? (Enter a number from Step 3)
 · · · · · · · · · · · ·
+```
 
-Do not wrap the above in a code block — output as raw markdown so bold styling renders.
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
 **STOP.** Wait for user response.
 
@@ -26,11 +28,13 @@ Do not wrap the above in a code block — output as raw markdown so bold styling
 
 #### If scope is "multi"
 
+```
 · · · · · · · · · · · ·
 Which plans to include? (Enter numbers separated by commas, e.g. 1,3)
 · · · · · · · · · · · ·
+```
 
-Do not wrap the above in a code block — output as raw markdown so bold styling renders.
+**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
 **STOP.** Wait for user response.
 
