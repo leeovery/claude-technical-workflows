@@ -8,7 +8,7 @@ Present all discovered plans with implementation status to help the user underst
 
 **Present the full state:**
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Review Phase
@@ -36,7 +36,7 @@ Omit either section entirely if it has no entries.
 
 #### If no reviewable plans
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 No implemented plans found.
@@ -49,7 +49,7 @@ Please run /start-implementation first.
 
 #### If single reviewable plan
 
-**Output the next fenced block as a code block:**
+> *Output the next fenced block as a code block:*
 
 ```
 Auto-selecting: {topic} (only reviewable plan)
@@ -60,7 +60,7 @@ Scope: single
 
 #### If multiple reviewable plans
 
-**Output the next fenced block as markdown (not a code block):**
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
