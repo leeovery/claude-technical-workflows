@@ -119,7 +119,7 @@ The implementation phase requires a plan.
 Run /start-planning first to create a plan from a specification.
 ```
 
-**STOP.** Wait for user to acknowledge before ending.
+**STOP.** Command ends.
 
 #### If scenario is "single_plan" or "multiple_plans"
 

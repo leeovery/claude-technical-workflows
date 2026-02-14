@@ -342,14 +342,25 @@ All skill files (entry-point and processing) MUST follow these structural conven
 
 Use `**STOP.**` (bold, period) followed by a brief instruction. This is the only pattern for user interaction boundaries.
 
+Three categories:
+
+**Interaction stop** — waiting for real user input to continue:
 ```
 **STOP.** Wait for user response.
 **STOP.** Wait for user response before proceeding.
-**STOP.** Wait for user to acknowledge before ending.
+```
+
+**Terminal stop** — skill is done, nothing to process:
+```
+**STOP.** Command ends.
+```
+
+**Blocked stop** — items exist but none are actionable:
+```
 **STOP.** This workflow cannot continue — do not proceed.
 ```
 
-Never use `Stop here.`, `STOP`, or other variations.
+Never use `Stop here.`, `Wait for user to acknowledge before ending.`, or other variations.
 
 ### Heading Hierarchy
 

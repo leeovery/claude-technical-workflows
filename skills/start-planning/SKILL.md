@@ -108,7 +108,7 @@ The planning phase requires a concluded specification.
 Run /start-specification first.
 ```
 
-**STOP.** Wait for user to acknowledge before ending.
+**STOP.** Command ends.
 
 #### If scenario is "nothing_actionable"
 
