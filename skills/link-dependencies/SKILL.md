@@ -38,7 +38,7 @@ No plans found in docs/workflow/planning/
 There are no plans to link. Create plans first.
 ```
 
-**STOP.**
+**STOP.** Do not proceed — terminal condition.
 
 **If only one plan exists:**
 
@@ -52,7 +52,7 @@ Only one plan found: {topic}
 Cross-topic dependency linking requires at least two plans.
 ```
 
-**STOP.**
+**STOP.** Do not proceed — terminal condition.
 
 ## Step 2: Check Output Format Consistency
 
@@ -75,7 +75,7 @@ Cross-topic dependencies can only be wired within the same output
 format. Consolidate your plans to a single format before linking.
 ```
 
-**STOP.**
+**STOP.** Do not proceed — terminal condition.
 
 ## Step 3: Extract External Dependencies
 

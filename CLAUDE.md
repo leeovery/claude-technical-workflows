@@ -360,9 +360,9 @@ Two categories:
 **STOP.** Wait for user response before proceeding.
 ```
 
-**Terminal stop** — skill is done, nothing to process. The output block preceding it already explains the situation, so no follow-up text is needed:
+**Terminal stop** — skill is done, nothing to process:
 ```
-**STOP.**
+**STOP.** Do not proceed — terminal condition.
 ```
 
 Never use `Stop here.`, `Command ends.`, `Wait for user to acknowledge before ending.`, or other variations.

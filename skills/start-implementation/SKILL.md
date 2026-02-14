@@ -119,7 +119,7 @@ The implementation phase requires a plan.
 Run /start-planning first to create a plan from a specification.
 ```
 
-**STOP.**
+**STOP.** Do not proceed — terminal condition.
 
 #### If scenario is "single_plan" or "multiple_plans"
 
@@ -251,7 +251,7 @@ Complete blocking dependencies first, or finish plans still
 in progress with /start-planning. Then re-run /start-implementation.
 ```
 
-**STOP.**
+**STOP.** Do not proceed — terminal condition.
 
 **Otherwise (multiple selectable plans, or implemented plans exist):**
 

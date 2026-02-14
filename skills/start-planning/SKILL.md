@@ -108,7 +108,7 @@ The planning phase requires a concluded specification.
 Run /start-specification first.
 ```
 
-**STOP.**
+**STOP.** Do not proceed — terminal condition.
 
 #### If scenario is "nothing_actionable"
 
@@ -239,7 +239,7 @@ Complete any in-progress specifications with /start-specification,
 or create a new specification first.
 ```
 
-**STOP.**
+**STOP.** Do not proceed — terminal condition.
 
 → Based on user choice, proceed to **Step 4**.
 

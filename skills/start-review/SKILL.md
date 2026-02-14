@@ -102,7 +102,7 @@ Run /start-planning first to create a plan, then /start-implementation
 to build it.
 ```
 
-**STOP.**
+**STOP.** Do not proceed — terminal condition.
 
 #### If scenario is "single_plan" or "multiple_plans"
 

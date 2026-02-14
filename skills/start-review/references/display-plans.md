@@ -74,7 +74,7 @@ The review phase requires at least one plan with an implementation.
 Run /start-implementation first.
 ```
 
-**STOP.**
+**STOP.** Do not proceed — terminal condition.
 
 #### If single reviewable plan
 

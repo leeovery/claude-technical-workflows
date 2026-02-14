@@ -22,7 +22,7 @@ that specifications are built upon.
 Run /start-discussion to begin documenting technical decisions.
 ```
 
-**STOP.**
+**STOP.** Do not proceed — terminal condition.
 
 ## If discussions exist but none concluded
 
@@ -44,4 +44,4 @@ Run /start-discussion to continue working on a discussion.
 
 List all in-progress discussions from discovery output.
 
-**STOP.**
+**STOP.** Do not proceed — terminal condition.
