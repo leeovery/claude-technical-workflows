@@ -36,18 +36,17 @@ For implementation, check `docs/workflow/implementation/{topic}/tracking.md` fil
 
 Research is project-wide exploration. From discussion onwards, work is organised by **topic** - different topics may be at different stages.
 
-> *Output the next fenced block as a code block:*
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
-Workflow Overview
+**Workflow Overview**
 
-Research: {count} files ({filenames})
+**Research:** {count} files ({filenames})
 
-Topics:
-
-  Topic          Discussion   Spec         Plan         Implemented
-  {topic}        {discussion_status}   {spec_status}   {plan_status}   {impl_status}
-  ...
+| Topic | Discussion | Spec | Plan | Implemented |
+|-------|------------|------|------|-------------|
+| {topic} | {discussion_status} | {spec_status} | {plan_status} | {impl_status} |
+| ... | | | | |
 ```
 
 Adapt based on what exists:
