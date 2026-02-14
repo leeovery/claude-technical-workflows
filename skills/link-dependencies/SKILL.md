@@ -67,9 +67,8 @@ Dependency Linking
 
 Mixed output formats detected:
 
-  • authentication ({format-a})
-  • billing-system ({format-b})
-  • notifications ({format-a})
+  • {topic} ({format})
+  • ...
 
 Cross-topic dependencies can only be wired within the same output
 format. Consolidate your plans to a single format before linking.
