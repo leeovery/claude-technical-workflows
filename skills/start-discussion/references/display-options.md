@@ -22,10 +22,13 @@ Research topics:
    └─ Discussion: no discussion
    └─ "{summary}"
 
-2. ...
-```
+2. {theme_name}
+   └─ Source: {filename}.md (lines {start}-{end})
+   └─ Discussion: {topic}.md ({status:[in-progress|concluded]})
+   └─ "{summary}"
 
-**Discussion branch:** Show `no discussion` when no discussion file exists. When one exists, show the filename and status: `{topic}.md (in-progress)` or `{topic}.md (concluded)`.
+3. ...
+```
 
 If discussions exist that are NOT linked to a research topic, list them separately:
 
