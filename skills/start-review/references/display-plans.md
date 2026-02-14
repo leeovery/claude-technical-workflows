@@ -8,7 +8,7 @@ Present all discovered plans with implementation status to help the user underst
 
 **Present the full state:**
 
-Show reviewable plans as numbered tree items. Convert topic filenames to title case (`auth-flow` → `Auth Flow`).
+Show reviewable plans as numbered tree items.
 
 > *Output the next fenced block as a code block:*
 
@@ -17,15 +17,12 @@ Review Overview
 
 {N} plans found. {M} with implementations.
 
-1. {Topic Title Case}
+1. {topic:(titlecase)}
    └─ Plan: concluded ({format})
-   └─ Implementation: completed
-   └─ Spec: exists
+   └─ Implementation: {impl_status:[completed|in-progress]}
+   └─ Spec: {spec:[exists|missing]}
 
-2. {Topic Title Case}
-   └─ Plan: concluded ({format})
-   └─ Implementation: in-progress
-   └─ Spec: exists
+2. ...
 ```
 
 **Tree rules:**
@@ -81,7 +78,7 @@ Run /start-implementation first.
 > *Output the next fenced block as a code block:*
 
 ```
-Automatically proceeding with "{Topic}".
+Automatically proceeding with "{topic:(titlecase)}".
 Scope: single
 ```
 

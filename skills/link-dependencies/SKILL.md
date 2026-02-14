@@ -96,20 +96,11 @@ Dependency Summary
 
 {N} plans found. {M} unresolved dependencies.
 
-Plan: Authentication (format: {format})
-  • billing-system: Invoice generation (unresolved)
-  • user-management: User profiles (resolved, {task-id})
+Plan: {topic:(titlecase)} (format: {format})
+  • {dependency}: {description} ({state:[unresolved|resolved|satisfied externally]})
 
-Plan: Billing System (format: {format})
-  • authentication: User context (unresolved)
-  • payment-gateway: Payment processing (satisfied externally)
-
-Plan: Notifications (format: {format})
-  • authentication: User lookup (unresolved)
-  • billing-system: Invoice events (unresolved)
+Plan: ...
 ```
-
-Convert topic filenames to title case (`auth-flow` → `Auth Flow`).
 
 > *Output the next fenced block as a code block:*
 
@@ -166,21 +157,19 @@ Present a summary:
 Dependency Linking Complete
 
 Resolved (newly linked):
-  • authentication → billing-system: {task-id} (Invoice generation)
-  • notifications → authentication: {task-id} (Session management)
+  • {source} → {target}: {task-id} ({description})
 
 Already resolved (no action needed):
-  • authentication → user-management: {task-id}
+  • {source} → {target}: {task-id}
 
 Satisfied externally (no action needed):
-  • billing-system → payment-gateway
+  • {source} → {target}
 
 Unresolved (no matching plan exists):
-  • notifications → email-service: Email delivery
+  • {source} → {target}: {description}
 
 Updated files:
-  • docs/workflow/planning/authentication.md
-  • docs/workflow/planning/notifications.md
+  • docs/workflow/planning/{topic}.md
 ```
 
 If any dependencies remain unresolved:

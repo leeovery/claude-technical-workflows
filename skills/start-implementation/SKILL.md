@@ -149,7 +149,7 @@ A plan is **Not implementable** if:
 
 **Present the full state:**
 
-Show implementable and implemented plans as numbered tree items. Convert topic filenames to title case (`auth-flow` → `Auth Flow`).
+Show implementable and implemented plans as numbered tree items.
 
 > *Output the next fenced block as a code block:*
 
@@ -158,17 +158,11 @@ Implementation Overview
 
 {N} plans found. {M} implementations in progress.
 
-1. Billing
-   └─ Plan: concluded (local-markdown)
-   └─ Implementation: in-progress (Phase 2, Task 3)
+1. {topic:(titlecase)}
+   └─ Plan: {plan_status:[concluded]} ({format})
+   └─ Implementation: {impl_status:[none|in-progress|completed]}
 
-2. Core Features
-   └─ Plan: concluded (local-markdown)
-   └─ Implementation: none
-
-3. User Auth
-   └─ Plan: concluded (local-markdown)
-   └─ Implementation: completed
+2. ...
 ```
 
 **Tree rules:**
@@ -231,7 +225,7 @@ Key:
 > *Output the next fenced block as a code block:*
 
 ```
-Automatically proceeding with "{Topic}".
+Automatically proceeding with "{topic:(titlecase)}".
 ```
 
 → Proceed directly to **Step 4**.
@@ -264,9 +258,8 @@ The verb in the menu depends on the implementation state:
 
 ```
 · · · · · · · · · · · ·
-1. Continue "Billing" — in-progress (Phase 2, Task 3)
-2. Start "Core Features" — not yet started
-3. Re-review "User Auth" — completed
+1. {verb:[Continue|Start|Re-review]} "{topic:(titlecase)}" — {description}
+2. ...
 
 Select an option (enter number):
 · · · · · · · · · · · ·

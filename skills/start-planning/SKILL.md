@@ -137,17 +137,11 @@ Planning Overview
 
 {N} specifications found. {M} plans exist.
 
-1. {Topic Title Case}
-   └─ Plan: none
+1. {topic:(titlecase)}
+   └─ Plan: {plan_status:[none|in-progress|concluded]}
    └─ Spec: concluded
 
-2. {Topic Title Case}
-   └─ Plan: in-progress
-   └─ Spec: concluded
-
-3. {Topic Title Case}
-   └─ Plan: concluded
-   └─ Spec: concluded
+2. ...
 ```
 
 **Tree rules:**
@@ -156,8 +150,6 @@ Each numbered item shows a feature specification that is actionable:
 - Concluded spec with no plan → `Plan: none`
 - Has a plan with `plan_status: planning` → `Plan: in-progress`
 - Has a plan with `plan_status: concluded` → `Plan: concluded`
-
-Convert topic filenames to title case (`auth-flow` → `Auth Flow`).
 
 **If non-plannable specifications exist**, show them in a separate code block:
 
@@ -168,9 +160,7 @@ Specifications not ready for planning:
 These specifications are either still in progress or cross-cutting
 and cannot be planned directly.
 
-  · {topic} (feature, in-progress)
-  · {caching-strategy} (cross-cutting, concluded)
-  · {rate-limiting} (cross-cutting, in-progress)
+  · {topic} ({type:[feature|cross-cutting]}, {status:[in-progress|concluded]})
 ```
 
 **Key/Legend** — show only statuses that appear in the current display. No `---` separator before this section.
@@ -205,9 +195,8 @@ The verb in the menu depends on the plan state:
 
 ```
 · · · · · · · · · · · ·
-1. Create "{Topic}" — concluded spec, no plan
-2. Continue "{Topic}" — plan in-progress
-3. Review "{Topic}" — plan concluded
+1. {verb:[Create|Continue|Review]} "{topic:(titlecase)}" — {description}
+2. ...
 
 Select an option (enter number):
 · · · · · · · · · · · ·
@@ -220,7 +209,7 @@ Select an option (enter number):
 > *Output the next fenced block as a code block:*
 
 ```
-Automatically proceeding with "{Topic}".
+Automatically proceeding with "{topic:(titlecase)}".
 ```
 
 → Proceed directly to **Step 4**.

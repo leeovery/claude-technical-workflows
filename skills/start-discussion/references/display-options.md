@@ -17,15 +17,12 @@ Discussion Overview
 
 Research topics:
 
-1. {Theme name}
+1. {theme_name}
    └─ Source: {filename}.md (lines {start}-{end})
-   └─ Discussion: none
-   └─ "{Brief summary}"
+   └─ Discussion: {status:[none|{topic}.md (in-progress)]}
+   └─ "{summary}"
 
-2. {Theme name}
-   └─ Source: {filename}.md (lines {start}-{end})
-   └─ Discussion: {topic}.md (in-progress)
-   └─ "{Brief summary}"
+2. ...
 ```
 
 If discussions exist that are NOT linked to a research topic, list them separately:
@@ -35,8 +32,7 @@ If discussions exist that are NOT linked to a research topic, list them separate
 ```
 Existing discussions:
 
-  • {topic}.md (in-progress)
-  • {topic}.md (concluded)
+  • {topic}.md ({status:[in-progress|concluded]})
 ```
 
 ### Key/Legend

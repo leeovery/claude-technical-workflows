@@ -192,28 +192,41 @@ Planning Overview
 4 specifications found. 2 plans exist.
 ```
 
-### Tree Structure
+### Template Placeholders
 
-Every actionable item gets a numbered entry with `└─` branches showing its state. Depth varies by phase but structure is consistent. **Blank line between each numbered item.**
+Skill files use placeholders in fenced block templates. The syntax is:
 
 ```
-1. Auth Flow
-   └─ Plan: none
-   └─ Spec: concluded
+{name}                                    — raw value, output as-is
+{name:[option1|option2|option3]}          — enumerated options (pick one)
+{name:(casing)}                           — with casing hint
+{name:[option1|option2]:(casing)}         — options and casing
+```
 
-2. Data Model
-   └─ Plan: in-progress
-   └─ Spec: concluded
+Casing hints: `titlecase`, `lowercase`, `kebabcase`. No hint means output the raw value.
+
+Each part is optional — use only what's needed for clarity.
+
+### Tree Structure
+
+Every actionable item gets a numbered entry with `└─` branches showing its state. Depth varies by phase but structure is consistent. **Blank line between each numbered item.** Show one full entry, then `2. ...` to indicate repetition.
+
+```
+1. {topic:(titlecase)}
+   └─ Plan: {plan_status:[none|in-progress|concluded]}
+   └─ Spec: {spec_status:[in-progress|concluded]}
+
+2. ...
 ```
 
 For richer hierarchies (specification phase):
 
 ```
-1. Auth Flow
-   └─ Spec: in-progress (2 of 3 sources extracted)
+1. {topic:(titlecase)}
+   └─ Spec: {spec_status:[in-progress|concluded]} ({extraction_summary})
    └─ Discussions:
-      ├─ auth-tokens (extracted)
-      └─ session-mgmt (pending)
+      ├─ {discussion} ({status:[extracted|pending]})
+      └─ ...
 ```
 
 ### Status Terms
@@ -270,9 +283,8 @@ Rendered as markdown (not code blocks). Framed with dot separators. Verb-based l
 
 ```
 · · · · · · · · · · · ·
-1. Create "Auth Flow" — concluded spec, no plan
-2. Continue "Data Model" — plan in-progress
-3. Review "Billing" — plan concluded
+1. {verb:[Create|Continue|Review]} "{topic:(titlecase)}" — {description}
+2. ...
 
 Select an option (enter number):
 · · · · · · · · · · · ·
@@ -313,7 +325,7 @@ What scope would you like to review?
 When only one actionable item exists:
 
 ```
-Automatically proceeding with "Auth Flow".
+Automatically proceeding with "{topic:(titlecase)}".
 ```
 
 ### Block / Terminal Messages

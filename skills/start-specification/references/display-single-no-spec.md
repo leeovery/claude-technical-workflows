@@ -54,7 +54,7 @@ Key:
 > *Output the next fenced block as a code block:*
 
 ```
-Automatically proceeding with "{Title Case Name}".
+Automatically proceeding with "{topic:(titlecase)}".
 ```
 
 Auto-proceed with verb **"Creating"**.

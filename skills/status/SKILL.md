@@ -41,14 +41,13 @@ Research is project-wide exploration. From discussion onwards, work is organised
 ```
 Workflow Overview
 
-Research: 2 files (exploration.md, market-analysis.md)
+Research: {count} files ({filenames})
 
 Topics:
 
   Topic          Discussion   Spec         Plan         Implemented
-  auth-system    concluded    concluded    concluded    phase 2 (3/8 tasks done)
-  payment-flow   concluded    concluded    none         none
-  notifications  concluded    none         none         none
+  {topic}        {status}     {status}     {status}     {impl_status}
+  ...
 ```
 
 Adapt based on what exists:

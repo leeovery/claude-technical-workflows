@@ -6,8 +6,6 @@
 
 Auto-proceed path — only one concluded discussion exists, so no selection menu is needed.
 
-Convert discussion filename to title case (`auth-flow` → `Auth Flow`).
-
 ## Route by Spec Coverage
 
 Check if a spec covers this discussion — either by name match (`has_individual_spec`) or by listing it in a spec's `sources` array.

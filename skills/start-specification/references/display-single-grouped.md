@@ -65,7 +65,7 @@ Key:
 > *Output the next fenced block as a code block:*
 
 ```
-Automatically proceeding with "{Spec Title Case Name}".
+Automatically proceeding with "{topic:(titlecase)}".
 ```
 
 Auto-proceed uses the spec name. Verb rule:
