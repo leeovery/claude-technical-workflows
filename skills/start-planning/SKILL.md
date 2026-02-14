@@ -289,7 +289,7 @@ If any are relevant:
 Cross-cutting specifications still in progress:
 These may contain architectural decisions relevant to this plan.
 
-  · {rate-limiting} (in-progress)
+  · {topic} (in-progress)
 
 · · · · · · · · · · · ·
 - **`c`/`continue`** — Plan without them
