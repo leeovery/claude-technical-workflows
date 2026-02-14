@@ -263,9 +263,14 @@ The plan already has its context from when it was created. Skip context gatherin
 
 ## Step 5: Gather Additional Context
 
-Ask:
-- Any additional context or priorities to consider?
-- Any constraints since the specification was concluded?
+> *Output the next fenced block as a code block:*
+
+```
+Any additional context since the specification was concluded?
+
+- Priorities, constraints, or new considerations?
+- Or "none" if nothing has changed.
+```
 
 **STOP.** Wait for user response.
 

@@ -333,3 +333,106 @@ Inside code blocks, maintain **one blank line** between:
 - Key categories
 
 Between code blocks (overview → not-ready → key → menu), no `---` separators — just the natural block separation.
+
+## Structural Conventions (IMPORTANT)
+
+All skill files (entry-point and processing) MUST follow these structural conventions for consistency.
+
+### Stop Gates
+
+Use `**STOP.**` (bold, period) followed by a brief instruction. This is the only pattern for user interaction boundaries.
+
+```
+**STOP.** Wait for user response.
+**STOP.** Wait for user response before proceeding.
+**STOP.** Wait for user to acknowledge before ending.
+**STOP.** This workflow cannot continue — do not proceed.
+```
+
+Never use `Stop here.`, `STOP`, or other variations.
+
+### Heading Hierarchy
+
+- **H1** (`#`): File title only — one per file, at the top
+- **H2** (`##`): Steps and major sections (`## Step N: {Name}`, `## Notes`, `## Instructions`)
+- **H3** (`###`): Subsections within steps (`### 6a: Warn about in-progress specs`)
+- **H4** (`####`): Conditional routing only (`#### If {condition}`, `#### Otherwise`)
+
+### Step Numbering
+
+Sequential: `## Step 0`, `## Step 1`, `## Step 2`, etc.
+
+- **Step 0** is reserved for migrations — mandatory in all entry-point skills
+- Steps are separated by `---` horizontal rules
+- Each step completes fully before the next begins
+
+### Conditional Routing
+
+Use H4 headings for if/else branches within a step:
+
+```
+#### If scenario is "no_specs"
+{content}
+
+#### If scenario is "has_options"
+{content}
+```
+
+Never use else-if chains. Each condition gets its own `#### If` heading.
+
+### Navigation Arrows
+
+Use `→` for flow control between steps or to external files:
+
+```
+→ Proceed to **Step 4**.
+→ Go directly to **Step 7** to invoke the skill.
+→ Load **[file.md](file.md)** and follow its instructions.
+```
+
+### Reference File Headers
+
+Reference files loaded by skills use this header pattern:
+
+```
+# Title
+
+*Reference for **[parent-skill](../SKILL.md)***
+
+---
+```
+
+### Critical / Important Markers
+
+Use bold labels with colons for emphasis levels:
+
+```
+**CRITICAL**: This guidance is mandatory.
+**IMPORTANT**: Use ONLY this script for discovery.
+**CHECKPOINT**: Summarize progress before continuing.
+```
+
+### Zero Output Rule
+
+Entry-point skills that invoke processing skills use this exact blockquote to prevent narration:
+
+```
+> **⚠️ ZERO OUTPUT RULE**: Do not narrate your processing. Produce no output until a step or reference file explicitly specifies display content. No "proceeding with...", no discovery summaries, no routing decisions, no transition text. Your first output must be content explicitly called for by the instructions.
+```
+
+### Rendering Instructions for Ask Blocks
+
+When a step asks the user a question, wrap it in a rendering instruction and code block — don't use bare `Ask:` labels:
+
+```
+> *Output the next fenced block as a code block:*
+
+\```
+What's on your mind?
+
+- What idea or topic do you want to explore?
+- What prompted this - a problem, opportunity, curiosity?
+\```
+
+**STOP.** Wait for user response before proceeding.
+```

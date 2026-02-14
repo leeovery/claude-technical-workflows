@@ -31,24 +31,28 @@ Scan the codebase for existing plans:
 > *Output the next fenced block as a code block:*
 
 ```
+Dependency Linking
+
 No plans found in docs/workflow/planning/
 
 There are no plans to link. Create plans first.
 ```
 
-Stop here.
+**STOP.** Wait for user to acknowledge before ending.
 
 **If only one plan exists:**
 
 > *Output the next fenced block as a code block:*
 
 ```
+Dependency Linking
+
 Only one plan found: {topic}
 
 Cross-topic dependency linking requires at least two plans.
 ```
 
-Stop here.
+**STOP.** Wait for user to acknowledge before ending.
 
 ## Step 2: Check Output Format Consistency
 
@@ -59,17 +63,19 @@ Compare the `format:` field across all discovered plans.
 > *Output the next fenced block as a code block:*
 
 ```
+Dependency Linking
+
 Mixed output formats detected:
 
-- authentication: {format-a}
-- billing-system: {format-b}
-- notifications: {format-a}
+  • authentication ({format-a})
+  • billing-system ({format-b})
+  • notifications ({format-a})
 
-Cross-topic dependencies can only be wired within the same output format.
-Please consolidate your plans to use a single output format before linking dependencies.
+Cross-topic dependencies can only be wired within the same output
+format. Consolidate your plans to a single format before linking.
 ```
 
-Stop here.
+**STOP.** Wait for user to acknowledge before ending.
 
 ## Step 3: Extract External Dependencies
 
@@ -88,17 +94,32 @@ For each plan, read the `external_dependencies` field from the frontmatter:
 ```
 Dependency Summary
 
-Plan: authentication (format: {format})
-  - billing-system: Invoice generation (unresolved)
-  - user-management: User profiles → {task-id} (resolved)
+{N} plans found. {M} unresolved dependencies.
 
-Plan: billing-system (format: {format})
-  - authentication: User context (unresolved)
-  - payment-gateway: Payment processing (satisfied externally)
+Plan: Authentication (format: {format})
+  • billing-system: Invoice generation (unresolved)
+  • user-management: User profiles (resolved, {task-id})
 
-Plan: notifications (format: {format})
-  - authentication: User lookup (unresolved)
-  - billing-system: Invoice events (unresolved)
+Plan: Billing System (format: {format})
+  • authentication: User context (unresolved)
+  • payment-gateway: Payment processing (satisfied externally)
+
+Plan: Notifications (format: {format})
+  • authentication: User lookup (unresolved)
+  • billing-system: Invoice events (unresolved)
+```
+
+Convert topic filenames to title case (`auth-flow` → `Auth Flow`).
+
+> *Output the next fenced block as a code block:*
+
+```
+Key:
+
+  Dependency state:
+    unresolved           — no task linked yet
+    resolved             — linked to a task in another plan
+    satisfied externally — implemented outside this workflow
 ```
 
 ## Step 4: Match Dependencies to Plans
@@ -144,26 +165,32 @@ Present a summary:
 ```
 Dependency Linking Complete
 
-RESOLVED (newly linked):
-  - authentication → billing-system: {task-id} (Invoice generation)
-  - notifications → authentication: {task-id} (Session management)
+Resolved (newly linked):
+  • authentication → billing-system: {task-id} (Invoice generation)
+  • notifications → authentication: {task-id} (Session management)
 
-ALREADY RESOLVED (no action needed):
-  - authentication → user-management: {task-id}
+Already resolved (no action needed):
+  • authentication → user-management: {task-id}
 
-SATISFIED EXTERNALLY (no action needed):
-  - billing-system → payment-gateway
+Satisfied externally (no action needed):
+  • billing-system → payment-gateway
 
-UNRESOLVED (no matching plan exists):
-  - notifications → email-service: Email delivery
+Unresolved (no matching plan exists):
+  • notifications → email-service: Email delivery
 
-  These dependencies have no corresponding plan. Either:
-  - Create a plan for the topic
-  - Mark as "satisfied externally" if already implemented
+Updated files:
+  • docs/workflow/planning/authentication.md
+  • docs/workflow/planning/notifications.md
+```
 
-UPDATED FILES:
-  - docs/workflow/planning/authentication.md
-  - docs/workflow/planning/notifications.md
+If any dependencies remain unresolved:
+
+> *Output the next fenced block as a code block:*
+
+```
+Unresolved dependencies have no corresponding plan. Either:
+  • Create a plan for the topic
+  • Mark as "satisfied externally" if already implemented
 ```
 
 ## Step 8: Commit Changes
@@ -179,6 +206,8 @@ Shall I commit these dependency updates?
 - **`n`/`no`** — Skip
 · · · · · · · · · · · ·
 ```
+
+**STOP.** Wait for user response.
 
 If yes, commit with message:
 ```

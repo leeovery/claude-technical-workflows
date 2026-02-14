@@ -10,7 +10,7 @@ Ask each question below **one at a time**. After each, **STOP** and wait for the
 
 ## Seed Idea
 
-Ask:
+> *Output the next fenced block as a code block:*
 
 ```
 What's on your mind?
@@ -25,7 +25,7 @@ What's on your mind?
 
 ## Current Knowledge
 
-Ask:
+> *Output the next fenced block as a code block:*
 
 ```
 What do you already know?
@@ -40,7 +40,7 @@ What do you already know?
 
 ## Starting Point
 
-Ask:
+> *Output the next fenced block as a code block:*
 
 ```
 Where should we start?
@@ -55,7 +55,7 @@ Where should we start?
 
 ## Final Context
 
-Ask:
+> *Output the next fenced block as a code block:*
 
 ```
 Any constraints or context I should know about upfront?
