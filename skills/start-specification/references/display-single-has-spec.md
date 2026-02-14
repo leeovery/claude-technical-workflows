@@ -17,8 +17,8 @@ Specification Overview
 
 Single concluded discussion found with existing specification.
 
-1. {Title Case Name}
-   └─ Spec: {spec_status} ({X} of {Y} sources extracted)
+1. {topic:(titlecase)}
+   └─ Spec: {spec_status:[in-progress|concluded]} ({X} of {Y} sources extracted)
    └─ Discussions:
       └─ {discussion-name} (extracted)
 ```
@@ -48,7 +48,8 @@ Key:
     extracted — content has been incorporated into the specification
 
   Spec status:
-    {spec_status} — {in-progress: "specification work is ongoing" | concluded: "specification is complete"}
+    in-progress — specification work is ongoing
+    concluded   — specification is complete
 ```
 
 ## After Display

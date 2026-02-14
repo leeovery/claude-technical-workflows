@@ -57,16 +57,13 @@ Specification Overview
 
 Recommended breakdown for specifications with their source discussions.
 
-1. {Grouping Name}
-   └─ Spec: {status} {(X of Y sources extracted) if applicable}
+1. {grouping_name:(titlecase)}
+   └─ Spec: @if(has_spec) {spec_status:[in-progress|concluded]} ({extraction_summary}) @else (no spec) @endif
    └─ Discussions:
-      ├─ {discussion-name} ({status})
-      └─ {discussion-name} ({status})
+      ├─ {discussion} ({status:[extracted|pending|ready|reopened]})
+      └─ ...
 
-2. {Grouping Name}
-   └─ Spec: none
-   └─ Discussions:
-      └─ {discussion-name} (ready)
+2. ...
 ```
 
 ### If in-progress discussions exist
@@ -97,7 +94,6 @@ Key:
     reopened  — was extracted but discussion has regressed to in-progress
 
   Spec status:
-    none        — no specification file exists yet
     in-progress — specification work is ongoing
     concluded   — specification is complete
 ```

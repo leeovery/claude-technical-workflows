@@ -46,16 +46,16 @@ Research: {count} files ({filenames})
 Topics:
 
   Topic          Discussion   Spec         Plan         Implemented
-  {topic}        {status}     {status}     {status}     {impl_status}
+  {topic}        {discussion_status}   {spec_status}   {plan_status}   {impl_status}
   ...
 ```
 
 Adapt based on what exists:
-- If a directory is empty or missing, show `none`
+- If a directory is empty or missing, show `-`
 - For planning, note the output format if specified in frontmatter
 - Match topics across phases by filename
 - For implementation, derive the Implemented column from tracking file data:
-  - No tracking file → `none`
+  - No tracking file → `-`
   - `status: not-started` → `not started`
   - `status: in-progress` → `phase {current_phase} ({n}/{total} tasks done)` — count `completed_tasks` for n; use total task count from `completed_tasks` + remaining if available, otherwise just show completed count
   - `status: completed` → `completed`

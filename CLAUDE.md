@@ -213,7 +213,7 @@ Each part is optional — use only what's needed for clarity.
 @if(condition) truthy content @else falsy content @endif
 ```
 
-Example: `@if(has_discussion) {topic}.md ({status:[in-progress|concluded]}) @else no discussion @endif`
+Example: `@if(has_discussion) {topic}.md ({status:[in-progress|concluded]}) @else (no discussion) @endif`
 
 **When to use placeholders vs concrete examples:** Placeholders work well for structural templates (tree displays, status blocks) where each field has a clear source. Selection menus should use concrete examples instead — they encode conditional logic (which verb maps to which state) that placeholders obscure.
 
@@ -223,7 +223,7 @@ Every actionable item gets a numbered entry with `└─` branches showing its s
 
 ```
 1. {topic:(titlecase)}
-   └─ Plan: {plan_status:[none|in-progress|concluded]}
+   └─ Plan: @if(has_plan) {plan_status:[in-progress|concluded]} @else (no plan) @endif
    └─ Spec: {spec_status:[in-progress|concluded]}
 
 2. ...
@@ -243,7 +243,7 @@ For richer hierarchies (specification phase):
 
 Always parenthetical `(term)`. Never brackets or dash-separated.
 
-Core vocabulary: `none`, `in-progress`, `concluded`, `ready`, `completed`, `extracted`, `pending`, `reopened`. Phase-specific terms are fine but format is always `(term)`.
+Core vocabulary: `in-progress`, `concluded`, `ready`, `completed`, `extracted`, `pending`, `reopened`. Phase-specific terms are fine but format is always `(term)`.
 
 ### Cross-Plan References
 
@@ -276,7 +276,6 @@ Separate code block. Categorized. Em dash (`—`) separators. **No `---` separat
 Key:
 
   Plan status:
-    none        — no plan exists yet
     in-progress — planning work is ongoing
     concluded   — plan is complete
 

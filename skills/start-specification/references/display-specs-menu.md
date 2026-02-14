@@ -23,8 +23,8 @@ For each non-superseded specification from discovery output, display as nested t
 > *Output the next fenced block as a code block:*
 
 ```
-1. {Spec Title Case Name}
-   └─ Spec: {status} ({X} of {Y} sources extracted)
+1. {topic:(titlecase)}
+   └─ Spec: {spec_status:[in-progress|concluded]} ({X} of {Y} sources extracted)
    └─ Discussions:
       ├─ {source-name} (extracted)
       └─ {source-name} (extracted)

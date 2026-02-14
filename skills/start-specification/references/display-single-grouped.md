@@ -22,8 +22,8 @@ Specification Overview
 
 Single concluded discussion found with existing multi-source specification.
 
-1. {Spec Title Case Name}
-   └─ Spec: {spec_status} ({X} of {Y} sources extracted)
+1. {topic:(titlecase)}
+   └─ Spec: {spec_status:[in-progress|concluded]} ({X} of {Y} sources extracted)
    └─ Discussions:
       ├─ {source-name} (extracted)
       └─ {source-name} (extracted, reopened)

@@ -15,8 +15,8 @@ Specification Overview
 
 Single concluded discussion found.
 
-1. {Title Case Name}
-   └─ Spec: none
+1. {topic:(titlecase)}
+   └─ Spec: (no spec)
    └─ Discussions:
       └─ {discussion-name} (ready)
 ```
@@ -44,9 +44,6 @@ Key:
 
   Discussion status:
     ready — concluded and available to be specified
-
-  Spec status:
-    none — no specification file exists yet
 ```
 
 ## After Display

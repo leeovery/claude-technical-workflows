@@ -138,7 +138,7 @@ Planning Overview
 {N} specifications found. {M} plans exist.
 
 1. {topic:(titlecase)}
-   └─ Plan: {plan_status:[none|in-progress|concluded]}
+   └─ Plan: @if(has_plan) {plan_status:[in-progress|concluded]} @else (no plan) @endif
    └─ Spec: concluded
 
 2. ...
@@ -147,7 +147,7 @@ Planning Overview
 **Tree rules:**
 
 Each numbered item shows a feature specification that is actionable:
-- Concluded spec with no plan → `Plan: none`
+- Concluded spec with no plan → `Plan: (no plan)`
 - Has a plan with `plan_status: planning` → `Plan: in-progress`
 - Has a plan with `plan_status: concluded` → `Plan: concluded`
 
@@ -171,7 +171,6 @@ and cannot be planned directly.
 Key:
 
   Plan status:
-    none        — no plan exists yet
     in-progress — planning work is ongoing
     concluded   — plan is complete
 

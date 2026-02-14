@@ -160,7 +160,7 @@ Implementation Overview
 
 1. {topic:(titlecase)}
    └─ Plan: {plan_status:[concluded]} ({format})
-   └─ Implementation: {impl_status:[none|in-progress|completed]}
+   └─ Implementation: @if(has_implementation) {impl_status:[in-progress|completed]} @else (not started) @endif
 
 2. ...
 ```
@@ -169,7 +169,7 @@ Implementation Overview
 
 Implementable:
 - Implementation `status: in-progress` → `Implementation: in-progress (Phase N, Task M)`
-- Concluded plan, deps met, not started → `Implementation: none`
+- Concluded plan, deps met, not started → `Implementation: (not started)`
 
 Implemented:
 - Implementation `status: completed` → `Implementation: completed`
@@ -211,7 +211,6 @@ Key:
   Implementation status:
     in-progress — work is ongoing
     completed   — all tasks implemented
-    none        — not yet started
 
   Blocking reason:
     blocked     — depends on another plan's task
