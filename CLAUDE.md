@@ -207,6 +207,14 @@ Casing hints: `titlecase`, `lowercase`, `kebabcase`. No hint means output the ra
 
 Each part is optional — use only what's needed for clarity.
 
+**Conditional directives** for branches that render differently based on state:
+
+```
+@if(condition) truthy content @else falsy content @endif
+```
+
+Example: `@if(has_discussion) {topic}.md ({status:[in-progress|concluded]}) @else no discussion @endif`
+
 **When to use placeholders vs concrete examples:** Placeholders work well for structural templates (tree displays, status blocks) where each field has a clear source. Selection menus should use concrete examples instead — they encode conditional logic (which verb maps to which state) that placeholders obscure.
 
 ### Tree Structure
