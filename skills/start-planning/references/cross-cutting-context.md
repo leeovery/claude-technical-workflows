@@ -48,5 +48,3 @@ Cross-cutting specifications to reference:
 ```
 
 These specifications contain validated architectural decisions that should inform the plan. The planning skill will incorporate these as a "Cross-Cutting References" section in the plan.
-
-→ Proceed to **Step 7**.

@@ -92,8 +92,6 @@ Recreate with actual topics and states from discovery.
 Automatically proceeding with "{topic:(titlecase)}".
 ```
 
-→ Proceed directly to **Step 4**.
-
 **If nothing actionable:**
 
 > *Output the next fenced block as a code block:*
@@ -109,5 +107,3 @@ or create a new specification first.
 ```
 
 **STOP.** Do not proceed — terminal condition.
-
-→ Based on user choice, proceed to **Step 4**.
