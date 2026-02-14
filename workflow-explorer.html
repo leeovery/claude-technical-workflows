@@ -1428,7 +1428,7 @@ const phases = {
     cache: null,
     prerequisites: 'Implementation of a plan',
     scenarios: ['no_plans','single_plan','multiple_plans'],
-    desc: 'Validate implementation against plan. Uses parallel review-task-verifier subagents (one per task).',
+    desc: 'Validate implementation against plan. QA task verifiers (batched) plus holistic product assessor. Scope: single, multi, or all.',
   },
   'start-feature': {
     color: '#818cf8', bg: 'rgba(129,140,248,0.12)',
@@ -1446,7 +1446,8 @@ const phases = {
     color: '#94a3b8', bg: 'rgba(148,163,184,0.12)',
     label: 'Status', cmd: '/status',
     complexity: 'Utility',
-    desc: 'Quick overview. Scans all workflow dirs, shows table by topic across phases.',
+    discovery: 'discovery.sh',
+    desc: 'Discovery-based status. Runs discovery script, presents relationship-aware display with specs, plans, and implementations.',
   },
   'view-plan': {
     color: '#94a3b8', bg: 'rgba(148,163,184,0.12)',
@@ -1542,7 +1543,12 @@ const phases = {
   'review-task-verifier': {
     color: '#f472b6', bg: 'rgba(244,114,182,0.12)',
     label: 'Task Verifier',
-    desc: 'Subagent that verifies a single task implementation against plan and spec. Spawned in parallel.',
+    desc: 'Subagent that verifies a single task implementation against plan and spec. Dispatched in batches of 5.',
+  },
+  'review-product-assessor': {
+    color: '#f472b6', bg: 'rgba(244,114,182,0.12)',
+    label: 'Product Assessor',
+    desc: 'Subagent that evaluates implementation holistically as a product — robustness, gaps, cross-plan consistency, and forward-looking assessment.',
   },
 };
 
@@ -1747,7 +1753,7 @@ const FLOWCHARTS = {
       { id: 'scenario', label: 'Scenario?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2: Route based on scenario: no_specs, nothing_actionable, or has_options.' },
       { id: 'stop-no-spec', label: 'STOP: No specs', shape: 'stop', w: 150, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: No specifications found. Run /start-specification first.' },
       { id: 'stop-none-ready', label: 'STOP: None actionable', shape: 'stop', w: 175, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'nothing_actionable: Specs exist but none actionable. Show state and suggest completing in-progress specs.' },
-      { id: 'present', label: 'Present options', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 3: Present available specs (+new, ▶continue, >review) and not plannable specs. Single auto-selects, multiple asks.' },
+      { id: 'present', label: 'Present options', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 3: Show workflow state. If nothing actionable → STOP. If single → auto-select. If multiple → present menu with Create/Continue/Review verbs.' },
       { id: 'plan-state', label: 'Existing plan?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 4: Route by plan state. New plan gathers context first; existing plan skips straight to skill invocation.' },
       { id: 'gather', label: 'ASK: Additional context', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 5: Gather additional context, priorities, or constraint changes. Only for new plans.' },
       { id: 'cross-cut', label: 'Surface cross-cutting specs', w: 215, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 6: Read concluded cross-cutting specs and surface relevant ones as reference context for planning. Only for new plans.' },
@@ -1757,9 +1763,9 @@ const FLOWCHARTS = {
       { from: 'start', to: 'migrate' },
       { from: 'migrate', to: 'discovery' },
       { from: 'discovery', to: 'scenario' },
-      { from: 'scenario', to: 'present', type: 'yes', label: 'has options', weight: 2 },
+      { from: 'scenario', to: 'present', type: 'yes', label: 'specs exist', weight: 2 },
       { from: 'scenario', to: 'stop-no-spec', type: 'no', label: 'no specs' },
-      { from: 'scenario', to: 'stop-none-ready', label: 'none actionable' },
+      { from: 'present', to: 'stop-none-ready', type: 'no', label: 'none actionable' },
       { from: 'present', to: 'plan-state' },
       { from: 'plan-state', to: 'gather', type: 'no', label: 'new' },
       { from: 'plan-state', to: 'skill', type: 'yes', label: 'exists' },
@@ -1809,25 +1815,29 @@ const FLOWCHARTS = {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for /start-review.' },
       { id: 'migrate', label: 'Run /migrate', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Step 0: Run migrations.' },
-      { id: 'discovery', label: 'Run discovery script', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run shared discovery-for-implementation-and-review.sh. Scans plans.' },
+      { id: 'discovery', label: 'Run discovery script', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run shared discovery-for-implementation-and-review.sh. Scans plans and implementation status.' },
       { id: 'scenario', label: 'Plans?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2: Do any plans exist? Gate check.' },
       { id: 'stop', label: 'STOP: No plans', shape: 'stop', w: 150, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: No plans found. Run /start-planning first.' },
-      { id: 'select', label: 'Select plan', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 3: Single plan = auto-select, multiple = ask user.' },
-      { id: 'auto', label: 'Auto-select single', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Only one plan. Auto-select it.' },
-      { id: 'ask', label: 'ASK: Which plan?', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Multiple plans. Ask user which to review.' },
-      { id: 'scope', label: 'ASK: Review scope', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 4: Choose scope - all changes since plan, specific dirs/files, or from git status.' },
-      { id: 'skill', label: 'Invoke review skill', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 5: Invoke technical-review skill. Reads plan, spec, extracts ALL tasks.', skillLink: 'skill-review' },
+      { id: 'present', label: 'Display plans', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 3: Show all plans with implementation status. Numbered reviewable plans, not-ready section for non-implemented.' },
+      { id: 'gate-reviewable', label: 'Reviewable?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Gate: Any plans with implementations? If none are reviewable, STOP.' },
+      { id: 'stop-no-impl', label: 'STOP: No implementations', shape: 'stop', w: 185, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: Plans exist but none have implementations. Run /start-implementation first.' },
+      { id: 'count', label: 'How many?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route: Single reviewable auto-selects with scope=single. Multiple asks user for scope.' },
+      { id: 'auto', label: 'Auto-select single', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Single reviewable plan. Auto-select with scope=single, skip to skill.' },
+      { id: 'scope', label: 'ASK: Review scope', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 3b: Choose scope — single (one plan), multi (selected plans), or all (full product). Then select specific plans if single/multi.' },
+      { id: 'skill', label: 'Invoke review skill', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 5: Invoke technical-review skill with selected plan(s) and scope.', skillLink: 'skill-review' },
     ],
     connections: [
       { from: 'start', to: 'migrate' },
       { from: 'migrate', to: 'discovery' },
       { from: 'discovery', to: 'scenario' },
-      { from: 'scenario', to: 'select', type: 'yes', label: 'exist', weight: 2 },
+      { from: 'scenario', to: 'present', type: 'yes', label: 'exist', weight: 2 },
       { from: 'scenario', to: 'stop', type: 'no', label: 'none' },
-      { from: 'select', to: 'auto', label: 'single' },
-      { from: 'select', to: 'ask', label: 'multiple' },
-      { from: 'auto', to: 'scope' },
-      { from: 'ask', to: 'scope' },
+      { from: 'present', to: 'gate-reviewable' },
+      { from: 'gate-reviewable', to: 'count', type: 'yes', label: 'yes', weight: 2 },
+      { from: 'gate-reviewable', to: 'stop-no-impl', type: 'no', label: 'none' },
+      { from: 'count', to: 'auto', label: 'single' },
+      { from: 'count', to: 'scope', label: 'multiple' },
+      { from: 'auto', to: 'skill', type: 'transition' },
       { from: 'scope', to: 'skill', type: 'transition' },
     ]
   },
@@ -2152,25 +2162,25 @@ const FLOWCHARTS = {
   },
   'skill-review': {
     nodes: [
-      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry: technical-review skill receives plan, optional spec, and scope.' },
-      { id: 'validate', label: 'Validate inputs', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Verify plan is available. Specification is optional but helpful.' },
-      { id: 'read-plan', label: 'Read plan', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Read the plan — all phases, tasks, and acceptance criteria.' },
-      { id: 'read-spec', label: 'Read specification', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'If available, read specification for design context.' },
-      { id: 'extract', label: 'Extract ALL tasks', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'List every task from every phase. Verify all, not a sample.' },
-      { id: 'spawn', label: 'Spawn task verifiers', w: 180, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'review-task-verifier', desc: 'Launch parallel review-task-verifier subagents (haiku). One per task.' },
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry: technical-review skill receives plan(s), optional spec(s), and scope.' },
+      { id: 'read-plan', label: 'Read plan(s)', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 1: Read all plan(s) for the selected scope — phases, tasks, and acceptance criteria.' },
+      { id: 'read-spec', label: 'Read specification(s)', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 1: If available, read linked specification(s) for design context.' },
+      { id: 'skills-disc', label: 'Project skills discovery', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 2: Scan .claude/skills/ for project-specific conventions, framework guidelines, and architecture patterns.' },
+      { id: 'extract', label: 'Extract ALL tasks', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 3: List every task from every phase across all plans in scope.' },
+      { id: 'spawn', label: 'Spawn task verifiers', w: 180, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'review-task-verifier', desc: 'Step 3: Launch review-task-verifier agents in batches of 5. Each writes findings to file.' },
       { id: 'v1', label: 'Verify task 1', w: 140, h: 44, color: 'var(--action)', bg: 'rgba(56,189,248,0.08)', desc: 'Check: implementation, acceptance criteria, tests, code quality.' },
-      { id: 'v2', label: 'Verify task 2', w: 140, h: 44, color: 'var(--action)', bg: 'rgba(56,189,248,0.08)', desc: 'Same checks, different task. Runs in parallel.' },
-      { id: 'vn', label: 'Verify task N', w: 140, h: 44, color: 'var(--action)', bg: 'rgba(56,189,248,0.08)', desc: 'One per task. All run simultaneously.' },
-      { id: 'aggregate', label: 'Aggregate findings', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Collect verifier results. Merge into structured review.' },
-      { id: 'conventions', label: 'Check conventions', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Check project skills for conventions. Apply SOLID, DRY, etc.' },
-      { id: 'produce', label: 'Produce review', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Generate structured review: per-task verdicts, overall verdict.' },
-      { id: 'end', label: 'approve / changes', shape: 'pill', w: 150, h: 40, color: 'var(--review)', bg: 'var(--review-bg)', desc: 'Output: Approve, request changes, or comments. Does NOT fix code.' },
+      { id: 'v2', label: 'Verify task 2', w: 140, h: 44, color: 'var(--action)', bg: 'rgba(56,189,248,0.08)', desc: 'Same checks, different task. Batches of 5 run in parallel.' },
+      { id: 'vn', label: 'Verify task N', w: 140, h: 44, color: 'var(--action)', bg: 'rgba(56,189,248,0.08)', desc: 'One per task. All within a batch run simultaneously.' },
+      { id: 'aggregate', label: 'Aggregate QA findings', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 3: Read all qa-task-*.md files. Collect blocking issues, test issues, and code quality concerns.' },
+      { id: 'product-assess', label: 'Invoke product assessor', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'review-product-assessor', desc: 'Step 4: Dispatch review-product-assessor agent. Evaluates implementation holistically — robustness, gaps, cross-plan consistency.' },
+      { id: 'produce', label: 'Produce review', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 5: Aggregate QA findings and product assessment into structured review document. Write to docs/workflow/review/.' },
+      { id: 'end', label: 'Review document', shape: 'pill', w: 150, h: 40, color: 'var(--review)', bg: 'var(--review-bg)', desc: 'Output: QA verdict (approve/changes/comments) plus product assessment. Does NOT fix code.' },
     ],
     connections: [
-      { from: 'start', to: 'validate' },
-      { from: 'validate', to: 'read-plan' },
+      { from: 'start', to: 'read-plan' },
       { from: 'read-plan', to: 'read-spec' },
-      { from: 'read-spec', to: 'extract' },
+      { from: 'read-spec', to: 'skills-disc' },
+      { from: 'skills-disc', to: 'extract' },
       { from: 'extract', to: 'spawn' },
       { from: 'spawn', to: 'v1' },
       { from: 'spawn', to: 'v2' },
@@ -2178,8 +2188,8 @@ const FLOWCHARTS = {
       { from: 'v1', to: 'aggregate' },
       { from: 'v2', to: 'aggregate' },
       { from: 'vn', to: 'aggregate' },
-      { from: 'aggregate', to: 'conventions' },
-      { from: 'conventions', to: 'produce' },
+      { from: 'aggregate', to: 'product-assess' },
+      { from: 'product-assess', to: 'produce' },
       { from: 'produce', to: 'end' },
     ]
   },
@@ -2189,7 +2199,7 @@ const FLOWCHARTS = {
       { id: 'migrate', label: 'Run /migrate', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Step 0: Run migrations to keep workflow files in sync.' },
       { id: 'gate-migrate', label: 'Files updated?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if migration scripts modified any workflow files.' },
       { id: 'wait-review', label: 'STOP: Review changes', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Migration updated files. Pause for user to review changes before continuing.' },
-      { id: 'scan', label: 'Scan workflow directories', w: 200, h: 44, color: '#94a3b8', bg: 'rgba(148,163,184,0.12)', desc: 'Scan docs/workflow/ subdirectories for research, discussion, specification, planning files.' },
+      { id: 'scan', label: 'Run discovery script', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery.sh. Scans all workflow directories and outputs YAML with counts, specs, plans, implementations, and relationships.' },
       { id: 'present', label: 'Present status table', w: 180, h: 44, color: '#94a3b8', bg: 'rgba(148,163,184,0.12)', desc: 'Display a table organized by topic showing progress across all 6 phases.' },
       { id: 'suggest', label: 'Suggest next steps', w: 180, h: 44, color: '#94a3b8', bg: 'rgba(148,163,184,0.12)', desc: 'Recommend which workflow command to run next based on current state.' },
       { id: 'end', label: 'Status output', shape: 'pill', w: 150, h: 40, color: '#94a3b8', bg: 'rgba(148,163,184,0.12)', desc: 'Final status overview presented to the user.' },
@@ -2499,7 +2509,7 @@ const FLOWCHARTS = {
   },
   'review-task-verifier': {
     nodes: [
-      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Spawned in parallel by technical-review skill (one per task).' },
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Dispatched in batches of 5 by technical-review skill during QA verification.' },
       { id: 'read-task', label: 'Understand task', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read the task: what it does, acceptance criteria, and expected tests.' },
       { id: 'load-spec', label: 'Load spec context', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Load the broader specification context: requirements, constraints, edge cases.' },
       { id: 'verify-impl', label: 'Verify implementation', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Check: implementation exists, matches acceptance criteria, aligns with spec.' },
@@ -2516,6 +2526,27 @@ const FLOWCHARTS = {
       { from: 'verify-tests', to: 'check-quality' },
       { from: 'check-quality', to: 'compile' },
       { from: 'compile', to: 'end' },
+    ]
+  },
+  'review-product-assessor': {
+    nodes: [
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Dispatched by technical-review skill during product assessment stage.' },
+      { id: 'read-skills', label: 'Read project skills', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read project skills to understand framework conventions and architecture patterns.' },
+      { id: 'read-spec', label: 'Read specification(s)', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read specification(s) to understand design intent and boundaries.' },
+      { id: 'read-plan', label: 'Read plan(s)', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read plan(s) to understand what was built and scope of each plan.' },
+      { id: 'read-impl', label: 'Read implementation files', w: 210, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read all implementation files to build a full picture of the product.' },
+      { id: 'assess', label: 'Assess as product', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Evaluate holistically: robustness, gaps, strengthening, next steps. For multi-plan: cross-plan consistency, integration seams, architectural coherence.' },
+      { id: 'write', label: 'Write assessment file', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Write findings to docs/workflow/review/{topic-or-scope}/product-assessment.md.' },
+      { id: 'end', label: 'Product assessment', shape: 'pill', w: 180, h: 40, color: 'var(--review)', bg: 'var(--review-bg)', desc: 'Output: findings | clean, with summary of product readiness.' },
+    ],
+    connections: [
+      { from: 'start', to: 'read-skills' },
+      { from: 'read-skills', to: 'read-spec' },
+      { from: 'read-spec', to: 'read-plan' },
+      { from: 'read-plan', to: 'read-impl' },
+      { from: 'read-impl', to: 'assess' },
+      { from: 'assess', to: 'write' },
+      { from: 'write', to: 'end' },
     ]
   }
 };
@@ -2563,9 +2594,9 @@ const FLOWCHART_DESCS = {
     meta: { output: 'Code changes (tracked in plan)', skill: 'technical-implementation', discovery: 'discovery-for-implementation-and-review.sh' }
   },
   review: {
-    summary: 'Validate completed implementation against plan tasks using parallel review-task-verifier subagents.',
-    body: `<p>Shares a discovery script with implementation. After plan selection and scope identification, the <strong>technical-review</strong> skill reads the plan and spec, extracts all tasks, then spawns <strong>parallel review-task-verifier subagents</strong> (one per task, using Haiku model).</p>
-<p>Each verifier checks: implementation exists, acceptance criteria met, test coverage adequate, and code quality acceptable. Results are aggregated into a structured review with one of three outcomes: <strong>approve</strong>, <strong>request changes</strong>, or <strong>comments</strong>. The skill does NOT fix code — it only reviews.</p>`,
+    summary: 'Validate implementation with scope selection, plan display, and reviewability gating.',
+    body: `<p>Shares a discovery script with implementation. Step 3 displays all plans with implementation status — plans without implementations are shown as not-ready. If <strong>no plans are reviewable</strong>, STOP (terminal).</p>
+<p>Single reviewable plan auto-selects with <strong>scope=single</strong>. Multiple reviewable plans prompt for <strong>scope</strong>: single (one plan), multi (selected plans), or all (full product). Then specific plans are selected if needed, and the <strong>technical-review</strong> skill is invoked.</p>`,
     meta: { output: 'Review feedback', skill: 'technical-review', discovery: 'discovery-for-implementation-and-review.sh' }
   },
   'start-feature': {
@@ -2614,16 +2645,18 @@ const FLOWCHART_DESCS = {
     meta: { complexity: 'Agent-based TDD' }
   },
   'skill-review': {
-    summary: 'The review skill — parallel fan-out verification of every task in the plan.',
-    body: `<p>Reads the plan and specification, extracts ALL tasks, then spawns <strong>parallel review-task-verifier subagents</strong> (Haiku model, one per task). All verifiers run simultaneously for efficiency.</p>
-<p>Each review-task-verifier checks: implementation correctness, acceptance criteria coverage, test adequacy, and code quality. Results are aggregated into a structured review and the skill produces a final assessment. It does not fix code — only identifies issues.</p>`,
-    meta: { complexity: 'Parallel fan-out' }
+    summary: 'The review skill — two-stage verification: batched QA task verifiers then holistic product assessor.',
+    body: `<p>Five steps: read plan(s)/spec(s), discover project skills, run QA verification, run product assessment, produce review.</p>
+<p><strong>QA Verification</strong> (Step 3): Extracts ALL tasks, then dispatches <strong>review-task-verifier subagents in batches of 5</strong> (Opus model). Each verifier checks implementation, acceptance criteria, tests, and code quality, writing findings to file. Results are aggregated from all files after all batches complete.</p>
+<p><strong>Product Assessment</strong> (Step 4): Dispatches a single <strong>review-product-assessor</strong> agent for holistic evaluation — robustness, gaps, cross-plan consistency, and forward-looking assessment. Scope-aware: single-plan, multi-plan, or full-product.</p>
+<p>Final review aggregates both stages into a structured document with QA verdict (approve/changes/comments) and product assessment.</p>`,
+    meta: { complexity: 'Two-stage review' }
   },
   'status': {
-    summary: 'Quick workflow status overview — scan all directories and suggest next steps.',
-    body: `<p>Runs <code>/migrate</code> first (pausing for review if files were updated), then scans all workflow directories: research, discussion, specification, and planning.</p>
-<p>Presents a table organised by topic showing progress across all 6 phases, then recommends which workflow command to run next based on the current state. No discovery script — uses direct directory scans.</p>`,
-    meta: { complexity: 'Utility' }
+    summary: 'Discovery-based workflow status — relationship-aware display with next step suggestions.',
+    body: `<p>Runs <code>/migrate</code> first (pausing for review if files were updated), then runs a <strong>discovery script</strong> that scans all workflow directories and outputs structured YAML.</p>
+<p>Presents a <strong>relationship-aware display</strong>: summary counts, specifications with source discussions, plans with spec links and dependency status, implementations with progress, and unlinked discussions. Suggests next steps based on gaps in the workflow.</p>`,
+    meta: { complexity: 'Utility', discovery: 'discovery.sh' }
   },
   'view-plan': {
     summary: 'Format-aware plan viewer — reads any plan regardless of output format.',
@@ -2677,8 +2710,15 @@ const FLOWCHART_DESCS = {
   },
   'review-task-verifier': {
     summary: 'Verify a single task\'s implementation, tests, and code quality against the plan and spec.',
-    body: `<p>Spawned <strong>in parallel</strong> (one per task) by the technical-review skill. Reads the task details, then loads the broader specification context.</p>
-<p>Three verification stages: <strong>implementation</strong> (exists, matches criteria, aligns with spec), <strong>tests</strong> (adequate coverage, edge cases, not over/under-tested), and <strong>code quality</strong> (conventions, SOLID, DRY, complexity, security, performance). Compiles a structured finding with blocking issues and non-blocking notes.</p>`,
+    body: `<p>Dispatched <strong>in batches of 5</strong> by the technical-review skill during QA verification. Each verifier writes findings to <code>docs/workflow/review/{topic}/qa-task-{index}.md</code>.</p>
+<p>Three verification stages: <strong>implementation</strong> (exists, matches criteria, aligns with spec), <strong>tests</strong> (adequate coverage, edge cases, not over/under-tested), and <strong>code quality</strong> (conventions, SOLID, DRY, complexity, security, performance). Receives review checklist, topic name, and task index. Compiles a structured finding with blocking issues and non-blocking notes.</p>`,
+    meta: { model: 'Opus', invokedBy: 'technical-review', complexity: 'Subagent' }
+  },
+  'review-product-assessor': {
+    summary: 'Holistic product evaluation — robustness, gaps, cross-plan consistency, and forward-looking assessment.',
+    body: `<p>Evaluates the implementation as a <strong>product</strong>, not task-by-task. Reads project skills, specifications, plans, and all implementation files to build a complete picture.</p>
+<p>Focus areas: <strong>robustness</strong> (where would it break?), <strong>gaps</strong> (what's obviously missing?), <strong>strengthening</strong> (performance, security, scalability), and <strong>next steps</strong> (what does this enable?). For <strong>multi-plan/full-product</strong> scope, also evaluates cross-plan consistency, integration seams, missing shared concerns, and architectural coherence.</p>
+<p>Read-only — writes only the assessment file. Does not fix code or modify implementation.</p>`,
     meta: { model: 'Opus', invokedBy: 'technical-review', complexity: 'Subagent' }
   },
   'implementation-analysis-duplication': {
@@ -2751,6 +2791,7 @@ const SOURCE_MAP = {
   'implementation-analysis-synthesizer': 'agents/implementation-analysis-synthesizer.md',
   'implementation-analysis-task-writer': 'agents/implementation-analysis-task-writer.md',
   'review-task-verifier':         'agents/review-task-verifier.md',
+  'review-product-assessor':      'agents/review-product-assessor.md',
 };
 
 // ── Markdown Viewer ──

@@ -84,7 +84,10 @@ Show if any specifications exist. This is the most important section — it reve
 Specifications
 
   1. {name:(titlecase)} ({status})
-     └─ Sources: {src1} ({src1_status}), {src2} ({src2_status})
+     └─ Sources: @if(no_sources) (none) @else
+        ├─ {src} ({src_status})
+        └─ ...
+     @endif
 
   2. ...
 ```
@@ -93,8 +96,6 @@ Specifications
 
 - Each numbered item is an active (non-superseded) specification
 - Show `(cross-cutting)` after status for cross-cutting specs; omit type label for feature specs
-- Sources come from the spec's `sources` array — show all with their incorporation status
-- If a spec has no sources, show `└─ Sources: (none)`
 - Blank line between numbered items
 - If superseded specs exist, show after the numbered list:
 
@@ -114,6 +115,10 @@ Plans
 
   1. {name:(titlecase)} ({status})
      └─ Spec: {specification_name}
+     @if(has_unresolved_deps) └─ Blocked:
+        ├─ {dep_topic}:{dep_task_id} ({dep_state})
+        └─ ...
+     @endif
 
   2. ...
 ```
@@ -122,7 +127,6 @@ Plans
 
 - Map raw `planning` status to `in-progress` in the display
 - Show spec name without `.md` extension
-- If `has_unresolved_deps`, add line: `└─ Blocked: {dep_topic}:{dep_task_id} ({dep_state})`
 
 ### 2d: Implementation
 
