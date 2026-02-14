@@ -19,7 +19,7 @@ Research topics:
 
 1. {theme_name}
    └─ Source: {filename}.md (lines {start}-{end})
-   └─ Discussion: @if(has_discussion) {topic}.md ({status:[in-progress|concluded]}) @else no discussion @endif
+   └─ Discussion: @if(has_discussion) {topic}.md ({status:[in-progress|concluded]}) @else (no discussion) @endif
    └─ "{summary}"
 
 2. ...
