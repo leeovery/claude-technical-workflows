@@ -122,8 +122,8 @@ List "Analyze for groupings (recommended)" first, then one entry per existing no
    `All discussions are analyzed for natural groupings. Existing`
    `specification names are preserved. You can provide guidance`
    `in the next step.`
-2. {verb:[Continue|Refine]} "{topic:(titlecase)}" — {description}
-3. ...
+2. Continue "Auth Flow" — in-progress
+3. Refine "Data Model" — concluded
 
 Select an option (enter number):
 · · · · · · · · · · · ·

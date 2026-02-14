@@ -207,6 +207,8 @@ Casing hints: `titlecase`, `lowercase`, `kebabcase`. No hint means output the ra
 
 Each part is optional — use only what's needed for clarity.
 
+**When to use placeholders vs concrete examples:** Placeholders work well for structural templates (tree displays, status blocks) where each field has a clear source. Selection menus should use concrete examples instead — they encode conditional logic (which verb maps to which state) that placeholders obscure.
+
 ### Tree Structure
 
 Every actionable item gets a numbered entry with `└─` branches showing its state. Depth varies by phase but structure is consistent. **Blank line between each numbered item.** Show one full entry, then `2. ...` to indicate repetition.
@@ -279,12 +281,13 @@ Key:
 
 Rendered as markdown (not code blocks). Framed with dot separators. Verb-based labels for selection menus. No single-character icons.
 
-**Selection menu:**
+**Selection menu** — use concrete examples showing verb-to-state mapping:
 
 ```
 · · · · · · · · · · · ·
-1. {verb:[Create|Continue|Review]} "{topic:(titlecase)}" — {description}
-2. ...
+1. Create "Auth Flow" — concluded spec, no plan
+2. Continue "Data Model" — plan in-progress
+3. Review "Billing" — plan concluded
 
 Select an option (enter number):
 · · · · · · · · · · · ·

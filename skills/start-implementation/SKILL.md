@@ -258,8 +258,9 @@ The verb in the menu depends on the implementation state:
 
 ```
 · · · · · · · · · · · ·
-1. {verb:[Continue|Start|Re-review]} "{topic:(titlecase)}" — {description}
-2. ...
+1. Continue "Billing" — in-progress (Phase 2, Task 3)
+2. Start "Core Features" — not yet started
+3. Re-review "User Auth" — completed
 
 Select an option (enter number):
 · · · · · · · · · · · ·

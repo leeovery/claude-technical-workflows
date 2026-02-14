@@ -138,8 +138,8 @@ After all grouping entries, append meta options:
 
 ```
 · · · · · · · · · · · ·
-1. {verb:[Start|Continue]} "{topic:(titlecase)}" — {description}
-2. ...
+1. Start "Auth Flow" — 2 ready discussions
+2. Continue "Data Model" — 1 source(s) pending extraction
 3. Unify all into single specification
    `All discussions are combined into one specification. Existing`
    `specifications are incorporated and superseded.`

@@ -195,8 +195,9 @@ The verb in the menu depends on the plan state:
 
 ```
 · · · · · · · · · · · ·
-1. {verb:[Create|Continue|Review]} "{topic:(titlecase)}" — {description}
-2. ...
+1. Create "Auth Flow" — concluded spec, no plan
+2. Continue "Data Model" — plan in-progress
+3. Review "Billing" — plan concluded
 
 Select an option (enter number):
 · · · · · · · · · · · ·
