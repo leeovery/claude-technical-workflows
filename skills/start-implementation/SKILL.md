@@ -308,23 +308,28 @@ External dependencies satisfied.
 
 This should not normally happen for plans classified as "Implementable" in Step 3. However, as an escape hatch:
 
+> *Output the next fenced block as a code block:*
+
+```
+Missing Dependencies
+
+Unresolved (not yet planned):
+  • {topic}: {description}
+    No plan exists. Create with /start-planning or mark as
+    satisfied externally.
+
+Incomplete (planned but not implemented):
+  • {topic}: {plan}:{task-id} not yet completed
+    This task must be completed first.
+```
+
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-Missing dependencies:
-
-UNRESOLVED (not yet planned):
-- {topic}: {description}
-  -> No plan exists for this topic. Create with /start-planning or mark as satisfied externally.
-
-INCOMPLETE (planned but not implemented):
-- {topic}: task {task_id} not yet completed
-  -> This task must be completed first.
-
 · · · · · · · · · · · ·
 - **`i`/`implement`** — Implement the blocking dependencies first
 - **`l`/`link`** — Run /link-dependencies to wire up recently completed plans
-- Mark as "satisfied externally" — tell me which dependency was implemented outside this workflow
+- **`s`/`satisfied`** — Mark a dependency as satisfied externally
 · · · · · · · · · · · ·
 ```
 
