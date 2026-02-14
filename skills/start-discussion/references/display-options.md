@@ -19,10 +19,15 @@ Research topics:
 
 1. {theme_name}
    └─ Source: {filename}.md (lines {start}-{end})
-   └─ Discussion: {status:[none|{topic}.md (in-progress)]}
+   └─ Discussion: none
    └─ "{summary}"
 
-2. ...
+2. {theme_name}
+   └─ Source: {filename}.md (lines {start}-{end})
+   └─ Discussion: {topic}.md ({status:[in-progress|concluded]})
+   └─ "{summary}"
+
+3. ...
 ```
 
 If discussions exist that are NOT linked to a research topic, list them separately:
