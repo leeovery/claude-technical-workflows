@@ -4,7 +4,7 @@
 
 ---
 
-This step dispatches `review-task-verifier` agents in parallel to verify ALL tasks across the selected plan(s). Each verifier independently checks one task for implementation, tests, and code quality.
+This step dispatches `review-task-verifier` agents in batches to verify ALL tasks across the selected plan(s). Each verifier independently checks one task for implementation, tests, and code quality, writing its full findings to a file and returning a brief status.
 
 ---
 
@@ -26,14 +26,32 @@ From each plan in scope, list every task across all phases:
 - Note each task's description
 - Note each task's acceptance criteria
 - Note expected micro acceptance (test name)
+- Assign each task a sequential **index** (1, 2, 3...) for file naming
 
 ---
 
-## Dispatch Verifiers
+## Create Output Directory
 
-Dispatch **one verifier per task, all in parallel** via the Task tool.
+For each topic in scope, ensure the review output directory exists:
+
+```bash
+mkdir -p docs/workflow/review/{topic}
+```
+
+---
+
+## Batch Dispatch
+
+Dispatch verifiers in **batches of 5** via the Task tool.
 
 - **Agent path**: `../../../agents/review-task-verifier.md`
+
+1. Group tasks into batches of 5
+2. For each batch:
+   a. Dispatch all agents in the batch in parallel
+   b. Wait for all agents in the batch to return
+   c. Record statuses
+3. After all batches complete, proceed to aggregation
 
 Each verifier receives:
 
@@ -42,63 +60,35 @@ Each verifier receives:
 3. **Plan path** — the full plan for phase context
 4. **Project skill paths** — from Step 2 discovery
 5. **Review checklist path** — `skills/technical-review/references/review-checklist.md`
+6. **Topic name** — for output file path
+7. **Task index** — sequential number for file naming (1, 2, 3...)
 
----
-
-## Wait for Completion
-
-**STOP.** Do not proceed until all verifiers have returned.
-
-Each verifier returns a structured finding. If any verifier fails (error, timeout), record the failure and continue — aggregate what's available.
+If any verifier fails (error, timeout), record the failure and continue — aggregate what's available.
 
 ---
 
 ## Expected Result
 
-Each verifier returns:
+Each verifier returns a brief status:
 
 ```
-TASK: [Task name/description]
-
-ACCEPTANCE CRITERIA: [List from plan]
-
 STATUS: Complete | Incomplete | Issues Found
-
-SPEC CONTEXT: [Brief summary of relevant spec context]
-
-IMPLEMENTATION:
-- Status: [Implemented/Missing/Partial/Drifted]
-- Location: [file:line references]
-- Notes: [Any concerns]
-
-TESTS:
-- Status: [Adequate/Under-tested/Over-tested/Missing]
-- Coverage: [What is/isn't tested]
-- Notes: [Specific issues]
-
-CODE QUALITY:
-- Project conventions: [Followed/Violations/N/A]
-- SOLID principles: [Good/Concerns]
-- Complexity: [Low/Acceptable/High]
-- Modern idioms: [Yes/Opportunities]
-- Readability: [Good/Concerns]
-- Issues: [Specific problems if any]
-
-BLOCKING ISSUES:
-- [List any issues that must be fixed]
-
-NON-BLOCKING NOTES:
-- [Suggestions for improvement]
+FINDINGS_COUNT: {N blocking issues}
+SUMMARY: {1 sentence}
 ```
+
+Full findings are written to `docs/workflow/review/{topic}/qa-task-{index}.md`.
 
 ---
 
 ## Aggregate Findings
 
-Once all verifiers have returned, synthesize their reports:
+Once all batches have completed:
 
-- Collect all tasks with `STATUS: Incomplete` or `STATUS: Issues Found` as blocking issues
-- Collect all test issues (under/over-tested)
-- Collect all code quality concerns
-- Include specific file:line references
-- Check overall plan completion (see [review-checklist.md](review-checklist.md) — Plan Completion Check)
+1. Read all `docs/workflow/review/{topic}/qa-task-*.md` files
+2. Synthesize findings from file contents:
+   - Collect all tasks with `STATUS: Incomplete` or `STATUS: Issues Found` as blocking issues
+   - Collect all test issues (under/over-tested)
+   - Collect all code quality concerns
+   - Include specific file:line references
+   - Check overall plan completion (see [review-checklist.md](review-checklist.md) — Plan Completion Check)
