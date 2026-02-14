@@ -291,7 +291,7 @@ Helpers for navigating and maintaining the workflow.
 | Skill                                                                        | Description                                                                                                                                 |
 |------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
 | [**/migrate**](skills/migrate/)                                              | Keep workflow files in sync with the current system design. Runs automatically at the start of every workflow skill.                        |
-| [**/status**](skills/status/)                                                | Show workflow status - what topics exist at each phase, and suggested next steps.                                                           |
+| [**/status**](skills/status/)                                                | Show workflow status with relationship-aware display — specification sources, unlinked discussions, plan dependencies, and suggested next steps. |
 | [**/view-plan**](skills/view-plan/)                                          | View a plan's tasks and progress, regardless of output format.                                                                              |
 
 #### Standalone Skills
