@@ -41,7 +41,7 @@ Omit any section entirely if it has no entries.
 Plans not ready for review:
 These plans have no implementation to review.
 
-  · {topic} (no implementation)
+  • {topic} (no implementation)
 ```
 
 **Key/Legend** — show only statuses that appear in the current display. No `---` separator before this section.

@@ -35,8 +35,8 @@ No concluded discussions found.
 
 The following discussions are still in progress:
 
-  · {discussion-name} (in-progress)
-  · {discussion-name} (in-progress)
+  • {discussion-name}
+  • {discussion-name}
 
 Specifications can only be created from concluded discussions.
 Run /start-discussion to continue working on a discussion.

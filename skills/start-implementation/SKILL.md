@@ -190,8 +190,8 @@ Plans not ready for implementation:
 These plans are either still in progress or have unresolved
 dependencies that must be addressed first.
 
-  · advanced-features (blocked by core-features:core-2-3)
-  · reporting (in-progress)
+  • advanced-features (blocked by core-features:core-2-3)
+  • reporting (in-progress)
 ```
 
 > *Output the next fenced block as a code block:*

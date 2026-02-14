@@ -160,7 +160,7 @@ Specifications not ready for planning:
 These specifications are either still in progress or cross-cutting
 and cannot be planned directly.
 
-  · {topic} ({type:[feature|cross-cutting]}, {status:[in-progress|concluded]})
+  • {topic} ({type:[feature|cross-cutting]}, {status:[in-progress|concluded]})
 ```
 
 **Key/Legend** — show only statuses that appear in the current display. No `---` separator before this section.
@@ -289,7 +289,7 @@ If any are relevant:
 Cross-cutting specifications still in progress:
 These may contain architectural decisions relevant to this plan.
 
-  · {topic} (in-progress)
+  • {topic}
 
 · · · · · · · · · · · ·
 - **`c`/`continue`** — Plan without them
