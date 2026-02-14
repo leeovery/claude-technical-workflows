@@ -18,7 +18,8 @@
       "Bash(gh release list:*)",
       "Bash(git -C /Users/leeovery/Code/claude/claude-technical-workflows show:*)",
       "Bash(git -C /Users/leeovery/Code/claude/claude-technical-workflows log --oneline --format=\"%h %ad %s\" --date=short 4ce0a16..8e672cf -- skills/technical-implementation/ agents/implementation-*)",
-      "Bash(git -C /Users/leeovery/Code/claude/claude-technical-workflows log --oneline --format=\"%h %ad %s\" --date=short 8ad63e3^..4ce0a16 -- skills/technical-implementation/ agents/implementation-*)"
+      "Bash(git -C /Users/leeovery/Code/claude/claude-technical-workflows log --oneline --format=\"%h %ad %s\" --date=short 8ad63e3^..4ce0a16 -- skills/technical-implementation/ agents/implementation-*)",
+      "Bash(gh pr create:*)"
     ],
     "deny": [],
     "ask": []

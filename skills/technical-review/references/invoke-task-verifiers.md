@@ -48,9 +48,9 @@ Dispatch verifiers in **batches of 5** via the Task tool.
 
 1. Group tasks into batches of 5
 2. For each batch:
-   a. Dispatch all agents in the batch in parallel
-   b. Wait for all agents in the batch to return
-   c. Record statuses
+   - Dispatch all agents in the batch in parallel
+   - Wait for all agents in the batch to return
+   - Record statuses
 3. After all batches complete, proceed to aggregation
 
 Each verifier receives:
