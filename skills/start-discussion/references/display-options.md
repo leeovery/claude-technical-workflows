@@ -46,10 +46,9 @@ No `---` separator before this section.
 ```
 Key:
 
-  Discussion:
-    no discussion — no discussion file exists
-    in-progress   — discussion is ongoing
-    concluded     — discussion is complete
+  Discussion status:
+    in-progress — discussion is ongoing
+    concluded   — discussion is complete
 ```
 
 **Then present the options based on what exists:**
