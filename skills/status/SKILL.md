@@ -2,6 +2,7 @@
 name: status
 description: "Show workflow status - what exists, where you are, and what to do next."
 disable-model-invocation: true
+allowed-tools: Bash(.claude/skills/status/scripts/discovery.sh)
 ---
 
 Show the current state of the workflow for this project.
@@ -12,81 +13,190 @@ Show the current state of the workflow for this project.
 
 Invoke the `/migrate` skill and assess its output.
 
-**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
+**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1.
 
 **If no updates needed**: Proceed to Step 1.
 
 ---
 
-## Step 1: Scan Directories
+## Step 1: Discovery State
 
-Check for files in each workflow directory:
+!`.claude/skills/status/scripts/discovery.sh`
 
-```
-docs/workflow/research/
-docs/workflow/discussion/
-docs/workflow/specification/
-docs/workflow/planning/
-docs/workflow/implementation/
+If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+
+```bash
+.claude/skills/status/scripts/discovery.sh
 ```
 
-For implementation, check `docs/workflow/implementation/{topic}/tracking.md` files and extract frontmatter fields: `status`, `current_phase`, `current_task`, `completed_tasks`, `completed_phases`.
+If YAML content is already displayed, it has been run on your behalf.
+
+Parse the discovery output. **IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state.
+
+→ Proceed to **Step 2**.
+
+---
 
 ## Step 2: Present Status
 
-Research is project-wide exploration. From discussion onwards, work is organised by **topic** - different topics may be at different stages.
+Build the display from discovery data. Only show sections for phases that have content.
 
-> *Output the next fenced block as markdown (not a code block):*
+**CRITICAL**: Entities don't flow one-to-one across phases. Multiple discussions may combine into one specification, topic names may change between phases, and specs may be superseded. The display must make these relationships visible — primarily through the specification's `sources` array.
 
-```
-**Workflow Overview**
-
-**Research:** {count} files ({filenames})
-
-| Topic | Discussion | Spec | Plan | Implemented |
-|-------|------------|------|------|-------------|
-| {topic} | {discussion_status} | {spec_status} | {plan_status} | {impl_status} |
-| ... | | | | |
-```
-
-Adapt based on what exists:
-- If a directory is empty or missing, show `-`
-- For planning, note the output format if specified in frontmatter
-- Match topics across phases by filename
-- For implementation, derive the Implemented column from tracking file data:
-  - No tracking file → `-`
-  - `status: not-started` → `not started`
-  - `status: in-progress` → `phase {current_phase} ({n}/{total} tasks done)` — count `completed_tasks` for n; use total task count from `completed_tasks` + remaining if available, otherwise just show completed count
-  - `status: completed` → `completed`
-
-## Step 3: Suggest Next Steps
-
-Based on what exists, offer relevant options. Don't assume linear progression - topics may have dependencies on each other.
-
-**If nothing exists:**
-- "Start with `/start-research` to explore ideas, or `/start-discussion` if you already know what you're building."
-
-**If topics exist at various stages**, summarise options without being prescriptive:
-- Topics in discussion can move to specification
-- Topics with specs can move to planning
-- Topics with plans can move to implementation
-- Completed implementations can be reviewed
-
-Example: "auth-system has a plan ready. payment-flow needs a spec before planning. You might want to complete planning for related topics before implementing if there are dependencies."
-
-Keep suggestions brief - the user knows their project's dependencies better than we do.
-
-## Step 4: Mention Plan Viewing
-
-If planning files exist, let the user know they can view plan details:
+### 2a: Summary
 
 > *Output the next fenced block as a code block:*
 
 ```
-To view a plan's tasks and progress, use /view-plan
+Workflow Status
+
+  Research:       {count} file(s)
+  Discussion:     {count} ({concluded} concluded, {in_progress} in-progress)
+  Specification:  {active} active ({feature} feature, {crosscutting} cross-cutting)
+  Planning:       {count} ({concluded} concluded, {in_progress} in-progress)
+  Implementation: {count} ({completed} completed, {in_progress} in-progress)
 ```
+
+Only show lines for phases that have content. If a phase has zero items but a later phase has content, show the line as `(none)` to highlight the gap.
+
+#### If no workflow content exists at all
+
+> *Output the next fenced block as a code block:*
+
+```
+Workflow Status
+
+No workflow files found in docs/workflow/
+
+Start with /start-research to explore ideas,
+or /start-discussion if you already know what to build.
+```
+
+**STOP.** Do not proceed — terminal condition.
+
+### 2b: Specifications
+
+Show if any specifications exist. This is the most important section — it reveals many-to-one relationships between discussions and specifications.
+
+> *Output the next fenced block as a code block:*
+
+```
+Specifications
+
+  1. {name:(titlecase)} ({status})
+     └─ Sources: {src1} ({src1_status}), {src2} ({src2_status})
+
+  2. ...
+```
+
+**Rules:**
+
+- Each numbered item is an active (non-superseded) specification
+- Show `(cross-cutting)` after status for cross-cutting specs; omit type label for feature specs
+- Sources come from the spec's `sources` array — show all with their incorporation status
+- If a spec has no sources, show `└─ Sources: (none)`
+- Blank line between numbered items
+- If superseded specs exist, show after the numbered list:
+
+```
+  Superseded:
+    • {name} → {superseded_by}
+```
+
+### 2c: Plans
+
+Show if any plans exist.
+
+> *Output the next fenced block as a code block:*
+
+```
+Plans
+
+  1. {name:(titlecase)} ({status})
+     └─ Spec: {specification_name}
+
+  2. ...
+```
+
+**Rules:**
+
+- Map raw `planning` status to `in-progress` in the display
+- Show spec name without `.md` extension
+- If `has_unresolved_deps`, add line: `└─ Blocked: {dep_topic}:{dep_task_id} ({dep_state})`
+
+### 2d: Implementation
+
+Show if any implementations exist.
+
+> *Output the next fenced block as a code block:*
+
+```
+Implementation
+
+  1. {topic:(titlecase)} ({status})
+     └─ Phase {current_phase}, {completed_tasks}/{total_tasks} tasks done
+
+  2. ...
+```
+
+**Rules:**
+
+- `not-started` → `└─ Not started`
+- `in-progress` → phase and task progress; if `total_tasks` is 0, show `{completed_tasks} tasks done` without denominator
+- `completed` → `└─ Complete`
+
+### 2e: Unlinked Discussions
+
+Derive which discussions are NOT referenced in any active (non-superseded) specification's `sources` array. Show only if unlinked discussions exist.
+
+> *Output the next fenced block as a code block:*
+
+```
+Discussions not yet in a specification:
+
+  • {name} ({status})
+```
+
+### 2f: Key
+
+Show if the display uses statuses that benefit from explanation. Only include statuses actually shown. No `---` separator before this section.
+
+> *Output the next fenced block as a code block:*
+
+```
+Key:
+
+  Status:
+    in-progress — work is ongoing
+    concluded   — complete, ready for next step
+    superseded  — replaced by another specification
+
+  Spec type:
+    cross-cutting — architectural policy, not directly plannable
+```
+
+Omit categories with no entries.
+
+---
+
+## Step 3: Suggest Next Steps
+
+Based on gaps in the workflow, briefly suggest 2-3 most relevant actions:
+
+- Concluded discussions not in any spec → `/start-specification`
+- In-progress specs → finish with `/start-specification`
+- Concluded feature specs without plans → `/start-planning`
+- Concluded plans not yet implemented → `/start-implementation`
+- Completed implementations → `/start-review`
+
+If plans exist, mention `/view-plan` for detailed plan viewing.
+
+Keep suggestions brief — the user knows their project better than we do.
 
 ## Notes
 
-- Keep output concise - this is a quick status check
-- Use tables for scannable information
+- Keep output scannable — this is a status check, not a deep analysis
+- Discussions may appear in multiple specifications' sources
+- A discussion not appearing in any active spec's sources is "unlinked"
+- Research files are project-wide, not topic-specific
+- Topic names may differ across phases (e.g., discussions "auth-flow" and "session-mgmt" may combine into specification "auth-system")

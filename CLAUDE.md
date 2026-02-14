@@ -46,6 +46,7 @@ skills/
   start-review/              # Begin review
     scripts/discovery.sh     #   Discovery script
   status/                    # Show workflow status and next steps
+    scripts/discovery.sh     #   Discovery script
   view-plan/                 # View plan tasks and progress
 
 .claude/skills/
