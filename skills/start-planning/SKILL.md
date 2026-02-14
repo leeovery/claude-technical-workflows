@@ -203,6 +203,8 @@ Select an option (enter number):
 · · · · · · · · · · · ·
 ```
 
+Recreate with actual topics and states from discovery.
+
 **STOP.** Wait for user response.
 
 **If single actionable item (auto-select):**

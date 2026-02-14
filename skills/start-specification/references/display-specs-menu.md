@@ -129,6 +129,8 @@ Select an option (enter number):
 · · · · · · · · · · · ·
 ```
 
+Recreate with actual topics and states from discovery.
+
 Menu descriptions are wrapped in backticks to visually distinguish them from the choice labels.
 
 **STOP.** Wait for user response.

@@ -152,6 +152,8 @@ Select an option (enter number):
 · · · · · · · · · · · ·
 ```
 
+Recreate with actual topics and states from discovery.
+
 Every meta option (Unify, Re-analyze) MUST include its description lines.
 
 **STOP.** Wait for user response.
