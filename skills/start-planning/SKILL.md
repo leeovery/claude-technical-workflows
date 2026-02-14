@@ -263,13 +263,15 @@ The plan already has its context from when it was created. Skip context gatherin
 
 ## Step 5: Gather Additional Context
 
-> *Output the next fenced block as a code block:*
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
+· · · · · · · · · · · ·
 Any additional context since the specification was concluded?
 
-- Priorities, constraints, or new considerations?
-- Or "none" if nothing has changed.
+- **`c`/`continue`** — Continue with the specification as-is
+- Or provide additional context (priorities, constraints, new considerations)
+· · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
