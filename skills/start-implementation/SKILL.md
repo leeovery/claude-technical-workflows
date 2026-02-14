@@ -111,9 +111,12 @@ No plans exist yet.
 > *Output the next fenced block as a code block:*
 
 ```
+Implementation Overview
+
 No plans found in docs/workflow/planning/
 
-The implementation phase requires a plan. Please run /start-planning first to create a plan from a specification.
+The implementation phase requires a plan.
+Run /start-planning first to create a plan from a specification.
 ```
 
 **STOP.** Wait for user to acknowledge before ending.
@@ -128,7 +131,7 @@ Plans exist.
 
 ## Step 3: Present Plans and Select
 
-Present all discovered plans using the icon system below. Classify each plan into one of three sections based on its state.
+Present all discovered plans. Classify each plan into one of three categories based on its state.
 
 **Classification logic:**
 
@@ -146,51 +149,79 @@ A plan is **Not implementable** if:
 
 **Present the full state:**
 
+Show implementable and implemented plans as numbered tree items. Convert topic filenames to title case (`auth-flow` → `Auth Flow`).
+
 > *Output the next fenced block as a code block:*
 
 ```
-Implementation Phase
+Implementation Overview
 
-Implementable:
-  1. ▶ billing - continue [Phase 2, Task 3]
-  2. + core-features - start
+{N} plans found. {M} implementations in progress.
 
-Implemented:
-  3. > user-auth
+1. Billing
+   └─ Plan: concluded (local-markdown)
+   └─ Implementation: in-progress (Phase 2, Task 3)
 
-Not implementable:
-  · advanced-features [blocked: core-features task core-2-3 not completed]
-  · reporting [planning]
+2. Core Features
+   └─ Plan: concluded (local-markdown)
+   └─ Implementation: none
+
+3. User Auth
+   └─ Plan: concluded (local-markdown)
+   └─ Implementation: completed
 ```
 
-**Formatting rules:**
+**Tree rules:**
 
-Implementable (numbered, selectable):
-- **`▶`** — implementation `status: in-progress`, show current position `[Phase N, Task M]`
-- **`+`** — concluded plan, deps met, no tracking file or tracking `status: not-started`
+Implementable:
+- Implementation `status: in-progress` → `Implementation: in-progress (Phase N, Task M)`
+- Concluded plan, deps met, not started → `Implementation: none`
 
-Implemented (numbered, selectable):
-- **`>`** — implementation `status: completed`
-
-Not implementable (not numbered, not selectable):
-- **`·`** — blocked or plan not concluded
-- `[blocked: {topic} task {id} not completed]` — resolved dep, task not done
-- `[blocked: unresolved dep on {topic}]` — no task linked
-- `[planning]` — plan status is not `concluded`
+Implemented:
+- Implementation `status: completed` → `Implementation: completed`
 
 **Ordering:**
-1. Implementable first: `▶` in-progress, then `+` new (foundational before dependent)
-2. Implemented next: `>` completed
-3. Not implementable last
+1. Implementable first: in-progress, then new (foundational before dependent)
+2. Implemented next: completed
+3. Not implementable last (separate block below)
 
 Numbering is sequential across Implementable and Implemented. Omit any section entirely if it has no entries.
 
-**If Not implementable section is shown**, append after the presentation:
+**If non-implementable plans exist**, show them in a separate code block:
 
 > *Output the next fenced block as a code block:*
 
 ```
-If a blocked dependency has been resolved outside this workflow, name the plan and the dependency to unblock it.
+Plans not ready for implementation:
+These plans are either still in progress or have unresolved
+dependencies that must be addressed first.
+
+  · advanced-features (blocked: core-features task core-2-3)
+  · reporting (in-progress)
+```
+
+> *Output the next fenced block as a code block:*
+
+```
+If a blocked dependency has been resolved outside this workflow,
+name the plan and the dependency to unblock it.
+```
+
+**Key/Legend** — show only statuses that appear in the current display. No `---` separator before this section.
+
+> *Output the next fenced block as a code block:*
+
+```
+Key:
+
+  Implementation status:
+    in-progress — work is ongoing
+    completed   — all tasks implemented
+    none        — not yet started
+
+  Blocking reason:
+    blocked     — depends on another plan's task
+    in-progress — plan not yet concluded
 ```
 
 **Then prompt based on what's actionable:**
@@ -200,34 +231,45 @@ If a blocked dependency has been resolved outside this workflow, name the plan a
 > *Output the next fenced block as a code block:*
 
 ```
-Auto-selecting: {topic} (only implementable plan)
+Automatically proceeding with "{Topic}".
 ```
+
 → Proceed directly to **Step 4**.
 
 **If nothing selectable (no implementable or implemented):**
-Show Not implementable section only (with unblock hint above).
+
+Show "not ready" block only (with unblock hint above).
 
 > *Output the next fenced block as a code block:*
 
 ```
-No implementable plans.
+Implementation Overview
 
-Before you can start implementation:
-- Complete blocking dependencies first, or
-- Finish plans still in progress with /start-planning
+No implementable plans found.
 
-Then re-run /start-implementation.
+Complete blocking dependencies first, or finish plans still
+in progress with /start-planning. Then re-run /start-implementation.
 ```
 
 **STOP.** This workflow cannot continue — do not proceed.
 
 **Otherwise (multiple selectable plans, or implemented plans exist):**
 
+The verb in the menu depends on the implementation state:
+- Implementation in-progress → **Continue**
+- Not yet started → **Start**
+- Completed → **Re-review**
+
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
-Select a plan (enter number):
+1. Continue "Billing" — in-progress (Phase 2, Task 3)
+2. Start "Core Features" — not yet started
+3. Re-review "User Auth" — completed
+
+Select an option (enter number):
+· · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.

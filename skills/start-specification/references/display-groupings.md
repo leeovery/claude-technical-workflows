@@ -77,6 +77,7 @@ Recommended breakdown for specifications with their source discussions.
 Discussions not ready for specification:
 These discussions are still in progress and must be concluded
 before they can be included in a specification.
+
   · {discussion-name} (in-progress)
 ```
 

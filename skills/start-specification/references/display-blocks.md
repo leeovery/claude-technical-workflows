@@ -11,7 +11,7 @@ Two terminal paths — the command stops and cannot proceed.
 > *Output the next fenced block as a code block:*
 
 ```
-Specification Phase
+Specification Overview
 
 No discussions found.
 
@@ -29,11 +29,12 @@ Run /start-discussion to begin documenting technical decisions.
 > *Output the next fenced block as a code block:*
 
 ```
-Specification Phase
+Specification Overview
 
 No concluded discussions found.
 
 The following discussions are still in progress:
+
   · {discussion-name} (in-progress)
   · {discussion-name} (in-progress)
 

@@ -36,27 +36,30 @@ For implementation, check `docs/workflow/implementation/{topic}/tracking.md` fil
 
 Research is project-wide exploration. From discussion onwards, work is organised by **topic** - different topics may be at different stages.
 
-> *Output the next fenced block as markdown (not a code block):*
+> *Output the next fenced block as a code block:*
 
 ```
-**Research:** 2 files (exploration.md, market-analysis.md)
+Workflow Overview
 
-| Topic        | Discussion | Spec | Plan | Implemented              |
-|--------------|------------|------|------|--------------------------|
-| auth-system  | ✓          | ✓    | ✓    | phase 2 (3/8 tasks done) |
-| payment-flow | ✓          | ✓    | -    | -                        |
-| notifications| ✓          | -    | -    | -                        |
+Research: 2 files (exploration.md, market-analysis.md)
+
+Topics:
+
+  Topic          Discussion   Spec         Plan         Implemented
+  auth-system    concluded    concluded    concluded    phase 2 (3/8 tasks done)
+  payment-flow   concluded    concluded    none         none
+  notifications  concluded    none         none         none
 ```
 
 Adapt based on what exists:
-- If a directory is empty or missing, show "Not started"
+- If a directory is empty or missing, show `none`
 - For planning, note the output format if specified in frontmatter
 - Match topics across phases by filename
 - For implementation, derive the Implemented column from tracking file data:
-  - No tracking file → `-`
+  - No tracking file → `none`
   - `status: not-started` → `not started`
   - `status: in-progress` → `phase {current_phase} ({n}/{total} tasks done)` — count `completed_tasks` for n; use total task count from `completed_tasks` + remaining if available, otherwise just show completed count
-  - `status: completed` → `✓`
+  - `status: completed` → `completed`
 
 ## Step 3: Suggest Next Steps
 

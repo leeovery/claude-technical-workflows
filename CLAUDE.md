@@ -161,3 +161,175 @@ awk '/^---$/ && c<2 {c++; next} c>=2 {print}' "$file"
 ```
 
 Also avoid BSD sed incompatibilities: `sed '/range/{cmd1;cmd2}'` syntax fails on macOS. Use awk or separate `sed -e` expressions instead.
+
+## Display & Output Conventions (IMPORTANT)
+
+All entry-point skills that present discovery state, menus, or interactive choices MUST follow these conventions. This ensures a consistent, scannable experience across all phases.
+
+### Rendering Instructions
+
+Every fenced block in skill files must be preceded by a rendering instruction:
+
+```
+> *Output the next fenced block as a code block:*
+```
+
+or:
+
+```
+> *Output the next fenced block as markdown (not a code block):*
+```
+
+Code blocks are used for informational displays (overviews, status, keys). Markdown is used for interactive elements (menus, prompts) where bold formatting is needed.
+
+### Title Pattern
+
+Always `{Phase} Overview` as the first line of the opening code block, followed by a blank line and a summary sentence.
+
+```
+Planning Overview
+
+4 specifications found. 2 plans exist.
+```
+
+### Tree Structure
+
+Every actionable item gets a numbered entry with `└─` branches showing its state. Depth varies by phase but structure is consistent. **Blank line between each numbered item.**
+
+```
+1. Auth Flow
+   └─ Plan: none
+   └─ Spec: concluded
+
+2. Data Model
+   └─ Plan: in-progress
+   └─ Spec: concluded
+```
+
+For richer hierarchies (specification phase):
+
+```
+1. Auth Flow
+   └─ Spec: in-progress (2 of 3 sources extracted)
+   └─ Discussions:
+      ├─ auth-tokens (extracted)
+      └─ session-mgmt (pending)
+```
+
+### Status Terms
+
+Always parenthetical `(term)`. Never brackets or dash-separated.
+
+Core vocabulary: `none`, `in-progress`, `concluded`, `ready`, `completed`, `extracted`, `pending`, `reopened`. Phase-specific terms are fine but format is always `(term)`.
+
+### "Not Ready" Blocks
+
+Separate code block. Descriptive heading as `{Artifacts} not ready for {phase}:`, explanatory line, then `·` bullets with parenthetical status. **Blank line after the explanation, before the list.**
+
+```
+Specifications not ready for planning:
+These specifications are either still in progress or cross-cutting
+and cannot be planned directly.
+
+  · caching-strategy (cross-cutting, concluded)
+  · rate-limiting (cross-cutting, in-progress)
+```
+
+### Key / Legend
+
+Separate code block. Categorized. Em dash (`—`) separators. **No `---` separator before the Key block.** Only show statuses that appear in the current display. **Blank line between categories.**
+
+```
+Key:
+
+  Plan status:
+    none        — no plan exists yet
+    in-progress — planning work is ongoing
+    concluded   — plan is complete
+
+  Spec type:
+    cross-cutting — architectural policy, not directly plannable
+    feature       — plannable feature specification
+```
+
+### Menus / Interactive Prompts
+
+Rendered as markdown (not code blocks). Framed with dot separators. Verb-based labels for selection menus. No single-character icons.
+
+**Selection menu:**
+
+```
+· · · · · · · · · · · ·
+1. Create "Auth Flow" — concluded spec, no plan
+2. Continue "Data Model" — plan in-progress
+3. Review "Billing" — plan concluded
+
+Select an option (enter number):
+· · · · · · · · · · · ·
+```
+
+**Yes/no prompt:**
+
+```
+· · · · · · · · · · · ·
+Proceed?
+- **`y`/`yes`**
+- **`n`/`no`**
+· · · · · · · · · · · ·
+```
+
+**Multi-choice prompt:**
+
+```
+· · · · · · · · · · · ·
+What scope would you like to review?
+
+- **`s`/`single`** — Review one plan's implementation
+- **`m`/`multi`** — Review selected plans together
+- **`a`/`all`** — Review all implemented plans
+· · · · · · · · · · · ·
+```
+
+**Meta options** in selection menus get backtick-wrapped descriptions:
+
+```
+3. Unify all into single specification
+   `All discussions combined into one specification.`
+   `Existing specifications are incorporated and superseded.`
+```
+
+### Auto-Select
+
+When only one actionable item exists:
+
+```
+Automatically proceeding with "Auth Flow".
+```
+
+### Block / Terminal Messages
+
+When a phase can't proceed — use the phase title pattern, then explain:
+
+```
+Planning Overview
+
+No specifications found in docs/workflow/specification/
+
+The planning phase requires a concluded specification.
+Run /start-specification first.
+```
+
+### Bullet Characters
+
+- `•` — simple lists (sources, files, items)
+- `·` — excluded / not-ready items in "not ready" blocks
+
+### Spacing Rules
+
+Inside code blocks, maintain **one blank line** between:
+- Title/summary and first content
+- Each numbered tree item
+- Section headings and their content
+- Key categories
+
+Between code blocks (overview → not-ready → key → menu), no `---` separators — just the natural block separation.

@@ -31,6 +31,7 @@ List all concluded discussions from discovery output.
 Discussions not ready for specification:
 These discussions are still in progress and must be concluded
 before they can be included in a specification.
+
   · {discussion-name} (in-progress)
 ```
 
