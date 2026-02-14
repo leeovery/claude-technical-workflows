@@ -19,16 +19,13 @@ Research topics:
 
 1. {theme_name}
    └─ Source: {filename}.md (lines {start}-{end})
-   └─ Discussion: none
+   └─ Discussion: no discussion
    └─ "{summary}"
 
-2. {theme_name}
-   └─ Source: {filename}.md (lines {start}-{end})
-   └─ Discussion: {topic}.md ({status:[in-progress|concluded]})
-   └─ "{summary}"
-
-3. ...
+2. ...
 ```
+
+**Discussion branch:** Show `no discussion` when no discussion file exists. When one exists, show the filename and status: `{topic}.md (in-progress)` or `{topic}.md (concluded)`.
 
 If discussions exist that are NOT linked to a research topic, list them separately:
 
@@ -49,10 +46,10 @@ No `---` separator before this section.
 ```
 Key:
 
-  Discussion status:
-    none        — no discussion exists yet
-    in-progress — discussion is ongoing
-    concluded   — discussion is complete
+  Discussion:
+    no discussion — no discussion file exists
+    in-progress   — discussion is ongoing
+    concluded     — discussion is complete
 ```
 
 **Then present the options based on what exists:**
