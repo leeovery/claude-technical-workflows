@@ -178,10 +178,3 @@ Load **[cross-cutting-context.md](references/cross-cutting-context.md)** and fol
 ## Step 7: Invoke the Skill
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
-
-## Notes
-
-- Ask questions clearly and wait for responses before proceeding
-- The feature specification is the primary source of truth for planning
-- Cross-cutting specifications provide supplementary context for architectural decisions
-- Do not reference discussions - only specifications
