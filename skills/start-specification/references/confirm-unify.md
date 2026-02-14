@@ -6,6 +6,8 @@
 
 #### If existing specifications will be superseded
 
+> *Output the next fenced block as a code block:*
+
 ```
 Creating specification: Unified
 
@@ -21,13 +23,19 @@ Existing specifications to incorporate:
 Output: docs/workflow/specification/unified.md
 ```
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 · · · · · · · · · · · ·
 Proceed?
 - **`y`/`yes`**
 - **`n`/`no`**
 · · · · · · · · · · · ·
+```
 
 #### If no existing specifications
+
+> *Output the next fenced block as a code block:*
 
 ```
 Creating specification: Unified
@@ -40,11 +48,15 @@ Sources:
 Output: docs/workflow/specification/unified.md
 ```
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 · · · · · · · · · · · ·
 Proceed?
 - **`y`/`yes`**
 - **`n`/`no`**
 · · · · · · · · · · · ·
+```
 
 **STOP.** Wait for user response.
 

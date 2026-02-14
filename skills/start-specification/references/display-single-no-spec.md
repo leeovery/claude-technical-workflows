@@ -8,6 +8,8 @@ No specification exists for this discussion.
 
 ## Display
 
+> *Output the next fenced block as a code block:*
+
 ```
 Specification Overview
 
@@ -19,9 +21,9 @@ Single concluded discussion found.
       └─ {discussion-name} (ready)
 ```
 
-**Output in a fenced code block exactly as shown above.**
-
 ### If in-progress discussions exist
+
+> *Output the next fenced block as a code block:*
 
 ```
 Discussions not ready for specification:
@@ -34,6 +36,8 @@ before they can be included in a specification.
 
 No `---` separator before this section.
 
+> *Output the next fenced block as a code block:*
+
 ```
 Key:
 
@@ -45,6 +49,8 @@ Key:
 ```
 
 ## After Display
+
+> *Output the next fenced block as a code block:*
 
 ```
 Automatically proceeding with "{Title Case Name}".

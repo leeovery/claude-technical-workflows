@@ -84,7 +84,7 @@ Then, **separately from the content above** (clear visual break), present the ch
 - **Or tell me what to change.**
 · · · · · · · · · · · ·
 
-**Do not wrap content or choices in a code block** — both must render as styled markdown. The content and choices must be visually distinct (not run together).
+Content and choices must be visually distinct (not run together).
 
 > **CHECKPOINT**: After presenting, you MUST STOP and wait for the user's response. Do NOT proceed to logging. Do NOT present the next topic. WAIT.
 
@@ -518,13 +518,17 @@ For each item, follow the **same workflow as the main specification process**:
 
    [content as rendered markdown]
 
+   > *Output the next fenced block as markdown (not a code block):*
+
+   ```
    · · · · · · · · · · · ·
    **To proceed:**
    - **`y`/`yes`** — Approved. I'll add the above to the specification **verbatim**.
    - **Or tell me what to change.**
    · · · · · · · · · · · ·
+   ```
 
-   **Do not wrap content or choices in a code block.** Content and choices must be visually distinct.
+   Content and choices must be visually distinct.
 
 4. **Wait for explicit approval** - same rules as always: `y`/`yes` or equivalent before writing
 5. **Log verbatim** when approved
@@ -652,13 +656,17 @@ For each item:
 
    [content as rendered markdown]
 
+   > *Output the next fenced block as markdown (not a code block):*
+
+   ```
    · · · · · · · · · · · ·
    **To proceed:**
    - **`y`/`yes`** — Approved. I'll add the above to the specification **verbatim**.
    - **Or tell me what to change.**
    · · · · · · · · · · · ·
+   ```
 
-   **Do not wrap content or choices in a code block.** Content and choices must be visually distinct.
+   Content and choices must be visually distinct.
 
 4. **Wait for explicit approval**
 5. **Log verbatim** when approved

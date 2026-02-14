@@ -50,6 +50,8 @@ For each discussion: status is `ready`. Spec status: `none`.
 
 All items are first-class — every grouping (including single-discussion entries) is a numbered item.
 
+> *Output the next fenced block as a code block:*
+
 ```
 Specification Overview
 
@@ -67,9 +69,9 @@ Recommended breakdown for specifications with their source discussions.
       └─ {discussion-name} (ready)
 ```
 
-**Output in a fenced code block exactly as shown above.**
-
 ### If in-progress discussions exist
+
+> *Output the next fenced block as a code block:*
 
 ```
 Discussions not ready for specification:
@@ -81,6 +83,8 @@ before they can be included in a specification.
 ### Key/Legend
 
 Show only the statuses that appear in the current display. No `---` separator before this section.
+
+> *Output the next fenced block as a code block:*
 
 ```
 Key:
@@ -100,6 +104,8 @@ Key:
 ### Tip (show when 2+ groupings)
 
 No `---` separator before this section.
+
+> *Output the next fenced block as a code block:*
 
 ```
 Tip: To restructure groupings or pull a discussion into its own
@@ -127,6 +133,8 @@ After all grouping entries, append meta options:
 
 **Example assembled menu** (2 groupings, specs exist):
 
+> *Output the next fenced block as markdown (not a code block):*
+
 ```
 · · · · · · · · · · · ·
 1. Start "Auth Flow" — 2 ready discussions
@@ -143,7 +151,7 @@ Select an option (enter number):
 · · · · · · · · · · · ·
 ```
 
-**Output in a fenced code block exactly as shown above.** Every meta option (Unify, Re-analyze) MUST include its description lines.
+Every meta option (Unify, Re-analyze) MUST include its description lines.
 
 **STOP.** Wait for user response.
 

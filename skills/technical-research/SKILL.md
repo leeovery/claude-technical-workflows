@@ -87,13 +87,15 @@ When you notice convergence, **flag it and give the user options**:
 
 This thread seems to be converging — we've explored {topic} enough that the tradeoffs are clear and it's approaching decision territory.
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 · · · · · · · · · · · ·
 - **`p`/`park`** — Mark as discussion-ready and move to another topic
 - **`k`/`keep`** — Keep digging, there's more to understand
 - Comment — your call
 · · · · · · · · · · · ·
-
-**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+```
 
 **Never decide for the user.** Even if the answer seems obvious, flag it and ask.
 

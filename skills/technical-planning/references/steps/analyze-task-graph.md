@@ -38,13 +38,15 @@ The natural task order is already correct. Present as rendered markdown (not in 
 
 {notes from agent output}"
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 · · · · · · · · · · · ·
 **To proceed:**
 - **`y`/`yes`** — Confirmed.
 - **Or tell me what to change.**
 · · · · · · · · · · · ·
-
-**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+```
 
 **STOP.** Wait for the user's response.
 
@@ -74,13 +76,15 @@ Dependencies and priorities have already been written to the task files. Present
 
 {any notes from agent output}"
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 · · · · · · · · · · · ·
 **To proceed:**
 - **`y`/`yes`** — Approved.
 - **Or tell me what to change.**
 · · · · · · · · · · · ·
-
-**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+```
 
 **STOP.** Wait for the user's response.
 

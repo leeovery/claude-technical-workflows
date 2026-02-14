@@ -71,14 +71,16 @@ Present the task list to the user as rendered markdown (not in a code block).
 
 **Phase {N}: {Phase Name}** — {M} tasks.
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 · · · · · · · · · · · ·
 **To proceed:**
 - **`y`/`yes`** — Confirmed.
 - **Or tell me what to change.**
 - **Or navigate** — a different phase or task, or the leading edge.
 · · · · · · · · · · · ·
-
-**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+```
 
 **STOP.** Wait for the user's response.
 

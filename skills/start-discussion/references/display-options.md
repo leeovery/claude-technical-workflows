@@ -8,6 +8,8 @@ Present everything discovered to help the user make an informed choice.
 
 **Present the full state:**
 
+> *Output the next fenced block as a code block:*
+
 ```
 Workflow Status: Discussion Phase
 
@@ -30,12 +32,13 @@ Key:
   ✓ = already has a corresponding discussion
 ```
 
-**Output in a fenced code block exactly as shown above.**
-
 **Then present the options based on what exists:**
 
 #### If research and discussions exist
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 · · · · · · · · · · · ·
 How would you like to proceed?
 
@@ -44,9 +47,13 @@ How would you like to proceed?
 - Continue discussion — name one above (e.g., "continue {topic}")
 - Fresh topic — describe what you want to discuss
 · · · · · · · · · · · ·
+```
 
 #### If only research exists
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 · · · · · · · · · · · ·
 How would you like to proceed?
 
@@ -54,14 +61,19 @@ How would you like to proceed?
 - From research — pick a topic number above (e.g., "1" or "research 1")
 - Fresh topic — describe what you want to discuss
 · · · · · · · · · · · ·
+```
 
 #### If only discussions exist
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 · · · · · · · · · · · ·
 How would you like to proceed?
 
 - Continue discussion — name one above (e.g., "continue {topic}")
 - Fresh topic — describe what you want to discuss
 · · · · · · · · · · · ·
+```
 
 **STOP.** Wait for user response before proceeding.

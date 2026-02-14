@@ -171,14 +171,16 @@ After presenting the finding and proposed fix, ask:
 
 **Finding {N} of {total}: {Brief Title}**
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 · · · · · · · · · · · ·
 **To proceed:**
 - **`y`/`yes`** — Approved. I'll apply it to the plan verbatim.
 - **`s`/`skip`** — Leave this as-is and move to the next finding.
 - **Or tell me what to change.**
 · · · · · · · · · · · ·
-
-**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+```
 
 **STOP.** Wait for the user's response.
 

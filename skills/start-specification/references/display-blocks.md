@@ -8,6 +8,8 @@ Two terminal paths — the command stops and cannot proceed.
 
 ## If no discussions exist
 
+> *Output the next fenced block as a code block:*
+
 ```
 Specification Phase
 
@@ -23,6 +25,8 @@ Run /start-discussion to begin documenting technical decisions.
 **STOP.** Wait for user acknowledgment. Command ends here.
 
 ## If discussions exist but none concluded
+
+> *Output the next fenced block as a code block:*
 
 ```
 Specification Phase

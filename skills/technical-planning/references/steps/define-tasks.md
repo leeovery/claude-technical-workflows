@@ -42,14 +42,16 @@ Present the task overview to the user as rendered markdown (not in a code block)
 
 **STOP.** Ask:
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 · · · · · · · · · · · ·
 **To proceed:**
 - **`y`/`yes`** — Approved.
 - **Or tell me what to change** — reorder, split, merge, add, edit, or remove tasks.
 - **Or navigate** — a different phase or task, or the leading edge.
 · · · · · · · · · · · ·
-
-**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
+```
 
 #### If the user provides feedback
 

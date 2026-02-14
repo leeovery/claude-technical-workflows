@@ -6,6 +6,8 @@
 
 Summarise the selected research topic in 2-5 lines, drawing from the source, summary, and key questions in the research analysis.
 
+> *Output the next fenced block as markdown (not a code block):*
+
 ```
 New discussion: {topic}
 
@@ -21,7 +23,5 @@ research you'd like to include — drop them in now.
 - Describe what you'd like to add
 · · · · · · · · · · · ·
 ```
-
-**Do not wrap the above in a code block** — output as raw markdown so bold styling renders.
 
 **STOP.** Wait for user response before proceeding.
