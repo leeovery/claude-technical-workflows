@@ -5,6 +5,7 @@
 ---
 
 **If no cross-cutting specifications exist**:
+
 Skip this step.
 
 → Proceed to **Step 7**.
