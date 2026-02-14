@@ -22,7 +22,7 @@ that specifications are built upon.
 Run /start-discussion to begin documenting technical decisions.
 ```
 
-**STOP.** Wait for user acknowledgment. Command ends here.
+**STOP.**
 
 ## If discussions exist but none concluded
 
@@ -44,4 +44,4 @@ Run /start-discussion to continue working on a discussion.
 
 List all in-progress discussions from discovery output.
 
-**STOP.** Wait for user acknowledgment. Command ends here.
+**STOP.**

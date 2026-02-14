@@ -222,6 +222,16 @@ Always parenthetical `(term)`. Never brackets or dash-separated.
 
 Core vocabulary: `none`, `in-progress`, `concluded`, `ready`, `completed`, `extracted`, `pending`, `reopened`. Phase-specific terms are fine but format is always `(term)`.
 
+### Cross-Plan References
+
+Use colon notation to reference a task within a plan: `{plan}:{task-id}`.
+
+```
+  · advanced-features (blocked by core-features:core-2-3)
+```
+
+Reads as: "advanced-features is blocked by task core-2-3 in the core-features plan."
+
 ### "Not Ready" Blocks
 
 Separate code block. Descriptive heading as `{Artifacts} not ready for {phase}:`, explanatory line, then `·` bullets with parenthetical status. **Blank line after the explanation, before the list.**
@@ -340,9 +350,9 @@ All skill files (entry-point and processing) MUST follow these structural conven
 
 ### Stop Gates
 
-Use `**STOP.**` (bold, period) followed by a brief instruction. This is the only pattern for user interaction boundaries.
+Use `**STOP.**` (bold, period). This is the only pattern for user interaction boundaries.
 
-Three categories:
+Two categories:
 
 **Interaction stop** — waiting for real user input to continue:
 ```
@@ -350,17 +360,12 @@ Three categories:
 **STOP.** Wait for user response before proceeding.
 ```
 
-**Terminal stop** — skill is done, nothing to process:
+**Terminal stop** — skill is done, nothing to process. The output block preceding it already explains the situation, so no follow-up text is needed:
 ```
-**STOP.** Command ends.
-```
-
-**Blocked stop** — items exist but none are actionable:
-```
-**STOP.** This workflow cannot continue — do not proceed.
+**STOP.**
 ```
 
-Never use `Stop here.`, `Wait for user to acknowledge before ending.`, or other variations.
+Never use `Stop here.`, `Command ends.`, `Wait for user to acknowledge before ending.`, or other variations.
 
 ### Heading Hierarchy
 

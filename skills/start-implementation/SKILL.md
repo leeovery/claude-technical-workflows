@@ -119,7 +119,7 @@ The implementation phase requires a plan.
 Run /start-planning first to create a plan from a specification.
 ```
 
-**STOP.** Command ends.
+**STOP.**
 
 #### If scenario is "single_plan" or "multiple_plans"
 
@@ -196,7 +196,7 @@ Plans not ready for implementation:
 These plans are either still in progress or have unresolved
 dependencies that must be addressed first.
 
-  · advanced-features (blocked: core-features task core-2-3)
+  · advanced-features (blocked by core-features:core-2-3)
   · reporting (in-progress)
 ```
 
@@ -251,7 +251,7 @@ Complete blocking dependencies first, or finish plans still
 in progress with /start-planning. Then re-run /start-implementation.
 ```
 
-**STOP.** This workflow cannot continue — do not proceed.
+**STOP.**
 
 **Otherwise (multiple selectable plans, or implemented plans exist):**
 

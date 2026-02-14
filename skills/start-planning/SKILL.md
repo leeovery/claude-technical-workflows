@@ -108,7 +108,7 @@ The planning phase requires a concluded specification.
 Run /start-specification first.
 ```
 
-**STOP.** Command ends.
+**STOP.**
 
 #### If scenario is "nothing_actionable"
 
@@ -239,7 +239,7 @@ Complete any in-progress specifications with /start-specification,
 or create a new specification first.
 ```
 
-**STOP.** This workflow cannot continue — do not proceed.
+**STOP.**
 
 → Based on user choice, proceed to **Step 4**.
 
