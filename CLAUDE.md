@@ -161,3 +161,315 @@ awk '/^---$/ && c<2 {c++; next} c>=2 {print}' "$file"
 ```
 
 Also avoid BSD sed incompatibilities: `sed '/range/{cmd1;cmd2}'` syntax fails on macOS. Use awk or separate `sed -e` expressions instead.
+
+## Display & Output Conventions (IMPORTANT)
+
+All entry-point skills that present discovery state, menus, or interactive choices MUST follow these conventions. This ensures a consistent, scannable experience across all phases.
+
+### Rendering Instructions
+
+Every fenced block in skill files must be preceded by a rendering instruction:
+
+```
+> *Output the next fenced block as a code block:*
+```
+
+or:
+
+```
+> *Output the next fenced block as markdown (not a code block):*
+```
+
+Code blocks are used for informational displays (overviews, status, keys). Markdown is used for interactive elements (menus, prompts) where bold formatting is needed.
+
+### Title Pattern
+
+Always `{Phase} Overview` as the first line of the opening code block, followed by a blank line and a summary sentence.
+
+```
+Planning Overview
+
+4 specifications found. 2 plans exist.
+```
+
+### Template Placeholders
+
+Skill files use placeholders in fenced block templates. The syntax is:
+
+```
+{name}                                    — raw value, output as-is
+{name:[option1|option2|option3]}          — enumerated options (pick one)
+{name:(casing)}                           — with casing hint
+{name:[option1|option2]:(casing)}         — options and casing
+```
+
+Casing hints: `titlecase`, `lowercase`, `kebabcase`. No hint means output the raw value.
+
+Each part is optional — use only what's needed for clarity.
+
+**Conditional directives** for branches that render differently based on state:
+
+```
+@if(condition) truthy content @else falsy content @endif
+```
+
+Example: `@if(has_discussion) {topic}.md ({status:[in-progress|concluded]}) @else (no discussion) @endif`
+
+**When to use placeholders vs concrete examples:** Placeholders work well for structural templates (tree displays, status blocks) where each field has a clear source. Selection menus should use concrete examples instead — they encode conditional logic (which verb maps to which state) that placeholders obscure.
+
+### Tree Structure
+
+Every actionable item gets a numbered entry with `└─` branches showing its state. Depth varies by phase but structure is consistent. **Blank line between each numbered item.** Show one full entry, then `2. ...` to indicate repetition.
+
+```
+1. {topic:(titlecase)}
+   └─ Plan: @if(has_plan) {plan_status:[in-progress|concluded]} @else (no plan) @endif
+   └─ Spec: {spec_status:[in-progress|concluded]}
+
+2. ...
+```
+
+For richer hierarchies (specification phase):
+
+```
+1. {topic:(titlecase)}
+   └─ Spec: {spec_status:[in-progress|concluded]} ({extraction_summary})
+   └─ Discussions:
+      ├─ {discussion} ({status:[extracted|pending]})
+      └─ ...
+```
+
+### Status Terms
+
+Always parenthetical `(term)`. Never brackets or dash-separated.
+
+Core vocabulary: `in-progress`, `concluded`, `ready`, `completed`, `extracted`, `pending`, `reopened`. Phase-specific terms are fine but format is always `(term)`.
+
+### Cross-Plan References
+
+Use colon notation to reference a task within a plan: `{plan}:{task-id}`.
+
+```
+  · advanced-features (blocked by core-features:core-2-3)
+```
+
+Reads as: "advanced-features is blocked by task core-2-3 in the core-features plan."
+
+### "Not Ready" Blocks
+
+Separate code block. Descriptive heading as `{Artifacts} not ready for {phase}:`, explanatory line, then `•` bullets with parenthetical status. **Blank line after the explanation, before the list.**
+
+```
+Specifications not ready for planning:
+These specifications are either still in progress or cross-cutting
+and cannot be planned directly.
+
+  • caching-strategy (cross-cutting, concluded)
+  • rate-limiting (cross-cutting, in-progress)
+```
+
+### Key / Legend
+
+Separate code block. Categorized. Em dash (`—`) separators. **No `---` separator before the Key block.** Only show statuses that appear in the current display. **Blank line between categories.**
+
+```
+Key:
+
+  Plan status:
+    in-progress — planning work is ongoing
+    concluded   — plan is complete
+
+  Spec type:
+    cross-cutting — architectural policy, not directly plannable
+    feature       — plannable feature specification
+```
+
+### Menus / Interactive Prompts
+
+Rendered as markdown (not code blocks). Framed with dot separators. Verb-based labels for selection menus. No single-character icons.
+
+**Selection menu** — use concrete examples showing verb-to-state mapping:
+
+```
+· · · · · · · · · · · ·
+1. Create "Auth Flow" — concluded spec, no plan
+2. Continue "Data Model" — plan in-progress
+3. Review "Billing" — plan concluded
+
+Select an option (enter number):
+· · · · · · · · · · · ·
+```
+
+**Yes/no prompt:**
+
+```
+· · · · · · · · · · · ·
+Proceed?
+- **`y`/`yes`**
+- **`n`/`no`**
+· · · · · · · · · · · ·
+```
+
+**Multi-choice prompt:**
+
+```
+· · · · · · · · · · · ·
+What scope would you like to review?
+
+- **`s`/`single`** — Review one plan's implementation
+- **`m`/`multi`** — Review selected plans together
+- **`a`/`all`** — Review all implemented plans
+· · · · · · · · · · · ·
+```
+
+**Meta options** in selection menus get backtick-wrapped descriptions:
+
+```
+3. Unify all into single specification
+   `All discussions combined into one specification.`
+   `Existing specifications are incorporated and superseded.`
+```
+
+### Auto-Select
+
+When only one actionable item exists:
+
+```
+Automatically proceeding with "{topic:(titlecase)}".
+```
+
+### Block / Terminal Messages
+
+When a phase can't proceed — use the phase title pattern, then explain:
+
+```
+Planning Overview
+
+No specifications found in docs/workflow/specification/
+
+The planning phase requires a concluded specification.
+Run /start-specification first.
+```
+
+### Bullet Characters
+
+Use `•` for all bulleted lists (sources, files, not-ready items, etc.).
+
+### Spacing Rules
+
+Inside code blocks, maintain **one blank line** between:
+- Title/summary and first content
+- Each numbered tree item
+- Section headings and their content
+- Key categories
+
+Between code blocks (overview → not-ready → key → menu), no `---` separators — just the natural block separation.
+
+## Structural Conventions (IMPORTANT)
+
+All skill files (entry-point and processing) MUST follow these structural conventions for consistency.
+
+### Stop Gates
+
+Use `**STOP.**` (bold, period). This is the only pattern for user interaction boundaries.
+
+Two categories:
+
+**Interaction stop** — waiting for real user input to continue:
+```
+**STOP.** Wait for user response.
+**STOP.** Wait for user response before proceeding.
+```
+
+**Terminal stop** — skill is done, nothing to process:
+```
+**STOP.** Do not proceed — terminal condition.
+```
+
+Never use `Stop here.`, `Command ends.`, `Wait for user to acknowledge before ending.`, or other variations.
+
+### Heading Hierarchy
+
+- **H1** (`#`): File title only — one per file, at the top
+- **H2** (`##`): Steps and major sections (`## Step N: {Name}`, `## Notes`, `## Instructions`)
+- **H3** (`###`): Subsections within steps (`### 6a: Warn about in-progress specs`)
+- **H4** (`####`): Conditional routing only (`#### If {condition}`, `#### Otherwise`)
+
+### Step Numbering
+
+Sequential: `## Step 0`, `## Step 1`, `## Step 2`, etc.
+
+- **Step 0** is reserved for migrations — mandatory in all entry-point skills
+- Steps are separated by `---` horizontal rules
+- Each step completes fully before the next begins
+
+### Conditional Routing
+
+Use H4 headings for if/else branches within a step:
+
+```
+#### If scenario is "no_specs"
+{content}
+
+#### If scenario is "has_options"
+{content}
+```
+
+Never use else-if chains. Each condition gets its own `#### If` heading.
+
+### Navigation Arrows
+
+Use `→` for flow control between steps or to external files:
+
+```
+→ Proceed to **Step 4**.
+→ Go directly to **Step 7** to invoke the skill.
+→ Load **[file.md](file.md)** and follow its instructions.
+```
+
+### Reference File Headers
+
+Reference files loaded by skills use this header pattern:
+
+```
+# Title
+
+*Reference for **[parent-skill](../SKILL.md)***
+
+---
+```
+
+### Critical / Important Markers
+
+Use bold labels with colons for emphasis levels:
+
+```
+**CRITICAL**: This guidance is mandatory.
+**IMPORTANT**: Use ONLY this script for discovery.
+**CHECKPOINT**: Summarize progress before continuing.
+```
+
+### Zero Output Rule
+
+Entry-point skills that invoke processing skills use this exact blockquote to prevent narration:
+
+```
+> **⚠️ ZERO OUTPUT RULE**: Do not narrate your processing. Produce no output until a step or reference file explicitly specifies display content. No "proceeding with...", no discovery summaries, no routing decisions, no transition text. Your first output must be content explicitly called for by the instructions.
+```
+
+### Rendering Instructions for Ask Blocks
+
+When a step asks the user a question, wrap it in a rendering instruction and code block — don't use bare `Ask:` labels:
+
+```
+> *Output the next fenced block as a code block:*
+
+\```
+What's on your mind?
+
+- What idea or topic do you want to explore?
+- What prompted this - a problem, opportunity, curiosity?
+\```
+
+**STOP.** Wait for user response before proceeding.
+```

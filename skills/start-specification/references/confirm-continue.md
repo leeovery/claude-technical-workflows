@@ -103,7 +103,7 @@ Understood. You can run /start-discussion to continue working on
 discussions, or re-run this command when ready.
 ```
 
-Command ends.
+**STOP.** Do not proceed — terminal condition.
 
 #### If groupings or specs menu
 

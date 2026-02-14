@@ -93,12 +93,16 @@ No plans exist yet.
 > *Output the next fenced block as a code block:*
 
 ```
+Review Overview
+
 No plans found in docs/workflow/planning/
 
-The review phase requires a completed implementation based on a plan. Please run /start-planning first to create a plan, then /start-implementation to build it.
+The review phase requires a completed implementation based on a plan.
+Run /start-planning first to create a plan, then /start-implementation
+to build it.
 ```
 
-**STOP.** Wait for user to acknowledge before ending.
+**STOP.** Do not proceed — terminal condition.
 
 #### If scenario is "single_plan" or "multiple_plans"
 

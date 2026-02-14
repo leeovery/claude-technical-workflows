@@ -100,12 +100,15 @@ No specifications exist yet.
 > *Output the next fenced block as a code block:*
 
 ```
+Planning Overview
+
 No specifications found in docs/workflow/specification/
 
-The planning phase requires a concluded specification. Please run /start-specification first.
+The planning phase requires a concluded specification.
+Run /start-specification first.
 ```
 
-**STOP.** Wait for user to acknowledge before ending.
+**STOP.** Do not proceed — terminal condition.
 
 #### If scenario is "nothing_actionable"
 
@@ -130,43 +133,76 @@ Present everything discovered to help the user make an informed choice.
 > *Output the next fenced block as a code block:*
 
 ```
-Planning Phase
+Planning Overview
 
-Available:
-  1. + {topic-2} - create new plan
-  2. ▶ {topic-3} - continue in-progress plan
-  3. > {topic-4} - review concluded plan
+{N} specifications found. {M} plans exist.
 
-Not plannable specifications:
-  · {topic-1} [feature, in-progress]
-  · {caching-strategy} [cross-cutting, concluded]
-  · {rate-limiting} [cross-cutting, in-progress]
+1. {topic:(titlecase)}
+   └─ Plan: @if(has_plan) {plan_status:[in-progress|concluded]} @else (no plan) @endif
+   └─ Spec: concluded
+
+2. ...
 ```
 
-**Formatting rules:**
+**Tree rules:**
 
-Available (numbered, selectable):
-- **`+`** — concluded spec with no plan yet
-- **`▶`** — has a plan with `plan_status: planning`
-- **`>`** — has a plan with `plan_status: concluded`
+Each numbered item shows a feature specification that is actionable:
+- Concluded spec with no plan → `Plan: (no plan)`
+- Has a plan with `plan_status: planning` → `Plan: in-progress`
+- Has a plan with `plan_status: concluded` → `Plan: concluded`
 
-Not plannable specifications (no number, not selectable — `[type, status]` format):
-- **`·`** — feature specs still in-progress, or cross-cutting specifications
-- Feature specs: `[feature, in-progress]`
-- Cross-cutting specs: `[cross-cutting, {status}]`
+**If non-plannable specifications exist**, show them in a separate code block:
 
-Omit either section entirely if it has no entries.
+> *Output the next fenced block as a code block:*
+
+```
+Specifications not ready for planning:
+These specifications are either still in progress or cross-cutting
+and cannot be planned directly.
+
+  • {topic} ({type:[feature|cross-cutting]}, {status:[in-progress|concluded]})
+```
+
+**Key/Legend** — show only statuses that appear in the current display. No `---` separator before this section.
+
+> *Output the next fenced block as a code block:*
+
+```
+Key:
+
+  Plan status:
+    in-progress — planning work is ongoing
+    concluded   — plan is complete
+
+  Spec type:
+    cross-cutting — architectural policy, not directly plannable
+    feature       — plannable feature specification
+```
+
+Omit any section entirely if it has no entries.
 
 **Then prompt based on what's actionable:**
 
 **If multiple actionable items:**
 
+The verb in the menu depends on the plan state:
+- No plan exists → **Create**
+- Plan is `in-progress` → **Continue**
+- Plan is `concluded` → **Review**
+
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
-Select a specification (enter number):
+1. Create "Auth Flow" — concluded spec, no plan
+2. Continue "Data Model" — plan in-progress
+3. Review "Billing" — plan concluded
+
+Select an option (enter number):
+· · · · · · · · · · · ·
 ```
+
+Recreate with actual topics and states from discovery.
 
 **STOP.** Wait for user response.
 
@@ -175,7 +211,7 @@ Select a specification (enter number):
 > *Output the next fenced block as a code block:*
 
 ```
-Auto-selecting: {topic} (only actionable specification)
+Automatically proceeding with "{topic:(titlecase)}".
 ```
 
 → Proceed directly to **Step 4**.
@@ -185,16 +221,16 @@ Auto-selecting: {topic} (only actionable specification)
 > *Output the next fenced block as a code block:*
 
 ```
-No plannable specifications.
+Planning Overview
 
-Before you can start planning:
-- Complete any in-progress specifications with /start-specification, or
-- Create a new specification first
+No plannable specifications found.
 
-Then re-run /start-planning.
+The planning phase requires a concluded feature specification.
+Complete any in-progress specifications with /start-specification,
+or create a new specification first.
 ```
 
-**STOP.** This workflow cannot continue — do not proceed.
+**STOP.** Do not proceed — terminal condition.
 
 → Based on user choice, proceed to **Step 4**.
 
@@ -218,9 +254,16 @@ The plan already has its context from when it was created. Skip context gatherin
 
 ## Step 5: Gather Additional Context
 
-Ask:
-- Any additional context or priorities to consider?
-- Any constraints since the specification was concluded?
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+Any additional context since the specification was concluded?
+
+- **`c`/`continue`** — Continue with the specification as-is
+- Or provide additional context (priorities, constraints, new considerations)
+· · · · · · · · · · · ·
+```
 
 **STOP.** Wait for user response.
 
@@ -243,10 +286,10 @@ If any are relevant:
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-Note: The following cross-cutting specifications are still in-progress:
-  · {rate-limiting} - in-progress
-
+Cross-cutting specifications still in progress:
 These may contain architectural decisions relevant to this plan.
+
+  • {topic}
 
 · · · · · · · · · · · ·
 - **`c`/`continue`** — Plan without them

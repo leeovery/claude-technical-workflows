@@ -11,25 +11,42 @@ Present everything discovered to help the user make an informed choice.
 > *Output the next fenced block as a code block:*
 
 ```
-Workflow Status: Discussion Phase
+Discussion Overview
+
+{N} research topics found. {M} existing discussions.
 
 Research topics:
-  1. · {Theme name} - undiscussed
-       Source: {filename}.md (lines {start}-{end})
-       "{Brief summary}"
 
-  2. ✓ {Theme name} → {topic}.md
-       Source: {filename}.md (lines {start}-{end})
-       "{Brief summary}"
+1. {theme_name}
+   └─ Source: {filename}.md (lines {start}-{end})
+   └─ Discussion: @if(has_discussion) {topic}.md ({status:[in-progress|concluded]}) @else (no discussion) @endif
+   └─ "{summary}"
 
-Discussions:
-  - {topic}.md (in-progress)
-  - {topic}.md (concluded)
+2. ...
+```
 
----
+If discussions exist that are NOT linked to a research topic, list them separately:
+
+> *Output the next fenced block as a code block:*
+
+```
+Existing discussions:
+
+  • {topic}.md ({status:[in-progress|concluded]})
+```
+
+### Key/Legend
+
+No `---` separator before this section.
+
+> *Output the next fenced block as a code block:*
+
+```
 Key:
-  · = undiscussed topic (potential new discussion)
-  ✓ = already has a corresponding discussion
+
+  Discussion status:
+    in-progress — discussion is ongoing
+    concluded   — discussion is complete
 ```
 
 **Then present the options based on what exists:**

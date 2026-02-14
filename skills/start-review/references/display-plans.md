@@ -8,29 +8,53 @@ Present all discovered plans with implementation status to help the user underst
 
 **Present the full state:**
 
+Show reviewable plans as numbered tree items.
+
 > *Output the next fenced block as a code block:*
 
 ```
-Review Phase
+Review Overview
 
-Reviewable:
-  1. ✓ {topic-1} (completed) - format: {format}, spec: {exists|missing}
-  2. ▶ {topic-2} (in-progress) - format: {format}, spec: {exists|missing}
+{N} plans found. {M} with implementations.
 
-Not reviewable:
-  · {topic-3} [no implementation]
+1. {topic:(titlecase)}
+   └─ Plan: concluded ({format})
+   └─ Implementation: {impl_status:[completed|in-progress]}
+   └─ Spec: {spec:[exists|missing]}
+
+2. ...
 ```
 
-**Formatting rules:**
+**Tree rules:**
 
-Reviewable (numbered, selectable):
-- **`✓`** — implementation_status: completed
-- **`▶`** — implementation_status: in-progress
+Reviewable (numbered):
+- Implementation `status: completed` → `Implementation: completed`
+- Implementation `status: in-progress` → `Implementation: in-progress`
 
-Not reviewable (not numbered, not selectable):
-- **`·`** — implementation_status: none
+Omit any section entirely if it has no entries.
 
-Omit either section entirely if it has no entries.
+**If non-reviewable plans exist**, show them in a separate code block:
+
+> *Output the next fenced block as a code block:*
+
+```
+Plans not ready for review:
+These plans have no implementation to review.
+
+  • {topic} (no implementation)
+```
+
+**Key/Legend** — show only statuses that appear in the current display. No `---` separator before this section.
+
+> *Output the next fenced block as a code block:*
+
+```
+Key:
+
+  Implementation status:
+    completed   — all tasks implemented
+    in-progress — implementation still ongoing
+```
 
 **Then route based on what's reviewable:**
 
@@ -39,20 +63,22 @@ Omit either section entirely if it has no entries.
 > *Output the next fenced block as a code block:*
 
 ```
+Review Overview
+
 No implemented plans found.
 
 The review phase requires at least one plan with an implementation.
-Please run /start-implementation first.
+Run /start-implementation first.
 ```
 
-**STOP.** Wait for user to acknowledge before ending.
+**STOP.** Do not proceed — terminal condition.
 
 #### If single reviewable plan
 
 > *Output the next fenced block as a code block:*
 
 ```
-Auto-selecting: {topic} (only reviewable plan)
+Automatically proceeding with "{topic:(titlecase)}".
 Scope: single
 ```
 

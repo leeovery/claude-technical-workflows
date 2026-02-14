@@ -23,8 +23,8 @@ For each non-superseded specification from discovery output, display as nested t
 > *Output the next fenced block as a code block:*
 
 ```
-1. {Spec Title Case Name}
-   └─ Spec: {status} ({X} of {Y} sources extracted)
+1. {topic:(titlecase)}
+   └─ Spec: {spec_status:[in-progress|concluded]} ({X} of {Y} sources extracted)
    └─ Discussions:
       ├─ {source-name} (extracted)
       └─ {source-name} (extracted)
@@ -57,7 +57,8 @@ Concluded discussions not in a specification:
 Discussions not ready for specification:
 These discussions are still in progress and must be concluded
 before they can be included in a specification.
-  · {discussion-name} (in-progress)
+
+  • {discussion-name}
 ```
 
 ### Key/Legend
@@ -127,6 +128,8 @@ List "Analyze for groupings (recommended)" first, then one entry per existing no
 Select an option (enter number):
 · · · · · · · · · · · ·
 ```
+
+Recreate with actual topics and states from discovery.
 
 Menu descriptions are wrapped in backticks to visually distinguish them from the choice labels.
 

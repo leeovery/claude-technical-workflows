@@ -38,8 +38,10 @@ Follow the reading reference to locate and read the actual plan content.
 
 Display a readable summary:
 
+> *Output the next fenced block as a code block:*
+
 ```
-## Plan: {topic}
+Plan: {topic}
 
 **Format:** {format}
 

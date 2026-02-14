@@ -31,7 +31,8 @@ List all concluded discussions from discovery output.
 Discussions not ready for specification:
 These discussions are still in progress and must be concluded
 before they can be included in a specification.
-  · {discussion-name} (in-progress)
+
+  • {discussion-name}
 ```
 
 ### Cache-Aware Message
@@ -100,4 +101,4 @@ Understood. You can run /start-discussion to continue working on
 discussions, or re-run this command when ready.
 ```
 
-**Command ends.** Control returns to the user.
+**STOP.** Do not proceed — terminal condition.
