@@ -71,7 +71,9 @@ The dependency analysis found a circular dependency:
 This must be resolved before continuing. The cycle usually means two tasks each assume the other is done first — one needs to be restructured or the dependency removed.
 ```
 
-**STOP.** Wait for the user to decide how to resolve. Options include adjusting task scope, merging tasks, or removing a dependency. Re-invoke the agent after changes.
+**STOP.** Wait for the user to decide how to resolve.
+
+Options include adjusting task scope, merging tasks, or removing a dependency. Re-invoke the agent after changes.
 
 #### If the agent applied changes successfully (`STATUS: complete`)
 
