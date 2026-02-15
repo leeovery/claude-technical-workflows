@@ -24,8 +24,9 @@ The specification's Dependencies section lists what this feature needs from outs
 2. **Resolve where possible** — For each dependency, check whether a plan already exists for that topic:
    - If a plan exists, identify the specific task(s) that satisfy the dependency. Query the output format to find relevant tasks. If ambiguous, ask the user which tasks apply. Update the dependency entry from `state: unresolved` → `state: resolved` with the `task_id`.
    - If no plan exists, leave the dependency as `state: unresolved`. It will be linked later via `/link-dependencies` or when that topic is planned.
+   - If no other plans exist at all, skip resolution — there is nothing to resolve against. All dependencies remain unresolved.
 
-3. **Reverse check** — Check whether any existing plans have unresolved dependencies in their `external_dependencies` frontmatter that reference *this* topic. Now that this plan exists with specific tasks:
+3. **Reverse check** — If other plans exist, check whether any have unresolved dependencies in their `external_dependencies` frontmatter that reference *this* topic. Now that this plan exists with specific tasks:
    - Scan other plan files' `external_dependencies` for entries that mention this topic
    - For each match, identify which task(s) in the current plan satisfy that dependency
    - Update the other plan's `external_dependencies` entry with the task reference (`state: resolved`, `task_id`)
@@ -40,9 +41,7 @@ external_dependencies: []
 
 This makes it clear that dependencies were considered and none exist — not that they were overlooked.
 
-#### If no other plans exist
-
-Skip the resolution and reverse check — there is nothing to resolve against. Document the dependencies as unresolved. They will be linked when other topics are planned, or via `/link-dependencies`.
+---
 
 Present a summary of the dependency state: what was documented, what was resolved, what remains unresolved, and any reverse resolutions made.
 
