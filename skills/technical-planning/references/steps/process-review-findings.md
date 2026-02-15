@@ -6,6 +6,8 @@
 
 Process findings from a review agent interactively with the user. The agent writes findings — with full fix content — to a tracking file. Read the tracking file and present each finding for approval.
 
+**Review type**: `{review_type:[traceability|integrity]}` — set by the calling context (B or C in plan-review.md).
+
 #### If STATUS is `clean`
 
 > *Output the next fenced block as a code block:*
@@ -60,17 +62,17 @@ Show the finding with its full fix content, read directly from the tracking file
 ```
 **Finding {N} of {total}: {Brief Title}**
 
-For traceability findings:
+@if(review_type = traceability)
 - **Type**: Missing from plan | Hallucinated content | Incomplete coverage
 - **Spec Reference**: {from tracking file}
 - **Plan Reference**: {from tracking file}
 - **Change Type**: {from tracking file}
-
-For integrity findings:
+@else
 - **Severity**: Critical | Important | Minor
 - **Plan Reference**: {from tracking file}
 - **Category**: {from tracking file}
 - **Change Type**: {from tracking file}
+@endif
 
 **Details**: {from tracking file}
 
