@@ -138,7 +138,7 @@ This is encouraged. Better to resurface and confirm "already covered" than let s
 
 > **CHECKPOINT**: You should NOT be creating or writing to this file unless you have explicit user approval for specific content. If you're about to create this file with content you haven't presented and had approved, **STOP**. That violates the workflow.
 
-Create `docs/workflow/specification/{topic}.md`
+Create `docs/workflow/specification/{topic}/specification.md`
 
 This is a single file per topic. Structure is **flexible** - organize around phases and subject matter, not rigid sections. This is a working document.
 
@@ -150,6 +150,7 @@ topic: {topic-name}
 status: in-progress
 type: feature
 date: YYYY-MM-DD  # Use today's actual date
+review_cycle: 0
 sources:
   - name: discussion-one
     status: incorporated
@@ -172,10 +173,11 @@ sources:
 
 ### Frontmatter Fields
 
-- **topic**: Kebab-case identifier matching the filename
+- **topic**: Kebab-case identifier matching the directory name
 - **status**: `in-progress` (building) or `concluded` (complete)
 - **type**: `feature` (something to build) or `cross-cutting` (patterns/policies)
 - **date**: Last updated date
+- **review_cycle**: Current review cycle number (starts at 0, incremented each review cycle). Missing field treated as 0.
 - **sources**: Array of source discussions with incorporation status (see below)
 
 ### Sources and Incorporation Status
@@ -382,15 +384,18 @@ After documenting dependencies, perform a **final comprehensive review** in two 
 
 To ensure analysis isn't lost during context refresh, create tracking files that capture your findings. These files persist your analysis so work can continue across sessions.
 
-**Location**: Store tracking files alongside the specification:
-- `docs/workflow/specification/{topic}-review-input-tracking.md` - Phase 1 findings
-- `docs/workflow/specification/{topic}-review-gap-analysis-tracking.md` - Phase 2 findings
+**Location**: Store tracking files in the specification topic directory (`docs/workflow/specification/{topic}/`), cycle-numbered:
+- `review-input-tracking-c{N}.md` — Phase 1 findings for cycle N
+- `review-gap-analysis-tracking-c{N}.md` — Phase 2 findings for cycle N
+
+Tracking files are **never deleted**. After all findings are processed, mark `status: complete`. Previous cycles' files persist as analysis history.
 
 **Format**:
 ```markdown
 ---
 status: in-progress | complete
 created: YYYY-MM-DD
+cycle: {N}
 phase: Input Review | Gap Analysis
 topic: [Topic Name]
 ---
@@ -429,10 +434,42 @@ topic: [Topic Name]
    - Get approval
    - Log to specification
    - Update the tracking file: mark resolution, add notes
-4. After all items resolved, delete the tracking file
-5. Proceed to the next phase (or completion)
+4. After all items resolved, mark tracking file `status: complete`
+5. Proceed to the next phase (or re-loop prompt)
 
 **Why tracking files**: If context refreshes mid-review, you can read the tracking file and continue where you left off. The tracking file shows which items are resolved and which remain. This is especially important when reviews surface 10-20 items that need individual discussion.
+
+---
+
+### Review Cycle Gate
+
+Each review cycle runs Phase 1 (Input Review) + Phase 2 (Gap Analysis) as a pair. Always start here.
+
+Increment `review_cycle` in the specification frontmatter and commit.
+
+→ If `review_cycle <= 3`, proceed directly to **Phase 1: Input Review**.
+
+If `review_cycle > 3`:
+
+**Do NOT skip review autonomously.** This gate is an escape hatch for the user — not a signal to stop. The expected default is to continue running review until no issues are found. Present the choice and let the user decide.
+
+**Review cycle {N}**
+
+Review has run {N-1} times so far. You can continue (recommended if issues were still found last cycle) or skip to completion.
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+- **`p`/`proceed`** — Continue review *(default)*
+- **`s`/`skip`** — Skip review, proceed to completion
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user choice. You MUST NOT choose on the user's behalf.
+
+- **`proceed`**: → Continue to **Phase 1: Input Review**.
+- **`skip`**: → Jump to **Completion**.
 
 ---
 
@@ -483,7 +520,7 @@ Compare the specification against all source material to catch anything that was
 
 After completing your review (steps 1-7):
 
-1. **Create the tracking file** - Write all findings to `{topic}-review-input-tracking.md` using the format above
+1. **Create the tracking file** - Write all findings to `review-input-tracking-c{N}.md` in the specification topic directory (where N is the current review cycle)
 2. **Commit the tracking file** - This ensures it survives context refresh
 3. **Present findings** to the user in two stages:
 
@@ -554,7 +591,7 @@ When you've:
 - Surfaced any potential gaps not covered by sources (and resolved them)
 - Updated the tracking file with all resolutions
 
-**Delete the Phase 1 tracking file** (`{topic}-review-input-tracking.md`) - it has served its purpose.
+**Mark the Phase 1 tracking file as complete** — Set `status: complete` in `review-input-tracking-c{N}.md`. Do not delete it; it persists as analysis history.
 
 Inform the user Phase 1 is complete and proceed to Phase 2: Gap Analysis.
 
@@ -624,7 +661,7 @@ Review the specification systematically for gaps *within what's specified*:
    - **Important**: Would require implementer to guess or make design decisions
    - **Minor**: Polish or clarification that improves understanding
 
-5. **Create the tracking file** - Write findings to `{topic}-review-gap-analysis-tracking.md`
+5. **Create the tracking file** - Write findings to `review-gap-analysis-tracking-c{N}.md` in the specification topic directory (where N is the current review cycle)
 
 6. **Commit the tracking file** - Ensures it survives context refresh
 
@@ -689,9 +726,42 @@ When you've:
 - Addressed all critical and important gaps with the user
 - Updated the tracking file with all resolutions
 
-**Delete the Phase 2 tracking file** (`{topic}-review-gap-analysis-tracking.md`).
+**Mark the Phase 2 tracking file as complete** — Set `status: complete` in `review-gap-analysis-tracking-c{N}.md`. Do not delete it; it persists as analysis history.
 
-Both review phases are now complete. Proceed to Completion.
+Both review phases for this cycle are now complete.
+
+---
+
+### Re-Loop Prompt
+
+After Phase 2 completes, check whether either phase surfaced findings in this cycle.
+
+#### If no findings were surfaced in either phase of this cycle
+
+→ Skip the re-loop prompt and proceed directly to **Completion** (nothing to re-analyse).
+
+#### If findings were surfaced
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+- **`r`/`reanalyse`** — Run another review cycle (Phase 1 + Phase 2)
+- **`p`/`proceed`** — Proceed to completion
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If reanalyse
+
+→ Return to the **Review Cycle Gate** to begin a fresh cycle.
+
+#### If proceed
+
+→ Continue to **Completion**.
+
+---
 
 ## Completion
 
@@ -722,29 +792,39 @@ Does this assessment seem correct?"
 
 Wait for user confirmation before proceeding.
 
-### Step 2: Verify Tracking Files Removed
+### Step 2: Verify Tracking Files Complete
 
-Before proceeding to sign-off, confirm that all review tracking files have been deleted:
+Before proceeding to sign-off, confirm that all review tracking files across all cycles have `status: complete`:
 
-- `{topic}-review-input-tracking.md` - should have been deleted after Phase 1
-- `{topic}-review-gap-analysis-tracking.md` - should have been deleted after Phase 2
+- `review-input-tracking-c{N}.md` — should be marked complete after each Phase 1
+- `review-gap-analysis-tracking-c{N}.md` — should be marked complete after each Phase 2
 
-If either file still exists, delete it now. These are temporary working files that should not persist after the review is complete.
+If any tracking file still shows `status: in-progress`, mark it complete now.
 
-> **CHECKPOINT**: Do not proceed to sign-off if tracking files still exist. They indicate incomplete review work.
+> **CHECKPOINT**: Do not proceed to sign-off if any tracking files still show `status: in-progress`. They indicate incomplete review work.
 
 ### Step 3: Sign-Off
 
-Once the type is confirmed and tracking files are removed, ask for final sign-off:
+Once the type is confirmed and tracking files are complete:
 
-"The specification is ready for sign-off:
-- **Type**: [feature/cross-cutting]
-- **Status**: Complete
+> *Output the next fenced block as markdown (not a code block):*
 
-[If feature]: This specification can proceed to planning
-[If cross-cutting]: This specification will be surfaced as reference context when planning features
+```
+· · · · · · · · · · · ·
+- **`y`/`yes`** — Conclude specification and mark as concluded
+- **Comment** — Add context before concluding
+· · · · · · · · · · · ·
+```
 
-Ready to mark as complete?"
+**STOP.** Wait for user response.
+
+#### If comment
+
+Discuss the user's context, apply any changes, then re-present the sign-off prompt above.
+
+#### If yes
+
+→ Proceed to **Step 4**.
 
 ### Step 4: Update Frontmatter
 
@@ -756,13 +836,14 @@ topic: {topic-name}
 status: concluded
 type: feature  # or cross-cutting
 date: YYYY-MM-DD  # Use today's actual date
+review_cycle: {N}
 ---
 ```
 
 Specification is complete when:
 - All topics/phases have validated content
-- Both review phases (Input Review and Gap Analysis) completed
-- All review tracking files have been deleted
+- At least one review cycle completed with no findings, OR user explicitly chose to proceed past the re-loop prompt
+- All review tracking files marked `status: complete`
 - Type has been determined and confirmed
 - User confirms the specification is complete
 - No blocking gaps remain

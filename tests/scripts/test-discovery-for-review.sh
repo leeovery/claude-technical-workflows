@@ -112,14 +112,14 @@ echo ""
 
 echo -e "${YELLOW}Test: Single plan with full frontmatter${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning"
-cat > "$TEST_DIR/docs/workflow/planning/user-auth.md" << 'EOF'
+mkdir -p "$TEST_DIR/docs/workflow/planning/user-auth"
+cat > "$TEST_DIR/docs/workflow/planning/user-auth/plan.md" << 'EOF'
 ---
 topic: user-auth
 status: in-progress
 date: 2024-01-15
 format: local-markdown
-specification: user-auth.md
+specification: user-auth/specification.md
 ---
 
 # Implementation Plan: User Authentication
@@ -138,7 +138,7 @@ assert_contains "$output" "topic: \"user-auth\"" "Topic extracted"
 assert_contains "$output" "status: \"in-progress\"" "Status extracted"
 assert_contains "$output" "date: \"2024-01-15\"" "Date extracted"
 assert_contains "$output" "format: \"local-markdown\"" "Format extracted"
-assert_contains "$output" "specification: \"user-auth.md\"" "Specification extracted"
+assert_contains "$output" "specification: \"user-auth/specification.md\"" "Specification extracted"
 assert_contains "$output" "scenario: \"single_plan\"" "Scenario is single_plan"
 
 echo ""
@@ -147,27 +147,28 @@ echo ""
 
 echo -e "${YELLOW}Test: Multiple plans${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning"
+mkdir -p "$TEST_DIR/docs/workflow/planning/feature-a"
+mkdir -p "$TEST_DIR/docs/workflow/planning/feature-b"
 
-cat > "$TEST_DIR/docs/workflow/planning/feature-a.md" << 'EOF'
+cat > "$TEST_DIR/docs/workflow/planning/feature-a/plan.md" << 'EOF'
 ---
 topic: feature-a
 status: in-progress
 date: 2024-01-10
 format: local-markdown
-specification: feature-a.md
+specification: feature-a/specification.md
 ---
 
 # Implementation Plan: Feature A
 EOF
 
-cat > "$TEST_DIR/docs/workflow/planning/feature-b.md" << 'EOF'
+cat > "$TEST_DIR/docs/workflow/planning/feature-b/plan.md" << 'EOF'
 ---
 topic: feature-b
 status: concluded
 date: 2024-01-20
 format: local-markdown
-specification: feature-b.md
+specification: feature-b/specification.md
 ---
 
 # Implementation Plan: Feature B
@@ -186,22 +187,22 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with linked specification that exists${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning"
-mkdir -p "$TEST_DIR/docs/workflow/specification"
+mkdir -p "$TEST_DIR/docs/workflow/planning/with-spec"
+mkdir -p "$TEST_DIR/docs/workflow/specification/with-spec"
 
-cat > "$TEST_DIR/docs/workflow/planning/with-spec.md" << 'EOF'
+cat > "$TEST_DIR/docs/workflow/planning/with-spec/plan.md" << 'EOF'
 ---
 topic: with-spec
 status: in-progress
 date: 2024-03-01
 format: local-markdown
-specification: with-spec.md
+specification: with-spec/specification.md
 ---
 
 # Implementation Plan: With Spec
 EOF
 
-cat > "$TEST_DIR/docs/workflow/specification/with-spec.md" << 'EOF'
+cat > "$TEST_DIR/docs/workflow/specification/with-spec/specification.md" << 'EOF'
 ---
 topic: with-spec
 status: concluded
@@ -220,15 +221,15 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with linked specification that doesn't exist${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning"
+mkdir -p "$TEST_DIR/docs/workflow/planning/no-spec"
 
-cat > "$TEST_DIR/docs/workflow/planning/no-spec.md" << 'EOF'
+cat > "$TEST_DIR/docs/workflow/planning/no-spec/plan.md" << 'EOF'
 ---
 topic: no-spec
 status: in-progress
 date: 2024-03-01
 format: local-markdown
-specification: missing-spec.md
+specification: missing-spec/specification.md
 ---
 
 # Implementation Plan: No Spec
@@ -244,9 +245,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with missing frontmatter fields (defaults)${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning"
+mkdir -p "$TEST_DIR/docs/workflow/planning/minimal"
 
-cat > "$TEST_DIR/docs/workflow/planning/minimal.md" << 'EOF'
+cat > "$TEST_DIR/docs/workflow/planning/minimal/plan.md" << 'EOF'
 ---
 topic: minimal
 ---
@@ -267,15 +268,15 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with plan_id${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning"
+mkdir -p "$TEST_DIR/docs/workflow/planning/with-plan-id"
 
-cat > "$TEST_DIR/docs/workflow/planning/with-plan-id.md" << 'EOF'
+cat > "$TEST_DIR/docs/workflow/planning/with-plan-id/plan.md" << 'EOF'
 ---
 topic: with-plan-id
 status: in-progress
 date: 2024-05-01
 format: beads
-specification: with-plan-id.md
+specification: with-plan-id/specification.md
 plan_id: my-project-abc123
 ---
 
@@ -292,15 +293,15 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan without plan_id${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning"
+mkdir -p "$TEST_DIR/docs/workflow/planning/no-plan-id"
 
-cat > "$TEST_DIR/docs/workflow/planning/no-plan-id.md" << 'EOF'
+cat > "$TEST_DIR/docs/workflow/planning/no-plan-id/plan.md" << 'EOF'
 ---
 topic: no-plan-id
 status: in-progress
 date: 2024-05-01
 format: local-markdown
-specification: no-plan-id.md
+specification: no-plan-id/specification.md
 ---
 
 # Implementation Plan: No Plan ID
@@ -316,14 +317,14 @@ echo ""
 
 echo -e "${YELLOW}Test: Review script does not output implementation section${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning"
+mkdir -p "$TEST_DIR/docs/workflow/planning/test"
 
-cat > "$TEST_DIR/docs/workflow/planning/test.md" << 'EOF'
+cat > "$TEST_DIR/docs/workflow/planning/test/plan.md" << 'EOF'
 ---
 topic: test
 status: concluded
 format: local-markdown
-specification: test.md
+specification: test/specification.md
 ---
 
 # Plan: Test

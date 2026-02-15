@@ -12,7 +12,7 @@ Invoke the [technical-review](../../technical-review/SKILL.md) skill for your ne
 ```
 Review session for: {topic}
 Review scope: single
-Plan: docs/workflow/planning/{topic}.md
+Plan: docs/workflow/planning/{topic}/plan.md
 Format: {format}
 Plan ID: {plan_id} (if applicable)
 Specification: {specification} (exists: {true|false})
@@ -25,8 +25,8 @@ Invoke the technical-review skill.
 Review session for: {scope description}
 Review scope: {multi | all}
 Plans:
-  - docs/workflow/planning/{topic-1}.md (format: {format}, spec: {spec})
-  - docs/workflow/planning/{topic-2}.md (format: {format}, spec: {spec})
+  - docs/workflow/planning/{topic-1}/plan.md (format: {format}, spec: {spec})
+  - docs/workflow/planning/{topic-2}/plan.md (format: {format}, spec: {spec})
 
 Invoke the technical-review skill.
 ```

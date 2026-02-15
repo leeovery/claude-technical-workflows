@@ -328,7 +328,7 @@ EOF
 run_migration
 content=$(cat "$PLAN_DIR/no-spec.md")
 
-assert_contains "$content" "^specification: no-spec.md$" "Specification defaults to topic.md"
+assert_contains "$content" "^specification: no-spec/specification.md$" "Specification defaults to topic directory"
 
 echo ""
 

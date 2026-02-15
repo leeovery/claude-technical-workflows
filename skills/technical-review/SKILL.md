@@ -25,7 +25,7 @@ Either way: Verify plan tasks were implemented, tested adequately, and meet qual
 **Before proceeding**, verify the required input is available. If anything is missing, **STOP** — do not proceed until resolved.
 
 - **No plan provided?**
-  > "I need the implementation plan to review against. Could you point me to the plan file (e.g., `docs/workflow/planning/{topic}.md`)?"
+  > "I need the implementation plan to review against. Could you point me to the plan file (e.g., `docs/workflow/planning/{topic}/plan.md`)?"
 
 - **Plan references a specification that can't be found?**
   > "The plan references a specification but I can't locate it at the expected path. Could you confirm where the specification is? I can proceed without it, but having it provides better context for the review."

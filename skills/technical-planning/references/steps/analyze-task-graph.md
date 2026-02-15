@@ -20,7 +20,7 @@ Read **[output-formats.md](../output-formats.md)**, find the entry matching the 
 
 Invoke `planning-dependency-grapher` with these file paths:
 
-1. **Plan Index File path**: `docs/workflow/planning/{topic}.md`
+1. **Plan Index File path**: `docs/workflow/planning/{topic}/plan.md`
 2. **reading.md**: the format's reading reference loaded above
 3. **graph.md**: the format's graph reference loaded above
 

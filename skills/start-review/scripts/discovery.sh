@@ -52,10 +52,10 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
     echo "  exists: true"
     echo "  files:"
 
-    for file in "$PLAN_DIR"/*.md; do
+    for file in "$PLAN_DIR"/*/plan.md; do
         [ -f "$file" ] || continue
 
-        name=$(basename "$file" .md)
+        name=$(basename "$(dirname "$file")")
         topic=$(extract_field "$file" "topic")
         topic=${topic:-"$name"}
         status=$(extract_field "$file" "status")
@@ -65,7 +65,7 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
         format=$(extract_field "$file" "format")
         format=${format:-"MISSING"}
         specification=$(extract_field "$file" "specification")
-        specification=${specification:-"${name}.md"}
+        specification=${specification:-"${name}/specification.md"}
         plan_id=$(extract_field "$file" "plan_id")
 
         # Check if linked specification exists

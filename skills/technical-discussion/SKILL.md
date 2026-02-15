@@ -97,7 +97,24 @@ These are natural pauses, not every exchange. Document the reasoning and context
 
 ## Concluding a Discussion
 
-When the user is ready to conclude the discussion:
+When the user indicates they want to conclude:
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+- **`y`/`yes`** — Conclude discussion and mark as concluded
+- **Comment** — Add context before concluding
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If comment
+
+Incorporate the user's context into the discussion, commit, then re-present the sign-off prompt above.
+
+#### If yes
 
 1. Update frontmatter `status: concluded`
 2. Final commit
@@ -105,17 +122,21 @@ When the user is ready to conclude the discussion:
 
 **If other in-progress discussions exist:**
 
+> *Output the next fenced block as a code block:*
+
 ```
 Discussion concluded: {topic}
 
 Remaining in-progress discussions:
-- {topic-1}
-- {topic-2}
+  • {topic-1}
+  • {topic-2}
 
-To continue, clear your context and run `/start-discussion` to pick up the next topic.
+To continue, clear your context and run /start-discussion to pick up the next topic.
 ```
 
 **If no in-progress discussions remain:**
+
+> *Output the next fenced block as a code block:*
 
 ```
 Discussion concluded: {topic}

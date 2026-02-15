@@ -9,7 +9,7 @@ This skill's purpose is now fulfilled. Invoke the [technical-specification](../.
 ```
 Specification session for: {Title Case Name}
 
-Continuing existing: docs/workflow/specification/{kebab-case-name}.md (concluded)
+Continuing existing: docs/workflow/specification/{kebab-case-name}/specification.md (concluded)
 
 New sources to extract:
 - docs/workflow/discussion/{new-discussion-name}.md

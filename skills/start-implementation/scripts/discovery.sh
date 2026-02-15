@@ -162,10 +162,10 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
     echo "  exists: true"
     echo "  files:"
 
-    for file in "$PLAN_DIR"/*.md; do
+    for file in "$PLAN_DIR"/*/plan.md; do
         [ -f "$file" ] || continue
 
-        name=$(basename "$file" .md)
+        name=$(basename "$(dirname "$file")")
         topic=$(extract_field "$file" "topic")
         topic=${topic:-"$name"}
         status=$(extract_field "$file" "status")
@@ -175,7 +175,7 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
         format=$(extract_field "$file" "format")
         format=${format:-"MISSING"}
         specification=$(extract_field "$file" "specification")
-        specification=${specification:-"${name}.md"}
+        specification=${specification:-"${name}/specification.md"}
         plan_id=$(extract_field "$file" "plan_id")
 
         # Track plan data
@@ -326,10 +326,10 @@ echo "dependency_resolution:"
 if [ "$plan_count" -gt 0 ] && [ -d "$PLAN_DIR" ]; then
     has_resolution_data=false
 
-    for file in "$PLAN_DIR"/*.md; do
+    for file in "$PLAN_DIR"/*/plan.md; do
         [ -f "$file" ] || continue
 
-        name=$(basename "$file" .md)
+        name=$(basename "$(dirname "$file")")
         deps_output=$(extract_external_deps "$file")
         [ -z "$deps_output" ] && continue
 
@@ -424,9 +424,9 @@ echo "  plans_with_unresolved_deps: $plans_with_unresolved_deps"
 # Plans ready = concluded + all deps satisfied (no unresolved, all resolved tasks completed)
 plans_ready_count=0
 if [ "$plan_count" -gt 0 ] && [ -d "$PLAN_DIR" ]; then
-    for file in "$PLAN_DIR"/*.md; do
+    for file in "$PLAN_DIR"/*/plan.md; do
         [ -f "$file" ] || continue
-        name=$(basename "$file" .md)
+        name=$(basename "$(dirname "$file")")
         status=$(extract_field "$file" "status")
 
         if [ "$status" = "concluded" ]; then

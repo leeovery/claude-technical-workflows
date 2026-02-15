@@ -15,10 +15,10 @@ Source discussions:
 ...
 
 Existing specifications to incorporate:
-- docs/workflow/specification/{spec-name}.md
-- docs/workflow/specification/{spec-name}.md
+- docs/workflow/specification/{spec-name}/specification.md
+- docs/workflow/specification/{spec-name}/specification.md
 
-Output: docs/workflow/specification/unified.md
+Output: docs/workflow/specification/unified/specification.md
 
 Context: This consolidates all discussions into a single unified specification. The existing specifications should be incorporated - extract and adapt their content alongside the discussion material.
 

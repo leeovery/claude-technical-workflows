@@ -81,7 +81,7 @@ After completing your review, categorize each finding by severity:
 
 Then:
 
-1. **Create the tracking file** — Write all findings to `{topic}-review-integrity-tracking.md`
+1. **Create the tracking file** — Write all findings to `review-integrity-tracking-c{N}.md` in the plan topic directory (where N is the current review cycle)
 2. **Commit the tracking file** — Ensures it survives context refresh
 3. **Present findings** in two stages:
 
@@ -215,7 +215,7 @@ Commit the tracking file (and any plan changes) before moving on. This ensures p
 
 **If all findings are processed:**
 
-**Delete the integrity tracking file** (`{topic}-review-integrity-tracking.md`) — it has served its purpose.
+**Mark the integrity tracking file as complete** — Set `status: complete` in `review-integrity-tracking-c{N}.md`. Do not delete it; it persists as review history.
 
 Inform the user the integrity review is complete.
 

@@ -37,7 +37,7 @@ Based on the feature description, suggest a topic name for the specification fil
 ```
 Based on what you've described, I'd suggest the topic name: {suggested-topic}
 
-This will create: docs/workflow/specification/{suggested-topic}.md
+This will create: docs/workflow/specification/{suggested-topic}/specification.md
 
 Is this name okay, or would you prefer something else?
 ```
@@ -77,6 +77,6 @@ Work from the inline context provided above.
 ## Notes
 
 - The specification skill contains instructions for synthesizing the inline context, presenting it for validation, and building the specification
-- Output is a standard specification file at `docs/workflow/specification/{topic}.md`
+- Output is a standard specification file at `docs/workflow/specification/{topic}/specification.md`
 - From there, the user can proceed to `/start-planning` as normal
 - This path skips formal discussion documentation - use the full workflow for complex features that need debate captured

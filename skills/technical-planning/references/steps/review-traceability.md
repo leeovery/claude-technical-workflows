@@ -59,7 +59,7 @@ Is everything in the plan actually from the specification? This is the anti-hall
 
 After completing your review:
 
-1. **Create the tracking file** — Write all findings to `{topic}-review-traceability-tracking.md`
+1. **Create the tracking file** — Write all findings to `review-traceability-tracking-c{N}.md` in the plan topic directory (where N is the current review cycle)
 2. **Commit the tracking file** — Ensures it survives context refresh
 3. **Present findings** in two stages:
 
@@ -193,7 +193,7 @@ Commit the tracking file (and any plan changes) before moving on. This ensures p
 
 **If all findings are processed:**
 
-**Delete the traceability tracking file** (`{topic}-review-traceability-tracking.md`) — it has served its purpose.
+**Mark the traceability tracking file as complete** — Set `status: complete` in `review-traceability-tracking-c{N}.md`. Do not delete it; it persists as review history.
 
 Inform the user the traceability review is complete.
 

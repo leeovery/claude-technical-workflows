@@ -98,8 +98,8 @@ Processing skills should **never hardcode references** to specific workflow phas
 Phase-first directory structure:
 - Research: `docs/workflow/research/` (flat, semantically named files)
 - Discussion: `docs/workflow/discussion/{topic}.md`
-- Specification: `docs/workflow/specification/{topic}.md`
-- Planning: `docs/workflow/planning/{topic}.md`
+- Specification: `docs/workflow/specification/{topic}/specification.md`
+- Planning: `docs/workflow/planning/{topic}/plan.md`
 
 Commit docs frequently (natural breaks, before context refresh). Skills capture context, don't implement.
 

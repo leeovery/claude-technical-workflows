@@ -14,7 +14,7 @@ Sources:
 - docs/workflow/discussion/{discussion-name}.md
 ...
 
-Output: docs/workflow/specification/unified.md
+Output: docs/workflow/specification/unified/specification.md
 
 ---
 Invoke the technical-specification skill.

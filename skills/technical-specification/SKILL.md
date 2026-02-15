@@ -1,6 +1,6 @@
 ---
 name: technical-specification
-description: "Build validated specifications from source material through collaborative refinement. Use when: (1) User asks to create/build a specification from source material, (2) User wants to validate and refine content before planning, (3) Converting source material (discussions, research, requirements) into standalone specifications, (4) User says 'specify this' or 'create a spec', (5) Need to filter hallucinations and enrich gaps before formal planning. Creates specifications in docs/workflow/specification/{topic}.md that can be used to build implementation plans."
+description: "Build validated specifications from source material through collaborative refinement. Use when: (1) User asks to create/build a specification from source material, (2) User wants to validate and refine content before planning, (3) Converting source material (discussions, research, requirements) into standalone specifications, (4) User says 'specify this' or 'create a spec', (5) Need to filter hallucinations and enrich gaps before formal planning. Creates specifications in docs/workflow/specification/{topic}/specification.md that can be used to build implementation plans."
 user-invocable: false
 ---
 
@@ -33,7 +33,7 @@ Either way: Transform unvalidated reference material into a specification that's
   > "I need source material to build a specification from. Could you point me to the source files (e.g., `docs/workflow/discussion/{topic}.md`), or provide the content directly?"
 
 - **No topic name provided?**
-  > "What should the specification be named? This determines the output file: `docs/workflow/specification/{name}.md`."
+  > "What should the specification be named? This determines the output file: `docs/workflow/specification/{name}/specification.md`."
 
 - **Source material seems incomplete or unclear?**
   > "I have the source material, but {concern}. Should I proceed as-is, or is there additional material I should review?"
@@ -59,7 +59,7 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 **Load**: [specification-guide.md](references/specification-guide.md)
 
-**Output**: `docs/workflow/specification/{topic}.md`
+**Output**: `docs/workflow/specification/{topic}/specification.md`
 
 **When complete**: User signs off on the specification.
 

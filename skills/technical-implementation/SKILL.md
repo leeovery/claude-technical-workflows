@@ -1,6 +1,6 @@
 ---
 name: technical-implementation
-description: "Orchestrate implementation of plans using agent-based TDD workflow with per-task review and approval gate (auto mode available). Use when: (1) Implementing a plan from docs/workflow/planning/{topic}.md, (2) User says 'implement', 'build', or 'code this' with a plan available, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Dispatches executor and reviewer agents per task, commits after review approval."
+description: "Orchestrate implementation of plans using agent-based TDD workflow with per-task review and approval gate (auto mode available). Use when: (1) Implementing a plan from docs/workflow/planning/{topic}/plan.md, (2) User says 'implement', 'build', or 'code this' with a plan available, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Dispatches executor and reviewer agents per task, commits after review approval."
 user-invocable: false
 ---
 
@@ -31,7 +31,7 @@ Either way: dispatch agents per task — executor implements via TDD, reviewer v
 **Before proceeding**, verify all required inputs are available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.
 
 - **No plan provided?**
-  "I need an implementation plan to execute. Could you point me to the plan file (e.g., `docs/workflow/planning/{topic}.md`)?"
+  "I need an implementation plan to execute. Could you point me to the plan file (e.g., `docs/workflow/planning/{topic}/plan.md`)?"
 
 - **Plan has no `format` field in frontmatter?**
   "The plan at {path} doesn't specify an output format in its frontmatter. Which format does this plan use?"
@@ -103,7 +103,7 @@ Save their instructions to `docs/workflow/environment-setup.md` (or "No special 
 
 ## Step 2: Read Plan + Load Plan Adapter
 
-1. Read the plan from the provided location (typically `docs/workflow/planning/{topic}.md`)
+1. Read the plan from the provided location (typically `docs/workflow/planning/{topic}/plan.md`)
 2. Plans can be stored in various formats. The `format` field in the plan's frontmatter identifies which format this plan uses.
 3. Load the format's per-concern adapter files from `../technical-planning/references/output-formats/{format}/`:
    - **reading.md** — how to read tasks from the plan
@@ -131,7 +131,7 @@ Create `docs/workflow/implementation/{topic}/tracking.md`:
 ```yaml
 ---
 topic: {topic}
-plan: ../../planning/{topic}.md
+plan: ../../planning/{topic}/plan.md
 format: {format from plan}
 status: in-progress
 task_gate_mode: gated
@@ -278,6 +278,25 @@ Load **[steps/analysis-loop.md](references/steps/analysis-loop.md)** and follow 
 ---
 
 ## Step 8: Mark Implementation Complete
+
+Before marking complete, present the sign-off:
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+- **`y`/`yes`** — Mark implementation as completed
+- **Comment** — Add context before completing
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If comment
+
+Discuss the user's context. If additional work is needed, route back to **Step 6** or **Step 7** as appropriate. Otherwise, re-present the sign-off prompt above.
+
+#### If yes
 
 Update the tracking file (`docs/workflow/implementation/{topic}/tracking.md`):
 - Set `status: completed`
