@@ -785,11 +785,22 @@ After Phase 2 completes, check whether either phase surfaced findings in this cy
 
 #### If findings were surfaced
 
+Do not skip review autonomously — present the choice and let the user decide.
+
+> *Output the next fenced block as a code block:*
+
+```
+Review cycle {N}
+
+Review has run {N-1} times so far.
+@if(finding_gate_mode = auto and review_cycle >= 5)
+Auto-review has not converged after 5 cycles — escalating for human review.
+@endif
+```
+
 Check `finding_gate_mode` and `review_cycle` in the specification frontmatter.
 
 #### If `finding_gate_mode: auto` and `review_cycle < 5`
-
-Announce (one line, no stop):
 
 > *Output the next fenced block as a code block:*
 
@@ -801,9 +812,7 @@ Review cycle {N} complete — findings applied. Running follow-up cycle.
 
 #### If `finding_gate_mode: auto` and `review_cycle >= 5`
 
-Review has auto-cycled 5 times without converging. Escalating for human review.
-
-→ Present the gated re-loop prompt below.
+→ Present the re-loop prompt below.
 
 #### If `finding_gate_mode: gated`
 
