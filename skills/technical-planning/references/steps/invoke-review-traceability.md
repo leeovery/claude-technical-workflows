@@ -18,6 +18,7 @@ Invoke `planning-review-traceability` with:
 4. **Format reading.md path**: load **[output-formats.md](../output-formats.md)**, find the entry matching the plan's `format:` field, and pass the format's `reading.md` path
 5. **Cycle number**: current `review_cycle` from the Plan Index File frontmatter
 6. **Topic name**: from the plan's `topic` frontmatter field
+7. **Task design path**: `../task-design.md`
 
 ---
 

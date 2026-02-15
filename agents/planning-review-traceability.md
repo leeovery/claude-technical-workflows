@@ -19,6 +19,7 @@ You receive file paths and context via the orchestrator's prompt:
 4. **Format reading.md path** — the output format's reading instructions for locating task files
 5. **Cycle number** — current review cycle (for tracking file naming)
 6. **Topic name** — for file naming and paths
+7. **Task design path** — `task-design.md` with the canonical task template and field requirements
 
 ## Your Process
 
@@ -41,6 +42,8 @@ For each finding, the tracking file must contain the **exact content** that woul
 
 For `add-task` or `add-phase`, omit **Current** and write the complete new content in **Proposed**.
 For `remove-task` or `remove-phase`, include **Current** for reference and omit **Proposed**.
+
+**Task structure**: Read `task-design.md` before writing any proposed content. All task content — whether new tasks (`add-task`) or modifications to existing tasks (`update-task`, `add-to-task`) — must follow the canonical task template and field requirements defined there.
 
 **Do not write summaries or descriptions** like "add missing acceptance criteria for edge case X". Write the actual acceptance criteria as they should appear in the plan.
 
