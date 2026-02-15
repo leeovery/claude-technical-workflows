@@ -4,13 +4,7 @@
 
 ---
 
-After completing the plan, perform a comprehensive two-part review before handing off to implementation. Each review is dispatched to a sub-agent for analysis, and findings are processed interactively with the user before the next review begins.
-
-**Why sub-agents**: The main planning context has accumulated significant state from phase design, task authoring, and dependency graphing. Dispatching reviews to fresh agents ensures analysis starts from a clean context with only the inputs needed — the specification, plan, and tasks.
-
-**Why sequential**: Traceability runs first and its approved fixes are applied to the plan before integrity begins. This means the integrity review evaluates the *corrected* plan — it won't waste time flagging structural issues in content that traceability has already removed or rewritten.
-
-**Why this matters**: The plan is what gets built. If content was hallucinated into the plan, it will be implemented — building something that was never discussed or validated. If specification content was missed, it won't be built. The entire purpose of this workflow is that artifacts carry validated decisions through to implementation. The plan is the final gate before code is written.
+Two-part review dispatched to sub-agents. Traceability runs first — its approved fixes are applied before the integrity review begins, so integrity evaluates the corrected plan.
 
 ---
 
@@ -24,17 +18,15 @@ Add `review_cycle: 1` to the Plan Index File frontmatter.
 
 #### If `review_cycle` is already set
 
-This is a re-loop. Increment `review_cycle` by 1.
+Increment `review_cycle` by 1.
 
-Record the current cycle number — it is passed to both review agents for tracking file naming (`c{N}`).
+Record the current cycle number — passed to both review agents for tracking file naming (`c{N}`).
 
 → Proceed to **B. Traceability Review**.
 
 ---
 
 ## B. Traceability Review
-
-Compare the plan against the specification in both directions — checking that everything from the spec is in the plan, and everything in the plan traces back to the spec.
 
 1. Load **[invoke-review-traceability.md](invoke-review-traceability.md)** and follow its instructions to dispatch the agent.
 2. **STOP.** Do not proceed until the agent has returned its result.
@@ -46,8 +38,6 @@ Compare the plan against the specification in both directions — checking that 
 
 ## C. Plan Integrity Review
 
-Review the plan as a standalone document for structural quality, implementation readiness, and adherence to planning standards. The integrity agent reviews the plan *after* traceability fixes have been applied.
-
 1. Load **[invoke-review-integrity.md](invoke-review-integrity.md)** and follow its instructions to dispatch the agent.
 2. **STOP.** Do not proceed until the agent has returned its result.
 3. On receipt of result, load **[process-review-findings.md](process-review-findings.md)** and follow its instructions to process the findings with the user.
@@ -58,11 +48,9 @@ Review the plan as a standalone document for structural quality, implementation 
 
 ## D. Re-Loop Prompt
 
-After both reviews complete, check whether either review surfaced findings in this cycle.
-
 #### If no findings were surfaced in this cycle
 
-→ Skip the re-loop prompt and proceed directly to **E. Completion**.
+→ Proceed directly to **E. Completion**.
 
 #### If findings were surfaced
 
@@ -79,8 +67,6 @@ After both reviews complete, check whether either review surfaced findings in th
 
 #### If reanalyse
 
-Keep existing tracking files — they are cycle-numbered and persist as review history.
-
 → Return to **A. Cycle Management** to begin a fresh cycle.
 
 #### If proceed
@@ -91,18 +77,9 @@ Keep existing tracking files — they are cycle-numbered and persist as review h
 
 ## E. Completion
 
-After reviews are complete:
-
 1. **Verify tracking files are marked complete** — All traceability and integrity tracking files across all cycles must have `status: complete`
 
-2. **Final quality confirmation**:
-   - All specification content has plan coverage (Traceability)
-   - No hallucinated content remains (Traceability)
-   - All tasks follow the required template (Integrity)
-   - Dependencies are documented and ordered (Integrity)
-   - External dependencies match specification (Integrity)
-
-3. **Sign-off**:
+2. **Sign-off**:
 
 > *Output the next fenced block as markdown (not a code block):*
 
