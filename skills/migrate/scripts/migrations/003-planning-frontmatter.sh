@@ -13,7 +13,7 @@
 #
 #   **Date**: YYYY-MM-DD
 #   **Status**: Draft | Ready | In Progress | Completed
-#   **Specification**: `docs/workflow/specification/{topic}/specification.md`
+#   **Specification**: `docs/workflow/specification/{topic}.md`
 #
 # New format (all metadata in frontmatter):
 #   ---
@@ -21,7 +21,7 @@
 #   status: in-progress | concluded
 #   date: YYYY-MM-DD
 #   format: {format}         # Required - no default, MISSING if not present
-#   specification: {topic}/specification.md
+#   specification: {topic}.md
 #   plan_id: {id}            # Optional - migrated from 'epic' or 'project' fields
 #   ---
 #
@@ -137,7 +137,7 @@ for file in "$PLAN_DIR"/*.md; do
     if [ -n "$spec_raw" ]; then
         spec_value=$(basename "$spec_raw")
     else
-        spec_value="${topic_kebab}/specification.md"  # Default to topic name
+        spec_value="${topic_kebab}.md"  # Default to topic name
     fi
 
     #
