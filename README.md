@@ -79,7 +79,7 @@ Pick your entry point based on where you are:
 │ • Ideas       │   │ • Architecture│   │ • Validate    │
 │ • Market      │   │ • Decisions   │   │ • Filter      │
 │ • Viability   │   │ • Edge cases  │   │ • Enrich      │
-│               │   │ • Rationale   │   │ • Standalone   │
+│               │   │ • Rationale   │   │ • Standalone  │
 └───────────────┘   └───────────────┘   └───────────────┘
                                                 │
                                                 ▼
