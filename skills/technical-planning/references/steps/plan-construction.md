@@ -92,9 +92,13 @@ After Step A returns with an approved task table, continue to **Author Tasks for
 
 **STOP.** Wait for the user's response.
 
-**If the user wants changes:** → Go to **Step A** with this phase for revision.
+#### If the user wants changes
 
-**If confirmed:** Continue to **Author Tasks for the Phase** below.
+→ Go to **Step A** with this phase for revision.
+
+#### If confirmed
+
+→ Continue to **Author Tasks for the Phase** below.
 
 ---
 
