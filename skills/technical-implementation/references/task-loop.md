@@ -94,18 +94,21 @@ Announce the fix round (one line, no stop):
 
 #### If `fix_gate_mode: gated`, or `fix_attempts >= 3`
 
-If `fix_attempts >= 3`, the executor and reviewer have failed to converge. Prepend:
+If `fix_attempts >= 3`, the executor and reviewer have failed to converge. Prepend the convergence warning in the code block below.
 
-The executor and reviewer have not converged after {N} attempts. Escalating for human review.
+> *Output the next fenced block as a code block:*
 
-Present the reviewer's findings and fix analysis to the user:
+```
+@if(fix_attempts >= 3) The executor and reviewer have not converged after {N} attempts. Escalating for human review.
 
-**Review for Task {id}: {Task Name} — needs changes** (attempt {N})
+@endif
+Review for Task {id}: {Task Name} — needs changes (attempt {N})
 
 {ISSUES from reviewer, including FIX, ALTERNATIVE, and CONFIDENCE for each}
 
 Notes (non-blocking):
 {NOTES from reviewer}
+```
 
 > *Output the next fenced block as markdown (not a code block):*
 
