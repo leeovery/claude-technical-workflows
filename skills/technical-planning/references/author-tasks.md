@@ -25,9 +25,13 @@ Invoke `planning-task-author` with these file paths:
 
 ### Check Gate Mode
 
-The agent returns complete task detail following the task template from task-design.md.
+The agent returns complete task detail following the task template from task-design.md. What the user sees is what gets logged.
 
-Present the task detail to the user as rendered markdown (not in a code block) **exactly as it will be written** — what the user sees is what gets logged.
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+{task detail from planning-task-author agent}
+```
 
 Check `author_gate_mode` in the Plan Index File frontmatter.
 
