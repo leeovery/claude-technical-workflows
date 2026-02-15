@@ -53,8 +53,11 @@ Work through each finding **sequentially**. For each finding: present it, show t
 
 ### Present the Finding
 
-Show the finding with its full fix content, read directly from the tracking file:
+Show the finding with its full fix content, read directly from the tracking file.
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 **Finding {N} of {total}: {Brief Title}**
 
 For traceability findings:
@@ -72,10 +75,11 @@ For integrity findings:
 **Details**: {from tracking file}
 
 **Current**:
-{from tracking file — the existing plan content, rendered as markdown}
+{from tracking file — the existing plan content}
 
 **Proposed**:
-{from tracking file — the replacement content, rendered as markdown}
+{from tracking file — the replacement content}
+```
 
 ### Ask for Approval
 
