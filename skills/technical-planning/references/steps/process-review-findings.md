@@ -106,7 +106,8 @@ Incorporate feedback and re-present the proposed fix **in full**. Update the tra
 
 1. Apply the fix to the plan — use the **Proposed** content exactly as shown, using the output format adapter to determine how it's written. Do not modify content between approval and writing.
 2. Update the tracking file: set resolution to "Fixed", add any discussion notes.
-3. > *Output the next fenced block as a code block:*
+3. Commit the tracking file and any plan changes — ensures progress survives context refresh.
+4. > *Output the next fenced block as a code block:*
 
    ```
    Finding {N} of {total}: {Brief Title} — fixed.
@@ -117,7 +118,8 @@ Incorporate feedback and re-present the proposed fix **in full**. Update the tra
 #### If skipped
 
 1. Update the tracking file: set resolution to "Skipped", note the reason.
-2. > *Output the next fenced block as a code block:*
+2. Commit the tracking file — ensures progress survives context refresh.
+3. > *Output the next fenced block as a code block:*
 
    ```
    Finding {N} of {total}: {Brief Title} — skipped.

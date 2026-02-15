@@ -1,6 +1,6 @@
 # Plan Integrity Review
 
-*Reference for **[plan-review](plan-review.md)***
+*Reference for **[plan-review](steps/plan-review.md)***
 
 ---
 

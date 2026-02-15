@@ -12,7 +12,7 @@ This step invokes the `planning-review-traceability` agent (`../../../../agents/
 
 Invoke `planning-review-traceability` with:
 
-1. **Review criteria path**: `review-traceability.md` (in this directory)
+1. **Review criteria path**: `../review-traceability.md` (in the parent references directory)
 2. **Specification path**: from the plan's `specification` frontmatter field (resolved relative to the plan directory)
 3. **Plan path**: `docs/workflow/planning/{topic}/plan.md`
 4. **Format reading.md path**: load **[output-formats.md](../output-formats.md)**, find the entry matching the plan's `format:` field, and pass the format's `reading.md` path
