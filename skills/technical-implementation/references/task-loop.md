@@ -88,7 +88,11 @@ Increment `fix_attempts` in the implementation tracking file.
 
 Announce the fix round (one line, no stop):
 
-**Review for Task {id}: {Task Name} — needs changes** (attempt {N}/{max 3}, fix analysis included). Re-invoking executor.
+> *Output the next fenced block as a code block:*
+
+```
+Review for Task {id}: {Task Name} — needs changes (attempt {N}/{max 3}, fix analysis included). Re-invoking executor.
+```
 
 → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the reviewer's notes (including fix analysis).
 
@@ -138,10 +142,14 @@ After the reviewer approves a task, check the `task_gate_mode` field in the impl
 
 Present a summary and wait for user input:
 
-**Task {id}: {Task Name} — approved**
+> *Output the next fenced block as a code block:*
+
+```
+Task {id}: {Task Name} — approved
 
 Phase: {phase number} — {phase name}
 {executor's SUMMARY — brief commentary, decisions, implementation notes}
+```
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -166,7 +174,11 @@ Phase: {phase number} — {phase name}
 
 Announce the result (one line, no stop):
 
-**Task {id}: {Task Name} — approved** (phase {N}: {phase name}, {brief summary}). Committing.
+> *Output the next fenced block as a code block:*
+
+```
+Task {id}: {Task Name} — approved (phase {N}: {phase name}, {brief summary}). Committing.
+```
 
 → Proceed to **E. Update Progress and Commit**.
 
