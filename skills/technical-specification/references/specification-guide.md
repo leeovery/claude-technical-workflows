@@ -558,7 +558,13 @@ Each item should have enough context that the user understands what they're abou
 
 **Stage 2: Process One Item at a Time**
 
-For each item, present it in detail — what you found, where it came from (source reference), and what you propose to add. Show the proposed content as rendered markdown (not in a code block).
+For each item, present what you found, where it came from (source reference), and what you propose to add.
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+{proposed content for this review item}
+```
 
 Check `finding_gate_mode` in the specification frontmatter.
 
@@ -713,7 +719,13 @@ Let's work through these one at a time, starting with #1.
 
 **Stage 2: Process One Item at a Time**
 
-For each item, present it in detail — what's missing or unclear, what questions an implementer would have. Show the proposed content as rendered markdown (not in a code block).
+For each item, present what's missing or unclear, what questions an implementer would have, and what you propose to add.
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+{proposed content for this review item}
+```
 
 Check `finding_gate_mode` in the specification frontmatter.
 
