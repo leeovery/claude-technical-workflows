@@ -44,20 +44,24 @@ This makes it clear that dependencies were considered and none exist — not tha
 
 Skip the resolution and reverse check — there is nothing to resolve against. Document the dependencies as unresolved. They will be linked when other topics are planned, or via `/link-dependencies`.
 
-**STOP.** Present a summary of the dependency state: what was documented, what was resolved, what remains unresolved, and any reverse resolutions made.
+Present a summary of the dependency state: what was documented, what was resolved, what remains unresolved, and any reverse resolutions made.
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
 **To proceed:**
-- **`y`/`yes`** — Approved. I'll proceed to plan review.
+- **`y`/`yes`** — Approved.
 - **Or tell me what to change.**
 · · · · · · · · · · · ·
 ```
+
+**STOP.** Wait for the user's response.
 
 #### If the user provides feedback
 
 Incorporate feedback, re-present the updated dependency state, and ask again. Repeat until approved.
 
 #### If approved
+
+Commit: `planning({topic}): resolve external dependencies`
