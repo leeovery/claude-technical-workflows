@@ -144,8 +144,9 @@ Phase: {phase number} — {phase name}
 · · · · · · · · · · · ·
 **Options:**
 - **`y`/`yes`** — Approve, commit, continue to next task
-- **`a`/`auto`** — Approve this and all future reviewer-approved tasks automatically
-- **Comment** — Feedback the reviewer missed (triggers a fix round)
+- **`a`/`auto`** — Approve this and all future tasks automatically (skips review prompts and questions)
+- **Ask** — Ask questions about the implementation (doesn't approve or reject)
+- **Comment** — Request changes — pass feedback or commentary (triggers a fix round)
 · · · · · · · · · · · ·
 ```
 
@@ -153,7 +154,8 @@ Phase: {phase number} — {phase name}
 
 - **`y`/`yes`**: → Proceed to **E. Update Progress and Commit**.
 - **`auto`**: Note that `task_gate_mode` should be updated to `auto` during the commit step. → Proceed to **E. Update Progress and Commit**.
-- **Comment**: → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the user's notes.
+- **Ask**: Answer the user's questions about the implementation. When complete, re-present the Task Gate options above. Repeat until the user selects a terminal option (`yes`, `auto`, or Comment).
+- **Comment**: → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the user's feedback.
 
 ### If `task_gate_mode: auto`
 
