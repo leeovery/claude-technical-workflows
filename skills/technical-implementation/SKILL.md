@@ -30,14 +30,38 @@ Either way: dispatch agents per task — executor implements via TDD, reviewer v
 
 **Before proceeding**, verify all required inputs are available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.
 
-- **No plan provided?**
-  "I need an implementation plan to execute. Could you point me to the plan file (e.g., `docs/workflow/planning/{topic}/plan.md`)?"
+#### If no plan provided
 
-- **Plan has no `format` field in frontmatter?**
-  "The plan at {path} doesn't specify an output format in its frontmatter. Which format does this plan use?"
+> *Output the next fenced block as a code block:*
 
-- **Plan status is not `concluded`?**
-  "The plan at {path} has status '{status}' — it hasn't completed the review process. Should I proceed anyway, or should the plan be reviewed first?"
+```
+I need an implementation plan to execute. Could you point me to the plan file
+(e.g., docs/workflow/planning/{topic}/plan.md)?
+```
+
+**STOP.** Wait for user response.
+
+#### If plan has no `format` field in frontmatter
+
+> *Output the next fenced block as a code block:*
+
+```
+The plan at {path} doesn't specify an output format in its frontmatter.
+Which format does this plan use?
+```
+
+**STOP.** Wait for user response.
+
+#### If plan status is not `concluded`
+
+> *Output the next fenced block as a code block:*
+
+```
+The plan at {path} has status '{status}' — it hasn't completed the review
+process. Should I proceed anyway, or should the plan be reviewed first?
+```
+
+**STOP.** Wait for user response.
 
 If no specification is available, the plan becomes the sole authority for design decisions.
 

@@ -29,14 +29,39 @@ Either way: Transform unvalidated reference material into a specification that's
 
 **Before proceeding**, verify all required inputs are available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.
 
-- **No source material provided?**
-  > "I need source material to build a specification from. Could you point me to the source files (e.g., `docs/workflow/discussion/{topic}.md`), or provide the content directly?"
+#### If no source material provided
 
-- **No topic name provided?**
-  > "What should the specification be named? This determines the output file: `docs/workflow/specification/{name}/specification.md`."
+> *Output the next fenced block as a code block:*
 
-- **Source material seems incomplete or unclear?**
-  > "I have the source material, but {concern}. Should I proceed as-is, or is there additional material I should review?"
+```
+I need source material to build a specification from. Could you point me to the
+source files (e.g., docs/workflow/discussion/{topic}.md), or provide the content
+directly?
+```
+
+**STOP.** Wait for user response.
+
+#### If no topic name provided
+
+> *Output the next fenced block as a code block:*
+
+```
+What should the specification be named? This determines the output file:
+docs/workflow/specification/{name}/specification.md
+```
+
+**STOP.** Wait for user response.
+
+#### If source material seems incomplete or unclear
+
+> *Output the next fenced block as a code block:*
+
+```
+I have the source material, but {concern}. Should I proceed as-is, or is there
+additional material I should review?
+```
+
+**STOP.** Wait for user response.
 
 **Multiple sources:** When multiple sources are provided, extract exhaustively from ALL of them. Content may be scattered across sources - a decision in one may have constraints or details in another. The specification consolidates everything into a single standalone document.
 

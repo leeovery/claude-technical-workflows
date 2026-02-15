@@ -28,11 +28,29 @@ Either way: Transform specifications into actionable phases, tasks, and acceptan
 
 **Before proceeding**, verify the required input is available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.
 
-- **No specification content provided?**
-  > "I need the specification content to plan from. Could you point me to the specification file (e.g., `docs/workflow/specification/{topic}/specification.md`), or provide the content directly?"
+#### If no specification content provided
 
-- **Specification seems incomplete or not concluded?**
-  > "The specification at {path} appears to be {concern — e.g., 'still in-progress' or 'missing sections that are referenced elsewhere'}. Should I proceed with this, or is there a more complete version?"
+> *Output the next fenced block as a code block:*
+
+```
+I need the specification content to plan from. Could you point me to the
+specification file (e.g., docs/workflow/specification/{topic}/specification.md),
+or provide the content directly?
+```
+
+**STOP.** Wait for user response.
+
+#### If specification seems incomplete or not concluded
+
+> *Output the next fenced block as a code block:*
+
+```
+The specification at {path} appears to be {concern — e.g., 'still in-progress'
+or 'missing sections that are referenced elsewhere'}. Should I proceed with
+this, or is there a more complete version?
+```
+
+**STOP.** Wait for user response.
 
 ---
 
