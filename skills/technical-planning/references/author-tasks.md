@@ -1,10 +1,10 @@
 # Author Tasks
 
-*Reference for **[technical-planning](../../SKILL.md)***
+*Reference for **[technical-planning](../SKILL.md)***
 
 ---
 
-This step uses the `planning-task-author` agent (`../../../../agents/planning-task-author.md`) to write full detail for a single task. You invoke the agent, present its output, and handle the approval gate.
+This step uses the `planning-task-author` agent (`../../../agents/planning-task-author.md`) to write full detail for a single task. You invoke the agent, present its output, and handle the approval gate.
 
 ---
 
@@ -14,14 +14,14 @@ This step uses the `planning-task-author` agent (`../../../../agents/planning-ta
 
 Invoke `planning-task-author` with these file paths:
 
-1. **read-specification.md**: `../read-specification.md`
+1. **read-specification.md**: `read-specification.md`
 2. **Specification**: path from the Plan Index File's `specification:` field
 3. **Cross-cutting specs**: paths from the Plan Index File's `cross_cutting_specs:` field (if any)
-4. **task-design.md**: `../task-design.md`
+4. **task-design.md**: `task-design.md`
 5. **All approved phases**: the complete phase structure from the Plan Index File body
 6. **Task list for current phase**: the approved task table
 7. **Target task**: the task name, edge cases, and ID from the table
-8. **Output format authoring reference**: path to the format's `authoring.md` (e.g., `../output-formats/{format}/authoring.md`)
+8. **Output format authoring reference**: path to the format's `authoring.md` (e.g., `output-formats/{format}/authoring.md`)
 
 ### Present the Output
 

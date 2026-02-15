@@ -1,10 +1,10 @@
 # Invoke Executor
 
-*Reference for **[technical-implementation](../../SKILL.md)***
+*Reference for **[technical-implementation](../SKILL.md)***
 
 ---
 
-This step invokes the `implementation-task-executor` agent (`../../../../agents/implementation-task-executor.md`) to implement one task.
+This step invokes the `implementation-task-executor` agent (`../../../agents/implementation-task-executor.md`) to implement one task.
 
 ---
 
@@ -12,11 +12,11 @@ This step invokes the `implementation-task-executor` agent (`../../../../agents/
 
 **Every invocation** — initial or re-attempt — includes these file paths:
 
-1. **tdd-workflow.md**: `../tdd-workflow.md`
-2. **code-quality.md**: `../code-quality.md`
+1. **tdd-workflow.md**: `tdd-workflow.md`
+2. **code-quality.md**: `code-quality.md`
 3. **Specification path**: from the plan's frontmatter (if available)
 4. **Project skill paths**: from `project_skills` in the implementation tracking file
-5. **Task content**: normalised task content (see [task-normalisation.md](../task-normalisation.md))
+5. **Task content**: normalised task content (see [task-normalisation.md](task-normalisation.md))
 6. **Linter commands**: from `linters` in the implementation tracking file (if configured)
 
 **Re-attempts after review feedback** additionally include:

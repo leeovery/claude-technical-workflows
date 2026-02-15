@@ -207,7 +207,7 @@ Load **[planning-principles.md](references/planning-principles.md)** and follow 
 
 ## Step 3: Verify Source Material
 
-Load **[steps/verify-source-material.md](references/steps/verify-source-material.md)** and follow its instructions as written.
+Load **[verify-source-material.md](references/verify-source-material.md)** and follow its instructions as written.
 
 → Proceed to **Step 4**.
 
@@ -215,7 +215,7 @@ Load **[steps/verify-source-material.md](references/steps/verify-source-material
 
 ## Step 4: Plan Construction
 
-Load **[steps/plan-construction.md](references/steps/plan-construction.md)** and follow its instructions as written.
+Load **[plan-construction.md](references/plan-construction.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
 
@@ -223,7 +223,7 @@ Load **[steps/plan-construction.md](references/steps/plan-construction.md)** and
 
 ## Step 5: Analyze Task Graph
 
-Load **[steps/analyze-task-graph.md](references/steps/analyze-task-graph.md)** and follow its instructions as written.
+Load **[analyze-task-graph.md](references/analyze-task-graph.md)** and follow its instructions as written.
 
 → Proceed to **Step 6**.
 
@@ -231,7 +231,7 @@ Load **[steps/analyze-task-graph.md](references/steps/analyze-task-graph.md)** a
 
 ## Step 6: Resolve External Dependencies
 
-Load **[steps/resolve-dependencies.md](references/steps/resolve-dependencies.md)** and follow its instructions as written.
+Load **[resolve-dependencies.md](references/resolve-dependencies.md)** and follow its instructions as written.
 
 → Proceed to **Step 7**.
 
@@ -239,7 +239,7 @@ Load **[steps/resolve-dependencies.md](references/steps/resolve-dependencies.md)
 
 ## Step 7: Plan Review
 
-Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its instructions as written.
+Load **[plan-review.md](references/plan-review.md)** and follow its instructions as written.
 
 → Proceed to **Step 8**.
 

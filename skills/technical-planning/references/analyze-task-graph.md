@@ -1,10 +1,10 @@
 # Analyze Task Graph
 
-*Reference for **[technical-planning](../../SKILL.md)***
+*Reference for **[technical-planning](../SKILL.md)***
 
 ---
 
-This step uses the `planning-dependency-grapher` agent (`../../../../agents/planning-dependency-grapher.md`) to analyze all authored tasks, establish internal dependencies, assign priorities, and detect cycles. You invoke the agent, present its output, and handle the approval gate.
+This step uses the `planning-dependency-grapher` agent (`../../../agents/planning-dependency-grapher.md`) to analyze all authored tasks, establish internal dependencies, assign priorities, and detect cycles. You invoke the agent, present its output, and handle the approval gate.
 
 ---
 
@@ -17,7 +17,7 @@ All tasks are authored. Now I'll analyze internal dependencies and
 priorities across the full plan.
 ```
 
-Read **[output-formats.md](../output-formats.md)**, find the entry matching the `format:` field in the Plan Index File, and load the format's **[reading.md](../output-formats/{format}/reading.md)** and **[graph.md](../output-formats/{format}/graph.md)**.
+Read **[output-formats.md](output-formats.md)**, find the entry matching the `format:` field in the Plan Index File, and load the format's **[reading.md](output-formats/{format}/reading.md)** and **[graph.md](output-formats/{format}/graph.md)**.
 
 ### Invoke the Agent
 

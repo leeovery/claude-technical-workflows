@@ -284,7 +284,7 @@ Recommendations: {any suggested tools with install commands}
 
 ## Step 6: Task Loop
 
-Load **[steps/task-loop.md](references/steps/task-loop.md)** and follow its instructions as written.
+Load **[task-loop.md](references/task-loop.md)** and follow its instructions as written.
 
 After the loop completes:
 
@@ -296,7 +296,7 @@ After the loop completes:
 
 ## Step 7: Analysis Loop
 
-Load **[steps/analysis-loop.md](references/steps/analysis-loop.md)** and follow its instructions as written.
+Load **[analysis-loop.md](references/analysis-loop.md)** and follow its instructions as written.
 
 → If new tasks were created in the plan, return to **Step 6**.
 
@@ -338,13 +338,13 @@ Commit: `impl({topic}): complete implementation`
 
 - **[environment-setup.md](references/environment-setup.md)** — Environment setup before implementation
 - **[linter-setup.md](references/linter-setup.md)** — Linter discovery and configuration
-- **[steps/task-loop.md](references/steps/task-loop.md)** — Task execution loop, task gates, tracking, commits
-- **[steps/analysis-loop.md](references/steps/analysis-loop.md)** — Analysis and refinement cycle
-- **[steps/invoke-executor.md](references/steps/invoke-executor.md)** — How to invoke the executor agent
-- **[steps/invoke-reviewer.md](references/steps/invoke-reviewer.md)** — How to invoke the reviewer agent
-- **[steps/invoke-analysis.md](references/steps/invoke-analysis.md)** — How to invoke analysis agents
-- **[steps/invoke-synthesizer.md](references/steps/invoke-synthesizer.md)** — How to invoke the synthesis agent
-- **[steps/invoke-task-writer.md](references/steps/invoke-task-writer.md)** — How to invoke the task writer agent
+- **[task-loop.md](references/task-loop.md)** — Task execution loop, task gates, tracking, commits
+- **[analysis-loop.md](references/analysis-loop.md)** — Analysis and refinement cycle
+- **[invoke-executor.md](references/invoke-executor.md)** — How to invoke the executor agent
+- **[invoke-reviewer.md](references/invoke-reviewer.md)** — How to invoke the reviewer agent
+- **[invoke-analysis.md](references/invoke-analysis.md)** — How to invoke analysis agents
+- **[invoke-synthesizer.md](references/invoke-synthesizer.md)** — How to invoke the synthesis agent
+- **[invoke-task-writer.md](references/invoke-task-writer.md)** — How to invoke the task writer agent
 - **[task-normalisation.md](references/task-normalisation.md)** — Normalised task shape for agent invocation
 - **[tdd-workflow.md](references/tdd-workflow.md)** — TDD cycle (passed to executor agent)
 - **[code-quality.md](references/code-quality.md)** — Quality standards (passed to executor agent)

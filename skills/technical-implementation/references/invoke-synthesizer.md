@@ -1,6 +1,6 @@
 # Invoke Synthesizer
 
-*Reference for **[technical-implementation](../../SKILL.md)***
+*Reference for **[technical-implementation](../SKILL.md)***
 
 ---
 
@@ -10,11 +10,11 @@ This step invokes the synthesis agent to read analysis findings, deduplicate, an
 
 ## Invoke the Agent
 
-**Agent path**: `../../../../agents/implementation-analysis-synthesizer.md`
+**Agent path**: `../../../agents/implementation-analysis-synthesizer.md`
 
 Pass via the orchestrator's prompt:
 
-1. **Task normalization reference path** — `../task-normalisation.md`
+1. **Task normalization reference path** — `task-normalisation.md`
 2. **Topic name** — the implementation topic
 3. **Cycle number** — the current analysis cycle number
 4. **Specification path** — from the plan's frontmatter (if available)

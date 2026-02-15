@@ -1,10 +1,10 @@
 # Define Tasks
 
-*Reference for **[technical-planning](../../SKILL.md)***
+*Reference for **[technical-planning](../SKILL.md)***
 
 ---
 
-This step uses the `planning-task-designer` agent (`../../../../agents/planning-task-designer.md`) to design a task list for a single phase. You invoke the agent, present its output, and handle the approval gate.
+This step uses the `planning-task-designer` agent (`../../../agents/planning-task-designer.md`) to design a task list for a single phase. You invoke the agent, present its output, and handle the approval gate.
 
 ---
 
@@ -22,10 +22,10 @@ propose a task list.
 
 Invoke `planning-task-designer` with these file paths:
 
-1. **read-specification.md**: `../read-specification.md`
+1. **read-specification.md**: `read-specification.md`
 2. **Specification**: path from the Plan Index File's `specification:` field
 3. **Cross-cutting specs**: paths from the Plan Index File's `cross_cutting_specs:` field (if any)
-4. **task-design.md**: `../task-design.md`
+4. **task-design.md**: `task-design.md`
 5. **All approved phases**: the complete phase structure from the Plan Index File body
 6. **Target phase number**: the phase being broken into tasks
 

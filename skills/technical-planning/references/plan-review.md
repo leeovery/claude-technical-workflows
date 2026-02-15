@@ -1,6 +1,6 @@
 # Plan Review
 
-*Reference for **[technical-planning](../../SKILL.md)***
+*Reference for **[technical-planning](../SKILL.md)***
 
 ---
 
@@ -97,4 +97,4 @@ with fresh context — 2-3 cycles typically surface anything cascading.
 Plan review complete — {N} cycle(s), all tracking files finalised.
 ```
 
-→ Return to **[technical-planning SKILL.md](../../SKILL.md)** for **Step 8**.
+→ Return to **[technical-planning SKILL.md](../SKILL.md)** for **Step 8**.

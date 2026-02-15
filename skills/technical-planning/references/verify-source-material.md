@@ -1,6 +1,6 @@
 # Verify Source Material
 
-*Reference for **[technical-planning](../../SKILL.md)***
+*Reference for **[technical-planning](../SKILL.md)***
 
 ---
 
