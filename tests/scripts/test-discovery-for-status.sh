@@ -431,7 +431,7 @@ test_implementation_tracking() {
     echo -e "${YELLOW}Test: Implementation tracking${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system"
+    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system/tasks"
     mkdir -p "$TEST_DIR/docs/workflow/implementation/auth-system"
 
     # Create plan with tasks
@@ -445,21 +445,21 @@ format: local-markdown
 # Auth System Plan
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system/auth-system-1-1.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/tasks/auth-system-1-1.md" << 'EOF'
 ---
 task_id: auth-system-1-1
 ---
 Task 1
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system/auth-system-1-2.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/tasks/auth-system-1-2.md" << 'EOF'
 ---
 task_id: auth-system-1-2
 ---
 Task 2
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system/auth-system-1-3.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/tasks/auth-system-1-3.md" << 'EOF'
 ---
 task_id: auth-system-1-3
 ---
@@ -499,7 +499,7 @@ test_completed_implementation() {
     echo -e "${YELLOW}Test: Completed implementation${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system"
+    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system/tasks"
     mkdir -p "$TEST_DIR/docs/workflow/implementation/auth-system"
 
     cat > "$TEST_DIR/docs/workflow/planning/auth-system/plan.md" << 'EOF'
@@ -512,7 +512,7 @@ format: local-markdown
 # Auth System Plan
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system/auth-system-1-1.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/tasks/auth-system-1-1.md" << 'EOF'
 ---
 task_id: auth-system-1-1
 ---
@@ -643,7 +643,7 @@ Spec
 EOF
 
     # Plan
-    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system"
+    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system/tasks"
     cat > "$TEST_DIR/docs/workflow/planning/auth-system/plan.md" << 'EOF'
 ---
 topic: auth-system
@@ -654,13 +654,13 @@ external_dependencies: []
 ---
 Plan
 EOF
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system/auth-system-1-1.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/tasks/auth-system-1-1.md" << 'EOF'
 ---
 task_id: auth-system-1-1
 ---
 Task
 EOF
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system/auth-system-1-2.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/tasks/auth-system-1-2.md" << 'EOF'
 ---
 task_id: auth-system-1-2
 ---

@@ -28,13 +28,15 @@ No external tools required. This format uses plain markdown files stored in the 
 
 ## Output Location
 
-Tasks are stored as individual markdown files in a `{topic}/` subdirectory under the planning directory:
+Tasks are stored as individual markdown files in a `tasks/` subdirectory under the topic directory:
 
 ```
 docs/workflow/planning/{topic}/
-├── {topic}-1-1.md              # Phase 1, task 1
-├── {topic}-1-2.md              # Phase 1, task 2
-└── {topic}-2-1.md              # Phase 2, task 1
+├── plan.md                     # Plan Index File (not a task)
+└── tasks/                      # Task files
+    ├── {topic}-1-1.md          # Phase 1, task 1
+    ├── {topic}-1-2.md          # Phase 1, task 2
+    └── {topic}-2-1.md          # Phase 2, task 1
 ```
 
 Task filename = task ID for easy lookup.

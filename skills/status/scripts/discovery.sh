@@ -393,7 +393,7 @@ if [ -d "$IMPL_DIR" ] && [ -n "$(ls -A "$IMPL_DIR" 2>/dev/null)" ]; then
         if [ -f "$plan_file" ]; then
             plan_format=$(extract_field "$plan_file" "format")
             if [ "$plan_format" = "local-markdown" ] && [ -d "$PLAN_DIR/${topic}" ]; then
-                total_tasks=$(ls -1 "$PLAN_DIR/${topic}/"*.md 2>/dev/null | grep -cv '/plan\.md$' || echo 0)
+                total_tasks=$(ls -1 "$PLAN_DIR/${topic}/tasks/"*.md 2>/dev/null | wc -l | tr -d ' ')
             fi
         fi
 
