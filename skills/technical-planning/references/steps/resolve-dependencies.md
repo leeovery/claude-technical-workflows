@@ -4,11 +4,14 @@
 
 ---
 
-Orient the user:
+> *Output the next fenced block as a code block:*
 
-"All phases and tasks are written. Now I'll check for external dependencies — things this plan needs from other topics or systems."
+```
+All phases and tasks are written. Now I'll check for external
+dependencies — things this plan needs from other topics or systems.
+```
 
-After all phases are detailed and written, handle external dependencies — things this plan needs from other topics or systems.
+Handle external dependencies — things this plan needs from other topics or systems.
 
 Dependencies are stored in the plan's **frontmatter** as `external_dependencies`. See [dependencies.md](../dependencies.md) for the format and states.
 

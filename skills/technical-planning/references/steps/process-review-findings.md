@@ -8,7 +8,11 @@ Process findings from a review agent interactively with the user. The agent writ
 
 #### If STATUS is `clean`
 
-"{Review type} review complete — no findings."
+> *Output the next fenced block as a code block:*
+
+```
+{Review type} review complete — no findings.
+```
 
 → Return to **[plan-review.md](plan-review.md)** for the next phase.
 
@@ -33,7 +37,11 @@ Read the tracking file at the path returned by the agent (`TRACKING_FILE`).
 2. ...
 ```
 
-"Let's work through these one at a time, starting with #1."
+> *Output the next fenced block as a code block:*
+
+```
+Let's work through these one at a time, starting with #1.
+```
 
 → Proceed to **B. Process One Item at a Time**.
 
@@ -92,14 +100,22 @@ Incorporate feedback and re-present the proposed fix **in full**. Update the tra
 
 1. Apply the fix to the plan — use the **Proposed** content exactly as shown, using the output format adapter to determine how it's written. Do not modify content between approval and writing.
 2. Update the tracking file: set resolution to "Fixed", add any discussion notes.
-3. "Finding {N} of {total}: {Brief Title} — fixed."
+3. > *Output the next fenced block as a code block:*
+
+   ```
+   Finding {N} of {total}: {Brief Title} — fixed.
+   ```
 
 → Present the next pending finding, or proceed to **C. After All Findings Processed**.
 
 #### If skipped
 
 1. Update the tracking file: set resolution to "Skipped", note the reason.
-2. "Finding {N} of {total}: {Brief Title} — skipped."
+2. > *Output the next fenced block as a code block:*
+
+   ```
+   Finding {N} of {total}: {Brief Title} — skipped.
+   ```
 
 → Present the next pending finding, or proceed to **C. After All Findings Processed**.
 
@@ -109,6 +125,10 @@ Incorporate feedback and re-present the proposed fix **in full**. Update the tra
 
 1. **Mark the tracking file as complete** — Set `status: complete`.
 2. **Commit** the tracking file and any plan changes.
-3. "{Review type} review complete — {N} findings processed."
+3. > *Output the next fenced block as a code block:*
+
+   ```
+   {Review type} review complete — {N} findings processed.
+   ```
 
 → Return to **[plan-review.md](plan-review.md)** for the next phase.

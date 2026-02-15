@@ -14,17 +14,23 @@ Read the Plan Index File. Check if phases already exist in the body.
 
 #### If phases exist
 
-Orient the user:
+> *Output the next fenced block as a code block:*
 
-"Phase structure already exists. I'll present it for your review."
+```
+Phase structure already exists. I'll present it for your review.
+```
 
 Continue to **Review and Approve** below.
 
 #### If no phases exist
 
-Orient the user:
+> *Output the next fenced block as a code block:*
 
-"I'll delegate phase design to a specialist agent. It will read the full specification and propose a phase structure — how we break this into independently testable stages."
+```
+I'll delegate phase design to a specialist agent. It will read the full
+specification and propose a phase structure — how we break this into
+independently testable stages.
+```
 
 ### Invoke the Agent
 

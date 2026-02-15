@@ -235,10 +235,14 @@ After the review sign-off (plan-review.md Completion confirms `yes`):
 3. **Final commit** — Commit the concluded plan
 4. **Present completion summary**:
 
-"Planning is complete for **{topic}**.
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+Planning is complete for **{topic}**.
 
 The plan contains **{N} phases** with **{M} tasks** total, reviewed for traceability against the specification and structural integrity.
 
-Status has been marked as `concluded`. The plan is ready for implementation."
+Status has been marked as `concluded`. The plan is ready for implementation.
+```
 
 > **CHECKPOINT**: Do not conclude if any tasks in the Plan Index File show `status: pending`. All tasks must be `authored` before concluding.

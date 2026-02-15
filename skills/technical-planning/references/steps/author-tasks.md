@@ -65,8 +65,10 @@ Present the revised task in full. Ask the same choice again. Repeat until approv
 3. Advance the `planning:` block in frontmatter to the next pending task (or next phase if this was the last task)
 4. Commit: `planning({topic}): author task {task-id} ({task name})`
 
-Confirm:
+> *Output the next fenced block as a code block:*
 
-"Task {M} of {total}: {Task Name} — authored."
+```
+Task {M} of {total}: {Task Name} — authored.
+```
 
 → Return to **Plan Construction**.

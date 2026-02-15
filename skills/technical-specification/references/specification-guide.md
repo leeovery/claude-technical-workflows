@@ -70,19 +70,27 @@ For each topic or subtopic, perform exhaustive extraction:
 **Why this matters:** The specification is the single source of truth for planning. Planning will not reference prior source material - only this document. Missing a detail here means that detail doesn't get implemented.
 
 ### 2. Synthesize and Present
-Present your understanding to the user **in the format it would appear in the specification**. Output the content as rendered markdown (not in a code block) — the user needs to read it naturally, not inspect raw formatting:
+Present your understanding to the user **in the format it would appear in the specification**:
 
-"Here's what I understand about [topic] based on the reference material. This is exactly what I'll write into the specification:
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+Here's what I understand about [topic] based on the reference material. This is exactly what I'll write into the specification:
 
 [content as rendered markdown]
+```
 
-Then, **separately from the content above** (clear visual break), present the choices as raw markdown:
+Then, **separately from the content above** (clear visual break):
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 · · · · · · · · · · · ·
 **To proceed:**
 - **`y`/`yes`** — Approved. I'll add the above to the specification **verbatim** (exactly as shown, no modifications).
 - **Or tell me what to change.**
 · · · · · · · · · · · ·
+```
 
 Content and choices must be visually distinct (not run together).
 
@@ -528,7 +536,10 @@ After completing your review (steps 1-7):
 
 Present a numbered summary of everything you found (from your tracking file):
 
-"I've completed my final review against all source material. I found [N] items:
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+I've completed my final review against all source material. I found [N] items:
 
 1. **[Brief title]**
    [2-4 line explanation: what was missed, where it came from, what it affects]
@@ -539,7 +550,8 @@ Present a numbered summary of everything you found (from your tracking file):
 3. **[Brief title]**
    [2-4 line explanation]
 
-Let's work through these one at a time, starting with #1."
+Let's work through these one at a time, starting with #1.
+```
 
 Each item should have enough context that the user understands what they're about to discuss - not just a label, but clarity on what was missed and why it matters.
 
@@ -671,7 +683,10 @@ Follow the same two-stage presentation as Phase 1:
 
 **Stage 1: Summary**
 
-"I've completed the gap analysis of the specification. I found [N] items:
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+I've completed the gap analysis of the specification. I found [N] items:
 
 1. **[Brief title]** (Critical/Important/Minor)
    [2-4 line explanation: what the gap is, why it matters for implementation]
@@ -679,7 +694,8 @@ Follow the same two-stage presentation as Phase 1:
 2. **[Brief title]** (Critical/Important/Minor)
    [2-4 line explanation]
 
-Let's work through these one at a time, starting with #1."
+Let's work through these one at a time, starting with #1.
+```
 
 **Stage 2: Process One Item at a Time**
 
@@ -781,14 +797,18 @@ Before asking for sign-off, assess whether this is a **feature** or **cross-cutt
 
 Present your assessment to the user:
 
-"This specification appears to be a **[feature/cross-cutting]** specification.
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+This specification appears to be a **[feature/cross-cutting]** specification.
 
 [Brief rationale - e.g., "It defines a caching strategy that will inform how multiple features handle data retrieval, rather than being a standalone piece of functionality to build."]
 
 - **Feature specs** proceed to planning and implementation
 - **Cross-cutting specs** are referenced by feature plans but don't have their own implementation plan
 
-Does this assessment seem correct?"
+Does this assessment seem correct?
+```
 
 Wait for user confirmation before proceeding.
 

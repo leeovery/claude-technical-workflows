@@ -89,9 +89,12 @@ Follow them. Complete ALL steps before proceeding.
 
 #### If no setup file exists
 
-Ask:
+> *Output the next fenced block as a code block:*
 
-"No environment setup document found. Are there any setup instructions I should follow before implementing?"
+```
+No environment setup document found. Are there any setup instructions
+I should follow before implementing?
+```
 
 **STOP.** Wait for user response.
 

@@ -195,6 +195,10 @@ This is the end of this iteration.
 
 ## When All Tasks Are Complete
 
-"All tasks complete. {M} tasks implemented."
+> *Output the next fenced block as a code block:*
+
+```
+All tasks complete. {M} tasks implemented.
+```
 
 → Return to the skill for **Step 7**.

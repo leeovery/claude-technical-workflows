@@ -369,8 +369,6 @@ Environment setup file found: docs/workflow/environment-setup.md
 
 **If `setup_file_exists: false` or `requires_setup: unknown`:**
 
-Ask:
-
 > *Output the next fenced block as a code block:*
 
 ```

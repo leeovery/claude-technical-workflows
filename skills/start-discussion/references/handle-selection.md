@@ -15,6 +15,9 @@ User chose to start from research (e.g., "research 1", "1", "from research", or 
 - Control returns to the backbone
 
 **If user just said "from research" without specifying:**
+
+> *Output the next fenced block as a code block:*
+
 ```
 Which research topic would you like to discuss? (Enter a number or topic name)
 ```
@@ -30,6 +33,9 @@ User chose to continue a discussion (e.g., "continue auth-flow" or "continue dis
 - Control returns to the backbone
 
 **If user just said "continue discussion" without specifying:**
+
+> *Output the next fenced block as a code block:*
+
 ```
 Which discussion would you like to continue?
 ```
@@ -41,6 +47,8 @@ Which discussion would you like to continue?
 User wants to start a fresh discussion. Control returns to the backbone.
 
 #### If user chose "refresh"
+
+> *Output the next fenced block as a code block:*
 
 ```
 Refreshing analysis...

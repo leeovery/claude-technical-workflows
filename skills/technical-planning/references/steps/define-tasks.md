@@ -10,9 +10,13 @@ This step uses the `planning-task-designer` agent (`../../../../agents/planning-
 
 ## Design the Task List
 
-Orient the user:
+> *Output the next fenced block as a code block:*
 
-"Taking Phase {N}: {Phase Name} and breaking it into tasks. I'll delegate this to a specialist agent that will read the full specification and propose a task list."
+```
+Taking Phase {N}: {Phase Name} and breaking it into tasks. I'll delegate
+this to a specialist agent that will read the full specification and
+propose a task list.
+```
 
 ### Invoke the Agent
 
