@@ -84,22 +84,6 @@ Task {id}: {Task Name} — {blocked/failed}
 
 Increment `fix_attempts` in the implementation tracking file.
 
-#### If `fix_gate_mode: auto` and `fix_attempts < 3`
-
-Announce the fix round (one line, no stop):
-
-> *Output the next fenced block as a code block:*
-
-```
-Review for Task {id}: {Task Name} — needs changes (attempt {N}/{max 3}, fix analysis included). Re-invoking executor.
-```
-
-→ Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the reviewer's notes (including fix analysis).
-
-#### If `fix_gate_mode: gated`, or `fix_attempts >= 3`
-
-If `fix_attempts >= 3`, the executor and reviewer have failed to converge. Prepend the convergence warning in the code block below.
-
 > *Output the next fenced block as a code block:*
 
 ```
@@ -113,6 +97,12 @@ Review for Task {id}: {Task Name} — needs changes (attempt {N})
 Notes (non-blocking):
 {NOTES from reviewer}
 ```
+
+#### If `fix_gate_mode: auto` and `fix_attempts < 3`
+
+→ Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the reviewer's notes (including fix analysis).
+
+#### If `fix_gate_mode: gated`, or `fix_attempts >= 3`
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -138,11 +128,7 @@ Notes (non-blocking):
 
 ## D. Task Gate
 
-After the reviewer approves a task, check the `task_gate_mode` field in the implementation tracking file.
-
-### If `task_gate_mode: gated`
-
-Present a summary and wait for user input:
+After the reviewer approves a task, present the result:
 
 > *Output the next fenced block as a code block:*
 
@@ -152,6 +138,14 @@ Task {id}: {Task Name} — approved
 Phase: {phase number} — {phase name}
 {executor's SUMMARY — brief commentary, decisions, implementation notes}
 ```
+
+Check the `task_gate_mode` field in the implementation tracking file.
+
+#### If `task_gate_mode: auto`
+
+→ Proceed to **E. Update Progress and Commit**.
+
+#### If `task_gate_mode: gated`
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -171,18 +165,6 @@ Phase: {phase number} — {phase name}
 - **`auto`**: Note that `task_gate_mode` should be updated to `auto` during the commit step. → Proceed to **E. Update Progress and Commit**.
 - **Ask**: Answer the user's questions about the implementation. When complete, re-present the Task Gate options above. Repeat until the user selects a terminal option (`yes`, `auto`, or Comment).
 - **Comment**: → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the user's feedback.
-
-### If `task_gate_mode: auto`
-
-Announce the result (one line, no stop):
-
-> *Output the next fenced block as a code block:*
-
-```
-Task {id}: {Task Name} — approved (phase {N}: {phase name}, {brief summary}). Committing.
-```
-
-→ Proceed to **E. Update Progress and Commit**.
 
 ---
 

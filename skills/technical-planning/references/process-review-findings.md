@@ -51,9 +51,9 @@ Let's work through these one at a time, starting with #1.
 
 ## B. Process One Item at a Time
 
-Work through each finding **sequentially**. For each finding: present it, show the proposed fix, wait for approval, then apply or skip.
+Work through each finding **sequentially**. For each finding: present it, show the proposed fix, then route through the gate.
 
-### Present the Finding
+### Present Finding
 
 Show the finding with its full fix content, read directly from the tracking file.
 
@@ -83,7 +83,25 @@ Show the finding with its full fix content, read directly from the tracking file
 {from tracking file — the replacement content}
 ```
 
-### Ask for Approval
+### Check Gate Mode
+
+Check `finding_gate_mode` in the Plan Index File frontmatter.
+
+#### If `finding_gate_mode: auto`
+
+1. Apply the fix to the plan (use **Proposed** content exactly as in tracking file)
+2. Update the tracking file: set resolution to "Fixed"
+3. Commit the tracking file and plan changes
+
+> *Output the next fenced block as a code block:*
+
+```
+Finding {N} of {total}: {Brief Title} — approved. Applied to plan.
+```
+
+→ Present the next pending finding, or proceed to **C. After All Findings Processed**.
+
+#### If `finding_gate_mode: gated`
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -91,6 +109,7 @@ Show the finding with its full fix content, read directly from the tracking file
 · · · · · · · · · · · ·
 **Finding {N} of {total}: {Brief Title}**
 - **`y`/`yes`** — Approved. Apply to the plan verbatim.
+- **`a`/`auto`** — Approve this and all remaining findings automatically
 - **`s`/`skip`** — Leave as-is, move to next finding.
 - **Or provide feedback** to adjust the fix.
 · · · · · · · · · · · ·
@@ -114,6 +133,16 @@ Incorporate feedback and re-present the proposed fix **in full**. Update the tra
    ```
 
 → Present the next pending finding, or proceed to **C. After All Findings Processed**.
+
+#### If `auto`
+
+1. Apply the fix (same as "If approved" above)
+2. Update the tracking file: set resolution to "Fixed"
+3. Update `finding_gate_mode: auto` in the Plan Index File frontmatter
+4. Commit
+5. Process all remaining findings using the auto-mode flow above
+
+→ After all processed, proceed to **C. After All Findings Processed**.
 
 #### If skipped
 

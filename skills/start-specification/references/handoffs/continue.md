@@ -4,6 +4,8 @@
 
 ---
 
+Before invoking the skill, reset `finding_gate_mode` to `gated` in the specification frontmatter if present. Commit if changed: `spec({topic}): reset gate mode`
+
 This skill's purpose is now fulfilled. Invoke the [technical-specification](../../../technical-specification/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded — it contains the instructions for how to proceed.
 
 ```

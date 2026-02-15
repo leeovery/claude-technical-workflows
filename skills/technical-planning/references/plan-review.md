@@ -54,6 +54,28 @@ Record the current cycle number — passed to both review agents for tracking fi
 
 #### If findings were surfaced
 
+Check `finding_gate_mode` and `review_cycle` in the Plan Index File frontmatter.
+
+#### If `finding_gate_mode: auto` and `review_cycle < 5`
+
+Announce (one line, no stop):
+
+> *Output the next fenced block as a code block:*
+
+```
+Review cycle {N} complete — findings applied. Running follow-up cycle.
+```
+
+→ Return to **A. Cycle Management**.
+
+#### If `finding_gate_mode: auto` and `review_cycle >= 5`
+
+Review has auto-cycled 5 times without converging. Escalating for human review.
+
+→ Present the gated re-loop prompt below.
+
+#### If `finding_gate_mode: gated`
+
 > *Output the next fenced block as a code block:*
 
 ```

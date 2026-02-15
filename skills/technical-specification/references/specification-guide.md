@@ -159,6 +159,7 @@ status: in-progress
 type: feature
 date: YYYY-MM-DD  # Use today's actual date
 review_cycle: 0
+finding_gate_mode: gated
 sources:
   - name: discussion-one
     status: incorporated
@@ -557,15 +558,32 @@ Each item should have enough context that the user understands what they're abou
 
 **Stage 2: Process One Item at a Time**
 
-For each item, follow the **same workflow as the main specification process**:
+For each item, present what you found, where it came from (source reference), and what you propose to add.
 
-1. **Present** the item in detail - what you found, where it came from (source reference), and what you propose to add
-2. **Discuss** if needed - clarify ambiguities, answer questions, refine the content
-3. **Present for approval** - show as rendered markdown (not a code block) exactly what will be written to the specification. Then, separately, show the choices:
+> *Output the next fenced block as markdown (not a code block):*
 
-   "Here's what I'll add to the specification:
+```
+{proposed content for this review item}
+```
 
-   [content as rendered markdown]
+Check `finding_gate_mode` in the specification frontmatter.
+
+#### If `finding_gate_mode: auto`
+
+Auto-approve: log verbatim, update tracking file (Resolution: Approved), commit.
+
+> *Output the next fenced block as a code block:*
+
+```
+Item {N} of {total}: {Brief Title} — approved. Added to specification.
+```
+
+→ Proceed to the next item. After all items processed, continue to **Completing Phase 1**.
+
+#### If `finding_gate_mode: gated`
+
+1. **Discuss** if needed - clarify ambiguities, answer questions, refine the content
+2. **Present for approval** - show as rendered markdown (not a code block) exactly what will be written to the specification. Then, separately, show the choices:
 
    > *Output the next fenced block as markdown (not a code block):*
 
@@ -573,18 +591,20 @@ For each item, follow the **same workflow as the main specification process**:
    · · · · · · · · · · · ·
    **To proceed:**
    - **`y`/`yes`** — Approved. I'll add the above to the specification **verbatim**.
+   - **`a`/`auto`** — Approve this and all remaining findings automatically
    - **Or tell me what to change.**
    · · · · · · · · · · · ·
    ```
 
    Content and choices must be visually distinct.
 
-4. **Wait for explicit approval** - same rules as always: `y`/`yes` or equivalent before writing
-5. **Log verbatim** when approved
-6. **Update tracking file** - Mark the item's resolution (Approved/Adjusted/Skipped) and add any notes
+3. **Wait for explicit approval** - same rules as always: `y`/`yes` or equivalent before writing
+4. **Log verbatim** when approved
+5. **Update tracking file** - Mark the item's resolution (Approved/Adjusted/Skipped) and add any notes
+6. **If user chose `auto`**: update `finding_gate_mode: auto` in the spec frontmatter, then process all remaining items using the auto-mode flow above → After all processed, continue to **Completing Phase 1**.
 7. **Move to the next item**: "Moving to #2: [Brief title]..."
 
-> **CHECKPOINT**: Each review item requires the full present → approve → log cycle. Do not batch multiple items together. Do not proceed to the next item until the current one is resolved (approved, adjusted, or explicitly skipped by the user).
+> **CHECKPOINT**: Each review item requires the full present → approve → log cycle (unless `finding_gate_mode: auto`). Do not batch multiple items together. Do not proceed to the next item until the current one is resolved (approved, adjusted, or explicitly skipped by the user).
 
 For potential gaps (items not in source material), you're asking questions rather than proposing content. If the user wants to address a gap, discuss it, then present what you'd add for approval.
 
@@ -699,15 +719,32 @@ Let's work through these one at a time, starting with #1.
 
 **Stage 2: Process One Item at a Time**
 
-For each item:
+For each item, present what's missing or unclear, what questions an implementer would have, and what you propose to add.
 
-1. **Present** the gap in detail - what's missing or unclear, what questions an implementer would have
-2. **Discuss** - work with the user to determine the correct specification content
-3. **Present for approval** - show as rendered markdown (not a code block) exactly what will be written. Then, separately, show the choices:
+> *Output the next fenced block as markdown (not a code block):*
 
-   "Here's what I'll add to the specification:
+```
+{proposed content for this review item}
+```
 
-   [content as rendered markdown]
+Check `finding_gate_mode` in the specification frontmatter.
+
+#### If `finding_gate_mode: auto`
+
+Auto-approve: log verbatim, update tracking file (Resolution: Approved), commit.
+
+> *Output the next fenced block as a code block:*
+
+```
+Item {N} of {total}: {Brief Title} — approved. Added to specification.
+```
+
+→ Proceed to the next item. After all items processed, continue to **Completing Phase 2**.
+
+#### If `finding_gate_mode: gated`
+
+1. **Discuss** - work with the user to determine the correct specification content
+2. **Present for approval** - show as rendered markdown (not a code block) exactly what will be written. Then, separately, show the choices:
 
    > *Output the next fenced block as markdown (not a code block):*
 
@@ -715,18 +752,20 @@ For each item:
    · · · · · · · · · · · ·
    **To proceed:**
    - **`y`/`yes`** — Approved. I'll add the above to the specification **verbatim**.
+   - **`a`/`auto`** — Approve this and all remaining findings automatically
    - **Or tell me what to change.**
    · · · · · · · · · · · ·
    ```
 
    Content and choices must be visually distinct.
 
-4. **Wait for explicit approval**
-5. **Log verbatim** when approved
-6. **Update tracking file** - Mark resolution and add notes
+3. **Wait for explicit approval**
+4. **Log verbatim** when approved
+5. **Update tracking file** - Mark resolution and add notes
+6. **If user chose `auto`**: update `finding_gate_mode: auto` in the spec frontmatter, then process all remaining items using the auto-mode flow above → After all processed, continue to **Completing Phase 2**.
 7. **Move to next item**
 
-> **CHECKPOINT**: Same rules apply - each item requires explicit approval before logging. No batching.
+> **CHECKPOINT**: Same rules apply - each item requires explicit approval before logging (unless `finding_gate_mode: auto`). No batching.
 
 #### What You're NOT Doing in Phase 2
 
@@ -757,6 +796,37 @@ After Phase 2 completes, check whether either phase surfaced findings in this cy
 → Skip the re-loop prompt and proceed directly to **Completion** (nothing to re-analyse).
 
 #### If findings were surfaced
+
+Do not skip review autonomously — present the choice and let the user decide.
+
+> *Output the next fenced block as a code block:*
+
+```
+Review cycle {N}
+
+Review has run {N-1} times so far.
+@if(finding_gate_mode = auto and review_cycle >= 5)
+Auto-review has not converged after 5 cycles — escalating for human review.
+@endif
+```
+
+Check `finding_gate_mode` and `review_cycle` in the specification frontmatter.
+
+#### If `finding_gate_mode: auto` and `review_cycle < 5`
+
+> *Output the next fenced block as a code block:*
+
+```
+Review cycle {N} complete — findings applied. Running follow-up cycle.
+```
+
+→ Return to the **Review Cycle Gate**.
+
+#### If `finding_gate_mode: auto` and `review_cycle >= 5`
+
+→ Present the re-loop prompt below.
+
+#### If `finding_gate_mode: gated`
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -857,6 +927,7 @@ status: concluded
 type: feature  # or cross-cutting
 date: YYYY-MM-DD  # Use today's actual date
 review_cycle: {N}
+finding_gate_mode: gated
 ---
 ```
 

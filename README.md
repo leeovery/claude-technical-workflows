@@ -52,33 +52,76 @@ See [Installation](#installation) for details.
 
 ## How do I use it?
 
-### Two Ways to Use the Skills
+### Where to Start
 
-**1. Full Workflow** - Sequential phases that build on each other:
+Pick your entry point based on where you are:
+
+- **Seeds of an idea?** → Start with `/start-research` *(recommended)*
+  You have a rough idea but haven't explored feasibility, alternatives, or scope yet. Research lets you think freely before committing to anything.
+
+- **Know what you're building?** → Start with `/start-discussion`
+  You've moved past exploration and want to capture architecture decisions, edge cases, and rationale for specific topics.
+
+- **Clear feature, ready to spec?** → Use `/start-feature`
+  You already know the what and why. Jump straight to building a specification from inline context — no prior documents needed.
+
+**Why research is the recommended default:** When you move from research to discussion, the skill analyses your research document and automatically breaks it into focused discussion topics. Skip research and you manage topic structure yourself. That automatic topic breakdown is one of the highest-value transitions in the workflow.
+
+### The Workflow
 
 ```
-Research → Discussion → Specification → Planning → Implementation → Review
+┌───────────────┐   ┌───────────────┐   ┌───────────────┐
+│   Research    │──▶│  Discussion   │──▶│ Specification │
+│   (Phase 1)   │   │   (Phase 2)   │   │   (Phase 3)   │
+├───────────────┤   ├───────────────┤   ├───────────────┤
+│ EXPLORING     │   │ WHAT & WHY    │   │ REFINING      │
+│               │   │               │   │               │
+│ • Ideas       │   │ • Architecture│   │ • Validate    │
+│ • Market      │   │ • Decisions   │   │ • Filter      │
+│ • Viability   │   │ • Edge cases  │   │ • Enrich      │
+│               │   │ • Rationale   │   │ • Standalone  │
+└───────────────┘   └───────────────┘   └───────────────┘
+                                                │
+                                                ▼
+┌───────────────┐   ┌───────────────┐   ┌───────────────┐
+│    Review     │◀──│Implementation │◀──│   Planning    │
+│   (Phase 6)   │   │   (Phase 5)   │   │   (Phase 4)   │
+├───────────────┤   ├───────────────┤   ├───────────────┤
+│ VALIDATING    │   │ DOING         │   │ HOW           │
+│               │   │               │   │               │
+│ • Plan check  │   │ • Tests first │   │ • Phases      │
+│ • Specs check │   │ • Then code   │   │ • Tasks       │
+│ • Test quality│   │ • Commit often│   │ • Criteria    │
+│ • Code quality│   │ • Task gates  │   │ • Outputs     │
+└───────────────┘   └───────────────┘   └───────────────┘
 ```
 
-Start with `/start-research` or `/start-discussion` and follow the flow. Each phase outputs files that the next phase consumes.
+Each phase produces documents that feed the next. Here's the journey:
 
-**2. Standalone Skills** - Jump directly to a processing skill with flexible inputs:
+**Research** — Free-form exploration. Investigate ideas, market fit, technical feasibility, business viability. The output is a research document capturing everything you've explored. The key benefit: when you move to discussion, the skill analyses this document and breaks it into focused topics automatically.
+
+**Discussion** — Per-topic deep dives into architecture, edge cases, competing approaches, and rationale. Each topic gets its own document. This captures not just decisions, but *why* you made them — the alternatives considered, the trade-offs weighed, the journey to the decision. Conclude each topic when its decisions are made.
+
+**Specification** — This is where the magic happens. The skill analyses *all* your discussions and creates intelligent groupings — 10 discussions might become 3–5 specifications, or you can unify everything into one. It filters hallucinations, enriches gaps, and validates decisions against each other. The spec becomes the golden document: planning only references this, not earlier phases.
+
+**Planning** — Converts each specification into phased implementation plans with tasks, acceptance criteria, and dependency ordering. Supports multiple output formats. Task authoring has per-item approval gates (with auto-mode for faster flow).
+
+**Implementation** — Executes plans via strict TDD. Tests first, then code, commit after each task. Per-task approval gates keep you in control, with auto-mode available when you trust the flow.
+
+**Review** — Validates the implementation against spec and plan. Catches drift, missing requirements, and quality issues. The spec is the source of truth here — earlier phases may contain rejected ideas that were intentionally filtered out. Produces structured feedback without fixing code directly.
+
+### Standalone Skills
+
+Not every task needs the full workflow. These skills gather inputs flexibly and invoke processing skills directly:
 
 | Skill | What it does |
 |-------|-------------|
 | `/start-feature` | Create a spec directly from inline context (skip research/discussion) |
+| `/link-dependencies` | Wire cross-topic dependencies across plans |
 
-*More standalone skills coming soon.*
+### Under the Hood
 
-### The Two-Tier Skill Architecture
-
-**Processing skills** (`technical-*`) are input-agnostic. They don't know or care where their inputs came from: a discussion document, inline context, or external sources. They just process what they receive.
-
-**Entry-point skills** (`/start-*`, `/status`, etc.) are the input layer. They gather context (from files, prompts, or inline) and pass it to processing skills. This separation means:
-
-- The same processing skill can be invoked from different entry points
-- You can create custom entry-point skills that feed processing skills in new ways
-- Processing skills remain reusable without coupling to specific workflows
+Skills are organised in two tiers. **Entry-point skills** (`/start-*`, `/status`, etc.) gather context from files, prompts, or inline input. **Processing skills** (`technical-*`) receive those inputs and do the work — they don't know or care where inputs came from. This means the same processing skill can be invoked from different entry points, and you can create custom entry-point skills that feed them in new ways.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -148,49 +191,6 @@ Due to bugs in npm 7+ ([issue #3042](https://github.com/npm/cli/issues/3042)) an
 npx claude-manager remove @leeovery/claude-technical-workflows && npm rm @leeovery/claude-technical-workflows
 ```
 </details>
-
-## The Six-Phase Workflow
-
-When using the full workflow, it progresses through six distinct phases:
-
-```
-┌───────────────┐   ┌───────────────┐   ┌───────────────┐
-│   Research    │──▶│  Discussion   │──▶│ Specification │
-│   (Phase 1)   │   │   (Phase 2)   │   │   (Phase 3)   │
-├───────────────┤   ├───────────────┤   ├───────────────┤
-│ EXPLORING     │   │ WHAT & WHY    │   │ REFINING      │
-│               │   │               │   │               │
-│ • Ideas       │   │ • Architecture│   │ • Validate    │
-│ • Market      │   │ • Decisions   │   │ • Filter      │
-│ • Viability   │   │ • Edge cases  │   │ • Enrich      │
-│               │   │ • Rationale   │   │ • Standalone  │
-└───────────────┘   └───────────────┘   └───────────────┘
-                                                │
-                                                ▼
-┌───────────────┐   ┌───────────────┐   ┌───────────────┐
-│    Review     │◀──│Implementation │◀──│   Planning    │
-│   (Phase 6)   │   │   (Phase 5)   │   │   (Phase 4)   │
-├───────────────┤   ├───────────────┤   ├───────────────┤
-│ VALIDATING    │   │ DOING         │   │ HOW           │
-│               │   │               │   │               │
-│ • Plan check  │   │ • Tests first │   │ • Phases      │
-│ • Specs check │   │ • Then code   │   │ • Tasks       │
-│ • Test quality│   │ • Commit often│   │ • Criteria    │
-│ • Code quality│   │ • Task gates  │   │ • Outputs     │
-└───────────────┘   └───────────────┘   └───────────────┘
-```
-
-**Phase 1 - Research:** Explore ideas from their earliest seed. Investigate market fit, technical feasibility, business viability. Free-flowing exploration that may or may not lead to building something.
-
-**Phase 2 - Discussion:** Captures the back-and-forth exploration of a problem. Documents competing solutions, why certain approaches won or lost, edge cases discovered, and the journey to decisions, not just the decisions themselves.
-
-**Phase 3 - Specification:** Transforms discussion(s) into validated, standalone specifications. Automatically analyses multiple discussions for natural groupings, filters hallucinations and inaccuracies, enriches gaps, and builds documents that planning can execute against without referencing other sources.
-
-**Phase 4 - Planning:** Converts specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (local markdown, Linear).
-
-**Phase 5 - Implementation:** Executes the plan using strict TDD. Writes tests first, implements to pass, commits frequently, with per-task approval gates (auto mode available).
-
-**Phase 6 - Review:** Validates completed work against specification requirements and plan acceptance criteria. The specification is the validated source of truth; earlier phases may contain rejected ideas that were intentionally filtered out. Provides structured feedback without fixing code directly.
 
 ## Project Structure
 
