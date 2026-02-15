@@ -62,6 +62,7 @@ Context refresh (compaction) summarizes the conversation, losing procedural deta
 2. **Read all tracking and state files** for the current topic — plan index files, review tracking files, implementation tracking files, or any working documents this skill creates. These are your source of truth for progress.
 3. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
+5. **Check `author_gate_mode` and `finding_gate_mode`** in the Plan Index File frontmatter — if `auto`, the user previously opted in during this session. Preserve these values.
 
 Do not guess at progress or continue from memory. The files on disk and git history are authoritative — your recollection is not.
 
@@ -116,6 +117,8 @@ Found existing plan for **{topic}** (previously reached phase {N}, task {M}).
 #### If `continue`
 
 If the specification changed, update `spec_commit` in the Plan Index File frontmatter to the current commit hash.
+
+Reset `author_gate_mode` and `finding_gate_mode` to `gated` in the Plan Index File frontmatter (fresh invocation = fresh gates).
 
 → Proceed to **Step 1**.
 
@@ -183,6 +186,8 @@ spec_commit: {output of git rev-parse HEAD}
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date
 external_dependencies: []
+author_gate_mode: gated
+finding_gate_mode: gated
 planning:
   phase: 1
   task: ~
