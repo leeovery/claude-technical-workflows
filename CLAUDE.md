@@ -460,6 +460,35 @@ Entry-point skills that invoke processing skills use this exact blockquote to pr
 > **⚠️ ZERO OUTPUT RULE**: Do not narrate your processing. Produce no output until a step or reference file explicitly specifies display content. No "proceeding with...", no discovery summaries, no routing decisions, no transition text. Your first output must be content explicitly called for by the instructions.
 ```
 
+### Auto-Mode Gates
+
+Per-item approval gates can offer `a`/`auto` to let the user bypass repeated STOP gates. This pattern is used in implementation (task + fix gates), planning (task authoring + review findings), and specification (review findings).
+
+**Frontmatter tracking**: Gate modes are stored in the relevant frontmatter file (`gated` or `auto`). This ensures they survive context refresh.
+
+**Behavior when `auto`**: Present the same content as gated mode (so the user can monitor), then proceed without a STOP gate. Use a rendering instruction + code block for the one-line announcement:
+
+```
+> *Output the next fenced block as a code block:*
+
+\```
+Task {M} of {total}: {Task Name} — authored. Logging to plan.
+\```
+```
+
+**Lifecycle**:
+- Default: `gated` (set in frontmatter template on creation)
+- Opt-in: user chooses `a`/`auto` at any per-item gate → frontmatter updated before next commit
+- Reset: entry-point skills reset gates to `gated` on fresh invocation (not on `continue`)
+- Context refresh: read gate modes from frontmatter and preserve
+
+**Menu option format**: Add between the primary action and secondary options:
+```
+- **`a`/`auto`** — Approve this and all remaining {items} automatically
+```
+
+**Re-loop safety cap**: When auto-mode enables automatic re-analysis loops, cap at 5 cycles before escalating to the user. This prevents infinite cascading.
+
 ### Rendering Instructions for Ask Blocks
 
 When a step asks the user a question, wrap it in a rendering instruction and code block — don't use bare `Ask:` labels:

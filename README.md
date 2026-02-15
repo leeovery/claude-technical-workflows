@@ -184,9 +184,9 @@ When using the full workflow, it progresses through six distinct phases:
 
 **Phase 2 - Discussion:** Captures the back-and-forth exploration of a problem. Documents competing solutions, why certain approaches won or lost, edge cases discovered, and the journey to decisions, not just the decisions themselves.
 
-**Phase 3 - Specification:** Transforms discussion(s) into validated, standalone specifications. Automatically analyses multiple discussions for natural groupings, filters hallucinations and inaccuracies, enriches gaps, and builds documents that planning can execute against without referencing other sources.
+**Phase 3 - Specification:** Transforms discussion(s) into validated, standalone specifications. Automatically analyses multiple discussions for natural groupings, filters hallucinations and inaccuracies, enriches gaps, and builds documents that planning can execute against without referencing other sources. Review findings have per-item approval gates (auto mode available).
 
-**Phase 4 - Planning:** Converts specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (local markdown, Linear).
+**Phase 4 - Planning:** Converts specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (local markdown, Linear). Task authoring and review findings have per-item approval gates (auto mode available).
 
 **Phase 5 - Implementation:** Executes the plan using strict TDD. Writes tests first, implements to pass, commits frequently, with per-task approval gates (auto mode available).
 
