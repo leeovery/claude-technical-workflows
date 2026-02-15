@@ -4,56 +4,29 @@
 
 ---
 
-After completing the plan, perform a comprehensive two-part review before handing off to implementation.
+After completing the plan, perform a comprehensive two-part review before handing off to implementation. Each review is dispatched to a sub-agent for analysis, and findings are processed interactively.
+
+**Why sub-agents**: The main planning context has accumulated significant state from phase design, task authoring, and dependency graphing. Dispatching reviews to fresh agents ensures analysis starts from a clean context with only the inputs needed — the specification, plan, and tasks.
 
 **Why this matters**: The plan is what gets built. If content was hallucinated into the plan, it will be implemented — building something that was never discussed or validated. If specification content was missed, it won't be built. The entire purpose of this workflow is that artifacts carry validated decisions through to implementation. The plan is the final gate before code is written.
 
-## A. Review Tracking Files
-
-To ensure analysis isn't lost during context refresh, create tracking files that capture findings. These files persist analysis so work can continue across sessions.
-
-**Location**: Store tracking files in the plan topic directory (`docs/workflow/planning/{topic}/`), cycle-numbered:
-- `review-traceability-tracking-c{N}.md` — Traceability findings for cycle N
-- `review-integrity-tracking-c{N}.md` — Integrity findings for cycle N
-
-Tracking files are **never deleted**. After all findings are processed, mark `status: complete`. Previous cycles' files persist as review history.
-
-**Format**:
-```markdown
----
-status: in-progress | complete
-created: YYYY-MM-DD  # Use today's actual date
-cycle: {N}
-phase: Traceability Review | Plan Integrity Review
-topic: [Topic Name]
 ---
 
-# Review Tracking: [Topic Name] - [Phase]
+## A. Cycle Management
 
-## Findings
+Check the `review_cycle` field in the Plan Index File frontmatter.
 
-### 1. [Brief Title]
+#### If `review_cycle` is missing or not set
 
-**Type**: Missing from plan | Hallucinated content | Incomplete coverage | Structural issue | Weak criteria | ...
-**Spec Reference**: [Section/decision in specification, or "N/A" for integrity findings]
-**Plan Reference**: [Phase/task in plan, or "N/A" for missing content]
+Add `review_cycle: 1` to the Plan Index File frontmatter.
 
-**Details**:
-[What was found and why it matters]
+#### If `review_cycle` is already set
 
-**Proposed Fix**:
-[What should change in the plan — leave blank until discussed]
+This is a re-loop. Increment `review_cycle` by 1.
 
-**Resolution**: Pending | Fixed | Adjusted | Skipped
-**Notes**: [Discussion notes or adjustments]
+Record the current cycle number — it is passed to both review agents for tracking file naming (`c{N}`).
 
----
-
-### 2. [Next Finding]
-...
-```
-
-**Why tracking files**: If context refreshes mid-review, you can read the tracking file and continue where you left off. The tracking file shows which items are resolved and which remain.
+→ Proceed to **B. Traceability Review**.
 
 ---
 
@@ -61,7 +34,11 @@ topic: [Topic Name]
 
 Compare the plan against the specification in both directions — checking that everything from the spec is in the plan, and everything in the plan traces back to the spec.
 
-Load **[review-traceability.md](review-traceability.md)** and follow its instructions as written.
+1. Load **[invoke-review-traceability.md](invoke-review-traceability.md)** and follow its instructions to dispatch the agent.
+2. **STOP.** Do not proceed until the agent has returned its result.
+3. On receipt of result, load **[process-review-findings.md](process-review-findings.md)** and follow its instructions to process the findings with the user.
+
+→ Proceed to **C. Plan Integrity Review**.
 
 ---
 
@@ -69,7 +46,11 @@ Load **[review-traceability.md](review-traceability.md)** and follow its instruc
 
 Review the plan as a standalone document for structural quality, implementation readiness, and adherence to planning standards.
 
-Load **[review-integrity.md](review-integrity.md)** and follow its instructions as written.
+1. Load **[invoke-review-integrity.md](invoke-review-integrity.md)** and follow its instructions to dispatch the agent.
+2. **STOP.** Do not proceed until the agent has returned its result.
+3. On receipt of result, load **[process-review-findings.md](process-review-findings.md)** and follow its instructions to process the findings with the user.
+
+→ Proceed to **D. Re-Loop Prompt**.
 
 ---
 
@@ -98,7 +79,7 @@ After both reviews complete, check whether either review surfaced findings in th
 
 Keep existing tracking files — they are cycle-numbered and persist as review history.
 
-→ Return to **B. Traceability Review** to begin a fresh cycle.
+→ Return to **A. Cycle Management** to begin a fresh cycle.
 
 #### If proceed
 

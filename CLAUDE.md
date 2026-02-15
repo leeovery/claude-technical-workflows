@@ -62,6 +62,8 @@ agents/
   planning-task-designer.md        # Break phases into task lists
   planning-task-author.md          # Write full task detail
   planning-dependency-grapher.md   # Analyze task dependencies and priorities
+  planning-review-traceability.md  # Spec-to-plan traceability analysis
+  planning-review-integrity.md     # Plan structural quality review
 
 tests/
   scripts/                   # Shell script tests for discovery and migrations
