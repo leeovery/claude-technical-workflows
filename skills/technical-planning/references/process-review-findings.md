@@ -61,10 +61,11 @@ Check `finding_gate_mode` in the Plan Index File frontmatter.
 
 Process all remaining findings automatically. For each finding:
 
-1. Apply the fix to the plan (use **Proposed** content exactly as in tracking file)
-2. Update the tracking file: set resolution to "Fixed"
-3. Commit the tracking file and plan changes
-4. Announce (one line, no stop):
+1. Present the finding (same display as gated mode — show full fix content with Current/Proposed so the user can monitor)
+2. Apply the fix to the plan (use **Proposed** content exactly as in tracking file)
+3. Update the tracking file: set resolution to "Fixed"
+4. Commit the tracking file and plan changes
+5. Announce (one line, no stop):
 
    > *Output the next fenced block as a code block:*
 

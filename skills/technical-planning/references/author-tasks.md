@@ -31,7 +31,9 @@ Check `author_gate_mode` in the Plan Index File frontmatter.
 
 #### If `author_gate_mode: auto`
 
-Announce (one line, no stop):
+Present the task detail to the user as rendered markdown (not in a code block) — same content as gated mode, so the user can monitor output as it flows.
+
+Then announce (one line, no stop):
 
 > *Output the next fenced block as a code block:*
 

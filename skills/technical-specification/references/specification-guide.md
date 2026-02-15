@@ -562,7 +562,9 @@ For each item, check `finding_gate_mode` in the specification frontmatter.
 
 #### If `finding_gate_mode: auto`
 
-Auto-approve this item: log verbatim, update tracking file (Resolution: Approved), commit, announce:
+Present the proposed content to the user as rendered markdown (same as gated mode — so the user can monitor output as it flows).
+
+Then auto-approve: log verbatim, update tracking file (Resolution: Approved), commit, announce:
 
 > *Output the next fenced block as a code block:*
 
@@ -722,7 +724,9 @@ For each item, check `finding_gate_mode` in the specification frontmatter.
 
 #### If `finding_gate_mode: auto`
 
-Auto-approve this item: log verbatim, update tracking file (Resolution: Approved), commit, announce:
+Present the proposed content to the user as rendered markdown (same as gated mode — so the user can monitor output as it flows).
+
+Then auto-approve: log verbatim, update tracking file (Resolution: Approved), commit, announce:
 
 > *Output the next fenced block as a code block:*
 
