@@ -4,9 +4,11 @@
 
 ---
 
-After completing the plan, perform a comprehensive two-part review before handing off to implementation. Each review is dispatched to a sub-agent for analysis, and findings are processed interactively.
+After completing the plan, perform a comprehensive two-part review before handing off to implementation. Each review is dispatched to a sub-agent for analysis, and findings are processed interactively with the user before the next review begins.
 
 **Why sub-agents**: The main planning context has accumulated significant state from phase design, task authoring, and dependency graphing. Dispatching reviews to fresh agents ensures analysis starts from a clean context with only the inputs needed — the specification, plan, and tasks.
+
+**Why sequential**: Traceability runs first and its approved fixes are applied to the plan before integrity begins. This means the integrity review evaluates the *corrected* plan — it won't waste time flagging structural issues in content that traceability has already removed or rewritten.
 
 **Why this matters**: The plan is what gets built. If content was hallucinated into the plan, it will be implemented — building something that was never discussed or validated. If specification content was missed, it won't be built. The entire purpose of this workflow is that artifacts carry validated decisions through to implementation. The plan is the final gate before code is written.
 
@@ -44,7 +46,7 @@ Compare the plan against the specification in both directions — checking that 
 
 ## C. Plan Integrity Review
 
-Review the plan as a standalone document for structural quality, implementation readiness, and adherence to planning standards.
+Review the plan as a standalone document for structural quality, implementation readiness, and adherence to planning standards. The integrity agent reviews the plan *after* traceability fixes have been applied.
 
 1. Load **[invoke-review-integrity.md](invoke-review-integrity.md)** and follow its instructions to dispatch the agent.
 2. **STOP.** Do not proceed until the agent has returned its result.

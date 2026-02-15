@@ -82,12 +82,16 @@ topic: {Topic Name}
 **Type**: Missing from plan | Hallucinated content | Incomplete coverage
 **Spec Reference**: [Section/decision in specification, or "N/A"]
 **Plan Reference**: [Phase/task in plan, or "N/A" for missing content]
+**Change Type**: [update-task | add-to-task | remove-from-task | add-task | remove-task | add-phase | remove-phase]
 
 **Details**:
 [What was found and why it matters]
 
-**Proposed Fix**:
-[What should change in the plan]
+**Current**:
+[The existing content as it appears in the plan — omit for add-task/add-phase]
+
+**Proposed**:
+[The replacement/new content in full plan format — omit for remove-task/remove-phase]
 
 **Resolution**: Pending
 **Notes**:

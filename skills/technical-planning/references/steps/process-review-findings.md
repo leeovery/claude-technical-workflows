@@ -4,7 +4,9 @@
 
 ---
 
-After receiving findings from a review agent, process them interactively with the user. This process is the same for both traceability and integrity reviews.
+After receiving status from a review agent, process its findings interactively with the user. This process is the same for both traceability and integrity reviews.
+
+The agent writes its findings — with full fix content — to a tracking file. The orchestrator reads the tracking file and presents each finding to the user for approval.
 
 ---
 
@@ -20,17 +22,19 @@ No findings. Announce:
 
 ## If STATUS is `findings`
 
+Read the tracking file at the path returned by the agent (`TRACKING_FILE`).
+
 ### Stage 1: Summary
 
 Present all findings as a numbered summary:
 
 "I've completed the {review type} review. {N} items found:
 
-1. **{title}** ({type or severity})
-   {2-4 line explanation: what's wrong, where, why it matters}
+1. **{title}** ({type or severity}) — {change_type}
+   {1-2 line summary from the Details field}
 
-2. **{title}** ({type or severity})
-   {2-4 line explanation}
+2. **{title}** ({type or severity}) — {change_type}
+   {1-2 line summary}
 
 Let's work through these one at a time, starting with #1."
 
@@ -38,77 +42,35 @@ Let's work through these one at a time, starting with #1."
 
 ### Stage 2: Process One Item at a Time
 
-Work through each finding **sequentially**. For each finding: present it, propose the fix, wait for approval, then apply it.
+Work through each finding **sequentially**. For each finding: present it, show the proposed fix, wait for approval, then apply or skip.
 
 #### Present the Finding
 
-Show the finding with full detail:
+Show the finding with its full fix content, read directly from the tracking file:
 
 **Finding {N} of {total}: {Brief Title}**
 
 For traceability findings:
 - **Type**: Missing from plan | Hallucinated content | Incomplete coverage
-- **Spec Reference**: {section/decision in specification, or "N/A"}
-- **Plan Reference**: {phase/task in plan, or "N/A"}
+- **Spec Reference**: {from tracking file}
+- **Plan Reference**: {from tracking file}
+- **Change Type**: {from tracking file}
 
 For integrity findings:
 - **Severity**: Critical | Important | Minor
-- **Plan Reference**: {phase/task in plan}
-- **Category**: {which review criterion}
+- **Plan Reference**: {from tracking file}
+- **Category**: {from tracking file}
+- **Change Type**: {from tracking file}
 
-**Details**: {what's wrong and why it matters}
+**Details**: {from tracking file}
 
-#### Propose the Fix
+**Current**:
+{from tracking file — the existing plan content, rendered as markdown}
 
-Present the proposed fix **in the format it will be written to the plan**, rendered as markdown (not in a code block). What the user sees is what gets applied — no changes between approval and writing.
+**Proposed**:
+{from tracking file — the replacement content, rendered as markdown}
 
-State the action type explicitly so the user knows what's changing structurally:
-
-**Update a task** — change content within an existing task:
-
-**Proposed fix — update Phase {N}, Task {M}:**
-
-**Current:**
-{The existing content as it appears in the plan}
-
-**Proposed:**
-{The replacement content}
-
-**Add content to a task** — insert into an existing task:
-
-**Proposed fix — add to Phase {N}, Task {M}, {section}:**
-
-{The exact content to be added, in plan format}
-
-**Remove content from a task** — strip content that shouldn't be there:
-
-**Proposed fix — remove from Phase {N}, Task {M}, {section}:**
-
-{The exact content to be removed}
-
-**Add a new task** — a spec section has no plan coverage:
-
-**Proposed fix — add new task to Phase {N}:**
-
-{The complete task in plan format, using the task template}
-
-**Remove a task** — an entire task is not backed by the specification:
-
-**Proposed fix — remove Phase {N}, Task {M}: {Task Name}**
-
-**Reason**: {Why this task should be removed}
-
-**Add a new phase** — a significant area has no plan coverage:
-
-**Proposed fix — add new Phase {N}: {Phase Name}**
-
-{Phase goal, acceptance criteria, and task overview}
-
-**Remove a phase** — an entire phase is not backed by the specification:
-
-**Proposed fix — remove Phase {N}: {Phase Name}**
-
-**Reason**: {Why this phase should be removed}
+What the user sees is what gets applied — no changes between approval and writing.
 
 #### Ask for Approval
 
@@ -127,17 +89,17 @@ State the action type explicitly so the user knows what's changing structurally:
 
 #### If the user provides feedback
 
-Incorporate feedback and re-present the proposed fix **in full** using the same format above. Then ask the same choice again. Repeat until approved or skipped.
+Incorporate feedback and re-present the proposed fix **in full**. Update the tracking file with the revised content. Then ask the same choice again. Repeat until approved or skipped.
 
 #### If approved
 
-1. Apply the fix to the plan — as presented, using the output format adapter to determine how it's written. Do not modify content between approval and writing.
-2. Update the tracking file: mark resolution as "Fixed", add any discussion notes.
+1. Apply the fix to the plan — use the **Proposed** content exactly as shown, using the output format adapter to determine how it's written. Do not modify content between approval and writing.
+2. Update the tracking file: set resolution to "Fixed", add any discussion notes.
 3. Confirm: "Finding {N} of {total}: {Brief Title} — fixed."
 
 #### If skipped
 
-1. Update the tracking file: mark resolution as "Skipped", note the reason.
+1. Update the tracking file: set resolution to "Skipped", note the reason.
 2. Confirm: "Finding {N} of {total}: {Brief Title} — skipped."
 
 ---

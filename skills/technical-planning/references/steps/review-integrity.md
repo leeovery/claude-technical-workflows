@@ -104,12 +104,16 @@ topic: {Topic Name}
 **Severity**: Critical | Important | Minor
 **Plan Reference**: [Phase/task in plan]
 **Category**: [Which review criterion — e.g., "Task Template Compliance", "Vertical Slicing"]
+**Change Type**: [update-task | add-to-task | remove-from-task | add-task | remove-task | add-phase | remove-phase]
 
 **Details**:
 [What the issue is and why it matters for implementation]
 
-**Proposed Fix**:
-[What should change in the plan]
+**Current**:
+[The existing content as it appears in the plan — omit for add-task/add-phase]
+
+**Proposed**:
+[The replacement/new content in full plan format — omit for remove-task/remove-phase]
 
 **Resolution**: Pending
 **Notes**:

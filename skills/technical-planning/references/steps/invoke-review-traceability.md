@@ -23,23 +23,14 @@ Invoke `planning-review-traceability` with:
 
 ## Expected Result
 
-The agent returns a structured result:
+The agent returns a brief status:
 
 ```
 STATUS: findings | clean
 CYCLE: {N}
 TRACKING_FILE: {path to tracking file}
 FINDING_COUNT: {N}
-FINDINGS:
-- finding: {N}
-  title: {brief title}
-  type: {Missing from plan | Hallucinated content | Incomplete coverage}
-  spec_ref: {section/decision in specification}
-  plan_ref: {phase/task in plan, or "N/A"}
-  details: {what's wrong}
-  proposed_fix_type: {update | add | remove | add-task | remove-task | add-phase | remove-phase}
-  proposed_fix: {description of proposed change}
 ```
 
 - `clean`: plan is a faithful, complete translation of the specification. No findings to process.
-- `findings`: FINDINGS contains items to present to the user for approval.
+- `findings`: tracking file contains findings with full fix content for the orchestrator to present to the user.

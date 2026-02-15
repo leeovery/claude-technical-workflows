@@ -22,23 +22,14 @@ Invoke `planning-review-integrity` with:
 
 ## Expected Result
 
-The agent returns a structured result:
+The agent returns a brief status:
 
 ```
 STATUS: findings | clean
 CYCLE: {N}
 TRACKING_FILE: {path to tracking file}
 FINDING_COUNT: {N}
-FINDINGS:
-- finding: {N}
-  title: {brief title}
-  severity: {Critical | Important | Minor}
-  plan_ref: {phase/task in plan}
-  category: {review criterion}
-  details: {what the issue is}
-  proposed_fix_type: {update | add | remove | add-task | remove-task | add-phase | remove-phase}
-  proposed_fix: {description of proposed change}
 ```
 
 - `clean`: plan meets structural quality standards. No findings to process.
-- `findings`: FINDINGS contains items to present to the user for approval.
+- `findings`: tracking file contains findings with full fix content for the orchestrator to present to the user.

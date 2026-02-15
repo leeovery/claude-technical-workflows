@@ -27,7 +27,19 @@ You receive file paths and context via the orchestrator's prompt:
 4. **Evaluate all review criteria** as defined in the review criteria file
 5. **Create the tracking file** — write findings to `review-integrity-tracking-c{N}.md` in the plan topic directory, using the format defined in the review criteria file
 6. **Commit the tracking file**: `planning({topic}): integrity review cycle {N}`
-7. **Return structured findings**
+7. **Return status**
+
+## Writing Full Fix Content
+
+For each finding, the tracking file must contain the **exact content** that would be written to the plan if the fix is approved. The orchestrator presents this content to the user as-is — what the user sees is what gets applied.
+
+- **Current**: Copy the existing content verbatim from the plan/task file. This shows the user exactly what's there now.
+- **Proposed**: Write the replacement content in full plan format. This is what will replace the current content if approved.
+
+For `add-task` or `add-phase`, omit **Current** and write the complete new content in **Proposed**.
+For `remove-task` or `remove-phase`, include **Current** for reference and omit **Proposed**.
+
+**Do not write summaries or descriptions** like "restructure the acceptance criteria". Write the actual restructured criteria as they should appear in the plan.
 
 ## Hard Rules
 
@@ -36,30 +48,21 @@ You receive file paths and context via the orchestrator's prompt:
 1. **Read everything** — plan and all tasks. Do not skip or skim.
 2. **Write only the tracking file** — do not modify the plan or tasks
 3. **Commit the tracking file** — ensures it survives context refresh
-4. **No user interaction** — return findings to the orchestrator
-5. **Propose fixes** — describe what should change in each finding, but do not apply them
+4. **No user interaction** — return status to the orchestrator
+5. **Full fix content** — every finding must include complete Current/Proposed content in plan format. No summaries.
 6. **Proportional** — prioritize by impact. Don't nitpick style when architecture is wrong.
 7. **Task scope only** — check the plan as built; don't redesign it
 
 ## Your Output
 
-Return a structured result:
+Return a brief status:
 
 ```
 STATUS: findings | clean
 CYCLE: {N}
 TRACKING_FILE: {path to tracking file}
 FINDING_COUNT: {N}
-FINDINGS:
-- finding: 1
-  title: {brief title}
-  severity: {Critical | Important | Minor}
-  plan_ref: {phase/task in plan}
-  category: {which review criterion — e.g., "Task Template Compliance", "Vertical Slicing"}
-  details: {what the issue is and why it matters for implementation}
-  proposed_fix_type: {update | add | remove | add-task | remove-task | add-phase | remove-phase}
-  proposed_fix: {description of what should change}
 ```
 
 - `clean`: No findings. The plan meets structural quality standards.
-- `findings`: FINDINGS contains specific items categorized by severity.
+- `findings`: Tracking file contains findings for the orchestrator to present to the user.
