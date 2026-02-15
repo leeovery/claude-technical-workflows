@@ -8,7 +8,7 @@ After completing the plan, perform a comprehensive two-part review before handin
 
 **Why this matters**: The plan is what gets built. If content was hallucinated into the plan, it will be implemented — building something that was never discussed or validated. If specification content was missed, it won't be built. The entire purpose of this workflow is that artifacts carry validated decisions through to implementation. The plan is the final gate before code is written.
 
-## Review Tracking Files
+## A. Review Tracking Files
 
 To ensure analysis isn't lost during context refresh, create tracking files that capture findings. These files persist analysis so work can continue across sessions.
 
@@ -57,7 +57,7 @@ topic: [Topic Name]
 
 ---
 
-## Traceability Review
+## B. Traceability Review
 
 Compare the plan against the specification in both directions — checking that everything from the spec is in the plan, and everything in the plan traces back to the spec.
 
@@ -65,7 +65,7 @@ Load **[review-traceability.md](review-traceability.md)** and follow its instruc
 
 ---
 
-## Plan Integrity Review
+## C. Plan Integrity Review
 
 Review the plan as a standalone document for structural quality, implementation readiness, and adherence to planning standards.
 
@@ -73,13 +73,13 @@ Load **[review-integrity.md](review-integrity.md)** and follow its instructions 
 
 ---
 
-## Re-Loop Prompt
+## D. Re-Loop Prompt
 
 After both reviews complete, check whether either review surfaced findings in this cycle.
 
 #### If no findings were surfaced in this cycle
 
-→ Skip the re-loop prompt and proceed directly to **Completion**.
+→ Skip the re-loop prompt and proceed directly to **E. Completion**.
 
 #### If findings were surfaced
 
@@ -96,15 +96,17 @@ After both reviews complete, check whether either review surfaced findings in th
 
 #### If reanalyse
 
-Keep existing tracking files (they are cycle-numbered and persist as review history). → Return to the top of this file (**Traceability Review**) to begin a fresh cycle.
+Keep existing tracking files — they are cycle-numbered and persist as review history.
+
+→ Return to **B. Traceability Review** to begin a fresh cycle.
 
 #### If proceed
 
-→ Continue to **Completion**.
+→ Continue to **E. Completion**.
 
 ---
 
-## Completion
+## E. Completion
 
 After reviews are complete:
 
