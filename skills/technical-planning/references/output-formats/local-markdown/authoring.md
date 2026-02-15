@@ -2,7 +2,7 @@
 
 ## Task Storage
 
-Each task is written to `docs/workflow/planning/{topic}/{task-id}.md` — a markdown file with frontmatter and a description body.
+Each task is written to `docs/workflow/planning/{topic}/tasks/{task-id}.md` — a markdown file with frontmatter and a description body.
 
 ```markdown
 ---
@@ -57,8 +57,8 @@ In the task file, add a **Needs Clarification** section:
 
 ## Cleanup (Restart)
 
-Delete the task detail directory for this topic:
+Delete the tasks directory — preserves `plan.md` (the Plan Index) and any review tracking files:
 
 ```bash
-rm -rf docs/workflow/planning/{topic}/
+rm -rf docs/workflow/planning/{topic}/tasks/
 ```

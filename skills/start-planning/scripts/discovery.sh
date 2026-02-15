@@ -48,10 +48,10 @@ if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
     echo "  feature:"
 
     # First pass: feature specifications
-    for file in "$SPEC_DIR"/*.md; do
+    for file in "$SPEC_DIR"/*/specification.md; do
         [ -f "$file" ] || continue
 
-        name=$(basename "$file" .md)
+        name=$(basename "$(dirname "$file")")
         status=$(extract_field "$file" "status")
         status=${status:-"active"}
         spec_type=$(extract_field "$file" "type")
@@ -63,9 +63,9 @@ if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
         # Check if plan exists and its status
         has_plan="false"
         plan_status=""
-        if [ -f "$PLAN_DIR/${name}.md" ]; then
+        if [ -f "$PLAN_DIR/${name}/plan.md" ]; then
             has_plan="true"
-            plan_status=$(extract_field "$PLAN_DIR/${name}.md" "status")
+            plan_status=$(extract_field "$PLAN_DIR/${name}/plan.md" "status")
             plan_status=${plan_status:-"unknown"}
         fi
 
@@ -93,10 +93,10 @@ if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
     echo "  crosscutting:"
 
     # Second pass: cross-cutting specifications
-    for file in "$SPEC_DIR"/*.md; do
+    for file in "$SPEC_DIR"/*/specification.md; do
         [ -f "$file" ] || continue
 
-        name=$(basename "$file" .md)
+        name=$(basename "$(dirname "$file")")
         spec_type=$(extract_field "$file" "type")
         spec_type=${spec_type:-"feature"}
 
@@ -146,10 +146,10 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
     echo "  exists: true"
     echo "  files:"
 
-    for file in "$PLAN_DIR"/*.md; do
+    for file in "$PLAN_DIR"/*/plan.md; do
         [ -f "$file" ] || continue
 
-        name=$(basename "$file" .md)
+        name=$(basename "$(dirname "$file")")
         format=$(extract_field "$file" "format")
         format=${format:-"MISSING"}
 

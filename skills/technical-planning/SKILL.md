@@ -1,6 +1,6 @@
 ---
 name: technical-planning
-description: "Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Use when: (1) User asks to create/write an implementation plan, (2) User asks to plan implementation from a specification, (3) Converting specifications from docs/workflow/specification/{topic}.md into implementation plans, (4) User says 'plan this' or 'create a plan', (5) Need to structure how to build something with phases and concrete steps. Creates plans in docs/workflow/planning/{topic}.md that can be executed via strict TDD."
+description: "Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Use when: (1) User asks to create/write an implementation plan, (2) User asks to plan implementation from a specification, (3) Converting specifications from docs/workflow/specification/{topic}/specification.md into implementation plans, (4) User says 'plan this' or 'create a plan', (5) Need to structure how to build something with phases and concrete steps. Creates plans in docs/workflow/planning/{topic}/plan.md that can be executed via strict TDD."
 user-invocable: false
 ---
 
@@ -28,11 +28,29 @@ Either way: Transform specifications into actionable phases, tasks, and acceptan
 
 **Before proceeding**, verify the required input is available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.
 
-- **No specification content provided?**
-  > "I need the specification content to plan from. Could you point me to the specification file (e.g., `docs/workflow/specification/{topic}.md`), or provide the content directly?"
+#### If no specification content provided
 
-- **Specification seems incomplete or not concluded?**
-  > "The specification at {path} appears to be {concern — e.g., 'still in-progress' or 'missing sections that are referenced elsewhere'}. Should I proceed with this, or is there a more complete version?"
+> *Output the next fenced block as a code block:*
+
+```
+I need the specification content to plan from. Could you point me to the
+specification file (e.g., docs/workflow/specification/{topic}/specification.md),
+or provide the content directly?
+```
+
+**STOP.** Wait for user response.
+
+#### If specification seems incomplete or not concluded
+
+> *Output the next fenced block as a code block:*
+
+```
+The specification at {path} appears to be {concern — e.g., 'still in-progress'
+or 'missing sections that are referenced elsewhere'}. Should I proceed with
+this, or is there a more complete version?
+```
+
+**STOP.** Wait for user response.
 
 ---
 
@@ -53,7 +71,7 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 This process constructs a plan from a specification. A plan consists of:
 
-- **Plan Index File** — `docs/workflow/planning/{topic}.md`. Contains frontmatter (topic, format, status, progress), phases with acceptance criteria, and task tables tracking status. This is the single source of truth for planning progress.
+- **Plan Index File** — `docs/workflow/planning/{topic}/plan.md`. Contains frontmatter (topic, format, status, progress), phases with acceptance criteria, and task tables tracking status. This is the single source of truth for planning progress.
 - **Authored Tasks** — Detailed task files written to the chosen **Output Format** (selected during planning). The output format determines where and how task detail is stored.
 
 Follow every step in sequence. No steps are optional.
@@ -66,7 +84,7 @@ When announcing a new step, output `── ── ── ── ──` on its o
 
 ## Step 0: Resume Detection
 
-Check if a Plan Index File already exists at `docs/workflow/planning/{topic}.md`.
+Check if a Plan Index File already exists at `docs/workflow/planning/{topic}/plan.md`.
 
 #### If no Plan Index File exists
 
@@ -151,16 +169,16 @@ Once selected:
 
 1. Read **[output-formats.md](references/output-formats.md)**, find the chosen format entry, and load the format's **[about.md](references/output-formats/{format}/about.md)** and **[authoring.md](references/output-formats/{format}/authoring.md)**
 2. Capture the current git commit hash: `git rev-parse HEAD`
-3. Create the Plan Index File at `docs/workflow/planning/{topic}.md` with the following frontmatter and title:
+3. Create the Plan Index File at `docs/workflow/planning/{topic}/plan.md` with the following frontmatter and title:
 
 ```yaml
 ---
 topic: {topic-name}
 status: planning
 format: {chosen-format}
-specification: ../specification/{topic}.md
+specification: ../specification/{topic}/specification.md
 cross_cutting_specs:              # Omit if none
-  - ../specification/{spec}.md
+  - ../specification/{spec}/specification.md
 spec_commit: {output of git rev-parse HEAD}
 created: YYYY-MM-DD  # Use today's actual date
 updated: YYYY-MM-DD  # Use today's actual date
@@ -189,7 +207,7 @@ Load **[planning-principles.md](references/planning-principles.md)** and follow 
 
 ## Step 3: Verify Source Material
 
-Load **[steps/verify-source-material.md](references/steps/verify-source-material.md)** and follow its instructions as written.
+Load **[verify-source-material.md](references/verify-source-material.md)** and follow its instructions as written.
 
 → Proceed to **Step 4**.
 
@@ -197,7 +215,7 @@ Load **[steps/verify-source-material.md](references/steps/verify-source-material
 
 ## Step 4: Plan Construction
 
-Load **[steps/plan-construction.md](references/steps/plan-construction.md)** and follow its instructions as written.
+Load **[plan-construction.md](references/plan-construction.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
 
@@ -205,7 +223,7 @@ Load **[steps/plan-construction.md](references/steps/plan-construction.md)** and
 
 ## Step 5: Analyze Task Graph
 
-Load **[steps/analyze-task-graph.md](references/steps/analyze-task-graph.md)** and follow its instructions as written.
+Load **[analyze-task-graph.md](references/analyze-task-graph.md)** and follow its instructions as written.
 
 → Proceed to **Step 6**.
 
@@ -213,7 +231,7 @@ Load **[steps/analyze-task-graph.md](references/steps/analyze-task-graph.md)** a
 
 ## Step 6: Resolve External Dependencies
 
-Load **[steps/resolve-dependencies.md](references/steps/resolve-dependencies.md)** and follow its instructions as written.
+Load **[resolve-dependencies.md](references/resolve-dependencies.md)** and follow its instructions as written.
 
 → Proceed to **Step 7**.
 
@@ -221,7 +239,7 @@ Load **[steps/resolve-dependencies.md](references/steps/resolve-dependencies.md)
 
 ## Step 7: Plan Review
 
-Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its instructions as written.
+Load **[plan-review.md](references/plan-review.md)** and follow its instructions as written.
 
 → Proceed to **Step 8**.
 
@@ -229,16 +247,35 @@ Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its 
 
 ## Step 8: Conclude the Plan
 
-After the review is complete:
+> **CHECKPOINT**: Do not conclude if any tasks in the Plan Index File show `status: pending`. All tasks must be `authored` before concluding.
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+- **`y`/`yes`** — Conclude plan and mark as concluded
+- **Comment** — Add context before concluding
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If comment
+
+Discuss the user's context. If additional work is needed, route back to **Step 6** or **Step 7** as appropriate. Otherwise, re-present the sign-off prompt above.
+
+#### If yes
 
 1. **Update plan status** — Set `status: concluded` in the Plan Index File frontmatter
-3. **Final commit** — Commit the concluded plan
-4. **Present completion summary**:
+2. **Final commit** — Commit the concluded plan: `planning({topic}): conclude plan`
+3. **Present completion summary**:
 
-"Planning is complete for **{topic}**.
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+Planning is complete for **{topic}**.
 
 The plan contains **{N} phases** with **{M} tasks** total, reviewed for traceability against the specification and structural integrity.
 
-Status has been marked as `concluded`. The plan is ready for implementation."
-
-> **CHECKPOINT**: Do not conclude if any tasks in the Plan Index File show `status: pending`. All tasks must be `authored` before concluding.
+Status has been marked as `concluded`. The plan is ready for implementation.
+```

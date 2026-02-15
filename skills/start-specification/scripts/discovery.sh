@@ -137,10 +137,10 @@ if [ -d "$DISCUSSION_DIR" ] && [ -n "$(ls -A "$DISCUSSION_DIR" 2>/dev/null)" ]; 
         # Check if this discussion has a corresponding individual spec
         has_individual_spec="false"
         spec_status=""
-        if [ -f "$SPEC_DIR/${name}.md" ]; then
+        if [ -f "$SPEC_DIR/${name}/specification.md" ]; then
             has_individual_spec="true"
             # Extract spec status in real-time (not from cache)
-            spec_status=$(extract_field "$SPEC_DIR/${name}.md" "status")
+            spec_status=$(extract_field "$SPEC_DIR/${name}/specification.md" "status")
             spec_status=${spec_status:-"in-progress"}
         fi
 
@@ -163,10 +163,10 @@ echo ""
 echo "specifications:"
 
 if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
-    for file in "$SPEC_DIR"/*.md; do
+    for file in "$SPEC_DIR"/*/specification.md; do
         [ -f "$file" ] || continue
 
-        name=$(basename "$file" .md)
+        name=$(basename "$(dirname "$file")")
         status=$(extract_field "$file" "status")
         status=${status:-"active"}
 
@@ -235,7 +235,7 @@ if [ -f "$CACHE_FILE" ]; then
     while IFS= read -r grouping_name; do
         # Clean the name (remove any trailing annotations, lowercase, spaces to hyphens)
         clean_name=$(echo "$grouping_name" | sed 's/[[:space:]]*(.*)//' | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
-        if [ -f "$SPEC_DIR/${clean_name}.md" ]; then
+        if [ -f "$SPEC_DIR/${clean_name}/specification.md" ]; then
             echo "    - \"$clean_name\""
             anchored_found=true
         fi
@@ -285,7 +285,7 @@ if [ -d "$DISCUSSION_DIR" ] && [ -n "$(ls -A "$DISCUSSION_DIR" 2>/dev/null)" ]; 
     # Count non-superseded specifications
     spec_count=0
     if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
-        for file in "$SPEC_DIR"/*.md; do
+        for file in "$SPEC_DIR"/*/specification.md; do
             [ -f "$file" ] || continue
             spec_status=$(extract_field "$file" "status")
             if [ "$spec_status" != "superseded" ]; then

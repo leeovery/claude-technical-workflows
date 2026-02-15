@@ -13,7 +13,7 @@ Sources:
 - docs/workflow/discussion/{discussion-name}.md
 - docs/workflow/discussion/{discussion-name}.md
 
-Output: docs/workflow/specification/{kebab-case-name}.md
+Output: docs/workflow/specification/{kebab-case-name}/specification.md
 
 ---
 Invoke the technical-specification skill.

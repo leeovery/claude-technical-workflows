@@ -1,6 +1,6 @@
 # Task Loop
 
-*Reference for **[technical-implementation](../../SKILL.md)***
+*Reference for **[technical-implementation](../SKILL.md)***
 
 ---
 
@@ -23,7 +23,7 @@ E. Update progress + commit
 
 1. Follow the format's **reading.md** instructions to determine the next available task.
 2. If no available tasks remain → skip to **When All Tasks Are Complete**.
-3. Normalise the task content following **[task-normalisation.md](../task-normalisation.md)**.
+3. Normalise the task content following **[task-normalisation.md](task-normalisation.md)**.
 4. Reset `fix_attempts` to `0` in the implementation tracking file.
 
 ---
@@ -195,6 +195,10 @@ This is the end of this iteration.
 
 ## When All Tasks Are Complete
 
-"All tasks complete. {M} tasks implemented."
+> *Output the next fenced block as a code block:*
+
+```
+All tasks complete. {M} tasks implemented.
+```
 
 → Return to the skill for **Step 7**.

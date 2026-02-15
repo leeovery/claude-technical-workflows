@@ -1,6 +1,6 @@
 # Invoke Analysis Agents
 
-*Reference for **[technical-implementation](../../SKILL.md)***
+*Reference for **[technical-implementation](../SKILL.md)***
 
 ---
 
@@ -27,7 +27,7 @@ Dispatch **all three in parallel** via the Task tool. Each agent receives the sa
 1. **Implementation files** — the file list from scope identification
 2. **Specification path** — from the plan's frontmatter (if available)
 3. **Project skill paths** — from `project_skills` in the implementation tracking file
-4. **code-quality.md path** — `../code-quality.md`
+4. **code-quality.md path** — `code-quality.md`
 5. **Topic name** — the implementation topic
 6. **Cycle number** — the current analysis cycle number (from `analysis_cycle` in the tracking file)
 
@@ -35,15 +35,15 @@ Each agent knows its own output path convention and writes findings independentl
 
 ### Agent 1: Duplication
 
-- **Agent path**: `../../../../agents/implementation-analysis-duplication.md`
+- **Agent path**: `../../../agents/implementation-analysis-duplication.md`
 
 ### Agent 2: Standards
 
-- **Agent path**: `../../../../agents/implementation-analysis-standards.md`
+- **Agent path**: `../../../agents/implementation-analysis-standards.md`
 
 ### Agent 3: Architecture
 
-- **Agent path**: `../../../../agents/implementation-analysis-architecture.md`
+- **Agent path**: `../../../agents/implementation-analysis-architecture.md`
 
 ---
 

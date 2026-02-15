@@ -369,8 +369,6 @@ Environment setup file found: docs/workflow/environment-setup.md
 
 **If `setup_file_exists: false` or `requires_setup: unknown`:**
 
-Ask:
-
 > *Output the next fenced block as a code block:*
 
 ```
@@ -396,7 +394,7 @@ Invoke the [technical-implementation](../technical-implementation/SKILL.md) skil
 **Example handoff:**
 ```
 Implementation session for: {topic}
-Plan: docs/workflow/planning/{topic}.md
+Plan: docs/workflow/planning/{topic}/plan.md
 Format: {format}
 Plan ID: {plan_id} (if applicable)
 Specification: {specification} (exists: {true|false})

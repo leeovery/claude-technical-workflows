@@ -50,6 +50,11 @@ fi
 for file in "$PLAN_DIR"/*.md; do
     [ -f "$file" ] || continue
 
+    # Skip tracking/review files — only process plan documents
+    case "$(basename "$file")" in
+        *-review-*|*-tracking*) continue ;;
+    esac
+
     # Check if already migrated via tracking
     if is_migrated "$file" "$MIGRATION_ID"; then
         report_skip "$file"

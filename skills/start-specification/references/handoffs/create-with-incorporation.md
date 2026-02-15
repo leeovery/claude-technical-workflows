@@ -14,9 +14,9 @@ Source discussions:
 - docs/workflow/discussion/{discussion-name}.md
 
 Existing specifications to incorporate:
-- docs/workflow/specification/{spec-name}.md (covers: {discussion-name} discussion)
+- docs/workflow/specification/{spec-name}/specification.md (covers: {discussion-name} discussion)
 
-Output: docs/workflow/specification/{kebab-case-name}.md
+Output: docs/workflow/specification/{kebab-case-name}/specification.md
 
 Context: This consolidates multiple sources. The existing {spec-name}.md specification should be incorporated - extract and adapt its content alongside the discussion material. The result should be a unified specification, not a simple merge.
 

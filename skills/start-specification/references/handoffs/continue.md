@@ -9,7 +9,7 @@ This skill's purpose is now fulfilled. Invoke the [technical-specification](../.
 ```
 Specification session for: {Title Case Name}
 
-Continuing existing: docs/workflow/specification/{kebab-case-name}.md
+Continuing existing: docs/workflow/specification/{kebab-case-name}/specification.md
 
 Sources for reference:
 - docs/workflow/discussion/{discussion-name}.md

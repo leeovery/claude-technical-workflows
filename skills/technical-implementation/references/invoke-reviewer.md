@@ -1,10 +1,10 @@
 # Invoke Reviewer
 
-*Reference for **[technical-implementation](../../SKILL.md)***
+*Reference for **[technical-implementation](../SKILL.md)***
 
 ---
 
-This step invokes the `implementation-task-reviewer` agent (`../../../../agents/implementation-task-reviewer.md`) to independently verify a completed task.
+This step invokes the `implementation-task-reviewer` agent (`../../../agents/implementation-task-reviewer.md`) to independently verify a completed task.
 
 ---
 

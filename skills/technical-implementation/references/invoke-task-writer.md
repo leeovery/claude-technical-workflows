@@ -1,6 +1,6 @@
 # Invoke Task Writer
 
-*Reference for **[technical-implementation](../../SKILL.md)***
+*Reference for **[technical-implementation](../SKILL.md)***
 
 ---
 
@@ -10,15 +10,15 @@ This step invokes the task writer agent to create plan tasks from approved analy
 
 ## Invoke the Agent
 
-**Agent path**: `../../../../agents/implementation-analysis-task-writer.md`
+**Agent path**: `../../../agents/implementation-analysis-task-writer.md`
 
 Pass via the orchestrator's prompt:
 
 1. **Topic name** — the implementation topic
 2. **Staging file path** — `docs/workflow/implementation/{topic}/analysis-tasks-c{cycle-number}.md`
 3. **Plan path** — the implementation plan path
-4. **Plan format reading adapter path** — `../../../technical-planning/references/output-formats/{format}/reading.md`
-5. **Plan format authoring adapter path** — `../../../technical-planning/references/output-formats/{format}/authoring.md`
+4. **Plan format reading adapter path** — `../../technical-planning/references/output-formats/{format}/reading.md`
+5. **Plan format authoring adapter path** — `../../technical-planning/references/output-formats/{format}/authoring.md`
 
 ---
 

@@ -62,6 +62,8 @@ agents/
   planning-task-designer.md        # Break phases into task lists
   planning-task-author.md          # Write full task detail
   planning-dependency-grapher.md   # Analyze task dependencies and priorities
+  planning-review-traceability.md  # Spec-to-plan traceability analysis
+  planning-review-integrity.md     # Plan structural quality review
 
 tests/
   scripts/                   # Shell script tests for discovery and migrations
@@ -98,8 +100,8 @@ Processing skills should **never hardcode references** to specific workflow phas
 Phase-first directory structure:
 - Research: `docs/workflow/research/` (flat, semantically named files)
 - Discussion: `docs/workflow/discussion/{topic}.md`
-- Specification: `docs/workflow/specification/{topic}.md`
-- Planning: `docs/workflow/planning/{topic}.md`
+- Specification: `docs/workflow/specification/{topic}/specification.md`
+- Planning: `docs/workflow/planning/{topic}/plan.md`
 
 Commit docs frequently (natural breaks, before context refresh). Skills capture context, don't implement.
 

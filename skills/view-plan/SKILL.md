@@ -18,7 +18,7 @@ Ask the user which plan to view.
 
 ## Step 2: Read the Plan Index
 
-Read the plan file from `docs/workflow/planning/{topic}.md` and check the `format:` field in the frontmatter.
+Read the plan file from `docs/workflow/planning/{topic}/plan.md` and check the `format:` field in the frontmatter.
 
 ## Step 3: Load Format Reading Reference
 

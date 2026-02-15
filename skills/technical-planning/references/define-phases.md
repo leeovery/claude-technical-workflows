@@ -1,10 +1,10 @@
 # Define Phases
 
-*Reference for **[technical-planning](../../SKILL.md)***
+*Reference for **[technical-planning](../SKILL.md)***
 
 ---
 
-This step uses the `planning-phase-designer` agent (`../../../../agents/planning-phase-designer.md`) to define or review the phase structure. Whether phases are being designed for the first time or reviewed from a previous session, the process converges on the same approval gate.
+This step uses the `planning-phase-designer` agent (`../../../agents/planning-phase-designer.md`) to define or review the phase structure. Whether phases are being designed for the first time or reviewed from a previous session, the process converges on the same approval gate.
 
 ---
 
@@ -14,27 +14,33 @@ Read the Plan Index File. Check if phases already exist in the body.
 
 #### If phases exist
 
-Orient the user:
+> *Output the next fenced block as a code block:*
 
-"Phase structure already exists. I'll present it for your review."
+```
+Phase structure already exists. I'll present it for your review.
+```
 
 Continue to **Review and Approve** below.
 
 #### If no phases exist
 
-Orient the user:
+> *Output the next fenced block as a code block:*
 
-"I'll delegate phase design to a specialist agent. It will read the full specification and propose a phase structure — how we break this into independently testable stages."
+```
+I'll delegate phase design to a specialist agent. It will read the full
+specification and propose a phase structure — how we break this into
+independently testable stages.
+```
 
 ### Invoke the Agent
 
 Invoke `planning-phase-designer` with these file paths:
 
-1. **read-specification.md**: `../read-specification.md`
+1. **read-specification.md**: `read-specification.md`
 2. **Specification**: path from the Plan Index File's `specification:` field
 3. **Cross-cutting specs**: paths from the Plan Index File's `cross_cutting_specs:` field (if any)
-4. **phase-design.md**: `../phase-design.md`
-5. **task-design.md**: `../task-design.md`
+4. **phase-design.md**: `phase-design.md`
+5. **task-design.md**: `task-design.md`
 
 The agent returns a complete phase structure. Write it directly to the Plan Index File body.
 

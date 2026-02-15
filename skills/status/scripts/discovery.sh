@@ -251,9 +251,9 @@ spec_crosscutting=0
 if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
     echo "  exists: true"
     echo "  files:"
-    for file in "$SPEC_DIR"/*.md; do
+    for file in "$SPEC_DIR"/*/specification.md; do
         [ -f "$file" ] || continue
-        name=$(basename "$file" .md)
+        name=$(basename "$(dirname "$file")")
         status=$(extract_field "$file" "status")
         status=${status:-"in-progress"}
         spec_type=$(extract_field "$file" "type")
@@ -316,15 +316,15 @@ plan_in_progress=0
 if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
     echo "  exists: true"
     echo "  files:"
-    for file in "$PLAN_DIR"/*.md; do
+    for file in "$PLAN_DIR"/*/plan.md; do
         [ -f "$file" ] || continue
-        name=$(basename "$file" .md)
+        name=$(basename "$(dirname "$file")")
         status=$(extract_field "$file" "status")
         status=${status:-"unknown"}
         format=$(extract_field "$file" "format")
         format=${format:-"unknown"}
         specification=$(extract_field "$file" "specification")
-        specification=${specification:-"${name}.md"}
+        specification=${specification:-"${name}/specification.md"}
 
         echo "    - name: \"$name\""
         echo "      status: \"$status\""
@@ -389,11 +389,11 @@ if [ -d "$IMPL_DIR" ] && [ -n "$(ls -A "$IMPL_DIR" 2>/dev/null)" ]; then
 
         # Count total tasks from plan directory (local-markdown format)
         total_tasks=0
-        plan_file="$PLAN_DIR/${topic}.md"
+        plan_file="$PLAN_DIR/${topic}/plan.md"
         if [ -f "$plan_file" ]; then
             plan_format=$(extract_field "$plan_file" "format")
             if [ "$plan_format" = "local-markdown" ] && [ -d "$PLAN_DIR/${topic}" ]; then
-                total_tasks=$(ls -1 "$PLAN_DIR/${topic}/"*.md 2>/dev/null | wc -l | tr -d ' ')
+                total_tasks=$(ls -1 "$PLAN_DIR/${topic}/tasks/"*.md 2>/dev/null | wc -l | tr -d ' ')
             fi
         fi
 

@@ -177,8 +177,8 @@ test_spec_multiple_sources() {
     echo -e "${YELLOW}Test: Specification with multiple sources (many-to-one)${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/specification"
-    cat > "$TEST_DIR/docs/workflow/specification/auth-system.md" << 'EOF'
+    mkdir -p "$TEST_DIR/docs/workflow/specification/auth-system"
+    cat > "$TEST_DIR/docs/workflow/specification/auth-system/specification.md" << 'EOF'
 ---
 topic: auth-system
 status: concluded
@@ -213,8 +213,8 @@ test_spec_pending_source() {
     echo -e "${YELLOW}Test: Specification with pending source${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/specification"
-    cat > "$TEST_DIR/docs/workflow/specification/billing.md" << 'EOF'
+    mkdir -p "$TEST_DIR/docs/workflow/specification/billing"
+    cat > "$TEST_DIR/docs/workflow/specification/billing/specification.md" << 'EOF'
 ---
 topic: billing
 status: in-progress
@@ -244,8 +244,8 @@ test_crosscutting_spec() {
     echo -e "${YELLOW}Test: Cross-cutting specification${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/specification"
-    cat > "$TEST_DIR/docs/workflow/specification/caching-policy.md" << 'EOF'
+    mkdir -p "$TEST_DIR/docs/workflow/specification/caching-policy"
+    cat > "$TEST_DIR/docs/workflow/specification/caching-policy/specification.md" << 'EOF'
 ---
 topic: caching-policy
 status: concluded
@@ -271,8 +271,9 @@ test_superseded_spec() {
     echo -e "${YELLOW}Test: Superseded specification${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/specification"
-    cat > "$TEST_DIR/docs/workflow/specification/old-auth.md" << 'EOF'
+    mkdir -p "$TEST_DIR/docs/workflow/specification/old-auth"
+    mkdir -p "$TEST_DIR/docs/workflow/specification/auth-system"
+    cat > "$TEST_DIR/docs/workflow/specification/old-auth/specification.md" << 'EOF'
 ---
 topic: old-auth
 status: superseded
@@ -283,7 +284,7 @@ superseded_by: auth-system
 # Old Auth Specification
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/specification/auth-system.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/specification/auth-system/specification.md" << 'EOF'
 ---
 topic: auth-system
 status: concluded
@@ -310,8 +311,8 @@ test_spec_no_sources() {
     echo -e "${YELLOW}Test: Specification with no sources${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/specification"
-    cat > "$TEST_DIR/docs/workflow/specification/quick-feature.md" << 'EOF'
+    mkdir -p "$TEST_DIR/docs/workflow/specification/quick-feature"
+    cat > "$TEST_DIR/docs/workflow/specification/quick-feature/specification.md" << 'EOF'
 ---
 topic: quick-feature
 status: concluded
@@ -337,13 +338,13 @@ test_plan_with_deps() {
     echo -e "${YELLOW}Test: Plan with external dependencies${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/planning"
-    cat > "$TEST_DIR/docs/workflow/planning/billing.md" << 'EOF'
+    mkdir -p "$TEST_DIR/docs/workflow/planning/billing"
+    cat > "$TEST_DIR/docs/workflow/planning/billing/plan.md" << 'EOF'
 ---
 topic: billing
 status: concluded
 format: local-markdown
-specification: billing.md
+specification: billing/specification.md
 external_dependencies:
   - topic: auth-system
     description: User authentication
@@ -369,13 +370,13 @@ test_plan_resolved_deps() {
     echo -e "${YELLOW}Test: Plan with resolved dependencies${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/planning"
-    cat > "$TEST_DIR/docs/workflow/planning/billing.md" << 'EOF'
+    mkdir -p "$TEST_DIR/docs/workflow/planning/billing"
+    cat > "$TEST_DIR/docs/workflow/planning/billing/plan.md" << 'EOF'
 ---
 topic: billing
 status: concluded
 format: local-markdown
-specification: billing.md
+specification: billing/specification.md
 external_dependencies:
   - topic: auth-system
     description: User authentication
@@ -402,13 +403,13 @@ test_plan_empty_deps() {
     echo -e "${YELLOW}Test: Plan with empty dependencies array${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/planning"
-    cat > "$TEST_DIR/docs/workflow/planning/simple.md" << 'EOF'
+    mkdir -p "$TEST_DIR/docs/workflow/planning/simple"
+    cat > "$TEST_DIR/docs/workflow/planning/simple/plan.md" << 'EOF'
 ---
 topic: simple
 status: concluded
 format: local-markdown
-specification: simple.md
+specification: simple/specification.md
 external_dependencies: []
 ---
 
@@ -430,11 +431,11 @@ test_implementation_tracking() {
     echo -e "${YELLOW}Test: Implementation tracking${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system"
+    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system/tasks"
     mkdir -p "$TEST_DIR/docs/workflow/implementation/auth-system"
 
     # Create plan with tasks
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/plan.md" << 'EOF'
 ---
 topic: auth-system
 status: concluded
@@ -444,21 +445,21 @@ format: local-markdown
 # Auth System Plan
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system/auth-system-1-1.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/tasks/auth-system-1-1.md" << 'EOF'
 ---
 task_id: auth-system-1-1
 ---
 Task 1
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system/auth-system-1-2.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/tasks/auth-system-1-2.md" << 'EOF'
 ---
 task_id: auth-system-1-2
 ---
 Task 2
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system/auth-system-1-3.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/tasks/auth-system-1-3.md" << 'EOF'
 ---
 task_id: auth-system-1-3
 ---
@@ -498,10 +499,10 @@ test_completed_implementation() {
     echo -e "${YELLOW}Test: Completed implementation${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system"
+    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system/tasks"
     mkdir -p "$TEST_DIR/docs/workflow/implementation/auth-system"
 
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/plan.md" << 'EOF'
 ---
 topic: auth-system
 status: concluded
@@ -511,7 +512,7 @@ format: local-markdown
 # Auth System Plan
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system/auth-system-1-1.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/tasks/auth-system-1-1.md" << 'EOF'
 ---
 task_id: auth-system-1-1
 ---
@@ -614,8 +615,9 @@ Discussion
 EOF
 
     # Specifications (1 feature with 2 sources, 1 cross-cutting)
-    mkdir -p "$TEST_DIR/docs/workflow/specification"
-    cat > "$TEST_DIR/docs/workflow/specification/auth-system.md" << 'EOF'
+    mkdir -p "$TEST_DIR/docs/workflow/specification/auth-system"
+    mkdir -p "$TEST_DIR/docs/workflow/specification/caching-policy"
+    cat > "$TEST_DIR/docs/workflow/specification/auth-system/specification.md" << 'EOF'
 ---
 topic: auth-system
 status: concluded
@@ -628,7 +630,7 @@ sources:
 ---
 Spec
 EOF
-    cat > "$TEST_DIR/docs/workflow/specification/caching-policy.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/specification/caching-policy/specification.md" << 'EOF'
 ---
 topic: caching-policy
 status: in-progress
@@ -641,24 +643,24 @@ Spec
 EOF
 
     # Plan
-    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system"
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system.md" << 'EOF'
+    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system/tasks"
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/plan.md" << 'EOF'
 ---
 topic: auth-system
 status: concluded
 format: local-markdown
-specification: auth-system.md
+specification: auth-system/specification.md
 external_dependencies: []
 ---
 Plan
 EOF
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system/auth-system-1-1.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/tasks/auth-system-1-1.md" << 'EOF'
 ---
 task_id: auth-system-1-1
 ---
 Task
 EOF
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system/auth-system-1-2.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/tasks/auth-system-1-2.md" << 'EOF'
 ---
 task_id: auth-system-1-2
 ---
@@ -713,25 +715,26 @@ test_plan_status_counts() {
     echo -e "${YELLOW}Test: Plan status counts${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/planning"
+    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system"
+    mkdir -p "$TEST_DIR/docs/workflow/planning/billing"
 
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/plan.md" << 'EOF'
 ---
 topic: auth-system
 status: concluded
 format: local-markdown
-specification: auth-system.md
+specification: auth-system/specification.md
 external_dependencies: []
 ---
 Plan
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/planning/billing.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/planning/billing/plan.md" << 'EOF'
 ---
 topic: billing
 status: planning
 format: local-markdown
-specification: billing.md
+specification: billing/specification.md
 external_dependencies: []
 ---
 Plan
@@ -753,8 +756,8 @@ test_spec_default_type() {
     echo -e "${YELLOW}Test: Spec defaults to feature type when missing${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/specification"
-    cat > "$TEST_DIR/docs/workflow/specification/legacy.md" << 'EOF'
+    mkdir -p "$TEST_DIR/docs/workflow/specification/legacy"
+    cat > "$TEST_DIR/docs/workflow/specification/legacy/specification.md" << 'EOF'
 ---
 topic: legacy
 status: concluded
@@ -777,20 +780,20 @@ test_plan_spec_link() {
     echo -e "${YELLOW}Test: Plan specification link${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/planning"
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system.md" << 'EOF'
+    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system"
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/plan.md" << 'EOF'
 ---
 topic: auth-system
 status: concluded
 format: local-markdown
-specification: auth-system.md
+specification: auth-system/specification.md
 ---
 Plan
 EOF
 
     local output=$(run_discovery)
 
-    assert_contains "$output" 'specification: "auth-system.md"' "Specification link extracted"
+    assert_contains "$output" 'specification: "auth-system/specification.md"' "Specification link extracted"
 
     echo ""
 }
@@ -802,8 +805,8 @@ test_plan_default_spec() {
     echo -e "${YELLOW}Test: Plan defaults specification when missing${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/planning"
-    cat > "$TEST_DIR/docs/workflow/planning/auth-system.md" << 'EOF'
+    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system"
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/plan.md" << 'EOF'
 ---
 topic: auth-system
 status: concluded
@@ -814,7 +817,7 @@ EOF
 
     local output=$(run_discovery)
 
-    assert_contains "$output" 'specification: "auth-system.md"' "Defaults to {name}.md"
+    assert_contains "$output" 'specification: "auth-system/specification.md"' "Defaults to {name}/specification.md"
 
     echo ""
 }

@@ -24,11 +24,28 @@ Either way: Capture decisions, rationale, competing approaches, and edge cases.
 
 **Before proceeding**, confirm the required input is clear. If anything is missing or unclear, **STOP** and resolve with the user.
 
-- **No topic provided?**
-  > "What topic would you like to discuss? This could be an architectural decision, a design problem, or edge cases to work through — anything that needs structured technical discussion."
+#### If no topic provided
 
-- **Topic is broad or ambiguous?**
-  > "You mentioned {topic}. To keep the discussion focused, is there a specific aspect or decision you want to work through first?"
+> *Output the next fenced block as a code block:*
+
+```
+What topic would you like to discuss? This could be an architectural decision,
+a design problem, or edge cases to work through — anything that needs structured
+technical discussion.
+```
+
+**STOP.** Wait for user response.
+
+#### If topic is broad or ambiguous
+
+> *Output the next fenced block as a code block:*
+
+```
+You mentioned {topic}. To keep the discussion focused, is there a specific
+aspect or decision you want to work through first?
+```
+
+**STOP.** Wait for user response.
 
 ---
 
@@ -97,7 +114,24 @@ These are natural pauses, not every exchange. Document the reasoning and context
 
 ## Concluding a Discussion
 
-When the user is ready to conclude the discussion:
+When the user indicates they want to conclude:
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+- **`y`/`yes`** — Conclude discussion and mark as concluded
+- **Comment** — Add context before concluding
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If comment
+
+Incorporate the user's context into the discussion, commit, then re-present the sign-off prompt above.
+
+#### If yes
 
 1. Update frontmatter `status: concluded`
 2. Final commit
@@ -105,17 +139,21 @@ When the user is ready to conclude the discussion:
 
 **If other in-progress discussions exist:**
 
+> *Output the next fenced block as a code block:*
+
 ```
 Discussion concluded: {topic}
 
 Remaining in-progress discussions:
-- {topic-1}
-- {topic-2}
+  • {topic-1}
+  • {topic-2}
 
-To continue, clear your context and run `/start-discussion` to pick up the next topic.
+To continue, clear your context and run /start-discussion to pick up the next topic.
 ```
 
 **If no in-progress discussions remain:**
+
+> *Output the next fenced block as a code block:*
 
 ```
 Discussion concluded: {topic}

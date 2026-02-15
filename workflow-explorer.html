@@ -1386,7 +1386,7 @@ const phases = {
     color: '#34d399', bg: 'rgba(52,211,153,0.12)',
     label: 'Specification', cmd: '/start-specification',
     complexity: 'Complex', steps: 7,
-    output: 'docs/workflow/specification/{topic}.md',
+    output: 'docs/workflow/specification/{topic}/specification.md',
     skill: 'technical-specification',
     discovery: 'discovery.sh',
     cache: '.cache/discussion-consolidation-analysis.md',
@@ -1398,7 +1398,7 @@ const phases = {
     color: '#fbbf24', bg: 'rgba(251,191,36,0.12)',
     label: 'Planning', cmd: '/start-planning',
     complexity: 'Moderate', steps: 8,
-    output: 'docs/workflow/planning/{topic}.md',
+    output: 'docs/workflow/planning/{topic}/plan.md',
     skill: 'technical-planning',
     discovery: 'discovery-for-planning.sh',
     cache: null,
@@ -1964,7 +1964,7 @@ const FLOWCHARTS = {
       { id: 'final-review', label: 'Final review', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Review ALL sources against spec. Flag potentially missed content.' },
       { id: 'supersede', label: 'Supersede source specs', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'If sources included existing specs, mark them superseded_by new spec.' },
       { id: 'signoff', label: 'User sign-off', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Final user approval of the complete specification.' },
-      { id: 'end', label: 'specification/{topic}.md', shape: 'pill', w: 190, h: 40, color: 'var(--specification)', bg: 'var(--specification-bg)', desc: 'Output: Validated, standalone specification — the golden document.' },
+      { id: 'end', label: 'specification/{topic}/specification.md', shape: 'pill', w: 260, h: 40, color: 'var(--specification)', bg: 'var(--specification-bg)', desc: 'Output: Validated, standalone specification — the golden document.' },
       { id: 'next', label: 'Invoke /start-planning', desc: 'Navigate to the planning command to create phased implementation tasks from the specification.', w: 200, h: 44, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'planning' },
     ],
     connections: [
@@ -1989,7 +1989,7 @@ const FLOWCHARTS = {
   'skill-planning': {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry: technical-planning skill receives specification and context.' },
-      { id: 'resume', label: 'Existing plan?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 0: Check if plan index file exists at docs/workflow/planning/{topic}.md.' },
+      { id: 'resume', label: 'Existing plan?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 0: Check if plan index file exists at docs/workflow/planning/{topic}/plan.md.' },
       { id: 'resume-choice', label: 'Continue / Restart?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'User chooses: continue from previous position or restart (deletes existing plan).' },
       { id: 'init', label: 'Initialize plan', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 1: Create plan index file. Choose output format.' },
       { id: 'load-existing', label: 'Load existing plan', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Continue: load existing plan and output format adapter.' },
@@ -2018,7 +2018,7 @@ const FLOWCHARTS = {
       { id: 'integ-finding', label: 'ASK: Approve fix?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Process findings one at a time (Critical/Important/Minor). Present finding + proposed fix. User: approve (y — applies verbatim), skip, or request changes. Commits after each. Tracking file deleted when complete.' },
       // Conclusion
       { id: 'conclude', label: 'Conclude plan', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 8: Set status: concluded. Checkpoint: all tasks must be authored before concluding.' },
-      { id: 'end', label: 'planning/{topic}.md', shape: 'pill', w: 150, h: 40, color: 'var(--planning)', bg: 'var(--planning-bg)', desc: 'Output: Plan index + authored tasks in chosen output format.' },
+      { id: 'end', label: 'planning/{topic}/plan.md', shape: 'pill', w: 190, h: 40, color: 'var(--planning)', bg: 'var(--planning-bg)', desc: 'Output: Plan index + authored tasks in chosen output format.' },
       { id: 'next', label: 'Invoke /start-implementation', desc: 'Navigate to the implementation command to execute the plan via strict TDD.', w: 215, h: 44, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'implementation' },
     ],
     connections: [
@@ -2579,13 +2579,13 @@ const FLOWCHART_DESCS = {
     body: `<p>Cache-first routing with progressive disclosure. Two prerequisite gates (discussions must exist and be concluded), then a priority chain: single discussion auto-selects, valid cache shows groupings directly, stale/none cache checks for existing specs before offering analysis.</p>
 <p>The <strong>analysis flow</strong> gathers context about topic relationships, reads all concluded discussions, analyses <strong>data, behavioural, and conceptual coupling</strong>, and caches the result. The <strong>groupings menu</strong> offers per-grouping actions (Start/Continue/Refine), Unify all, and Re-analyze. A separate <strong>specs menu</strong> appears when specs exist but cache is stale — showing existing specs alongside an analyze option.</p>
 <p>The <strong>technical-specification</strong> skill is collaborative — it extracts, filters hallucinations, enriches gaps, presents for approval, and waits for explicit sign-off before writing.</p>`,
-    meta: { output: 'docs/workflow/specification/{topic}.md', skill: 'technical-specification', discovery: 'discovery.sh', cache: 'discussion-consolidation-analysis.md' }
+    meta: { output: 'docs/workflow/specification/{topic}/specification.md', skill: 'technical-specification', discovery: 'discovery.sh', cache: 'discussion-consolidation-analysis.md' }
   },
   planning: {
     summary: 'Transform specifications into phased implementation plans with tasks and acceptance criteria.',
     body: `<p>Discovery classifies into 3 scenarios: <strong>no_specs</strong>, <strong>nothing_actionable</strong>, or <strong>has_options</strong>. After selection, a plan-state check routes new plans through context gathering and cross-cutting spec surfacing, while existing plans skip straight to the skill.</p>
 <p>The <strong>technical-planning</strong> skill runs a structured process with three nested loops. <strong>Plan construction</strong> is the core: the <strong>planning-phase-designer</strong> agent designs the phase structure (user approval gate with revision loop), then for each phase the <strong>planning-task-designer</strong> agent breaks it into tasks (approval gate), then for each task the <strong>planning-task-author</strong> agent writes full detail (approval gate, logged on approval). After construction, the <strong>planning-dependency-grapher</strong> agent analyzes the task graph for dependencies and cycles. Finally, a two-part <strong>plan review</strong> — traceability (spec↔plan completeness and anti-hallucination) then integrity (structural quality) — processes findings one at a time with per-finding approval gates.</p>`,
-    meta: { output: 'docs/workflow/planning/{topic}.md', skill: 'technical-planning', discovery: 'discovery-for-planning.sh' }
+    meta: { output: 'docs/workflow/planning/{topic}/plan.md', skill: 'technical-planning', discovery: 'discovery-for-planning.sh' }
   },
   implementation: {
     summary: 'Discover plans, classify readiness, gate on dependencies, and hand off to agent-based implementation.',
@@ -2603,7 +2603,7 @@ const FLOWCHART_DESCS = {
     summary: 'Shortcut to specification — bypass research and discussion phases entirely.',
     body: `<p>For adding features to existing projects where you already know what you're building. No migration step, no discovery script. Gathers feature context inline (what, scope, constraints), suggests a topic name, checks for naming conflicts in <code>docs/workflow/specification/</code>, then invokes the <strong>technical-specification</strong> skill directly.</p>
 <p>Output is a standard specification file that continues to <code>/start-planning</code> normally.</p>`,
-    meta: { output: 'docs/workflow/specification/{topic}.md', skill: 'technical-specification', complexity: 'Shortcut' }
+    meta: { output: 'docs/workflow/specification/{topic}/specification.md', skill: 'technical-specification', complexity: 'Shortcut' }
   },
   'link-deps': {
     summary: 'Wire up cross-topic dependencies across all plans with bidirectional linking.',
@@ -2627,7 +2627,7 @@ const FLOWCHART_DESCS = {
     summary: 'The specification skill — collaborative refinement that filters hallucinations and enriches gaps.',
     body: `<p>Processes each topic through: <strong>Extract → Filter (validate against source) → Enrich (fill gaps) → Present → STOP &amp; WAIT for approval → Log</strong>. The skill is collaborative, not autonomous — it must wait for explicit user approval before writing anything.</p>
 <p>Self-check before every write: "Was this presented? Was it approved?" Final review includes source traceability and supersede handling for replaced specifications.</p>`,
-    meta: { output: 'docs/workflow/specification/{topic}.md', complexity: 'Collaborative skill' }
+    meta: { output: 'docs/workflow/specification/{topic}/specification.md', complexity: 'Collaborative skill' }
   },
   'skill-planning': {
     summary: 'The planning skill — three nested loops with agent-driven phase design, task design, and task authoring.',
@@ -2635,7 +2635,7 @@ const FLOWCHART_DESCS = {
 <p><strong>Plan construction</strong> is a three-level nested loop. Outer: invoke <strong>planning-phase-designer</strong> agent → user approval gate (revise backloop). Middle: for each phase, invoke <strong>planning-task-designer</strong> agent → approval gate. Inner: for each task, invoke <strong>planning-task-author</strong> agent → approval gate → log task + commit. Independent tasks may be authored in parallel. User can navigate to any position at any approval gate.</p>
 <p>Post-construction: <strong>planning-dependency-grapher</strong> agent analyzes the full task graph (dependencies, priorities, cycle detection) → approval gate. <strong>External dependencies</strong> are matched to tasks in other plans or left unresolved for <code>/link-dependencies</code>.</p>
 <p><strong>Plan review</strong> runs two sequential reviews. <strong>Traceability</strong>: spec→plan completeness + plan→spec fidelity (anti-hallucination gate). <strong>Integrity</strong>: standalone structural quality (templates, slicing, dependencies, self-containment, criteria quality). Both create tracking files and process findings one-at-a-time with per-finding approval gates (approve/skip/revise).</p>`,
-    meta: { output: 'docs/workflow/planning/{topic}.md', complexity: 'Multi-loop skill', agents: 'phase-designer, task-designer, task-author, dependency-grapher' }
+    meta: { output: 'docs/workflow/planning/{topic}/plan.md', complexity: 'Multi-loop skill', agents: 'phase-designer, task-designer, task-author, dependency-grapher' }
   },
   'skill-implementation': {
     summary: 'The implementation skill — agent-based TDD with per-task executor/reviewer, linting, and analysis cycle.',

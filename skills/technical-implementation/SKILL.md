@@ -1,6 +1,6 @@
 ---
 name: technical-implementation
-description: "Orchestrate implementation of plans using agent-based TDD workflow with per-task review and approval gate (auto mode available). Use when: (1) Implementing a plan from docs/workflow/planning/{topic}.md, (2) User says 'implement', 'build', or 'code this' with a plan available, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Dispatches executor and reviewer agents per task, commits after review approval."
+description: "Orchestrate implementation of plans using agent-based TDD workflow with per-task review and approval gate (auto mode available). Use when: (1) Implementing a plan from docs/workflow/planning/{topic}/plan.md, (2) User says 'implement', 'build', or 'code this' with a plan available, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Dispatches executor and reviewer agents per task, commits after review approval."
 user-invocable: false
 ---
 
@@ -30,14 +30,38 @@ Either way: dispatch agents per task — executor implements via TDD, reviewer v
 
 **Before proceeding**, verify all required inputs are available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.
 
-- **No plan provided?**
-  "I need an implementation plan to execute. Could you point me to the plan file (e.g., `docs/workflow/planning/{topic}.md`)?"
+#### If no plan provided
 
-- **Plan has no `format` field in frontmatter?**
-  "The plan at {path} doesn't specify an output format in its frontmatter. Which format does this plan use?"
+> *Output the next fenced block as a code block:*
 
-- **Plan status is not `concluded`?**
-  "The plan at {path} has status '{status}' — it hasn't completed the review process. Should I proceed anyway, or should the plan be reviewed first?"
+```
+I need an implementation plan to execute. Could you point me to the plan file
+(e.g., docs/workflow/planning/{topic}/plan.md)?
+```
+
+**STOP.** Wait for user response.
+
+#### If plan has no `format` field in frontmatter
+
+> *Output the next fenced block as a code block:*
+
+```
+The plan at {path} doesn't specify an output format in its frontmatter.
+Which format does this plan use?
+```
+
+**STOP.** Wait for user response.
+
+#### If plan status is not `concluded`
+
+> *Output the next fenced block as a code block:*
+
+```
+The plan at {path} has status '{status}' — it hasn't completed the review
+process. Should I proceed anyway, or should the plan be reviewed first?
+```
+
+**STOP.** Wait for user response.
 
 If no specification is available, the plan becomes the sole authority for design decisions.
 
@@ -89,9 +113,12 @@ Follow them. Complete ALL steps before proceeding.
 
 #### If no setup file exists
 
-Ask:
+> *Output the next fenced block as a code block:*
 
-"No environment setup document found. Are there any setup instructions I should follow before implementing?"
+```
+No environment setup document found. Are there any setup instructions
+I should follow before implementing?
+```
 
 **STOP.** Wait for user response.
 
@@ -103,7 +130,7 @@ Save their instructions to `docs/workflow/environment-setup.md` (or "No special 
 
 ## Step 2: Read Plan + Load Plan Adapter
 
-1. Read the plan from the provided location (typically `docs/workflow/planning/{topic}.md`)
+1. Read the plan from the provided location (typically `docs/workflow/planning/{topic}/plan.md`)
 2. Plans can be stored in various formats. The `format` field in the plan's frontmatter identifies which format this plan uses.
 3. Load the format's per-concern adapter files from `../technical-planning/references/output-formats/{format}/`:
    - **reading.md** — how to read tasks from the plan
@@ -131,7 +158,7 @@ Create `docs/workflow/implementation/{topic}/tracking.md`:
 ```yaml
 ---
 topic: {topic}
-plan: ../../planning/{topic}.md
+plan: ../../planning/{topic}/plan.md
 format: {format from plan}
 status: in-progress
 task_gate_mode: gated
@@ -257,7 +284,7 @@ Recommendations: {any suggested tools with install commands}
 
 ## Step 6: Task Loop
 
-Load **[steps/task-loop.md](references/steps/task-loop.md)** and follow its instructions as written.
+Load **[task-loop.md](references/task-loop.md)** and follow its instructions as written.
 
 After the loop completes:
 
@@ -269,7 +296,7 @@ After the loop completes:
 
 ## Step 7: Analysis Loop
 
-Load **[steps/analysis-loop.md](references/steps/analysis-loop.md)** and follow its instructions as written.
+Load **[analysis-loop.md](references/analysis-loop.md)** and follow its instructions as written.
 
 → If new tasks were created in the plan, return to **Step 6**.
 
@@ -278,6 +305,25 @@ Load **[steps/analysis-loop.md](references/steps/analysis-loop.md)** and follow 
 ---
 
 ## Step 8: Mark Implementation Complete
+
+Before marking complete, present the sign-off:
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+- **`y`/`yes`** — Mark implementation as completed
+- **Comment** — Add context before completing
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If comment
+
+Discuss the user's context. If additional work is needed, route back to **Step 6** or **Step 7** as appropriate. Otherwise, re-present the sign-off prompt above.
+
+#### If yes
 
 Update the tracking file (`docs/workflow/implementation/{topic}/tracking.md`):
 - Set `status: completed`
@@ -292,13 +338,13 @@ Commit: `impl({topic}): complete implementation`
 
 - **[environment-setup.md](references/environment-setup.md)** — Environment setup before implementation
 - **[linter-setup.md](references/linter-setup.md)** — Linter discovery and configuration
-- **[steps/task-loop.md](references/steps/task-loop.md)** — Task execution loop, task gates, tracking, commits
-- **[steps/analysis-loop.md](references/steps/analysis-loop.md)** — Analysis and refinement cycle
-- **[steps/invoke-executor.md](references/steps/invoke-executor.md)** — How to invoke the executor agent
-- **[steps/invoke-reviewer.md](references/steps/invoke-reviewer.md)** — How to invoke the reviewer agent
-- **[steps/invoke-analysis.md](references/steps/invoke-analysis.md)** — How to invoke analysis agents
-- **[steps/invoke-synthesizer.md](references/steps/invoke-synthesizer.md)** — How to invoke the synthesis agent
-- **[steps/invoke-task-writer.md](references/steps/invoke-task-writer.md)** — How to invoke the task writer agent
+- **[task-loop.md](references/task-loop.md)** — Task execution loop, task gates, tracking, commits
+- **[analysis-loop.md](references/analysis-loop.md)** — Analysis and refinement cycle
+- **[invoke-executor.md](references/invoke-executor.md)** — How to invoke the executor agent
+- **[invoke-reviewer.md](references/invoke-reviewer.md)** — How to invoke the reviewer agent
+- **[invoke-analysis.md](references/invoke-analysis.md)** — How to invoke analysis agents
+- **[invoke-synthesizer.md](references/invoke-synthesizer.md)** — How to invoke the synthesis agent
+- **[invoke-task-writer.md](references/invoke-task-writer.md)** — How to invoke the task writer agent
 - **[task-normalisation.md](references/task-normalisation.md)** — Normalised task shape for agent invocation
 - **[tdd-workflow.md](references/tdd-workflow.md)** — TDD cycle (passed to executor agent)
 - **[code-quality.md](references/code-quality.md)** — Quality standards (passed to executor agent)

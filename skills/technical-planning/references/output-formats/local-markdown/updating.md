@@ -2,7 +2,7 @@
 
 ## Status Transitions
 
-Update the `status` field in the task file frontmatter at `docs/workflow/planning/{topic}/{task-id}.md`:
+Update the `status` field in the task file frontmatter at `docs/workflow/planning/{topic}/tasks/{task-id}.md`:
 
 | Transition | Value |
 |------------|-------|

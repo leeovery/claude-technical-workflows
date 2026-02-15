@@ -1,6 +1,6 @@
 # Verify Source Material
 
-*Reference for **[technical-planning](../../SKILL.md)***
+*Reference for **[technical-planning](../SKILL.md)***
 
 ---
 
@@ -15,6 +15,6 @@ Verify that all source material exists and is accessible before entering agent-d
 ### Example
 
 ```bash
-ls docs/workflow/specification/{topic}.md
-ls docs/workflow/specification/{cross-cutting-spec}.md
+ls docs/workflow/specification/{topic}/specification.md
+ls docs/workflow/specification/{cross-cutting-spec}/specification.md
 ```

@@ -1,6 +1,6 @@
 # Plan Construction
 
-*Reference for **[technical-planning](../../SKILL.md)***
+*Reference for **[technical-planning](../SKILL.md)***
 
 ---
 
@@ -51,9 +51,13 @@ After the phase structure is approved, continue to **Process Phases** below.
 
 Work through each phase in order.
 
-Orient the user:
+> *Output the next fenced block as a code block:*
 
-"I'll now work through each phase — presenting existing work for review and designing or authoring anything still pending. You'll approve at every stage."
+```
+I'll now work through each phase — presenting existing work for review
+and designing or authoring anything still pending. You'll approve at
+every stage.
+```
 
 ### For each phase, check its state:
 
@@ -67,9 +71,13 @@ After Step A returns with an approved task table, continue to **Author Tasks for
 
 #### If the phase has a task table
 
-Present the task list to the user as rendered markdown (not in a code block).
+> *Output the next fenced block as markdown (not a code block):*
 
+```
 **Phase {N}: {Phase Name}** — {M} tasks.
+
+{task list from the phase's task table}
+```
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -84,9 +92,13 @@ Present the task list to the user as rendered markdown (not in a code block).
 
 **STOP.** Wait for the user's response.
 
-**If the user wants changes:** → Go to **Step A** with this phase for revision.
+#### If the user wants changes
 
-**If confirmed:** Continue to **Author Tasks for the Phase** below.
+→ Go to **Step A** with this phase for revision.
+
+#### If confirmed
+
+→ Continue to **Author Tasks for the Phase** below.
 
 ---
 
@@ -107,9 +119,13 @@ Never parallelize the first `pending` task in a phase. Never parallelize across 
 
 #### If the task status is `authored`
 
-Already written. Present a brief summary:
+Already written.
 
-"Task {M} of {total}: {Task Name} — already authored."
+> *Output the next fenced block as a code block:*
+
+```
+Task {M} of {total}: {Task Name} — already authored.
+```
 
 Continue to the next task.
 
@@ -123,7 +139,11 @@ After Step B returns, the task is authored. Continue to the next task.
 
 Advance the `planning:` block in frontmatter to the next phase. Commit: `planning({topic}): complete Phase {N} tasks`
 
+> *Output the next fenced block as a code block:*
+
+```
 Phase {N}: {Phase Name} — complete ({M} tasks authored).
+```
 
 Continue to the next phase.
 
@@ -133,7 +153,11 @@ Continue to the next phase.
 
 When all phases have all tasks authored:
 
-"All phases are complete. The plan has **{N} phases** with **{M} tasks** total."
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+All phases are complete. The plan has **{N} phases** with **{M} tasks** total.
+```
 
 ---
 
