@@ -122,7 +122,7 @@ Notes (non-blocking):
 - **`a`/`auto`** — Accept and auto-approve future fix analyses
 - **`s`/`skip`** — Override the reviewer and proceed as-is
 - **Ask** — Ask questions about the review (doesn't accept or reject)
-- **Comment** — Any commentary, adjustments, or alternative approaches before passing to executor
+- **Comment** — Accept with adjustments — pass your own direction to the executor alongside the review
 · · · · · · · · · · · ·
 ```
 
