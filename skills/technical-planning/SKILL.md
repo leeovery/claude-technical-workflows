@@ -247,11 +247,28 @@ Load **[steps/plan-review.md](references/steps/plan-review.md)** and follow its 
 
 ## Step 8: Conclude the Plan
 
-After the review sign-off (plan-review.md Completion confirms `yes`):
+> **CHECKPOINT**: Do not conclude if any tasks in the Plan Index File show `status: pending`. All tasks must be `authored` before concluding.
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+- **`y`/`yes`** — Conclude plan and mark as concluded
+- **Comment** — Add context before concluding
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If comment
+
+Discuss the user's context. If additional work is needed, route back to **Step 6** or **Step 7** as appropriate. Otherwise, re-present the sign-off prompt above.
+
+#### If yes
 
 1. **Update plan status** — Set `status: concluded` in the Plan Index File frontmatter
-3. **Final commit** — Commit the concluded plan
-4. **Present completion summary**:
+2. **Final commit** — Commit the concluded plan: `planning({topic}): conclude plan`
+3. **Present completion summary**:
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -262,5 +279,3 @@ The plan contains **{N} phases** with **{M} tasks** total, reviewed for traceabi
 
 Status has been marked as `concluded`. The plan is ready for implementation.
 ```
-
-> **CHECKPOINT**: Do not conclude if any tasks in the Plan Index File show `status: pending`. All tasks must be `authored` before concluding.

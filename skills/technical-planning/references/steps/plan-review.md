@@ -85,27 +85,16 @@ with fresh context — 2-3 cycles typically surface anything cascading.
 
 ## E. Completion
 
-1. **Verify tracking files are marked complete** — All traceability and integrity tracking files across all cycles must have `status: complete`
-
-2. **Sign-off**:
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-- **`y`/`yes`** — Conclude plan and mark as concluded
-- **Comment** — Add context before concluding
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-#### If comment
-
-Discuss the user's context, apply any changes, then re-present the sign-off prompt above.
-
-#### If yes
-
-→ Return to **[technical-planning SKILL.md](../../SKILL.md)** Step 8 for conclusion.
+1. **Verify tracking files are marked complete** — All traceability and integrity tracking files across all cycles must have `status: complete`.
 
 > **CHECKPOINT**: Do not confirm completion if any tracking files still show `status: in-progress`. They indicate incomplete review work.
+
+2. **Commit** all review tracking files: `planning({topic}): complete plan review (cycle {N})`
+
+> *Output the next fenced block as a code block:*
+
+```
+Plan review complete — {N} cycle(s), all tracking files finalised.
+```
+
+→ Return to **[technical-planning SKILL.md](../../SKILL.md)** for **Step 8**.
