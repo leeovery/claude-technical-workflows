@@ -38,11 +38,13 @@ E. Update progress + commit
 
 ### Executor Blocked
 
-Present the executor's ISSUES to the user:
+> *Output the next fenced block as a code block:*
 
-**Task {id}: {Task Name} — {blocked/failed}**
+```
+Task {id}: {Task Name} — {blocked/failed}
 
 {executor's ISSUES content}
+```
 
 > *Output the next fenced block as markdown (not a code block):*
 
