@@ -71,9 +71,13 @@ After Step A returns with an approved task table, continue to **Author Tasks for
 
 #### If the phase has a task table
 
-Present the task list to the user as rendered markdown (not in a code block).
+> *Output the next fenced block as markdown (not a code block):*
 
+```
 **Phase {N}: {Phase Name}** — {M} tasks.
+
+{task list from the phase's task table}
+```
 
 > *Output the next fenced block as markdown (not a code block):*
 
