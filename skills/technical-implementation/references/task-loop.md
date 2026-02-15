@@ -121,7 +121,8 @@ Notes (non-blocking):
 - **`y`/`yes`** — Accept the review and fix analysis, pass to executor
 - **`a`/`auto`** — Accept and auto-approve future fix analyses
 - **`s`/`skip`** — Override the reviewer and proceed as-is
-- **Comment** — Any commentary, adjustments, alternative approaches, or questions before passing to executor
+- **Ask** — Ask questions about the review (doesn't accept or reject)
+- **Comment** — Any commentary, adjustments, or alternative approaches before passing to executor
 · · · · · · · · · · · ·
 ```
 
@@ -130,6 +131,7 @@ Notes (non-blocking):
 - **`y`/`yes`**: → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the reviewer's notes (including fix analysis).
 - **`auto`**: Note that `fix_gate_mode` should be updated to `auto` during the next commit step. → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content and the reviewer's notes (including fix analysis).
 - **`skip`**: → Proceed to **D. Task Gate**.
+- **Ask**: Answer the user's questions about the review. When complete, re-present the Review Changes options above. Repeat until the user selects a terminal option (`yes`, `auto`, `skip`, or Comment).
 - **Comment**: → Return to the top of **B. Execute Task** and re-invoke the executor with the full task content, the reviewer's notes, and the user's commentary.
 
 ---
