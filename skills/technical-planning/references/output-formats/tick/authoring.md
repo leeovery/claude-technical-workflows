@@ -1,0 +1,94 @@
+# Tick: Authoring
+
+## Task Storage
+
+Tasks are created using the `tick create` command. Before creating individual tasks, establish the topic and phase parent tasks.
+
+**1. Create the topic task:**
+
+```bash
+tick create "{Topic Name}"
+```
+
+This returns the topic task ID (e.g., `tick-a1b2`).
+
+**2. Create phase tasks as children of the topic:**
+
+```bash
+tick create "Phase 1: {Phase Name}" --parent tick-a1b2
+tick create "Phase 2: {Phase Name}" --parent tick-a1b2
+```
+
+**3. Create tasks as children of their phase:**
+
+```bash
+tick create "{Task Title}" --parent tick-c3d4 \
+  --description "{Task description content.
+
+Acceptance criteria, edge cases, and implementation
+details go here. Supports multi-line text.}"
+```
+
+Complete example — creating a task under a phase:
+
+```bash
+tick create "Implement authentication middleware" \
+  --parent tick-c3d4 \
+  --description "Create Express middleware that validates JWT tokens on protected routes.
+
+Acceptance criteria:
+- Validates token signature and expiry
+- Extracts user ID from token payload
+- Returns 401 for missing or invalid tokens
+- Passes user context to downstream handlers"
+```
+
+## Task Properties
+
+### Status
+
+Tasks are created with `open` status by default.
+
+| Status | Meaning |
+|--------|---------|
+| `open` | Task has been authored but not started |
+| `in_progress` | Task is currently being worked on |
+| `done` | Task is complete |
+| `cancelled` | Task is no longer needed |
+
+### Phase Grouping
+
+Phases are represented as parent tasks. Each task belongs to a phase by being a child of that phase's task. Use `--parent <phase-id>` during creation.
+
+To list tasks within a phase:
+
+```bash
+tick list --parent <phase-id>
+```
+
+### Labels / Tags
+
+Tick does not have a native label or tag system. Categorisation is handled through the parent/child hierarchy.
+
+## Flagging
+
+When information is missing, prefix the task title with `[NEEDS INFO]` and include questions in the description:
+
+```bash
+tick create "[NEEDS INFO] Rate limiting strategy" \
+  --parent tick-c3d4 \
+  --description "Needs clarification:
+- What is the rate limit threshold?
+- Per-user or per-IP?
+- What response code on limit exceeded?"
+```
+
+## Cleanup (Restart)
+
+Delete the `.tick/` directory and reinitialize:
+
+```bash
+rm -rf .tick && tick init
+```
+
+This removes all tasks and starts fresh. For single-topic projects this is the simplest restart.
