@@ -4,13 +4,9 @@
 
 ---
 
-After receiving status from a review agent, process its findings interactively with the user. This process is the same for both traceability and integrity reviews.
+Process findings from a review agent interactively with the user. The agent writes findings — with full fix content — to a tracking file. Read the tracking file and present each finding for approval.
 
-The agent writes its findings — with full fix content — to a tracking file. The orchestrator reads the tracking file and presents each finding to the user for approval.
-
----
-
-## If STATUS is `clean`
+#### If STATUS is `clean`
 
 No findings. Announce:
 
@@ -18,33 +14,38 @@ No findings. Announce:
 
 → Return to **[plan-review.md](plan-review.md)** for the next phase.
 
----
-
-## If STATUS is `findings`
+#### If STATUS is `findings`
 
 Read the tracking file at the path returned by the agent (`TRACKING_FILE`).
 
-### Stage 1: Summary
-
-Present all findings as a numbered summary:
-
-"I've completed the {review type} review. {N} items found:
-
-1. **{title}** ({type or severity}) — {change_type}
-   {1-2 line summary from the Details field}
-
-2. **{title}** ({type or severity}) — {change_type}
-   {1-2 line summary}
-
-Let's work through these one at a time, starting with #1."
+→ Proceed to **A. Summary**.
 
 ---
 
-### Stage 2: Process One Item at a Time
+## A. Summary
+
+> *Output the next fenced block as a code block:*
+
+```
+{Review type} Review — {N} items found
+
+1. {title} ({type or severity}) — {change_type}
+   {1-2 line summary from the Details field}
+
+2. ...
+```
+
+"Let's work through these one at a time, starting with #1."
+
+→ Proceed to **B. Process One Item at a Time**.
+
+---
+
+## B. Process One Item at a Time
 
 Work through each finding **sequentially**. For each finding: present it, show the proposed fix, wait for approval, then apply or skip.
 
-#### Present the Finding
+### Present the Finding
 
 Show the finding with its full fix content, read directly from the tracking file:
 
@@ -70,9 +71,7 @@ For integrity findings:
 **Proposed**:
 {from tracking file — the replacement content, rendered as markdown}
 
-What the user sees is what gets applied — no changes between approval and writing.
-
-#### Ask for Approval
+### Ask for Approval
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -97,17 +96,21 @@ Incorporate feedback and re-present the proposed fix **in full**. Update the tra
 2. Update the tracking file: set resolution to "Fixed", add any discussion notes.
 3. Confirm: "Finding {N} of {total}: {Brief Title} — fixed."
 
+→ Present the next pending finding, or proceed to **C. After All Findings Processed**.
+
 #### If skipped
 
 1. Update the tracking file: set resolution to "Skipped", note the reason.
 2. Confirm: "Finding {N} of {total}: {Brief Title} — skipped."
 
+→ Present the next pending finding, or proceed to **C. After All Findings Processed**.
+
 ---
 
-### After All Findings Processed
+## C. After All Findings Processed
 
-1. **Mark the tracking file as complete** — Set `status: complete`. Do not delete it; it persists as review history.
-2. **Commit** the tracking file and any plan changes. This ensures progress survives context refresh.
+1. **Mark the tracking file as complete** — Set `status: complete`.
+2. **Commit** the tracking file and any plan changes.
 3. Announce: "{Review type} review complete — {N} findings processed."
 
 → Return to **[plan-review.md](plan-review.md)** for the next phase.
