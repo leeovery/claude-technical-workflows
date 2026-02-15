@@ -103,7 +103,8 @@ If `fix_attempts >= 3`, the executor and reviewer have failed to converge. Prepe
 > *Output the next fenced block as a code block:*
 
 ```
-@if(fix_attempts >= 3) The executor and reviewer have not converged after {N} attempts. Escalating for human review.
+@if(fix_attempts >= 3)
+  The executor and reviewer have not converged after {N} attempts. Escalating for human review.
 
 @endif
 Review for Task {id}: {Task Name} — needs changes (attempt {N})
