@@ -24,5 +24,6 @@
   "sandbox": {
     "enabled": false,
     "autoAllowBashIfSandboxed": false
-  }
+  },
+  "outputStyle": "Explanatory"
 }
