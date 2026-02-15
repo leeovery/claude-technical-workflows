@@ -27,13 +27,11 @@ Invoke `planning-task-author` with these file paths:
 
 The agent returns complete task detail following the task template from task-design.md.
 
+Present the task detail to the user as rendered markdown (not in a code block) **exactly as it will be written** — what the user sees is what gets logged.
+
 Check `author_gate_mode` in the Plan Index File frontmatter.
 
 #### If `author_gate_mode: auto`
-
-Present the task detail to the user as rendered markdown (not in a code block) — same content as gated mode, so the user can monitor output as it flows.
-
-Then announce (one line, no stop):
 
 > *Output the next fenced block as a code block:*
 
@@ -44,10 +42,6 @@ Task {M} of {total}: {Task Name} — authored. Logging to plan.
 → Skip to **If approved** below.
 
 #### If `author_gate_mode: gated`
-
-Present the task detail to the user as rendered markdown (not in a code block) **exactly as it will be written** — what the user sees is what gets logged.
-
-After presenting, ask:
 
 **Task {M} of {total}: {Task Name}**
 

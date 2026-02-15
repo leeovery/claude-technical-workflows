@@ -51,31 +51,9 @@ Let's work through these one at a time, starting with #1.
 
 ## B. Process One Item at a Time
 
-Work through each finding **sequentially**. For each finding: present it, show the proposed fix, wait for approval, then apply or skip.
+Work through each finding **sequentially**. For each finding: present it, show the proposed fix, then route through the gate.
 
-### Check Gate Mode
-
-Check `finding_gate_mode` in the Plan Index File frontmatter.
-
-#### If `finding_gate_mode: auto`
-
-Process all remaining findings automatically. For each finding:
-
-1. Present the finding (same display as gated mode — show full fix content with Current/Proposed so the user can monitor)
-2. Apply the fix to the plan (use **Proposed** content exactly as in tracking file)
-3. Update the tracking file: set resolution to "Fixed"
-4. Commit the tracking file and plan changes
-5. Announce (one line, no stop):
-
-   > *Output the next fenced block as a code block:*
-
-   ```
-   Finding {N} of {total}: {Brief Title} — approved. Applied to plan.
-   ```
-
-After all findings processed → Proceed to **C. After All Findings Processed**.
-
-#### If `finding_gate_mode: gated`
+### Present Finding
 
 Show the finding with its full fix content, read directly from the tracking file.
 
@@ -105,7 +83,25 @@ Show the finding with its full fix content, read directly from the tracking file
 {from tracking file — the replacement content}
 ```
 
-### Ask for Approval
+### Check Gate Mode
+
+Check `finding_gate_mode` in the Plan Index File frontmatter.
+
+#### If `finding_gate_mode: auto`
+
+1. Apply the fix to the plan (use **Proposed** content exactly as in tracking file)
+2. Update the tracking file: set resolution to "Fixed"
+3. Commit the tracking file and plan changes
+
+> *Output the next fenced block as a code block:*
+
+```
+Finding {N} of {total}: {Brief Title} — approved. Applied to plan.
+```
+
+→ Present the next pending finding, or proceed to **C. After All Findings Processed**.
+
+#### If `finding_gate_mode: gated`
 
 > *Output the next fenced block as markdown (not a code block):*
 

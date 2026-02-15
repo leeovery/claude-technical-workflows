@@ -466,7 +466,7 @@ Per-item approval gates can offer `a`/`auto` to let the user bypass repeated STO
 
 **Frontmatter tracking**: Gate modes are stored in the relevant frontmatter file (`gated` or `auto`). This ensures they survive context refresh.
 
-**Behavior when `auto`**: Present the same content as gated mode (so the user can monitor), then proceed without a STOP gate. Use a rendering instruction + code block for the one-line announcement:
+**Behavior when `auto`**: Content is always rendered above the gate check (so both modes see identical output). Auto mode proceeds without a STOP gate. Use a rendering instruction + code block for the one-line announcement:
 
 ```
 > *Output the next fenced block as a code block:*
