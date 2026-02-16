@@ -126,24 +126,21 @@ Not every task needs the full workflow. These skills gather inputs flexibly and 
 Skills are organised in two tiers. **Entry-point skills** (`/start-*`, `/status`, etc.) gather context from files, prompts, or inline input. **Processing skills** (`technical-*`) receive those inputs and do the work — they don't know or care where inputs came from. This means the same processing skill can be invoked from different entry points, and you can create custom entry-point skills that feed them in new ways.
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    ENTRY-POINT SKILLS                        │
-│  (gather inputs from files, prompts, inline context)         │
-├─────────────────────────────────────────────────────────────┤
-│  /start-specification   /start-feature   (your custom)      │
-│         │                       │                 │          │
-│         └───────────┬───────────┘                 │          │
-│                     ▼                             ▼          │
-├─────────────────────────────────────────────────────────────┤
-│                    PROCESSING SKILLS                         │
-│  (process inputs without knowing their source)               │
-├─────────────────────────────────────────────────────────────┤
-│           technical-specification skill                      │
-│           technical-planning skill                           │
-│           technical-implementation skill                     │
-│           etc.                                               │
-└─────────────────────────────────────────────────────────────┘
+  Entry-Point Skills                Processing Skills
+  (gather inputs)                   (do the work)
+
+  /start-specification ──┐
+                         ├────▶  technical-specification
+  /start-feature ────────┘
+
+  /start-planning ───────────▶  technical-planning
+
+  /start-implementation ─────▶  technical-implementation
+
+  (your custom) ─────────────▶  (any processing skill)
 ```
+
+Entry-point skills are interchangeable — `/start-specification` and `/start-feature` both feed the same processing skill with different inputs.
 
 ### Workflow Skills
 
@@ -172,17 +169,11 @@ Choose a format when planning begins. New formats can be scaffolded with `/creat
 
 ## Installation
 
-| Method  | Where files live           | Best for                                        |
-|---------|----------------------------|-------------------------------------------------|
-| **npm** | `.claude/` in your project | Ownership, version control, Claude Code for Web |
-
-### npm
-
 ```bash
 npm install -D @leeovery/claude-technical-workflows
 ```
 
-Skills are copied to `.claude/` and can be committed, giving you ownership and making them available everywhere including Claude Code for Web.
+Skills are copied to `.claude/` in your project and can be committed, giving you ownership and making them available everywhere including Claude Code for Web.
 
 <details>
 <summary>pnpm users</summary>
@@ -210,23 +201,33 @@ npx claude-manager remove @leeovery/claude-technical-workflows && npm rm @leeove
 
 ### Output Files
 
-Documents are stored in your project using a **phase-first** organisation:
+Documents are stored in your project using a **phase-first** organisation. Early phases use flat files; later phases use topic directories with multiple files for tracking and analysis.
 
 ```
 docs/workflow/
-├── research/              # Phase 1 - flat, semantically named files
+├── research/                          # Phase 1 — flat, semantically named
 │   ├── exploration.md
 │   ├── competitor-analysis.md
 │   └── pricing-models.md
-├── discussion/            # Phase 2 - one file per topic
+├── discussion/                        # Phase 2 — one file per topic
 │   └── {topic}.md
-├── specification/         # Phase 3 - one file per topic
-│   └── {topic}.md
-└── planning/              # Phase 4 - one file per topic
+├── specification/                     # Phase 3 — directory per topic
+│   └── {topic}/
+│       └── specification.md
+├── planning/                          # Phase 4 — directory per topic
+│   └── {topic}/
+│       ├── plan.md                    #   Plan index (phases, metadata)
+│       └── tasks/                     #   Task files (local-markdown format)
+│           ├── {topic}-1-1.md
+│           └── {topic}-1-2.md
+├── implementation/                    # Phase 5 — directory per topic
+│   └── {topic}/
+│       └── tracking.md               #   Progress, gates, current task
+└── review/                            # Phase 6 — one file per review
     └── {topic}.md
 ```
 
-Research starts with `exploration.md` and splits into topic files as themes emerge. From discussion onwards, each topic gets its own file per phase.
+Research starts with `exploration.md` and splits into topic files as themes emerge. From specification onwards, each topic gets its own directory. Planning task storage varies by [output format](#output-formats) — the tree above shows local-markdown; Tick and Linear store tasks externally.
 
 ### Package Structure
 

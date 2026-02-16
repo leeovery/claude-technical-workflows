@@ -101,7 +101,9 @@ Phase-first directory structure:
 - Research: `docs/workflow/research/` (flat, semantically named files)
 - Discussion: `docs/workflow/discussion/{topic}.md`
 - Specification: `docs/workflow/specification/{topic}/specification.md`
-- Planning: `docs/workflow/planning/{topic}/plan.md`
+- Planning: `docs/workflow/planning/{topic}/plan.md` + format-specific task storage
+- Implementation: `docs/workflow/implementation/{topic}/tracking.md`
+- Review: `docs/workflow/review/{topic}.md`
 
 Commit docs frequently (natural breaks, before context refresh). Skills capture context, don't implement.
 
