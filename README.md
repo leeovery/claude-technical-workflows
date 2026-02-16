@@ -123,27 +123,18 @@ Not every task needs the full workflow. These skills gather inputs flexibly and 
 
 ### Feature Pipeline
 
-The `/start-feature` and `/continue-feature` skills form an automated pipeline that chains phases together using **plan mode bridges**:
+`/start-feature` chains the full workflow into an automated pipeline:
 
 ```
 /start-feature
     │
     ▼
-Discussion ──bridge──▶ /continue-feature
-                            │
-                            ▼
-                      Specification ──bridge──▶ /continue-feature
-                                                    │
-                                                    ▼
-                                              Planning ──bridge──▶ /continue-feature
-                                                                        │
-                                                                        ▼
-                                                                  Implementation
+Discussion ──▶ Specification ──▶ Planning ──▶ Implementation
 ```
 
-**How it works:** After each phase completes, the skill enters plan mode with a handoff message. When you approve with "clear context and continue", Claude starts fresh and invokes `/continue-feature` which detects the current state and routes to the next phase. This keeps each phase in a clean context window.
+**How it works:** After each phase completes, a plan mode bridge clears context and advances to the next phase automatically. You approve each transition with "clear context and continue" — this keeps each phase in a clean context window.
 
-You can also run `/continue-feature` manually at any time to pick up where you left off — it reads artifact state to determine the next phase.
+If a session is interrupted, run `/continue-feature` to pick up where you left off. It reads artifact state to determine the next phase.
 
 ### Under the Hood
 
