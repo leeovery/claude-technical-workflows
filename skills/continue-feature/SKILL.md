@@ -131,8 +131,6 @@ After the processing skill concludes (specification status becomes "concluded"):
 
 → Proceed to **Step 6**.
 
-**Recovery checkpoint**: If context was compacted, check `docs/workflow/specification/{topic}/specification.md`. If it exists and has `status: concluded` → proceed to Step 6. If `status: in-progress` → resume specification. If absent → re-enter Step 3.
-
 ---
 
 ## Step 4: Planning Phase
@@ -143,8 +141,6 @@ After the processing skill concludes (plan status becomes "concluded"):
 
 → Proceed to **Step 6**.
 
-**Recovery checkpoint**: If context was compacted, check `docs/workflow/planning/{topic}/plan.md`. If it exists and has `status: concluded` → proceed to Step 6. If `status: in-progress` or `status: planning` → resume planning. If absent → re-enter Step 4.
-
 ---
 
 ## Step 5: Implementation Phase
@@ -154,8 +150,6 @@ Load **[invoke-implementation.md](references/invoke-implementation.md)** and fol
 After the processing skill concludes (implementation tracking status becomes "completed"):
 
 → Proceed to **Step 6**.
-
-**Recovery checkpoint**: If context was compacted, check `docs/workflow/implementation/{topic}/tracking.md`. If it exists and has `status: completed` → proceed to Step 6. If `status: in-progress` → resume implementation. If absent → re-enter Step 5.
 
 ---
 
