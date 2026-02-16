@@ -36,7 +36,17 @@ Invoke the `/migrate` skill and assess its output.
 
 ## Step 1: Gather Feature Context
 
-**Recovery checkpoint**: If context was compacted, check for a discussion file matching the topic. If `docs/workflow/discussion/{topic}.md` exists with `status: concluded` → skip to Step 4. If exists with `status: in-progress` → skip to Step 3 to resume. If no topic is known → start from the beginning.
+**Recovery checkpoint**: If context was compacted, check for a discussion file matching the topic (`docs/workflow/discussion/{topic}.md`).
+
+#### If discussion exists with `status: concluded`
+
+→ Skip to **Step 4**.
+
+#### If discussion exists with `status: in-progress`
+
+→ Skip to **Step 3** to resume.
+
+#### If no topic is known or no discussion exists
 
 Load **[gather-feature-context.md](references/gather-feature-context.md)** and follow its instructions.
 
