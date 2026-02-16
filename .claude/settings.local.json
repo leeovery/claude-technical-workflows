@@ -17,7 +17,8 @@
       "Bash(git log:*)",
       "Bash(gh release list:*)",
       "Bash(gh pr create:*)",
-      "Bash(git -C /Users/leeovery/Code/claude/claude-technical-workflows log --oneline -30 -- skills/technical-research/)"
+      "Bash(git -C /Users/leeovery/Code/claude/claude-technical-workflows log --oneline -30 -- skills/technical-research/)",
+      "Bash(git remote prune:*)"
     ],
     "deny": [],
     "ask": []
