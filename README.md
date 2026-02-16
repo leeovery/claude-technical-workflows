@@ -1,7 +1,7 @@
 <h1 align="center">Claude Technical Workflows</h1>
 
 <p align="center">
-  <strong>From Idea to Implementation: Software Engineering Workflows for Claude Code</strong>
+  <strong>From Idea to Implementation: Agentic Engineering Workflows for Claude Code</strong>
 </p>
 
 <p align="center">
