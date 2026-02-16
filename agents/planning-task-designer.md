@@ -55,10 +55,10 @@ Phase {N}: {Phase Name}
 
 ```markdown
 #### Tasks
-| ID | Name | Edge Cases | Status |
-|----|------|------------|--------|
-| {topic}-{phase}-1 | {Task Name} | {list} | pending |
-| {topic}-{phase}-2 | {Task Name} | {list} | pending |
+| ID | Name | Edge Cases | Status | Ext ID |
+|----|------|------------|--------|--------|
+| {topic}-{phase}-1 | {Task Name} | {list} | pending | |
+| {topic}-{phase}-2 | {Task Name} | {list} | pending | |
 ```
 
 Use placeholder IDs in the format `{topic}-{phase}-{seq}`. The orchestrator will use the topic name from the Plan Index File.

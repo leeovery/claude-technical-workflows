@@ -41,16 +41,17 @@ status: approved
 **Goal**: Address findings from implementation analysis cycle {N}.
 
 #### Tasks
-| ID | Name | Edge Cases | Status |
-|----|------|------------|--------|
-| {topic}-{phase}-1 | {Task Title} | — | authored |
-| {topic}-{phase}-2 | {Task Title} | — | authored |
+| ID | Name | Edge Cases | Status | Ext ID |
+|----|------|------------|--------|--------|
+| {topic}-{phase}-1 | {Task Title} | — | authored | {ext-id} |
+| {topic}-{phase}-2 | {Task Title} | — | authored | {ext-id} |
 ```
 
 - Use `status: approved` for the phase (it's pre-approved by the user in the approval gate)
 - Use `authored` for each task status (the task files are fully written)
 - Use `—` for edge cases (analysis tasks don't have separate edge case annotations)
 - Task IDs must match the IDs used in the created task files
+- `Ext ID` must contain the external identifier for the task as exposed by the output format.
 
 ## Hard Rules
 
