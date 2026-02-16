@@ -123,24 +123,7 @@ Not every task needs the full workflow. These skills gather inputs flexibly and 
 
 ### Under the Hood
 
-Skills are organised in two tiers. **Entry-point skills** (`/start-*`, `/status`, etc.) gather context from files, prompts, or inline input. **Processing skills** (`technical-*`) receive those inputs and do the work — they don't know or care where inputs came from. This means the same processing skill can be invoked from different entry points, and you can create custom entry-point skills that feed them in new ways.
-
-```
-  Entry-Point Skills                Processing Skills
-  (gather inputs)                   (do the work)
-
-  /start-specification ──┐
-                         ├────▶  technical-specification
-  /start-feature ────────┘
-
-  /start-planning ───────────▶  technical-planning
-
-  /start-implementation ─────▶  technical-implementation
-
-  (your custom) ─────────────▶  (any processing skill)
-```
-
-Entry-point skills are interchangeable — `/start-specification` and `/start-feature` both feed the same processing skill with different inputs.
+Skills are organised in two tiers. **Entry-point skills** (`/start-*`, `/status`, etc.) gather context from files, prompts, or inline input. **Processing skills** (`technical-*`) receive those inputs and do the work — they don't know or care where inputs came from. This separation means the same processing skill can be invoked from different entry points: `/start-specification` and `/start-feature` both feed `technical-specification` with different inputs. You can create custom entry-point skills that feed processing skills in new ways.
 
 ### Workflow Skills
 
