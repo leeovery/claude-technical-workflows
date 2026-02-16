@@ -125,6 +125,7 @@ The contract and scaffolding templates live in `.claude/skills/create-output-for
 **NEVER list output format names (linear, local-markdown, etc.) anywhere except:**
 - `skills/technical-planning/references/output-formats.md` - the authoritative list
 - `skills/technical-planning/references/output-formats/{format}/` - individual format directories
+- `README.md` - user-facing documentation where format options are presented
 
 **Why this matters:** Listing formats elsewhere creates maintenance dependencies. If a format is added or removed, we should only need to update the planning references - not hunt through other skills or documentation.
 

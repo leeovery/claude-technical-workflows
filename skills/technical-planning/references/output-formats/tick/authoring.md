@@ -85,10 +85,22 @@ tick create "[NEEDS INFO] Rate limiting strategy" \
 
 ## Cleanup (Restart)
 
-Delete the `.tick/` directory and reinitialize:
+Cancel the topic task and all its descendants. First, list the tasks to collect their IDs:
+
+```bash
+tick list --parent <topic-id>
+```
+
+Then cancel each task (leaf tasks first, then phases, then the topic):
+
+```bash
+tick cancel <task-id>
+```
+
+Cancelled tasks remain in the JSONL history but are excluded from `tick ready` and active listings.
+
+**Full reset** (removes all tasks across all topics):
 
 ```bash
 rm -rf .tick && tick init
 ```
-
-This removes all tasks and starts fresh. For single-topic projects this is the simplest restart.

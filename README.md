@@ -36,6 +36,8 @@ Research → Discussion → Specification → Planning → Implementation → Re
 
 **Flexible entry points:** Need the full workflow? Start at Research or Discussion and progress through each phase. Already know what you're building? Jump straight to Specification with `/start-feature`. Entry-point skills gather context and feed it to processing skills.
 
+**Engineered like software.** This isn't a collection of prompts — it's built with the same discipline you'd apply to code. Processing skills follow the single responsibility principle. Entry-point skills compose with them, keeping input gathering DRY. Output formats implement a [5-file adapter contract](#output-formats), so planning works identically regardless of where tasks end up. Agents handle isolated concerns. The result is a natural language workflow that's modular, extensible, and maintainable — software engineering principles applied to agentic workflows.
+
 > [!NOTE]
 > **Work in progress.** The workflow is being refined through real-world usage. Expect updates as patterns evolve.
 
@@ -104,7 +106,7 @@ Each phase produces documents that feed the next. Here's the journey:
 
 **Specification** — This is where the magic happens. The skill analyses *all* your discussions and creates intelligent groupings — 10 discussions might become 3–5 specifications, or you can unify everything into one. It filters hallucinations, enriches gaps, and validates decisions against each other. The spec becomes the golden document: planning only references this, not earlier phases.
 
-**Planning** — Converts each specification into phased implementation plans with tasks, acceptance criteria, and dependency ordering. Supports multiple output formats. Task authoring has per-item approval gates (with auto-mode for faster flow).
+**Planning** — Converts each specification into phased implementation plans with tasks, acceptance criteria, and dependency ordering. Supports [multiple output formats](#output-formats) — from local markdown files to CLI tools with native dependency graphs. Task authoring has per-item approval gates (with auto-mode for faster flow).
 
 **Implementation** — Executes plans via strict TDD. Tests first, then code, commit after each task. Per-task approval gates keep you in control, with auto-mode available when you trust the flow.
 
@@ -155,6 +157,18 @@ Skills are organised in two tiers. **Entry-point skills** (`/start-*`, `/status`
 | Review         | `/start-review`         |
 
 Run the skill directly or ask Claude to run it. Each gathers context from previous phase outputs and passes it to the processing skill.
+
+### Output Formats
+
+Planning supports multiple output formats through an adapter pattern. Each format implements a 5-file contract — about, authoring, reading, updating, and graph — so the planning workflow works identically regardless of where tasks are stored.
+
+| Format | Best for | Setup | |
+|--------|----------|-------|-|
+| **Tick** | AI-driven workflows, native dependencies, token-efficient | `brew install leeovery/tools/tick` | Recommended |
+| **Local Markdown** | Simple features, offline, quick iterations | None | |
+| **Linear** | Team collaboration, visual tracking | Linear account + MCP server | |
+
+Choose a format when planning begins. New formats can be scaffolded with `/create-output-format`.
 
 ## Installation
 
@@ -280,7 +294,7 @@ Sequential skills that expect files from previous phases and pass content to pro
 | [**/start-research**](skills/start-research/)                                | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion.                                                                                     |
 | [**/start-discussion**](skills/start-discussion/)                            | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation.                                                               |
 | [**/start-specification**](skills/start-specification/)                      | Start a specification session from existing discussion(s). Automatically analyses multiple discussions for natural groupings and consolidates them into unified specifications.                            |
-| [**/start-planning**](skills/start-planning/)                                | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (local markdown, Linear). |
+| [**/start-planning**](skills/start-planning/)                                | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats. |
 | [**/start-implementation**](skills/start-implementation/)                    | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
 | [**/start-review**](skills/start-review/)                                    | Start reviewing completed work. Validates implementation against plan tasks and acceptance criteria.                                                                                                        |
 
