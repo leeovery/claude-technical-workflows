@@ -28,6 +28,7 @@ Invoke `planning-task-designer` with these file paths:
 4. **task-design.md**: `task-design.md`
 5. **All approved phases**: the complete phase structure from the Plan Index File body
 6. **Target phase number**: the phase being broken into tasks
+7. **plan-index-schema.md**: `plan-index-schema.md`
 
 ### Present the Output
 

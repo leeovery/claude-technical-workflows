@@ -41,6 +41,7 @@ Invoke `planning-phase-designer` with these file paths:
 3. **Cross-cutting specs**: paths from the Plan Index File's `cross_cutting_specs:` field (if any)
 4. **phase-design.md**: `phase-design.md`
 5. **task-design.md**: `task-design.md`
+6. **plan-index-schema.md**: `plan-index-schema.md`
 
 The agent returns a complete phase structure. Write it directly to the Plan Index File body.
 
@@ -88,7 +89,7 @@ Update the Plan Index File with the revised output, re-present, and ask again. R
 
 **If the phase structure is new or was amended:**
 
-1. Update each phase in the Plan Index File: set `status: approved` and `approved_at: YYYY-MM-DD` (use today's actual date)
+1. Update each phase in the Plan Index File: set `status: approved` and `approved_at: YYYY-MM-DD` (use today's actual date). See **Phase Entry** in plan-index-schema for field definitions.
 2. Commit: `planning({topic}): approve phase structure`
 
 **If the phase structure was already approved and unchanged:** No updates needed.

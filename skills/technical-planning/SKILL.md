@@ -172,29 +172,7 @@ Once selected:
 
 1. Read **[output-formats.md](references/output-formats.md)**, find the chosen format entry, and load the format's **[about.md](references/output-formats/{format}/about.md)** and **[authoring.md](references/output-formats/{format}/authoring.md)**
 2. Capture the current git commit hash: `git rev-parse HEAD`
-3. Create the Plan Index File at `docs/workflow/planning/{topic}/plan.md` with the following frontmatter and title:
-
-```yaml
----
-topic: {topic-name}
-status: planning
-format: {chosen-format}
-specification: ../specification/{topic}/specification.md
-cross_cutting_specs:              # Omit if none
-  - ../specification/{spec}/specification.md
-spec_commit: {output of git rev-parse HEAD}
-created: YYYY-MM-DD  # Use today's actual date
-updated: YYYY-MM-DD  # Use today's actual date
-external_dependencies: []
-author_gate_mode: gated
-finding_gate_mode: gated
-planning:
-  phase: 1
-  task: ~
----
-
-# Plan: {Topic Name}
-```
+3. Create the Plan Index File at `docs/workflow/planning/{topic}/plan.md` using the **Frontmatter** and **Title** templates from **[plan-index-schema.md](references/plan-index-schema.md)**. Set `status: planning`, `spec_commit` to the captured git hash, and today's actual date for `created` and `updated`.
 
 3. Commit: `planning({topic}): initialize plan`
 
