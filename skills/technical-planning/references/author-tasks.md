@@ -85,6 +85,8 @@ Note that `author_gate_mode` should be updated to `auto` during the commit step 
 
 > **CHECKPOINT**: If `author_gate_mode: gated`, verify before logging: (1) You presented this exact content, (2) The user explicitly approved with `y`/`yes` or equivalent — not a question, comment, or "okay" in passing, (3) You are writing exactly what was approved with no modifications.
 
+See **[plan-index-schema.md](plan-index-schema.md)** for field definitions and lifecycle.
+
 1. Write the task to the output format (format-specific — see authoring.md)
 2. If the Plan Index File frontmatter `ext_id` is empty, set it to the external identifier for the plan as exposed by the output format.
 3. If the current phase's `ext_id` is empty, set it to the external identifier for the phase as exposed by the output format.
