@@ -10,7 +10,7 @@ Route a feature to its next pipeline phase.
 
 ## Instructions
 
-Follow these steps EXACTLY as written. Do not skip steps or combine them. Present output using the EXACT format shown in examples - do not simplify or alter the formatting.
+Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 **CRITICAL**: This guidance is mandatory.
 
@@ -44,7 +44,7 @@ Use the provided topic directly.
 
 #### If no topic provided (bare invocation)
 
-Run the discovery script:
+Run the discovery script to gather current state:
 
 ```bash
 .claude/skills/continue-feature/scripts/discovery.sh
@@ -58,8 +58,6 @@ Parse the output to understand:
 
 **IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state.
 
-**Route by scenario:**
-
 #### If scenario is "no_topics"
 
 > *Output the next fenced block as a code block:*
@@ -67,69 +65,43 @@ Parse the output to understand:
 ```
 Continue Feature
 
-No feature topics found in the workflow directories.
+No workflow topics found.
 
-Start a new feature with /start-feature or begin a discussion
-with /start-discussion.
+Start a new feature with /start-feature.
 ```
 
 **STOP.** Do not proceed — terminal condition.
 
-#### If scenario is "single_topic"
+#### If topics exist
 
-If the topic is actionable:
-
-> *Output the next fenced block as a code block:*
-
-```
-Automatically proceeding with "{topic:(titlecase)}".
-```
-
-Use this topic.
-
-If the topic is not actionable (done or unknown), handle as terminal — see Step 2.
-
-→ Proceed to **Step 2**.
-
-#### If scenario is "multiple_topics"
-
-Present all topics with their state:
+Present the discovered state as context, then ask the user to select:
 
 > *Output the next fenced block as a code block:*
 
 ```
 Continue Feature
 
-{N} feature topics found. {M} actionable.
+This skill continues a feature through the pipeline phases:
+Discussion → Specification → Planning → Implementation
+
+It's designed for features started with /start-feature, but works
+with any topic that has workflow artifacts.
+
+Topics found:
 
 1. {topic:(titlecase)}
    └─ Next: {next_phase}
-   └─ Discussion: @if(disc_exists) {disc_status} @else (none) @endif
-   └─ Spec: @if(spec_exists) {spec_status} @else (none) @endif
-   └─ Plan: @if(plan_exists) {plan_status} ({format}) @else (none) @endif
-   └─ Implementation: @if(impl_exists) {impl_status} @else (none) @endif
 
 2. ...
-```
-
-If any topics are not actionable (done), show them in a separate block:
-
-> *Output the next fenced block as a code block:*
-
-```
-Completed features:
-
-  • {topic} (done)
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
-1. Continue "{Topic}" — next: {next_phase}
-2. Continue "{Topic}" — next: {next_phase}
+Which topic would you like to continue?
 
-Select a feature to continue (enter number):
+Select by number, or enter a topic name directly:
 · · · · · · · · · · · ·
 ```
 
