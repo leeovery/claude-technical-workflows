@@ -22,6 +22,22 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 ---
 
+## Resuming After Context Refresh
+
+Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
+
+1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
+2. **Identify the topic.** Check conversation history for the topic name. If unknown, check `docs/workflow/discussion/` for recently modified files via `git log --oneline -5`.
+3. **Determine current step from artifacts:**
+   - No discussion file exists → resume at **Step 1**
+   - Discussion exists with `status: in-progress` → resume at **Step 3** (re-invoke technical-discussion)
+   - Discussion exists with `status: concluded` → resume at **Step 4** (phase bridge)
+4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
+
+Do not guess at progress or continue from memory. The files on disk and git history are authoritative — your recollection is not.
+
+---
+
 ## Step 0: Run Migrations
 
 **This step is mandatory. You must complete it before proceeding.**
