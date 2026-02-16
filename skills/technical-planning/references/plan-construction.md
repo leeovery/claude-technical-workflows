@@ -79,6 +79,20 @@ After Step A returns with an approved task table, continue to **Author Tasks for
 {task list from the phase's task table}
 ```
 
+Check `task_list_gate_mode` in the Plan Index File frontmatter.
+
+#### If `task_list_gate_mode: auto` (existing task table)
+
+> *Output the next fenced block as a code block:*
+
+```
+Phase {N}: {Phase Name} — task list confirmed. Proceeding to authoring.
+```
+
+→ Continue to **Author Tasks for the Phase** below.
+
+#### If `task_list_gate_mode: gated` (existing task table)
+
 > *Output the next fenced block as markdown (not a code block):*
 
 ```

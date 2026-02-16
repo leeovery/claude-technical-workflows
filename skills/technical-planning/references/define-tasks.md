@@ -43,7 +43,31 @@ planning:
 
 Commit: `planning({topic}): draft Phase {N} task list`
 
-Present the task overview to the user as rendered markdown (not in a code block). Then, separately, present the choices:
+Present the task overview to the user:
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+{task overview from planning-task-designer agent}
+```
+
+Then check the gate mode.
+
+### Check Gate Mode
+
+Check `task_list_gate_mode` in the Plan Index File frontmatter.
+
+#### If `task_list_gate_mode: auto`
+
+> *Output the next fenced block as a code block:*
+
+```
+Phase {N}: {Phase Name} — task list approved. Proceeding to authoring.
+```
+
+→ Skip to **If approved** below.
+
+#### If `task_list_gate_mode: gated`
 
 **STOP.** Ask:
 
@@ -53,6 +77,7 @@ Present the task overview to the user as rendered markdown (not in a code block)
 · · · · · · · · · · · ·
 **To proceed:**
 - **`y`/`yes`** — Approved.
+- **`a`/`auto`** — Approve this and all remaining task list gates automatically
 - **Or tell me what to change** — reorder, split, merge, add, edit, or remove tasks.
 - **Or navigate** — a different phase or task, or the leading edge.
 · · · · · · · · · · · ·
@@ -66,12 +91,19 @@ Re-invoke `planning-task-designer` with all original inputs PLUS:
 
 Update the Plan Index File with the revised task table, re-present, and ask again. Repeat until approved.
 
-#### If approved
+#### If `auto`
+
+Note that `task_list_gate_mode` should be updated to `auto` during the commit step below.
+
+→ Proceed to **If approved** below.
+
+#### If approved (`y`/`yes` or `auto`)
 
 **If the task list is new or was amended:**
 
 1. Advance the `planning:` block to the first task in this phase
-2. Commit: `planning({topic}): approve Phase {N} task list`
+2. If user chose `auto` at this gate: update `task_list_gate_mode: auto` in the Plan Index File frontmatter
+3. Commit: `planning({topic}): approve Phase {N} task list`
 
 **If the task list was already approved and unchanged:** No updates needed.
 

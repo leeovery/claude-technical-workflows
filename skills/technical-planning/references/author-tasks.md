@@ -55,7 +55,7 @@ Task {M} of {total}: {Task Name} — authored. Logging to plan.
 · · · · · · · · · · · ·
 **To proceed:**
 - **`y`/`yes`** — Approved. I'll log it to the plan.
-- **`a`/`auto`** — Approve this and all remaining tasks automatically
+- **`a`/`auto`** — Approve this and all remaining task authoring gates automatically
 - **Or tell me what to change.**
 - **Or navigate** — a different phase or task, or the leading edge.
 · · · · · · · · · · · ·
