@@ -65,7 +65,7 @@ Pick your entry point based on where you are:
 - **Clear feature, ready to spec?** → Use `/start-feature`
   You already know the what and why. Jump straight to building a specification from inline context — no prior documents needed.
 
-**Why research is the recommended default:** When you move from research to discussion, the skill analyses your research document and automatically breaks it into focused discussion topics. Skip research and you manage topic structure yourself. That automatic topic breakdown is one of the highest-value transitions in the workflow.
+**Why research is the recommended default:** When you move from research to discussion, the discussion skill analyses your research document and automatically breaks it into focused discussion topics. Skip research and you manage topic structure yourself.
 
 ### The Workflow
 
