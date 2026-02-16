@@ -23,6 +23,7 @@ spec_commit: {commit-hash}
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 external_dependencies: []
+task_list_gate_mode: gated
 author_gate_mode: gated
 finding_gate_mode: gated
 planning:
@@ -43,6 +44,7 @@ planning:
 | `created` | Plan creation — today's date |
 | `updated` | Plan creation — today's date; update on each commit |
 | `external_dependencies` | Dependency resolution (Step 6) |
+| `task_list_gate_mode` | Plan creation → `gated`; user opts in → `auto` |
 | `author_gate_mode` | Plan creation → `gated`; user opts in → `auto` |
 | `finding_gate_mode` | Plan creation → `gated`; user opts in → `auto` |
 | `planning.phase` | Tracks current phase position |
