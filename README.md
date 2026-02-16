@@ -64,8 +64,8 @@ Pick your entry point based on where you are:
 - **Know what you're building?** → Start with `/start-discussion`
   You've moved past exploration and want to capture architecture decisions, edge cases, and rationale for specific topics.
 
-- **Clear feature, ready to spec?** → Use `/start-feature`
-  You already know the what and why. Jump straight to building a specification from inline context — no prior documents needed.
+- **Clear feature, ready to build?** → Use `/start-feature`
+  You know what you're building. Start-feature gathers context, creates a discussion, then pipelines through specification → planning → implementation automatically via plan mode bridges.
 
 **Why research is the recommended default:** When you move from research to discussion, the discussion skill analyses your research document and automatically breaks it into focused discussion topics. Skip research and you manage topic structure yourself.
 
@@ -120,6 +120,30 @@ Not every task needs the full workflow. These skills gather inputs flexibly and 
 |-------|-------------|
 | `/start-feature` | Create a spec directly from inline context (skip research/discussion) |
 | `/link-dependencies` | Wire cross-topic dependencies across plans |
+
+### Feature Pipeline
+
+The `/start-feature` and `/continue-feature` skills form an automated pipeline that chains phases together using **plan mode bridges**:
+
+```
+/start-feature
+    │
+    ▼
+Discussion ──bridge──▶ /continue-feature
+                            │
+                            ▼
+                      Specification ──bridge──▶ /continue-feature
+                                                    │
+                                                    ▼
+                                              Planning ──bridge──▶ /continue-feature
+                                                                        │
+                                                                        ▼
+                                                                  Implementation
+```
+
+**How it works:** After each phase completes, the skill enters plan mode with a handoff message. When you approve with "clear context and continue", Claude starts fresh and invokes `/continue-feature` which detects the current state and routes to the next phase. This keeps each phase in a clean context window.
+
+You can also run `/continue-feature` manually at any time to pick up where you left off — it reads artifact state to determine the next phase.
 
 ### Under the Hood
 
@@ -226,7 +250,8 @@ skills/
 │
 ├── # Entry-point skills (user-invocable)
 ├── migrate/                         # Keep workflow files in sync with system design
-├── start-feature/                   # Standalone: spec from inline context
+├── start-feature/                   # Pipeline: discussion → spec → plan → impl
+├── continue-feature/                # Pipeline: route feature to next phase
 ├── link-dependencies/               # Standalone: wire cross-topic deps
 ├── start-research/                  # Begin research
 ├── start-discussion/                # Begin discussions
@@ -235,7 +260,11 @@ skills/
 ├── start-implementation/            # Begin implementation
 ├── start-review/                    # Begin review
 ├── status/                          # Show workflow status
-└── view-plan/                       # View plan tasks
+├── view-plan/                       # View plan tasks
+│
+├── # Bridge skills (model-invocable — pipeline pre-flight)
+├── begin-planning/                  # Pre-flight for planning in pipeline
+└── begin-implementation/            # Pre-flight for implementation in pipeline
 
 agents/
 ├── review-task-verifier.md           # Verifies single task implementation for review
@@ -298,7 +327,8 @@ Independent skills that gather inputs flexibly (inline context, files, or prompt
 
 | Skill                                                   | Description                                                                                                                                 |
 |---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| [**/start-feature**](skills/start-feature/)              | Create a specification directly from inline context. Invokes the specification skill without requiring a discussion document.              |
+| [**/start-feature**](skills/start-feature/)              | Start a new feature through the full pipeline. Gathers context, creates a discussion, then bridges through specification → planning → implementation. |
+| [**/continue-feature**](skills/continue-feature/)        | Continue a feature through its next pipeline phase. Routes automatically based on artifact state. Used manually or from plan mode bridges.  |
 | [**/link-dependencies**](skills/link-dependencies/)      | Link external dependencies across topics. Scans plans and wires up unresolved cross-topic dependencies.                                    |
 
 ### Creating Custom Skills

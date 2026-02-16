@@ -32,8 +32,17 @@ skills/
   migrate/                   # Keep workflow files in sync with system design
     scripts/migrate.sh       #   Migration orchestrator
     scripts/migrations/      #   Individual migration scripts (numbered)
-  start-feature/             # Create spec directly from inline context
+  start-feature/             # Start feature pipeline (discussion → spec → plan → impl)
+    references/              #   Interview questions, handoffs, phase bridge
+  continue-feature/          # Continue feature through next pipeline phase
+    scripts/discovery.sh     #   Cross-phase discovery script
+    references/              #   Phase detection, bridges, handoffs
   link-dependencies/         # Link dependencies across topics
+
+  # Bridge skills (model-invocable — pre-flight + handoff for pipeline)
+  begin-planning/            # Pre-flight for planning, invokes technical-planning
+    references/              #   Cross-cutting context
+  begin-implementation/      # Pre-flight for implementation, invokes technical-implementation
   start-research/            # Begin research exploration
   start-discussion/          # Begin technical discussions
     scripts/discovery.sh     #   Discovery script
