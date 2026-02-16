@@ -43,7 +43,15 @@ planning:
 
 Commit: `planning({topic}): draft Phase {N} task list`
 
-Present the task overview to the user as rendered markdown (not in a code block). Then check the gate mode.
+Present the task overview to the user:
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+{task overview from planning-task-designer agent}
+```
+
+Then check the gate mode.
 
 ### Check Gate Mode
 
