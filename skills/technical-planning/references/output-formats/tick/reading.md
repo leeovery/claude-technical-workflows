@@ -1,0 +1,61 @@
+# Tick: Reading
+
+## Listing Tasks
+
+To retrieve all tasks for a topic:
+
+```bash
+tick list --parent <topic-id>
+```
+
+This returns all descendants (phases and tasks) with summary-level data: id, title, status, priority, and parent. Results are sorted by priority (ascending), then creation date.
+
+To list tasks within a specific phase:
+
+```bash
+tick list --parent <phase-id>
+```
+
+Additional filtering:
+
+```bash
+tick list --parent <topic-id> --status open       # only open tasks
+tick list --parent <topic-id> --ready              # ready tasks only
+tick list --parent <topic-id> --blocked            # blocked tasks only
+tick list --parent <topic-id> --priority 0         # critical tasks only
+```
+
+## Extracting a Task
+
+To read full task detail including description, blockers, and children:
+
+```bash
+tick show <task-id>
+```
+
+Returns: id, title, status, priority, created/updated timestamps, parent, blocked_by list, children list, and full description.
+
+## Next Available Task
+
+To find the next task to implement:
+
+```bash
+tick ready --parent <phase-id>
+```
+
+This returns tasks that are:
+
+1. Status is `open` (not started, not done, not cancelled)
+2. No unresolved blockers (all `blocked_by` tasks are `done`)
+3. No open children (leaf tasks, or parent tasks whose children are all complete)
+4. Within the specified phase (scoped by `--parent`)
+
+Results are sorted by priority (lower number = higher priority), then creation date. The first result is the next task.
+
+To find the next task across all phases of a topic:
+
+```bash
+tick ready --parent <topic-id>
+```
+
+If `tick ready` returns no results, either all tasks are complete or remaining tasks are blocked.

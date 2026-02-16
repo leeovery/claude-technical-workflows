@@ -33,3 +33,14 @@ Tasks managed as Linear issues within a Linear project. A thin Plan Index File p
 - **Pros**: Visual tracking, team collaboration, real-time updates, integrates with existing Linear workflows
 - **Cons**: Requires Linear account and MCP server, external dependency, not fully local
 - **Best for**: Teams already using Linear, collaborative projects needing shared visibility
+
+### Tick
+format: `tick`
+
+adapter: [tick/](output-formats/tick/)
+
+CLI task management with native dependencies, priority, and token-efficient output designed for AI agents. Tasks stored in git-friendly JSONL with a SQLite cache.
+
+- **Pros**: Native dependency graph with cycle detection, `tick ready` for next-task resolution, token-efficient TOON output, git-friendly, works offline
+- **Cons**: Requires Tick CLI installation, no visual board or web UI
+- **Best for**: AI-driven workflows needing structured task tracking with dependency resolution

@@ -36,6 +36,8 @@ Research → Discussion → Specification → Planning → Implementation → Re
 
 **Flexible entry points:** Need the full workflow? Start at Research or Discussion and progress through each phase. Already know what you're building? Jump straight to Specification with `/start-feature`. Entry-point skills gather context and feed it to processing skills.
 
+**Engineered like software.** This isn't a collection of prompts — it's built with the same discipline you'd apply to code. Processing skills follow the single responsibility principle. Entry-point skills compose with them, keeping input gathering DRY. Output formats implement a [5-file adapter contract](#output-formats), so planning works identically regardless of where tasks end up. Agents handle isolated concerns. The result is a natural language workflow that's modular, extensible, and maintainable — software engineering principles applied to agentic workflows.
+
 > [!NOTE]
 > **Work in progress.** The workflow is being refined through real-world usage. Expect updates as patterns evolve.
 
@@ -104,7 +106,7 @@ Each phase produces documents that feed the next. Here's the journey:
 
 **Specification** — This is where the magic happens. The skill analyses *all* your discussions and creates intelligent groupings — 10 discussions might become 3–5 specifications, or you can unify everything into one. It filters hallucinations, enriches gaps, and validates decisions against each other. The spec becomes the golden document: planning only references this, not earlier phases.
 
-**Planning** — Converts each specification into phased implementation plans with tasks, acceptance criteria, and dependency ordering. Supports multiple output formats. Task authoring has per-item approval gates (with auto-mode for faster flow).
+**Planning** — Converts each specification into phased implementation plans with tasks, acceptance criteria, and dependency ordering. Supports [multiple output formats](#output-formats) — from local markdown files to CLI tools with native dependency graphs. Task authoring has per-item approval gates (with auto-mode for faster flow).
 
 **Implementation** — Executes plans via strict TDD. Tests first, then code, commit after each task. Per-task approval gates keep you in control, with auto-mode available when you trust the flow.
 
@@ -121,27 +123,7 @@ Not every task needs the full workflow. These skills gather inputs flexibly and 
 
 ### Under the Hood
 
-Skills are organised in two tiers. **Entry-point skills** (`/start-*`, `/status`, etc.) gather context from files, prompts, or inline input. **Processing skills** (`technical-*`) receive those inputs and do the work — they don't know or care where inputs came from. This means the same processing skill can be invoked from different entry points, and you can create custom entry-point skills that feed them in new ways.
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    ENTRY-POINT SKILLS                        │
-│  (gather inputs from files, prompts, inline context)         │
-├─────────────────────────────────────────────────────────────┤
-│  /start-specification   /start-feature   (your custom)      │
-│         │                       │                 │          │
-│         └───────────┬───────────┘                 │          │
-│                     ▼                             ▼          │
-├─────────────────────────────────────────────────────────────┤
-│                    PROCESSING SKILLS                         │
-│  (process inputs without knowing their source)               │
-├─────────────────────────────────────────────────────────────┤
-│           technical-specification skill                      │
-│           technical-planning skill                           │
-│           technical-implementation skill                     │
-│           etc.                                               │
-└─────────────────────────────────────────────────────────────┘
-```
+Skills are organised in two tiers. **Entry-point skills** (`/start-*`, `/status`, etc.) gather context from files, prompts, or inline input. **Processing skills** (`technical-*`) receive those inputs and do the work — they don't know or care where inputs came from. This separation means the same processing skill can be invoked from different entry points: `/start-specification` and `/start-feature` both feed `technical-specification` with different inputs. You can create custom entry-point skills that feed processing skills in new ways.
 
 ### Workflow Skills
 
@@ -156,19 +138,25 @@ Skills are organised in two tiers. **Entry-point skills** (`/start-*`, `/status`
 
 Run the skill directly or ask Claude to run it. Each gathers context from previous phase outputs and passes it to the processing skill.
 
+### Output Formats
+
+Planning supports multiple output formats through an adapter pattern. Each format implements a 5-file contract — about, authoring, reading, updating, and graph — so the planning workflow works identically regardless of where tasks are stored.
+
+| Format | Best for | Setup | |
+|--------|----------|-------|-|
+| **Tick** | AI-driven workflows, native dependencies, token-efficient | `brew install leeovery/tools/tick` | Recommended |
+| **Local Markdown** | Simple features, offline, quick iterations | None | |
+| **Linear** | Team collaboration, visual tracking | Linear account + MCP server | |
+
+Choose a format when planning begins. New formats can be scaffolded with `/create-output-format`.
+
 ## Installation
-
-| Method  | Where files live           | Best for                                        |
-|---------|----------------------------|-------------------------------------------------|
-| **npm** | `.claude/` in your project | Ownership, version control, Claude Code for Web |
-
-### npm
 
 ```bash
 npm install -D @leeovery/claude-technical-workflows
 ```
 
-Skills are copied to `.claude/` and can be committed, giving you ownership and making them available everywhere including Claude Code for Web.
+Skills are copied to `.claude/` in your project and can be committed, giving you ownership and making them available everywhere including Claude Code for Web.
 
 <details>
 <summary>pnpm users</summary>
@@ -196,23 +184,33 @@ npx claude-manager remove @leeovery/claude-technical-workflows && npm rm @leeove
 
 ### Output Files
 
-Documents are stored in your project using a **phase-first** organisation:
+Documents are stored in your project using a **phase-first** organisation. Early phases use flat files; later phases use topic directories with multiple files for tracking and analysis.
 
 ```
 docs/workflow/
-├── research/              # Phase 1 - flat, semantically named files
+├── research/                          # Phase 1 — flat, semantically named
 │   ├── exploration.md
 │   ├── competitor-analysis.md
 │   └── pricing-models.md
-├── discussion/            # Phase 2 - one file per topic
+├── discussion/                        # Phase 2 — one file per topic
 │   └── {topic}.md
-├── specification/         # Phase 3 - one file per topic
-│   └── {topic}.md
-└── planning/              # Phase 4 - one file per topic
+├── specification/                     # Phase 3 — directory per topic
+│   └── {topic}/
+│       └── specification.md
+├── planning/                          # Phase 4 — directory per topic
+│   └── {topic}/
+│       ├── plan.md                    #   Plan index (phases, metadata)
+│       └── tasks/                     #   Task files (local-markdown format)
+│           ├── {topic}-1-1.md
+│           └── {topic}-1-2.md
+├── implementation/                    # Phase 5 — directory per topic
+│   └── {topic}/
+│       └── tracking.md               #   Progress, gates, current task
+└── review/                            # Phase 6 — one file per review
     └── {topic}.md
 ```
 
-Research starts with `exploration.md` and splits into topic files as themes emerge. From discussion onwards, each topic gets its own file per phase.
+Research starts with `exploration.md` and splits into topic files as themes emerge. From specification onwards, each topic gets its own directory. Planning task storage varies by [output format](#output-formats) — the tree above shows local-markdown; Tick and Linear store tasks externally.
 
 ### Package Structure
 
@@ -280,7 +278,7 @@ Sequential skills that expect files from previous phases and pass content to pro
 | [**/start-research**](skills/start-research/)                                | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion.                                                                                     |
 | [**/start-discussion**](skills/start-discussion/)                            | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation.                                                               |
 | [**/start-specification**](skills/start-specification/)                      | Start a specification session from existing discussion(s). Automatically analyses multiple discussions for natural groupings and consolidates them into unified specifications.                            |
-| [**/start-planning**](skills/start-planning/)                                | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats (local markdown, Linear). |
+| [**/start-planning**](skills/start-planning/)                                | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats. |
 | [**/start-implementation**](skills/start-implementation/)                    | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
 | [**/start-review**](skills/start-review/)                                    | Start reviewing completed work. Validates implementation against plan tasks and acceptance criteria.                                                                                                        |
 

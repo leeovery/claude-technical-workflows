@@ -101,7 +101,9 @@ Phase-first directory structure:
 - Research: `docs/workflow/research/` (flat, semantically named files)
 - Discussion: `docs/workflow/discussion/{topic}.md`
 - Specification: `docs/workflow/specification/{topic}/specification.md`
-- Planning: `docs/workflow/planning/{topic}/plan.md`
+- Planning: `docs/workflow/planning/{topic}/plan.md` + format-specific task storage
+- Implementation: `docs/workflow/implementation/{topic}/tracking.md`
+- Review: `docs/workflow/review/{topic}.md`
 
 Commit docs frequently (natural breaks, before context refresh). Skills capture context, don't implement.
 
@@ -125,6 +127,7 @@ The contract and scaffolding templates live in `.claude/skills/create-output-for
 **NEVER list output format names (linear, local-markdown, etc.) anywhere except:**
 - `skills/technical-planning/references/output-formats.md` - the authoritative list
 - `skills/technical-planning/references/output-formats/{format}/` - individual format directories
+- `README.md` - user-facing documentation where format options are presented
 
 **Why this matters:** Listing formats elsewhere creates maintenance dependencies. If a format is added or removed, we should only need to update the planning references - not hunt through other skills or documentation.
 
