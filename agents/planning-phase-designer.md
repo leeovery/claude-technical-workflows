@@ -18,6 +18,7 @@ You receive file paths via the orchestrator's prompt:
 3. **Cross-cutting spec paths** (if any) — Architectural decisions that influence planning
 4. **phase-design.md** — Phase design principles
 5. **task-design.md** — Task design principles (for phase granularity awareness)
+6. **plan-index-schema.md** — Canonical plan index structure
 
 On **amendment**, you also receive:
 - **Previous output** — Your prior phase structure
@@ -30,7 +31,8 @@ On **amendment**, you also receive:
 3. Read any cross-cutting specifications
 4. Read `phase-design.md` — absorb the phase design principles
 5. Read `task-design.md` — understand task granularity (needed to judge phase scope)
-6. Design the phase structure
+6. Read `plan-index-schema.md` — understand the plan index structure
+7. Design the phase structure
 
 If this is an **amendment**: read your previous output and the user's feedback, then revise accordingly.
 
@@ -51,29 +53,7 @@ Phase {N}: {Phase Name}
 
 **Phase structure (for the Plan Index File):**
 
-```markdown
-## Phases
-
-### Phase 1: {Phase Name}
-status: draft
-
-**Goal**: {What this phase accomplishes}
-**Why this order**: {Why this comes at this position}
-
-**Acceptance**:
-- [ ] {First verifiable criterion}
-- [ ] {Second verifiable criterion}
-
-### Phase 2: {Phase Name}
-status: draft
-
-**Goal**: {What this phase accomplishes}
-**Why this order**: {Why this comes at this position}
-
-**Acceptance**:
-- [ ] {First verifiable criterion}
-- [ ] {Second verifiable criterion}
-```
+Begin with a `## Phases` heading, then follow the **Phase Entry** template from plan-index-schema for each phase. Set `status: draft`. Leave `ext_id` empty. Omit `approved_at`.
 
 Continue for all phases.
 

@@ -18,6 +18,7 @@ You receive via the orchestrator's prompt:
 3. **Plan path** — the implementation plan path
 4. **Plan format reading adapter path** — how to read tasks from the plan (for determining next phase number)
 5. **Plan format authoring adapter path** — how to create tasks in the plan
+6. **plan-index-schema.md** — Canonical plan index structure
 
 ## Your Process
 
@@ -32,26 +33,17 @@ You receive via the orchestrator's prompt:
 
 The Plan Index File (`docs/workflow/planning/{topic}/plan.md`) is the single source of truth for planning progress. After creating task files, you **must** append the new phase and task table to its body.
 
-Append at the end of the Plan Index File body:
+Append at the end of the Plan Index File body, following the **Phase Entry** and **Task Table** templates from plan-index-schema:
 
-```markdown
-### Phase {N}: Analysis ({cycle description})
-status: approved
-
-**Goal**: Address findings from implementation analysis cycle {N}.
-
-#### Tasks
-| ID | Name | Edge Cases | Status | Ext ID |
-|----|------|------------|--------|--------|
-| {topic}-{phase}-1 | {Task Title} | — | authored | {ext-id} |
-| {topic}-{phase}-2 | {Task Title} | — | authored | {ext-id} |
-```
-
-- Use `status: approved` for the phase (it's pre-approved by the user in the approval gate)
-- Use `authored` for each task status (the task files are fully written)
-- Use `—` for edge cases (analysis tasks don't have separate edge case annotations)
+- Phase heading: `### Phase {N}: Analysis ({cycle description})`
+- Phase `status`: `approved` (pre-approved by user in approval gate)
+- Phase `ext_id`: external identifier for the phase from the output format
+- Phase goal: `Address findings from implementation analysis cycle {N}.`
+- Omit `approved_at` and acceptance criteria (analysis phases don't use them)
+- Task `Status`: `authored` (task files are fully written)
+- Task `Ext ID`: external identifier for the task from the output format
 - Task IDs must match the IDs used in the created task files
-- `Ext ID` must contain the external identifier for the task as exposed by the output format.
+- If the Plan Index File frontmatter `ext_id` is empty, set it to the external identifier for the plan from the output format
 
 ## Hard Rules
 

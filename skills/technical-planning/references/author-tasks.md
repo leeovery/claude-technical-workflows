@@ -86,10 +86,12 @@ Note that `author_gate_mode` should be updated to `auto` during the commit step 
 > **CHECKPOINT**: If `author_gate_mode: gated`, verify before logging: (1) You presented this exact content, (2) The user explicitly approved with `y`/`yes` or equivalent — not a question, comment, or "okay" in passing, (3) You are writing exactly what was approved with no modifications.
 
 1. Write the task to the output format (format-specific — see authoring.md)
-2. Update the task table in the Plan Index File: set `status: authored` and set `Ext ID` to the external identifier for the task as exposed by the output format.
-3. Advance the `planning:` block in frontmatter to the next pending task (or next phase if this was the last task)
-4. If user chose `auto` at this gate: update `author_gate_mode: auto` in the Plan Index File frontmatter
-5. Commit: `planning({topic}): author task {task-id} ({task name})`
+2. If the Plan Index File frontmatter `ext_id` is empty, set it to the external identifier for the plan as exposed by the output format.
+3. If the current phase's `ext_id` is empty, set it to the external identifier for the phase as exposed by the output format.
+4. Update the task table in the Plan Index File: set `status: authored` and set `Ext ID` to the external identifier for the task as exposed by the output format.
+5. Advance the `planning:` block in frontmatter to the next pending task (or next phase if this was the last task)
+6. If user chose `auto` at this gate: update `author_gate_mode: auto` in the Plan Index File frontmatter
+7. Commit: `planning({topic}): author task {task-id} ({task name})`
 
 > *Output the next fenced block as a code block:*
 

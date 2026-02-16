@@ -19,6 +19,7 @@ Pass via the orchestrator's prompt:
 3. **Plan path** — the implementation plan path
 4. **Plan format reading adapter path** — `../../technical-planning/references/output-formats/{format}/reading.md`
 5. **Plan format authoring adapter path** — `../../technical-planning/references/output-formats/{format}/authoring.md`
+6. **plan-index-schema.md** — `../../technical-planning/references/plan-index-schema.md`
 
 ---
 
