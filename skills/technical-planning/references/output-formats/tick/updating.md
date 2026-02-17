@@ -16,6 +16,8 @@ Tick uses dedicated commands for each status transition:
 
 ## Updating Task Content
 
+**Sandbox mode**: When updating descriptions, disable sandbox mode on the Bash tool call (`dangerouslyDisableSandbox: true`) to prevent empty descriptions caused by blocked temp directory access. See [authoring.md](authoring.md) for details.
+
 To update a task's properties:
 
 - **Title**: `tick update <task-id> --title "New title"`

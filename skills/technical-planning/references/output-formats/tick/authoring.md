@@ -1,5 +1,11 @@
 # Tick: Authoring
 
+## Sandbox Mode
+
+When creating tasks with descriptions, Claude Code may write the description to a temp file and cat it back into the `--description` flag via heredoc. Sandbox mode blocks temp directory access, resulting in empty descriptions being set silently.
+
+**Disable sandbox mode** for `tick create` and `tick update` commands that include `--description`. Use `dangerouslyDisableSandbox: true` on those specific Bash tool calls only.
+
 ## Task Storage
 
 Tasks are created using the `tick create` command. Before creating individual tasks, establish the topic and phase parent tasks.
