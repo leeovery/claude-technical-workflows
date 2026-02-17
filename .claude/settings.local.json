@@ -18,7 +18,8 @@
       "Bash(gh release list:*)",
       "Bash(gh pr create:*)",
       "Bash(git -C /Users/leeovery/Code/claude/claude-technical-workflows log --oneline -30 -- skills/technical-research/)",
-      "Bash(git remote prune:*)"
+      "Bash(git remote prune:*)",
+      "WebFetch(domain:docs.anthropic.com)"
     ],
     "deny": [],
     "ask": []
