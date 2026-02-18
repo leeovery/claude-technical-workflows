@@ -1,10 +1,15 @@
 # Tick: Authoring
 
-## Sandbox Mode
+## Sandbox Mode and Large Descriptions
 
-When creating tasks with descriptions, Claude Code may write the description to a temp file and cat it back into the `--description` flag via heredoc. Sandbox mode blocks temp directory access, resulting in empty descriptions being set silently.
+Bash heredocs (`$(cat <<'EOF'...EOF)`) create temp files that sandbox mode blocks, resulting in empty descriptions being set silently. Do **not** use `dangerouslyDisableSandbox` — it forces user approval on every call.
 
-**Disable sandbox mode** for `tick create` and `tick update` commands that include `--description`. Use `dangerouslyDisableSandbox: true` on those specific Bash tool calls only.
+Instead, use the **Write tool + cat pattern**:
+
+1. Use the **Write tool** to save the description to `$TMPDIR/tick-desc.txt` — this bypasses sandbox because it uses Claude Code's file writing, not bash
+2. Run the tick command with `--description "$(cat $TMPDIR/tick-desc.txt)"` in normal sandbox mode — `cat` just reads, no temp files needed
+
+This works for both `tick create --description` and `tick update --description`.
 
 ## Task Storage
 

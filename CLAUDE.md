@@ -76,6 +76,14 @@ agents/
 
 tests/
   scripts/                   # Shell script tests for discovery and migrations
+
+hooks/
+  workflows/
+    system-check.sh      # Bootstrap: install hooks + run migrations
+    session-env.sh       # Export CLAUDE_SESSION_ID on session start
+    compact-recovery.sh  # Read session state, inject recovery context
+    session-cleanup.sh   # Delete session state on session end
+    write-session-state.sh # Helper: write session state YAML
 ```
 
 ## Skill Architecture
@@ -148,7 +156,7 @@ This keeps format knowledge centralized in the planning phase where it belongs.
 
 ## Migrations
 
-The `/migrate` skill keeps workflow files in sync with the current system design. It runs automatically at the start of every workflow skill (Step 0).
+The `/migrate` skill keeps workflow files in sync with the current system design. It runs automatically via the `system-check.sh` PreToolUse hook at the start of every workflow skill.
 
 **How it works:**
 - `skills/migrate/scripts/migrate.sh` runs all migration scripts in `skills/migrate/scripts/migrations/` in numeric order
@@ -176,6 +184,31 @@ awk '/^---$/ && c<2 {c++; next} c>=2 {print}' "$file"
 ```
 
 Also avoid BSD sed incompatibilities: `sed '/range/{cmd1;cmd2}'` syntax fails on macOS. Use awk or separate `sed -e` expressions instead.
+
+## Compaction Recovery
+
+Processing skills run long and may hit context compaction. The hook system provides deterministic recovery.
+
+**How it works:**
+- Project-level hooks in `.claude/settings.json` are snapshotted at session startup and persist through compaction
+- `SessionStart` (compact) hook reads session state from `docs/workflow/.cache/sessions/{session_id}.yaml` and injects recovery context as additionalContext
+- Entry-point skills write session state (topic, skill, artifact) before invoking processing skills
+- `SessionEnd` hook cleans up session state files
+
+**Session state files:**
+- Stored at `docs/workflow/.cache/sessions/{session_id}.yaml`
+- Created by entry-point skills before invoking processing skills
+- Contain: topic, skill path, artifact path, optional pipeline context
+- Ephemeral — cleaned up on session end, gitignored
+
+**First-run bootstrap:**
+- Skill-level `PreToolUse` hook (`system-check.sh`) detects missing project hooks
+- Installs hooks into `.claude/settings.json` and stops with restart message
+- One-time cost; self-healing if hooks are removed
+
+**Step 0 replacement:**
+- The `system-check.sh` hook also runs migrations (previously Step 0 in entry-point skills)
+- Step 0 has been removed from all entry-point skills — migrations now run deterministically via hooks
 
 ## Display & Output Conventions (IMPORTANT)
 
@@ -414,7 +447,7 @@ Never use `Stop here.`, `Command ends.`, `Wait for user to acknowledge before en
 
 Sequential: `## Step 0`, `## Step 1`, `## Step 2`, etc.
 
-- **Step 0** is reserved for migrations — mandatory in all entry-point skills
+- **Step 0** has been replaced by the `system-check.sh` PreToolUse hook (runs migrations automatically)
 - Steps are separated by `---` horizontal rules
 - Each step completes fully before the next begins
 

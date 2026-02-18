@@ -2,7 +2,13 @@
 name: start-planning
 description: "Start a planning session from an existing specification. Discovers available specifications, gathers context, and invokes the technical-planning skill."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/start-planning/scripts/discovery.sh)
+allowed-tools: Bash(.claude/skills/start-planning/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh)
+hooks:
+  PreToolUse:
+    - hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/.claude/hooks/workflows/system-check.sh"
+          once: true
 ---
 
 Invoke the **technical-planning** skill for this conversation.
@@ -37,18 +43,6 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 - Even if the user's initial prompt seems to answer a question, still confirm with them at the appropriate step
 - Complete each step fully before moving to the next
 - Do not act on gathered information until the skill is loaded - it contains the instructions for how to proceed
-
----
-
-## Step 0: Run Migrations
-
-**This step is mandatory. You must complete it before proceeding.**
-
-Invoke the `/migrate` skill and assess its output.
-
-**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
-
-**If no updates needed**: Proceed to Step 1.
 
 ---
 
@@ -176,5 +170,14 @@ Load **[cross-cutting-context.md](references/cross-cutting-context.md)** and fol
 ---
 
 ## Step 7: Invoke the Skill
+
+Before invoking the processing skill, record the session state:
+
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-planning/SKILL.md" \
+  "docs/workflow/planning/{topic}/plan.md"
+```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

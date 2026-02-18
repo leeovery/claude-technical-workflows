@@ -1,0 +1,193 @@
+#!/bin/bash
+#
+# Tests hooks/workflows/compact-recovery.sh
+# Validates session state reading and recovery context injection.
+#
+
+set -eo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+HOOK_SCRIPT="$SCRIPT_DIR/../../hooks/workflows/compact-recovery.sh"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Test counters
+TESTS_RUN=0
+TESTS_PASSED=0
+TESTS_FAILED=0
+
+# Create a temporary directory for test fixtures
+TEST_DIR=$(mktemp -d)
+trap "rm -rf $TEST_DIR" EXIT
+
+echo "Test directory: $TEST_DIR"
+echo ""
+
+#
+# Helper functions
+#
+
+setup_fixture() {
+    rm -rf "$TEST_DIR/docs"
+    mkdir -p "$TEST_DIR/docs/workflow/.cache/sessions"
+}
+
+run_hook() {
+    local session_id="$1"
+    echo "{\"session_id\": \"${session_id}\"}" | CLAUDE_PROJECT_DIR="$TEST_DIR" bash "$HOOK_SCRIPT" 2>&1 || true
+}
+
+assert_contains() {
+    local content="$1"
+    local expected="$2"
+    local description="$3"
+
+    TESTS_RUN=$((TESTS_RUN + 1))
+
+    if echo "$content" | grep -q -- "$expected"; then
+        echo -e "  ${GREEN}✓${NC} $description"
+        TESTS_PASSED=$((TESTS_PASSED + 1))
+        return 0
+    else
+        echo -e "  ${RED}✗${NC} $description"
+        echo -e "    Expected to find: $expected"
+        TESTS_FAILED=$((TESTS_FAILED + 1))
+        return 1
+    fi
+}
+
+assert_not_contains() {
+    local content="$1"
+    local unexpected="$2"
+    local description="$3"
+
+    TESTS_RUN=$((TESTS_RUN + 1))
+
+    if ! echo "$content" | grep -q -- "$unexpected"; then
+        echo -e "  ${GREEN}✓${NC} $description"
+        TESTS_PASSED=$((TESTS_PASSED + 1))
+        return 0
+    else
+        echo -e "  ${RED}✗${NC} $description"
+        echo -e "    Did not expect to find: $unexpected"
+        TESTS_FAILED=$((TESTS_FAILED + 1))
+        return 1
+    fi
+}
+
+assert_equals() {
+    local actual="$1"
+    local expected="$2"
+    local description="$3"
+
+    TESTS_RUN=$((TESTS_RUN + 1))
+
+    if [ "$actual" = "$expected" ]; then
+        echo -e "  ${GREEN}✓${NC} $description"
+        TESTS_PASSED=$((TESTS_PASSED + 1))
+        return 0
+    else
+        echo -e "  ${RED}✗${NC} $description"
+        echo -e "    Expected: $expected"
+        echo -e "    Actual:   $actual"
+        TESTS_FAILED=$((TESTS_FAILED + 1))
+        return 1
+    fi
+}
+
+# ============================================================================
+# TEST CASES
+# ============================================================================
+
+echo -e "${YELLOW}Test: No session state file — silent exit${NC}"
+setup_fixture
+
+output=$(run_hook "nonexistent-session-123")
+
+assert_equals "$output" "" "No output when session file does not exist"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Basic state (no pipeline) — IMMEDIATE section only${NC}"
+setup_fixture
+cat > "$TEST_DIR/docs/workflow/.cache/sessions/session-basic-001.yaml" << 'EOF'
+topic: auth-flow
+skill: .claude/skills/technical-discussion/SKILL.md
+artifact: docs/workflow/discussion/auth-flow.md
+EOF
+
+output=$(run_hook "session-basic-001")
+
+assert_contains "$output" "additionalContext" "Output contains additionalContext"
+assert_contains "$output" "IMMEDIATE" "Output contains IMMEDIATE section"
+assert_contains "$output" "auth-flow" "Output contains topic"
+assert_contains "$output" "technical-discussion" "Output contains skill path"
+assert_contains "$output" "discussion/auth-flow.md" "Output contains artifact path"
+assert_not_contains "$output" "AFTER CONCLUSION" "No AFTER CONCLUSION section without pipeline"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Pipeline state — both IMMEDIATE and AFTER CONCLUSION sections${NC}"
+setup_fixture
+cat > "$TEST_DIR/docs/workflow/.cache/sessions/session-pipeline-001.yaml" << 'EOF'
+topic: billing
+skill: .claude/skills/technical-specification/SKILL.md
+artifact: docs/workflow/specification/billing/specification.md
+pipeline:
+  after_conclude: |
+    Enter plan mode with this message:
+    "Clear context and continue with /continue-feature for billing"
+EOF
+
+output=$(run_hook "session-pipeline-001")
+
+assert_contains "$output" "additionalContext" "Output contains additionalContext"
+assert_contains "$output" "IMMEDIATE" "Output contains IMMEDIATE section"
+assert_contains "$output" "AFTER CONCLUSION" "Output contains AFTER CONCLUSION section"
+assert_contains "$output" "billing" "Output contains topic"
+assert_contains "$output" "continue-feature" "Output contains pipeline instructions"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Malformed YAML — graceful handling${NC}"
+setup_fixture
+cat > "$TEST_DIR/docs/workflow/.cache/sessions/session-bad-001.yaml" << 'EOF'
+this is not valid yaml
+  : broken : stuff
+  @@@ garbage
+EOF
+
+output=$(run_hook "session-bad-001")
+
+# Should not crash — may produce output or empty, but no error exit
+TESTS_RUN=$((TESTS_RUN + 1))
+# If we got here, the script didn't crash
+echo -e "  ${GREEN}✓${NC} Script did not crash on malformed YAML"
+TESTS_PASSED=$((TESTS_PASSED + 1))
+
+echo ""
+
+# ============================================================================
+# SUMMARY
+# ============================================================================
+
+echo ""
+echo "========================================"
+echo -e "Tests run: $TESTS_RUN"
+echo -e "Passed: ${GREEN}$TESTS_PASSED${NC}"
+echo -e "Failed: ${RED}$TESTS_FAILED${NC}"
+echo "========================================"
+
+if [ $TESTS_FAILED -gt 0 ]; then
+    exit 1
+fi

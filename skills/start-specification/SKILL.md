@@ -2,7 +2,13 @@
 name: start-specification
 description: "Start a specification session from concluded discussions. Discovers available discussions, offers consolidation assessment for multiple discussions, and invokes the technical-specification skill."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/start-specification/scripts/discovery.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/discussion-consolidation-analysis.md)
+allowed-tools: Bash(.claude/skills/start-specification/scripts/discovery.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/discussion-consolidation-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh)
+hooks:
+  PreToolUse:
+    - hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/.claude/hooks/workflows/system-check.sh"
+          once: true
 ---
 
 Invoke the **technical-specification** skill for this conversation.
@@ -37,18 +43,6 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 - Even if the user's initial prompt seems to answer a question, still confirm with them at the appropriate step
 - Complete each step fully before moving to the next
 - Do not act on gathered information until the skill is loaded - it contains the instructions for how to proceed
-
----
-
-## Step 0: Run Migrations
-
-**This step is mandatory. You must complete it before proceeding.**
-
-Invoke the `/migrate` skill and assess its output.
-
-**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1.
-
-**If no updates needed**: Proceed to Step 1.
 
 ---
 
@@ -93,6 +87,15 @@ Parse the discovery output to understand:
 ---
 
 ## Step 3: Route
+
+Before invoking the processing skill, record the session state:
+
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-specification/SKILL.md" \
+  "docs/workflow/specification/{topic}/specification.md"
+```
 
 Based on discovery state, load exactly ONE reference file:
 

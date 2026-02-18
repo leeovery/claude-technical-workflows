@@ -140,6 +140,16 @@ If a session is interrupted, run `/continue-feature` to pick up where you left o
 
 Skills are organised in two tiers. **Entry-point skills** (`/start-*`, `/status`, etc.) gather context from files, prompts, or inline input. **Processing skills** (`technical-*`) receive those inputs and do the work — they don't know or care where inputs came from. This separation means the same processing skill can be invoked from different entry points: `/start-specification` and `/start-feature` both feed `technical-specification` with different inputs. You can create custom entry-point skills that feed processing skills in new ways.
 
+### Compaction Recovery
+
+Long-running skills can hit context compaction, where Claude's conversation is summarized and procedural detail is lost. The hook system provides automatic recovery:
+
+- **Project-level hooks** installed in `.claude/settings.json` persist through compaction events
+- On compaction, the recovery hook reads session state from disk and injects authoritative context — the skill to re-read, the artifact to resume, and pipeline instructions
+- On first run, a bootstrap hook detects missing configuration and installs it automatically (requires one Claude restart)
+
+Session state is ephemeral (gitignored, cleaned up on session end) and per-session — multiple concurrent sessions don't interfere.
+
 ### Workflow Skills
 
 | Phase          | Skill                   |

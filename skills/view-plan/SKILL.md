@@ -2,6 +2,12 @@
 name: view-plan
 description: "View a plan's tasks and progress, regardless of output format."
 disable-model-invocation: true
+hooks:
+  PreToolUse:
+    - hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/.claude/hooks/workflows/system-check.sh"
+          once: true
 ---
 
 Display a readable summary of a plan's phases, tasks, and status.
