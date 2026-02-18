@@ -183,19 +183,4 @@ Load **[select-plans.md](references/select-plans.md)** and follow its instructio
 
 ## Step 5: Invoke the Skill
 
-Before invoking the processing skill, save a session bookmark.
-
-> *Output the next fenced block as a code block:*
-
-```
-Saving session state so Claude can pick up where it left off if the conversation is compacted.
-```
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-review/SKILL.md" \
-  "docs/workflow/review/{scope}/r{N}/review.md"
-```
-
-Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written. Use the appropriate handoff format based on the gathered context (review or analysis-only).
+Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

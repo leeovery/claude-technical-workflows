@@ -6,7 +6,26 @@
 
 After completing the steps above, this skill's purpose is fulfilled.
 
-Invoke the [technical-review](../../technical-review/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
+## Save Session Bookmark
+
+> *Output the next fenced block as a code block:*
+
+```
+Saving session state so Claude can pick up where it left off if the conversation is compacted.
+```
+
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-review/SKILL.md" \
+  "docs/workflow/review/{scope}/r{N}/review.md"
+```
+
+---
+
+## Invoke the Skill
+
+Invoke the [technical-review](../../technical-review/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed. Use the appropriate handoff format based on the gathered context (review or analysis-only).
 
 **Example handoff (single):**
 ```
