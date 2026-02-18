@@ -7,12 +7,6 @@ allowed-tools: Bash(.claude/skills/start-implementation/scripts/discovery.sh)
 
 Invoke the **technical-implementation** skill for this conversation with pre-flight context.
 
-<!-- TODO: Steps 2 and 3 (external dependencies, environment setup) duplicate content
-     from start-implementation Steps 4 and 5. When start-implementation is refactored
-     to use progressive disclosure (reference files), de-duplicate by referencing
-     start-implementation's reference files directly — same pattern as begin-planning
-     referencing start-planning's cross-cutting-context.md. -->
-
 > **⚠️ ZERO OUTPUT RULE**: Do not narrate your processing. Produce no output until a step or reference file explicitly specifies display content. No "proceeding with...", no discovery summaries, no routing decisions, no transition text. Your first output must be content explicitly called for by the instructions.
 
 ## Instructions
