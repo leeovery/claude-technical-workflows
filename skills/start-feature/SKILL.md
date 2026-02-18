@@ -127,14 +127,13 @@ Saving session state so Claude can pick up where it left off and continue the fe
 .claude/hooks/workflows/write-session-state.sh \
   "{topic}" \
   "skills/technical-discussion/SKILL.md" \
-  "docs/workflow/discussion/{topic}.md"
+  "docs/workflow/discussion/{topic}.md" \
+  --pipeline "This session is part of the feature pipeline. After the discussion concludes, load and follow the phase bridge at skills/start-feature/references/phase-bridge.md for topic '{topic}'."
 ```
 
 Load **[invoke-discussion.md](references/invoke-discussion.md)** and follow its instructions.
 
-After the discussion concludes (status becomes "concluded"):
-
-→ Proceed to **Step 4**.
+**CRITICAL**: When the discussion concludes (status becomes "concluded"), you MUST proceed to **Step 4** below. Do not end the session — the feature pipeline continues to specification via the phase bridge.
 
 ---
 
