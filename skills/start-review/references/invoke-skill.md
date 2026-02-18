@@ -30,3 +30,18 @@ Plans:
 
 Invoke the technical-review skill.
 ```
+
+**Example handoff (analysis-only):**
+```
+Analysis session for: {scope description}
+Review mode: analysis-only
+Review scope: {single | multi | all}
+Reviews:
+  - scope: {scope}
+    path: docs/workflow/review/{scope}/r{N}/
+    plans: [{plan topics}]
+    format: {format}
+    specification: {spec path}
+
+Invoke the technical-review skill.
+```

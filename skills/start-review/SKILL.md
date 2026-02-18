@@ -235,17 +235,4 @@ Save session state before invoking analysis:
   "docs/workflow/review/{scope}/r{N}/review.md"
 ```
 
-Construct the handoff context and load the review actions loop:
-
-```
-Analysis session for: {scope description}
-Review scope: {single | multi | all}
-Reviews:
-  - scope: {scope}
-    path: docs/workflow/review/{scope}/r{N}/
-    plans: [{plan topics}]
-    format: {format}
-    specification: {spec path}
-```
-
-→ Load **[review-actions-loop.md](../technical-review/references/review-actions-loop.md)** and follow its instructions.
+Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written. Use the analysis-only handoff format.

@@ -49,6 +49,12 @@ having it provides better context for the review.
 
 The specification is optional — the review can proceed with just the plan.
 
+#### If review mode is "analysis-only"
+
+Analysis of existing review findings was requested. The review has already been completed.
+
+→ Go directly to **Step 6**.
+
 ---
 
 ## Resuming After Context Refresh
