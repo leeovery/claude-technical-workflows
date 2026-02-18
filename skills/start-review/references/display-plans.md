@@ -108,5 +108,4 @@ Select an option:
 
 **STOP.** Wait for user response.
 
-- If `analysis` → Skip to **Step 6**.
-- Otherwise → Based on user choice, proceed to **Step 4**.
+→ Based on user choice, proceed to **Step 4**.

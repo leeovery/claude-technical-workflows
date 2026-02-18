@@ -8,7 +8,32 @@ This step only applies for `single`, `multi`, or `all` scope chosen in Step 3.
 
 #### If scope is "analysis"
 
-→ Skip to **Step 6**.
+Select which reviews to analyze.
+
+#### If multiple reviews exist
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+Which reviews to analyze?
+
+- **`a`/`all`** — All reviewed plans
+- **`s`/`select`** — Choose specific reviews
+
+Select an option:
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+If `select`, present numbered list of reviewed plans for the user to choose from (comma-separated numbers).
+
+#### If single review exists
+
+Automatically proceed with the only available review.
+
+→ Proceed to **Step 5**.
 
 #### If scope is "all"
 

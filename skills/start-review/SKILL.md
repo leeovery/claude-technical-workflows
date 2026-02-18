@@ -149,8 +149,13 @@ Select an option:
 
 **STOP.** Wait for user response.
 
-- `analysis` → Skip to **Step 6** (analysis path)
-- `re-review` → Proceed to **Step 3**, incrementing the review version for the selected plan
+#### If analysis
+
+→ Proceed to **Step 4** with scope set to "analysis".
+
+#### If re-review
+
+→ Proceed to **Step 3**, incrementing the review version for the selected plan.
 
 #### If scenario is "single_plan" or "multiple_plans"
 
@@ -193,46 +198,4 @@ Saving session state so Claude can pick up where it left off if the conversation
   "docs/workflow/review/{scope}/r{N}/review.md"
 ```
 
-Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
-
----
-
-## Step 6: Analysis Path
-
-This step is reached when the user chooses "analysis" — either from the all_reviewed menu in Step 2 or from the scope menu in Step 3.
-
-#### If multiple reviews exist
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-Which reviews to analyze?
-
-- **`a`/`all`** — All reviewed plans
-- **`s`/`select`** — Choose specific reviews
-
-Select an option:
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-If `select`, present numbered list of reviewed plans for the user to choose from (comma-separated numbers).
-
-#### If single review exists
-
-Automatically proceed with the only available review.
-
----
-
-Save session state before invoking analysis:
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{scope}" \
-  "skills/technical-review/SKILL.md" \
-  "docs/workflow/review/{scope}/r{N}/review.md"
-```
-
-Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written. Use the analysis-only handoff format.
+Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written. Use the appropriate handoff format based on the gathered context (review or analysis-only).
