@@ -1,15 +1,22 @@
 # Tick: Authoring
 
-## Sandbox Mode and Large Descriptions
+## Descriptions: Inline Only
 
-Bash heredocs (`$(cat <<'EOF'...EOF)`) create temp files that sandbox mode blocks, resulting in empty descriptions being set silently. Do **not** use `dangerouslyDisableSandbox` — it forces user approval on every call.
+**CRITICAL**: Always pass descriptions directly as inline quoted strings. Never use workarounds.
 
-Instead, use the **Write tool + cat pattern**:
+```bash
+tick create "Title" --parent <id> --description "Full description here.
 
-1. Use the **Write tool** to save the description to `$TMPDIR/tick-desc.txt` — this bypasses sandbox because it uses Claude Code's file writing, not bash
-2. Run the tick command with `--description "$(cat $TMPDIR/tick-desc.txt)"` in normal sandbox mode — `cat` just reads, no temp files needed
+Multi-line content works fine inside double quotes."
+```
 
-This works for both `tick create --description` and `tick update --description`.
+**Do NOT**:
+- Use heredocs (`<<'EOF'`) — sandbox blocks the temp files they create
+- Use the Write tool to create temp files — triggers approval prompts outside the project directory
+- Use Bash functions, variables, or subshells to construct the description
+- Write temp files anywhere (including `$TMPDIR`, `/tmp`, or the working directory)
+
+If a description contains double quotes, escape them with `\"`. That's it.
 
 ## Task Storage
 
