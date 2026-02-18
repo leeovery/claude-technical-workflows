@@ -134,13 +134,9 @@ Select by number, or enter a topic name directly:
 
 ## Step 2: Detect Phase and Route
 
-Load **[detect-phase.md](references/detect-phase.md)** and follow its instructions to determine routing.
+Load **[detect-phase.md](references/detect-phase.md)** and follow its instructions.
 
-The detect-phase reference will direct you to one of:
-- **Step 3** (specification)
-- **Step 4** (planning)
-- **Step 5** (implementation)
-- **Terminal** (done or discussion)
+→ The reference file will route you to **Step 3**, **Step 4**, **Step 5**, or a terminal condition. Follow its routing.
 
 ---
 
