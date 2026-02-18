@@ -24,7 +24,7 @@ You receive via the orchestrator's prompt:
 1. **Read review summary(ies)** — extract verdict, required changes, recommendations from each `review.md`
 2. **Read all QA files** — read every `qa-task-*.md` across all review paths. Extract BLOCKING ISSUES and significant NON-BLOCKING NOTES with their file:line references
 3. **Read product assessment(s)** — extract ROBUSTNESS, GAPS, and STRENGTHENING findings from `product-assessment.md`
-4. **Tag each finding with source plan** — use the QA task ID prefix or directory structure to identify which plan each finding belongs to (e.g., `tick-core/qa-task-6.md` → tick-core). Product assessment findings: tag by plan where identifiable; mark as `cross-cutting` otherwise
+4. **Tag each finding with source plan** — use the directory structure of QA files to identify which plan each finding belongs to. For multi-plan reviews, QA files are stored in per-plan subdirectories within the review. Product assessment findings: tag by plan where identifiable; mark as `cross-cutting` otherwise
 5. **Deduplicate** — same issue found in QA + product assessment → one finding, note all sources
 6. **Group related findings** — multiple findings about the same concern become one task (e.g., 3 QA findings about missing error handling in the same module = 1 "add error handling" task)
 7. **Filter** — discard low-severity non-blocking findings unless they cluster into a pattern. Never discard high-severity or blocking findings.
