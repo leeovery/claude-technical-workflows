@@ -157,20 +157,11 @@ Your review feedback can be:
 
 You produce feedback. User decides what to do with it.
 
+→ Proceed to **Step 6**.
+
 ---
 
 ## Step 6: Review Actions
 
 Load **[review-actions-loop.md](references/review-actions-loop.md)** and follow its instructions.
 
----
-
-## References
-
-- **[invoke-task-verifiers.md](references/invoke-task-verifiers.md)** — How to dispatch QA verifier agents
-- **[invoke-product-assessor.md](references/invoke-product-assessor.md)** — How to dispatch the product assessor agent
-- **[template.md](references/template.md)** — Review output structure and verdict guidelines
-- **[review-checklist.md](references/review-checklist.md)** — Per-task verification criteria (read by agents), plan completion checks, writing feedback guidance
-- **[review-actions-loop.md](references/review-actions-loop.md)** — Review findings synthesis and task creation pipeline
-- **[invoke-review-synthesizer.md](references/invoke-review-synthesizer.md)** — How to dispatch the review synthesizer agent
-- **[invoke-review-task-writer.md](references/invoke-review-task-writer.md)** — How to dispatch the review task writer agent
