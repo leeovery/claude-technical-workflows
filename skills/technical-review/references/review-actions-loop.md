@@ -94,9 +94,19 @@ Load **[invoke-review-synthesizer.md](invoke-review-synthesizer.md)** and follow
 
 **STOP.** Do not proceed until the synthesizer has returned.
 
-→ If `STATUS: clean`, report "No actionable tasks synthesized." **STOP.** Do not proceed — terminal condition.
+#### If STATUS is "clean"
 
-→ If `STATUS: tasks_proposed`, proceed to **C. Approval Gate**.
+> *Output the next fenced block as a code block:*
+
+```
+No actionable tasks synthesized.
+```
+
+**STOP.** Do not proceed — terminal condition.
+
+#### If STATUS is "tasks_proposed"
+
+→ Proceed to **C. Approval Gate**.
 
 ---
 
