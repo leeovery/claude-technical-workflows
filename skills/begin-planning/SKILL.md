@@ -47,7 +47,7 @@ The topic was provided by the caller. Confirm the specification exists and is co
 
 ## Step 2: Handle Cross-Cutting Context
 
-Load **[cross-cutting-context.md](references/cross-cutting-context.md)** and follow its instructions as written.
+Load **[cross-cutting-context.md](../start-planning/references/cross-cutting-context.md)** and follow its instructions as written.
 
 → Proceed to **Step 3**.
 
