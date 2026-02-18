@@ -16,6 +16,24 @@ The specification needs source material. Check what's available:
 
 2. If no discussion exists, this is an error — the pipeline expects a concluded discussion before specification. Report it and stop.
 
+## Save Session State
+
+Before invoking the processing skill, save a session bookmark.
+
+> *Output the next fenced block as a code block:*
+
+```
+Saving session state so Claude can pick up where it left off and continue the feature pipeline if the conversation is compacted.
+```
+
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-specification/SKILL.md" \
+  "docs/workflow/specification/{topic}/specification.md" \
+  --pipeline "This session is part of the feature pipeline. After the specification concludes, return to the continue-feature skill and execute Step 6 (Phase Bridge). Load: skills/continue-feature/references/phase-bridge.md"
+```
+
 ## Handoff
 
 Invoke the [technical-specification](../../technical-specification/SKILL.md) skill:

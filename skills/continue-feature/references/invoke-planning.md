@@ -6,6 +6,24 @@
 
 Invoke the begin-planning bridge skill for this topic.
 
+## Save Session State
+
+Before invoking the processing skill, save a session bookmark.
+
+> *Output the next fenced block as a code block:*
+
+```
+Saving session state so Claude can pick up where it left off and continue the feature pipeline if the conversation is compacted.
+```
+
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-planning/SKILL.md" \
+  "docs/workflow/planning/{topic}/plan.md" \
+  --pipeline "This session is part of the feature pipeline. After the plan concludes, return to the continue-feature skill and execute Step 6 (Phase Bridge). Load: skills/continue-feature/references/phase-bridge.md"
+```
+
 ## Handoff
 
 Invoke the [begin-planning](../../begin-planning/SKILL.md) skill:

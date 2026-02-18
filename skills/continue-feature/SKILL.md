@@ -148,22 +148,6 @@ Load **[detect-phase.md](references/detect-phase.md)** and follow its instructio
 
 ## Step 3: Specification Phase
 
-Before invoking the processing skill, save a session bookmark.
-
-> *Output the next fenced block as a code block:*
-
-```
-Saving session state so Claude can pick up where it left off and continue the feature pipeline if the conversation is compacted.
-```
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-specification/SKILL.md" \
-  "docs/workflow/specification/{topic}/specification.md" \
-  --pipeline "This session is part of the feature pipeline. After the specification concludes, return to the continue-feature skill and execute Step 6 (Phase Bridge). Load: skills/continue-feature/references/phase-bridge.md"
-```
-
 Load **[invoke-specification.md](references/invoke-specification.md)** and follow its instructions.
 
 **CRITICAL**: When the specification concludes (status becomes "concluded"), you MUST proceed to **Step 6** below. Do not end the session — the feature pipeline continues to the phase bridge.
@@ -172,22 +156,6 @@ Load **[invoke-specification.md](references/invoke-specification.md)** and follo
 
 ## Step 4: Planning Phase
 
-Before invoking the processing skill, save a session bookmark.
-
-> *Output the next fenced block as a code block:*
-
-```
-Saving session state so Claude can pick up where it left off and continue the feature pipeline if the conversation is compacted.
-```
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-planning/SKILL.md" \
-  "docs/workflow/planning/{topic}/plan.md" \
-  --pipeline "This session is part of the feature pipeline. After the plan concludes, return to the continue-feature skill and execute Step 6 (Phase Bridge). Load: skills/continue-feature/references/phase-bridge.md"
-```
-
 Load **[invoke-planning.md](references/invoke-planning.md)** and follow its instructions.
 
 **CRITICAL**: When the plan concludes (status becomes "concluded"), you MUST proceed to **Step 6** below. Do not end the session — the feature pipeline continues to the phase bridge.
@@ -195,22 +163,6 @@ Load **[invoke-planning.md](references/invoke-planning.md)** and follow its inst
 ---
 
 ## Step 5: Implementation Phase
-
-Before invoking the processing skill, save a session bookmark.
-
-> *Output the next fenced block as a code block:*
-
-```
-Saving session state so Claude can pick up where it left off and continue the feature pipeline if the conversation is compacted.
-```
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-implementation/SKILL.md" \
-  "docs/workflow/implementation/{topic}/tracking.md" \
-  --pipeline "This session is part of the feature pipeline. After implementation completes, return to the continue-feature skill and execute Step 6 (Phase Bridge). Load: skills/continue-feature/references/phase-bridge.md"
-```
 
 Load **[invoke-implementation.md](references/invoke-implementation.md)** and follow its instructions.
 
