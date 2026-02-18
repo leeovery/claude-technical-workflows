@@ -203,7 +203,8 @@ Processing skills run long and may hit context compaction. The hook system provi
 
 **First-run bootstrap:**
 - Skill-level `PreToolUse` hook (`system-check.sh`) detects missing project hooks
-- Installs hooks into `.claude/settings.json` and stops with restart message
+- Installs hooks into `.claude/settings.json` (appends to existing settings, preserving user configuration) and stops with restart message
+- Uses jq if available for merging, falls back to node, then to manual instructions
 - One-time cost; self-healing if hooks are removed
 
 ## Display & Output Conventions (IMPORTANT)
