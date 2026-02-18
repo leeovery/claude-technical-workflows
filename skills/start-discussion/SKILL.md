@@ -46,6 +46,18 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 ---
 
+## Step 0: Run Migrations
+
+**This step is mandatory. You must complete it before proceeding.**
+
+Invoke the `/migrate` skill and assess its output.
+
+**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
+
+**If no updates needed**: Proceed to Step 1.
+
+---
+
 ## Step 1: Discovery State
 
 !`.claude/skills/start-discussion/scripts/discovery.sh`
@@ -156,7 +168,13 @@ Load **[gather-context.md](references/gather-context.md)** and follow its instru
 
 ## Step 7: Invoke the Skill
 
-Before invoking the processing skill, record the session state:
+Before invoking the processing skill, save a session bookmark.
+
+> *Output the next fenced block as a code block:*
+
+```
+Saving session state so Claude can pick up where it left off if the conversation is compacted.
+```
 
 ```bash
 .claude/hooks/workflows/write-session-state.sh \

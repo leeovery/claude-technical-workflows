@@ -79,7 +79,7 @@ tests/
 
 hooks/
   workflows/
-    system-check.sh      # Bootstrap: install hooks + run migrations
+    system-check.sh      # Bootstrap: install project-level hooks
     session-env.sh       # Export CLAUDE_SESSION_ID on session start
     compact-recovery.sh  # Read session state, inject recovery context
     session-cleanup.sh   # Delete session state on session end
@@ -156,7 +156,7 @@ This keeps format knowledge centralized in the planning phase where it belongs.
 
 ## Migrations
 
-The `/migrate` skill keeps workflow files in sync with the current system design. It runs automatically via the `system-check.sh` PreToolUse hook at the start of every workflow skill.
+The `/migrate` skill keeps workflow files in sync with the current system design. It runs via Step 0 at the start of every entry-point skill.
 
 **How it works:**
 - `skills/migrate/scripts/migrate.sh` runs all migration scripts in `skills/migrate/scripts/migrations/` in numeric order
@@ -205,10 +205,6 @@ Processing skills run long and may hit context compaction. The hook system provi
 - Skill-level `PreToolUse` hook (`system-check.sh`) detects missing project hooks
 - Installs hooks into `.claude/settings.json` and stops with restart message
 - One-time cost; self-healing if hooks are removed
-
-**Step 0 replacement:**
-- The `system-check.sh` hook also runs migrations (previously Step 0 in entry-point skills)
-- Step 0 has been removed from all entry-point skills — migrations now run deterministically via hooks
 
 ## Display & Output Conventions (IMPORTANT)
 
@@ -447,7 +443,7 @@ Never use `Stop here.`, `Command ends.`, `Wait for user to acknowledge before en
 
 Sequential: `## Step 0`, `## Step 1`, `## Step 2`, etc.
 
-- **Step 0** has been replaced by the `system-check.sh` PreToolUse hook (runs migrations automatically)
+- **Step 0** runs migrations via the `/migrate` skill (mandatory in all entry-point skills)
 - Steps are separated by `---` horizontal rules
 - Each step completes fully before the next begins
 

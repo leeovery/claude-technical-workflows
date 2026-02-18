@@ -6,13 +6,18 @@
 # Reads session_id from stdin JSON and removes the session state file if it exists.
 #
 
-set -eo pipefail
+# Resolve project directory
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-}"
+if [ -z "$PROJECT_DIR" ]; then
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  PROJECT_DIR="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+fi
 
-# Read session_id from stdin JSON
-session_id=$(jq -r '.session_id // empty' < /dev/stdin)
+# Extract session_id from stdin JSON
+session_id=$(cat | grep -o '"session_id" *: *"[^"]*"' | sed 's/.*: *"//;s/"//')
 
 if [ -n "$session_id" ]; then
-  session_file="$CLAUDE_PROJECT_DIR/docs/workflow/.cache/sessions/${session_id}.yaml"
+  session_file="$PROJECT_DIR/docs/workflow/.cache/sessions/${session_id}.yaml"
   if [ -f "$session_file" ]; then
     rm -f "$session_file"
   fi

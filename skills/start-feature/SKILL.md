@@ -28,6 +28,18 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 ---
 
+## Step 0: Run Migrations
+
+**This step is mandatory. You must complete it before proceeding.**
+
+Invoke the `/migrate` skill and assess its output.
+
+**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
+
+**If no updates needed**: Proceed to Step 1.
+
+---
+
 ## Resuming After Context Refresh
 
 Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
@@ -103,7 +115,13 @@ If resuming, check the discussion status. If concluded → skip to Step 4. If in
 
 ## Step 3: Invoke Discussion
 
-Before invoking the processing skill, record the session state:
+Before invoking the processing skill, save a session bookmark.
+
+> *Output the next fenced block as a code block:*
+
+```
+Saving session state so Claude can pick up where it left off and continue the feature pipeline if the conversation is compacted.
+```
 
 ```bash
 .claude/hooks/workflows/write-session-state.sh \

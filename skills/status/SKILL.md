@@ -13,6 +13,18 @@ hooks:
 
 Show the current state of the workflow for this project.
 
+## Step 0: Run Migrations
+
+**This step is mandatory. You must complete it before proceeding.**
+
+Invoke the `/migrate` skill and assess its output.
+
+**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
+
+**If no updates needed**: Proceed to Step 1.
+
+---
+
 ## Step 1: Discovery State
 
 !`.claude/skills/status/scripts/discovery.sh`

@@ -11,7 +11,12 @@
 # Requires CLAUDE_SESSION_ID in environment (set by session-env.sh).
 #
 
-set -eo pipefail
+# Resolve project directory
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-}"
+if [ -z "$PROJECT_DIR" ]; then
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  PROJECT_DIR="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+fi
 
 if [ -z "$CLAUDE_SESSION_ID" ]; then
   # No session ID available — silently skip
@@ -37,7 +42,7 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-SESSIONS_DIR="$CLAUDE_PROJECT_DIR/docs/workflow/.cache/sessions"
+SESSIONS_DIR="$PROJECT_DIR/docs/workflow/.cache/sessions"
 mkdir -p "$SESSIONS_DIR"
 
 SESSION_FILE="$SESSIONS_DIR/${CLAUDE_SESSION_ID}.yaml"

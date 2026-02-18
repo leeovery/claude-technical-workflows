@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Tests hooks/workflows/system-check.sh
-# Validates hook installation and migration integration.
+# Validates hook installation into .claude/settings.json.
 #
 
 set -eo pipefail
@@ -33,7 +33,6 @@ echo ""
 
 setup_fixture() {
     rm -rf "$TEST_DIR/.claude" "$TEST_DIR/docs"
-    mkdir -p "$TEST_DIR/.claude/skills/migrate/scripts"
 }
 
 run_hook() {
@@ -105,12 +104,6 @@ assert_equals() {
 
 echo -e "${YELLOW}Test: No settings.json — creates with hooks, outputs continue:false${NC}"
 setup_fixture
-# Create a no-op migrate script
-cat > "$TEST_DIR/.claude/skills/migrate/scripts/migrate.sh" << 'EOF'
-#!/bin/bash
-echo "[SKIP] No changes needed"
-EOF
-chmod +x "$TEST_DIR/.claude/skills/migrate/scripts/migrate.sh"
 
 output=$(run_hook)
 
@@ -134,11 +127,6 @@ cat > "$TEST_DIR/.claude/settings.json" << 'EOF'
   }
 }
 EOF
-cat > "$TEST_DIR/.claude/skills/migrate/scripts/migrate.sh" << 'EOF'
-#!/bin/bash
-echo "[SKIP] No changes needed"
-EOF
-chmod +x "$TEST_DIR/.claude/skills/migrate/scripts/migrate.sh"
 
 output=$(run_hook)
 
@@ -150,71 +138,41 @@ echo ""
 
 # ----------------------------------------------------------------------------
 
-echo -e "${YELLOW}Test: settings.json with hooks already — silent exit, no output${NC}"
+echo -e "${YELLOW}Test: settings.json with our hooks already — silent exit, no output${NC}"
 setup_fixture
 mkdir -p "$TEST_DIR/.claude"
-# Create settings with hooks already present
+# Create settings with our specific hooks already present
 cat > "$TEST_DIR/.claude/settings.json" << 'EOF'
 {
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "compact",
-        "hooks": [{ "type": "command", "command": "echo test" }]
-      }
-    ]
-  }
-}
-EOF
-# Create no-op migrate script that outputs only skips
-cat > "$TEST_DIR/.claude/skills/migrate/scripts/migrate.sh" << 'EOF'
-#!/bin/bash
-echo "[SKIP] No changes needed"
-EOF
-chmod +x "$TEST_DIR/.claude/skills/migrate/scripts/migrate.sh"
-
-output=$(run_hook)
-
-assert_equals "$output" "" "No output when hooks already configured and no migrations"
-
-echo ""
-
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: Migrations needed — outputs additionalContext${NC}"
-setup_fixture
-mkdir -p "$TEST_DIR/.claude"
-# Create settings with hooks present (so hook install is skipped)
-cat > "$TEST_DIR/.claude/settings.json" << 'EOF'
-{
-  "hooks": {
-    "SessionStart": [
+        "matcher": "startup|resume|clear",
+        "hooks": [{ "type": "command", "command": "hooks/workflows/session-env.sh" }]
+      },
       {
         "matcher": "compact",
-        "hooks": [{ "type": "command", "command": "echo test" }]
+        "hooks": [{ "type": "command", "command": "hooks/workflows/compact-recovery.sh" }]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [{ "type": "command", "command": "hooks/workflows/session-cleanup.sh" }]
       }
     ]
   }
 }
 EOF
-# Create migrate script that reports actual migrations
-cat > "$TEST_DIR/.claude/skills/migrate/scripts/migrate.sh" << 'EOF'
-#!/bin/bash
-echo "[UPDATE] auth-flow.md: migrated to frontmatter format"
-echo "[UPDATE] caching.md: migrated to frontmatter format"
-EOF
-chmod +x "$TEST_DIR/.claude/skills/migrate/scripts/migrate.sh"
 
 output=$(run_hook)
 
-assert_contains "$output" "additionalContext" "Output contains additionalContext"
-assert_contains "$output" "migrated" "Output contains migration report"
+assert_equals "$output" "" "No output when our hooks already configured"
 
 echo ""
 
 # ----------------------------------------------------------------------------
 
-echo -e "${YELLOW}Test: No migrations needed — silent exit${NC}"
+echo -e "${YELLOW}Test: User has own hooks — our hooks appended, theirs preserved${NC}"
 setup_fixture
 mkdir -p "$TEST_DIR/.claude"
 cat > "$TEST_DIR/.claude/settings.json" << 'EOF'
@@ -222,51 +180,41 @@ cat > "$TEST_DIR/.claude/settings.json" << 'EOF'
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "compact",
-        "hooks": [{ "type": "command", "command": "echo test" }]
+        "matcher": "startup",
+        "hooks": [{ "type": "command", "command": "echo user-hook" }]
       }
     ]
-  }
-}
-EOF
-cat > "$TEST_DIR/.claude/skills/migrate/scripts/migrate.sh" << 'EOF'
-#!/bin/bash
-echo "[SKIP] No changes needed"
-EOF
-chmod +x "$TEST_DIR/.claude/skills/migrate/scripts/migrate.sh"
-
-output=$(run_hook)
-
-assert_equals "$output" "" "No output when no migrations needed"
-
-echo ""
-
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: Existing permissions in settings.json — preserved after merge${NC}"
-setup_fixture
-mkdir -p "$TEST_DIR/.claude"
-cat > "$TEST_DIR/.claude/settings.json" << 'EOF'
-{
+  },
   "permissions": {
     "allow": ["Read", "Write", "Bash(git *)"]
   },
   "customSetting": "keep-me"
 }
 EOF
-cat > "$TEST_DIR/.claude/skills/migrate/scripts/migrate.sh" << 'EOF'
-#!/bin/bash
-echo "[SKIP] No changes needed"
-EOF
-chmod +x "$TEST_DIR/.claude/skills/migrate/scripts/migrate.sh"
 
 output=$(run_hook)
 
 settings_content=$(cat "$TEST_DIR/.claude/settings.json")
+assert_contains "$settings_content" "echo user-hook" "User's hook preserved"
 assert_contains "$settings_content" '"allow"' "Permissions preserved"
 assert_contains "$settings_content" 'Bash(git' "Specific permission preserved"
 assert_contains "$settings_content" "keep-me" "Custom settings preserved"
-assert_contains "$settings_content" "SessionStart" "Hooks added"
+assert_contains "$settings_content" "session-env.sh" "Our SessionStart hooks added"
+assert_contains "$settings_content" "session-cleanup.sh" "Our SessionEnd hooks added"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Second run after install — silent exit${NC}"
+setup_fixture
+
+# First run: installs hooks
+run_hook > /dev/null 2>&1
+
+# Second run: should be silent
+output=$(run_hook)
+assert_equals "$output" "" "Silent on second run (hooks already exist)"
 
 echo ""
 

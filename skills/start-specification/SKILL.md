@@ -46,6 +46,18 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 ---
 
+## Step 0: Run Migrations
+
+**This step is mandatory. You must complete it before proceeding.**
+
+Invoke the `/migrate` skill and assess its output.
+
+**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
+
+**If no updates needed**: Proceed to Step 1.
+
+---
+
 ## Step 1: Discovery State
 
 !`.claude/skills/start-specification/scripts/discovery.sh`
@@ -87,15 +99,6 @@ Parse the discovery output to understand:
 ---
 
 ## Step 3: Route
-
-Before invoking the processing skill, record the session state:
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-specification/SKILL.md" \
-  "docs/workflow/specification/{topic}/specification.md"
-```
 
 Based on discovery state, load exactly ONE reference file:
 

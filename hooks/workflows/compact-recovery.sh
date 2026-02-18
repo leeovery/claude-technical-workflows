@@ -7,16 +7,21 @@
 # and injects recovery context so the model can resume work.
 #
 
-set -eo pipefail
+# Resolve project directory
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-}"
+if [ -z "$PROJECT_DIR" ]; then
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  PROJECT_DIR="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+fi
 
-# Read session_id from stdin JSON
-session_id=$(jq -r '.session_id // empty' < /dev/stdin)
+# Extract session_id from stdin JSON
+session_id=$(cat | grep -o '"session_id" *: *"[^"]*"' | sed 's/.*: *"//;s/"//')
 
 if [ -z "$session_id" ]; then
   exit 0
 fi
 
-SESSION_FILE="$CLAUDE_PROJECT_DIR/docs/workflow/.cache/sessions/${session_id}.yaml"
+SESSION_FILE="$PROJECT_DIR/docs/workflow/.cache/sessions/${session_id}.yaml"
 
 if [ ! -f "$SESSION_FILE" ]; then
   exit 0
@@ -45,8 +50,8 @@ context="CONTEXT COMPACTION — SESSION RECOVERY
 Context was just compacted. Follow these instructions carefully.
 
 ─── IMMEDIATE: Resume current work ───
-
-You are working on topic '${topic}'.
+$([ -n "$topic" ] && echo "
+You are working on topic '${topic}'.")
 Skill: ${skill}
 
 1. Re-read that skill file completely
@@ -67,8 +72,10 @@ Do NOT enter plan mode or invoke continue-feature until the current
 phase is complete. Finish the current phase first."
 fi
 
-# Escape for JSON and output
-json_context=$(printf '%s' "$context" | jq -Rs '.')
+# Escape context for JSON output
+json_context=$(printf '%s' "$context" | sed 's/\\/\\\\/g; s/"/\\"/g; s/$/\\n/' | tr -d '\n')
+json_context="\"${json_context%\\n}\""
+
 echo "{ \"hookSpecificOutput\": { \"hookEventName\": \"SessionStart\", \"additionalContext\": ${json_context} } }"
 
 exit 0
