@@ -29,8 +29,6 @@
 #   - If no matching discussion, add empty sources: [] and report for user review
 #
 # This script is sourced by migrate.sh and has access to:
-#   - is_migrated "filepath" "migration_id"
-#   - record_migration "filepath" "migration_id"
 #   - report_update "filepath" "description"
 #   - report_skip "filepath"
 #
@@ -92,15 +90,8 @@ for file in "$SPEC_DIR"/*.md; do
         *-review-*|*-tracking*) continue ;;
     esac
 
-    # Check if already migrated via tracking
-    if is_migrated "$file" "$MIGRATION_ID"; then
-        report_skip "$file"
-        continue
-    fi
-
     # Check if file has YAML frontmatter
     if ! head -1 "$file" 2>/dev/null | grep -q "^---$"; then
-        record_migration "$file" "$MIGRATION_ID"
         report_skip "$file"
         continue
     fi
@@ -113,7 +104,6 @@ for file in "$SPEC_DIR"/*.md; do
 
     # If sources field exists, check if already in object format
     if $has_sources_field && sources_already_object_format "$file"; then
-        record_migration "$file" "$MIGRATION_ID"
         report_skip "$file"
         continue
     fi
@@ -195,8 +185,6 @@ ${new_sources_block}"
         echo "---"
         echo "$content"
     } > "$file"
-
-    record_migration "$file" "$MIGRATION_ID"
 
     # Report appropriate message based on what was done
     if $has_sources_field; then

@@ -12,8 +12,6 @@
 # Updates plan frontmatter `specification` field to use new directory paths.
 #
 # This script is sourced by migrate.sh and has access to:
-#   - is_migrated "filepath" "migration_id"
-#   - record_migration "filepath" "migration_id"
 #   - report_update "filepath" "description"
 #   - report_skip "filepath"
 #
@@ -33,19 +31,11 @@ if [ -d "$SPEC_DIR" ]; then
 
         # Skip if already a directory (already migrated)
         if [ -d "$SPEC_DIR/$name" ] && [ -f "$SPEC_DIR/$name/specification.md" ]; then
-            new_path="$SPEC_DIR/$name/specification.md"
-            if ! is_migrated "$new_path" "$MIGRATION_ID"; then
-                record_migration "$new_path" "$MIGRATION_ID"
-            fi
-            report_skip "$new_path"
+            report_skip "$SPEC_DIR/$name/specification.md"
             continue
         fi
 
         new_path="$SPEC_DIR/$name/specification.md"
-        if is_migrated "$new_path" "$MIGRATION_ID"; then
-            report_skip "$new_path"
-            continue
-        fi
 
         # Create topic directory
         mkdir -p "$SPEC_DIR/$name"
@@ -63,7 +53,6 @@ if [ -d "$SPEC_DIR" ]; then
             report_update "$SPEC_DIR/$name/$new_tracking_name" "moved tracking file into topic directory"
         done
 
-        record_migration "$new_path" "$MIGRATION_ID"
         report_update "$new_path" "restructured to topic directory"
     done
 fi
@@ -79,19 +68,11 @@ if [ -d "$PLAN_DIR" ]; then
 
         # Skip if already a directory with plan.md
         if [ -d "$PLAN_DIR/$name" ] && [ -f "$PLAN_DIR/$name/plan.md" ]; then
-            new_path="$PLAN_DIR/$name/plan.md"
-            if ! is_migrated "$new_path" "$MIGRATION_ID"; then
-                record_migration "$new_path" "$MIGRATION_ID"
-            fi
-            report_skip "$new_path"
+            report_skip "$PLAN_DIR/$name/plan.md"
             continue
         fi
 
         new_path="$PLAN_DIR/$name/plan.md"
-        if is_migrated "$new_path" "$MIGRATION_ID"; then
-            report_skip "$new_path"
-            continue
-        fi
 
         # Create topic directory (may already exist for local-markdown tasks)
         mkdir -p "$PLAN_DIR/$name"
@@ -108,7 +89,6 @@ if [ -d "$PLAN_DIR" ]; then
             report_update "$PLAN_DIR/$name/$new_tracking_name" "moved tracking file into topic directory"
         done
 
-        record_migration "$new_path" "$MIGRATION_ID"
         report_update "$new_path" "restructured to topic directory"
     done
 fi

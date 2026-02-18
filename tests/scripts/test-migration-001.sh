@@ -31,20 +31,6 @@ echo ""
 # Mock migration helper functions
 #
 
-MIGRATION_LOG="$TEST_DIR/.migration-log"
-
-is_migrated() {
-    local file="$1"
-    local migration_id="$2"
-    grep -q "^$file:$migration_id$" "$MIGRATION_LOG" 2>/dev/null
-}
-
-record_migration() {
-    local file="$1"
-    local migration_id="$2"
-    echo "$file:$migration_id" >> "$MIGRATION_LOG"
-}
-
 report_update() {
     local file="$1"
     local description="$2"
@@ -57,7 +43,7 @@ report_skip() {
 }
 
 # Export functions for sourced script
-export -f is_migrated record_migration report_update report_skip
+export -f report_update report_skip
 
 #
 # Helper functions
@@ -65,7 +51,6 @@ export -f is_migrated record_migration report_update report_skip
 
 setup_fixture() {
     rm -rf "$TEST_DIR/docs"
-    rm -f "$MIGRATION_LOG"
     mkdir -p "$TEST_DIR/docs/workflow/discussion"
     DISCUSSION_DIR="$TEST_DIR/docs/workflow/discussion"
 }

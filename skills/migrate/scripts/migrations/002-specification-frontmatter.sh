@@ -34,8 +34,6 @@
 #   (not found or unrecognized) → empty (requires manual review)
 #
 # This script is sourced by migrate.sh and has access to:
-#   - is_migrated "filepath" "migration_id"
-#   - record_migration "filepath" "migration_id"
 #   - report_update "filepath" "description"
 #   - report_skip "filepath"
 #
@@ -57,24 +55,14 @@ for file in "$SPEC_DIR"/*.md; do
         *-review-*|*-tracking*) continue ;;
     esac
 
-    # Check if already migrated via tracking
-    if is_migrated "$file" "$MIGRATION_ID"; then
-        report_skip "$file"
-        continue
-    fi
-
     # Check if file already has YAML frontmatter
     if head -1 "$file" 2>/dev/null | grep -q "^---$"; then
-        # Already has frontmatter - just record and skip
-        record_migration "$file" "$MIGRATION_ID"
         report_skip "$file"
         continue
     fi
 
     # Check if file has legacy format (look for **Status**: or **Status:** or **Type**: or **Last Updated**:)
     if ! grep -q '^\*\*Status\*\*:\|^\*\*Status:\*\*\|^\*\*Type\*\*:\|^\*\*Last Updated\*\*:' "$file" 2>/dev/null; then
-        # No legacy format found - might be malformed, skip
-        record_migration "$file" "$MIGRATION_ID"
         report_skip "$file"
         continue
     fi
@@ -206,7 +194,5 @@ date: $date_value
         echo "$content"
     } > "$file"
 
-    # Record and report
-    record_migration "$file" "$MIGRATION_ID"
     report_update "$file" "added frontmatter (status: $status_new, type: $type_new)"
 done

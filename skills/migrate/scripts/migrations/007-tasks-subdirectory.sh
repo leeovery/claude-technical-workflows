@@ -24,8 +24,6 @@
 # Idempotent: skips if tasks/ already exists and contains .md files.
 #
 # This script is sourced by migrate.sh and has access to:
-#   - is_migrated "filepath" "migration_id"
-#   - record_migration "filepath" "migration_id"
 #   - report_update "filepath" "description"
 #   - report_skip "filepath"
 #
@@ -44,12 +42,6 @@ for topic_dir in "$PLAN_DIR"/*/; do
     topic=$(basename "$topic_dir")
     marker="${topic_dir}plan.md"
 
-    # Use plan.md as the migration tracking key
-    if is_migrated "$marker" "$MIGRATION_ID"; then
-        report_skip "$marker"
-        continue
-    fi
-
     # Skip if no plan.md exists (not a valid topic directory)
     if [ ! -f "$marker" ]; then
         continue
@@ -59,14 +51,7 @@ for topic_dir in "$PLAN_DIR"/*/; do
     task_files=("$topic_dir${topic}-"*.md)
     if [ ! -f "${task_files[0]}" ]; then
         # No task files — format may not be local-markdown, or tasks already moved
-        # Check if tasks/ already has files (idempotent check)
-        if [ -d "${topic_dir}tasks" ] && ls -1 "${topic_dir}tasks/"*.md >/dev/null 2>&1; then
-            record_migration "$marker" "$MIGRATION_ID"
-            report_skip "$marker"
-        else
-            record_migration "$marker" "$MIGRATION_ID"
-            report_skip "$marker"
-        fi
+        report_skip "$marker"
         continue
     fi
 
@@ -81,6 +66,5 @@ for topic_dir in "$PLAN_DIR"/*/; do
         moved=$((moved + 1))
     done
 
-    record_migration "$marker" "$MIGRATION_ID"
     report_update "$marker" "moved $moved task file(s) to tasks/ subdirectory"
 done
