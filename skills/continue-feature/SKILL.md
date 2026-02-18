@@ -1,7 +1,13 @@
 ---
 name: continue-feature
 description: "Continue a feature through the pipeline. Routes to the next phase (specification, planning, or implementation) based on artifact state. Can be invoked manually or from plan mode bridges."
-allowed-tools: Bash(.claude/skills/continue-feature/scripts/discovery.sh)
+allowed-tools: Bash(.claude/skills/continue-feature/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh)
+hooks:
+  PreToolUse:
+    - hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/.claude/hooks/workflows/system-check.sh"
+          once: true
 ---
 
 Route a feature to its next pipeline phase.
@@ -142,31 +148,73 @@ Load **[detect-phase.md](references/detect-phase.md)** and follow its instructio
 
 ## Step 3: Specification Phase
 
+Before invoking the processing skill, save a session bookmark.
+
+> *Output the next fenced block as a code block:*
+
+```
+Saving session state so Claude can pick up where it left off and continue the feature pipeline if the conversation is compacted.
+```
+
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-specification/SKILL.md" \
+  "docs/workflow/specification/{topic}/specification.md" \
+  --pipeline "This session is part of the feature pipeline. After the specification concludes, return to the continue-feature skill and execute Step 6 (Phase Bridge). Load: skills/continue-feature/references/phase-bridge.md"
+```
+
 Load **[invoke-specification.md](references/invoke-specification.md)** and follow its instructions.
 
-After the processing skill concludes (specification status becomes "concluded"):
-
-→ Proceed to **Step 6**.
+**CRITICAL**: When the specification concludes (status becomes "concluded"), you MUST proceed to **Step 6** below. Do not end the session — the feature pipeline continues to the phase bridge.
 
 ---
 
 ## Step 4: Planning Phase
 
+Before invoking the processing skill, save a session bookmark.
+
+> *Output the next fenced block as a code block:*
+
+```
+Saving session state so Claude can pick up where it left off and continue the feature pipeline if the conversation is compacted.
+```
+
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-planning/SKILL.md" \
+  "docs/workflow/planning/{topic}/plan.md" \
+  --pipeline "This session is part of the feature pipeline. After the plan concludes, return to the continue-feature skill and execute Step 6 (Phase Bridge). Load: skills/continue-feature/references/phase-bridge.md"
+```
+
 Load **[invoke-planning.md](references/invoke-planning.md)** and follow its instructions.
 
-After the processing skill concludes (plan status becomes "concluded"):
-
-→ Proceed to **Step 6**.
+**CRITICAL**: When the plan concludes (status becomes "concluded"), you MUST proceed to **Step 6** below. Do not end the session — the feature pipeline continues to the phase bridge.
 
 ---
 
 ## Step 5: Implementation Phase
 
+Before invoking the processing skill, save a session bookmark.
+
+> *Output the next fenced block as a code block:*
+
+```
+Saving session state so Claude can pick up where it left off and continue the feature pipeline if the conversation is compacted.
+```
+
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-implementation/SKILL.md" \
+  "docs/workflow/implementation/{topic}/tracking.md" \
+  --pipeline "This session is part of the feature pipeline. After implementation completes, return to the continue-feature skill and execute Step 6 (Phase Bridge). Load: skills/continue-feature/references/phase-bridge.md"
+```
+
 Load **[invoke-implementation.md](references/invoke-implementation.md)** and follow its instructions.
 
-After the processing skill concludes (implementation tracking status becomes "completed"):
-
-→ Proceed to **Step 6**.
+**CRITICAL**: When implementation completes (tracking status becomes "completed"), you MUST proceed to **Step 6** below. Do not end the session — the feature pipeline continues to the phase bridge.
 
 ---
 

@@ -28,5 +28,10 @@ Source material:
 
 Topic name: {topic}
 
+PIPELINE CONTINUATION — When this specification concludes (status: concluded),
+you MUST return to the continue-feature skill and execute Step 6 (Phase Bridge).
+Load: skills/continue-feature/references/phase-bridge.md
+Do not end the session after the specification — the feature pipeline continues.
+
 Invoke the technical-specification skill.
 ```
