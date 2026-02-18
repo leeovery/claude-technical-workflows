@@ -56,8 +56,13 @@ Proceed with synthesis?
 
 **STOP.** Wait for user response.
 
-- `yes` → Proceed to **B. Dispatch Review Synthesizer**.
-- `no` → **STOP.** Do not proceed — terminal condition.
+#### If yes
+
+→ Proceed to **B. Dispatch Review Synthesizer**.
+
+#### If no
+
+**STOP.** Do not proceed — terminal condition.
 
 #### If verdict is "Comments Only"
 
@@ -83,8 +88,13 @@ Synthesize non-blocking findings?
 
 **STOP.** Wait for user response.
 
-- `yes` → Proceed to **B. Dispatch Review Synthesizer**.
-- `no` → **STOP.** Do not proceed — terminal condition.
+#### If yes
+
+→ Proceed to **B. Dispatch Review Synthesizer**.
+
+#### If no
+
+**STOP.** Do not proceed — terminal condition.
 
 ---
 
