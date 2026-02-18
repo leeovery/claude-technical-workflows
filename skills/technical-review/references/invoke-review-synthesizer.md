@@ -28,9 +28,8 @@ The synthesizer receives:
 
 1. **Review scope** — single or multi, with plan list
 2. **Review paths** — paths to `r{N}/` directories (include summary, QA directory, product assessment)
-3. **Task normalization reference path** — `skills/technical-implementation/references/task-normalisation.md`
-4. **Specification path(s)** — from each plan's frontmatter
-5. **Cycle number** — the review remediation cycle number
+3. **Specification path(s)** — from each plan's frontmatter
+4. **Cycle number** — the review remediation cycle number
 
 ---
 

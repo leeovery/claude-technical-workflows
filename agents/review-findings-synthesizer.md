@@ -15,9 +15,8 @@ You receive via the orchestrator's prompt:
 
 1. **Review scope** — single or multi, with plan list
 2. **Review paths** — paths to `r{N}/` directories containing review summary, QA files, and product assessment
-3. **Task normalization reference path** — canonical task template
-4. **Specification path(s)** — the validated specification(s) for context
-5. **Cycle number** — which review remediation cycle this is
+3. **Specification path(s)** — the validated specification(s) for context
+4. **Cycle number** — which review remediation cycle this is
 
 ## Your Process
 
