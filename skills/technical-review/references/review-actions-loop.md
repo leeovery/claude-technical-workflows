@@ -4,7 +4,7 @@
 
 ---
 
-After a review is complete, this loop synthesizes findings into actionable tasks. Loaded by `technical-review` Step 6 — either after completing a fresh review or when invoked in analysis-only mode.
+After a review is complete, this loop synthesizes findings into actionable tasks.
 
 Stages A through E run sequentially. Always start at **A. Verdict Gate**.
 
