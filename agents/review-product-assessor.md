@@ -42,7 +42,7 @@ You receive via the orchestrator's prompt:
 3. **Read plan(s)** — understand what was built and the scope of each plan
 4. **Read all implementation files** — understand the full picture
 5. **Assess as a product** — evaluate holistically against focus areas
-6. **Write findings** to `docs/workflow/review/{topic-or-scope}/product-assessment.md`
+6. **Write findings** to `docs/workflow/review/{scope}/r{N}/product-assessment.md`
 
 For multi-plan/full-product scope, use a descriptive scope name (e.g., `full-product` or a hyphenated list of topic names).
 
@@ -59,7 +59,7 @@ For multi-plan/full-product scope, use a descriptive scope name (e.g., `full-pro
 
 ## Output File Format
 
-Write to `docs/workflow/review/{topic-or-scope}/product-assessment.md`:
+Write to `docs/workflow/review/{scope}/r{N}/product-assessment.md`:
 
 ```
 SCOPE: {single-plan | multi-plan | full-product}

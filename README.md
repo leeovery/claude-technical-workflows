@@ -110,7 +110,7 @@ Each phase produces documents that feed the next. Here's the journey:
 
 **Implementation** — Executes plans via strict TDD. Tests first, then code, commit after each task. Per-task approval gates keep you in control, with auto-mode available when you trust the flow.
 
-**Review** — Validates the implementation against spec and plan. Catches drift, missing requirements, and quality issues. The spec is the source of truth here — earlier phases may contain rejected ideas that were intentionally filtered out. Produces structured feedback without fixing code directly.
+**Review** — Validates the implementation against spec and plan. Catches drift, missing requirements, and quality issues. Findings can be synthesized into remediation tasks that feed back into implementation, closing the review-implementation loop.
 
 ### Standalone Skills
 
@@ -231,8 +231,12 @@ docs/workflow/
 ├── implementation/                    # Phase 5 — directory per topic
 │   └── {topic}/
 │       └── tracking.md               #   Progress, gates, current task
-└── review/                            # Phase 6 — one file per review
-    └── {topic}.md
+└── review/                            # Phase 6 — versioned per review
+    └── {topic}/
+        └── r1/
+            ├── review.md              #   Review summary and verdict
+            ├── qa-task-1.md           #   Per-task QA verification
+            └── product-assessment.md  #   Holistic product assessment
 ```
 
 Research starts with `exploration.md` and splits into topic files as themes emerge. From specification onwards, each topic gets its own directory. Planning task storage varies by [output format](#output-formats) — the tree above shows local-markdown; Tick and Linear store tasks externally.
@@ -269,12 +273,15 @@ skills/
 
 agents/
 ├── review-task-verifier.md           # Verifies single task implementation for review
+├── review-findings-synthesizer.md   # Synthesizes review findings into remediation tasks
 ├── implementation-task-executor.md  # TDD executor for single plan tasks
 ├── implementation-task-reviewer.md  # Post-task review for spec conformance
 ├── planning-phase-designer.md       # Design phases from specification
 ├── planning-task-designer.md        # Break phases into task lists
 ├── planning-task-author.md          # Write full task detail
-└── planning-dependency-grapher.md   # Analyze task dependencies and priorities
+├── planning-dependency-grapher.md   # Analyze task dependencies and priorities
+├── planning-review-traceability.md  # Spec-to-plan traceability analysis
+└── planning-review-integrity.md     # Plan structural quality review
 
 tests/
 └── scripts/                         # Shell script tests for discovery and migrations
@@ -310,7 +317,7 @@ Sequential skills that expect files from previous phases and pass content to pro
 | [**/start-specification**](skills/start-specification/)                      | Start a specification session from existing discussion(s). Automatically analyses multiple discussions for natural groupings and consolidates them into unified specifications.                            |
 | [**/start-planning**](skills/start-planning/)                                | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats. |
 | [**/start-implementation**](skills/start-implementation/)                    | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
-| [**/start-review**](skills/start-review/)                                    | Start reviewing completed work. Validates implementation against plan tasks and acceptance criteria.                                                                                                        |
+| [**/start-review**](skills/start-review/)                                    | Start reviewing completed work. Validates implementation against plan tasks and acceptance criteria. Findings can be synthesized into remediation tasks.                                                    |
 
 #### Utility Skills
 
@@ -354,6 +361,9 @@ Subagents that skills can spawn for parallel task execution.
 | [**planning-task-designer**](agents/planning-task-designer.md) | technical-planning | Breaks a single phase into a task list with edge cases. |
 | [**planning-task-author**](agents/planning-task-author.md) | technical-planning | Writes full detail for a single plan task. |
 | [**planning-dependency-grapher**](agents/planning-dependency-grapher.md) | technical-planning | Analyzes authored tasks to establish internal dependencies and priorities. |
+| [**planning-review-traceability**](agents/planning-review-traceability.md) | technical-planning | Spec-to-plan traceability analysis. |
+| [**planning-review-integrity**](agents/planning-review-integrity.md) | technical-planning | Plan structural quality review. |
+| [**review-findings-synthesizer**](agents/review-findings-synthesizer.md) | technical-review | Synthesizes review findings into normalized remediation tasks for plan integration. |
 
 ## Requirements
 

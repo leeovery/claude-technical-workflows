@@ -65,6 +65,7 @@ skills/
 
 agents/
   review-task-verifier.md           # Verifies single task implementation for review
+  review-findings-synthesizer.md   # Synthesizes review findings into remediation tasks
   implementation-task-executor.md  # TDD executor for single plan tasks
   implementation-task-reviewer.md  # Post-task review for spec conformance
   planning-phase-designer.md       # Design phases from specification
@@ -120,7 +121,7 @@ Phase-first directory structure:
 - Specification: `docs/workflow/specification/{topic}/specification.md`
 - Planning: `docs/workflow/planning/{topic}/plan.md` + format-specific task storage
 - Implementation: `docs/workflow/implementation/{topic}/tracking.md`
-- Review: `docs/workflow/review/{topic}.md`
+- Review: `docs/workflow/review/{topic}/r{N}/review.md`
 
 Commit docs frequently (natural breaks, before context refresh). Skills capture context, don't implement.
 

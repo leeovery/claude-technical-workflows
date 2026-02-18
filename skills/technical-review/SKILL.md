@@ -49,6 +49,12 @@ having it provides better context for the review.
 
 The specification is optional — the review can proceed with just the plan.
 
+#### If review mode is "analysis-only"
+
+Analysis of existing review findings was requested. The review has already been completed.
+
+→ Go directly to **Step 6**.
+
 ---
 
 ## Resuming After Context Refresh
@@ -135,33 +141,13 @@ Load **[invoke-product-assessor.md](references/invoke-product-assessor.md)** and
 
 ## Step 5: Produce Review
 
-Aggregate findings from both stages into a review document using the **[template.md](references/template.md)**.
+Load **[produce-review.md](references/produce-review.md)** and follow its instructions as written.
 
-Write the review to `docs/workflow/review/{topic}.md` (single) or `docs/workflow/review/{scope-description}.md` (multi/all).
-
-**QA Verdict** (from Step 3):
-- **Approve** — All acceptance criteria met, no blocking issues
-- **Request Changes** — Missing requirements, broken functionality, inadequate tests
-- **Comments Only** — Minor suggestions, non-blocking observations
-
-**Product Assessment** (from Step 4) — always advisory, presented alongside the verdict.
-
-Commit: `review({topic}): complete review`
-
-Present the review to the user.
-
-Your review feedback can be:
-- Addressed by implementation (same or new session)
-- Delegated to an agent for fixes
-- Overridden by user ("ship it anyway")
-
-You produce feedback. User decides what to do with it.
+→ Proceed to **Step 6**.
 
 ---
 
-## References
+## Step 6: Review Actions
 
-- **[invoke-task-verifiers.md](references/invoke-task-verifiers.md)** — How to dispatch QA verifier agents
-- **[invoke-product-assessor.md](references/invoke-product-assessor.md)** — How to dispatch the product assessor agent
-- **[template.md](references/template.md)** — Review output structure and verdict guidelines
-- **[review-checklist.md](references/review-checklist.md)** — Per-task verification criteria (read by agents), plan completion checks, writing feedback guidance
+Load **[review-actions-loop.md](references/review-actions-loop.md)** and follow its instructions.
+

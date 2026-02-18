@@ -40,7 +40,7 @@ The assessor receives:
 
 **STOP.** Do not proceed until the assessor has returned.
 
-The assessor writes its findings to `docs/workflow/review/{topic-or-scope}/product-assessment.md` and returns a brief status. If the agent fails (error, timeout), record the failure and continue to the review production step with QA findings only.
+The assessor writes its findings to `docs/workflow/review/{scope}/r{N}/product-assessment.md` and returns a brief status. If the agent fails (error, timeout), record the failure and continue to the review production step with QA findings only.
 
 ---
 
@@ -54,4 +54,4 @@ FINDINGS_COUNT: {N}
 SUMMARY: {1 sentence}
 ```
 
-The full findings are in the output file. Read `docs/workflow/review/{topic-or-scope}/product-assessment.md` to incorporate into the review document.
+The full findings are in the output file. Read `docs/workflow/review/{scope}/r{N}/product-assessment.md` to incorporate into the review document.

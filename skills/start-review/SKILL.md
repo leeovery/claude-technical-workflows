@@ -77,10 +77,16 @@ Parse the discovery output to understand:
 - `files` - list of plans with: name, topic, status, date, format, specification, specification_exists, plan_id (if present)
 - `count` - total number of plans
 
+**From `reviews` section:**
+- `exists` - whether any reviews exist
+- `entries` - list of reviews with: scope, type, plans, versions, latest_version, latest_verdict, latest_path, has_synthesis
+
 **From `state` section:**
 - `scenario` - one of: `"no_plans"`, `"single_plan"`, `"multiple_plans"`
 - `implemented_count` - plans with implementation_status != "none"
 - `completed_count` - plans with implementation_status == "completed"
+- `reviewed_plan_count` - plans that have been reviewed
+- `all_reviewed` - whether all implemented plans have reviews
 
 **IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
 
@@ -110,9 +116,50 @@ to build it.
 
 **STOP.** Do not proceed — terminal condition.
 
+#### If all_reviewed is true
+
+All implemented plans have been reviewed.
+
+> *Output the next fenced block as a code block:*
+
+```
+Review Overview
+
+All {N} implemented plans have been reviewed.
+
+1. {topic:(titlecase)}
+   └─ Review: r{N} ({verdict})
+   └─ Synthesis: @if(has_synthesis) completed @else pending @endif
+
+2. ...
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+All plans have been reviewed.
+
+- **`a`/`analysis`** — Synthesize findings from existing reviews into tasks
+- **`r`/`re-review`** — Re-review a plan (creates new review version)
+
+Select an option:
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If analysis
+
+→ Proceed to **Step 4** with scope set to "analysis".
+
+#### If re-review
+
+→ Proceed to **Step 3**, incrementing the review version for the selected plan.
+
 #### If scenario is "single_plan" or "multiple_plans"
 
-Plans exist.
+Plans exist (some may have reviews, some may not).
 
 → Proceed to **Step 3** to present options.
 
@@ -135,20 +182,5 @@ Load **[select-plans.md](references/select-plans.md)** and follow its instructio
 ---
 
 ## Step 5: Invoke the Skill
-
-Before invoking the processing skill, save a session bookmark.
-
-> *Output the next fenced block as a code block:*
-
-```
-Saving session state so Claude can pick up where it left off if the conversation is compacted.
-```
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-review/SKILL.md" \
-  "docs/workflow/review/{topic}.md"
-```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
