@@ -12,3 +12,5 @@ __pycache__/
 
 # Workflow session state (ephemeral, per-session)
 docs/workflow/.cache/sessions/
+
+.claude/settings.local.json
