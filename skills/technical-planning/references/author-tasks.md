@@ -37,6 +37,8 @@ Check `author_gate_mode` in the Plan Index File frontmatter.
 
 #### If `author_gate_mode: auto`
 
+**Auto mode removes the approval pause — not the sequential process.** Each task is still invoked, authored, and logged one at a time, in order. Do not batch, skip ahead, or create multiple tasks concurrently.
+
 > *Output the next fenced block as a code block:*
 
 ```

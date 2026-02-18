@@ -3,6 +3,12 @@ name: status
 description: "Show workflow status - what exists, where you are, and what to do next."
 disable-model-invocation: true
 allowed-tools: Bash(.claude/skills/status/scripts/discovery.sh)
+hooks:
+  PreToolUse:
+    - hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/.claude/hooks/workflows/system-check.sh"
+          once: true
 ---
 
 Show the current state of the workflow for this project.
@@ -13,7 +19,7 @@ Show the current state of the workflow for this project.
 
 Invoke the `/migrate` skill and assess its output.
 
-**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1.
+**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
 
 **If no updates needed**: Proceed to Step 1.
 

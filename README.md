@@ -64,8 +64,8 @@ Pick your entry point based on where you are:
 - **Know what you're building?** → Start with `/start-discussion`
   You've moved past exploration and want to capture architecture decisions, edge cases, and rationale for specific topics.
 
-- **Clear feature, ready to spec?** → Use `/start-feature`
-  You already know the what and why. Jump straight to building a specification from inline context — no prior documents needed.
+- **Clear feature, ready to build?** → Use `/start-feature`
+  You know what you're building. Start-feature gathers context, creates a discussion, then pipelines through specification → planning → implementation automatically via plan mode bridges.
 
 **Why research is the recommended default:** When you move from research to discussion, the discussion skill analyses your research document and automatically breaks it into focused discussion topics. Skip research and you manage topic structure yourself.
 
@@ -121,9 +121,34 @@ Not every task needs the full workflow. These skills gather inputs flexibly and 
 | `/start-feature` | Create a spec directly from inline context (skip research/discussion) |
 | `/link-dependencies` | Wire cross-topic dependencies across plans |
 
+### Feature Pipeline
+
+`/start-feature` chains the full workflow into an automated pipeline:
+
+```
+/start-feature
+    │
+    ▼
+Discussion ──▶ Specification ──▶ Planning ──▶ Implementation
+```
+
+**How it works:** After each phase completes, a plan mode bridge clears context and advances to the next phase automatically. You approve each transition with "clear context and continue" — this keeps each phase in a clean context window.
+
+If a session is interrupted, run `/continue-feature` to pick up where you left off. It reads artifact state to determine the next phase.
+
 ### Under the Hood
 
 Skills are organised in two tiers. **Entry-point skills** (`/start-*`, `/status`, etc.) gather context from files, prompts, or inline input. **Processing skills** (`technical-*`) receive those inputs and do the work — they don't know or care where inputs came from. This separation means the same processing skill can be invoked from different entry points: `/start-specification` and `/start-feature` both feed `technical-specification` with different inputs. You can create custom entry-point skills that feed processing skills in new ways.
+
+### Compaction Recovery
+
+Long-running skills can hit context compaction, where Claude's conversation is summarized and procedural detail is lost. The hook system provides automatic recovery:
+
+- **Project-level hooks** installed in `.claude/settings.json` persist through compaction events
+- On compaction, the recovery hook reads session state from disk and injects authoritative context — the skill to re-read, the artifact to resume, and pipeline instructions
+- On first run, a bootstrap hook detects missing configuration and installs it automatically (requires one Claude restart)
+
+Session state is ephemeral (gitignored, cleaned up on session end) and per-session — multiple concurrent sessions don't interfere.
 
 ### Workflow Skills
 
@@ -226,7 +251,8 @@ skills/
 │
 ├── # Entry-point skills (user-invocable)
 ├── migrate/                         # Keep workflow files in sync with system design
-├── start-feature/                   # Standalone: spec from inline context
+├── start-feature/                   # Pipeline: discussion → spec → plan → impl
+├── continue-feature/                # Pipeline: route feature to next phase
 ├── link-dependencies/               # Standalone: wire cross-topic deps
 ├── start-research/                  # Begin research
 ├── start-discussion/                # Begin discussions
@@ -235,7 +261,11 @@ skills/
 ├── start-implementation/            # Begin implementation
 ├── start-review/                    # Begin review
 ├── status/                          # Show workflow status
-└── view-plan/                       # View plan tasks
+├── view-plan/                       # View plan tasks
+│
+├── # Bridge skills (model-invocable — pipeline pre-flight)
+├── begin-planning/                  # Pre-flight for planning in pipeline
+└── begin-implementation/            # Pre-flight for implementation in pipeline
 
 agents/
 ├── review-task-verifier.md           # Verifies single task implementation for review
@@ -298,7 +328,8 @@ Independent skills that gather inputs flexibly (inline context, files, or prompt
 
 | Skill                                                   | Description                                                                                                                                 |
 |---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| [**/start-feature**](skills/start-feature/)              | Create a specification directly from inline context. Invokes the specification skill without requiring a discussion document.              |
+| [**/start-feature**](skills/start-feature/)              | Start a new feature through the full pipeline. Gathers context, creates a discussion, then bridges through specification → planning → implementation. |
+| [**/continue-feature**](skills/continue-feature/)        | Continue a feature through its next pipeline phase. Routes automatically based on artifact state. Used manually or from plan mode bridges.  |
 | [**/link-dependencies**](skills/link-dependencies/)      | Link external dependencies across topics. Scans plans and wires up unresolved cross-topic dependencies.                                    |
 
 ### Creating Custom Skills

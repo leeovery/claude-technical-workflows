@@ -1,5 +1,16 @@
 # Tick: Authoring
 
+## Sandbox Mode and Large Descriptions
+
+Bash heredocs (`$(cat <<'EOF'...EOF)`) create temp files that sandbox mode blocks, resulting in empty descriptions being set silently. Do **not** use `dangerouslyDisableSandbox` — it forces user approval on every call.
+
+Instead, use the **Write tool + cat pattern**:
+
+1. Use the **Write tool** to save the description to `$TMPDIR/tick-desc.txt` — this bypasses sandbox because it uses Claude Code's file writing, not bash
+2. Run the tick command with `--description "$(cat $TMPDIR/tick-desc.txt)"` in normal sandbox mode — `cat` just reads, no temp files needed
+
+This works for both `tick create --description` and `tick update --description`.
+
 ## Task Storage
 
 Tasks are created using the `tick create` command. Before creating individual tasks, establish the topic and phase parent tasks.

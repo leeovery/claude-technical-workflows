@@ -2,7 +2,13 @@
 name: start-implementation
 description: "Start an implementation session from an existing plan. Discovers available plans, checks environment setup, and invokes the technical-implementation skill."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/start-implementation/scripts/discovery.sh)
+allowed-tools: Bash(.claude/skills/start-implementation/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh)
+hooks:
+  PreToolUse:
+    - hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/.claude/hooks/workflows/system-check.sh"
+          once: true
 ---
 
 Invoke the **technical-implementation** skill for this conversation.
@@ -386,6 +392,21 @@ Are there any environment setup instructions I should follow before implementati
 ---
 
 ## Step 6: Invoke the Skill
+
+Before invoking the processing skill, save a session bookmark.
+
+> *Output the next fenced block as a code block:*
+
+```
+Saving session state so Claude can pick up where it left off if the conversation is compacted.
+```
+
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-implementation/SKILL.md" \
+  "docs/workflow/implementation/{topic}/tracking.md"
+```
 
 After completing the steps above, this skill's purpose is fulfilled.
 

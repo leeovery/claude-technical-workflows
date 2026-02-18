@@ -2,7 +2,13 @@
 name: start-discussion
 description: "Start a technical discussion. Discovers research and existing discussions, offers multiple entry paths, and invokes the technical-discussion skill."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/start-discussion/scripts/discovery.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/research-analysis.md)
+allowed-tools: Bash(.claude/skills/start-discussion/scripts/discovery.sh), Bash(mkdir -p docs/workflow/.cache), Bash(rm docs/workflow/.cache/research-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh)
+hooks:
+  PreToolUse:
+    - hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/.claude/hooks/workflows/system-check.sh"
+          once: true
 ---
 
 Invoke the **technical-discussion** skill for this conversation.
@@ -161,6 +167,21 @@ Load **[gather-context.md](references/gather-context.md)** and follow its instru
 ---
 
 ## Step 7: Invoke the Skill
+
+Before invoking the processing skill, save a session bookmark.
+
+> *Output the next fenced block as a code block:*
+
+```
+Saving session state so Claude can pick up where it left off if the conversation is compacted.
+```
+
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-discussion/SKILL.md" \
+  "docs/workflow/discussion/{topic}.md"
+```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
 

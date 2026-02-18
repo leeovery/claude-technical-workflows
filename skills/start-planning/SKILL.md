@@ -2,7 +2,13 @@
 name: start-planning
 description: "Start a planning session from an existing specification. Discovers available specifications, gathers context, and invokes the technical-planning skill."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/start-planning/scripts/discovery.sh)
+allowed-tools: Bash(.claude/skills/start-planning/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh)
+hooks:
+  PreToolUse:
+    - hooks:
+        - type: command
+          command: "$CLAUDE_PROJECT_DIR/.claude/hooks/workflows/system-check.sh"
+          once: true
 ---
 
 Invoke the **technical-planning** skill for this conversation.
@@ -176,5 +182,20 @@ Load **[cross-cutting-context.md](references/cross-cutting-context.md)** and fol
 ---
 
 ## Step 7: Invoke the Skill
+
+Before invoking the processing skill, save a session bookmark.
+
+> *Output the next fenced block as a code block:*
+
+```
+Saving session state so Claude can pick up where it left off if the conversation is compacted.
+```
+
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-planning/SKILL.md" \
+  "docs/workflow/planning/{topic}/plan.md"
+```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

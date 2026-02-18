@@ -32,8 +32,17 @@ skills/
   migrate/                   # Keep workflow files in sync with system design
     scripts/migrate.sh       #   Migration orchestrator
     scripts/migrations/      #   Individual migration scripts (numbered)
-  start-feature/             # Create spec directly from inline context
+  start-feature/             # Start feature pipeline (discussion → spec → plan → impl)
+    references/              #   Interview questions, handoffs, phase bridge
+  continue-feature/          # Continue feature through next pipeline phase
+    scripts/discovery.sh     #   Cross-phase discovery script
+    references/              #   Phase detection, bridges, handoffs
   link-dependencies/         # Link dependencies across topics
+
+  # Bridge skills (model-invocable — pre-flight + handoff for pipeline)
+  begin-planning/            # Pre-flight for planning, invokes technical-planning
+    references/              #   Cross-cutting context
+  begin-implementation/      # Pre-flight for implementation, invokes technical-implementation
   start-research/            # Begin research exploration
   start-discussion/          # Begin technical discussions
     scripts/discovery.sh     #   Discovery script
@@ -67,6 +76,14 @@ agents/
 
 tests/
   scripts/                   # Shell script tests for discovery and migrations
+
+hooks/
+  workflows/
+    system-check.sh      # Bootstrap: install project-level hooks
+    session-env.sh       # Export CLAUDE_SESSION_ID on session start
+    compact-recovery.sh  # Read session state, inject recovery context
+    session-cleanup.sh   # Delete session state on session end
+    write-session-state.sh # Helper: write session state YAML
 ```
 
 ## Skill Architecture
@@ -139,7 +156,7 @@ This keeps format knowledge centralized in the planning phase where it belongs.
 
 ## Migrations
 
-The `/migrate` skill keeps workflow files in sync with the current system design. It runs automatically at the start of every workflow skill (Step 0).
+The `/migrate` skill keeps workflow files in sync with the current system design. It runs via Step 0 at the start of every entry-point skill.
 
 **How it works:**
 - `skills/migrate/scripts/migrate.sh` runs all migration scripts in `skills/migrate/scripts/migrations/` in numeric order
@@ -167,6 +184,28 @@ awk '/^---$/ && c<2 {c++; next} c>=2 {print}' "$file"
 ```
 
 Also avoid BSD sed incompatibilities: `sed '/range/{cmd1;cmd2}'` syntax fails on macOS. Use awk or separate `sed -e` expressions instead.
+
+## Compaction Recovery
+
+Processing skills run long and may hit context compaction. The hook system provides deterministic recovery.
+
+**How it works:**
+- Project-level hooks in `.claude/settings.json` are snapshotted at session startup and persist through compaction
+- `SessionStart` (compact) hook reads session state from `docs/workflow/.cache/sessions/{session_id}.yaml` and injects recovery context as additionalContext
+- Entry-point skills write session state (topic, skill, artifact) before invoking processing skills
+- `SessionEnd` hook cleans up session state files
+
+**Session state files:**
+- Stored at `docs/workflow/.cache/sessions/{session_id}.yaml`
+- Created by entry-point skills before invoking processing skills
+- Contain: topic, skill path, artifact path, optional pipeline context
+- Ephemeral — cleaned up on session end, gitignored
+
+**First-run bootstrap:**
+- Skill-level `PreToolUse` hook (`system-check.sh`) detects missing project hooks
+- Installs hooks into `.claude/settings.json` (appends to existing settings, preserving user configuration) and stops with restart message
+- Uses jq if available for merging, falls back to node, then to manual instructions
+- One-time cost; self-healing if hooks are removed
 
 ## Display & Output Conventions (IMPORTANT)
 
@@ -405,7 +444,7 @@ Never use `Stop here.`, `Command ends.`, `Wait for user to acknowledge before en
 
 Sequential: `## Step 0`, `## Step 1`, `## Step 2`, etc.
 
-- **Step 0** is reserved for migrations — mandatory in all entry-point skills
+- **Step 0** runs migrations via the `/migrate` skill (mandatory in all entry-point skills)
 - Steps are separated by `---` horizontal rules
 - Each step completes fully before the next begins
 

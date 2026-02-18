@@ -120,16 +120,11 @@ Phase {N}: {Phase Name} — task list confirmed. Proceeding to authoring.
 
 Work through each task in the phase's task table, in order.
 
-### Parallel authoring (optional optimization)
+### Sequential authoring (mandatory)
 
-After the first `pending` task in a phase is approved, you may invoke multiple Step B agents concurrently for tasks you judge to be independent — where the authored detail of one would not inform the other. This is an invocation optimization only; the approval flow is unchanged:
+Tasks **must** be authored one at a time, in order. Each task's authored detail builds context for the next — later tasks benefit from decisions, patterns, and structure established by earlier ones. This applies regardless of gate mode. Auto-gate removes the approval pause, not the sequential process.
 
-- Present tasks one at a time, in order
-- Each task still requires explicit user approval before logging
-- If user feedback on a presented task changes context that could affect any already-authored task waiting to be presented, discard those results and re-invoke Step B
-- When uncertain about independence, default to sequential — it is always safe
-
-Never parallelize the first `pending` task in a phase. Never parallelize across phases.
+**Never** invoke multiple Step B agents concurrently. **Never** batch or skip ahead.
 
 #### If the task status is `authored`
 

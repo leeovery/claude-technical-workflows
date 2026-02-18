@@ -9,3 +9,8 @@ __pycache__/
 *$py.class
 *.so
 .Python
+
+# Workflow session state (ephemeral, per-session)
+docs/workflow/.cache/sessions/
+
+.claude/settings.local.json

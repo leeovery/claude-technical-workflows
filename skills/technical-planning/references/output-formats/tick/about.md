@@ -54,6 +54,11 @@ Add to `.gitignore`:
 
 The 3-level hierarchy (topic → phase → task) uses Tick's parent/child system. Parent tasks are implicitly blocked by their children — a parent is not "ready" until all children are complete. Explicit dependencies (`tick dep add`) handle cross-phase and cross-topic blocking.
 
+## Usage Notes
+
+- **Help**: `tick help --all` displays all available commands and flags in a single view.
+- **Output format**: The `--toon` flag is **not needed** — TOON is the default for non-interactive shells, which is what Claude Code uses. Omit it from all commands.
+
 ## Output Location
 
 Tasks are stored in a `.tick/` directory at the project root:

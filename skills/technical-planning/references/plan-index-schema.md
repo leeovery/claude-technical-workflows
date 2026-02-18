@@ -90,14 +90,15 @@ approved_at: {YYYY-MM-DD}
 
 ```markdown
 #### Tasks
-| ID | Name | Status | Ext ID |
-|----|------|--------|--------|
-| {topic}-{phase}-{seq} | {Task Name} | {status} | |
+| ID | Name | Edge Cases | Status | Ext ID |
+|----|------|------------|--------|--------|
+| {topic}-{phase}-{seq} | {Task Name} | {comma-separated list, or "none"} | {status} | |
 ```
 
 | Field | Set when |
 |-------|----------|
 | `ID` | Task design — format: `{topic}-{phase}-{seq}` |
 | `Name` | Task design — descriptive task name |
+| `Edge Cases` | Task design — curated list scoping which edge cases this task handles |
 | `Status` | Task design → `pending`; authoring → `authored` |
 | `Ext ID` | Task authored — external identifier for the task |
