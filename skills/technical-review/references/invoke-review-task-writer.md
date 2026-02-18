@@ -8,6 +8,12 @@ This step invokes the task writer agent to create plan tasks from approved revie
 
 ---
 
+## Determine Format
+
+Read the `format` field from the plan's frontmatter (`docs/workflow/planning/{topic}/plan.md`). This determines which output format adapters to pass to the agent.
+
+---
+
 ## Invoke the Agent
 
 **Agent path**: `../../../agents/implementation-analysis-task-writer.md`
