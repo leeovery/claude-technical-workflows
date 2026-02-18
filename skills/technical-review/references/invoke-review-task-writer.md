@@ -1,10 +1,10 @@
-# Invoke Task Writer
+# Invoke Review Task Writer
 
-*Reference for **[technical-implementation](../SKILL.md)***
+*Reference for **[technical-review](../SKILL.md)***
 
 ---
 
-This step invokes the task writer agent to create plan tasks from approved analysis findings.
+This step invokes the task writer agent to create plan tasks from approved review findings. It reuses the `implementation-analysis-task-writer` agent with a review-specific phase label.
 
 ---
 
@@ -14,13 +14,13 @@ This step invokes the task writer agent to create plan tasks from approved analy
 
 Pass via the orchestrator's prompt:
 
-1. **Topic name** — the implementation topic
-2. **Staging file path** — `docs/workflow/implementation/{topic}/analysis-tasks-c{cycle-number}.md`
+1. **Topic name** — the implementation topic (scopes tasks to correct plan)
+2. **Staging file path** — `docs/workflow/implementation/{topic}/review-tasks-c{cycle-number}.md`
 3. **Plan path** — the implementation plan path
 4. **Plan format reading adapter path** — `../../technical-planning/references/output-formats/{format}/reading.md`
 5. **Plan format authoring adapter path** — `../../technical-planning/references/output-formats/{format}/authoring.md`
 6. **plan-index-schema.md** — `../../technical-planning/references/plan-index-schema.md`
-7. **Phase label** — `Analysis (Cycle {N})`
+7. **Phase label** — `Review Remediation (Cycle {N})`
 
 ---
 

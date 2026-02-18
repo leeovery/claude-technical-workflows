@@ -19,6 +19,7 @@ You receive via the orchestrator's prompt:
 4. **Plan format reading adapter path** — how to read tasks from the plan (for determining next phase number)
 5. **Plan format authoring adapter path** — how to create tasks in the plan
 6. **plan-index-schema.md** — Canonical plan index structure
+7. **Phase label** — the label for the new phase (e.g., "Analysis (Cycle 1)", "Review Remediation (Cycle 1)")
 
 ## Your Process
 
@@ -35,10 +36,10 @@ The Plan Index File (`docs/workflow/planning/{topic}/plan.md`) is the single sou
 
 Append at the end of the Plan Index File body, following the **Phase Entry** and **Task Table** templates from plan-index-schema:
 
-- Phase heading: `### Phase {N}: Analysis ({cycle description})`
+- Phase heading: `### Phase {N}: {phase_label}`
 - Phase `status`: `approved` (pre-approved by user in approval gate)
 - Phase `ext_id`: external identifier for the phase from the output format
-- Phase goal: `Address findings from implementation analysis cycle {N}.`
+- Phase goal: `Address findings from {phase_label}.`
 - Omit `approved_at` and acceptance criteria (analysis phases don't use them)
 - Task `Status`: `authored` (task files are fully written)
 - Task `Ext ID`: external identifier for the task from the output format

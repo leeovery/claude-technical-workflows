@@ -21,6 +21,7 @@ Review Overview
    └─ Plan: concluded ({format})
    └─ Implementation: {impl_status:[completed|in-progress]}
    └─ Spec: {spec:[exists|missing]}
+   └─ Review: @if(has_review) r{N} ({verdict}) @else (none) @endif
 
 2. ...
 ```
@@ -54,6 +55,10 @@ Key:
   Implementation status:
     completed   — all tasks implemented
     in-progress — implementation still ongoing
+
+  Review status:
+    r{N}        — review version number
+    (none)      — not yet reviewed
 ```
 
 **Then route based on what's reviewable:**
@@ -90,14 +95,18 @@ Scope: single
 
 ```
 · · · · · · · · · · · ·
-What scope would you like to review?
+What would you like to do?
 
 - **`s`/`single`** — Review one plan's implementation
 - **`m`/`multi`** — Review selected plans together (cross-cutting)
 - **`a`/`all`** — Review all implemented plans (full product)
+@if(has_any_review) - **`analysis`** — Synthesize findings from existing reviews into tasks @endif
+
+Select an option:
 · · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
 
-→ Based on user choice, proceed to **Step 4**.
+- If `analysis` → Skip to **Step 6**.
+- Otherwise → Based on user choice, proceed to **Step 4**.

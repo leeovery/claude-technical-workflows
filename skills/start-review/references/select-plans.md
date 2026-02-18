@@ -4,7 +4,11 @@
 
 ---
 
-This step only applies for `single` or `multi` scope chosen in Step 3.
+This step only applies for `single`, `multi`, or `all` scope chosen in Step 3.
+
+#### If scope is "analysis"
+
+→ Skip to **Step 6**.
 
 #### If scope is "all"
 

@@ -137,7 +137,7 @@ Load **[invoke-product-assessor.md](references/invoke-product-assessor.md)** and
 
 Aggregate findings from both stages into a review document using the **[template.md](references/template.md)**.
 
-Write the review to `docs/workflow/review/{topic}.md` (single) or `docs/workflow/review/{scope-description}.md` (multi/all).
+Write the review to `docs/workflow/review/{scope}/r{N}/review.md`. The review scope `{scope}` is the topic name (single) or a descriptive scope name (multi/all). The review number `r{N}` is passed in from the entry point.
 
 **QA Verdict** (from Step 3):
 - **Approve** — All acceptance criteria met, no blocking issues
@@ -159,9 +159,18 @@ You produce feedback. User decides what to do with it.
 
 ---
 
+## Step 6: Review Actions
+
+Load **[review-actions-loop.md](references/review-actions-loop.md)** and follow its instructions.
+
+---
+
 ## References
 
 - **[invoke-task-verifiers.md](references/invoke-task-verifiers.md)** — How to dispatch QA verifier agents
 - **[invoke-product-assessor.md](references/invoke-product-assessor.md)** — How to dispatch the product assessor agent
 - **[template.md](references/template.md)** — Review output structure and verdict guidelines
 - **[review-checklist.md](references/review-checklist.md)** — Per-task verification criteria (read by agents), plan completion checks, writing feedback guidance
+- **[review-actions-loop.md](references/review-actions-loop.md)** — Review findings synthesis and task creation pipeline
+- **[invoke-review-synthesizer.md](references/invoke-review-synthesizer.md)** — How to dispatch the review synthesizer agent
+- **[invoke-review-task-writer.md](references/invoke-review-task-writer.md)** — How to dispatch the review task writer agent
