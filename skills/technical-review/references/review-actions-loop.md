@@ -143,6 +143,9 @@ Review synthesis cycle {N}: {K} proposed tasks
 
 Then present each task with `status: pending` individually:
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 **Task {current}/{total}: {title}** ({severity}) — Plan: {plan-topic}
 Sources: {sources}
 
@@ -158,6 +161,7 @@ Sources: {sources}
 
 **Tests**:
 {tests}
+```
 
 #### If gate_mode is "gated"
 
