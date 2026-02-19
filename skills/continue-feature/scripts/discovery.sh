@@ -15,6 +15,7 @@ DISC_DIR="docs/workflow/discussion"
 SPEC_DIR="docs/workflow/specification"
 PLAN_DIR="docs/workflow/planning"
 IMPL_DIR="docs/workflow/implementation"
+REVIEW_DIR="docs/workflow/review"
 
 # Helper: Extract a frontmatter field value from a file
 # Usage: extract_field <file> <field_name>
@@ -132,13 +133,26 @@ else
             impl_status=${impl_status:-"in-progress"}
         fi
 
+        # Review state
+        review_exists="false"
+        if [ -d "$REVIEW_DIR/${topic}" ]; then
+            for rdir in "$REVIEW_DIR/${topic}"/r*/; do
+                [ -d "$rdir" ] || continue
+                [ -f "${rdir}review.md" ] || continue
+                review_exists="true"
+                break
+            done
+        fi
+
         #
         # Compute next_phase (check from top down, first match wins)
         #
         next_phase=""
 
-        if [ "$impl_exists" = "true" ] && [ "$impl_status" = "completed" ]; then
+        if [ "$impl_exists" = "true" ] && [ "$impl_status" = "completed" ] && [ "$review_exists" = "true" ]; then
             next_phase="done"
+        elif [ "$impl_exists" = "true" ] && [ "$impl_status" = "completed" ] && [ "$review_exists" = "false" ]; then
+            next_phase="review"
         elif [ "$impl_exists" = "true" ] && [ "$impl_status" = "in-progress" ]; then
             next_phase="implementation"
         elif [ "$plan_exists" = "true" ] && [ "$plan_status" = "concluded" ]; then
@@ -190,6 +204,9 @@ else
         if [ "$impl_exists" = "true" ]; then
             echo "      status: \"$impl_status\""
         fi
+
+        echo "    review:"
+        echo "      exists: $review_exists"
 
         echo "    next_phase: \"$next_phase\""
         echo "    actionable: $actionable"

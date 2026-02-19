@@ -342,10 +342,10 @@ EOF
 }
 
 #
-# Test: Implementation complete
+# Test: Implementation complete (no review)
 #
-test_implementation_complete() {
-    echo -e "${YELLOW}Test: Implementation complete${NC}"
+test_implementation_complete_no_review() {
+    echo -e "${YELLOW}Test: Implementation complete (no review)${NC}"
     setup_fixture
 
     mkdir -p "$TEST_DIR/docs/workflow/specification/auth-flow"
@@ -383,8 +383,67 @@ EOF
 
     local output=$(run_discovery)
 
+    assert_contains "$output" 'next_phase: "review"' "Next phase is review"
+    assert_contains "$output" 'actionable: true' "Topic is actionable"
+
+    echo ""
+}
+
+#
+# Test: Implementation complete with review (done)
+#
+test_implementation_complete_with_review() {
+    echo -e "${YELLOW}Test: Implementation complete with review (done)${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/specification/auth-flow"
+    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-flow"
+    mkdir -p "$TEST_DIR/docs/workflow/implementation/auth-flow"
+    mkdir -p "$TEST_DIR/docs/workflow/review/auth-flow/r1"
+
+    cat > "$TEST_DIR/docs/workflow/specification/auth-flow/specification.md" << 'EOF'
+---
+topic: auth-flow
+status: concluded
+type: feature
+---
+
+# Auth Flow Specification
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/planning/auth-flow/plan.md" << 'EOF'
+---
+topic: auth-flow
+status: concluded
+format: tick
+---
+
+# Auth Flow Plan
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/implementation/auth-flow/tracking.md" << 'EOF'
+---
+topic: auth-flow
+status: completed
+---
+
+# Auth Flow Implementation
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/review/auth-flow/r1/review.md" << 'EOF'
+---
+topic: auth-flow
+---
+
+# Auth Flow Review
+EOF
+
+    local output=$(run_discovery)
+
     assert_contains "$output" 'next_phase: "done"' "Next phase is done"
     assert_contains "$output" 'actionable: false' "Topic is not actionable"
+    assert_contains "$output" 'review:' "Has review section"
+    assert_contains "$output" 'exists: true' "Review exists"
 
     echo ""
 }
@@ -465,7 +524,7 @@ EOF
     assert_contains "$output" 'name: "billing"' "Found billing"
     assert_contains "$output" 'name: "dashboard"' "Found dashboard"
     assert_contains "$output" 'topic_count: 3' "Topic count is 3"
-    assert_contains "$output" 'actionable_count: 2' "Actionable count is 2"
+    assert_contains "$output" 'actionable_count: 3' "Actionable count is 3"
     assert_contains "$output" 'scenario: "multiple_topics"' "Scenario is multiple_topics"
 
     echo ""
@@ -606,7 +665,8 @@ test_spec_in_progress
 test_plan_in_progress
 test_plan_concluded_no_impl
 test_implementation_in_progress
-test_implementation_complete
+test_implementation_complete_no_review
+test_implementation_complete_with_review
 test_multiple_topics
 test_crosscutting_excluded
 test_spec_without_discussion

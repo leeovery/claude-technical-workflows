@@ -129,7 +129,7 @@ Not every task needs the full workflow. These skills gather inputs flexibly and 
 /start-feature
     │
     ▼
-Discussion ──▶ Specification ──▶ Planning ──▶ Implementation
+Discussion ──▶ Specification ──▶ Planning ──▶ Implementation ──▶ Review
 ```
 
 **How it works:** After each phase completes, a plan mode bridge clears context and advances to the next phase automatically. You approve each transition with "clear context and continue" — this keeps each phase in a clean context window.
@@ -254,7 +254,7 @@ skills/
 │
 ├── # Entry-point skills (user-invocable)
 ├── migrate/                         # Keep workflow files in sync with system design
-├── start-feature/                   # Pipeline: discussion → spec → plan → impl
+├── start-feature/                   # Pipeline: discussion → spec → plan → impl → review
 ├── continue-feature/                # Pipeline: route feature to next phase
 ├── link-dependencies/               # Standalone: wire cross-topic deps
 ├── start-research/                  # Begin research
@@ -268,7 +268,8 @@ skills/
 │
 ├── # Bridge skills (model-invocable — pipeline pre-flight)
 ├── begin-planning/                  # Pre-flight for planning in pipeline
-└── begin-implementation/            # Pre-flight for implementation in pipeline
+├── begin-implementation/            # Pre-flight for implementation in pipeline
+└── begin-review/                    # Pre-flight for review in pipeline
 
 agents/
 ├── review-task-verifier.md           # Verifies single task implementation for review
@@ -334,7 +335,7 @@ Independent skills that gather inputs flexibly (inline context, files, or prompt
 
 | Skill                                                   | Description                                                                                                                                 |
 |---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| [**/start-feature**](skills/start-feature/)              | Start a new feature through the full pipeline. Gathers context, creates a discussion, then bridges through specification → planning → implementation. |
+| [**/start-feature**](skills/start-feature/)              | Start a new feature through the full pipeline. Gathers context, creates a discussion, then bridges through specification → planning → implementation → review. |
 | [**/continue-feature**](skills/continue-feature/)        | Continue a feature through its next pipeline phase. Routes automatically based on artifact state. Used manually or from plan mode bridges.  |
 | [**/link-dependencies**](skills/link-dependencies/)      | Link external dependencies across topics. Scans plans and wires up unresolved cross-topic dependencies.                                    |
 

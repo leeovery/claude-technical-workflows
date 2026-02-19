@@ -12,9 +12,10 @@ Check which step just completed to determine what continue-feature will route to
 
 - Just completed **specification** (Step 3) → next session routes to planning
 - Just completed **planning** (Step 4) → next session routes to implementation
-- Just completed **implementation** (Step 5) → feature is done
+- Just completed **implementation** (Step 5) → next session routes to review
+- Just completed **review** (Step 6) → pipeline is done
 
-#### If implementation just completed
+#### If review just completed
 
 > *Output the next fenced block as a code block:*
 
@@ -22,8 +23,6 @@ Check which step just completed to determine what continue-feature will route to
 Feature Complete
 
 "{topic:(titlecase)}" has completed all pipeline phases.
-
-Run /start-review to validate the implementation.
 ```
 
 **STOP.** Do not proceed — terminal condition.
