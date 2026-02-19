@@ -1435,7 +1435,7 @@ const phases = {
     color: '#818cf8', bg: 'rgba(129,140,248,0.12)',
     label: 'Start Feature', cmd: '/start-feature',
     complexity: 'Pipeline',
-    desc: 'Gather feature context, create discussion, then bridge to continue-feature for specification, planning, and implementation.',
+    desc: 'Gather feature context, create discussion, then bridge to continue-feature for specification, planning, implementation, and review.',
   },
   'link-deps': {
     color: '#94a3b8', bg: 'rgba(148,163,184,0.12)',
@@ -1858,7 +1858,7 @@ const FLOWCHARTS = {
       { id: 'conflict', label: 'ASK: Resume / new name', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Discussion exists: resume the existing discussion or choose a different name.' },
       { id: 'status-check', label: 'Concluded?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'If resuming: check discussion status. Concluded → skip to bridge. In-progress → invoke discussion.' },
       { id: 'disc-skill', label: 'Invoke discussion skill', w: 210, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 3: Invoke technical-discussion skill. When discussion concludes, proceed to phase bridge.', skillLink: 'skill-discussion' },
-      { id: 'bridge', label: 'Phase bridge', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 4: Enter plan mode with handoff to continue-feature for specification, planning, and implementation.' },
+      { id: 'bridge', label: 'Phase bridge', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 4: Enter plan mode with handoff to continue-feature for specification, planning, implementation, and review.' },
       { id: 'end', label: 'Pipeline handoff', shape: 'pill', w: 150, h: 40, color: '#818cf8', bg: 'rgba(129,140,248,0.12)', desc: 'Output: Discussion concluded. Plan mode handoff to continue-feature for remaining phases.' },
     ],
     connections: [
@@ -2650,7 +2650,7 @@ const FLOWCHART_DESCS = {
   'start-feature': {
     summary: 'Pipeline entry — gather context, create discussion, then bridge to continue-feature.',
     body: `<p>Runs migrations, gathers feature context inline (what, scope, constraints), suggests a topic name, and checks for existing discussions. If a discussion exists, offers to <strong>resume</strong> (in-progress → invoke discussion, concluded → skip to bridge) or choose a <strong>new name</strong>.</p>
-<p>Invokes the <strong>technical-discussion</strong> skill with the gathered context. When the discussion concludes, a <strong>phase bridge</strong> enters plan mode with instructions to invoke <code>/continue-feature</code> in the next session for specification, planning, and implementation.</p>`,
+<p>Invokes the <strong>technical-discussion</strong> skill with the gathered context. When the discussion concludes, a <strong>phase bridge</strong> enters plan mode with instructions to invoke <code>/continue-feature</code> in the next session for specification, planning, implementation, and review.</p>`,
     meta: { output: 'docs/workflow/discussion/{topic}.md', skill: 'technical-discussion', complexity: 'Pipeline' }
   },
   'link-deps': {
