@@ -200,36 +200,6 @@ fi
 echo ""
 
 #
-# PRODUCT ASSESSMENTS
-#
-echo "product_assessments:"
-if [ -d "$REVIEW_DIR/product-assessment" ]; then
-    assessment_count=0
-    for assessment_file in "$REVIEW_DIR/product-assessment"/*.md; do
-        [ -f "$assessment_file" ] || continue
-        assessment_count=$((assessment_count + 1))
-    done
-    echo "  exists: $([ "$assessment_count" -gt 0 ] && echo "true" || echo "false")"
-    echo "  count: $assessment_count"
-    if [ "$assessment_count" -gt 0 ]; then
-        echo "  files:"
-        for assessment_file in "$REVIEW_DIR/product-assessment"/*.md; do
-            [ -f "$assessment_file" ] || continue
-            name=$(basename "$assessment_file" .md)
-            plans_reviewed=$(grep -m1 '^PLANS_REVIEWED:' "$assessment_file" 2>/dev/null | sed 's/^PLANS_REVIEWED:[[:space:]]*//' || echo "unknown")
-            echo "    - number: $name"
-            echo "      path: \"$assessment_file\""
-            echo "      plans_reviewed: \"$plans_reviewed\""
-        done
-    fi
-else
-    echo "  exists: false"
-    echo "  count: 0"
-fi
-
-echo ""
-
-#
 # WORKFLOW STATE SUMMARY
 #
 echo "state:"

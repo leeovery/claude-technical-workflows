@@ -1,6 +1,6 @@
 ---
 name: review-findings-synthesizer
-description: Synthesizes review findings into normalized tasks. Reads review files (QA verifications and product assessment), deduplicates, groups, normalizes using task template, and writes a staging file for orchestrator approval. Invoked by technical-review skill after review actions are initiated.
+description: Synthesizes review findings into normalized tasks. Reads QA verification files, deduplicates, groups, normalizes using task template, and writes a staging file for orchestrator approval. Invoked by technical-review skill after review actions are initiated.
 tools: Read, Write, Glob, Grep
 model: opus
 ---
@@ -91,7 +91,7 @@ status: pending
 1. **No new features** — only address issues found in the review. Every proposed task must trace back to a specific review finding.
 2. **Never discard blocking** — blocking issues from QA always become proposed tasks.
 3. **Self-contained tasks** — every proposed task must be independently executable. No task should depend on another proposed task.
-4. **Faithful synthesis** — do not invent findings. Every proposed task must trace back to at least one QA finding or product assessment observation.
+4. **Faithful synthesis** — do not invent findings. Every proposed task must trace back to at least one QA finding.
 5. **No git writes** — do not commit or stage. Writing the report and staging files are your only file writes.
 
 ## Your Output

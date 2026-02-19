@@ -235,8 +235,7 @@ docs/workflow/
     └── {topic}/
         └── r1/
             ├── review.md              #   Review summary and verdict
-            ├── qa-task-1.md           #   Per-task QA verification
-            └── product-assessment.md  #   Holistic product assessment
+            └── qa-task-1.md           #   Per-task QA verification
 ```
 
 Research starts with `exploration.md` and splits into topic files as themes emerge. From specification onwards, each topic gets its own directory. Planning task storage varies by [output format](#output-formats) — the tree above shows local-markdown; Tick and Linear store tasks externally.

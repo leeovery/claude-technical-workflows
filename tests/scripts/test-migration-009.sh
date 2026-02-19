@@ -139,7 +139,7 @@ assert_equals() {
 # TEST CASES
 # ============================================================================
 
-echo -e "${YELLOW}Test: Phase 1 — Product assessment moved to product-assessment/${NC}"
+echo -e "${YELLOW}Test: Phase 1 — Product assessment files deleted${NC}"
 setup_fixture
 
 mkdir -p "$REVIEW_DIR/tick-core/r1"
@@ -153,18 +153,14 @@ EOF
 
 run_migration
 
-assert_file_exists "$REVIEW_DIR/product-assessment/1.md" "Product assessment moved to product-assessment/1.md"
-assert_file_not_exists "$REVIEW_DIR/tick-core/r1/product-assessment.md" "Original removed"
-
-content=$(cat "$REVIEW_DIR/product-assessment/1.md")
-assert_equals "$content" "PLANS_REVIEWED: tick-core
-ROBUSTNESS: Good" "Content preserved"
+assert_file_not_exists "$REVIEW_DIR/tick-core/r1/product-assessment.md" "Product assessment deleted"
+assert_file_exists "$REVIEW_DIR/tick-core/r1/review.md" "review.md preserved"
 
 echo ""
 
 # ----------------------------------------------------------------------------
 
-echo -e "${YELLOW}Test: Phase 1 — Multiple product assessments numbered sequentially${NC}"
+echo -e "${YELLOW}Test: Phase 1 — Multiple product assessments all deleted${NC}"
 setup_fixture
 
 mkdir -p "$REVIEW_DIR/plan-a/r1"
@@ -179,8 +175,8 @@ EOF
 
 run_migration
 
-assert_file_exists "$REVIEW_DIR/product-assessment/1.md" "First assessment numbered 1"
-assert_file_exists "$REVIEW_DIR/product-assessment/2.md" "Second assessment numbered 2"
+assert_file_not_exists "$REVIEW_DIR/plan-a/r1/product-assessment.md" "plan-a PA deleted"
+assert_file_not_exists "$REVIEW_DIR/plan-b/r1/product-assessment.md" "plan-b PA deleted"
 
 echo ""
 
@@ -287,9 +283,10 @@ echo ""
 
 # ----------------------------------------------------------------------------
 
-echo -e "${YELLOW}Test: Product-assessment directory skipped by phases 2 and 3${NC}"
+echo -e "${YELLOW}Test: Existing product-assessment/ dir not processed by phases 2 and 3${NC}"
 setup_fixture
 
+# If a product-assessment dir exists from a previous migration run, leave it alone
 mkdir -p "$REVIEW_DIR/product-assessment"
 cat > "$REVIEW_DIR/product-assessment/1.md" << 'EOF'
 PLANS_REVIEWED: tick-core
@@ -335,9 +332,6 @@ mkdir -p "$REVIEW_DIR/doctor-installation-migration/r1/migration"
 cat > "$REVIEW_DIR/doctor-installation-migration/r1/review.md" << 'EOF'
 # Aggregate
 EOF
-cat > "$REVIEW_DIR/doctor-installation-migration/r1/product-assessment.md" << 'EOF'
-PLANS_REVIEWED: doctor-validation, installation, migration
-EOF
 cat > "$REVIEW_DIR/doctor-installation-migration/r1/installation/qa-task-1.md" << 'EOF'
 # Install QA 1
 EOF
@@ -353,10 +347,6 @@ EOF
 cat > "$REVIEW_DIR/tick-core/r1/qa-task-1.md" << 'EOF'
 # TC QA 1
 EOF
-cat > "$REVIEW_DIR/tick-core/r1/product-assessment.md" << 'EOF'
-PLANS_REVIEWED: tick-core
-EOF
-
 # Orphaned per-plan dirs
 mkdir -p "$REVIEW_DIR/doctor-validation"
 cat > "$REVIEW_DIR/doctor-validation/qa-task-1.md" << 'EOF'
@@ -368,12 +358,6 @@ EOF
 
 run_migration
 
-# Phase 1: product assessments moved
-assert_file_exists "$REVIEW_DIR/product-assessment/1.md" "First product assessment moved"
-assert_file_exists "$REVIEW_DIR/product-assessment/2.md" "Second product assessment moved"
-assert_file_not_exists "$REVIEW_DIR/tick-core/r1/product-assessment.md" "tick-core PA removed"
-assert_file_not_exists "$REVIEW_DIR/doctor-installation-migration/r1/product-assessment.md" "multi-plan PA removed"
-
 # Phase 2: multi-plan QA moved to per-plan
 assert_file_exists "$REVIEW_DIR/installation/r1/qa-task-1.md" "installation QA moved"
 assert_file_exists "$REVIEW_DIR/migration/r1/qa-task-1.md" "migration QA moved"
@@ -382,7 +366,7 @@ assert_file_exists "$REVIEW_DIR/migration/r1/qa-task-1.md" "migration QA moved"
 assert_file_exists "$REVIEW_DIR/doctor-validation/r1/qa-task-1.md" "orphaned DV QA 1 moved to r1/"
 assert_file_exists "$REVIEW_DIR/doctor-validation/r1/qa-task-2.md" "orphaned DV QA 2 moved to r1/"
 
-# Already-correct single-plan review untouched (except PA moved)
+# Already-correct single-plan review untouched
 assert_file_exists "$REVIEW_DIR/tick-core/r1/review.md" "tick-core review.md preserved"
 assert_file_exists "$REVIEW_DIR/tick-core/r1/qa-task-1.md" "tick-core QA preserved"
 

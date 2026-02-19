@@ -6,11 +6,10 @@
 #
 # Handles three patterns:
 #
-# 1. Multi-plan review with per-plan QA subdirectories:
-#    review/{scope}/r{N}/{plan}/qa-task-*.md → review/{plan}/r{N}/qa-task-*.md
+# 1. Product assessment files inside review versions — deleted (feature removed)
 #
-# 2. Product assessment files inside review versions:
-#    review/{scope}/r{N}/product-assessment.md → review/product-assessment/1.md
+# 2. Multi-plan review with per-plan QA subdirectories:
+#    review/{scope}/r{N}/{plan}/qa-task-*.md → review/{plan}/r{N}/qa-task-*.md
 #
 # 3. Orphaned per-plan directories at review root (no r{N}/ structure):
 #    review/{topic}/qa-task-*.md → review/{topic}/r1/qa-task-*.md
@@ -31,22 +30,14 @@ if [ ! -d "$REVIEW_DIR" ]; then
 fi
 
 #
-# Phase 1: Move product-assessment.md files to review/product-assessment/
+# Phase 1: Delete product-assessment.md files (feature removed)
 #
-product_assessment_count=0
 for rdir in "$REVIEW_DIR"/*/r*/; do
     [ -d "$rdir" ] || continue
     pa_file="${rdir}product-assessment.md"
     [ -f "$pa_file" ] || continue
-
-    mkdir -p "$REVIEW_DIR/product-assessment"
-
-    # Determine next number
-    product_assessment_count=$((product_assessment_count + 1))
-    dest="$REVIEW_DIR/product-assessment/${product_assessment_count}.md"
-
-    mv "$pa_file" "$dest"
-    report_update "$dest" "moved product assessment to product-assessment/"
+    rm "$pa_file"
+    report_update "$pa_file" "removed product assessment (feature removed)"
 done
 
 #
@@ -58,7 +49,7 @@ done
 for scope_dir in "$REVIEW_DIR"/*/; do
     [ -d "$scope_dir" ] || continue
     scope=$(basename "$scope_dir")
-    # Skip product-assessment directory
+    # Skip non-topic directories
     [ "$scope" = "product-assessment" ] && continue
 
     for rdir in "$scope_dir"r*/; do
@@ -104,7 +95,7 @@ done
 for topic_dir in "$REVIEW_DIR"/*/; do
     [ -d "$topic_dir" ] || continue
     topic=$(basename "$topic_dir")
-    # Skip product-assessment directory
+    # Skip non-topic directories
     [ "$topic" = "product-assessment" ] && continue
 
     # Skip if r1/ already exists with content
