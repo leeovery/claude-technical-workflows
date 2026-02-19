@@ -65,7 +65,7 @@ skills/
 
 agents/
   review-task-verifier.md           # Verifies single task implementation for review
-  review-findings-synthesizer.md   # Synthesizes review findings into remediation tasks
+  review-findings-synthesizer.md   # Synthesizes QA findings into remediation tasks
   implementation-task-executor.md  # TDD executor for single plan tasks
   implementation-task-reviewer.md  # Post-task review for spec conformance
   planning-phase-designer.md       # Design phases from specification
@@ -364,7 +364,7 @@ Proceed?
 What scope would you like to review?
 
 - **`s`/`single`** — Review one plan's implementation
-- **`m`/`multi`** — Review selected plans together
+- **`m`/`multi`** — Review selected plans
 - **`a`/`all`** — Review all implemented plans
 · · · · · · · · · · · ·
 ```
