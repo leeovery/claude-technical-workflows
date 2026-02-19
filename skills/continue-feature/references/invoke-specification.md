@@ -31,7 +31,7 @@ Saving session state so Claude can pick up where it left off and continue the fe
   "{topic}" \
   "skills/technical-specification/SKILL.md" \
   "docs/workflow/specification/{topic}/specification.md" \
-  --pipeline "This session is part of the feature pipeline. After the specification concludes, return to the continue-feature skill and execute Step 6 (Phase Bridge). Load: skills/continue-feature/references/phase-bridge.md"
+  --pipeline "This session is part of the feature pipeline. After the specification concludes, return to the continue-feature skill and execute Step 7 (Phase Bridge). Load: skills/continue-feature/references/phase-bridge.md"
 ```
 
 ## Handoff
@@ -47,7 +47,7 @@ Source material:
 Topic name: {topic}
 
 PIPELINE CONTINUATION — When this specification concludes (status: concluded),
-you MUST return to the continue-feature skill and execute Step 6 (Phase Bridge).
+you MUST return to the continue-feature skill and execute Step 7 (Phase Bridge).
 Load: skills/continue-feature/references/phase-bridge.md
 Do not end the session after the specification — the feature pipeline continues.
 

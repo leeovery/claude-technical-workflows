@@ -1,7 +1,7 @@
 ---
 name: continue-feature
 description: "Continue a feature through the pipeline. Routes to the next phase (specification, planning, or implementation) based on artifact state. Can be invoked manually or from plan mode bridges."
-allowed-tools: Bash(.claude/skills/continue-feature/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh)
+allowed-tools: Bash(.claude/skills/continue-feature/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(.claude/skills/start-review/scripts/discovery.sh)
 hooks:
   PreToolUse:
     - hooks:
@@ -33,7 +33,8 @@ Context refresh (compaction) summarizes the conversation, losing procedural deta
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
 2. **Identify the topic.** Check conversation history for the topic name. If unknown, ask the user.
 3. **Determine current step from artifacts** (check top-down, first match wins):
-   - Implementation tracking exists with `status: completed` → resume at **Step 6** (phase bridge — feature is done)
+   - Review exists for topic → resume at **Step 7** (phase bridge — pipeline complete)
+   - Implementation tracking exists with `status: completed`, no review → resume at **Step 6** (invoke begin-review)
    - Implementation tracking exists with `status: in-progress` → resume at **Step 5** (re-invoke begin-implementation)
    - Plan exists with `status: concluded` → resume at **Step 5** (invoke begin-implementation)
    - Plan exists with other status → resume at **Step 4** (re-invoke begin-planning)
@@ -109,7 +110,7 @@ Present the discovered state as context, then ask the user to select:
 Continue Feature
 
 This skill continues a feature through the pipeline phases:
-Discussion → Specification → Planning → Implementation
+Discussion → Specification → Planning → Implementation → Review
 
 It's designed for features started with /start-feature, but works
 with any topic that has workflow artifacts.
@@ -142,7 +143,7 @@ Select by number, or enter a topic name directly:
 
 Load **[detect-phase.md](references/detect-phase.md)** and follow its instructions.
 
-→ The reference file will route you to **Step 3**, **Step 4**, **Step 5**, or a terminal condition. Follow its routing.
+→ The reference file will route you to **Step 3**, **Step 4**, **Step 5**, **Step 6**, or a terminal condition. Follow its routing.
 
 ---
 
@@ -150,7 +151,7 @@ Load **[detect-phase.md](references/detect-phase.md)** and follow its instructio
 
 Load **[invoke-specification.md](references/invoke-specification.md)** and follow its instructions.
 
-**CRITICAL**: When the specification concludes (status becomes "concluded"), you MUST proceed to **Step 6** below. Do not end the session — the feature pipeline continues to the phase bridge.
+**CRITICAL**: When the specification concludes (status becomes "concluded"), you MUST proceed to **Step 7** below. Do not end the session — the feature pipeline continues to the phase bridge.
 
 ---
 
@@ -158,7 +159,7 @@ Load **[invoke-specification.md](references/invoke-specification.md)** and follo
 
 Load **[invoke-planning.md](references/invoke-planning.md)** and follow its instructions.
 
-**CRITICAL**: When the plan concludes (status becomes "concluded"), you MUST proceed to **Step 6** below. Do not end the session — the feature pipeline continues to the phase bridge.
+**CRITICAL**: When the plan concludes (status becomes "concluded"), you MUST proceed to **Step 7** below. Do not end the session — the feature pipeline continues to the phase bridge.
 
 ---
 
@@ -166,12 +167,20 @@ Load **[invoke-planning.md](references/invoke-planning.md)** and follow its inst
 
 Load **[invoke-implementation.md](references/invoke-implementation.md)** and follow its instructions.
 
-**CRITICAL**: When implementation completes (tracking status becomes "completed"), you MUST proceed to **Step 6** below. Do not end the session — the feature pipeline continues to the phase bridge.
+**CRITICAL**: When implementation completes (tracking status becomes "completed"), you MUST proceed to **Step 7** below. Do not end the session — the feature pipeline continues to the phase bridge.
 
 ---
 
-## Step 6: Phase Bridge
+## Step 6: Review Phase
+
+Load **[invoke-review.md](references/invoke-review.md)** and follow its instructions.
+
+**CRITICAL**: When review concludes, you MUST proceed to **Step 7** below. Do not end the session — the feature pipeline continues to the phase bridge.
+
+---
+
+## Step 7: Phase Bridge
 
 Load **[phase-bridge.md](references/phase-bridge.md)** and follow its instructions.
 
-The bridge will enter plan mode with instructions to invoke continue-feature for the topic in the next session.
+The bridge will enter plan mode with instructions to invoke continue-feature for the topic in the next session, or show a terminal message if the pipeline is complete.

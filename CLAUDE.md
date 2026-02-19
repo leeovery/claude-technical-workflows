@@ -43,6 +43,7 @@ skills/
   begin-planning/            # Pre-flight for planning, invokes technical-planning
     references/              #   Cross-cutting context
   begin-implementation/      # Pre-flight for implementation, invokes technical-implementation
+  begin-review/              # Pre-flight for review, invokes technical-review
   start-research/            # Begin research exploration
   start-discussion/          # Begin technical discussions
     scripts/discovery.sh     #   Discovery script

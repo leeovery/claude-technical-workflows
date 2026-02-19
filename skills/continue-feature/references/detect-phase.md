@@ -14,23 +14,26 @@ Either use the `next_phase` from discovery output (if discovery was run), or com
 
 Check artifacts in this order (first match wins):
 
-1. Read `docs/workflow/implementation/{topic}/tracking.md`
-   - If exists with `status: completed` → next_phase is **"done"**
+1. Check `docs/workflow/review/{topic}/r*/review.md`
+   - If any review exists → next_phase is **"done"**
+
+2. Read `docs/workflow/implementation/{topic}/tracking.md`
+   - If exists with `status: completed` → next_phase is **"review"**
    - If exists with `status: in-progress` → next_phase is **"implementation"**
 
-2. Read `docs/workflow/planning/{topic}/plan.md`
+3. Read `docs/workflow/planning/{topic}/plan.md`
    - If exists with `status: concluded` → next_phase is **"implementation"**
    - If exists with other status → next_phase is **"planning"**
 
-3. Read `docs/workflow/specification/{topic}/specification.md`
+4. Read `docs/workflow/specification/{topic}/specification.md`
    - If exists with `status: concluded` → next_phase is **"planning"**
    - If exists with other status → next_phase is **"specification"**
 
-4. Check `docs/workflow/discussion/{topic}.md`
+5. Check `docs/workflow/discussion/{topic}.md`
    - If exists with `status: concluded` → next_phase is **"specification"**
    - If exists with other status → next_phase is **"discussion"**
 
-5. If none found → next_phase is **"unknown"**
+6. If none found → next_phase is **"unknown"**
 
 ## Routing
 
@@ -46,17 +49,21 @@ Check artifacts in this order (first match wins):
 
 → Proceed to **Step 5**.
 
+#### If next_phase is "review"
+
+→ Proceed to **Step 6**.
+
 #### If next_phase is "done"
 
 > *Output the next fenced block as a code block:*
 
 ```
-Feature Complete
+Pipeline Complete
 
-"{topic:(titlecase)}" has completed implementation.
+"{topic:(titlecase)}" has completed all pipeline phases
+(implementation and review).
 
-Run /start-review to validate the implementation against the
-specification and plan.
+Use /start-review to re-review or synthesize findings.
 ```
 
 **STOP.** Do not proceed — terminal condition.

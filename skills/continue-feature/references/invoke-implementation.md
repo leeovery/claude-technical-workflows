@@ -21,7 +21,7 @@ Saving session state so Claude can pick up where it left off and continue the fe
   "{topic}" \
   "skills/technical-implementation/SKILL.md" \
   "docs/workflow/implementation/{topic}/tracking.md" \
-  --pipeline "This session is part of the feature pipeline. After implementation completes, return to the continue-feature skill and execute Step 6 (Phase Bridge). Load: skills/continue-feature/references/phase-bridge.md"
+  --pipeline "This session is part of the feature pipeline. After implementation completes, return to the continue-feature skill and execute Step 7 (Phase Bridge). Load: skills/continue-feature/references/phase-bridge.md"
 ```
 
 ## Handoff
@@ -33,7 +33,7 @@ Implementation pre-flight for: {topic}
 Plan: docs/workflow/planning/{topic}/plan.md
 
 PIPELINE CONTINUATION — When implementation completes (tracking status: completed),
-you MUST return to the continue-feature skill and execute Step 6 (Phase Bridge).
+you MUST return to the continue-feature skill and execute Step 7 (Phase Bridge).
 Load: skills/continue-feature/references/phase-bridge.md
 Do not end the session after implementation — the feature pipeline continues.
 
