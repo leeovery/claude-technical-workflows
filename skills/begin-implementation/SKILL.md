@@ -25,11 +25,15 @@ This skill is a **bridge** — it runs pre-flight checks for implementation and 
 
 ## Step 1: Run Discovery
 
-Execute the start-implementation discovery script to gather current state:
+!`.claude/skills/start-implementation/scripts/discovery.sh`
+
+If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
 
 ```bash
 .claude/skills/start-implementation/scripts/discovery.sh
 ```
+
+If YAML content is already displayed, it has been run on your behalf.
 
 Parse the output to find the plan matching the provided topic. Extract:
 
