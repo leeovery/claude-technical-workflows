@@ -145,7 +145,7 @@ Your context (or 'none'):
 
 Claude reads all 5 concluded discussions. Considers existing specs and user context. Forms groupings preserving existing spec names (anchored names will apply on subsequent runs).
 
-Cache written to `docs/workflow/.cache/discussion-consolidation-analysis.md`:
+Cache written to `docs/workflow/.state/discussion-consolidation-analysis.md`:
 ```markdown
 ---
 checksum: def456...
