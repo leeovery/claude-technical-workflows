@@ -10,7 +10,5 @@ __pycache__/
 *.so
 .Python
 
-# Workflow ephemeral runtime data (sessions, etc.)
-docs/workflow/.cache/
 
 .claude/settings.local.json
