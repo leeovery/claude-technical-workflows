@@ -39,8 +39,9 @@ tick init
 Add to `.gitignore`:
 
 ```
-.tick/.store
+.tick/cache.db
 .tick/lock
+.tick/.tasks-*.jsonl.tmp
 ```
 
 ## Structure Mapping
@@ -66,7 +67,7 @@ Tasks are stored in a `.tick/` directory at the project root:
 ```
 .tick/
 ├── tasks.jsonl     # Append-only source of truth (git-friendly)
-├── .store          # SQLite cache (auto-rebuilt, do not commit)
+├── cache.db        # SQLite query cache (auto-rebuilt, do not commit)
 └── lock            # File lock for concurrent access
 ```
 

@@ -118,31 +118,27 @@ Phase {N}: {Phase Name} — task list confirmed. Proceeding to authoring.
 
 ## Author Tasks for the Phase
 
-Work through each task in the phase's task table, in order.
+Tasks are authored in a single batch per phase. One sub-agent authors all tasks for the phase, writing to a scratch file. The orchestrator then handles approval and writing to the plan format. Never invoke multiple authoring agents concurrently. Never batch beyond a single phase.
 
-### Sequential authoring (mandatory)
+#### If all tasks in the phase have status `authored`
 
-Tasks **must** be authored one at a time, in order. Each task's authored detail builds context for the next — later tasks benefit from decisions, patterns, and structure established by earlier ones. This applies regardless of gate mode. Auto-gate removes the approval pause, not the sequential process.
-
-**Never** invoke multiple Step B agents concurrently. **Never** batch or skip ahead.
-
-#### If the task status is `authored`
-
-Already written.
+All tasks already written.
 
 > *Output the next fenced block as a code block:*
 
 ```
-Task {M} of {total}: {Task Name} — already authored.
+Phase {N}: {Phase Name} — all tasks already authored.
 ```
 
-Continue to the next task.
+→ Continue to the next phase.
 
-#### If the task status is `pending`
+#### If any tasks in the phase have status `pending`
 
-→ Go to **Step B** with this task.
+→ Go to **Step B** for the entire phase.
 
-After Step B returns, the task is authored. Continue to the next task.
+After Step B returns, all tasks in the phase are authored.
+
+If the user navigates mid-approval, the scratch file preserves approval state. On return, resume from the first non-approved task.
 
 #### When all tasks in the phase are authored
 
@@ -178,4 +174,4 @@ Load **[define-tasks.md](define-tasks.md)** and follow its instructions as writt
 
 ## Step B: Author Tasks
 
-Load **[author-tasks.md](author-tasks.md)** and follow its instructions as written. This step authors **one task** and returns.
+Load **[author-tasks.md](author-tasks.md)** and follow its instructions as written. This step authors **all tasks for the phase** via a batch agent and returns.
