@@ -49,8 +49,6 @@ done
 for scope_dir in "$REVIEW_DIR"/*/; do
     [ -d "$scope_dir" ] || continue
     scope=$(basename "$scope_dir")
-    # Skip non-topic directories
-    [ "$scope" = "product-assessment" ] && continue
 
     for rdir in "$scope_dir"r*/; do
         [ -d "$rdir" ] || continue
@@ -95,8 +93,6 @@ done
 for topic_dir in "$REVIEW_DIR"/*/; do
     [ -d "$topic_dir" ] || continue
     topic=$(basename "$topic_dir")
-    # Skip non-topic directories
-    [ "$topic" = "product-assessment" ] && continue
 
     # Skip if r1/ already exists with content
     if [ -d "${topic_dir}r1" ]; then

@@ -129,8 +129,6 @@ if [ -d "$REVIEW_DIR" ]; then
     has_reviews="false"
     for topic_dir in "$REVIEW_DIR"/*/; do
         [ -d "$topic_dir" ] || continue
-        # Skip product-assessment directory
-        [ "$(basename "$topic_dir")" = "product-assessment" ] && continue
         if ls -d "$topic_dir"r*/review.md >/dev/null 2>&1; then
             has_reviews="true"
             break
@@ -145,9 +143,6 @@ if [ -d "$REVIEW_DIR" ]; then
         for topic_dir in "$REVIEW_DIR"/*/; do
             [ -d "$topic_dir" ] || continue
             topic=$(basename "$topic_dir")
-            # Skip product-assessment directory
-            [ "$topic" = "product-assessment" ] && continue
-
             # Count r*/ versions
             versions=0
             latest_version=0

@@ -283,25 +283,6 @@ echo ""
 
 # ----------------------------------------------------------------------------
 
-echo -e "${YELLOW}Test: Existing product-assessment/ dir not processed by phases 2 and 3${NC}"
-setup_fixture
-
-# If a product-assessment dir exists from a previous migration run, leave it alone
-mkdir -p "$REVIEW_DIR/product-assessment"
-cat > "$REVIEW_DIR/product-assessment/1.md" << 'EOF'
-PLANS_REVIEWED: tick-core
-EOF
-
-original=$(cat "$REVIEW_DIR/product-assessment/1.md")
-run_migration
-new=$(cat "$REVIEW_DIR/product-assessment/1.md")
-
-assert_equals "$new" "$original" "product-assessment/ not processed by later phases"
-
-echo ""
-
-# ----------------------------------------------------------------------------
-
 echo -e "${YELLOW}Test: Idempotency — running migration twice${NC}"
 setup_fixture
 
