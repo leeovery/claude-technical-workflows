@@ -162,7 +162,7 @@ The `/migrate` skill keeps workflow files in sync with the current system design
 **How it works:**
 - `skills/migrate/scripts/migrate.sh` runs all migration scripts in `skills/migrate/scripts/migrations/` in numeric order
 - Each migration is idempotent - safe to run multiple times
-- Progress is tracked in `docs/workflow/.cache/migrations.log`
+- Progress is tracked in `docs/workflow/.state/migrations`
 - Delete the log file to force re-running all migrations
 
 **Adding new migrations:**

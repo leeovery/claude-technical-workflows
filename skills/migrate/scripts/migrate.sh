@@ -9,7 +9,7 @@
 #   ./scripts/migrate.sh
 #
 # Tracking:
-#   Migrations are tracked in docs/workflow/.cache/migrations.log
+#   Migrations are tracked in docs/workflow/.state/migrations
 #   Format: "migration_id" per line (e.g., "001", "002")
 #   The orchestrator checks/records migration IDs — individual scripts don't track.
 #   Delete the log file to force re-running all migrations.
@@ -24,15 +24,24 @@ set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MIGRATIONS_DIR="$SCRIPT_DIR/migrations"
-TRACKING_FILE="docs/workflow/.cache/migrations.log"
+TRACKING_FILE="docs/workflow/.state/migrations"
 
 # Track counts for final report
 FILES_UPDATED=0
 FILES_SKIPPED=0
 MIGRATIONS_RUN=0
 
-# Ensure cache directory exists
+# Ensure state directory exists
 mkdir -p "$(dirname "$TRACKING_FILE")"
+
+# Self-healing: merge entries from old locations into .state/migrations
+OLD_CACHE_LOG="docs/workflow/.cache/migrations.log"
+OLD_CACHE_FILE="docs/workflow/.cache/migrations"
+if [ -f "$OLD_CACHE_LOG" ] || [ -f "$OLD_CACHE_FILE" ]; then
+    { cat "$OLD_CACHE_LOG" 2>/dev/null; cat "$OLD_CACHE_FILE" 2>/dev/null; cat "$TRACKING_FILE" 2>/dev/null; } | sort -u > "${TRACKING_FILE}.tmp"
+    mv "${TRACKING_FILE}.tmp" "$TRACKING_FILE"
+    rm -f "$OLD_CACHE_LOG" "$OLD_CACHE_FILE"
+fi
 
 # Touch tracking file if it doesn't exist
 touch "$TRACKING_FILE"

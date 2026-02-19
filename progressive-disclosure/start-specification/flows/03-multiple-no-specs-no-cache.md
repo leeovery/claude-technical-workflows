@@ -100,7 +100,7 @@ Claude reads all 3 concluded discussion files, considers the user's context, and
 Analyzing discussions...
 ```
 
-Analysis result — writes to `docs/workflow/.cache/discussion-consolidation-analysis.md`:
+Analysis result — writes to `docs/workflow/.state/discussion-consolidation-analysis.md`:
 ```markdown
 ---
 checksum: abc123...
@@ -291,7 +291,7 @@ Steps 0-6 are identical to Scenario A.
 
 Claude deletes the cache:
 ```bash
-rm docs/workflow/.cache/discussion-consolidation-analysis.md
+rm docs/workflow/.state/discussion-consolidation-analysis.md
 ```
 
 Loops back to Step 4:

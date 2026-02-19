@@ -10,7 +10,7 @@ set -eo pipefail
 
 RESEARCH_DIR="docs/workflow/research"
 DISCUSSION_DIR="docs/workflow/discussion"
-CACHE_FILE="docs/workflow/.cache/research-analysis.md"
+CACHE_FILE="docs/workflow/.state/research-analysis.md"
 
 # Helper: Extract a frontmatter field value from a file
 # Usage: extract_field <file> <field_name>

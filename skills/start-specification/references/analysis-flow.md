@@ -65,10 +65,10 @@ When forming groupings:
 
 Create the cache directory if needed:
 ```bash
-mkdir -p docs/workflow/.cache
+mkdir -p docs/workflow/.state
 ```
 
-Write to `docs/workflow/.cache/discussion-consolidation-analysis.md`:
+Write to `docs/workflow/.state/discussion-consolidation-analysis.md`:
 
 ```markdown
 ---

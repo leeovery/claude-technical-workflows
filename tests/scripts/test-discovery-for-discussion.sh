@@ -304,7 +304,7 @@ test_cache_valid() {
     setup_fixture
 
     mkdir -p "$TEST_DIR/docs/workflow/research"
-    mkdir -p "$TEST_DIR/docs/workflow/.cache"
+    mkdir -p "$TEST_DIR/docs/workflow/.state"
 
     cat > "$TEST_DIR/docs/workflow/research/exploration.md" << 'EOF'
 ---
@@ -318,7 +318,7 @@ EOF
     local checksum=$(cat "$TEST_DIR/docs/workflow/research"/*.md | md5sum | cut -d' ' -f1)
 
     # Create cache with matching checksum
-    cat > "$TEST_DIR/docs/workflow/.cache/research-analysis.md" << EOF
+    cat > "$TEST_DIR/docs/workflow/.state/research-analysis.md" << EOF
 ---
 checksum: $checksum
 generated: 2026-01-21T10:00:00
@@ -354,7 +354,7 @@ test_cache_stale() {
     setup_fixture
 
     mkdir -p "$TEST_DIR/docs/workflow/research"
-    mkdir -p "$TEST_DIR/docs/workflow/.cache"
+    mkdir -p "$TEST_DIR/docs/workflow/.state"
 
     cat > "$TEST_DIR/docs/workflow/research/exploration.md" << 'EOF'
 ---
@@ -367,7 +367,7 @@ This content is different from when cache was created.
 EOF
 
     # Create cache with OLD checksum (doesn't match current)
-    cat > "$TEST_DIR/docs/workflow/.cache/research-analysis.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/.state/research-analysis.md" << 'EOF'
 ---
 checksum: old_checksum_that_doesnt_match
 generated: 2026-01-20T10:00:00
