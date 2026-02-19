@@ -55,15 +55,6 @@ In the task file, add a **Needs Clarification** section:
 - Per-user or per-IP?
 ```
 
-## Writing from Canonical Content
-
-When the orchestrator writes a task from the scratch file:
-
-1. Create `docs/workflow/planning/{topic}/tasks/{task-id}.md`
-2. Add frontmatter: id, phase, status (pending), created (today)
-3. Add `# {Task Title}` heading
-4. Copy task body content (Problem through Spec Reference)
-
 ## Cleanup (Restart)
 
 Delete the tasks directory — preserves `plan.md` (the Plan Index) and any review tracking files:

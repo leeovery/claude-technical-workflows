@@ -168,7 +168,7 @@ Repeat until all tasks are approved.
 For each approved task in the scratch file, in order:
 
 1. Read the task content from the scratch file
-2. Write to the output format (format-specific — see the format's **[authoring.md](output-formats/{format}/authoring.md)** "Writing from Canonical Content" section)
+2. Write to the output format (format-specific — see the format's **[authoring.md](output-formats/{format}/authoring.md)**)
 3. Update the task table in the Plan Index File: set `status: authored` and set `Ext ID` to the external identifier for the task as exposed by the output format
 4. If the Plan Index File frontmatter `ext_id` is empty, set it to the external identifier for the plan as exposed by the output format
 5. If the current phase's `ext_id` is empty, set it to the external identifier for the phase as exposed by the output format

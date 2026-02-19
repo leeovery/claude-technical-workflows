@@ -101,15 +101,6 @@ tick create "[NEEDS INFO] Rate limiting strategy" \
 - What response code on limit exceeded?"
 ```
 
-## Writing from Canonical Content
-
-When the orchestrator writes a task from the scratch file:
-
-1. Extract task title from `### Task {N}: {Title}` heading
-2. Build description from task body (Problem through Spec Reference)
-3. Run: `tick create "{Title}" --parent {phase-ext-id} --description "{description}"`
-4. Capture returned task ID as ext_id
-
 ## Cleanup (Restart)
 
 Cancel the topic task and all its descendants. First, list the tasks to collect their IDs:
