@@ -153,11 +153,7 @@ After completing the approval loop, check for rejected tasks.
 {N} tasks need revision. Re-invoking author agent...
 ```
 
-Invoke a NEW `planning-task-author` agent with the same inputs plus the scratch file path. The agent reads the scratch file, rewrites rejected tasks (addressing feedback), and copies approved tasks verbatim.
-
-Re-enter **Section 5** approval loop — only non-approved tasks get presented.
-
-Repeat until all tasks are approved.
+→ Return to **Section 2**. The agent receives the scratch file with rejected tasks and feedback, rewrites only those, and the flow continues through validation, gate check, and approval as normal.
 
 ---
 
