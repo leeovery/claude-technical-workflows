@@ -32,7 +32,7 @@ skills/
   migrate/                   # Keep workflow files in sync with system design
     scripts/migrate.sh       #   Migration orchestrator
     scripts/migrations/      #   Individual migration scripts (numbered)
-  start-feature/             # Start feature pipeline (discussion → spec → plan → impl)
+  start-feature/             # Start feature pipeline (discussion → spec → plan → impl → review)
     references/              #   Interview questions, handoffs, phase bridge
   continue-feature/          # Continue feature through next pipeline phase
     scripts/discovery.sh     #   Cross-phase discovery script
