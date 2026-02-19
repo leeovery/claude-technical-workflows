@@ -1101,6 +1101,7 @@
       <button class="nav-btn dropdown-btn" onclick="selectPhase('implementation-analysis-task-writer',this)" id="btn-implementation-analysis-task-writer"><span class="badge badge-agt">agt</span><span class="btn-label">analysis-task-writer</span></button>
       <div class="dropdown-subheading">Review</div>
       <button class="nav-btn dropdown-btn" onclick="selectPhase('review-task-verifier',this)" id="btn-review-task-verifier"><span class="badge badge-agt">agt</span><span class="btn-label">review-task-verifier</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('review-findings-synthesizer',this)" id="btn-review-findings-synthesizer"><span class="badge badge-agt">agt</span><span class="btn-label">review-findings-synthesizer</span></button>
     </div>
 
     <div class="section-label collapsible" onclick="toggleSidebarSection(this)"><span class="chevron">▼</span> Legend</div>
@@ -1164,7 +1165,7 @@
           <div class="ov-shortcut-anchor">
             <div class="ov-shortcut-pill" onclick="selectPhase('start-feature')">
               <span class="ov-pill-cmd">/start-feature</span>
-              <span class="ov-pill-desc">skip to spec</span>
+              <span class="ov-pill-desc">skip research</span>
             </div>
             <div class="ov-shortcut-arrow"></div>
           </div>
@@ -1421,20 +1422,20 @@ const phases = {
   review: {
     color: '#f472b6', bg: 'rgba(244,114,182,0.12)',
     label: 'Review', cmd: '/start-review',
-    complexity: 'Moderate', steps: 5,
+    complexity: 'Moderate', steps: 6,
     output: 'Review feedback (approve/changes/comments)',
     skill: 'technical-review',
-    discovery: 'discovery-for-implementation-and-review.sh',
+    discovery: 'discovery.sh',
     cache: null,
     prerequisites: 'Implementation of a plan',
-    scenarios: ['no_plans','single_plan','multiple_plans'],
-    desc: 'Validate implementation against plan. QA task verifiers (batched) plus holistic product assessor. Scope: single, multi, or all.',
+    scenarios: ['no_plans','all_reviewed','single_plan','multiple_plans'],
+    desc: 'Validate implementation against plan. QA task verifiers (batched). Scope: single, multi, all, or analysis. Routes all-reviewed state.',
   },
   'start-feature': {
     color: '#818cf8', bg: 'rgba(129,140,248,0.12)',
     label: 'Start Feature', cmd: '/start-feature',
-    complexity: 'Shortcut',
-    desc: 'Bypass phases 1-2. Gather feature context inline, invoke specification skill directly.',
+    complexity: 'Pipeline',
+    desc: 'Gather feature context, create discussion, then bridge to continue-feature for specification, planning, and implementation.',
   },
   'link-deps': {
     color: '#94a3b8', bg: 'rgba(148,163,184,0.12)',
@@ -1545,10 +1546,10 @@ const phases = {
     label: 'Task Verifier',
     desc: 'Subagent that verifies a single task implementation against plan and spec. Dispatched in batches of 5.',
   },
-  'review-product-assessor': {
+  'review-findings-synthesizer': {
     color: '#f472b6', bg: 'rgba(244,114,182,0.12)',
-    label: 'Product Assessor',
-    desc: 'Subagent that evaluates implementation holistically as a product — robustness, gaps, cross-plan consistency, and forward-looking assessment.',
+    label: 'Findings Synthesizer',
+    desc: 'Subagent that synthesizes review findings into deduplicated, normalized remediation tasks for approval.',
   },
 };
 
@@ -1563,7 +1564,7 @@ const OVERVIEW_NODES = [
   { id: 'review', label: '6. Review', subtitle: '/start-review', x: 280, y: 520, w: 240, h: 58, type: 'phase', color: 'var(--review)', bg: 'var(--review-bg)', phase: 'review' },
 
   // Shortcut entry
-  { id: 'start-feature', label: '/start-feature', subtitle: 'Skip research & discussion', x: 20, y: 234, w: 210, h: 42, type: 'standalone', color: '#818cf8', bg: 'rgba(129,140,248,0.12)', phase: 'start-feature' },
+  { id: 'start-feature', label: '/start-feature', subtitle: 'Skip research phase', x: 20, y: 148, w: 210, h: 42, type: 'standalone', color: '#818cf8', bg: 'rgba(129,140,248,0.12)', phase: 'start-feature' },
 ];
 
 const OVERVIEW_CONNECTIONS = [
@@ -1574,8 +1575,8 @@ const OVERVIEW_CONNECTIONS = [
   { from: 'planning', to: 'implementation', type: 'flow', label: 'plan + tasks' },
   { from: 'implementation', to: 'review', type: 'flow', label: 'code changes' },
 
-  // Shortcut: /start-feature enters at specification
-  { from: 'start-feature', to: 'specification', type: 'shortcut', label: 'shortcut' },
+  // Shortcut: /start-feature enters at discussion
+  { from: 'start-feature', to: 'discussion', type: 'shortcut', label: 'shortcut' },
 ];
 
 // ── Dagre-based Flowchart Layout ──
@@ -1815,23 +1816,29 @@ const FLOWCHARTS = {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for /start-review.' },
       { id: 'migrate', label: 'Run /migrate', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Step 0: Run migrations.' },
-      { id: 'discovery', label: 'Run discovery script', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run shared discovery-for-implementation-and-review.sh. Scans plans and implementation status.' },
+      { id: 'discovery', label: 'Run discovery script', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery.sh. Scans plans, implementation status, and existing reviews.' },
       { id: 'scenario', label: 'Plans?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2: Do any plans exist? Gate check.' },
       { id: 'stop', label: 'STOP: No plans', shape: 'stop', w: 150, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: No plans found. Run /start-planning first.' },
+      { id: 'all-reviewed', label: 'All reviewed?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2: Check if all plans have been reviewed already. Routes to analysis/re-review menu.' },
+      { id: 'reviewed-menu', label: 'ASK: Analysis / re-review', w: 210, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'All plans reviewed. Options: analysis (synthesize existing findings) or re-review (increment review version).' },
       { id: 'present', label: 'Display plans', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 3: Show all plans with implementation status. Numbered reviewable plans, not-ready section for non-implemented.' },
       { id: 'gate-reviewable', label: 'Reviewable?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Gate: Any plans with implementations? If none are reviewable, STOP.' },
       { id: 'stop-no-impl', label: 'STOP: No implementations', shape: 'stop', w: 185, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: Plans exist but none have implementations. Run /start-implementation first.' },
       { id: 'count', label: 'How many?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route: Single reviewable auto-selects with scope=single. Multiple asks user for scope.' },
       { id: 'auto', label: 'Auto-select single', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Single reviewable plan. Auto-select with scope=single, skip to skill.' },
-      { id: 'scope', label: 'ASK: Review scope', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 3b: Choose scope — single (one plan), multi (selected plans), or all (full product). Then select specific plans if single/multi.' },
+      { id: 'scope', label: 'ASK: Review scope', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 3b: Choose scope — single (one plan), multi (selected plans), all (full product), or analysis (if applicable). Then select specific plans.' },
       { id: 'skill', label: 'Invoke review skill', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 5: Invoke technical-review skill with selected plan(s) and scope.', skillLink: 'skill-review' },
     ],
     connections: [
       { from: 'start', to: 'migrate' },
       { from: 'migrate', to: 'discovery' },
       { from: 'discovery', to: 'scenario' },
-      { from: 'scenario', to: 'present', type: 'yes', label: 'exist', weight: 2 },
+      { from: 'scenario', to: 'all-reviewed', type: 'yes', label: 'exist', weight: 2 },
       { from: 'scenario', to: 'stop', type: 'no', label: 'none' },
+      { from: 'all-reviewed', to: 'reviewed-menu', type: 'yes', label: 'all done' },
+      { from: 'all-reviewed', to: 'present', type: 'no', label: 'pending', weight: 2 },
+      { from: 'reviewed-menu', to: 'skill', label: 'analysis', type: 'transition' },
+      { from: 'reviewed-menu', to: 'present', label: 're-review' },
       { from: 'present', to: 'gate-reviewable' },
       { from: 'gate-reviewable', to: 'count', type: 'yes', label: 'yes', weight: 2 },
       { from: 'gate-reviewable', to: 'stop-no-impl', type: 'no', label: 'none' },
@@ -1843,20 +1850,30 @@ const FLOWCHARTS = {
   },
   'start-feature': {
     nodes: [
-      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for /start-feature. No migration step (standalone command).' },
-      { id: 'gather', label: 'ASK: Feature context', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 1: Gather feature context - what, scope, constraints. Can skip if already provided inline.' },
-      { id: 'name', label: 'ASK: Suggest topic name', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 2: Suggest a topic name for the specification file based on feature description.' },
-      { id: 'check', label: 'Name conflict?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 3: Check docs/workflow/specification/ for naming conflicts.' },
-      { id: 'conflict', label: 'ASK: Append / rename / replace', w: 230, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Conflict found: Ask user to append to existing, choose different name, or replace.' },
-      { id: 'skill', label: 'Invoke specification skill', w: 210, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 4: Invoke technical-specification skill with inline feature context (no discussion doc).', skillLink: 'skill-specification' },
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for /start-feature.' },
+      { id: 'migrate', label: 'Run /migrate', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Step 0: Run migrations.' },
+      { id: 'gather', label: 'ASK: Feature context', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 1: Gather feature context — what, scope, constraints.' },
+      { id: 'name', label: 'ASK: Suggest topic name', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 2: Suggest a kebab-case topic name for the discussion file.' },
+      { id: 'check', label: 'Discussion exists?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2: Check docs/workflow/discussion/ for existing discussion with same name.' },
+      { id: 'conflict', label: 'ASK: Resume / new name', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Discussion exists: resume the existing discussion or choose a different name.' },
+      { id: 'status-check', label: 'Concluded?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'If resuming: check discussion status. Concluded → skip to bridge. In-progress → invoke discussion.' },
+      { id: 'disc-skill', label: 'Invoke discussion skill', w: 210, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 3: Invoke technical-discussion skill. When discussion concludes, proceed to phase bridge.', skillLink: 'skill-discussion' },
+      { id: 'bridge', label: 'Phase bridge', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 4: Enter plan mode with handoff to continue-feature for specification, planning, and implementation.' },
+      { id: 'end', label: 'Pipeline handoff', shape: 'pill', w: 150, h: 40, color: '#818cf8', bg: 'rgba(129,140,248,0.12)', desc: 'Output: Discussion concluded. Plan mode handoff to continue-feature for remaining phases.' },
     ],
     connections: [
-      { from: 'start', to: 'gather' },
+      { from: 'start', to: 'migrate' },
+      { from: 'migrate', to: 'gather' },
       { from: 'gather', to: 'name' },
       { from: 'name', to: 'check' },
-      { from: 'check', to: 'conflict', type: 'yes', label: 'conflict' },
-      { from: 'check', to: 'skill', type: 'no', label: 'ok' },
-      { from: 'conflict', to: 'skill' },
+      { from: 'check', to: 'conflict', type: 'yes', label: 'exists' },
+      { from: 'check', to: 'disc-skill', type: 'no', label: 'new', weight: 2 },
+      { from: 'conflict', to: 'status-check', label: 'resume' },
+      { from: 'conflict', to: 'name', type: 'backloop', label: 'new name' },
+      { from: 'status-check', to: 'bridge', type: 'yes', label: 'concluded' },
+      { from: 'status-check', to: 'disc-skill', type: 'no', label: 'in-progress', weight: 2 },
+      { from: 'disc-skill', to: 'bridge', type: 'transition' },
+      { from: 'bridge', to: 'end' },
     ]
   },
   'link-deps': {
@@ -2172,9 +2189,17 @@ const FLOWCHARTS = {
       { id: 'v2', label: 'Verify task 2', w: 140, h: 44, color: 'var(--action)', bg: 'rgba(56,189,248,0.08)', desc: 'Same checks, different task. Batches of 5 run in parallel.' },
       { id: 'vn', label: 'Verify task N', w: 140, h: 44, color: 'var(--action)', bg: 'rgba(56,189,248,0.08)', desc: 'One per task. All within a batch run simultaneously.' },
       { id: 'aggregate', label: 'Aggregate QA findings', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 3: Read all qa-task-*.md files. Collect blocking issues, test issues, and code quality concerns.' },
-      { id: 'product-assess', label: 'Invoke product assessor', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'review-product-assessor', desc: 'Step 4: Dispatch review-product-assessor agent. Evaluates implementation holistically — robustness, gaps, cross-plan consistency.' },
-      { id: 'produce', label: 'Produce review', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 5: Aggregate QA findings and product assessment into structured review document. Write to docs/workflow/review/.' },
-      { id: 'end', label: 'Review document', shape: 'pill', w: 150, h: 40, color: 'var(--review)', bg: 'var(--review-bg)', desc: 'Output: QA verdict (approve/changes/comments) plus product assessment. Does NOT fix code.' },
+      { id: 'produce', label: 'Produce review', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 4: Aggregate QA findings into structured review document. Determine verdict (approve/changes/comments). Write to docs/workflow/review/.' },
+      // Review Actions Loop (Step 5)
+      { id: 'verdict', label: 'Verdict?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 5A: Route on QA verdict — approve (terminal), request-changes (synthesize recommended), comments-only (synthesize optional).' },
+      { id: 'ask-synth', label: 'ASK: Synthesize?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 5A: Ask user whether to synthesize findings into implementation tasks. Recommended for request-changes, optional for comments-only.' },
+      { id: 'synthesizer', label: 'Invoke synthesizer', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'review-findings-synthesizer', desc: 'Step 5B: Dispatch review-findings-synthesizer agent. Deduplicates, groups, normalizes findings into tasks.' },
+      { id: 'synth-result', label: 'Tasks proposed?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route on synthesizer result — clean (terminal) or tasks_proposed (approval gate).' },
+      { id: 'approve-tasks', label: 'ASK: Approve tasks', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 5C: Present each proposed task individually. Per-task: approve, auto, skip, or comment. Auto mode available.' },
+      { id: 'any-approved', label: 'Any approved?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route: any tasks approved → create in plan. All skipped → terminal.' },
+      { id: 'task-writer', label: 'Create plan tasks', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'implementation-analysis-task-writer', desc: 'Step 5D: Invoke task-writer agent to create approved tasks as a new review remediation phase in the plan.' },
+      { id: 'reopen', label: 'Reopen implementation', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 5E: Update tracking to in-progress, reset analysis cycle. Enter plan mode with handoff to /start-implementation.' },
+      { id: 'end', label: 'Review complete', shape: 'pill', w: 150, h: 40, color: 'var(--review)', bg: 'var(--review-bg)', desc: 'Output: QA verdict with optional remediation task creation and implementation reopening.' },
     ],
     connections: [
       { from: 'start', to: 'read-plan' },
@@ -2188,9 +2213,25 @@ const FLOWCHARTS = {
       { from: 'v1', to: 'aggregate' },
       { from: 'v2', to: 'aggregate' },
       { from: 'vn', to: 'aggregate' },
-      { from: 'aggregate', to: 'product-assess' },
-      { from: 'product-assess', to: 'produce' },
-      { from: 'produce', to: 'end' },
+      { from: 'aggregate', to: 'produce' },
+      { from: 'produce', to: 'verdict' },
+      // Verdict routing
+      { from: 'verdict', to: 'end', type: 'yes', label: 'approve' },
+      { from: 'verdict', to: 'ask-synth', type: 'no', label: 'changes', weight: 2 },
+      // Synthesis decision
+      { from: 'ask-synth', to: 'synthesizer', type: 'yes', label: 'yes', weight: 2 },
+      { from: 'ask-synth', to: 'end', type: 'no', label: 'decline' },
+      // Synthesizer result
+      { from: 'synthesizer', to: 'synth-result' },
+      { from: 'synth-result', to: 'end', type: 'no', label: 'clean' },
+      { from: 'synth-result', to: 'approve-tasks', type: 'yes', label: 'tasks', weight: 2 },
+      // Approval routing
+      { from: 'approve-tasks', to: 'any-approved' },
+      { from: 'any-approved', to: 'end', type: 'no', label: 'all skipped' },
+      { from: 'any-approved', to: 'task-writer', type: 'yes', label: 'approved', weight: 2 },
+      // Task creation and reopen
+      { from: 'task-writer', to: 'reopen' },
+      { from: 'reopen', to: 'end' },
     ]
   },
   'status': {
@@ -2528,25 +2569,32 @@ const FLOWCHARTS = {
       { from: 'compile', to: 'end' },
     ]
   },
-  'review-product-assessor': {
+  'review-findings-synthesizer': {
     nodes: [
-      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Dispatched by technical-review skill during product assessment stage.' },
-      { id: 'read-skills', label: 'Read project skills', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read project skills to understand framework conventions and architecture patterns.' },
-      { id: 'read-spec', label: 'Read specification(s)', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read specification(s) to understand design intent and boundaries.' },
-      { id: 'read-plan', label: 'Read plan(s)', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read plan(s) to understand what was built and scope of each plan.' },
-      { id: 'read-impl', label: 'Read implementation files', w: 210, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read all implementation files to build a full picture of the product.' },
-      { id: 'assess', label: 'Assess as product', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Evaluate holistically: robustness, gaps, strengthening, next steps. For multi-plan: cross-plan consistency, integration seams, architectural coherence.' },
-      { id: 'write', label: 'Write assessment file', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Write findings to docs/workflow/review/{topic-or-scope}/product-assessment.md.' },
-      { id: 'end', label: 'Product assessment', shape: 'pill', w: 180, h: 40, color: 'var(--review)', bg: 'var(--review-bg)', desc: 'Output: findings | clean, with summary of product readiness.' },
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Agent entry point. Invoked by technical-review skill during review actions loop.' },
+      { id: 'read-review', label: 'Read review summary', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read review.md — extract verdict, required changes, and recommendations.' },
+      { id: 'read-qa', label: 'Read all QA files', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Read every qa-task-*.md in the review path. Extract BLOCKING ISSUES and significant NON-BLOCKING NOTES with file:line refs.' },
+      { id: 'dedup', label: 'Deduplicate findings', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Same issue from multiple QA files → one finding, noting all sources.' },
+      { id: 'group', label: 'Group related findings', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Multiple findings about the same concern become one task (e.g., 3 findings about missing error handling = 1 task).' },
+      { id: 'filter', label: 'Filter by severity', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Discard low-severity non-blocking unless they cluster. Never discard high-severity or blocking.' },
+      { id: 'normalize', label: 'Normalize into tasks', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Convert each group into canonical task template: Problem/Solution/Outcome/Do/AC/Tests.' },
+      { id: 'write-report', label: 'Write report', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Write summary report to {topic}/review-report-c{cycle}.md with discarded findings.' },
+      { id: 'has-tasks', label: 'Tasks to propose?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if any actionable tasks remain after filtering.' },
+      { id: 'write-staging', label: 'Write staging file', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Write tasks to {topic}/review-tasks-c{cycle}.md with status: pending for each task.' },
+      { id: 'end', label: 'STATUS report', shape: 'pill', w: 180, h: 40, color: 'var(--review)', bg: 'var(--review-bg)', desc: 'Output: tasks_proposed (with count) or clean.' },
     ],
     connections: [
-      { from: 'start', to: 'read-skills' },
-      { from: 'read-skills', to: 'read-spec' },
-      { from: 'read-spec', to: 'read-plan' },
-      { from: 'read-plan', to: 'read-impl' },
-      { from: 'read-impl', to: 'assess' },
-      { from: 'assess', to: 'write' },
-      { from: 'write', to: 'end' },
+      { from: 'start', to: 'read-review' },
+      { from: 'read-review', to: 'read-qa' },
+      { from: 'read-qa', to: 'dedup' },
+      { from: 'dedup', to: 'group' },
+      { from: 'group', to: 'filter' },
+      { from: 'filter', to: 'normalize' },
+      { from: 'normalize', to: 'write-report' },
+      { from: 'write-report', to: 'has-tasks' },
+      { from: 'has-tasks', to: 'end', type: 'no', label: 'clean' },
+      { from: 'has-tasks', to: 'write-staging', type: 'yes', label: 'yes', weight: 2 },
+      { from: 'write-staging', to: 'end' },
     ]
   }
 };
@@ -2594,16 +2642,16 @@ const FLOWCHART_DESCS = {
     meta: { output: 'Code changes (tracked in plan)', skill: 'technical-implementation', discovery: 'discovery-for-implementation-and-review.sh' }
   },
   review: {
-    summary: 'Validate implementation with scope selection, plan display, and reviewability gating.',
-    body: `<p>Shares a discovery script with implementation. Step 3 displays all plans with implementation status — plans without implementations are shown as not-ready. If <strong>no plans are reviewable</strong>, STOP (terminal).</p>
-<p>Single reviewable plan auto-selects with <strong>scope=single</strong>. Multiple reviewable plans prompt for <strong>scope</strong>: single (one plan), multi (selected plans), or all (full product). Then specific plans are selected if needed, and the <strong>technical-review</strong> skill is invoked.</p>`,
-    meta: { output: 'Review feedback', skill: 'technical-review', discovery: 'discovery-for-implementation-and-review.sh' }
+    summary: 'Validate implementation with scope selection, reviewability gating, and all-reviewed routing.',
+    body: `<p>Discovery scans plans, implementation status, and existing reviews. Routes <strong>all-reviewed</strong> state to an analysis/re-review menu — analysis synthesizes existing findings without re-running verifiers, re-review increments the version.</p>
+<p>For pending reviews: displays all plans with implementation status — plans without implementations are shown as not-ready. If <strong>no plans are reviewable</strong>, STOP (terminal). Single reviewable plan auto-selects with <strong>scope=single</strong>. Multiple reviewable plans prompt for <strong>scope</strong>: single (one plan), multi (selected plans), all (full product), or analysis (if applicable). Then specific plans are selected and the <strong>technical-review</strong> skill is invoked.</p>`,
+    meta: { output: 'Review feedback', skill: 'technical-review', discovery: 'discovery.sh' }
   },
   'start-feature': {
-    summary: 'Shortcut to specification — bypass research and discussion phases entirely.',
-    body: `<p>For adding features to existing projects where you already know what you're building. No migration step, no discovery script. Gathers feature context inline (what, scope, constraints), suggests a topic name, checks for naming conflicts in <code>docs/workflow/specification/</code>, then invokes the <strong>technical-specification</strong> skill directly.</p>
-<p>Output is a standard specification file that continues to <code>/start-planning</code> normally.</p>`,
-    meta: { output: 'docs/workflow/specification/{topic}/specification.md', skill: 'technical-specification', complexity: 'Shortcut' }
+    summary: 'Pipeline entry — gather context, create discussion, then bridge to continue-feature.',
+    body: `<p>Runs migrations, gathers feature context inline (what, scope, constraints), suggests a topic name, and checks for existing discussions. If a discussion exists, offers to <strong>resume</strong> (in-progress → invoke discussion, concluded → skip to bridge) or choose a <strong>new name</strong>.</p>
+<p>Invokes the <strong>technical-discussion</strong> skill with the gathered context. When the discussion concludes, a <strong>phase bridge</strong> enters plan mode with instructions to invoke <code>/continue-feature</code> in the next session for specification, planning, and implementation.</p>`,
+    meta: { output: 'docs/workflow/discussion/{topic}.md', skill: 'technical-discussion', complexity: 'Pipeline' }
   },
   'link-deps': {
     summary: 'Wire up cross-topic dependencies across all plans with bidirectional linking.',
@@ -2645,12 +2693,12 @@ const FLOWCHART_DESCS = {
     meta: { complexity: 'Agent-based TDD' }
   },
   'skill-review': {
-    summary: 'The review skill — two-stage verification: batched QA task verifiers then holistic product assessor.',
-    body: `<p>Five steps: read plan(s)/spec(s), discover project skills, run QA verification, run product assessment, produce review.</p>
+    summary: 'The review skill — batched QA verification then review actions loop with synthesis and remediation.',
+    body: `<p>Five steps: read plan(s)/spec(s), discover project skills, run QA verification, produce review, then review actions loop.</p>
 <p><strong>QA Verification</strong> (Step 3): Extracts ALL tasks, then dispatches <strong>review-task-verifier subagents in batches of 5</strong> (Opus model). Each verifier checks implementation, acceptance criteria, tests, and code quality, writing findings to file. Results are aggregated from all files after all batches complete.</p>
-<p><strong>Product Assessment</strong> (Step 4): Dispatches a single <strong>review-product-assessor</strong> agent for holistic evaluation — robustness, gaps, cross-plan consistency, and forward-looking assessment. Scope-aware: single-plan, multi-plan, or full-product.</p>
-<p>Final review aggregates both stages into a structured document with QA verdict (approve/changes/comments) and product assessment.</p>`,
-    meta: { complexity: 'Two-stage review' }
+<p><strong>Produce Review</strong> (Step 4): Aggregates QA findings into a structured review document with verdict (approve/request-changes/comments-only).</p>
+<p><strong>Review Actions Loop</strong> (Step 5): Routes on verdict — approve is terminal, request-changes recommends synthesis, comments-only offers optional synthesis. If the user opts to synthesize, dispatches the <strong>review-findings-synthesizer</strong> agent to deduplicate, group, and normalize findings into tasks. User approves/skips tasks individually (auto mode available). Approved tasks are created in the plan via the <strong>task-writer</strong> agent, implementation tracking is reopened, and a plan mode handoff directs the next session to <code>/start-implementation</code>.</p>`,
+    meta: { complexity: 'QA + actions loop' }
   },
   'status': {
     summary: 'Discovery-based workflow status — relationship-aware display with next step suggestions.',
@@ -2714,12 +2762,11 @@ const FLOWCHART_DESCS = {
 <p>Three verification stages: <strong>implementation</strong> (exists, matches criteria, aligns with spec), <strong>tests</strong> (adequate coverage, edge cases, not over/under-tested), and <strong>code quality</strong> (conventions, SOLID, DRY, complexity, security, performance). Receives review checklist, topic name, and task index. Compiles a structured finding with blocking issues and non-blocking notes.</p>`,
     meta: { model: 'Opus', invokedBy: 'technical-review', complexity: 'Subagent' }
   },
-  'review-product-assessor': {
-    summary: 'Holistic product evaluation — robustness, gaps, cross-plan consistency, and forward-looking assessment.',
-    body: `<p>Evaluates the implementation as a <strong>product</strong>, not task-by-task. Reads project skills, specifications, plans, and all implementation files to build a complete picture.</p>
-<p>Focus areas: <strong>robustness</strong> (where would it break?), <strong>gaps</strong> (what's obviously missing?), <strong>strengthening</strong> (performance, security, scalability), and <strong>next steps</strong> (what does this enable?). For <strong>multi-plan/full-product</strong> scope, also evaluates cross-plan consistency, integration seams, missing shared concerns, and architectural coherence.</p>
-<p>Read-only — writes only the assessment file. Does not fix code or modify implementation.</p>`,
-    meta: { model: 'Opus', invokedBy: 'technical-review', complexity: 'Subagent' }
+  'review-findings-synthesizer': {
+    summary: 'Synthesize review findings into deduplicated, normalized remediation tasks for user approval.',
+    body: `<p>Reads the review summary and all QA task verification files. Performs multi-step synthesis: <strong>deduplicate</strong> (same issue from multiple QA files → one finding) → <strong>group related findings</strong> into single tasks → <strong>filter by severity</strong> (never discard blocking) → <strong>normalize</strong> into canonical task template (Problem/Solution/Outcome/Do/AC/Tests).</p>
+<p>Writes two outputs: a <strong>review report</strong> (summary + discarded findings) and a <strong>staging file</strong> (proposed tasks with <code>status: pending</code>) for the orchestrator to present to the user.</p>`,
+    meta: { model: 'Opus', invokedBy: 'technical-review', tools: 'Read, Write, Glob, Grep', complexity: 'Synthesis agent' }
   },
   'implementation-analysis-duplication': {
     summary: 'Hunt for cross-file duplication, near-duplicate logic, and extraction candidates.',
@@ -2791,7 +2838,7 @@ const SOURCE_MAP = {
   'implementation-analysis-synthesizer': 'agents/implementation-analysis-synthesizer.md',
   'implementation-analysis-task-writer': 'agents/implementation-analysis-task-writer.md',
   'review-task-verifier':         'agents/review-task-verifier.md',
-  'review-product-assessor':      'agents/review-product-assessor.md',
+  'review-findings-synthesizer':  'agents/review-findings-synthesizer.md',
 };
 
 // ── Markdown Viewer ──
