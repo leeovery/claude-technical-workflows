@@ -9,7 +9,7 @@
 ```markdown
 # Implementation Review: {Topic / Product}
 
-**Scope**: Single Plan ({plan}) | Multi-Plan ({plans}) | Full Product
+**Plan**: {topic}
 **QA Verdict**: Approve | Request Changes | Comments Only
 
 ## Summary
@@ -33,26 +33,6 @@
 
 ### Required Changes (if any)
 1. [Specific actionable change]
-
-## Product Assessment
-
-### Robustness
-[Where would this break under real-world usage?]
-
-### Gaps
-[What's obviously missing now the product exists?]
-
-### Cross-Plan Consistency (multi/all only)
-[Are patterns consistent across features?]
-
-### Integration Seams (multi/all only)
-[Do independently-built features connect cleanly?]
-
-### Strengthening Opportunities
-[Priority improvements for production readiness]
-
-### What's Next
-[What does this enable? What should be built next?]
 
 ## Recommendations
 [Combined non-blocking suggestions]
