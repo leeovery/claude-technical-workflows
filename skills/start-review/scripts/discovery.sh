@@ -85,6 +85,25 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
             impl_status=${impl_status_val:-"in-progress"}
         fi
 
+        # Check review status for this plan
+        review_count=0
+        latest_review_version=0
+        latest_review_verdict=""
+        if [ -d "$REVIEW_DIR/$name" ]; then
+            for rdir in "$REVIEW_DIR/$name"/r*/; do
+                [ -d "$rdir" ] || continue
+                [ -f "${rdir}review.md" ] || continue
+                rnum=${rdir##*r}
+                rnum=${rnum%/}
+                review_count=$((review_count + 1))
+                if [ "$rnum" -gt "$latest_review_version" ] 2>/dev/null; then
+                    latest_review_version=$rnum
+                    latest_review_verdict=$(grep -m1 '\*\*QA Verdict\*\*:' "${rdir}review.md" 2>/dev/null | \
+                        sed -E 's/.*\*\*QA Verdict\*\*:[[:space:]]*//' || true)
+                fi
+            done
+        fi
+
         echo "    - name: \"$name\""
         echo "      topic: \"$topic\""
         echo "      status: \"$status\""
@@ -96,6 +115,11 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
             echo "      plan_id: \"$plan_id\""
         fi
         echo "      implementation_status: \"$impl_status\""
+        echo "      review_count: $review_count"
+        if [ "$review_count" -gt 0 ]; then
+            echo "      latest_review_version: $latest_review_version"
+            echo "      latest_review_verdict: \"$latest_review_verdict\""
+        fi
 
         plan_count=$((plan_count + 1))
         if [ "$impl_status" != "none" ]; then

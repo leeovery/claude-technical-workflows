@@ -315,6 +315,141 @@ echo ""
 
 # ----------------------------------------------------------------------------
 
+echo -e "${YELLOW}Test: Plan with no review${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning/no-review"
+
+cat > "$TEST_DIR/docs/workflow/planning/no-review/plan.md" << 'EOF'
+---
+topic: no-review
+status: concluded
+format: local-markdown
+specification: no-review/specification.md
+---
+
+# Plan: No Review
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "review_count: 0" "Review count is 0 when no review exists"
+assert_not_contains "$output" "latest_review_version:" "No latest_review_version when unreviewed"
+assert_not_contains "$output" "latest_review_verdict:" "No latest_review_verdict when unreviewed"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Plan with single review${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning/single-review"
+mkdir -p "$TEST_DIR/docs/workflow/review/single-review/r1"
+
+cat > "$TEST_DIR/docs/workflow/planning/single-review/plan.md" << 'EOF'
+---
+topic: single-review
+status: concluded
+format: local-markdown
+specification: single-review/specification.md
+---
+
+# Plan: Single Review
+EOF
+
+cat > "$TEST_DIR/docs/workflow/review/single-review/r1/review.md" << 'EOF'
+---
+topic: single-review
+---
+
+**QA Verdict**: Approve
+
+# Review: Single Review
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "review_count: 1" "Review count is 1"
+assert_contains "$output" "latest_review_version: 1" "Latest review version is 1"
+assert_contains "$output" 'latest_review_verdict: "Approve"' "Latest verdict is Approve"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Plan with multiple reviews${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning/multi-review"
+mkdir -p "$TEST_DIR/docs/workflow/review/multi-review/r1"
+mkdir -p "$TEST_DIR/docs/workflow/review/multi-review/r2"
+
+cat > "$TEST_DIR/docs/workflow/planning/multi-review/plan.md" << 'EOF'
+---
+topic: multi-review
+status: concluded
+format: local-markdown
+specification: multi-review/specification.md
+---
+
+# Plan: Multi Review
+EOF
+
+cat > "$TEST_DIR/docs/workflow/review/multi-review/r1/review.md" << 'EOF'
+---
+topic: multi-review
+---
+
+**QA Verdict**: Request Changes
+
+# Review: Multi Review r1
+EOF
+
+cat > "$TEST_DIR/docs/workflow/review/multi-review/r2/review.md" << 'EOF'
+---
+topic: multi-review
+---
+
+**QA Verdict**: Approve
+
+# Review: Multi Review r2
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "review_count: 2" "Review count is 2"
+assert_contains "$output" "latest_review_version: 2" "Latest review version is 2"
+assert_contains "$output" 'latest_review_verdict: "Approve"' "Latest verdict from r2 (not r1)"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Review dir exists but no review.md files${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/docs/workflow/planning/empty-review"
+mkdir -p "$TEST_DIR/docs/workflow/review/empty-review/r1"
+
+cat > "$TEST_DIR/docs/workflow/planning/empty-review/plan.md" << 'EOF'
+---
+topic: empty-review
+status: concluded
+format: local-markdown
+specification: empty-review/specification.md
+---
+
+# Plan: Empty Review
+EOF
+
+# r1 directory exists but no review.md inside it
+
+output=$(run_discovery)
+
+assert_contains "$output" "review_count: 0" "Review count is 0 when review dir has no review.md"
+assert_not_contains "$output" "latest_review_version:" "No latest_review_version for empty review dir"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
 echo -e "${YELLOW}Test: Review script does not output implementation section${NC}"
 setup_fixture
 mkdir -p "$TEST_DIR/docs/workflow/planning/test"
