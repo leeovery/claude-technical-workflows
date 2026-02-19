@@ -10,10 +10,4 @@ __pycache__/
 *.so
 .Python
 
-# Workflow session state (ephemeral, per-session)
-docs/workflow/.cache/sessions/
-
-# Planning scratch files (ephemeral, per-phase authoring)
-docs/workflow/planning/**/.scratch/
-
 .claude/settings.local.json
