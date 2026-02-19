@@ -66,6 +66,15 @@ When creating issues, if something is unclear:
 3. **Note what's missing** in description — add a **Needs Clarification** section
 4. **Continue planning** — circle back later
 
+## Writing from Canonical Content
+
+When the orchestrator writes a task from the scratch file:
+
+1. Extract task title from `### Task {N}: {Title}` heading
+2. Build description from task body (Problem through Spec Reference)
+3. Call: `linear_createIssue(teamId, projectId, title, description, labelIds)`
+4. Capture returned issue ID as ext_id
+
 ## Cleanup (Restart)
 
 The official Linear MCP server does not support deletion. Ask the user to delete the Linear project manually via the Linear UI.

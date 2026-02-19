@@ -59,7 +59,7 @@ this, or is there a more complete version?
 Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
-2. **Read all tracking and state files** for the current topic — plan index files, review tracking files, implementation tracking files, or any working documents this skill creates. These are your source of truth for progress.
+2. **Read all tracking and state files** for the current topic — plan index files, review tracking files, implementation tracking files, or any working documents this skill creates. These are your source of truth for progress. Check for scratch files at `docs/workflow/planning/{topic}/.scratch/`. If a scratch file exists, you are mid-authoring for that phase — resume the approval loop in author-tasks.md.
 3. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 5. **Check `task_list_gate_mode`, `author_gate_mode`, and `finding_gate_mode`** in the Plan Index File frontmatter — if `auto`, the user previously opted in during this session. Preserve these values.
@@ -126,8 +126,9 @@ Reset `task_list_gate_mode`, `author_gate_mode`, and `finding_gate_mode` to `gat
 
 1. Read **[output-formats.md](references/output-formats.md)**, find the entry matching the `format:` field in the Plan Index File, and load the format's **[authoring.md](references/output-formats/{format}/authoring.md)**
 2. Follow the authoring file's cleanup instructions to remove Authored Tasks for this topic
-3. Delete the Plan Index File
-4. Commit: `planning({topic}): restart planning`
+3. Delete the scratch directory if it exists: `rm -rf docs/workflow/planning/{topic}/.scratch/`
+4. Delete the Plan Index File
+5. Commit: `planning({topic}): restart planning`
 
 → Proceed to **Step 1**.
 
