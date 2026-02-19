@@ -98,8 +98,8 @@ Scope: single
 What would you like to do?
 
 - **`s`/`single`** — Review one plan's implementation
-- **`m`/`multi`** — Review selected plans together (cross-cutting)
-- **`a`/`all`** — Review all implemented plans (full product)
+- **`m`/`multi`** — Review selected plans
+- **`a`/`all`** — Review all implemented plans
 @if(has_any_review) - **`analysis`** — Synthesize findings from existing reviews into tasks @endif
 
 Select an option:

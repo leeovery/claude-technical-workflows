@@ -39,6 +39,7 @@ Return control silently - no user interaction needed.
 ## Notes
 
 - This skill is run automatically at the start of every workflow skill
-- Migrations are tracked in `docs/workflow/.cache/migrations.log`
+- Migrations are tracked in `docs/workflow/.cache/migrations.log` (one migration ID per line)
+- The orchestrator skips entire migrations once recorded — individual scripts don't track
 - To force re-running all migrations, delete the tracking file
 - Each migration is idempotent - safe to run multiple times

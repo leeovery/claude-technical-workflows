@@ -37,7 +37,7 @@ Automatically proceed with the only available review.
 
 #### If scope is "all"
 
-All reviewable plans are included. No selection needed.
+All reviewable plans are included. No selection needed. Each plan will be reviewed independently.
 
 → Proceed directly to **Step 5**.
 

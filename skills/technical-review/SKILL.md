@@ -129,25 +129,15 @@ Load **[invoke-task-verifiers.md](references/invoke-task-verifiers.md)** and fol
 
 ---
 
-## Step 4: Product Assessment
+## Step 4: Produce Review
 
-Load **[invoke-product-assessor.md](references/invoke-product-assessor.md)** and follow its instructions as written.
-
-**STOP.** Do not proceed until the product assessor has returned.
+Load **[produce-review.md](references/produce-review.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
 
 ---
 
-## Step 5: Produce Review
-
-Load **[produce-review.md](references/produce-review.md)** and follow its instructions as written.
-
-→ Proceed to **Step 6**.
-
----
-
-## Step 6: Review Actions
+## Step 5: Review Actions
 
 Load **[review-actions-loop.md](references/review-actions-loop.md)** and follow its instructions.
 

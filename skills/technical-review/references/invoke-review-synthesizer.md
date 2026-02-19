@@ -26,9 +26,9 @@ Dispatch **one agent** via the Task tool.
 
 The synthesizer receives:
 
-1. **Review scope** — single or multi, with plan list
-2. **Review paths** — paths to `r{N}/` directories (include summary, QA directory, product assessment)
-3. **Specification path(s)** — from each plan's frontmatter
+1. **Plan topic** — the plan being synthesized
+2. **Review path** — path to `r{N}/` directory (review summary + QA files)
+3. **Specification path** — from the plan's frontmatter
 4. **Cycle number** — the review remediation cycle number
 
 ---

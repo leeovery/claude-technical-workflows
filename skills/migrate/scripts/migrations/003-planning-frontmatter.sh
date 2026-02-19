@@ -32,8 +32,6 @@
 #   Completed, Done → concluded
 #
 # This script is sourced by migrate.sh and has access to:
-#   - is_migrated "filepath" "migration_id"
-#   - record_migration "filepath" "migration_id"
 #   - report_update "filepath" "description"
 #   - report_skip "filepath"
 #
@@ -55,16 +53,8 @@ for file in "$PLAN_DIR"/*.md; do
         *-review-*|*-tracking*) continue ;;
     esac
 
-    # Check if already migrated via tracking
-    if is_migrated "$file" "$MIGRATION_ID"; then
-        report_skip "$file"
-        continue
-    fi
-
     # Check if file already has full frontmatter (topic field present)
     if head -10 "$file" 2>/dev/null | grep -q "^topic:"; then
-        # Already has full frontmatter - just record and skip
-        record_migration "$file" "$MIGRATION_ID"
         report_skip "$file"
         continue
     fi
@@ -75,8 +65,6 @@ for file in "$PLAN_DIR"/*.md; do
     has_inline_metadata=$(grep -c '^\*\*Date\*\*:\|^\*\*Status\*\*:\|^\*\*Specification\*\*:' "$file" 2>/dev/null || true)
 
     if [ "${has_partial_frontmatter:-0}" = "0" ] && [ "${has_inline_metadata:-0}" = "0" ]; then
-        # No legacy format found - might be malformed, skip
-        record_migration "$file" "$MIGRATION_ID"
         report_skip "$file"
         continue
     fi
@@ -192,7 +180,5 @@ specification: $spec_value
         echo "$content"
     } > "$file"
 
-    # Record and report
-    record_migration "$file" "$MIGRATION_ID"
     report_update "$file" "added full frontmatter (status: $status_new, format: $format_value)"
 done

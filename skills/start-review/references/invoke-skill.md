@@ -25,42 +25,36 @@ Saving session state so Claude can pick up where it left off if the conversation
 
 ## Invoke the Skill
 
-Invoke the [technical-review](../../technical-review/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed. Use the appropriate handoff format based on the gathered context (review or analysis-only).
+Invoke the [technical-review](../../technical-review/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
-**Example handoff (single):**
-```
-Review session for: {topic}
-Review scope: single
-Plan: docs/workflow/planning/{topic}/plan.md
-Format: {format}
-Plan ID: {plan_id} (if applicable)
-Specification: {specification} (exists: {true|false})
+Each plan is reviewed independently. When multiple plans are selected, pass all plans in the handoff — the orchestrator will loop through them one at a time.
 
-Invoke the technical-review skill.
+**Example handoff:**
 ```
-
-**Example handoff (multi/all):**
-```
-Review session for: {scope description}
-Review scope: {multi | all}
-Plans:
-  - docs/workflow/planning/{topic-1}/plan.md (format: {format}, spec: {spec})
-  - docs/workflow/planning/{topic-2}/plan.md (format: {format}, spec: {spec})
+Review session
+Plans to review:
+  - topic: {topic-1}
+    plan: docs/workflow/planning/{topic-1}/plan.md
+    format: {format}
+    plan_id: {plan_id} (if applicable)
+    specification: {specification} (exists: {true|false})
+    review_version: r{N}
+  - topic: {topic-2}
+    plan: docs/workflow/planning/{topic-2}/plan.md
+    format: {format}
+    specification: {specification} (exists: {true|false})
+    review_version: r{N}
 
 Invoke the technical-review skill.
 ```
 
 **Example handoff (analysis-only):**
 ```
-Analysis session for: {scope description}
+Analysis session for: {topic}
 Review mode: analysis-only
-Review scope: {single | multi | all}
-Reviews:
-  - scope: {scope}
-    path: docs/workflow/review/{scope}/r{N}/
-    plans: [{plan topics}]
-    format: {format}
-    specification: {spec path}
+Review path: docs/workflow/review/{topic}/r{N}/
+Format: {format}
+Specification: {spec path}
 
 Invoke the technical-review skill.
 ```

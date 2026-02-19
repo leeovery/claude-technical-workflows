@@ -65,7 +65,7 @@ skills/
 
 agents/
   review-task-verifier.md           # Verifies single task implementation for review
-  review-findings-synthesizer.md   # Synthesizes review findings into remediation tasks
+  review-findings-synthesizer.md   # Synthesizes QA findings into remediation tasks
   implementation-task-executor.md  # TDD executor for single plan tasks
   implementation-task-reviewer.md  # Post-task review for spec conformance
   planning-phase-designer.md       # Design phases from specification
@@ -168,7 +168,8 @@ The `/migrate` skill keeps workflow files in sync with the current system design
 **Adding new migrations:**
 1. Create `skills/migrate/scripts/migrations/NNN-description.sh` (e.g., `002-spec-frontmatter.sh`)
 2. The script will be run automatically in numeric order
-3. Use helper functions: `is_migrated`, `record_migration`, `report_update`, `report_skip`
+3. The orchestrator handles tracking — once a migration ID appears in the log, the script never runs again
+4. Use helper functions: `report_update`, `report_skip` (for display only)
 
 **Critical: Frontmatter extraction in bash scripts**
 
@@ -363,7 +364,7 @@ Proceed?
 What scope would you like to review?
 
 - **`s`/`single`** — Review one plan's implementation
-- **`m`/`multi`** — Review selected plans together
+- **`m`/`multi`** — Review selected plans
 - **`a`/`all`** — Review all implemented plans
 · · · · · · · · · · · ·
 ```
