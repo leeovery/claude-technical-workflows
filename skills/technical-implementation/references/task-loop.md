@@ -7,13 +7,13 @@
 Follow stages A through E sequentially for each task. Do not abbreviate, skip, or compress stages based on previous iterations.
 
 ```
-A. Retrieve next task
+A. Retrieve next task + mark in-progress
 B. Execute task → invoke-executor.md
    → Executor Blocked (conditional)
 C. Review task → invoke-reviewer.md
    → Review Changes with fix analysis (conditional, fix_gate_mode)
 D. Task gate (gated → prompt user / auto → announce)
-E. Update progress + commit
+E. Update progress + phase check + commit
 → loop back to A until done
 ```
 
@@ -25,6 +25,8 @@ E. Update progress + commit
 2. If no available tasks remain → skip to **When All Tasks Are Complete**.
 3. Normalise the task content following **[task-normalisation.md](task-normalisation.md)**.
 4. Reset `fix_attempts` to `0` in the implementation tracking file.
+5. Mark the task as **in-progress** — follow the format's **updating.md** "In Progress" status transition.
+6. If the format's updating.md includes a **Phase / Parent Status** section: check whether the task's phase parent needs to be started. If so, follow the format's phase start instructions.
 
 ---
 
@@ -172,10 +174,15 @@ Check the `task_gate_mode` field in the implementation tracking file.
 
 **Update task progress in the plan** — follow the format's **updating.md** instructions to mark the task complete.
 
+**Check for phase completion** — use the format's **reading.md** to list remaining tasks in the current phase. If no tasks remain open or in-progress:
+- If the format's updating.md includes a **Phase / Parent Status** section, follow its phase completion instructions
+- Append the phase number to `completed_phases` in the tracking file
+
 **Mirror to implementation tracking file** (`docs/workflow/implementation/{topic}/tracking.md`):
 - Append the task ID to `completed_tasks`
 - Update `current_phase` if phase changed
 - Update `current_task` to the next task (or `~` if done)
+- Update `completed_phases` if a phase completed this iteration
 - Update `updated` to today's date
 - If user chose `auto` at the task gate this turn: update `task_gate_mode: auto`
 - If user chose `auto` at the fix gate this turn: update `fix_gate_mode: auto`
