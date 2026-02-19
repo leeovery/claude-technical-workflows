@@ -48,7 +48,7 @@ cache:
 
 Valid cache, no specs → show groupings directly from cache.
 
-Claude loads `docs/workflow/.cache/discussion-consolidation-analysis.md` and presents:
+Claude loads `docs/workflow/.state/discussion-consolidation-analysis.md` and presents:
 
 ```
 Specification Overview
@@ -151,7 +151,7 @@ Steps 0-3 are identical to Scenario A.
 
 Claude deletes the cache:
 ```bash
-rm docs/workflow/.cache/discussion-consolidation-analysis.md
+rm docs/workflow/.state/discussion-consolidation-analysis.md
 ```
 
 ### Step 4: Gather Analysis Context

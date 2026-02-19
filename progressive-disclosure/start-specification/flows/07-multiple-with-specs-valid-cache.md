@@ -303,7 +303,7 @@ Steps 0-3 identical to Scenario A.
 
 Claude deletes the cache:
 ```bash
-rm docs/workflow/.cache/discussion-consolidation-analysis.md
+rm docs/workflow/.state/discussion-consolidation-analysis.md
 ```
 
 ### Step 4: Gather Analysis Context

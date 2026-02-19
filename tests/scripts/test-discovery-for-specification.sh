@@ -445,7 +445,7 @@ test_cache_valid() {
     setup_fixture
 
     mkdir -p "$TEST_DIR/docs/workflow/discussion"
-    mkdir -p "$TEST_DIR/docs/workflow/.cache"
+    mkdir -p "$TEST_DIR/docs/workflow/.state"
 
     cat > "$TEST_DIR/docs/workflow/discussion/auth-flow.md" << 'EOF'
 ---
@@ -460,7 +460,7 @@ EOF
     # Compute the checksum that the cache should have
     local checksum=$(cat "$TEST_DIR/docs/workflow/discussion"/*.md | md5sum | cut -d' ' -f1)
 
-    cat > "$TEST_DIR/docs/workflow/.cache/discussion-consolidation-analysis.md" << EOF
+    cat > "$TEST_DIR/docs/workflow/.state/discussion-consolidation-analysis.md" << EOF
 ---
 checksum: $checksum
 generated: 2026-01-20T10:00:00
@@ -487,7 +487,7 @@ test_cache_stale() {
     setup_fixture
 
     mkdir -p "$TEST_DIR/docs/workflow/discussion"
-    mkdir -p "$TEST_DIR/docs/workflow/.cache"
+    mkdir -p "$TEST_DIR/docs/workflow/.state"
 
     cat > "$TEST_DIR/docs/workflow/discussion/auth-flow.md" << 'EOF'
 ---
@@ -500,7 +500,7 @@ date: 2026-01-20
 EOF
 
     # Use a different checksum to make cache stale
-    cat > "$TEST_DIR/docs/workflow/.cache/discussion-consolidation-analysis.md" << 'EOF'
+    cat > "$TEST_DIR/docs/workflow/.state/discussion-consolidation-analysis.md" << 'EOF'
 ---
 checksum: oldchecksum123
 generated: 2026-01-19T10:00:00
@@ -528,7 +528,7 @@ test_anchored_names() {
 
     mkdir -p "$TEST_DIR/docs/workflow/discussion"
     mkdir -p "$TEST_DIR/docs/workflow/specification"
-    mkdir -p "$TEST_DIR/docs/workflow/.cache"
+    mkdir -p "$TEST_DIR/docs/workflow/.state"
 
     cat > "$TEST_DIR/docs/workflow/discussion/auth-flow.md" << 'EOF'
 ---
@@ -556,7 +556,7 @@ EOF
     local checksum=$(cat "$TEST_DIR/docs/workflow/discussion"/*.md | md5sum | cut -d' ' -f1)
 
     # Cache with grouping names
-    cat > "$TEST_DIR/docs/workflow/.cache/discussion-consolidation-analysis.md" << EOF
+    cat > "$TEST_DIR/docs/workflow/.state/discussion-consolidation-analysis.md" << EOF
 ---
 checksum: $checksum
 generated: 2026-01-20T10:00:00

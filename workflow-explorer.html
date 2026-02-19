@@ -1378,7 +1378,7 @@ const phases = {
     output: 'docs/workflow/discussion/{topic}.md',
     skill: 'technical-discussion',
     discovery: 'discovery-for-discussion.sh',
-    cache: '.cache/research-analysis.md',
+    cache: '.state/research-analysis.md',
     prerequisites: 'None (but can consume research)',
     scenarios: ['fresh','research_only','discussions_only','research_and_discussions'],
     desc: 'Capture architecture decisions, debates, and edge cases. Cache-aware research analysis.',
@@ -1390,7 +1390,7 @@ const phases = {
     output: 'docs/workflow/specification/{topic}/specification.md',
     skill: 'technical-specification',
     discovery: 'discovery.sh',
-    cache: '.cache/discussion-consolidation-analysis.md',
+    cache: '.state/discussion-consolidation-analysis.md',
     prerequisites: 'Concluded discussions required',
     scenarios: ['single','multi+cache valid','multi+stale+no specs','multi+stale+specs'],
     desc: 'Cache-first routing with progressive disclosure. Analyzes discussion coupling, groups into features, builds validated specs.',
@@ -2714,7 +2714,7 @@ const FLOWCHART_DESCS = {
   },
   'migrate': {
     summary: 'Migration orchestrator — keeps workflow files in sync with the current system design.',
-    body: `<p>Executes <code>skills/migrate/scripts/migrate.sh</code>, which runs all numbered scripts in <code>skills/migrate/scripts/migrations/</code> in order. Each migration is idempotent — safe to run multiple times. Progress is tracked in <code>docs/workflow/.cache/migrations.log</code>.</p>
+    body: `<p>Executes <code>skills/migrate/scripts/migrate.sh</code>, which runs all numbered scripts in <code>skills/migrate/scripts/migrations/</code> in order. Each migration is idempotent — safe to run multiple times. Progress is tracked in <code>docs/workflow/.state/migrations</code>.</p>
 <p>Runs automatically as <strong>Step 0 of every workflow command</strong>. If files were updated, shows changes and waits for user review via git diff. Delete the log file to force re-running all migrations.</p>`,
     meta: { complexity: 'System' }
   },
