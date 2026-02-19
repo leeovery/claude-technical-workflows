@@ -25,3 +25,35 @@ To update a task's properties:
 - **Priority**: `tick update <task-id> --priority 1`
 - **Parent**: `tick update <task-id> --parent <new-parent-id>` (pass empty string to clear)
 - **Dependencies**: See [graph.md](graph.md)
+
+## Phase / Parent Status
+
+Phase tasks are parent tasks in the tick hierarchy. Update their status to reflect child task progress.
+
+### Start Phase
+
+When the first task in a phase begins and the phase parent is still `open`:
+
+```bash
+tick start <phase-id>
+```
+
+Check the phase parent's status with `tick show <phase-id>`. If status is `open`, start it.
+
+### Complete Phase
+
+When all child tasks in a phase are `done` or `cancelled` (none remain `open` or `in_progress`):
+
+```bash
+tick done <phase-id>
+```
+
+After completing a task, check: `tick list --parent <phase-id> --status open` and `tick list --parent <phase-id> --status in_progress`. If both return empty, the phase is complete.
+
+### Cancel Phase
+
+If all child tasks are `cancelled` (none `done`):
+
+```bash
+tick cancel <phase-id>
+```
