@@ -128,7 +128,7 @@ Review Overview
 All {N} implemented plans have been reviewed.
 
 1. {topic:(titlecase)}
-   └─ Review: r{N} ({verdict})
+   └─ Review: x{review_count} — r{latest_review_version} ({latest_review_verdict})
    └─ Synthesis: @if(has_synthesis) completed @else pending @endif
 
 2. ...

@@ -21,7 +21,7 @@ Review Overview
    └─ Plan: concluded ({format})
    └─ Implementation: {impl_status:[completed|in-progress]}
    └─ Spec: {spec:[exists|missing]}
-   └─ Review: @if(has_review) r{N} ({verdict}) @else (none) @endif
+   └─ Review: @if(review_count > 0) x{review_count} — r{latest_review_version} ({latest_review_verdict}) @else (no review) @endif
 
 2. ...
 ```
@@ -57,8 +57,8 @@ Key:
     in-progress — implementation still ongoing
 
   Review status:
-    r{N}        — review version number
-    (none)      — not yet reviewed
+    x{N}        — number of reviews completed
+    (no review) — not yet reviewed
 ```
 
 **Then route based on what's reviewable:**
