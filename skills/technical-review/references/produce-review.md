@@ -4,16 +4,14 @@
 
 ---
 
-Aggregate findings from both stages into a review document using the **[template.md](template.md)**.
+Aggregate QA findings into a review document using the **[template.md](template.md)**.
 
-Write the review to `docs/workflow/review/{scope}/r{N}/review.md`. The review scope `{scope}` is the topic name (single) or a descriptive scope name (multi/all). The review number `r{N}` is passed in from the entry point.
+Write the review to `docs/workflow/review/{topic}/r{N}/review.md`. The review is always per-plan. The review number `r{N}` is passed in from the entry point.
 
 **QA Verdict** (from Step 3):
 - **Approve** — All acceptance criteria met, no blocking issues
 - **Request Changes** — Missing requirements, broken functionality, inadequate tests
 - **Comments Only** — Minor suggestions, non-blocking observations
-
-**Product Assessment** (from Step 4) — always advisory, presented alongside the verdict.
 
 Commit: `review({topic}): complete review`
 

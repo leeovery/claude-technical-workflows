@@ -127,9 +127,11 @@ reviewed_plans=""
 if [ -d "$REVIEW_DIR" ]; then
     # Check for any review directories with r*/review.md
     has_reviews="false"
-    for scope_dir in "$REVIEW_DIR"/*/; do
-        [ -d "$scope_dir" ] || continue
-        if ls -d "$scope_dir"r*/review.md >/dev/null 2>&1; then
+    for topic_dir in "$REVIEW_DIR"/*/; do
+        [ -d "$topic_dir" ] || continue
+        # Skip product-assessment directory
+        [ "$(basename "$topic_dir")" = "product-assessment" ] && continue
+        if ls -d "$topic_dir"r*/review.md >/dev/null 2>&1; then
             has_reviews="true"
             break
         fi
@@ -140,15 +142,17 @@ if [ -d "$REVIEW_DIR" ]; then
     if [ "$has_reviews" = "true" ]; then
         echo "  entries:"
 
-        for scope_dir in "$REVIEW_DIR"/*/; do
-            [ -d "$scope_dir" ] || continue
-            scope=$(basename "$scope_dir")
+        for topic_dir in "$REVIEW_DIR"/*/; do
+            [ -d "$topic_dir" ] || continue
+            topic=$(basename "$topic_dir")
+            # Skip product-assessment directory
+            [ "$topic" = "product-assessment" ] && continue
 
             # Count r*/ versions
             versions=0
             latest_version=0
             latest_path=""
-            for rdir in "$scope_dir"r*/; do
+            for rdir in "$topic_dir"r*/; do
                 [ -d "$rdir" ] || continue
                 [ -f "${rdir}review.md" ] || continue
                 rnum=${rdir##*r}
@@ -169,67 +173,19 @@ if [ -d "$REVIEW_DIR" ]; then
                     sed -E 's/.*\*\*QA Verdict\*\*:[[:space:]]*//' || true)
             fi
 
-            # Determine type (single/multi) from Scope line
-            review_type="single"
-            review_plans=""
-            if [ -f "${latest_path}review.md" ]; then
-                scope_line=$(grep -m1 '\*\*Scope\*\*:' "${latest_path}review.md" 2>/dev/null || true)
-                if echo "$scope_line" | grep -qi "multi-plan\|multi plan"; then
-                    review_type="multi"
-                    # Extract plan names from parentheses: Multi-Plan (plan1, plan2, plan3)
-                    review_plans=$(echo "$scope_line" | sed -E 's/.*\(([^)]+)\).*/\1/' | tr ',' '\n' | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
-                elif echo "$scope_line" | grep -qi "full product"; then
-                    review_type="multi"
-                fi
-            fi
-
-            # For single-plan reviews, plan name is the scope
-            if [ "$review_type" = "single" ]; then
-                review_plans="$scope"
-            fi
-
-            # Check for synthesis: look for review-tasks-c*.md in implementation dirs
+            # Check for synthesis: look for review-tasks-c*.md in implementation dir
             has_synthesis="false"
-            if [ "$review_type" = "single" ]; then
-                if ls "$IMPL_DIR/$scope"/review-tasks-c*.md >/dev/null 2>&1; then
-                    has_synthesis="true"
-                fi
-            else
-                # For multi-plan, check each plan's implementation dir
-                for plan_name in $review_plans; do
-                    plan_name=$(echo "$plan_name" | tr -d '[:space:]')
-                    if ls "$IMPL_DIR/$plan_name"/review-tasks-c*.md >/dev/null 2>&1; then
-                        has_synthesis="true"
-                        break
-                    fi
-                done
+            if ls "$IMPL_DIR/$topic"/review-tasks-c*.md >/dev/null 2>&1; then
+                has_synthesis="true"
             fi
 
             # Track reviewed plans
-            for plan_name in $review_plans; do
-                plan_name=$(echo "$plan_name" | tr -d '[:space:]')
-                if ! echo " $reviewed_plans " | grep -q " $plan_name "; then
-                    reviewed_plans="$reviewed_plans $plan_name"
-                    reviewed_plan_count=$((reviewed_plan_count + 1))
-                fi
-            done
+            if ! echo " $reviewed_plans " | grep -q " $topic "; then
+                reviewed_plans="$reviewed_plans $topic"
+                reviewed_plan_count=$((reviewed_plan_count + 1))
+            fi
 
-            echo "    - scope: \"$scope\""
-            echo "      type: \"$review_type\""
-            # Format plans as YAML array
-            printf "      plans: ["
-            first="true"
-            for plan_name in $review_plans; do
-                plan_name=$(echo "$plan_name" | tr -d '[:space:]')
-                [ -z "$plan_name" ] && continue
-                if [ "$first" = "true" ]; then
-                    printf "\"%s\"" "$plan_name"
-                    first="false"
-                else
-                    printf ", \"%s\"" "$plan_name"
-                fi
-            done
-            echo "]"
+            echo "    - topic: \"$topic\""
             echo "      versions: $versions"
             echo "      latest_version: $latest_version"
             echo "      latest_verdict: \"$latest_verdict\""
@@ -239,6 +195,36 @@ if [ -d "$REVIEW_DIR" ]; then
     fi
 else
     echo "  exists: false"
+fi
+
+echo ""
+
+#
+# PRODUCT ASSESSMENTS
+#
+echo "product_assessments:"
+if [ -d "$REVIEW_DIR/product-assessment" ]; then
+    assessment_count=0
+    for assessment_file in "$REVIEW_DIR/product-assessment"/*.md; do
+        [ -f "$assessment_file" ] || continue
+        assessment_count=$((assessment_count + 1))
+    done
+    echo "  exists: $([ "$assessment_count" -gt 0 ] && echo "true" || echo "false")"
+    echo "  count: $assessment_count"
+    if [ "$assessment_count" -gt 0 ]; then
+        echo "  files:"
+        for assessment_file in "$REVIEW_DIR/product-assessment"/*.md; do
+            [ -f "$assessment_file" ] || continue
+            name=$(basename "$assessment_file" .md)
+            plans_reviewed=$(grep -m1 '^PLANS_REVIEWED:' "$assessment_file" 2>/dev/null | sed 's/^PLANS_REVIEWED:[[:space:]]*//' || echo "unknown")
+            echo "    - number: $name"
+            echo "      path: \"$assessment_file\""
+            echo "      plans_reviewed: \"$plans_reviewed\""
+        done
+    fi
+else
+    echo "  exists: false"
+    echo "  count: 0"
 fi
 
 echo ""

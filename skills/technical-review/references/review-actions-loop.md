@@ -122,23 +122,19 @@ No actionable tasks synthesized.
 
 ## C. Approval Gate
 
-Read the staging file from `docs/workflow/implementation/{primary-topic}/review-tasks-c{cycle-number}.md`.
+Read the staging file from `docs/workflow/implementation/{topic}/review-tasks-c{cycle-number}.md`.
 
 Check `gate_mode` in the staging file frontmatter (`gated` or `auto`).
 
-Present an overview. For multi-plan reviews, group tasks by plan:
+Present an overview:
 
 > *Output the next fenced block as a code block:*
 
 ```
 Review synthesis cycle {N}: {K} proposed tasks
 
-{plan-topic}:
   1. {title} ({severity})
   2. {title} ({severity})
-
-{plan-topic-2}:
-  3. {title} ({severity})
 ```
 
 Then present each task with `status: pending` individually:
@@ -146,7 +142,7 @@ Then present each task with `status: pending` individually:
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-**Task {current}/{total}: {title}** ({severity}) — Plan: {plan-topic}
+**Task {current}/{total}: {title}** ({severity})
 Sources: {sources}
 
 **Problem**: {problem}
@@ -225,7 +221,7 @@ After all tasks processed:
 Commit the staging file updates:
 
 ```
-review({scope}): synthesis cycle {N} — tasks skipped
+review({topic}): synthesis cycle {N} — tasks skipped
 ```
 
 **STOP.** Do not proceed — terminal condition.
@@ -234,22 +230,18 @@ review({scope}): synthesis cycle {N} — tasks skipped
 
 ## D. Create Tasks in Plan
 
-For each plan that has approved tasks in the staging file, invoke the task writer.
+For approved tasks in the staging file, invoke the task writer.
 
-Process plans sequentially — each writes to a different plan.
-
-For each plan:
-
-1. Filter staging file to tasks with `plan: {plan-topic}` and `status: approved`
+1. Filter staging file to tasks with `status: approved`
 2. Load **[invoke-review-task-writer.md](invoke-review-task-writer.md)** and follow its instructions
-3. Wait for the task writer to return before processing the next plan
+3. Wait for the task writer to return
 
-**STOP.** Do not proceed until all task writers have returned.
+**STOP.** Do not proceed until the task writer has returned.
 
 Commit all changes (staging file, plan tasks, Plan Index Files):
 
 ```
-review({scope}): add review remediation ({K} tasks across {P} plans)
+review({topic}): add review remediation ({K} tasks)
 ```
 
 → Proceed to **E. Re-open Implementation + Plan Mode Handoff**.
@@ -269,19 +261,19 @@ For each plan that received new tasks:
 3. Commit tracking changes:
 
 ```
-review({scope}): re-open implementation tracking
+review({topic}): re-open implementation tracking
 ```
 
 Then enter plan mode and write the following plan:
 
 ```
-# Review Actions Complete: {scope}
+# Review Actions Complete: {topic}
 
 Review findings have been synthesized into {N} implementation tasks.
 
 ## Summary
 
-{Per-plan summary, e.g., "tick-core: 3 tasks in Phase 9", "installation: 1 task in Phase 6"}
+{Summary, e.g., "tick-core: 3 tasks in Phase 9"}
 
 ## Instructions
 
@@ -290,9 +282,9 @@ Review findings have been synthesized into {N} implementation tasks.
 
 ## Context
 
-- Plans updated: {list of plan topics}
+- Plan updated: {topic}
 - Tasks created: {total count}
-- Implementation tracking: re-opened for each plan
+- Implementation tracking: re-opened
 
 ## How to proceed
 

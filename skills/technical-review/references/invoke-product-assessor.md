@@ -8,15 +8,22 @@ This step dispatches a single `review-product-assessor` agent to evaluate the im
 
 ---
 
-## Identify Scope
+## Determine Assessment Number
 
-Determine the review scope indicator to pass to the assessor:
+Count existing files in `docs/workflow/review/product-assessment/` to determine the next number:
 
-- **single-plan** — one plan selected
-- **multi-plan** — multiple plans selected
-- **full-product** — all implemented plans
+```bash
+mkdir -p docs/workflow/review/product-assessment
+ls docs/workflow/review/product-assessment/*.md 2>/dev/null | wc -l
+```
 
-Build the full list of implementation files across all plans in scope (same git history approach as QA verification).
+The next assessment is `{count + 1}.md`.
+
+---
+
+## Build Implementation File List
+
+Build the full list of implementation files across all reviewed plans (same git history approach as QA verification).
 
 ---
 
@@ -28,11 +35,11 @@ Dispatch **one agent** via the Task tool.
 
 The assessor receives:
 
-1. **Implementation files** — all files in scope (the full list, not summarized)
+1. **Implementation files** — all files across reviewed plans
 2. **Specification path(s)** — from each plan's frontmatter
-3. **Plan path(s)** — all plans in scope
+3. **Plan path(s)** — all reviewed plans
 4. **Project skill paths** — from Step 2 discovery
-5. **Review scope** — one of: `single-plan`, `multi-plan`, `full-product`
+5. **Assessment number** — sequential number for output file naming
 
 ---
 
@@ -40,7 +47,7 @@ The assessor receives:
 
 **STOP.** Do not proceed until the assessor has returned.
 
-The assessor writes its findings to `docs/workflow/review/{scope}/r{N}/product-assessment.md` and returns a brief status. If the agent fails (error, timeout), record the failure and continue to the review production step with QA findings only.
+The assessor writes its findings to `docs/workflow/review/product-assessment/{N}.md` and returns a brief status.
 
 ---
 
@@ -54,4 +61,4 @@ FINDINGS_COUNT: {N}
 SUMMARY: {1 sentence}
 ```
 
-The full findings are in the output file. Read `docs/workflow/review/{scope}/r{N}/product-assessment.md` to incorporate into the review document.
+The full findings are in the output file at `docs/workflow/review/product-assessment/{N}.md`.
