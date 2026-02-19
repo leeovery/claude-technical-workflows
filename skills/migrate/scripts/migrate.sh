@@ -38,7 +38,7 @@ mkdir -p "$(dirname "$TRACKING_FILE")"
 OLD_CACHE_LOG="docs/workflow/.cache/migrations.log"
 OLD_CACHE_FILE="docs/workflow/.cache/migrations"
 if [ -f "$OLD_CACHE_LOG" ] || [ -f "$OLD_CACHE_FILE" ]; then
-    { cat "$OLD_CACHE_LOG" 2>/dev/null; cat "$OLD_CACHE_FILE" 2>/dev/null; cat "$TRACKING_FILE" 2>/dev/null; } | sort -u > "${TRACKING_FILE}.tmp"
+    { cat "$OLD_CACHE_LOG" 2>/dev/null || true; cat "$OLD_CACHE_FILE" 2>/dev/null || true; cat "$TRACKING_FILE" 2>/dev/null || true; } | sort -u > "${TRACKING_FILE}.tmp"
     mv "${TRACKING_FILE}.tmp" "$TRACKING_FILE"
     rm -f "$OLD_CACHE_LOG" "$OLD_CACHE_FILE"
 fi
