@@ -59,3 +59,5 @@ tick ready --parent <topic-id>
 ```
 
 If `tick ready` returns no results, either all tasks are complete or remaining tasks are blocked.
+
+**Natural ordering convention**: `tick ready` always returns results in the correct execution order — by priority, then creation date. Consumers should take the first result as the next task. Because creation date preserves authoring order, sequential intra-phase tasks execute in natural order without needing explicit dependencies. Only add dependencies when the correct order differs from the natural order.

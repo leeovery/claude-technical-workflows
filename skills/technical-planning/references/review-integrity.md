@@ -47,7 +47,7 @@ Read the plan end-to-end — carefully, as if you were about to implement it. Fo
    - Task dependencies are explicit and correct — each dependency reflects a genuine data or capability requirement
    - No circular dependencies exist in the task graph
    - Priority assignments reflect graph position — foundation tasks and tasks that unblock others are prioritised appropriately
-   - An implementer can determine execution order from the dependency graph and priorities alone
+   - Tasks within a phase execute in natural order (by task ID) unless dependencies or priorities override it. Do not flag missing dependencies for sequential intra-phase tasks where natural order already produces the correct sequence. Only flag dependency issues where: execution would happen in the wrong order without an explicit dependency, a cross-phase dependency is missing, or a convergence point (task needing multiple predecessors) lacks explicit edges.
 
 5. **Task Self-Containment**
    - Each task contains all context needed for execution
