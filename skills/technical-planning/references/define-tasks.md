@@ -28,7 +28,7 @@ Invoke `planning-task-designer` with these file paths:
 2. **Specification**: path from the Plan Index File's `specification:` field
 3. **Cross-cutting specs**: paths from the Plan Index File's `cross_cutting_specs:` field (if any)
 4. **task-design.md**: `task-design.md`
-5. **Context guidance**: If `work_type` is set, include `task-design/{work_type}.md`
+5. **Context guidance**: `task-design/{work_type}.md` (default to `greenfield` if `work_type` is empty)
 6. **All approved phases**: the complete phase structure from the Plan Index File body
 7. **Target phase number**: the phase being broken into tasks
 8. **plan-index-schema.md**: `plan-index-schema.md`
@@ -88,7 +88,7 @@ Phase {N}: {Phase Name} — task list approved. Proceeding to authoring.
 
 #### If the user provides feedback
 
-Re-invoke `planning-task-designer` with all original inputs (including context guidance if `work_type` is set) PLUS:
+Re-invoke `planning-task-designer` with all original inputs PLUS:
 - **Previous output**: the current task list
 - **User feedback**: what the user wants changed
 

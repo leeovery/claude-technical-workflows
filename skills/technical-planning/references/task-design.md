@@ -6,7 +6,7 @@
 
 This reference defines the principles for breaking phases into tasks and writing task detail. It is loaded when tasks are first proposed and stays in context through task detailing.
 
-Context-specific guidance supplements these principles. When a context file is loaded (greenfield, feature, or bugfix), it provides ordering examples and slicing strategies appropriate to the work type.
+Context-specific guidance supplements these principles. A context file (greenfield, feature, or bugfix) is always loaded alongside this file, providing ordering examples and slicing strategies appropriate to the work type.
 
 ## One Task = One TDD Cycle
 
@@ -71,7 +71,7 @@ Within a phase, order tasks by:
 
 What constitutes "foundation" depends on context — in greenfield work it's models and migrations; in feature work it's extensions to existing code; in bugfix work it's the reproduction test.
 
-If context-specific guidance was loaded alongside this file, it provides examples of what "foundation" means in that context.
+Context-specific guidance is always loaded alongside this file and provides examples of what "foundation" means in that context.
 
 **Edge cases as separate tasks**: Keep the happy-path task focused. If a task's acceptance criteria start growing beyond 3-4 items, the edge cases probably deserve their own tasks. This keeps each TDD cycle tight and each task independently verifiable.
 

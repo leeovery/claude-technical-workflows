@@ -42,7 +42,7 @@ Invoke `planning-phase-designer` with these file paths:
 2. **Specification**: path from the Plan Index File's `specification:` field
 3. **Cross-cutting specs**: paths from the Plan Index File's `cross_cutting_specs:` field (if any)
 4. **phase-design.md**: `phase-design.md`
-5. **Context guidance**: If `work_type` is set, include `phase-design/{work_type}.md`
+5. **Context guidance**: `phase-design/{work_type}.md` (default to `greenfield` if `work_type` is empty)
 6. **task-design.md**: `task-design.md`
 7. **plan-index-schema.md**: `plan-index-schema.md`
 
@@ -82,7 +82,7 @@ Present the phase structure to the user as rendered markdown (not in a code bloc
 
 #### If the user provides feedback
 
-Re-invoke `planning-phase-designer` with all original inputs (including context guidance if `work_type` is set) PLUS:
+Re-invoke `planning-phase-designer` with all original inputs PLUS:
 - **Previous output**: the current phase structure
 - **User feedback**: what the user wants changed
 

@@ -6,7 +6,7 @@
 
 This reference defines the principles for breaking specifications into implementation phases. It is loaded when phases are first proposed and stays in context through phase approval.
 
-Context-specific guidance supplements these principles. When a context file is loaded (greenfield, feature, or bugfix), it provides the Phase 1 strategy, progression model, and examples appropriate to the work type.
+Context-specific guidance supplements these principles. A context file (greenfield, feature, or bugfix) is always loaded alongside this file, providing the Phase 1 strategy, progression model, and examples appropriate to the work type.
 
 ## What Makes a Good Phase
 
@@ -28,7 +28,7 @@ Phase 1 establishes the pattern for subsequent phases. The right strategy depend
 - **Feature addition**: Start with the most fundamental new capability. The existing codebase is the foundation. See [feature.md](phase-design/feature.md).
 - **Bug fix**: Start with reproducing and fixing the core issue. See [bugfix.md](phase-design/bugfix.md).
 
-If context-specific guidance was loaded alongside this file, follow its Phase 1 strategy. Otherwise, use your judgment based on the specification.
+Context-specific guidance is always loaded alongside this file. Follow its Phase 1 strategy. If no work type was specified, greenfield guidance is loaded by default.
 
 ---
 

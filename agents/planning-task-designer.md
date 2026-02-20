@@ -17,7 +17,7 @@ You receive file paths via the orchestrator's prompt:
 2. **Specification path** — The validated specification to plan from
 3. **Cross-cutting spec paths** (if any) — Architectural decisions that influence planning
 4. **task-design.md** — Task design principles
-5. **Context-specific task design** (if provided) — Work-type guidance (greenfield, feature, or bugfix)
+5. **Context-specific task design** — Work-type guidance (greenfield, feature, or bugfix)
 6. **All approved phases** — The complete phase structure (from the Plan Index File)
 7. **Target phase number** — Which phase to break into tasks
 8. **plan-index-schema.md** — Canonical plan index structure
@@ -32,7 +32,7 @@ On **amendment**, you also receive:
 2. Read the specification in full, following the ingestion protocol
 3. Read any cross-cutting specifications
 4. Read `task-design.md` — absorb the task design principles
-5. If context-specific task design guidance was provided, read it
+5. Read the context-specific task design guidance
 6. Read the approved phases — understand the full plan structure and where this phase fits
 7. Read `plan-index-schema.md` — understand the plan index structure
 8. Design the task list for the target phase

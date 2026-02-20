@@ -17,7 +17,7 @@ You receive file paths via the orchestrator's prompt:
 2. **Specification path** — The validated specification to plan from
 3. **Cross-cutting spec paths** (if any) — Architectural decisions that influence planning
 4. **phase-design.md** — Phase design principles
-5. **Context-specific phase design** (if provided) — Work-type guidance (greenfield, feature, or bugfix)
+5. **Context-specific phase design** — Work-type guidance (greenfield, feature, or bugfix)
 6. **task-design.md** — Task design principles (for phase granularity awareness)
 7. **plan-index-schema.md** — Canonical plan index structure
 
@@ -31,7 +31,7 @@ On **amendment**, you also receive:
 2. Read the specification in full, following the ingestion protocol
 3. Read any cross-cutting specifications
 4. Read `phase-design.md` — absorb the phase design principles
-5. If context-specific phase design guidance was provided, read it
+5. Read the context-specific phase design guidance
 6. Read `task-design.md` — understand task granularity (needed to judge phase scope)
 7. Read `plan-index-schema.md` — understand the plan index structure
 8. Design the phase structure
@@ -61,7 +61,7 @@ Continue for all phases.
 
 ## Rules
 
-1. **Strongest foundation first** — Phase 1 establishes the pattern for subsequent phases. Follow the Phase 1 strategy from the loaded context guidance. If no context guidance was loaded, infer the appropriate strategy from the specification content.
+1. **Strongest foundation first** — Phase 1 establishes the pattern for subsequent phases. Follow the Phase 1 strategy from the loaded context guidance.
 2. **Vertical phases** — each phase delivers working functionality, not technical layers
 3. **Clear acceptance** — every criterion is pass/fail verifiable
 4. **No forward references** — no phase depends on something not yet built
