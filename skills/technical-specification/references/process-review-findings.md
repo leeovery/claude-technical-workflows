@@ -15,7 +15,7 @@ Check if the tracking file exists at the expected path.
 > *Output the next fenced block as a code block:*
 
 ```
-{Review type} complete — no findings.
+{review_type} complete — no findings.
 ```
 
 → Return to **[spec-review.md](spec-review.md)** for the next phase.
@@ -33,7 +33,7 @@ Read the tracking file and count pending findings.
 > *Output the next fenced block as a code block:*
 
 ```
-{Review type} — {N} items found
+{review_type} — {N} items found
 
 1. {title} ({category})
    {1-2 line summary from the Details field}
@@ -62,12 +62,12 @@ Show the finding with its proposed content, read directly from the tracking file
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-**Finding {N} of {total}: {Brief Title}**
+**Finding {N} of {total}: {brief_title:(titlecase)}**
 
 - **Source**: {from tracking file}
 - **Category**: {from tracking file}
 @if(review_type = Gap Analysis)
-- **Priority**: {Critical | Important | Minor}
+- **Priority**: Critical | Important | Minor
 @endif
 - **Affects**: {from tracking file}
 
@@ -92,7 +92,7 @@ Check `finding_gate_mode` in the specification frontmatter.
 > *Output the next fenced block as a code block:*
 
 ```
-Finding {N} of {total}: {Brief Title} — approved. Added to specification.
+Finding {N} of {total}: {brief_title:(titlecase)} — approved. Added to specification.
 ```
 
 → Present the next pending finding, or proceed to **C. After All Findings Processed**.
@@ -103,7 +103,7 @@ Finding {N} of {total}: {Brief Title} — approved. Added to specification.
 
 ```
 · · · · · · · · · · · ·
-**Finding {N} of {total}: {Brief Title}**
+**Finding {N} of {total}: {brief_title:(titlecase)}**
 - **`y`/`yes`** — Approved. Add to the specification verbatim.
 - **`a`/`auto`** — Approve this and all remaining findings automatically
 - **`s`/`skip`** — Leave as-is, move to next finding.
@@ -126,7 +126,7 @@ Incorporate feedback and re-present the proposed content **in full**. Update the
 > *Output the next fenced block as a code block:*
 
 ```
-Finding {N} of {total}: {Brief Title} — added.
+Finding {N} of {total}: {brief_title:(titlecase)} — added.
 ```
 
 → Present the next pending finding, or proceed to **C. After All Findings Processed**.
@@ -149,7 +149,7 @@ Finding {N} of {total}: {Brief Title} — added.
 > *Output the next fenced block as a code block:*
 
 ```
-Finding {N} of {total}: {Brief Title} — skipped.
+Finding {N} of {total}: {brief_title:(titlecase)} — skipped.
 ```
 
 → Present the next pending finding, or proceed to **C. After All Findings Processed**.
@@ -164,7 +164,7 @@ Finding {N} of {total}: {Brief Title} — skipped.
 > *Output the next fenced block as a code block:*
 
 ```
-{Review type} complete — {N} findings processed.
+{review_type} complete — {N} findings processed.
 ```
 
 → Return to **[spec-review.md](spec-review.md)** for the next phase.
