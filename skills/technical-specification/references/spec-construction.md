@@ -4,15 +4,30 @@
 
 ---
 
-Work through the specification **topic by topic**. For each topic, follow the cycle below.
+Follow stages A through F sequentially for each topic in the specification. Each topic completes a full cycle before the next begins.
 
-## 1. Review (Exhaustive Extraction)
+Load **[context-resurfacing.md](context-resurfacing.md)** — internalize this behaviour. When later topics reveal information that affects already-logged content, resurface and correct it immediately (with approval).
+
+```
+A. Exhaustive extraction from sources
+B. Synthesize and present for approval
+C. Discuss and refine (if needed)
+D. Approval gate
+E. Log and commit
+F. Topic complete → loop back to A or exit
+```
+
+---
+
+## A. Exhaustive Extraction
 
 Load **[exhaustive-extraction.md](exhaustive-extraction.md)** and follow its instructions for the current topic.
 
 When working with multiple sources, search each one — information about a single topic may be scattered across documents.
 
-## 2. Synthesize and Present
+---
+
+## B. Synthesize and Present
 
 Present your understanding to the user **in the format it would appear in the specification**:
 
@@ -40,7 +55,9 @@ Content and choices must be visually distinct (not run together).
 
 > **CHECKPOINT**: After presenting, you MUST STOP and wait for the user's response. Do NOT proceed to logging. Do NOT present the next topic. WAIT.
 
-## 3. Discuss and Refine
+---
+
+## C. Discuss and Refine
 
 Work through the content together:
 - Validate what's accurate
@@ -51,7 +68,9 @@ Work through the content together:
 
 This is a **human-level conversation**, not form-filling. The user brings context from across the project that may not be in the reference material — decisions from other topics, implications from later work, or knowledge that can't all fit in context.
 
-## 4. Wait for Explicit Approval
+---
+
+## D. Approval Gate
 
 **DO NOT PROCEED TO LOGGING WITHOUT EXPLICIT USER APPROVAL.**
 
@@ -59,26 +78,24 @@ If you are uncertain whether the user approved, **ASK**: "Ready to log it, or do
 
 > **CHECKPOINT**: If you are about to write to the specification and the user's last message was not explicit approval, **STOP**. Present the choices again.
 
-## 5. Log When Approved
+---
 
-Only after receiving explicit approval, write to the specification — **verbatim** as presented and approved. No silent modifications.
+## E. Log and Commit
 
-## 6. Update Source Status
-
-After completing exhaustive extraction from a source (all relevant content presented and logged), update that source's status to `incorporated` in the specification frontmatter. See **[specification-format.md](specification-format.md)** for source status details.
-
-## 7. Repeat
-
-Move to the next topic. Commit at natural breaks — after significant exchanges, after each major topic, and before any context refresh.
+1. Write to the specification — **verbatim** as presented and approved. No silent modifications.
+2. After completing exhaustive extraction from a source (all relevant content presented and logged), update that source's status to `incorporated` in the specification frontmatter. See **[specification-format.md](specification-format.md)** for source status details.
+3. Commit at natural breaks — after significant exchanges, after each major topic, and before any context refresh.
 
 ---
 
-## Context Resurfacing
+## F. Topic Complete
 
-When you discover information that affects **already-logged topics**, resurface them. Even mid-discussion — interrupt, flag what you found, and discuss whether it changes anything.
+This is the end of this iteration.
 
-If it does: summarize what's changing in the chat, then re-present the full updated topic. The summary is for discussion only — the specification just gets the clean replacement. **Standard workflow applies: user approves before you update.**
+#### If additional topics remain
 
-> **CHECKPOINT**: Even when resurfacing content, you MUST NOT update the specification until the user explicitly approves the change. Present the updated version, wait for approval, then update.
+→ Proceed to **A. Exhaustive Extraction** and follow the instructions as written.
 
-This is encouraged. Better to resurface and confirm "already covered" than let something slip past.
+#### If all topics are covered
+
+→ Return to **[technical-specification SKILL.md](../SKILL.md)** for **Step 5**.
