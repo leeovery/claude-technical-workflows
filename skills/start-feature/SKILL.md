@@ -80,7 +80,10 @@ This will create: docs/workflow/discussion/{suggested-topic}.md
 
 ```
 · · · · · · · · · · · ·
-Is this name okay, or would you prefer something else?
+Is this name okay?
+
+- **`y`/`yes`** — Use this name
+- **`s`/`something else`** — Suggest a different name
 · · · · · · · · · · · ·
 ```
 
