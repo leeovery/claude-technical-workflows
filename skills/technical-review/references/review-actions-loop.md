@@ -165,8 +165,10 @@ Sources: {sources}
 
 ```
 · · · · · · · · · · · ·
-- **`a`/`approve`** — Approve this task
-- **`auto`** — Approve this and all remaining tasks automatically
+Approve this task?
+
+- **`y`/`yes`** — Approve this task
+- **`a`/`auto`** — Approve this and all remaining tasks automatically
 - **`s`/`skip`** — Skip this task
 - **Comment** — Revise based on feedback
 · · · · · · · · · · · ·
@@ -188,7 +190,7 @@ Task {current} of {total}: {title} — approved (auto).
 
 Process user input:
 
-#### If `approve`
+#### If `yes`
 
 Update `status: approved` in the staging file.
 

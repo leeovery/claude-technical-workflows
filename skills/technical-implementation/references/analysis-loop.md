@@ -123,16 +123,24 @@ impl({topic}): analysis cycle {N} — synthesis
 
 Read the staging file from `docs/workflow/implementation/{topic}/analysis-tasks-c{cycle-number}.md`.
 
+Check `analysis_gate_mode` in the implementation tracking file (`gated` or `auto`).
+
 Present an overview:
 
-**Analysis cycle {N}: {K} proposed tasks**
+> *Output the next fenced block as a code block:*
 
-1. {title} ({severity})
-2. {title} ({severity})
-...
+```
+Analysis cycle {N}: {K} proposed tasks
+
+  1. {title} ({severity})
+  2. {title} ({severity})
+```
 
 Then present each task with `status: pending` individually:
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 **Task {current}/{total}: {title}** ({severity})
 Sources: {sources}
 
@@ -148,12 +156,18 @@ Sources: {sources}
 
 **Tests**:
 {tests}
+```
+
+#### If `analysis_gate_mode: gated`
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
-- **`a`/`approve`** — Approve this task
+Approve this task?
+
+- **`y`/`yes`** — Approve this task
+- **`a`/`auto`** — Approve this and all remaining tasks automatically
 - **`s`/`skip`** — Skip this task
 - **Comment** — Revise based on feedback
 · · · · · · · · · · · ·
@@ -161,11 +175,33 @@ Sources: {sources}
 
 **STOP.** Wait for user input.
 
-#### If `approve`
+#### If `analysis_gate_mode: auto`
+
+Update `status: approved` in the staging file. Note that `analysis_gate_mode` should be updated to `auto` in the tracking file during the next commit.
+
+> *Output the next fenced block as a code block:*
+
+```
+Task {current} of {total}: {title} — approved (auto).
+```
+
+→ Continue to next task without stopping.
+
+---
+
+Process user input:
+
+#### If `yes`
 
 Update `status: approved` in the staging file.
 
 → Present the next pending task, or proceed to routing below if all tasks processed.
+
+#### If `auto`
+
+Update `status: approved` in the staging file. Note that `analysis_gate_mode` should be updated to `auto` in the tracking file during the next commit.
+
+→ Continue processing remaining tasks without stopping.
 
 #### If `skip`
 
@@ -185,7 +221,7 @@ After all tasks processed:
 
 → If all tasks were skipped:
 
-Commit the staging file updates:
+Commit the staging file updates (include tracking file if `analysis_gate_mode` was updated):
 
 ```
 impl({topic}): analysis cycle {N} — tasks skipped
@@ -201,7 +237,7 @@ Load **[invoke-task-writer.md](invoke-task-writer.md)** and follow its instructi
 
 **STOP.** Do not proceed until the task writer has returned.
 
-Commit all analysis and plan changes (staging file, plan tasks, Plan Index File):
+Commit all analysis and plan changes (staging file, plan tasks, Plan Index File, and tracking file if `analysis_gate_mode` was updated):
 
 ```
 impl({topic}): add analysis phase {N} ({K} tasks)
