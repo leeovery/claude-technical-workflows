@@ -6,8 +6,6 @@
 
 Follow stages A through F sequentially for each topic in the specification. Each topic completes a full cycle before the next begins.
 
-Load **[context-resurfacing.md](context-resurfacing.md)** — internalize this behaviour. When later topics reveal information that affects already-logged content, resurface and correct it immediately (with approval).
-
 ```
 A. Exhaustive extraction from sources
 B. Synthesize and present for approval
@@ -24,6 +22,16 @@ F. Topic complete → loop back to A or exit
 Load **[exhaustive-extraction.md](exhaustive-extraction.md)** and follow its instructions for the current topic.
 
 When working with multiple sources, search each one — information about a single topic may be scattered across documents.
+
+### Context Resurfacing
+
+When extraction reveals information that affects **already-logged topics**, resurface them immediately. Even mid-discussion — interrupt, flag what you found, and discuss whether it changes anything.
+
+If it does: summarize what's changing in the chat, then re-present the full updated topic. The summary is for discussion only — the specification just gets the clean replacement. **Standard workflow applies: user approves before you update.**
+
+> **CHECKPOINT**: Even when resurfacing content, you MUST NOT update the specification until the user explicitly approves the change. Present the updated version, wait for approval, then update.
+
+Better to resurface and confirm "already covered" than let something slip past.
 
 ---
 
