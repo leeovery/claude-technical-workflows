@@ -19,7 +19,7 @@ if [ -z "$PROJECT_DIR" ]; then
 fi
 
 if [ -z "$CLAUDE_SESSION_ID" ]; then
-  # No session ID available — silently skip
+  echo "[write-session-state] WARNING: CLAUDE_SESSION_ID not set — session state will not be saved" >&2
   exit 0
 fi
 
