@@ -318,6 +318,24 @@ assert_equals "$(cat "$TEST_DIR/docs/workflow/.state/discussion-consolidation-an
 
 echo ""
 
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: .gitignore with no trailing newline — entry on its own line${NC}"
+setup_fixture
+printf 'node_modules/\n.claude/settings.local.json' > "$TEST_DIR/.gitignore"
+
+run_migration
+content=$(cat "$TEST_DIR/.gitignore")
+
+assert_contains "$content" ".claude/settings.local.json" "Original last line preserved intact"
+assert_not_contains "$content" ".claude/settings.local.jsondocs" "No concatenation with appended entry"
+assert_contains "$content" "docs/workflow/.cache/" ".cache/ entry present"
+# Verify each entry is on its own line
+line_count=$(wc -l < "$TEST_DIR/.gitignore" | tr -d ' ')
+assert_equals "$line_count" "3" "Entry appended as separate line (3 lines total)"
+
+echo ""
+
 # ============================================================================
 # SUMMARY
 # ============================================================================

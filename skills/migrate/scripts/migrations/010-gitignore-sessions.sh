@@ -53,6 +53,8 @@ done
 if [ -f "$GITIGNORE" ] && grep -qxF "$NEW_ENTRY" "$GITIGNORE"; then
     report_skip "$GITIGNORE"
 else
+    # Ensure file ends with newline before appending
+    [ -f "$GITIGNORE" ] && [ -n "$(tail -c 1 "$GITIGNORE")" ] && echo >> "$GITIGNORE"
     echo "$NEW_ENTRY" >> "$GITIGNORE"
     report_update "$GITIGNORE" "added .cache/ to gitignore"
 fi
