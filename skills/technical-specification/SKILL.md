@@ -198,19 +198,3 @@ Load **[spec-review.md](references/spec-review.md)** and follow its instructions
 
 Load **[spec-completion.md](references/spec-completion.md)** and follow its instructions as written.
 
----
-
-## References
-
-- [verify-source-material.md](references/verify-source-material.md) — Step 1: Source material verification
-- [specification-format.md](references/specification-format.md) — Steps 2, 4: Specification document template and schema
-- [specification-principles.md](references/specification-principles.md) — Step 3: Approval rules, process principles, self-check
-- [spec-construction.md](references/spec-construction.md) — Step 4: Topic-by-topic building loop
-- [exhaustive-extraction.md](references/exhaustive-extraction.md) — Step 4: Extraction methodology (loaded by spec-construction)
-- [dependencies.md](references/dependencies.md) — Step 5: Dependency identification and format
-- [spec-review.md](references/spec-review.md) — Step 6: Two-phase review orchestration
-- [review-tracking-format.md](references/review-tracking-format.md) — Step 6: Tracking file format (loaded by spec-review)
-- [review-input.md](references/review-input.md) — Step 6: Phase 1 input review methodology (loaded by spec-review)
-- [review-gap-analysis.md](references/review-gap-analysis.md) — Step 6: Phase 2 gap analysis methodology (loaded by spec-review)
-- [process-review-findings.md](references/process-review-findings.md) — Step 6: Finding processing and approval loop (loaded by spec-review)
-- [spec-completion.md](references/spec-completion.md) — Step 7: Type determination, sign-off, conclusion

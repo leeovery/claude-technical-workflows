@@ -332,20 +332,4 @@ Update the tracking file (`docs/workflow/implementation/{topic}/tracking.md`):
 
 Commit: `impl({topic}): complete implementation`
 
----
-
-## References
-
-- **[environment-setup.md](references/environment-setup.md)** — Environment setup before implementation
-- **[linter-setup.md](references/linter-setup.md)** — Linter discovery and configuration
-- **[task-loop.md](references/task-loop.md)** — Task execution loop, task gates, tracking, commits
-- **[analysis-loop.md](references/analysis-loop.md)** — Analysis and refinement cycle
-- **[invoke-executor.md](references/invoke-executor.md)** — How to invoke the executor agent
-- **[invoke-reviewer.md](references/invoke-reviewer.md)** — How to invoke the reviewer agent
-- **[invoke-analysis.md](references/invoke-analysis.md)** — How to invoke analysis agents
-- **[invoke-synthesizer.md](references/invoke-synthesizer.md)** — How to invoke the synthesis agent
-- **[invoke-task-writer.md](references/invoke-task-writer.md)** — How to invoke the task writer agent
-- **[task-normalisation.md](references/task-normalisation.md)** — Normalised task shape for agent invocation
-- **[tdd-workflow.md](references/tdd-workflow.md)** — TDD cycle (passed to executor agent)
-- **[code-quality.md](references/code-quality.md)** — Quality standards (passed to executor agent)
 
