@@ -47,7 +47,7 @@ Phase 2: Add idempotency keys, handle edge cases (duplicate submissions, timeout
 Fix the root cause, don't redesign. The goal is surgical correction:
 
 - Change the minimum code needed to resolve the issue
-- If related issues are discovered during investigation, create separate specifications rather than expanding scope
+- If related issues are discovered during investigation, note them for the user but don't expand scope
 - Resist the temptation to "improve" surrounding code while you're in there
 - The fix should be easy to review — a reviewer should immediately see what changed and why
 
