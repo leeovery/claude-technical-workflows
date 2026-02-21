@@ -35,3 +35,13 @@ Task 4: Handle empty room and deleted messages (edge cases)
 ```
 
 The first task is slightly larger because it establishes the foundation AND the first working behaviour. Subsequent tasks are narrower because the pattern exists.
+
+---
+
+## Phase 2+ Considerations
+
+After Phase 1 completes, code exists. When designing tasks for subsequent phases:
+
+- **Review what Phase 1 established** — understand the patterns, conventions, and structure that were created. Subsequent tasks should extend these consistently.
+- **Check for drift** — if early implementation decisions could be improved, note them but don't redesign mid-project. Consistency matters more than perfection.
+- **Build on what's there** — subsequent phases have infrastructure to work with. Tasks should use existing models, services, and patterns rather than creating parallel structures.

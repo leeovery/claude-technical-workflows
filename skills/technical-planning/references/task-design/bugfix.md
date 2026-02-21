@@ -50,3 +50,16 @@ Each task changes the minimum code needed:
 - Don't add features while fixing bugs — if the fix area suggests improvements, note them for a separate specification
 - Keep the diff small and reviewable — a reviewer should immediately see what changed and why
 - If a task starts growing beyond the fix, it's probably two tasks
+
+---
+
+## Codebase Analysis During Task Design
+
+Tasks must be designed with knowledge of the affected code:
+
+- **Understand the bug's context** — what code is involved? What tests exist? What are the inputs, outputs, and side effects of the affected code?
+- **Design tasks around existing structure** — bug fixes should work within the existing architecture. Don't design tasks that require restructuring unless the specification explicitly calls for it.
+- **Keep scope surgical** — bugfix tasks should touch as few files as possible. If a task needs to touch many files, question whether the fix is truly minimal.
+- **Leverage existing tests** — if relevant tests exist, tasks can extend them. If not, the reproduction test becomes the foundation.
+
+This analysis happens during task design — it informs what needs to change without being documented separately.

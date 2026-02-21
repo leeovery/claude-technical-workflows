@@ -61,3 +61,15 @@ Regression tests are first-class deliverables, not afterthoughts:
 - Tests verify the fix doesn't break existing behaviour
 - Edge cases related to the bug get their own test cases
 - If the bug was in a poorly-tested area, the fix improves coverage for that specific area (not a general testing campaign)
+
+---
+
+## Codebase Awareness
+
+Before designing bugfix phases, understand the affected area:
+
+- **Trace the bug's scope** — what code is involved? What calls into it, what does it call? Understanding the boundaries helps design a fix that doesn't cause side effects.
+- **Check existing tests** — what coverage exists? This informs whether the fix needs new test infrastructure or can extend existing tests.
+- **Understand before fixing** — a minimal fix requires knowing exactly what's broken and why. Don't design phases until the root cause is understood.
+
+This is targeted analysis, not a general codebase review — focus on the code paths involved in the bug.

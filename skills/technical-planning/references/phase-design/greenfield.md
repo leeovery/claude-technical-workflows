@@ -63,3 +63,13 @@ This ordering means each phase builds on a working system. The skeleton establis
 
 - **Walking skeleton first** — subsequent phases add to a working system rather than depending on future phases
 - **Shared infrastructure in Phase 1** — if multiple phases need the same foundation, it belongs in the skeleton
+
+---
+
+## Phase 2+ Considerations
+
+After Phase 1 is implemented, code exists. When designing subsequent phases:
+
+- **Review what Phase 1 established** — understand the patterns, conventions, and architectural decisions that were made. Subsequent phases should build on these consistently.
+- **Extend, don't reinvent** — Phase 2+ should use the infrastructure Phase 1 created. If something is missing, add it — don't create parallel structures.
+- **Watch for drift** — if early decisions could be improved, note them but maintain consistency unless the specification calls for restructuring.

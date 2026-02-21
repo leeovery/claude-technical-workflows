@@ -92,6 +92,27 @@ All of this is needed regardless of how the entry point evolves:
 
 ---
 
+## Future Consideration: Implementation-Level Work Type Awareness
+
+Currently, `work_type` is used during planning (phase design, task design) but not during implementation. The executor agent has generic codebase guidance that works across all work types.
+
+**Current state:**
+- Plan Index File stores `work_type`
+- `technical-implementation` and executor agent don't read or use it
+- Executor guidance is generic: "find similar implementations, understand inputs/outputs, note testing patterns"
+
+**Question for later:** Does implementation need work-type-specific guidance?
+
+- **Bugfix** implementation could emphasize extra caution about minimal changes, understanding side effects
+- **Feature** implementation could emphasize integration testing, pattern consistency
+- **Greenfield** implementation might not need codebase analysis at all in early phases
+
+**Current thinking:** The implementation guidance is probably generic enough. Work-type-specific concerns are addressed during planning — the tasks themselves carry that context forward. The executor just needs to "follow existing patterns" regardless of type.
+
+This can be revisited after seeing how the current approach works in practice. If implementation struggles in work-type-specific ways, we can add context dispatch at that level too.
+
+---
+
 ## Next Steps
 
 1. **Merge PR #133** — the consumption mechanism is correct and all tests pass
@@ -99,3 +120,4 @@ All of this is needed regardless of how the entry point evolves:
 3. **Thread work_type through the pipeline** — `start-feature` (or unified command) sets it, carried through `continue-feature` → bridge skills → processing skills
 4. **Consider consolidating start/continue** — may not need separate commands if the unified entry point handles both
 5. **Future: `start-bugfix`** — or its equivalent in the unified command family
+6. **Evaluate implementation-level work type awareness** — after observing the current approach in practice

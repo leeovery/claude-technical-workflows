@@ -46,3 +46,16 @@ Task implementations should match established conventions in the codebase:
 - Follow the existing file organisation and naming conventions
 - Use established service/repository/controller patterns rather than introducing new ones
 - Match the existing error handling approach
+
+---
+
+## Codebase Analysis During Task Design
+
+Tasks must be designed with knowledge of the existing code. Before finalizing task lists:
+
+- **Identify similar implementations** — find existing code that does something similar. Tasks should reference this as the pattern to follow. "Follow the same approach as UserController" is more effective than abstract descriptions.
+- **Map what needs to change** — which files, modules, or services does each task touch? Understanding this shapes task scope and ordering.
+- **Prefer addition over modification** — when possible, design tasks that add new code (functions, modules, endpoints) and call it from existing code, rather than tasks that heavily modify existing code. This reduces risk and makes changes easier to review.
+- **Keep tasks focused** — tasks touching existing code should ideally stay within one file or module. Multi-file tasks in existing codebases are significantly harder to get right.
+
+This analysis happens during task design — it informs task scope and ordering without being documented separately.
