@@ -11,7 +11,7 @@ Invoke the [technical-research](../../technical-research/SKILL.md) skill for you
 **Example handoff:**
 ```
 Research session for: {topic}
-Output: docs/workflow/research/exploration.md
+Output: .workflows/research/exploration.md
 
 Context:
 - Prompted by: {problem, opportunity, or curiosity}

@@ -35,7 +35,7 @@ From each plan in scope, list every task across all phases:
 Ensure the review output directory exists:
 
 ```bash
-mkdir -p docs/workflow/review/{topic}/r{N}
+mkdir -p .workflows/review/{topic}/r{N}
 ```
 
 ---
@@ -78,7 +78,7 @@ FINDINGS_COUNT: {N blocking issues}
 SUMMARY: {1 sentence}
 ```
 
-Full findings are written to `docs/workflow/review/{topic}/r{N}/qa-task-{index}.md`.
+Full findings are written to `.workflows/review/{topic}/r{N}/qa-task-{index}.md`.
 
 ---
 
@@ -86,7 +86,7 @@ Full findings are written to `docs/workflow/review/{topic}/r{N}/qa-task-{index}.
 
 Once all batches have completed:
 
-1. Read all `docs/workflow/review/{topic}/r{N}/qa-task-*.md` files
+1. Read all `.workflows/review/{topic}/r{N}/qa-task-*.md` files
 2. Synthesize findings from file contents:
    - Collect all tasks with `STATUS: Incomplete` or `STATUS: Issues Found` as blocking issues
    - Collect all test issues (under/over-tested)

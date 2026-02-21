@@ -48,7 +48,7 @@ cache:
 
 Valid cache, no specs → show groupings directly from cache.
 
-Claude loads `docs/workflow/.state/discussion-consolidation-analysis.md` and presents:
+Claude loads `.workflows/.state/discussion-consolidation-analysis.md` and presents:
 
 ```
 Specification Overview
@@ -113,7 +113,7 @@ Sources:
   • auth-flow
   • api-design
 
-Output: docs/workflow/specification/api-authentication.md
+Output: .workflows/specification/api-authentication.md
 
 Proceed? (y/n)
 ```
@@ -128,10 +128,10 @@ Proceed? (y/n)
 Specification session for: API Authentication
 
 Sources:
-- docs/workflow/discussion/auth-flow.md
-- docs/workflow/discussion/api-design.md
+- .workflows/discussion/auth-flow.md
+- .workflows/discussion/api-design.md
 
-Output: docs/workflow/specification/api-authentication.md
+Output: .workflows/specification/api-authentication.md
 
 ---
 Invoke the technical-specification skill.
@@ -151,7 +151,7 @@ Steps 0-3 are identical to Scenario A.
 
 Claude deletes the cache:
 ```bash
-rm docs/workflow/.state/discussion-consolidation-analysis.md
+rm .workflows/.state/discussion-consolidation-analysis.md
 ```
 
 ### Step 4: Gather Analysis Context

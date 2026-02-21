@@ -4,7 +4,7 @@
 
 ---
 
-Standard structure for `docs/workflow/discussion/{topic}.md`. DOCUMENT only - no plans or code.
+Standard structure for `.workflows/discussion/{topic}.md`. DOCUMENT only - no plans or code.
 
 This is a single file per topic.
 
@@ -98,7 +98,7 @@ What we chose, why, the deciding factor, trade-offs accepted, confidence level.
 ## Usage Notes
 
 **When creating**:
-1. Ensure discussion directory exists: `docs/workflow/discussion/`
+1. Ensure discussion directory exists: `.workflows/discussion/`
 2. Create file: `{topic}.md`
 3. Fill frontmatter: topic, status, date
 4. Start with context: why discussing?

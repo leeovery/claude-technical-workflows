@@ -33,8 +33,8 @@ echo ""
 
 setup_fixture() {
     # Clean up from previous test
-    rm -rf "$TEST_DIR/docs"
-    mkdir -p "$TEST_DIR/docs/workflow"
+    rm -rf "$TEST_DIR/.workflows"
+    mkdir -p "$TEST_DIR/.workflows"
 }
 
 run_discovery() {
@@ -112,8 +112,8 @@ test_discussions_only() {
     echo -e "${YELLOW}Test: Discussions only (no specs)${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
-    cat > "$TEST_DIR/docs/workflow/discussion/auth-flow.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+    cat > "$TEST_DIR/.workflows/discussion/auth-flow.md" << 'EOF'
 ---
 topic: auth-flow
 status: in-progress
@@ -123,7 +123,7 @@ date: 2026-01-20
 # Discussion: Auth Flow
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/discussion/api-design.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/api-design.md" << 'EOF'
 ---
 topic: api-design
 status: concluded
@@ -158,8 +158,8 @@ test_specifications_only() {
     echo -e "${YELLOW}Test: Specifications only (no discussions)${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/specification/auth-system"
-    cat > "$TEST_DIR/docs/workflow/specification/auth-system/specification.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/specification/auth-system"
+    cat > "$TEST_DIR/.workflows/specification/auth-system/specification.md" << 'EOF'
 ---
 topic: auth-system
 status: in-progress
@@ -186,10 +186,10 @@ test_discussion_with_spec() {
     echo -e "${YELLOW}Test: Discussion with corresponding spec${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
-    mkdir -p "$TEST_DIR/docs/workflow/specification/auth-flow"
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+    mkdir -p "$TEST_DIR/.workflows/specification/auth-flow"
 
-    cat > "$TEST_DIR/docs/workflow/discussion/auth-flow.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/auth-flow.md" << 'EOF'
 ---
 topic: auth-flow
 status: concluded
@@ -199,7 +199,7 @@ date: 2026-01-20
 # Discussion: Auth Flow
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/specification/auth-flow/specification.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/specification/auth-flow/specification.md" << 'EOF'
 ---
 topic: auth-flow
 status: in-progress
@@ -225,10 +225,10 @@ test_discussion_with_concluded_spec() {
     echo -e "${YELLOW}Test: Discussion with corresponding concluded spec${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
-    mkdir -p "$TEST_DIR/docs/workflow/specification/billing"
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+    mkdir -p "$TEST_DIR/.workflows/specification/billing"
 
-    cat > "$TEST_DIR/docs/workflow/discussion/billing.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/billing.md" << 'EOF'
 ---
 topic: billing
 status: concluded
@@ -238,7 +238,7 @@ date: 2026-01-20
 # Discussion: Billing
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/specification/billing/specification.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/specification/billing/specification.md" << 'EOF'
 ---
 topic: billing
 status: concluded
@@ -264,9 +264,9 @@ test_discussion_without_spec_no_status() {
     echo -e "${YELLOW}Test: Discussion without spec has no spec_status${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
+    mkdir -p "$TEST_DIR/.workflows/discussion"
 
-    cat > "$TEST_DIR/docs/workflow/discussion/standalone.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/standalone.md" << 'EOF'
 ---
 topic: standalone
 status: concluded
@@ -291,8 +291,8 @@ test_spec_with_sources() {
     echo -e "${YELLOW}Test: Specification with sources in object format${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/specification/combined-feature"
-    cat > "$TEST_DIR/docs/workflow/specification/combined-feature/specification.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/specification/combined-feature"
+    cat > "$TEST_DIR/.workflows/specification/combined-feature/specification.md" << 'EOF'
 ---
 topic: combined-feature
 status: in-progress
@@ -331,9 +331,9 @@ test_spec_sources_discussion_status() {
     echo -e "${YELLOW}Test: Spec sources include discussion_status${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
+    mkdir -p "$TEST_DIR/.workflows/discussion"
 
-    cat > "$TEST_DIR/docs/workflow/discussion/auth-flow.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/auth-flow.md" << 'EOF'
 ---
 topic: auth-flow
 status: concluded
@@ -343,7 +343,7 @@ date: 2026-01-20
 # Discussion: Auth Flow
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/discussion/api-design.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/api-design.md" << 'EOF'
 ---
 topic: api-design
 status: in-progress
@@ -353,8 +353,8 @@ date: 2026-01-19
 # Discussion: API Design
 EOF
 
-    mkdir -p "$TEST_DIR/docs/workflow/specification/combined"
-    cat > "$TEST_DIR/docs/workflow/specification/combined/specification.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/specification/combined"
+    cat > "$TEST_DIR/.workflows/specification/combined/specification.md" << 'EOF'
 ---
 topic: combined
 status: in-progress
@@ -388,8 +388,8 @@ test_spec_superseded() {
     echo -e "${YELLOW}Test: Specification with superseded_by${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/specification/old-auth"
-    cat > "$TEST_DIR/docs/workflow/specification/old-auth/specification.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/specification/old-auth"
+    cat > "$TEST_DIR/.workflows/specification/old-auth/specification.md" << 'EOF'
 ---
 topic: old-auth
 status: superseded
@@ -416,8 +416,8 @@ test_cache_none() {
     echo -e "${YELLOW}Test: Cache status none${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
-    cat > "$TEST_DIR/docs/workflow/discussion/test.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+    cat > "$TEST_DIR/.workflows/discussion/test.md" << 'EOF'
 ---
 topic: test
 status: in-progress
@@ -444,10 +444,10 @@ test_cache_valid() {
     echo -e "${YELLOW}Test: Cache status valid${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
-    mkdir -p "$TEST_DIR/docs/workflow/.state"
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+    mkdir -p "$TEST_DIR/.workflows/.state"
 
-    cat > "$TEST_DIR/docs/workflow/discussion/auth-flow.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/auth-flow.md" << 'EOF'
 ---
 topic: auth-flow
 status: concluded
@@ -458,9 +458,9 @@ date: 2026-01-20
 EOF
 
     # Compute the checksum that the cache should have
-    local checksum=$(cat "$TEST_DIR/docs/workflow/discussion"/*.md | md5sum | cut -d' ' -f1)
+    local checksum=$(cat "$TEST_DIR/.workflows/discussion"/*.md | md5sum | cut -d' ' -f1)
 
-    cat > "$TEST_DIR/docs/workflow/.state/discussion-consolidation-analysis.md" << EOF
+    cat > "$TEST_DIR/.workflows/.state/discussion-consolidation-analysis.md" << EOF
 ---
 checksum: $checksum
 generated: 2026-01-20T10:00:00
@@ -486,10 +486,10 @@ test_cache_stale() {
     echo -e "${YELLOW}Test: Cache status stale${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
-    mkdir -p "$TEST_DIR/docs/workflow/.state"
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+    mkdir -p "$TEST_DIR/.workflows/.state"
 
-    cat > "$TEST_DIR/docs/workflow/discussion/auth-flow.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/auth-flow.md" << 'EOF'
 ---
 topic: auth-flow
 status: concluded
@@ -500,7 +500,7 @@ date: 2026-01-20
 EOF
 
     # Use a different checksum to make cache stale
-    cat > "$TEST_DIR/docs/workflow/.state/discussion-consolidation-analysis.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/.state/discussion-consolidation-analysis.md" << 'EOF'
 ---
 checksum: oldchecksum123
 generated: 2026-01-19T10:00:00
@@ -526,11 +526,11 @@ test_anchored_names() {
     echo -e "${YELLOW}Test: Anchored names in cache${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
-    mkdir -p "$TEST_DIR/docs/workflow/specification"
-    mkdir -p "$TEST_DIR/docs/workflow/.state"
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+    mkdir -p "$TEST_DIR/.workflows/specification"
+    mkdir -p "$TEST_DIR/.workflows/.state"
 
-    cat > "$TEST_DIR/docs/workflow/discussion/auth-flow.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/auth-flow.md" << 'EOF'
 ---
 topic: auth-flow
 status: concluded
@@ -541,8 +541,8 @@ date: 2026-01-20
 EOF
 
     # Create a spec that matches a grouping name in the cache
-    mkdir -p "$TEST_DIR/docs/workflow/specification/authentication"
-    cat > "$TEST_DIR/docs/workflow/specification/authentication/specification.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/specification/authentication"
+    cat > "$TEST_DIR/.workflows/specification/authentication/specification.md" << 'EOF'
 ---
 topic: authentication
 status: in-progress
@@ -553,10 +553,10 @@ date: 2026-01-21
 # Specification: Authentication
 EOF
 
-    local checksum=$(cat "$TEST_DIR/docs/workflow/discussion"/*.md | md5sum | cut -d' ' -f1)
+    local checksum=$(cat "$TEST_DIR/.workflows/discussion"/*.md | md5sum | cut -d' ' -f1)
 
     # Cache with grouping names
-    cat > "$TEST_DIR/docs/workflow/.state/discussion-consolidation-analysis.md" << EOF
+    cat > "$TEST_DIR/.workflows/.state/discussion-consolidation-analysis.md" << EOF
 ---
 checksum: $checksum
 generated: 2026-01-20T10:00:00
@@ -590,9 +590,9 @@ test_current_state_checksum() {
     echo -e "${YELLOW}Test: Current state with discussions checksum${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
+    mkdir -p "$TEST_DIR/.workflows/discussion"
 
-    cat > "$TEST_DIR/docs/workflow/discussion/test.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/test.md" << 'EOF'
 ---
 topic: test
 status: concluded
@@ -618,8 +618,8 @@ test_spec_default_status() {
     echo -e "${YELLOW}Test: Spec without status defaults to active${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/specification/legacy"
-    cat > "$TEST_DIR/docs/workflow/specification/legacy/specification.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/specification/legacy"
+    cat > "$TEST_DIR/.workflows/specification/legacy/specification.md" << 'EOF'
 ---
 topic: legacy
 type: feature
@@ -645,8 +645,8 @@ test_discussion_default_status() {
     echo -e "${YELLOW}Test: Discussion without status defaults to unknown${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
-    cat > "$TEST_DIR/docs/workflow/discussion/legacy.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+    cat > "$TEST_DIR/.workflows/discussion/legacy.md" << 'EOF'
 ---
 topic: legacy
 date: 2026-01-20
@@ -671,8 +671,8 @@ test_spec_many_sources() {
     echo -e "${YELLOW}Test: Specification with many sources (8)${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/specification/tick-core"
-    cat > "$TEST_DIR/docs/workflow/specification/tick-core/specification.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/specification/tick-core"
+    cat > "$TEST_DIR/.workflows/specification/tick-core/specification.md" << 'EOF'
 ---
 topic: tick-core
 status: in-progress
@@ -722,8 +722,8 @@ test_spec_with_hr_in_body() {
     echo -e "${YELLOW}Test: Specification with --- in body content${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/specification/tricky-spec"
-    cat > "$TEST_DIR/docs/workflow/specification/tricky-spec/specification.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/specification/tricky-spec"
+    cat > "$TEST_DIR/.workflows/specification/tricky-spec/specification.md" << 'EOF'
 ---
 topic: tricky-spec
 status: in-progress
@@ -772,8 +772,8 @@ test_spec_empty_sources() {
     echo -e "${YELLOW}Test: Specification with empty sources${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/specification/empty-sources"
-    cat > "$TEST_DIR/docs/workflow/specification/empty-sources/specification.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/specification/empty-sources"
+    cat > "$TEST_DIR/.workflows/specification/empty-sources/specification.md" << 'EOF'
 ---
 topic: empty-sources
 status: in-progress
@@ -812,8 +812,8 @@ test_discussion_with_hr_in_body() {
     echo -e "${YELLOW}Test: Discussion with --- in body content${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
-    cat > "$TEST_DIR/docs/workflow/discussion/tricky-discussion.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+    cat > "$TEST_DIR/.workflows/discussion/tricky-discussion.md" << 'EOF'
 ---
 topic: tricky-discussion
 status: concluded
@@ -855,9 +855,9 @@ test_spec_count_excludes_superseded() {
     echo -e "${YELLOW}Test: Spec count excludes superseded${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
+    mkdir -p "$TEST_DIR/.workflows/discussion"
 
-    cat > "$TEST_DIR/docs/workflow/discussion/auth-flow.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/auth-flow.md" << 'EOF'
 ---
 topic: auth-flow
 status: concluded
@@ -867,8 +867,8 @@ date: 2026-01-20
 # Discussion: Auth Flow
 EOF
 
-    mkdir -p "$TEST_DIR/docs/workflow/specification/auth-flow"
-    cat > "$TEST_DIR/docs/workflow/specification/auth-flow/specification.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/specification/auth-flow"
+    cat > "$TEST_DIR/.workflows/specification/auth-flow/specification.md" << 'EOF'
 ---
 topic: auth-flow
 status: superseded
@@ -880,8 +880,8 @@ superseded_by: auth-system
 # Specification: Auth Flow (superseded)
 EOF
 
-    mkdir -p "$TEST_DIR/docs/workflow/specification/auth-system"
-    cat > "$TEST_DIR/docs/workflow/specification/auth-system/specification.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/specification/auth-system"
+    cat > "$TEST_DIR/.workflows/specification/auth-system/specification.md" << 'EOF'
 ---
 topic: auth-system
 status: in-progress

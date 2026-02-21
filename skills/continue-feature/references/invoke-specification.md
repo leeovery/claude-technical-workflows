@@ -10,7 +10,7 @@ Invoke the specification skill for this topic.
 
 The specification needs source material. Check what's available:
 
-1. **Discussion document**: `docs/workflow/discussion/{topic}.md`
+1. **Discussion document**: `.workflows/discussion/{topic}.md`
    - If exists and concluded → use as primary source
    - If exists and in-progress → this shouldn't happen (detect-phase would have routed to discussion)
 
@@ -30,7 +30,7 @@ Saving session state so Claude can pick up where it left off and continue the fe
 .claude/hooks/workflows/write-session-state.sh \
   "{topic}" \
   "skills/technical-specification/SKILL.md" \
-  "docs/workflow/specification/{topic}/specification.md" \
+  ".workflows/specification/{topic}/specification.md" \
   --pipeline "This session is part of the feature pipeline. After the specification concludes, return to the continue-feature skill and execute Step 7 (Phase Bridge). Load: skills/continue-feature/references/phase-bridge.md"
 ```
 
@@ -42,7 +42,7 @@ Invoke the [technical-specification](../../technical-specification/SKILL.md) ski
 Specification session for: {topic}
 
 Source material:
-- Discussion: docs/workflow/discussion/{topic}.md
+- Discussion: .workflows/discussion/{topic}.md
 
 Topic name: {topic}
 

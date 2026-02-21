@@ -87,7 +87,7 @@ Review the implementation as a senior architect would:
 
 ## Output File Format
 
-Write to `docs/workflow/review/{topic}/r{N}/qa-task-{index}.md`:
+Write to `.workflows/review/{topic}/r{N}/qa-task-{index}.md`:
 
 ```
 TASK: [Task name/description]

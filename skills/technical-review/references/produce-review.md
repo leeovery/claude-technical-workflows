@@ -6,7 +6,7 @@
 
 Aggregate QA findings into a review document using the **[template.md](template.md)**.
 
-Write the review to `docs/workflow/review/{topic}/r{N}/review.md`. The review is always per-plan. The review number `r{N}` is passed in from the entry point.
+Write the review to `.workflows/review/{topic}/r{N}/review.md`. The review is always per-plan. The review number `r{N}` is passed in from the entry point.
 
 **QA Verdict** (from Step 3):
 - **Approve** — All acceptance criteria met, no blocking issues

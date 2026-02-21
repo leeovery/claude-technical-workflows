@@ -32,8 +32,8 @@ echo ""
 #
 
 setup_fixture() {
-    rm -rf "$TEST_DIR/docs"
-    mkdir -p "$TEST_DIR/docs/workflow/.cache/sessions"
+    rm -rf "$TEST_DIR/.workflows"
+    mkdir -p "$TEST_DIR/.workflows/.cache/sessions"
 }
 
 run_hook() {
@@ -116,10 +116,10 @@ echo ""
 
 echo -e "${YELLOW}Test: Basic state (no pipeline) — IMMEDIATE section only${NC}"
 setup_fixture
-cat > "$TEST_DIR/docs/workflow/.cache/sessions/session-basic-001.yaml" << 'EOF'
+cat > "$TEST_DIR/.workflows/.cache/sessions/session-basic-001.yaml" << 'EOF'
 topic: auth-flow
 skill: .claude/skills/technical-discussion/SKILL.md
-artifact: docs/workflow/discussion/auth-flow.md
+artifact: .workflows/discussion/auth-flow.md
 EOF
 
 output=$(run_hook "session-basic-001")
@@ -137,10 +137,10 @@ echo ""
 
 echo -e "${YELLOW}Test: Pipeline state — both IMMEDIATE and AFTER CONCLUSION sections${NC}"
 setup_fixture
-cat > "$TEST_DIR/docs/workflow/.cache/sessions/session-pipeline-001.yaml" << 'EOF'
+cat > "$TEST_DIR/.workflows/.cache/sessions/session-pipeline-001.yaml" << 'EOF'
 topic: billing
 skill: .claude/skills/technical-specification/SKILL.md
-artifact: docs/workflow/specification/billing/specification.md
+artifact: .workflows/specification/billing/specification.md
 pipeline:
   after_conclude: |
     Enter plan mode with this message:
@@ -161,7 +161,7 @@ echo ""
 
 echo -e "${YELLOW}Test: Malformed YAML — graceful handling${NC}"
 setup_fixture
-cat > "$TEST_DIR/docs/workflow/.cache/sessions/session-bad-001.yaml" << 'EOF'
+cat > "$TEST_DIR/.workflows/.cache/sessions/session-bad-001.yaml" << 'EOF'
 this is not valid yaml
   : broken : stuff
   @@@ garbage

@@ -14,7 +14,7 @@ Use `cache.status` from discovery to determine the approach:
 Using cached research analysis (unchanged since {cache.generated})
 ```
 
-Load the topics from `docs/workflow/.state/research-analysis.md` and proceed.
+Load the topics from `.workflows/.state/research-analysis.md` and proceed.
 
 #### If cache.status is "stale" or "none"
 
@@ -40,10 +40,10 @@ Read each research file and extract key themes and potential discussion topics. 
 
 Ensure the cache directory exists:
 ```bash
-mkdir -p docs/workflow/.state
+mkdir -p .workflows/.state
 ```
 
-Create/update `docs/workflow/.state/research-analysis.md`:
+Create/update `.workflows/.state/research-analysis.md`:
 
 ```markdown
 ---

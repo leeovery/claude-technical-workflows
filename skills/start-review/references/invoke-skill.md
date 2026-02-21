@@ -18,7 +18,7 @@ Saving session state so Claude can pick up where it left off if the conversation
 .claude/hooks/workflows/write-session-state.sh \
   "{topic}" \
   "skills/technical-review/SKILL.md" \
-  "docs/workflow/review/{scope}/r{N}/review.md"
+  ".workflows/review/{scope}/r{N}/review.md"
 ```
 
 ---
@@ -34,13 +34,13 @@ Each plan is reviewed independently. When multiple plans are selected, pass all 
 Review session
 Plans to review:
   - topic: {topic-1}
-    plan: docs/workflow/planning/{topic-1}/plan.md
+    plan: .workflows/planning/{topic-1}/plan.md
     format: {format}
     plan_id: {plan_id} (if applicable)
     specification: {specification} (exists: {true|false})
     review_version: r{N}
   - topic: {topic-2}
-    plan: docs/workflow/planning/{topic-2}/plan.md
+    plan: .workflows/planning/{topic-2}/plan.md
     format: {format}
     specification: {specification} (exists: {true|false})
     review_version: r{N}
@@ -52,7 +52,7 @@ Invoke the technical-review skill.
 ```
 Analysis session for: {topic}
 Review mode: analysis-only
-Review path: docs/workflow/review/{topic}/r{N}/
+Review path: .workflows/review/{topic}/r{N}/
 Format: {format}
 Specification: {spec path}
 

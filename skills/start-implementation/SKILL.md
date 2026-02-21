@@ -119,7 +119,7 @@ No plans exist yet.
 ```
 Implementation Overview
 
-No plans found in docs/workflow/planning/
+No plans found in .workflows/planning/
 
 The implementation phase requires a plan.
 Run /start-planning first to create a plan from a specification.
@@ -369,7 +369,7 @@ Environment: No special setup required.
 > *Output the next fenced block as a code block:*
 
 ```
-Environment setup file found: docs/workflow/environment-setup.md
+Environment setup file found: .workflows/environment-setup.md
 ```
 → Proceed to **Step 6**.
 
@@ -384,8 +384,8 @@ Are there any environment setup instructions I should follow before implementati
 
 **STOP.** Wait for user response.
 
-- If the user provides instructions, save them to `docs/workflow/environment-setup.md`, commit and push
-- If the user says no/none, create `docs/workflow/environment-setup.md` with "No special setup required." and commit
+- If the user provides instructions, save them to `.workflows/environment-setup.md`, commit and push
+- If the user says no/none, create `.workflows/environment-setup.md` with "No special setup required." and commit
 
 → Proceed to **Step 6**.
 
@@ -405,7 +405,7 @@ Saving session state so Claude can pick up where it left off if the conversation
 .claude/hooks/workflows/write-session-state.sh \
   "{topic}" \
   "skills/technical-implementation/SKILL.md" \
-  "docs/workflow/implementation/{topic}/tracking.md"
+  ".workflows/implementation/{topic}/tracking.md"
 ```
 
 After completing the steps above, this skill's purpose is fulfilled.
@@ -415,7 +415,7 @@ Invoke the [technical-implementation](../technical-implementation/SKILL.md) skil
 **Example handoff:**
 ```
 Implementation session for: {topic}
-Plan: docs/workflow/planning/{topic}/plan.md
+Plan: .workflows/planning/{topic}/plan.md
 Format: {format}
 Plan ID: {plan_id} (if applicable)
 Specification: {specification} (exists: {true|false})

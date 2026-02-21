@@ -100,7 +100,7 @@ Claude reads all 3 concluded discussion files, considers the user's context, and
 Analyzing discussions...
 ```
 
-Analysis result — writes to `docs/workflow/.state/discussion-consolidation-analysis.md`:
+Analysis result — writes to `.workflows/.state/discussion-consolidation-analysis.md`:
 ```markdown
 ---
 checksum: abc123...
@@ -193,7 +193,7 @@ Sources:
   • auth-flow
   • api-design
 
-Output: docs/workflow/specification/api-authentication.md
+Output: .workflows/specification/api-authentication.md
 
 Proceed? (y/n)
 ```
@@ -208,10 +208,10 @@ Proceed? (y/n)
 Specification session for: API Authentication
 
 Sources:
-- docs/workflow/discussion/auth-flow.md
-- docs/workflow/discussion/api-design.md
+- .workflows/discussion/auth-flow.md
+- .workflows/discussion/api-design.md
 
-Output: docs/workflow/specification/api-authentication.md
+Output: .workflows/specification/api-authentication.md
 
 ---
 Invoke the technical-specification skill.
@@ -241,7 +241,7 @@ Sources:
   • api-design
   • error-handling
 
-Output: docs/workflow/specification/unified.md
+Output: .workflows/specification/unified.md
 
 Proceed? (y/n)
 ```
@@ -256,11 +256,11 @@ Proceed? (y/n)
 Specification session for: Unified
 
 Sources:
-- docs/workflow/discussion/auth-flow.md
-- docs/workflow/discussion/api-design.md
-- docs/workflow/discussion/error-handling.md
+- .workflows/discussion/auth-flow.md
+- .workflows/discussion/api-design.md
+- .workflows/discussion/error-handling.md
 
-Output: docs/workflow/specification/unified.md
+Output: .workflows/specification/unified.md
 
 ---
 Invoke the technical-specification skill.
@@ -291,7 +291,7 @@ Steps 0-6 are identical to Scenario A.
 
 Claude deletes the cache:
 ```bash
-rm docs/workflow/.state/discussion-consolidation-analysis.md
+rm .workflows/.state/discussion-consolidation-analysis.md
 ```
 
 Loops back to Step 4:

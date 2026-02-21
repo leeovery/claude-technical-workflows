@@ -2,7 +2,7 @@
 name: start-feature
 description: "Start a new feature through the full pipeline. Gathers context via structured interview, creates a discussion, then bridges to continue-feature for specification, planning, and implementation."
 disable-model-invocation: true
-allowed-tools: Bash(ls docs/workflow/discussion/), Bash(.claude/hooks/workflows/write-session-state.sh)
+allowed-tools: Bash(ls .workflows/discussion/), Bash(.claude/hooks/workflows/write-session-state.sh)
 hooks:
   PreToolUse:
     - hooks:
@@ -45,7 +45,7 @@ Invoke the `/migrate` skill and assess its output.
 Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
-2. **Identify the topic.** Check conversation history for the topic name. If unknown, check `docs/workflow/discussion/` for recently modified files via `git log --oneline -5`.
+2. **Identify the topic.** Check conversation history for the topic name. If unknown, check `.workflows/discussion/` for recently modified files via `git log --oneline -5`.
 3. **Determine current step from artifacts:**
    - No discussion file exists → resume at **Step 1**
    - Discussion exists with `status: in-progress` → resume at **Step 3** (re-invoke technical-discussion)
@@ -73,7 +73,7 @@ Based on the feature description, suggest a topic name:
 ```
 Suggested topic name: {suggested-topic:(kebabcase)}
 
-This will create: docs/workflow/discussion/{suggested-topic}.md
+This will create: .workflows/discussion/{suggested-topic}.md
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -92,7 +92,7 @@ Is this name okay?
 Once the topic name is confirmed, check for naming conflicts:
 
 ```bash
-ls docs/workflow/discussion/
+ls .workflows/discussion/
 ```
 
 If a discussion with the same name exists, inform the user:
@@ -130,7 +130,7 @@ Saving session state so Claude can pick up where it left off and continue the fe
 .claude/hooks/workflows/write-session-state.sh \
   "{topic}" \
   "skills/technical-discussion/SKILL.md" \
-  "docs/workflow/discussion/{topic}.md" \
+  ".workflows/discussion/{topic}.md" \
   --pipeline "This session is part of the feature pipeline. After the discussion concludes, load and follow the phase bridge at skills/start-feature/references/phase-bridge.md for topic '{topic}'."
 ```
 

@@ -11,10 +11,10 @@ Invoke the [technical-discussion](../../technical-discussion/SKILL.md) skill for
 **Example handoff (from research):**
 ```
 Discussion session for: {topic}
-Output: docs/workflow/discussion/{topic}.md
+Output: .workflows/discussion/{topic}.md
 
 Research reference:
-Source: docs/workflow/research/{filename}.md (lines {start}-{end})
+Source: .workflows/research/{filename}.md (lines {start}-{end})
 Summary: {the 1-2 sentence summary from the research analysis}
 
 Invoke the technical-discussion skill.
@@ -24,7 +24,7 @@ Invoke the technical-discussion skill.
 ```
 Discussion session for: {topic}
 Source: {existing discussion | fresh}
-Output: docs/workflow/discussion/{topic}.md
+Output: .workflows/discussion/{topic}.md
 
 Invoke the technical-discussion skill.
 ```

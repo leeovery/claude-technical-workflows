@@ -56,7 +56,7 @@ Refreshing analysis...
 
 Delete the cache file:
 ```bash
-rm docs/workflow/.state/research-analysis.md
+rm .workflows/.state/research-analysis.md
 ```
 
 → Return to **Step 3** to re-analyze.

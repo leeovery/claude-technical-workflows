@@ -130,7 +130,7 @@ Enter choice (1-3):
 
 Claude deletes the stale cache:
 ```bash
-rm docs/workflow/.state/discussion-consolidation-analysis.md
+rm .workflows/.state/discussion-consolidation-analysis.md
 ```
 
 ### Step 4: Gather Analysis Context
@@ -235,7 +235,7 @@ Steps 0-3 identical to Scenario A.
 ```
 Continuing specification: Authentication System
 
-Existing: docs/workflow/specification/authentication-system.md (in-progress)
+Existing: .workflows/specification/authentication-system.md (in-progress)
 
 All sources extracted:
   • auth-flow
@@ -253,11 +253,11 @@ Proceed? (y/n)
 ```
 Specification session for: Authentication System
 
-Continuing existing: docs/workflow/specification/authentication-system.md
+Continuing existing: .workflows/specification/authentication-system.md
 
 Sources for reference:
-- docs/workflow/discussion/auth-flow.md
-- docs/workflow/discussion/user-sessions.md
+- .workflows/discussion/auth-flow.md
+- .workflows/discussion/user-sessions.md
 
 Context: This specification already exists. Review and refine it based on the source discussions.
 

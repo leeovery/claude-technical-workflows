@@ -24,8 +24,8 @@ Use simple, individual commands. Never combine multiple operations into bash loo
 
 Scan the codebase for existing plans:
 
-1. **Find plan files**: Look in `docs/workflow/planning/`
-   - Run `ls docs/workflow/planning/` to list plan files
+1. **Find plan files**: Look in `.workflows/planning/`
+   - Run `ls .workflows/planning/` to list plan files
    - Each topic is a directory containing `plan.md`
 
 2. **Extract plan metadata**: For each plan file
@@ -39,7 +39,7 @@ Scan the codebase for existing plans:
 ```
 Dependency Linking
 
-No plans found in docs/workflow/planning/
+No plans found in .workflows/planning/
 
 There are no plans to link. Create plans first.
 ```
@@ -122,7 +122,7 @@ Key:
 
 For each unresolved dependency:
 
-1. **Search for matching plan**: Does `docs/workflow/planning/{dependency-topic}/plan.md` exist?
+1. **Search for matching plan**: Does `.workflows/planning/{dependency-topic}/plan.md` exist?
    - If no match: Mark as "no plan exists" - cannot resolve yet
 
 2. **If plan exists**: Load the format's reading reference
@@ -174,7 +174,7 @@ Unresolved (no matching plan exists):
   • {source} → {target}: {description}
 
 Updated files:
-  • docs/workflow/planning/{topic}/plan.md
+  • .workflows/planning/{topic}/plan.md
 ```
 
 If any dependencies remain unresolved:
