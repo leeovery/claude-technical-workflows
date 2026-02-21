@@ -74,11 +74,13 @@ Parse the discovery output to understand:
 
 **From `specifications` section:**
 - `exists` - whether any specifications exist
-- `feature` - list of feature specs (name, status, has_plan, plan_status)
+- `feature` - list of feature specs (name, status, has_plan, plan_status, has_impl, impl_status)
 - `crosscutting` - list of cross-cutting specs (name, status)
 - `counts.feature` - total feature specifications
 - `counts.feature_ready` - feature specs ready for planning (concluded + no plan)
 - `counts.feature_with_plan` - feature specs that already have plans
+- `counts.feature_actionable_with_plan` - specs with plans that are NOT fully implemented
+- `counts.feature_implemented` - specs with `impl_status: completed`
 - `counts.crosscutting` - total cross-cutting specifications
 
 **From `plans` section:**
