@@ -6,7 +6,7 @@
 
 This reference defines generic principles for breaking phases into tasks and writing task detail.
 
-A work-type context file (greenfield, feature, or bugfix) is always loaded alongside this file. The context file provides ordering examples, slicing strategies, and work-type-specific guidance. These generic principles apply across all work types.
+A work-type context file (greenfield, feature, or bugfix) is always loaded alongside this file. The context file provides task ordering, slicing examples, and work-type-specific guidance. These generic principles apply across all work types.
 
 ## One Task = One TDD Cycle
 
@@ -32,44 +32,11 @@ Cross-cutting references are context, not scope. They shape how tasks are writte
 
 Prefer **vertical slices** that deliver complete, testable functionality over horizontal slices that separate by technical layer.
 
-**Horizontal (avoid)**:
-
-```
-Task 1: Create all database models
-Task 2: Create all service classes
-Task 3: Wire up integrations
-Task 4: Add error handling
-```
-
-Nothing works until Task 4. No task is independently verifiable.
-
-**Vertical (prefer)**:
-
-```
-Task 1: Fetch and store events from provider (happy path)
-Task 2: Handle pagination for large result sets
-Task 3: Handle authentication token refresh
-Task 4: Handle rate limiting
-```
-
-Each task delivers a complete slice of functionality that can be tested in isolation.
-
-Within a bounded feature, vertical slicing means each task completes a coherent unit of that feature's functionality — not that it must touch UI/API/database layers. The test is: *can this task be verified independently?*
+The test: *can this task be verified independently?* If yes, it's a good vertical slice. If it only works once other tasks are complete, it's probably a horizontal slice.
 
 TDD naturally encourages vertical slicing — when you think "what test can I write?", you frame work as complete, verifiable behaviour rather than technical layers.
 
----
-
-## Task Ordering
-
-Within a phase, order tasks by:
-
-1. **Foundation / setup** — whatever other tasks need to build on
-2. **Happy path** — the primary expected behaviour, end-to-end
-3. **Error handling** — validation failures, API errors, permission checks
-4. **Edge cases** — boundary conditions, unusual inputs, race conditions
-
-**Edge cases as separate tasks**: Keep the happy-path task focused. If a task's acceptance criteria start growing beyond 3-4 items, the edge cases probably deserve their own tasks. This keeps each TDD cycle tight and each task independently verifiable.
+The context file provides examples of vertical slicing appropriate to the work type.
 
 ---
 
