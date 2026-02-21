@@ -20,7 +20,7 @@ Saving session state so Claude can pick up where it left off and continue the fe
 .claude/hooks/workflows/write-session-state.sh \
   "{topic}" \
   "skills/technical-review/SKILL.md" \
-  "docs/workflow/review/{topic}/r{N}/review.md" \
+  ".workflows/review/{topic}/r{N}/review.md" \
   --pipeline "This session is part of the feature pipeline. After the review concludes, return to the continue-feature skill and execute Step 7 (Phase Bridge). Load: skills/continue-feature/references/phase-bridge.md"
 ```
 
@@ -30,7 +30,7 @@ Invoke the [begin-review](../../begin-review/SKILL.md) skill:
 
 ```
 Review pre-flight for: {topic}
-Plan: docs/workflow/planning/{topic}/plan.md
+Plan: .workflows/planning/{topic}/plan.md
 
 PIPELINE CONTINUATION — When review concludes,
 you MUST return to the continue-feature skill and execute Step 7 (Phase Bridge).

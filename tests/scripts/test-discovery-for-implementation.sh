@@ -33,8 +33,8 @@ echo ""
 
 setup_fixture() {
     # Clean up from previous test
-    rm -rf "$TEST_DIR/docs"
-    mkdir -p "$TEST_DIR/docs/workflow"
+    rm -rf "$TEST_DIR/.workflows"
+    mkdir -p "$TEST_DIR/.workflows"
 }
 
 run_discovery() {
@@ -100,7 +100,7 @@ echo ""
 
 echo -e "${YELLOW}Test: Empty planning directory${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning"
+mkdir -p "$TEST_DIR/.workflows/planning"
 output=$(run_discovery)
 
 assert_contains "$output" "exists: false" "Plans don't exist (empty dir)"
@@ -112,8 +112,8 @@ echo ""
 
 echo -e "${YELLOW}Test: Single plan with full frontmatter${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/user-auth"
-cat > "$TEST_DIR/docs/workflow/planning/user-auth/plan.md" << 'EOF'
+mkdir -p "$TEST_DIR/.workflows/planning/user-auth"
+cat > "$TEST_DIR/.workflows/planning/user-auth/plan.md" << 'EOF'
 ---
 topic: user-auth
 status: in-progress
@@ -147,10 +147,10 @@ echo ""
 
 echo -e "${YELLOW}Test: Multiple plans${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/feature-a"
-mkdir -p "$TEST_DIR/docs/workflow/planning/feature-b"
+mkdir -p "$TEST_DIR/.workflows/planning/feature-a"
+mkdir -p "$TEST_DIR/.workflows/planning/feature-b"
 
-cat > "$TEST_DIR/docs/workflow/planning/feature-a/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/feature-a/plan.md" << 'EOF'
 ---
 topic: feature-a
 status: in-progress
@@ -162,7 +162,7 @@ specification: feature-a/specification.md
 # Implementation Plan: Feature A
 EOF
 
-cat > "$TEST_DIR/docs/workflow/planning/feature-b/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/feature-b/plan.md" << 'EOF'
 ---
 topic: feature-b
 status: concluded
@@ -187,9 +187,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with concluded status${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/completed-feature"
+mkdir -p "$TEST_DIR/.workflows/planning/completed-feature"
 
-cat > "$TEST_DIR/docs/workflow/planning/completed-feature/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/completed-feature/plan.md" << 'EOF'
 ---
 topic: completed-feature
 status: concluded
@@ -212,10 +212,10 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with linked specification that exists${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/with-spec"
-mkdir -p "$TEST_DIR/docs/workflow/specification/with-spec"
+mkdir -p "$TEST_DIR/.workflows/planning/with-spec"
+mkdir -p "$TEST_DIR/.workflows/specification/with-spec"
 
-cat > "$TEST_DIR/docs/workflow/planning/with-spec/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/with-spec/plan.md" << 'EOF'
 ---
 topic: with-spec
 status: in-progress
@@ -227,7 +227,7 @@ specification: with-spec/specification.md
 # Implementation Plan: With Spec
 EOF
 
-cat > "$TEST_DIR/docs/workflow/specification/with-spec/specification.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/specification/with-spec/specification.md" << 'EOF'
 ---
 topic: with-spec
 status: concluded
@@ -246,9 +246,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with linked specification that doesn't exist${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/no-spec"
+mkdir -p "$TEST_DIR/.workflows/planning/no-spec"
 
-cat > "$TEST_DIR/docs/workflow/planning/no-spec/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/no-spec/plan.md" << 'EOF'
 ---
 topic: no-spec
 status: in-progress
@@ -270,9 +270,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Environment setup file exists with setup required${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/test"
+mkdir -p "$TEST_DIR/.workflows/planning/test"
 
-cat > "$TEST_DIR/docs/workflow/planning/test/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/test/plan.md" << 'EOF'
 ---
 topic: test
 status: in-progress
@@ -284,7 +284,7 @@ specification: test/specification.md
 # Implementation Plan: Test
 EOF
 
-cat > "$TEST_DIR/docs/workflow/environment-setup.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/environment-setup.md" << 'EOF'
 # Environment Setup
 
 Run the following commands:
@@ -304,9 +304,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Environment setup file with no special setup required${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/test"
+mkdir -p "$TEST_DIR/.workflows/planning/test"
 
-cat > "$TEST_DIR/docs/workflow/planning/test/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/test/plan.md" << 'EOF'
 ---
 topic: test
 status: in-progress
@@ -318,7 +318,7 @@ specification: test/specification.md
 # Implementation Plan: Test
 EOF
 
-cat > "$TEST_DIR/docs/workflow/environment-setup.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/environment-setup.md" << 'EOF'
 # Environment Setup
 
 No special setup required.
@@ -335,9 +335,9 @@ echo ""
 
 echo -e "${YELLOW}Test: No environment setup file${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/test"
+mkdir -p "$TEST_DIR/.workflows/planning/test"
 
-cat > "$TEST_DIR/docs/workflow/planning/test/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/test/plan.md" << 'EOF'
 ---
 topic: test
 status: in-progress
@@ -360,9 +360,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with missing frontmatter fields (defaults)${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/minimal"
+mkdir -p "$TEST_DIR/.workflows/planning/minimal"
 
-cat > "$TEST_DIR/docs/workflow/planning/minimal/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/minimal/plan.md" << 'EOF'
 ---
 topic: minimal
 ---
@@ -383,9 +383,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan without frontmatter (legacy edge case)${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/no-frontmatter"
+mkdir -p "$TEST_DIR/.workflows/planning/no-frontmatter"
 
-cat > "$TEST_DIR/docs/workflow/planning/no-frontmatter/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/no-frontmatter/plan.md" << 'EOF'
 # Implementation Plan: No Frontmatter
 
 ## Overview
@@ -405,9 +405,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Different format value${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/beads-plan"
+mkdir -p "$TEST_DIR/.workflows/planning/beads-plan"
 
-cat > "$TEST_DIR/docs/workflow/planning/beads-plan/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/beads-plan/plan.md" << 'EOF'
 ---
 topic: beads-plan
 status: in-progress
@@ -429,9 +429,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with plan_id (beads format)${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/with-plan-id"
+mkdir -p "$TEST_DIR/.workflows/planning/with-plan-id"
 
-cat > "$TEST_DIR/docs/workflow/planning/with-plan-id/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/with-plan-id/plan.md" << 'EOF'
 ---
 topic: with-plan-id
 status: in-progress
@@ -454,9 +454,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan without plan_id (local-markdown)${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/no-plan-id"
+mkdir -p "$TEST_DIR/.workflows/planning/no-plan-id"
 
-cat > "$TEST_DIR/docs/workflow/planning/no-plan-id/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/no-plan-id/plan.md" << 'EOF'
 ---
 topic: no-plan-id
 status: in-progress
@@ -480,9 +480,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with empty external_dependencies${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/no-deps"
+mkdir -p "$TEST_DIR/.workflows/planning/no-deps"
 
-cat > "$TEST_DIR/docs/workflow/planning/no-deps/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/no-deps/plan.md" << 'EOF'
 ---
 topic: no-deps
 status: concluded
@@ -505,9 +505,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with unresolved dependency${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/has-unresolved"
+mkdir -p "$TEST_DIR/.workflows/planning/has-unresolved"
 
-cat > "$TEST_DIR/docs/workflow/planning/has-unresolved/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/has-unresolved/plan.md" << 'EOF'
 ---
 topic: has-unresolved
 status: concluded
@@ -535,9 +535,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with resolved dependency${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/has-resolved"
+mkdir -p "$TEST_DIR/.workflows/planning/has-resolved"
 
-cat > "$TEST_DIR/docs/workflow/planning/has-resolved/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/has-resolved/plan.md" << 'EOF'
 ---
 topic: has-resolved
 status: concluded
@@ -566,9 +566,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with satisfied_externally dependency${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/has-external"
+mkdir -p "$TEST_DIR/.workflows/planning/has-external"
 
-cat > "$TEST_DIR/docs/workflow/planning/has-external/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/has-external/plan.md" << 'EOF'
 ---
 topic: has-external
 status: concluded
@@ -594,9 +594,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with mixed dependencies${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/mixed-deps"
+mkdir -p "$TEST_DIR/.workflows/planning/mixed-deps"
 
-cat > "$TEST_DIR/docs/workflow/planning/mixed-deps/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/mixed-deps/plan.md" << 'EOF'
 ---
 topic: mixed-deps
 status: concluded
@@ -632,9 +632,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan without external_dependencies field (legacy)${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/legacy"
+mkdir -p "$TEST_DIR/.workflows/planning/legacy"
 
-cat > "$TEST_DIR/docs/workflow/planning/legacy/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/legacy/plan.md" << 'EOF'
 ---
 topic: legacy
 status: concluded
@@ -658,9 +658,9 @@ echo ""
 
 echo -e "${YELLOW}Test: No implementation directory${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/test"
+mkdir -p "$TEST_DIR/.workflows/planning/test"
 
-cat > "$TEST_DIR/docs/workflow/planning/test/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/test/plan.md" << 'EOF'
 ---
 topic: test
 status: concluded
@@ -683,10 +683,10 @@ echo ""
 
 echo -e "${YELLOW}Test: Implementation tracking file - in-progress${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/core-features"
-mkdir -p "$TEST_DIR/docs/workflow/implementation"
+mkdir -p "$TEST_DIR/.workflows/planning/core-features"
+mkdir -p "$TEST_DIR/.workflows/implementation"
 
-cat > "$TEST_DIR/docs/workflow/planning/core-features/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/core-features/plan.md" << 'EOF'
 ---
 topic: core-features
 status: concluded
@@ -698,8 +698,8 @@ external_dependencies: []
 # Plan: Core Features
 EOF
 
-mkdir -p "$TEST_DIR/docs/workflow/implementation/core-features"
-cat > "$TEST_DIR/docs/workflow/implementation/core-features/tracking.md" << 'EOF'
+mkdir -p "$TEST_DIR/.workflows/implementation/core-features"
+cat > "$TEST_DIR/.workflows/implementation/core-features/tracking.md" << 'EOF'
 ---
 topic: core-features
 plan: ../planning/core-features/plan.md
@@ -747,10 +747,10 @@ echo ""
 
 echo -e "${YELLOW}Test: Implementation tracking file - completed${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/user-auth"
-mkdir -p "$TEST_DIR/docs/workflow/implementation"
+mkdir -p "$TEST_DIR/.workflows/planning/user-auth"
+mkdir -p "$TEST_DIR/.workflows/implementation"
 
-cat > "$TEST_DIR/docs/workflow/planning/user-auth/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/user-auth/plan.md" << 'EOF'
 ---
 topic: user-auth
 status: concluded
@@ -762,8 +762,8 @@ external_dependencies: []
 # Plan: User Auth
 EOF
 
-mkdir -p "$TEST_DIR/docs/workflow/implementation/user-auth"
-cat > "$TEST_DIR/docs/workflow/implementation/user-auth/tracking.md" << 'EOF'
+mkdir -p "$TEST_DIR/.workflows/implementation/user-auth"
+cat > "$TEST_DIR/.workflows/implementation/user-auth/tracking.md" << 'EOF'
 ---
 topic: user-auth
 plan: ../planning/user-auth/plan.md
@@ -805,10 +805,10 @@ echo ""
 
 echo -e "${YELLOW}Test: Resolved dep with task in completed_tasks${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/billing"
-mkdir -p "$TEST_DIR/docs/workflow/implementation"
+mkdir -p "$TEST_DIR/.workflows/planning/billing"
+mkdir -p "$TEST_DIR/.workflows/implementation"
 
-cat > "$TEST_DIR/docs/workflow/planning/billing/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/billing/plan.md" << 'EOF'
 ---
 topic: billing
 status: concluded
@@ -824,8 +824,8 @@ external_dependencies:
 # Plan: Billing
 EOF
 
-mkdir -p "$TEST_DIR/docs/workflow/implementation/user-auth"
-cat > "$TEST_DIR/docs/workflow/implementation/user-auth/tracking.md" << 'EOF'
+mkdir -p "$TEST_DIR/.workflows/implementation/user-auth"
+cat > "$TEST_DIR/.workflows/implementation/user-auth/tracking.md" << 'EOF'
 ---
 topic: user-auth
 plan: ../planning/user-auth/plan.md
@@ -859,10 +859,10 @@ echo ""
 
 echo -e "${YELLOW}Test: Resolved dep with task NOT in completed_tasks${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/billing"
-mkdir -p "$TEST_DIR/docs/workflow/implementation"
+mkdir -p "$TEST_DIR/.workflows/planning/billing"
+mkdir -p "$TEST_DIR/.workflows/implementation"
 
-cat > "$TEST_DIR/docs/workflow/planning/billing/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/billing/plan.md" << 'EOF'
 ---
 topic: billing
 status: concluded
@@ -878,8 +878,8 @@ external_dependencies:
 # Plan: Billing
 EOF
 
-mkdir -p "$TEST_DIR/docs/workflow/implementation/core-features"
-cat > "$TEST_DIR/docs/workflow/implementation/core-features/tracking.md" << 'EOF'
+mkdir -p "$TEST_DIR/.workflows/implementation/core-features"
+cat > "$TEST_DIR/.workflows/implementation/core-features/tracking.md" << 'EOF'
 ---
 topic: core-features
 plan: ../planning/core-features/plan.md
@@ -914,14 +914,14 @@ echo ""
 
 echo -e "${YELLOW}Test: State summary counts with multiple plans${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/feature-a"
-mkdir -p "$TEST_DIR/docs/workflow/planning/feature-b"
-mkdir -p "$TEST_DIR/docs/workflow/planning/feature-c"
-mkdir -p "$TEST_DIR/docs/workflow/planning/feature-d"
-mkdir -p "$TEST_DIR/docs/workflow/implementation"
+mkdir -p "$TEST_DIR/.workflows/planning/feature-a"
+mkdir -p "$TEST_DIR/.workflows/planning/feature-b"
+mkdir -p "$TEST_DIR/.workflows/planning/feature-c"
+mkdir -p "$TEST_DIR/.workflows/planning/feature-d"
+mkdir -p "$TEST_DIR/.workflows/implementation"
 
 # Concluded plan, no deps, no impl -> ready
-cat > "$TEST_DIR/docs/workflow/planning/feature-a/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/feature-a/plan.md" << 'EOF'
 ---
 topic: feature-a
 status: concluded
@@ -934,7 +934,7 @@ external_dependencies: []
 EOF
 
 # Concluded plan with unresolved dep -> not ready
-cat > "$TEST_DIR/docs/workflow/planning/feature-b/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/feature-b/plan.md" << 'EOF'
 ---
 topic: feature-b
 status: concluded
@@ -950,7 +950,7 @@ external_dependencies:
 EOF
 
 # Planning status -> not concluded
-cat > "$TEST_DIR/docs/workflow/planning/feature-c/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/feature-c/plan.md" << 'EOF'
 ---
 topic: feature-c
 status: planning
@@ -963,7 +963,7 @@ external_dependencies: []
 EOF
 
 # Concluded with completed impl
-cat > "$TEST_DIR/docs/workflow/planning/feature-d/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/feature-d/plan.md" << 'EOF'
 ---
 topic: feature-d
 status: concluded
@@ -975,8 +975,8 @@ external_dependencies: []
 # Plan: Feature D
 EOF
 
-mkdir -p "$TEST_DIR/docs/workflow/implementation/feature-d"
-cat > "$TEST_DIR/docs/workflow/implementation/feature-d/tracking.md" << 'EOF'
+mkdir -p "$TEST_DIR/.workflows/implementation/feature-d"
+cat > "$TEST_DIR/.workflows/implementation/feature-d/tracking.md" << 'EOF'
 ---
 topic: feature-d
 status: completed

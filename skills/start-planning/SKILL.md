@@ -110,7 +110,7 @@ No specifications exist yet.
 ```
 Planning Overview
 
-No specifications found in docs/workflow/specification/
+No specifications found in .workflows/specification/
 
 The planning phase requires a concluded specification.
 Run /start-specification first.
@@ -197,7 +197,7 @@ Saving session state so Claude can pick up where it left off if the conversation
 .claude/hooks/workflows/write-session-state.sh \
   "{topic}" \
   "skills/technical-planning/SKILL.md" \
-  "docs/workflow/planning/{topic}/plan.md"
+  ".workflows/planning/{topic}/plan.md"
 ```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

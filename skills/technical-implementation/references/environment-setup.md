@@ -17,7 +17,7 @@ Before starting implementation, ensure the environment is ready. This step runs 
 
 ## Setup Document Location
 
-Look for: `docs/workflow/environment-setup.md`
+Look for: `.workflows/environment-setup.md`
 
 This file contains natural language instructions for setting up the implementation environment. It's project-specific.
 
@@ -42,9 +42,9 @@ Ask the user:
 
 If they provide instructions, offer to save them:
 
-> "Would you like me to save these instructions to `docs/workflow/environment-setup.md` for future sessions?"
+> "Would you like me to save these instructions to `.workflows/environment-setup.md` for future sessions?"
 
-If they say no setup is needed, create `docs/workflow/environment-setup.md` with "No special setup required." and commit. This prevents asking the same question in future sessions.
+If they say no setup is needed, create `.workflows/environment-setup.md` with "No special setup required." and commit. This prevents asking the same question in future sessions.
 
 ## No Setup Required
 

@@ -21,7 +21,7 @@ if [ -z "$session_id" ]; then
   exit 0
 fi
 
-SESSION_FILE="$PROJECT_DIR/docs/workflow/.cache/sessions/${session_id}.yaml"
+SESSION_FILE="$PROJECT_DIR/.workflows/.cache/sessions/${session_id}.yaml"
 
 if [ ! -f "$SESSION_FILE" ]; then
   exit 0

@@ -34,8 +34,8 @@ echo ""
 #
 
 setup_fixture() {
-    rm -rf "$TEST_DIR/docs" "$TEST_DIR/env"
-    mkdir -p "$TEST_DIR/docs/workflow/.cache/sessions"
+    rm -rf "$TEST_DIR/.workflows" "$TEST_DIR/env"
+    mkdir -p "$TEST_DIR/.workflows/.cache/sessions"
 }
 
 assert_contains() {
@@ -142,14 +142,14 @@ setup_fixture
 
 CLAUDE_SESSION_ID="test-session-001" \
 CLAUDE_PROJECT_DIR="$TEST_DIR" \
-bash "$WRITE_SCRIPT" "auth-flow" ".claude/skills/technical-discussion/SKILL.md" "docs/workflow/discussion/auth-flow.md"
+bash "$WRITE_SCRIPT" "auth-flow" ".claude/skills/technical-discussion/SKILL.md" ".workflows/discussion/auth-flow.md"
 
-session_file="$TEST_DIR/docs/workflow/.cache/sessions/test-session-001.yaml"
+session_file="$TEST_DIR/.workflows/.cache/sessions/test-session-001.yaml"
 assert_file_exists "$session_file" "Session file created"
 content=$(cat "$session_file")
 assert_contains "$content" "^topic: auth-flow$" "Topic field correct"
 assert_contains "$content" "^skill: .claude/skills/technical-discussion/SKILL.md$" "Skill field correct"
-assert_contains "$content" "^artifact: docs/workflow/discussion/auth-flow.md$" "Artifact field correct"
+assert_contains "$content" "^artifact: .workflows/discussion/auth-flow.md$" "Artifact field correct"
 assert_not_contains "$content" "pipeline" "No pipeline section without --pipeline flag"
 
 echo ""
@@ -161,10 +161,10 @@ setup_fixture
 
 CLAUDE_SESSION_ID="test-session-002" \
 CLAUDE_PROJECT_DIR="$TEST_DIR" \
-bash "$WRITE_SCRIPT" "billing" ".claude/skills/technical-specification/SKILL.md" "docs/workflow/specification/billing/specification.md" \
+bash "$WRITE_SCRIPT" "billing" ".claude/skills/technical-specification/SKILL.md" ".workflows/specification/billing/specification.md" \
   --pipeline 'Enter plan mode: "Clear context and continue with /continue-feature for billing"'
 
-session_file="$TEST_DIR/docs/workflow/.cache/sessions/test-session-002.yaml"
+session_file="$TEST_DIR/.workflows/.cache/sessions/test-session-002.yaml"
 assert_file_exists "$session_file" "Session file created"
 content=$(cat "$session_file")
 assert_contains "$content" "^topic: billing$" "Topic field correct"
@@ -199,7 +199,7 @@ echo ""
 
 echo -e "${YELLOW}Test: session-cleanup deletes session file${NC}"
 setup_fixture
-session_file="$TEST_DIR/docs/workflow/.cache/sessions/cleanup-test-001.yaml"
+session_file="$TEST_DIR/.workflows/.cache/sessions/cleanup-test-001.yaml"
 cat > "$session_file" << 'EOF'
 topic: test
 skill: test

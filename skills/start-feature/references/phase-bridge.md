@@ -26,7 +26,7 @@ continue the feature pipeline from specification onwards.
 - Topic: {topic}
 - Completed phase: discussion
 - Expected next phase: specification
-- Discussion: docs/workflow/discussion/{topic}.md
+- Discussion: .workflows/discussion/{topic}.md
 
 ## How to proceed
 

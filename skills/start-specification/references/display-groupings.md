@@ -8,7 +8,7 @@ Shows when cache is valid (directly from routing) or after analysis completes. T
 
 ## A. Load Groupings
 
-Load groupings from `docs/workflow/.state/discussion-consolidation-analysis.md`. Parse the `### {Name}` headings and their discussion lists.
+Load groupings from `.workflows/.state/discussion-consolidation-analysis.md`. Parse the `### {Name}` headings and their discussion lists.
 
 → Proceed to **B. Determine Discussion Status**.
 
@@ -160,7 +160,7 @@ Every meta option (Unify, Re-analyze) MUST include its description lines.
 
 #### If user picks "Unify all"
 
-Update the cache: rewrite `docs/workflow/.state/discussion-consolidation-analysis.md` with a single "Unified" grouping containing all concluded discussions. Keep the same checksum, update the generated timestamp. Add note: `Custom groupings confirmed by user (unified).`
+Update the cache: rewrite `.workflows/.state/discussion-consolidation-analysis.md` with a single "Unified" grouping containing all concluded discussions. Keep the same checksum, update the generated timestamp. Add note: `Custom groupings confirmed by user (unified).`
 
 Spec name: "Unified". Sources: all concluded discussions.
 
@@ -170,7 +170,7 @@ Spec name: "Unified". Sources: all concluded discussions.
 
 Delete the cache:
 ```bash
-rm docs/workflow/.state/discussion-consolidation-analysis.md
+rm .workflows/.state/discussion-consolidation-analysis.md
 ```
 
 → Load **[analysis-flow.md](analysis-flow.md)** and follow its instructions.

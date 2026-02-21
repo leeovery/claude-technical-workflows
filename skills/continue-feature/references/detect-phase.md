@@ -14,22 +14,22 @@ Either use the `next_phase` from discovery output (if discovery was run), or com
 
 Check artifacts in this order (first match wins):
 
-1. Check `docs/workflow/review/{topic}/r*/review.md`
+1. Check `.workflows/review/{topic}/r*/review.md`
    - If any review exists → next_phase is **"done"**
 
-2. Read `docs/workflow/implementation/{topic}/tracking.md`
+2. Read `.workflows/implementation/{topic}/tracking.md`
    - If exists with `status: completed` → next_phase is **"review"**
    - If exists with `status: in-progress` → next_phase is **"implementation"**
 
-3. Read `docs/workflow/planning/{topic}/plan.md`
+3. Read `.workflows/planning/{topic}/plan.md`
    - If exists with `status: concluded` → next_phase is **"implementation"**
    - If exists with other status → next_phase is **"planning"**
 
-4. Read `docs/workflow/specification/{topic}/specification.md`
+4. Read `.workflows/specification/{topic}/specification.md`
    - If exists with `status: concluded` → next_phase is **"planning"**
    - If exists with other status → next_phase is **"specification"**
 
-5. Check `docs/workflow/discussion/{topic}.md`
+5. Check `.workflows/discussion/{topic}.md`
    - If exists with `status: concluded` → next_phase is **"specification"**
    - If exists with other status → next_phase is **"discussion"**
 

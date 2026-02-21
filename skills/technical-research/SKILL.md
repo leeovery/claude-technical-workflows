@@ -1,6 +1,6 @@
 ---
 name: technical-research
-description: "Explore ideas, validate concepts, and research broadly across technical, business, and market domains. Use when: (1) User has a new idea to explore, (2) Need to research a topic deeply, (3) Validating feasibility - technical, business, or market, (4) Learning and exploration without necessarily building anything, (5) User says 'research this' or 'explore this idea', (6) Brain dumping early thoughts before formal discussion. Creates research documents in docs/workflow/research/ that may feed into discussion or specification."
+description: "Explore ideas, validate concepts, and research broadly across technical, business, and market domains. Use when: (1) User has a new idea to explore, (2) Need to research a topic deeply, (3) Validating feasibility - technical, business, or market, (4) Learning and exploration without necessarily building anything, (5) User says 'research this' or 'explore this idea', (6) Brain dumping early thoughts before formal discussion. Creates research documents in .workflows/research/ that may feed into discussion or specification."
 user-invocable: false
 ---
 
@@ -151,7 +151,7 @@ Ask one question at a time. Wait for the answer. Document. Then ask the next.
 
 ## File Strategy
 
-**Output**: `docs/workflow/research/exploration.md`
+**Output**: `.workflows/research/exploration.md`
 
 **Template**: Use `references/template.md` for document structure. All research documents use YAML frontmatter:
 

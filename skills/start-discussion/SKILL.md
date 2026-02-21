@@ -2,7 +2,7 @@
 name: start-discussion
 description: "Start a technical discussion. Discovers research and existing discussions, offers multiple entry paths, and invokes the technical-discussion skill."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/start-discussion/scripts/discovery.sh), Bash(mkdir -p docs/workflow/.state), Bash(rm docs/workflow/.state/research-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh)
+allowed-tools: Bash(.claude/skills/start-discussion/scripts/discovery.sh), Bash(mkdir -p .workflows/.state), Bash(rm .workflows/.state/research-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh)
 hooks:
   PreToolUse:
     - hooks:
@@ -180,7 +180,7 @@ Saving session state so Claude can pick up where it left off if the conversation
 .claude/hooks/workflows/write-session-state.sh \
   "{topic}" \
   "skills/technical-discussion/SKILL.md" \
-  "docs/workflow/discussion/{topic}.md"
+  ".workflows/discussion/{topic}.md"
 ```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

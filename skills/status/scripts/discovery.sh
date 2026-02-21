@@ -8,11 +8,11 @@
 
 set -eo pipefail
 
-RESEARCH_DIR="docs/workflow/research"
-DISCUSSION_DIR="docs/workflow/discussion"
-SPEC_DIR="docs/workflow/specification"
-PLAN_DIR="docs/workflow/planning"
-IMPL_DIR="docs/workflow/implementation"
+RESEARCH_DIR=".workflows/research"
+DISCUSSION_DIR=".workflows/discussion"
+SPEC_DIR=".workflows/specification"
+PLAN_DIR=".workflows/planning"
+IMPL_DIR=".workflows/implementation"
 
 # Helper: Extract a frontmatter field value from a file
 # Usage: extract_field <file> <field_name>

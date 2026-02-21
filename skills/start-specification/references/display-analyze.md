@@ -87,7 +87,7 @@ Proceed with analysis?
 
 If cache is stale, delete it first:
 ```bash
-rm docs/workflow/.state/discussion-consolidation-analysis.md
+rm .workflows/.state/discussion-consolidation-analysis.md
 ```
 
 → Load **[analysis-flow.md](analysis-flow.md)** and follow its instructions.

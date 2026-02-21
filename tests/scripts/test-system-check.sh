@@ -32,7 +32,7 @@ echo ""
 #
 
 setup_fixture() {
-    rm -rf "$TEST_DIR/.claude" "$TEST_DIR/docs"
+    rm -rf "$TEST_DIR/.claude" "$TEST_DIR/.workflows"
 }
 
 run_hook() {

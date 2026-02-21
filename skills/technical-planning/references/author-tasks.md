@@ -10,9 +10,9 @@ This step uses the `planning-task-author` agent (`../../../agents/planning-task-
 
 ## Section 1: Prepare the Scratch File
 
-Scratch file path: `docs/workflow/.cache/planning/{topic}/phase-{N}.md`
+Scratch file path: `.workflows/.cache/planning/{topic}/phase-{N}.md`
 
-Create the `docs/workflow/.cache/planning/{topic}/` directory if it does not exist.
+Create the `.workflows/.cache/planning/{topic}/` directory if it does not exist.
 
 ---
 
@@ -32,7 +32,7 @@ Invoke `planning-task-author` with these file paths:
 4. **task-design.md**: `task-design.md`
 5. **All approved phases**: the complete phase structure from the Plan Index File body
 6. **Task list for current phase**: the approved task table (ALL tasks in the phase)
-7. **Scratch file path**: `docs/workflow/.cache/planning/{topic}/phase-{N}.md`
+7. **Scratch file path**: `.workflows/.cache/planning/{topic}/phase-{N}.md`
 
 The agent writes all tasks to the scratch file and returns.
 
@@ -183,8 +183,8 @@ Repeat for each task.
 
 ## Section 7: Cleanup
 
-Delete the scratch file: `rm docs/workflow/.cache/planning/{topic}/phase-{N}.md`
+Delete the scratch file: `rm .workflows/.cache/planning/{topic}/phase-{N}.md`
 
-Remove the `docs/workflow/.cache/planning/{topic}/` directory if empty.
+Remove the `.workflows/.cache/planning/{topic}/` directory if empty.
 
 → Return to **Plan Construction**.

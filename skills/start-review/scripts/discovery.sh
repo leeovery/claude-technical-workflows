@@ -7,10 +7,10 @@
 
 set -eo pipefail
 
-PLAN_DIR="docs/workflow/planning"
-SPEC_DIR="docs/workflow/specification"
-REVIEW_DIR="docs/workflow/review"
-IMPL_DIR="docs/workflow/implementation"
+PLAN_DIR=".workflows/planning"
+SPEC_DIR=".workflows/specification"
+REVIEW_DIR=".workflows/review"
+IMPL_DIR=".workflows/implementation"
 
 # Helper: Extract a frontmatter field value from a file
 # Usage: extract_field <file> <field_name>
@@ -78,7 +78,7 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
         fi
 
         # Check implementation status
-        impl_tracking="docs/workflow/implementation/${name}/tracking.md"
+        impl_tracking=".workflows/implementation/${name}/tracking.md"
         impl_status="none"
         if [ -f "$impl_tracking" ]; then
             impl_status_val=$(extract_field "$impl_tracking" "status")
