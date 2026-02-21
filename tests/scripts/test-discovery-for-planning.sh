@@ -763,6 +763,215 @@ EOF
 }
 
 #
+# Test: Spec with completed implementation
+#
+test_spec_with_completed_implementation() {
+    echo -e "${YELLOW}Test: Spec with completed implementation${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/specification/auth-system"
+    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system"
+    mkdir -p "$TEST_DIR/docs/workflow/implementation/auth-system"
+
+    cat > "$TEST_DIR/docs/workflow/specification/auth-system/specification.md" << 'EOF'
+---
+topic: auth-system
+status: concluded
+type: feature
+---
+
+# Specification: Auth System
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/plan.md" << 'EOF'
+---
+format: local-markdown
+status: concluded
+---
+
+# Implementation Plan: Auth System
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/implementation/auth-system/tracking.md" << 'EOF'
+---
+topic: auth-system
+status: completed
+---
+
+# Implementation: Auth System
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'has_impl: true' "Implementation tracking exists"
+    assert_contains "$output" 'impl_status: "completed"' "Implementation status is completed"
+    assert_contains "$output" 'feature_implemented: 1' "Feature implemented count is 1"
+    assert_contains "$output" 'feature_actionable_with_plan: 0' "Feature actionable with plan is 0 (implemented)"
+
+    echo ""
+}
+
+#
+# Test: Spec with in-progress implementation
+#
+test_spec_with_in_progress_implementation() {
+    echo -e "${YELLOW}Test: Spec with in-progress implementation${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/specification/auth-system"
+    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system"
+    mkdir -p "$TEST_DIR/docs/workflow/implementation/auth-system"
+
+    cat > "$TEST_DIR/docs/workflow/specification/auth-system/specification.md" << 'EOF'
+---
+topic: auth-system
+status: concluded
+type: feature
+---
+
+# Specification: Auth System
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/plan.md" << 'EOF'
+---
+format: local-markdown
+status: concluded
+---
+
+# Implementation Plan: Auth System
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/implementation/auth-system/tracking.md" << 'EOF'
+---
+topic: auth-system
+status: in-progress
+---
+
+# Implementation: Auth System
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'has_impl: true' "Implementation tracking exists"
+    assert_contains "$output" 'impl_status: "in-progress"' "Implementation status is in-progress"
+    assert_contains "$output" 'feature_implemented: 0' "Feature implemented count is 0"
+    assert_contains "$output" 'feature_actionable_with_plan: 1' "Feature actionable with plan is 1 (not completed)"
+    assert_contains "$output" 'scenario: "has_options"' "Scenario is has_options"
+
+    echo ""
+}
+
+#
+# Test: All specs implemented yields nothing_actionable
+#
+test_all_specs_implemented() {
+    echo -e "${YELLOW}Test: All specs implemented yields nothing_actionable${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/specification/auth-system"
+    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system"
+    mkdir -p "$TEST_DIR/docs/workflow/implementation/auth-system"
+
+    cat > "$TEST_DIR/docs/workflow/specification/auth-system/specification.md" << 'EOF'
+---
+topic: auth-system
+status: concluded
+type: feature
+---
+
+# Specification: Auth System
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/plan.md" << 'EOF'
+---
+format: local-markdown
+status: concluded
+---
+
+# Implementation Plan: Auth System
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/implementation/auth-system/tracking.md" << 'EOF'
+---
+topic: auth-system
+status: completed
+---
+
+# Implementation: Auth System
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'feature_ready: 0' "No specs ready for new plans"
+    assert_contains "$output" 'feature_actionable_with_plan: 0' "No actionable specs with plans"
+    assert_contains "$output" 'scenario: "nothing_actionable"' "Scenario is nothing_actionable"
+
+    echo ""
+}
+
+#
+# Test: Mix of implemented and ready specs
+#
+test_mix_implemented_and_ready() {
+    echo -e "${YELLOW}Test: Mix of implemented and ready specs${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/docs/workflow/specification/auth-system"
+    mkdir -p "$TEST_DIR/docs/workflow/specification/billing"
+    mkdir -p "$TEST_DIR/docs/workflow/planning/auth-system"
+    mkdir -p "$TEST_DIR/docs/workflow/implementation/auth-system"
+
+    # Implemented spec
+    cat > "$TEST_DIR/docs/workflow/specification/auth-system/specification.md" << 'EOF'
+---
+topic: auth-system
+status: concluded
+type: feature
+---
+
+# Specification: Auth System
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/planning/auth-system/plan.md" << 'EOF'
+---
+format: local-markdown
+status: concluded
+---
+
+# Implementation Plan: Auth System
+EOF
+
+    cat > "$TEST_DIR/docs/workflow/implementation/auth-system/tracking.md" << 'EOF'
+---
+topic: auth-system
+status: completed
+---
+
+# Implementation: Auth System
+EOF
+
+    # Ready spec (no plan)
+    cat > "$TEST_DIR/docs/workflow/specification/billing/specification.md" << 'EOF'
+---
+topic: billing
+status: concluded
+type: feature
+---
+
+# Specification: Billing
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'feature: 2' "Feature count is 2"
+    assert_contains "$output" 'feature_ready: 1' "Feature ready count is 1"
+    assert_contains "$output" 'feature_implemented: 1' "Feature implemented count is 1"
+    assert_contains "$output" 'scenario: "has_options"' "Scenario is has_options"
+
+    echo ""
+}
+
+#
 # Run all tests
 #
 echo "=========================================="
@@ -789,6 +998,10 @@ test_common_format_single_plan
 test_common_format_multiple_same
 test_common_format_mixed
 test_common_format_missing_ignored
+test_spec_with_completed_implementation
+test_spec_with_in_progress_implementation
+test_all_specs_implemented
+test_mix_implemented_and_ready
 
 #
 # Summary
