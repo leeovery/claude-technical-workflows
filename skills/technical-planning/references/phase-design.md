@@ -4,9 +4,9 @@
 
 ---
 
-This reference defines the principles for breaking specifications into implementation phases. It is loaded when phases are first proposed and stays in context through phase approval.
+This reference defines generic principles for breaking specifications into implementation phases.
 
-Context-specific guidance supplements these principles. A context file (greenfield, feature, or bugfix) is always loaded alongside this file, providing the Phase 1 strategy, progression model, and examples appropriate to the work type.
+A work-type context file (greenfield, feature, or bugfix) is always loaded alongside this file. The context file provides the Phase 1 strategy, progression model, examples, and work-type-specific guidance. These generic principles apply across all work types.
 
 ## What Makes a Good Phase
 
@@ -17,18 +17,6 @@ Each phase should:
 - **Follow natural boundaries** — domain, feature, or capability boundaries, not architectural layers
 - **Leave the system working** — every phase ends with a green test suite and deployable code
 - **Be independently valuable** — if the project stopped after this phase, something useful would exist
-
----
-
-## Phase 1 Strategy
-
-Phase 1 establishes the pattern for subsequent phases. The right strategy depends on the project context:
-
-- **New system (greenfield)**: Start with a walking skeleton — the thinnest end-to-end slice proving the architecture. See [greenfield.md](phase-design/greenfield.md).
-- **Feature addition**: Start with the most fundamental new capability. The existing codebase is the foundation. See [feature.md](phase-design/feature.md).
-- **Bug fix**: Start with reproducing and fixing the core issue. See [bugfix.md](phase-design/bugfix.md).
-
-Context-specific guidance is always loaded alongside this file. Follow its Phase 1 strategy. If no work type was specified, greenfield guidance is loaded by default.
 
 ---
 
