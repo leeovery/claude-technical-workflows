@@ -12,9 +12,9 @@ The same workflow applies: present the dependencies section for approval, then l
 
 Dependencies are **blockers** — things that must exist before implementation can begin.
 
-Think of it like building a house: if you're specifying the roof, the walls are a dependency. You cannot build a roof without walls to support it. The walls must exist first.
+If feature B requires data that feature A produces, then feature A is a dependency — B cannot function without A's output existing first.
 
-**The test**: "If system X doesn't exist, can we still build this feature?"
+**The test**: "If system X doesn't exist, can we still deliver this?"
 - If **no** → X is a dependency
 - If **yes** → X is not a dependency (even if the systems work together)
 

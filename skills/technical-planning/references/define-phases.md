@@ -34,14 +34,17 @@ independently testable stages.
 
 ### Invoke the Agent
 
+Read `work_type` from the Plan Index File frontmatter.
+
 Invoke `planning-phase-designer` with these file paths:
 
 1. **read-specification.md**: `read-specification.md`
 2. **Specification**: path from the Plan Index File's `specification:` field
 3. **Cross-cutting specs**: paths from the Plan Index File's `cross_cutting_specs:` field (if any)
 4. **phase-design.md**: `phase-design.md`
-5. **task-design.md**: `task-design.md`
-6. **plan-index-schema.md**: `plan-index-schema.md`
+5. **Context guidance**: `phase-design/{work_type}.md` (default to `greenfield` if `work_type` is empty)
+6. **task-design.md**: `task-design.md`
+7. **plan-index-schema.md**: `plan-index-schema.md`
 
 The agent returns a complete phase structure. Write it directly to the Plan Index File body.
 

@@ -36,6 +36,9 @@ You are stateless — each invocation starts fresh. The full task content is alw
    - Read files and tests related to the task's domain
    - Identify patterns, conventions, and structures you'll need to follow or extend
    - Check for existing code that the task builds on or integrates with
+   - Find similar implementations — if the task is "add endpoint X", find existing endpoints and follow the same pattern
+   - Understand inputs, outputs, and callers of any code you'll modify
+   - Note the testing approach used in this area — use the same patterns
 6. **Execute TDD cycle** — follow the process in tdd-workflow.md for each acceptance criterion and test case.
 7. **Verify all acceptance criteria met** — every criterion from the task must be satisfied
 8. **Return structured result**

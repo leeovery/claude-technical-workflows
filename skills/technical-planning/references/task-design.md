@@ -4,7 +4,9 @@
 
 ---
 
-This reference defines the principles for breaking phases into tasks and writing task detail. It is loaded when tasks are first proposed and stays in context through task detailing.
+This reference defines generic principles for breaking phases into tasks and writing task detail.
+
+A work-type context file (greenfield, feature, or bugfix) is always loaded alongside this file. The context file provides ordering examples, slicing strategies, and work-type-specific guidance. These generic principles apply across all work types.
 
 ## One Task = One TDD Cycle
 
@@ -62,12 +64,10 @@ TDD naturally encourages vertical slicing — when you think "what test can I wr
 
 Within a phase, order tasks by:
 
-1. **Foundation / setup** — models, migrations, base configuration needed by other tasks
+1. **Foundation / setup** — whatever other tasks need to build on
 2. **Happy path** — the primary expected behaviour, end-to-end
 3. **Error handling** — validation failures, API errors, permission checks
 4. **Edge cases** — boundary conditions, unusual inputs, race conditions
-
-This ordering means the first tasks establish the pattern and the later tasks extend it. Each task builds on a working foundation rather than building in the dark.
 
 **Edge cases as separate tasks**: Keep the happy-path task focused. If a task's acceptance criteria start growing beyond 3-4 items, the edge cases probably deserve their own tasks. This keeps each TDD cycle tight and each task independently verifiable.
 

@@ -4,7 +4,9 @@
 
 ---
 
-This reference defines the principles for breaking specifications into implementation phases. It is loaded when phases are first proposed and stays in context through phase approval.
+This reference defines generic principles for breaking specifications into implementation phases.
+
+A work-type context file (greenfield, feature, or bugfix) is always loaded alongside this file. The context file provides the Phase 1 strategy, progression model, examples, and work-type-specific guidance. These generic principles apply across all work types.
 
 ## What Makes a Good Phase
 
@@ -18,49 +20,9 @@ Each phase should:
 
 ---
 
-## The Walking Skeleton
-
-Phase 1 is always a **walking skeleton** — the thinnest possible end-to-end slice that threads through all system layers and proves the architecture works.
-
-The walking skeleton:
-
-- Touches every architectural component the system needs (database, API, UI, external services)
-- Delivers one complete flow, however minimal
-- Establishes the patterns subsequent phases will follow
-- Is production code, not throwaway — it becomes the foundation
-
-**Example** (Slack clone):
-
-> Phase 1: "Any unauthenticated person can post messages in a hardcoded #general room. Messages persist through page refreshes."
->
-> No auth, no accounts, no multiple rooms. Just the thinnest thread through the entire stack.
-
-**Example** (Calendar app):
-
-> Phase 1: "A single event can be created with title, start, and end time, persisted, and retrieved by ID."
->
-> No recurrence, no sharing, no notifications. Just one thing working end-to-end.
-
-The skeleton validates architecture assumptions at the cheapest possible moment. If the end-to-end flow doesn't work, you discover it in Phase 1 — not after building three phases of isolated components.
-
-This is the **steel thread** principle: never have big-bang integration. By threading through all layers immediately, integration is the first thing you solve, not the last.
-
----
-
 ## Vertical Phases
 
-After the walking skeleton, each subsequent phase adds complete functionality — a vertical slice through the relevant layers.
-
-**Vertical (prefer):**
-
-```
-Phase 1: Walking skeleton — single event CRUD, end-to-end
-Phase 2: Recurring events — rules, instance generation, single-instance editing
-Phase 3: Sharing and permissions — invite users, permission levels, shared calendars
-Phase 4: Notifications — email and push notifications for event changes
-```
-
-Each phase delivers something a user or test suite can validate independently.
+Each phase adds complete functionality — a vertical slice through the relevant layers.
 
 **Horizontal (avoid):**
 
@@ -75,17 +37,6 @@ Phase 5: Wire everything together
 Nothing works until Phase 5. No phase is independently testable. Integration risk concentrates at the end.
 
 A phase may touch multiple architectural layers — that's expected. The test is: **does this phase deliver working functionality, or does it deliver infrastructure that only becomes useful later?**
-
-### Progression
-
-**Skeleton → Core features → Edge cases → Refinement**
-
-- **Skeleton** (Phase 1): Thinnest end-to-end slice proving the architecture
-- **Core features**: Each phase adds a complete capability, building on what exists
-- **Edge cases**: Handling boundary conditions, error scenarios, unusual inputs
-- **Refinement**: Performance optimisation, UX polish, hardening
-
-This ordering means each phase builds on a working system. The skeleton establishes the pattern; core features flesh it out; edge cases harden it; refinement polishes it.
 
 ---
 
@@ -122,20 +73,19 @@ If a phase has only 1-2 trivial tasks, it's probably too thin — merge it. If a
 
 **Maximize cohesion within a phase, minimize dependencies between phases.**
 
-A well-bounded phase could theoretically be reordered or dropped without cascading failures across other phases. In practice, phases have a natural sequence (the skeleton must come first), but each phase should be as self-contained as possible.
+A well-bounded phase could theoretically be reordered or dropped without cascading failures across other phases. In practice, phases have a natural sequence, but each phase should be as self-contained as possible.
 
 Strategies:
 
-- **Walking skeleton first** — subsequent phases add to a working system rather than depending on future phases
+- **Strongest foundation first** — subsequent phases add to a working system rather than depending on future phases
 - **Clear interfaces between phases** — each phase produces defined contracts (API shapes, data models, test suites) that subsequent phases consume
-- **Shared infrastructure in Phase 1** — if multiple phases need the same foundation, it belongs in the skeleton
 - **No forward references** — a phase should never depend on something that hasn't been built yet
 
 ---
 
 ## Anti-Patterns
 
-**Horizontal phases** — organising by technical layer ("all models, then all services, then all controllers"). Defers integration risk, produces phases that aren't independently valuable. The walking skeleton eliminates this by integrating from the start.
+**Horizontal phases** — organising by technical layer ("all models, then all services, then all controllers"). Defers integration risk, produces phases that aren't independently valuable. Vertical slicing eliminates this by integrating from the start.
 
 **God phase** — one massive phase covering too many concerns. Results in unclear success criteria, inability to track progress, and cognitive overload. If you can't summarise a phase's goal in one sentence, it needs splitting.
 
