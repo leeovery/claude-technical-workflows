@@ -46,9 +46,9 @@ Task 3: Add integration test covering the full workflow (regression)
 
 Each task changes the minimum code needed:
 
-- Don't refactor adjacent code, even if the fix reveals it could be cleaner
-- Don't add features while fixing bugs — if improvements are apparent, note them for the user but keep the fix focused
-- Keep the diff small and reviewable — a reviewer should immediately see what changed and why
+- Don't refactor adjacent code
+- Don't add features while fixing bugs
+- Keep the diff small and reviewable
 - If a task starts growing beyond the fix, it's probably two tasks
 
 ---
