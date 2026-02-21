@@ -8,9 +8,9 @@
 
 set -eo pipefail
 
-DISCUSSION_DIR="docs/workflow/discussion"
-SPEC_DIR="docs/workflow/specification"
-CACHE_FILE="docs/workflow/.state/discussion-consolidation-analysis.md"
+DISCUSSION_DIR=".workflows/discussion"
+SPEC_DIR=".workflows/specification"
+CACHE_FILE=".workflows/.state/discussion-consolidation-analysis.md"
 
 # Helper: Extract a frontmatter field value from a file
 # Usage: extract_field <file> <field_name>

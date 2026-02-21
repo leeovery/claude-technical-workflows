@@ -169,7 +169,7 @@ Enter choice (1-6):
 ```
 Continuing specification: Authentication System
 
-Existing: docs/workflow/specification/authentication-system.md (in-progress)
+Existing: .workflows/specification/authentication-system.md (in-progress)
 
 Sources to extract:
   • oauth-integration (pending)
@@ -190,12 +190,12 @@ Proceed? (y/n)
 ```
 Specification session for: Authentication System
 
-Continuing existing: docs/workflow/specification/authentication-system.md
+Continuing existing: .workflows/specification/authentication-system.md
 
 Sources for reference:
-- docs/workflow/discussion/auth-flow.md
-- docs/workflow/discussion/user-sessions.md
-- docs/workflow/discussion/oauth-integration.md
+- .workflows/discussion/auth-flow.md
+- .workflows/discussion/user-sessions.md
+- .workflows/discussion/oauth-integration.md
 
 Context: This specification already exists. Review and refine it based on the source discussions.
 
@@ -224,7 +224,7 @@ Sources:
   • api-endpoints
   • error-handling
 
-Output: docs/workflow/specification/api-design.md
+Output: .workflows/specification/api-design.md
 
 Proceed? (y/n)
 ```
@@ -237,10 +237,10 @@ Proceed? (y/n)
 Specification session for: API Design
 
 Sources:
-- docs/workflow/discussion/api-endpoints.md
-- docs/workflow/discussion/error-handling.md
+- .workflows/discussion/api-endpoints.md
+- .workflows/discussion/error-handling.md
 
-Output: docs/workflow/specification/api-design.md
+Output: .workflows/specification/api-design.md
 
 ---
 Invoke the technical-specification skill.
@@ -263,7 +263,7 @@ Steps 0-3 identical to Scenario A.
 ```
 Refining specification: Caching Layer
 
-Existing: docs/workflow/specification/caching-layer.md (concluded)
+Existing: .workflows/specification/caching-layer.md (concluded)
 
 All sources extracted:
   • caching-layer
@@ -278,10 +278,10 @@ Proceed? (y/n)
 ```
 Specification session for: Caching Layer
 
-Continuing existing: docs/workflow/specification/caching-layer.md
+Continuing existing: .workflows/specification/caching-layer.md
 
 Sources for reference:
-- docs/workflow/discussion/caching-layer.md
+- .workflows/discussion/caching-layer.md
 
 Context: This specification already exists. Review and refine it based on the source discussions.
 
@@ -303,7 +303,7 @@ Steps 0-3 identical to Scenario A.
 
 Claude deletes the cache:
 ```bash
-rm docs/workflow/.state/discussion-consolidation-analysis.md
+rm .workflows/.state/discussion-consolidation-analysis.md
 ```
 
 ### Step 4: Gather Analysis Context
@@ -427,7 +427,7 @@ Existing specifications to incorporate:
   • authentication-system.md → will be superseded
   • caching-layer.md → will be superseded
 
-Output: docs/workflow/specification/unified.md
+Output: .workflows/specification/unified.md
 
 Proceed? (y/n)
 ```
@@ -442,19 +442,19 @@ Proceed? (y/n)
 Specification session for: Unified
 
 Source discussions:
-- docs/workflow/discussion/auth-flow.md
-- docs/workflow/discussion/user-sessions.md
-- docs/workflow/discussion/oauth-integration.md
-- docs/workflow/discussion/api-endpoints.md
-- docs/workflow/discussion/error-handling.md
-- docs/workflow/discussion/logging-strategy.md
-- docs/workflow/discussion/caching-layer.md
+- .workflows/discussion/auth-flow.md
+- .workflows/discussion/user-sessions.md
+- .workflows/discussion/oauth-integration.md
+- .workflows/discussion/api-endpoints.md
+- .workflows/discussion/error-handling.md
+- .workflows/discussion/logging-strategy.md
+- .workflows/discussion/caching-layer.md
 
 Existing specifications to incorporate:
-- docs/workflow/specification/authentication-system.md
-- docs/workflow/specification/caching-layer.md
+- .workflows/specification/authentication-system.md
+- .workflows/specification/caching-layer.md
 
-Output: docs/workflow/specification/unified.md
+Output: .workflows/specification/unified.md
 
 Context: This consolidates all discussions into a single unified specification. The existing specifications should be incorporated - extract and adapt their content alongside the discussion material.
 
@@ -510,7 +510,7 @@ Sources:
   • auth-flow (has individual spec — will be incorporated)
   • api-design
 
-Output: docs/workflow/specification/api-authentication.md
+Output: .workflows/specification/api-authentication.md
 
 After completion:
   specification/auth-flow.md → marked as superseded
@@ -528,13 +528,13 @@ Proceed? (y/n)
 Specification session for: API Authentication
 
 Source discussions:
-- docs/workflow/discussion/auth-flow.md
-- docs/workflow/discussion/api-design.md
+- .workflows/discussion/auth-flow.md
+- .workflows/discussion/api-design.md
 
 Existing specifications to incorporate:
-- docs/workflow/specification/auth-flow.md (covers: auth-flow discussion)
+- .workflows/specification/auth-flow.md (covers: auth-flow discussion)
 
-Output: docs/workflow/specification/api-authentication.md
+Output: .workflows/specification/api-authentication.md
 
 Context: This consolidates multiple sources. The existing auth-flow.md specification should be incorporated - extract and adapt its content alongside the discussion material. The result should be a unified specification, not a simple merge.
 

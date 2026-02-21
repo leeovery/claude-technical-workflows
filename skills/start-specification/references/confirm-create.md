@@ -15,7 +15,7 @@ Sources:
   • {discussion-name}
   • {discussion-name}
 
-Output: docs/workflow/specification/{kebab-case-name}/specification.md
+Output: .workflows/specification/{kebab-case-name}/specification.md
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -41,7 +41,7 @@ Sources:
   • {discussion-name} (has individual spec — will be incorporated)
   • {discussion-name}
 
-Output: docs/workflow/specification/{kebab-case-name}/specification.md
+Output: .workflows/specification/{kebab-case-name}/specification.md
 
 After completion:
   specification/{discussion-name}/specification.md → marked as superseded

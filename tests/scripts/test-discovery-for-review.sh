@@ -33,8 +33,8 @@ echo ""
 
 setup_fixture() {
     # Clean up from previous test
-    rm -rf "$TEST_DIR/docs"
-    mkdir -p "$TEST_DIR/docs/workflow"
+    rm -rf "$TEST_DIR/.workflows"
+    mkdir -p "$TEST_DIR/.workflows"
 }
 
 run_discovery() {
@@ -100,7 +100,7 @@ echo ""
 
 echo -e "${YELLOW}Test: Empty planning directory${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning"
+mkdir -p "$TEST_DIR/.workflows/planning"
 output=$(run_discovery)
 
 assert_contains "$output" "exists: false" "Plans don't exist (empty dir)"
@@ -112,8 +112,8 @@ echo ""
 
 echo -e "${YELLOW}Test: Single plan with full frontmatter${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/user-auth"
-cat > "$TEST_DIR/docs/workflow/planning/user-auth/plan.md" << 'EOF'
+mkdir -p "$TEST_DIR/.workflows/planning/user-auth"
+cat > "$TEST_DIR/.workflows/planning/user-auth/plan.md" << 'EOF'
 ---
 topic: user-auth
 status: in-progress
@@ -147,10 +147,10 @@ echo ""
 
 echo -e "${YELLOW}Test: Multiple plans${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/feature-a"
-mkdir -p "$TEST_DIR/docs/workflow/planning/feature-b"
+mkdir -p "$TEST_DIR/.workflows/planning/feature-a"
+mkdir -p "$TEST_DIR/.workflows/planning/feature-b"
 
-cat > "$TEST_DIR/docs/workflow/planning/feature-a/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/feature-a/plan.md" << 'EOF'
 ---
 topic: feature-a
 status: in-progress
@@ -162,7 +162,7 @@ specification: feature-a/specification.md
 # Implementation Plan: Feature A
 EOF
 
-cat > "$TEST_DIR/docs/workflow/planning/feature-b/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/feature-b/plan.md" << 'EOF'
 ---
 topic: feature-b
 status: concluded
@@ -187,10 +187,10 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with linked specification that exists${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/with-spec"
-mkdir -p "$TEST_DIR/docs/workflow/specification/with-spec"
+mkdir -p "$TEST_DIR/.workflows/planning/with-spec"
+mkdir -p "$TEST_DIR/.workflows/specification/with-spec"
 
-cat > "$TEST_DIR/docs/workflow/planning/with-spec/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/with-spec/plan.md" << 'EOF'
 ---
 topic: with-spec
 status: in-progress
@@ -202,7 +202,7 @@ specification: with-spec/specification.md
 # Implementation Plan: With Spec
 EOF
 
-cat > "$TEST_DIR/docs/workflow/specification/with-spec/specification.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/specification/with-spec/specification.md" << 'EOF'
 ---
 topic: with-spec
 status: concluded
@@ -221,9 +221,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with linked specification that doesn't exist${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/no-spec"
+mkdir -p "$TEST_DIR/.workflows/planning/no-spec"
 
-cat > "$TEST_DIR/docs/workflow/planning/no-spec/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/no-spec/plan.md" << 'EOF'
 ---
 topic: no-spec
 status: in-progress
@@ -245,9 +245,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with missing frontmatter fields (defaults)${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/minimal"
+mkdir -p "$TEST_DIR/.workflows/planning/minimal"
 
-cat > "$TEST_DIR/docs/workflow/planning/minimal/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/minimal/plan.md" << 'EOF'
 ---
 topic: minimal
 ---
@@ -268,9 +268,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with plan_id${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/with-plan-id"
+mkdir -p "$TEST_DIR/.workflows/planning/with-plan-id"
 
-cat > "$TEST_DIR/docs/workflow/planning/with-plan-id/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/with-plan-id/plan.md" << 'EOF'
 ---
 topic: with-plan-id
 status: in-progress
@@ -293,9 +293,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan without plan_id${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/no-plan-id"
+mkdir -p "$TEST_DIR/.workflows/planning/no-plan-id"
 
-cat > "$TEST_DIR/docs/workflow/planning/no-plan-id/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/no-plan-id/plan.md" << 'EOF'
 ---
 topic: no-plan-id
 status: in-progress
@@ -317,9 +317,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with no review${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/no-review"
+mkdir -p "$TEST_DIR/.workflows/planning/no-review"
 
-cat > "$TEST_DIR/docs/workflow/planning/no-review/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/no-review/plan.md" << 'EOF'
 ---
 topic: no-review
 status: concluded
@@ -342,10 +342,10 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with single review${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/single-review"
-mkdir -p "$TEST_DIR/docs/workflow/review/single-review/r1"
+mkdir -p "$TEST_DIR/.workflows/planning/single-review"
+mkdir -p "$TEST_DIR/.workflows/review/single-review/r1"
 
-cat > "$TEST_DIR/docs/workflow/planning/single-review/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/single-review/plan.md" << 'EOF'
 ---
 topic: single-review
 status: concluded
@@ -356,7 +356,7 @@ specification: single-review/specification.md
 # Plan: Single Review
 EOF
 
-cat > "$TEST_DIR/docs/workflow/review/single-review/r1/review.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/review/single-review/r1/review.md" << 'EOF'
 ---
 topic: single-review
 ---
@@ -378,11 +378,11 @@ echo ""
 
 echo -e "${YELLOW}Test: Plan with multiple reviews${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/multi-review"
-mkdir -p "$TEST_DIR/docs/workflow/review/multi-review/r1"
-mkdir -p "$TEST_DIR/docs/workflow/review/multi-review/r2"
+mkdir -p "$TEST_DIR/.workflows/planning/multi-review"
+mkdir -p "$TEST_DIR/.workflows/review/multi-review/r1"
+mkdir -p "$TEST_DIR/.workflows/review/multi-review/r2"
 
-cat > "$TEST_DIR/docs/workflow/planning/multi-review/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/multi-review/plan.md" << 'EOF'
 ---
 topic: multi-review
 status: concluded
@@ -393,7 +393,7 @@ specification: multi-review/specification.md
 # Plan: Multi Review
 EOF
 
-cat > "$TEST_DIR/docs/workflow/review/multi-review/r1/review.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/review/multi-review/r1/review.md" << 'EOF'
 ---
 topic: multi-review
 ---
@@ -403,7 +403,7 @@ topic: multi-review
 # Review: Multi Review r1
 EOF
 
-cat > "$TEST_DIR/docs/workflow/review/multi-review/r2/review.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/review/multi-review/r2/review.md" << 'EOF'
 ---
 topic: multi-review
 ---
@@ -425,10 +425,10 @@ echo ""
 
 echo -e "${YELLOW}Test: Review dir exists but no review.md files${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/empty-review"
-mkdir -p "$TEST_DIR/docs/workflow/review/empty-review/r1"
+mkdir -p "$TEST_DIR/.workflows/planning/empty-review"
+mkdir -p "$TEST_DIR/.workflows/review/empty-review/r1"
 
-cat > "$TEST_DIR/docs/workflow/planning/empty-review/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/empty-review/plan.md" << 'EOF'
 ---
 topic: empty-review
 status: concluded
@@ -452,9 +452,9 @@ echo ""
 
 echo -e "${YELLOW}Test: Review script does not output implementation section${NC}"
 setup_fixture
-mkdir -p "$TEST_DIR/docs/workflow/planning/test"
+mkdir -p "$TEST_DIR/.workflows/planning/test"
 
-cat > "$TEST_DIR/docs/workflow/planning/test/plan.md" << 'EOF'
+cat > "$TEST_DIR/.workflows/planning/test/plan.md" << 'EOF'
 ---
 topic: test
 status: concluded

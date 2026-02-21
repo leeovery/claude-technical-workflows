@@ -7,10 +7,10 @@
 
 set -eo pipefail
 
-PLAN_DIR="docs/workflow/planning"
-SPEC_DIR="docs/workflow/specification"
-IMPL_DIR="docs/workflow/implementation"
-ENVIRONMENT_FILE="docs/workflow/environment-setup.md"
+PLAN_DIR=".workflows/planning"
+SPEC_DIR=".workflows/specification"
+IMPL_DIR=".workflows/implementation"
+ENVIRONMENT_FILE=".workflows/environment-setup.md"
 
 # Helper: Extract a frontmatter field value from a file
 # Usage: extract_field <file> <field_name>

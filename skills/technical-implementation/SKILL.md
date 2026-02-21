@@ -1,6 +1,6 @@
 ---
 name: technical-implementation
-description: "Orchestrate implementation of plans using agent-based TDD workflow with per-task review and approval gate (auto mode available). Use when: (1) Implementing a plan from docs/workflow/planning/{topic}/plan.md, (2) User says 'implement', 'build', or 'code this' with a plan available, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Dispatches executor and reviewer agents per task, commits after review approval."
+description: "Orchestrate implementation of plans using agent-based TDD workflow with per-task review and approval gate (auto mode available). Use when: (1) Implementing a plan from .workflows/planning/{topic}/plan.md, (2) User says 'implement', 'build', or 'code this' with a plan available, (3) Ad hoc coding that should follow TDD and quality standards, (4) Bug fixes or features benefiting from structured implementation. Dispatches executor and reviewer agents per task, commits after review approval."
 user-invocable: false
 ---
 
@@ -36,7 +36,7 @@ Either way: dispatch agents per task — executor implements via TDD, reviewer v
 
 ```
 I need an implementation plan to execute. Could you point me to the plan file
-(e.g., docs/workflow/planning/{topic}/plan.md)?
+(e.g., .workflows/planning/{topic}/plan.md)?
 ```
 
 **STOP.** Wait for user response.
@@ -101,7 +101,7 @@ Complete ALL setup steps before proceeding.
 
 Load **[environment-setup.md](references/environment-setup.md)** and follow its instructions.
 
-#### If `docs/workflow/environment-setup.md` states "No special setup required"
+#### If `.workflows/environment-setup.md` states "No special setup required"
 
 → Proceed to **Step 2**.
 
@@ -122,7 +122,7 @@ I should follow before implementing?
 
 **STOP.** Wait for user response.
 
-Save their instructions to `docs/workflow/environment-setup.md` (or "No special setup required." if none needed). Commit.
+Save their instructions to `.workflows/environment-setup.md` (or "No special setup required." if none needed). Commit.
 
 → Proceed to **Step 2**.
 
@@ -130,7 +130,7 @@ Save their instructions to `docs/workflow/environment-setup.md` (or "No special 
 
 ## Step 2: Read Plan + Load Plan Adapter
 
-1. Read the plan from the provided location (typically `docs/workflow/planning/{topic}/plan.md`)
+1. Read the plan from the provided location (typically `.workflows/planning/{topic}/plan.md`)
 2. Plans can be stored in various formats. The `format` field in the plan's frontmatter identifies which format this plan uses.
 3. Load the format's per-concern adapter files from `../technical-planning/references/output-formats/{format}/`:
    - **reading.md** — how to read tasks from the plan
@@ -145,7 +145,7 @@ Save their instructions to `docs/workflow/environment-setup.md` (or "No special 
 
 ## Step 3: Initialize Implementation Tracking
 
-#### If `docs/workflow/implementation/{topic}/tracking.md` already exists
+#### If `.workflows/implementation/{topic}/tracking.md` already exists
 
 Reset `task_gate_mode`, `fix_gate_mode`, and `analysis_gate_mode` to `gated`, `fix_attempts` to `0`, and `analysis_cycle` to `0` (fresh session = fresh gates/cycles).
 
@@ -153,7 +153,7 @@ Reset `task_gate_mode`, `fix_gate_mode`, and `analysis_gate_mode` to `gated`, `f
 
 #### If no tracking file exists
 
-Create `docs/workflow/implementation/{topic}/tracking.md`:
+Create `.workflows/implementation/{topic}/tracking.md`:
 
 ```yaml
 ---
@@ -326,7 +326,7 @@ Discuss the user's context. If additional work is needed, route back to **Step 6
 
 #### If yes
 
-Update the tracking file (`docs/workflow/implementation/{topic}/tracking.md`):
+Update the tracking file (`.workflows/implementation/{topic}/tracking.md`):
 - Set `status: completed`
 - Set `completed: YYYY-MM-DD` (use today's actual date)
 - Update `updated` date

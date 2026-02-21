@@ -10,10 +10,10 @@ This step dispatches a `review-findings-synthesizer` agent to read review findin
 
 ## Determine Cycle Number
 
-Count existing `review-tasks-c*.md` files in `docs/workflow/implementation/{primary-topic}/` and add 1.
+Count existing `review-tasks-c*.md` files in `.workflows/implementation/{primary-topic}/` and add 1.
 
 ```bash
-ls docs/workflow/implementation/{primary-topic}/review-tasks-c*.md 2>/dev/null | wc -l
+ls .workflows/implementation/{primary-topic}/review-tasks-c*.md 2>/dev/null | wc -l
 ```
 
 ---
@@ -61,4 +61,4 @@ TASKS_PROPOSED: {N}
 SUMMARY: {1-2 sentences}
 ```
 
-The full report is at `docs/workflow/implementation/{primary-topic}/review-report-c{N}.md`. If tasks were proposed, the staging file is at `docs/workflow/implementation/{primary-topic}/review-tasks-c{N}.md`.
+The full report is at `.workflows/implementation/{primary-topic}/review-report-c{N}.md`. If tasks were proposed, the staging file is at `.workflows/implementation/{primary-topic}/review-tasks-c{N}.md`.

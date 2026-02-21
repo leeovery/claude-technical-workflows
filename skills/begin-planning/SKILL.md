@@ -82,7 +82,7 @@ Construct the handoff and invoke the [technical-planning](../technical-planning/
 
 ```
 Planning session for: {topic}
-Specification: docs/workflow/specification/{topic}/specification.md
+Specification: .workflows/specification/{topic}/specification.md
 Work type: feature
 Additional context: {summary of user's answer from Step 3, or "none"}
 Cross-cutting references: {list of applicable cross-cutting specs with brief summaries, or "none"}

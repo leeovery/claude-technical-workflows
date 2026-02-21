@@ -178,7 +178,7 @@ Check the `task_gate_mode` field in the implementation tracking file.
 - If the format's updating.md includes a **Phase / Parent Status** section, follow its phase completion instructions
 - Append the phase number to `completed_phases` in the tracking file
 
-**Mirror to implementation tracking file** (`docs/workflow/implementation/{topic}/tracking.md`):
+**Mirror to implementation tracking file** (`.workflows/implementation/{topic}/tracking.md`):
 - Append the task ID to `completed_tasks`
 - Update `current_phase` if phase changed
 - Update `current_task` to the next task (or `~` if done)

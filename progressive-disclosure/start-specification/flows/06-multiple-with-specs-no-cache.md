@@ -145,7 +145,7 @@ Your context (or 'none'):
 
 Claude reads all 5 concluded discussions. Considers existing specs and user context. Forms groupings preserving existing spec names (anchored names will apply on subsequent runs).
 
-Cache written to `docs/workflow/.state/discussion-consolidation-analysis.md`:
+Cache written to `.workflows/.state/discussion-consolidation-analysis.md`:
 ```markdown
 ---
 checksum: def456...
@@ -259,7 +259,7 @@ Sources:
   • api-design
   • error-handling
 
-Output: docs/workflow/specification/api-design.md
+Output: .workflows/specification/api-design.md
 
 Proceed? (y/n)
 ```
@@ -274,10 +274,10 @@ Proceed? (y/n)
 Specification session for: API Design
 
 Sources:
-- docs/workflow/discussion/api-design.md
-- docs/workflow/discussion/error-handling.md
+- .workflows/discussion/api-design.md
+- .workflows/discussion/error-handling.md
 
-Output: docs/workflow/specification/api-design.md
+Output: .workflows/specification/api-design.md
 
 ---
 Invoke the technical-specification skill.
@@ -300,7 +300,7 @@ Steps 0-3 identical to Scenario A.
 ```
 Continuing specification: Authentication System
 
-Existing: docs/workflow/specification/authentication-system.md (in-progress)
+Existing: .workflows/specification/authentication-system.md (in-progress)
 
 All sources extracted:
   • auth-flow
@@ -318,11 +318,11 @@ Proceed? (y/n)
 ```
 Specification session for: Authentication System
 
-Continuing existing: docs/workflow/specification/authentication-system.md
+Continuing existing: .workflows/specification/authentication-system.md
 
 Sources for reference:
-- docs/workflow/discussion/auth-flow.md
-- docs/workflow/discussion/user-sessions.md
+- .workflows/discussion/auth-flow.md
+- .workflows/discussion/user-sessions.md
 
 Context: This specification already exists. Review and refine it based on the source discussions.
 
@@ -345,7 +345,7 @@ Steps 0-3 identical. User picks option 2 (Continue "Authentication System").
 ```
 Continuing specification: Authentication System
 
-Existing: docs/workflow/specification/authentication-system.md (in-progress)
+Existing: .workflows/specification/authentication-system.md (in-progress)
 
 All sources extracted:
   • auth-flow

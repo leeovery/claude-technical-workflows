@@ -117,7 +117,7 @@ Environment: No special setup required.
 > *Output the next fenced block as a code block:*
 
 ```
-Environment setup file found: docs/workflow/environment-setup.md
+Environment setup file found: .workflows/environment-setup.md
 ```
 
 → Proceed to **Step 4**.
@@ -133,8 +133,8 @@ Are there any environment setup instructions I should follow before implementati
 
 **STOP.** Wait for user response.
 
-- If the user provides instructions, save them to `docs/workflow/environment-setup.md`, commit
-- If the user says no/none, create `docs/workflow/environment-setup.md` with "No special setup required." and commit
+- If the user provides instructions, save them to `.workflows/environment-setup.md`, commit
+- If the user says no/none, create `.workflows/environment-setup.md` with "No special setup required." and commit
 
 → Proceed to **Step 4**.
 
@@ -150,10 +150,10 @@ Construct the handoff and invoke the [technical-implementation](../technical-imp
 
 ```
 Implementation session for: {topic}
-Plan: docs/workflow/planning/{topic}/plan.md
+Plan: .workflows/planning/{topic}/plan.md
 Format: {format}
 Plan ID: {plan_id} (if applicable)
-Specification: docs/workflow/specification/{topic}/specification.md (exists: {true|false})
+Specification: .workflows/specification/{topic}/specification.md (exists: {true|false})
 Implementation tracking: {exists | new} (status: {status})
 Dependencies: {All satisfied | notes}
 Environment: {Setup required | No special setup required}

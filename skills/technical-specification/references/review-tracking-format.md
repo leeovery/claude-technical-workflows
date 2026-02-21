@@ -8,7 +8,7 @@ Review tracking files capture analysis findings so work persists across context 
 
 ## Location
 
-Store tracking files in the specification topic directory (`docs/workflow/specification/{topic}/`), cycle-numbered:
+Store tracking files in the specification topic directory (`.workflows/specification/{topic}/`), cycle-numbered:
 - `review-input-tracking-c{N}.md` — Phase 1 findings for cycle N
 - `review-gap-analysis-tracking-c{N}.md` — Phase 2 findings for cycle N
 

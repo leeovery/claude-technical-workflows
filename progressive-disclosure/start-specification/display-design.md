@@ -211,7 +211,7 @@ Sources:
   • auth-flow
   • user-sessions
 
-Output: docs/workflow/specification/authentication-system.md
+Output: .workflows/specification/authentication-system.md
 
 Proceed? (y/n)
 ```
@@ -220,7 +220,7 @@ Proceed? (y/n)
 ```
 Continuing specification: Authentication System
 
-Existing: docs/workflow/specification/authentication-system.md (in-progress)
+Existing: .workflows/specification/authentication-system.md (in-progress)
 
 Sources to extract:
   • oauth-integration (pending)
@@ -236,7 +236,7 @@ Proceed? (y/n)
 ```
 Refining specification: Caching Layer
 
-Existing: docs/workflow/specification/caching-layer.md (concluded)
+Existing: .workflows/specification/caching-layer.md (concluded)
 
 All sources extracted:
   • caching-layer
@@ -252,7 +252,7 @@ Sources:
   • auth-flow (has individual spec — will be incorporated)
   • user-sessions
 
-Output: docs/workflow/specification/authentication-system.md
+Output: .workflows/specification/authentication-system.md
 
 After completion:
   specification/auth-flow.md → marked as superseded

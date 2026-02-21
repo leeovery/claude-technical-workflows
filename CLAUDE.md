@@ -117,12 +117,12 @@ Processing skills should **never hardcode references** to specific workflow phas
 ## Key Conventions
 
 Phase-first directory structure:
-- Research: `docs/workflow/research/` (flat, semantically named files)
-- Discussion: `docs/workflow/discussion/{topic}.md`
-- Specification: `docs/workflow/specification/{topic}/specification.md`
-- Planning: `docs/workflow/planning/{topic}/plan.md` + format-specific task storage
-- Implementation: `docs/workflow/implementation/{topic}/tracking.md`
-- Review: `docs/workflow/review/{topic}/r{N}/review.md`
+- Research: `.workflows/research/` (flat, semantically named files)
+- Discussion: `.workflows/discussion/{topic}.md`
+- Specification: `.workflows/specification/{topic}/specification.md`
+- Planning: `.workflows/planning/{topic}/plan.md` + format-specific task storage
+- Implementation: `.workflows/implementation/{topic}/tracking.md`
+- Review: `.workflows/review/{topic}/r{N}/review.md`
 
 Commit docs frequently (natural breaks, before context refresh). Skills capture context, don't implement.
 
@@ -163,7 +163,7 @@ The `/migrate` skill keeps workflow files in sync with the current system design
 **How it works:**
 - `skills/migrate/scripts/migrate.sh` runs all migration scripts in `skills/migrate/scripts/migrations/` in numeric order
 - Each migration is idempotent - safe to run multiple times
-- Progress is tracked in `docs/workflow/.state/migrations`
+- Progress is tracked in `.workflows/.state/migrations`
 - Delete the log file to force re-running all migrations
 
 **Adding new migrations:**
@@ -194,12 +194,12 @@ Processing skills run long and may hit context compaction. The hook system provi
 
 **How it works:**
 - Project-level hooks in `.claude/settings.json` are snapshotted at session startup and persist through compaction
-- `SessionStart` (compact) hook reads session state from `docs/workflow/.cache/sessions/{session_id}.yaml` and injects recovery context as additionalContext
+- `SessionStart` (compact) hook reads session state from `.workflows/.cache/sessions/{session_id}.yaml` and injects recovery context as additionalContext
 - Entry-point skills write session state (topic, skill, artifact) before invoking processing skills
 - `SessionEnd` hook cleans up session state files
 
 **Session state files:**
-- Stored at `docs/workflow/.cache/sessions/{session_id}.yaml`
+- Stored at `.workflows/.cache/sessions/{session_id}.yaml`
 - Created by entry-point skills before invoking processing skills
 - Contain: topic, skill path, artifact path, optional pipeline context
 - Ephemeral — cleaned up on session end, gitignored
@@ -393,7 +393,7 @@ When a phase can't proceed — use the phase title pattern, then explain:
 ```
 Planning Overview
 
-No specifications found in docs/workflow/specification/
+No specifications found in .workflows/specification/
 
 The planning phase requires a concluded specification.
 Run /start-specification first.

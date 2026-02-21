@@ -212,7 +212,7 @@ npx claude-manager remove @leeovery/claude-technical-workflows && npm rm @leeove
 Documents are stored in your project using a **phase-first** organisation. Early phases use flat files; later phases use topic directories with multiple files for tracking and analysis.
 
 ```
-docs/workflow/
+.workflows/
 ├── research/                          # Phase 1 — flat, semantically named
 │   ├── exploration.md
 │   ├── competitor-analysis.md

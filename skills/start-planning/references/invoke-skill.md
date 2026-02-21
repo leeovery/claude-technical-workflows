@@ -11,7 +11,7 @@ Invoke the [technical-planning](../../technical-planning/SKILL.md) skill for you
 **Example handoff (fresh plan):**
 ```
 Planning session for: {topic}
-Specification: docs/workflow/specification/{topic}/specification.md
+Specification: .workflows/specification/{topic}/specification.md
 Additional context: {summary of user's answers from Step 5}
 Cross-cutting references: {list of applicable cross-cutting specs with brief summaries, or "none"}
 Recommended output format: {common_format from discovery if non-empty, otherwise "none"}
@@ -22,8 +22,8 @@ Invoke the technical-planning skill.
 **Example handoff (continue/review existing plan):**
 ```
 Planning session for: {topic}
-Specification: docs/workflow/specification/{topic}/specification.md
-Existing plan: docs/workflow/planning/{topic}/plan.md
+Specification: .workflows/specification/{topic}/specification.md
+Existing plan: .workflows/planning/{topic}/plan.md
 
 Invoke the technical-planning skill.
 ```

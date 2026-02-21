@@ -33,8 +33,8 @@ echo ""
 
 setup_fixture() {
     # Clean up from previous test
-    rm -rf "$TEST_DIR/docs"
-    mkdir -p "$TEST_DIR/docs/workflow"
+    rm -rf "$TEST_DIR/.workflows"
+    mkdir -p "$TEST_DIR/.workflows"
 }
 
 run_discovery() {
@@ -105,8 +105,8 @@ test_research_only() {
     echo -e "${YELLOW}Test: Research only (no discussions)${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/research"
-    cat > "$TEST_DIR/docs/workflow/research/exploration.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/research"
+    cat > "$TEST_DIR/.workflows/research/exploration.md" << 'EOF'
 ---
 topic: exploration
 date: 2026-01-21
@@ -137,8 +137,8 @@ test_discussions_only() {
     echo -e "${YELLOW}Test: Discussions only (no research)${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
-    cat > "$TEST_DIR/docs/workflow/discussion/auth-flow.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+    cat > "$TEST_DIR/.workflows/discussion/auth-flow.md" << 'EOF'
 ---
 topic: auth-flow
 status: in-progress
@@ -170,10 +170,10 @@ test_research_and_discussions() {
     echo -e "${YELLOW}Test: Research and discussions${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/research"
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
+    mkdir -p "$TEST_DIR/.workflows/research"
+    mkdir -p "$TEST_DIR/.workflows/discussion"
 
-    cat > "$TEST_DIR/docs/workflow/research/exploration.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/research/exploration.md" << 'EOF'
 ---
 topic: exploration
 date: 2026-01-18
@@ -182,7 +182,7 @@ date: 2026-01-18
 # Research: Exploration
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/discussion/auth-flow.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/auth-flow.md" << 'EOF'
 ---
 topic: auth-flow
 status: concluded
@@ -192,7 +192,7 @@ date: 2026-01-19
 # Discussion: Auth Flow
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/discussion/data-model.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/data-model.md" << 'EOF'
 ---
 topic: data-model
 status: in-progress
@@ -220,9 +220,9 @@ test_multiple_discussions() {
     echo -e "${YELLOW}Test: Multiple discussions with mixed statuses${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
+    mkdir -p "$TEST_DIR/.workflows/discussion"
 
-    cat > "$TEST_DIR/docs/workflow/discussion/topic-a.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/topic-a.md" << 'EOF'
 ---
 topic: topic-a
 status: concluded
@@ -231,7 +231,7 @@ date: 2026-01-15
 # Discussion: Topic A
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/discussion/topic-b.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/topic-b.md" << 'EOF'
 ---
 topic: topic-b
 status: concluded
@@ -240,7 +240,7 @@ date: 2026-01-16
 # Discussion: Topic B
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/discussion/topic-c.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/topic-c.md" << 'EOF'
 ---
 topic: topic-c
 status: in-progress
@@ -249,7 +249,7 @@ date: 2026-01-17
 # Discussion: Topic C
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/discussion/topic-d.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/topic-d.md" << 'EOF'
 ---
 topic: topic-d
 status: in-progress
@@ -277,8 +277,8 @@ test_cache_none() {
     echo -e "${YELLOW}Test: Cache status none (no cache file)${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/research"
-    cat > "$TEST_DIR/docs/workflow/research/exploration.md" << 'EOF'
+    mkdir -p "$TEST_DIR/.workflows/research"
+    cat > "$TEST_DIR/.workflows/research/exploration.md" << 'EOF'
 ---
 topic: exploration
 date: 2026-01-21
@@ -303,10 +303,10 @@ test_cache_valid() {
     echo -e "${YELLOW}Test: Cache status valid (checksums match)${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/research"
-    mkdir -p "$TEST_DIR/docs/workflow/.state"
+    mkdir -p "$TEST_DIR/.workflows/research"
+    mkdir -p "$TEST_DIR/.workflows/.state"
 
-    cat > "$TEST_DIR/docs/workflow/research/exploration.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/research/exploration.md" << 'EOF'
 ---
 topic: exploration
 date: 2026-01-21
@@ -315,10 +315,10 @@ date: 2026-01-21
 EOF
 
     # Compute the checksum of the research file
-    local checksum=$(cat "$TEST_DIR/docs/workflow/research"/*.md | md5sum | cut -d' ' -f1)
+    local checksum=$(cat "$TEST_DIR/.workflows/research"/*.md | md5sum | cut -d' ' -f1)
 
     # Create cache with matching checksum
-    cat > "$TEST_DIR/docs/workflow/.state/research-analysis.md" << EOF
+    cat > "$TEST_DIR/.workflows/.state/research-analysis.md" << EOF
 ---
 checksum: $checksum
 generated: 2026-01-21T10:00:00
@@ -353,10 +353,10 @@ test_cache_stale() {
     echo -e "${YELLOW}Test: Cache status stale (research changed)${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/research"
-    mkdir -p "$TEST_DIR/docs/workflow/.state"
+    mkdir -p "$TEST_DIR/.workflows/research"
+    mkdir -p "$TEST_DIR/.workflows/.state"
 
-    cat > "$TEST_DIR/docs/workflow/research/exploration.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/research/exploration.md" << 'EOF'
 ---
 topic: exploration
 date: 2026-01-21
@@ -367,7 +367,7 @@ This content is different from when cache was created.
 EOF
 
     # Create cache with OLD checksum (doesn't match current)
-    cat > "$TEST_DIR/docs/workflow/.state/research-analysis.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/.state/research-analysis.md" << 'EOF'
 ---
 checksum: old_checksum_that_doesnt_match
 generated: 2026-01-20T10:00:00
@@ -393,10 +393,10 @@ test_research_no_frontmatter() {
     echo -e "${YELLOW}Test: Research files without frontmatter${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/research"
+    mkdir -p "$TEST_DIR/.workflows/research"
 
     # Create research file WITHOUT frontmatter
-    cat > "$TEST_DIR/docs/workflow/research/market-analysis.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/research/market-analysis.md" << 'EOF'
 # Market Analysis
 
 No frontmatter here, just content.
@@ -417,9 +417,9 @@ test_discussion_no_status() {
     echo -e "${YELLOW}Test: Discussion without status field${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
+    mkdir -p "$TEST_DIR/.workflows/discussion"
 
-    cat > "$TEST_DIR/docs/workflow/discussion/legacy-topic.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/legacy-topic.md" << 'EOF'
 ---
 topic: legacy-topic
 date: 2026-01-15
@@ -444,9 +444,9 @@ test_multiple_research_files() {
     echo -e "${YELLOW}Test: Multiple research files${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/docs/workflow/research"
+    mkdir -p "$TEST_DIR/.workflows/research"
 
-    cat > "$TEST_DIR/docs/workflow/research/exploration.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/research/exploration.md" << 'EOF'
 ---
 topic: exploration
 date: 2026-01-18
@@ -454,7 +454,7 @@ date: 2026-01-18
 # Exploration
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/research/market-landscape.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/research/market-landscape.md" << 'EOF'
 ---
 topic: market-landscape
 date: 2026-01-19
@@ -462,7 +462,7 @@ date: 2026-01-19
 # Market Landscape
 EOF
 
-    cat > "$TEST_DIR/docs/workflow/research/technical-feasibility.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/research/technical-feasibility.md" << 'EOF'
 ---
 topic: technical-feasibility
 date: 2026-01-20

@@ -10,7 +10,7 @@ This step invokes the task writer agent to create plan tasks from approved revie
 
 ## Determine Format
 
-Read the `format` field from the plan's frontmatter (`docs/workflow/planning/{topic}/plan.md`). This determines which output format adapters to pass to the agent.
+Read the `format` field from the plan's frontmatter (`.workflows/planning/{topic}/plan.md`). This determines which output format adapters to pass to the agent.
 
 ---
 
@@ -21,7 +21,7 @@ Read the `format` field from the plan's frontmatter (`docs/workflow/planning/{to
 Pass via the orchestrator's prompt:
 
 1. **Topic name** — the implementation topic (scopes tasks to correct plan)
-2. **Staging file path** — `docs/workflow/implementation/{topic}/review-tasks-c{cycle-number}.md`
+2. **Staging file path** — `.workflows/implementation/{topic}/review-tasks-c{cycle-number}.md`
 3. **Plan path** — the implementation plan path
 4. **Plan format reading adapter path** — `../../technical-planning/references/output-formats/{format}/reading.md`
 5. **Plan format authoring adapter path** — `../../technical-planning/references/output-formats/{format}/authoring.md`

@@ -1,6 +1,6 @@
 ---
 name: technical-specification
-description: "Build validated specifications from source material through collaborative refinement. Use when: (1) User asks to create/build a specification from source material, (2) User wants to validate and refine content before planning, (3) Converting source material (discussions, research, requirements) into standalone specifications, (4) User says 'specify this' or 'create a spec', (5) Need to filter hallucinations and enrich gaps before formal planning. Creates specifications in docs/workflow/specification/{topic}/specification.md that can be used to build implementation plans."
+description: "Build validated specifications from source material through collaborative refinement. Use when: (1) User asks to create/build a specification from source material, (2) User wants to validate and refine content before planning, (3) Converting source material (discussions, research, requirements) into standalone specifications, (4) User says 'specify this' or 'create a spec', (5) Need to filter hallucinations and enrich gaps before formal planning. Creates specifications in .workflows/specification/{topic}/specification.md that can be used to build implementation plans."
 user-invocable: false
 ---
 
@@ -35,7 +35,7 @@ Either way: Transform unvalidated reference material into a specification that's
 
 ```
 I need source material to build a specification from. Could you point me to the
-source files (e.g., docs/workflow/discussion/{topic}.md), or provide the content
+source files (e.g., .workflows/discussion/{topic}.md), or provide the content
 directly?
 ```
 
@@ -47,7 +47,7 @@ directly?
 
 ```
 What should the specification be named? This determines the output file:
-docs/workflow/specification/{name}/specification.md
+.workflows/specification/{name}/specification.md
 ```
 
 **STOP.** Wait for user response.
@@ -97,7 +97,7 @@ When announcing a new step, output `── ── ── ── ──` on its o
 
 ## Step 0: Resume Detection
 
-Check if `docs/workflow/specification/{topic}/specification.md` exists.
+Check if `.workflows/specification/{topic}/specification.md` exists.
 
 #### If no file exists
 
@@ -147,7 +147,7 @@ Load **[verify-source-material.md](references/verify-source-material.md)** and f
 
 Load **[specification-format.md](references/specification-format.md)** for the template.
 
-Create the specification file at `docs/workflow/specification/{topic}/specification.md`:
+Create the specification file at `.workflows/specification/{topic}/specification.md`:
 
 1. Use the frontmatter template from specification-format.md
 2. Set `topic` to the kebab-case topic name
