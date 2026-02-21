@@ -74,4 +74,4 @@ This is not a full codebase audit — focus on the specific areas relevant to th
 
 ## Scope Discipline
 
-Implement what the specification defines. Don't refactor surrounding code, even if it could be "improved". If the existing code works and the specification doesn't call for changing it, leave it alone. Refactoring discoveries belong in separate specifications.
+Implement what the specification defines. Don't refactor surrounding code, even if it could be "improved". If the existing code works and the specification doesn't call for changing it, leave it alone.
