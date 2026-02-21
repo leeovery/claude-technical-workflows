@@ -20,7 +20,7 @@ Issues with this:
 
 3. **Hardcoded `feature` is wrong for other paths** — if someone uses the pipeline for a greenfield project or a bugfix (which is possible), they'd incorrectly get feature guidance.
 
-4. **Standalone `start-planning` passes nothing** — falls back to universal principles, which works but means standalone users never get context-specific guidance unless they also happen to set `work_type` manually.
+4. **Standalone `start-planning` passes nothing** — defaults to greenfield guidance, which preserves current behavior but means standalone users always get greenfield context even if they're adding a feature or fixing a bug.
 
 ---
 
@@ -84,7 +84,7 @@ A robust way to store the `work_type` declaration so it flows through the entire
 All of this is needed regardless of how the entry point evolves:
 
 - 6 context files: `phase-design/{greenfield,feature,bugfix}.md`, `task-design/{greenfield,feature,bugfix}.md`
-- Refactored `phase-design.md` and `task-design.md` with universal principles and dispatch sections
+- Refactored `phase-design.md` and `task-design.md` with shared principles and dispatch sections
 - `work_type` field in plan-index-schema frontmatter
 - Dispatch plumbing in `define-phases.md` and `define-tasks.md`
 - Agent updates in `planning-phase-designer.md` and `planning-task-designer.md`

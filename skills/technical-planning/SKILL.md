@@ -24,7 +24,7 @@ Either way: Transform specifications into actionable phases, tasks, and acceptan
 - **Topic name** (optional) - Will derive from specification if not provided
 - **Output format preference** (optional) - Will ask if not specified
 - **Recommended output format** (optional) - A format suggestion for consistency with existing plans
-- **Work type** (optional) — `greenfield`, `feature`, or `bugfix`. Determines which context-specific guidance is loaded during phase and task design. When not provided, agents use universal principles and infer from the specification.
+- **Work type** (optional) — `greenfield`, `feature`, or `bugfix`. Determines which context-specific guidance is loaded during phase and task design. Defaults to `greenfield` when not provided.
 - **Cross-cutting references** (optional) - Cross-cutting specifications that inform technical decisions in this plan
 
 **Before proceeding**, verify the required input is available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.

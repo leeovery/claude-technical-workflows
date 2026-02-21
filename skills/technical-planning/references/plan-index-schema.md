@@ -38,7 +38,7 @@ planning:
 | `topic` | Plan creation (Step 1) |
 | `status` | Plan creation → `planning`; conclusion → `concluded` |
 | `format` | Plan creation — user-chosen output format |
-| `work_type` | Plan creation — set by caller if known. Values: `greenfield`, `feature`, `bugfix`. Empty if unknown or standalone. |
+| `work_type` | Plan creation — set by caller if known. Values: `greenfield`, `feature`, `bugfix`. Defaults to `greenfield` when empty. |
 | `ext_id` | First task authored — external identifier for the plan |
 | `specification` | Plan creation — relative path to source specification |
 | `cross_cutting_specs` | Plan creation — relative paths to cross-cutting specs (omit key if none) |
