@@ -4,7 +4,7 @@
 
 ---
 
-This file defines the canonical structure for specification files (`docs/workflow/specification/{topic}/specification.md`).
+This file defines the canonical structure for specification files (`.workflows/specification/{topic}/specification.md`).
 
 The specification is a single file per topic. Structure is **flexible** — organize around phases and subject matter, not rigid sections. This is a working document.
 

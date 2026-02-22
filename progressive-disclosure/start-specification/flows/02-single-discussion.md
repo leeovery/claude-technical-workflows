@@ -74,7 +74,7 @@ Creating specification: Auth Flow
 Sources:
   • auth-flow
 
-Output: docs/workflow/specification/auth-flow.md
+Output: .workflows/specification/auth-flow.md
 
 Proceed? (y/n)
 ```
@@ -90,9 +90,9 @@ Handoff to technical-specification skill:
 Specification session for: Auth Flow
 
 Sources:
-- docs/workflow/discussion/auth-flow.md
+- .workflows/discussion/auth-flow.md
 
-Output: docs/workflow/specification/auth-flow.md
+Output: .workflows/specification/auth-flow.md
 
 ---
 Invoke the technical-specification skill.
@@ -184,7 +184,7 @@ Step 3 auto-proceeds — no prompt needed since Step 7 immediately follows.
 ```
 Continuing specification: Auth Flow
 
-Existing: docs/workflow/specification/auth-flow.md (in-progress)
+Existing: .workflows/specification/auth-flow.md (in-progress)
 
 All sources extracted:
   • auth-flow
@@ -202,10 +202,10 @@ Handoff to technical-specification skill:
 ```
 Specification session for: Auth Flow
 
-Continuing existing: docs/workflow/specification/auth-flow.md
+Continuing existing: .workflows/specification/auth-flow.md
 
 Sources for reference:
-- docs/workflow/discussion/auth-flow.md
+- .workflows/discussion/auth-flow.md
 
 Context: This specification already exists. Review and refine it based on the source discussions.
 
@@ -253,7 +253,7 @@ Automatically proceeding with "Auth Flow".
 ```
 Refining specification: Auth Flow
 
-Existing: docs/workflow/specification/auth-flow.md (concluded)
+Existing: .workflows/specification/auth-flow.md (concluded)
 
 All sources extracted:
   • auth-flow

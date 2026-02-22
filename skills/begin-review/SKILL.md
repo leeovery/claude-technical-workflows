@@ -80,7 +80,7 @@ Construct the handoff and invoke the [technical-review](../technical-review/SKIL
 Review session
 Plans to review:
   - topic: {topic}
-    plan: docs/workflow/planning/{topic}/plan.md
+    plan: .workflows/planning/{topic}/plan.md
     format: {format}
     plan_id: {plan_id} (if applicable)
     specification: {specification} (exists: {true|false})

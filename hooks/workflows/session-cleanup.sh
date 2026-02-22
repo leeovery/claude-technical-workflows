@@ -17,7 +17,7 @@ fi
 session_id=$(cat | grep -o '"session_id" *: *"[^"]*"' | sed 's/.*: *"//;s/"//')
 
 if [ -n "$session_id" ]; then
-  session_file="$PROJECT_DIR/docs/workflow/.cache/sessions/${session_id}.yaml"
+  session_file="$PROJECT_DIR/.workflows/.cache/sessions/${session_id}.yaml"
   if [ -f "$session_file" ]; then
     rm -f "$session_file"
   fi

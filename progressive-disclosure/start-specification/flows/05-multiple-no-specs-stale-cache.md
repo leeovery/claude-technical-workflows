@@ -80,7 +80,7 @@ Proceed with analysis? (y/n)
 
 Claude deletes the stale cache:
 ```bash
-rm docs/workflow/.state/discussion-consolidation-analysis.md
+rm .workflows/.state/discussion-consolidation-analysis.md
 ```
 
 ### Step 4: Gather Analysis Context

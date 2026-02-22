@@ -72,7 +72,7 @@ Only show lines for phases that have content. If a phase has zero items but a la
 ```
 Workflow Status
 
-No workflow files found in docs/workflow/
+No workflow files found in .workflows/
 
 Start with /start-research to explore ideas,
 or /start-discussion if you already know what to build.

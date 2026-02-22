@@ -84,7 +84,7 @@ Key observation: `analysis-flow.md` always feeds into `display-groupings.md`, an
 name: start-specification
 description: "Start a specification session from concluded discussions. Discovers available discussions, offers consolidation assessment for multiple discussions, and invokes the technical-specification skill."
 disable-model-invocation: true
-allowed-tools: Bash(./scripts/discovery.sh), Bash(mkdir -p docs/workflow/.state), Bash(rm docs/workflow/.state/discussion-consolidation-analysis.md)
+allowed-tools: Bash(./scripts/discovery.sh), Bash(mkdir -p .workflows/.state), Bash(rm .workflows/.state/discussion-consolidation-analysis.md)
 ---
 ```
 

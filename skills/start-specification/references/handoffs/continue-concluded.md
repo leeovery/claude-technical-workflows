@@ -18,7 +18,7 @@ Saving session state so Claude can pick up where it left off if the conversation
 .claude/hooks/workflows/write-session-state.sh \
   "{topic}" \
   "skills/technical-specification/SKILL.md" \
-  "docs/workflow/specification/{topic}/specification.md"
+  ".workflows/specification/{topic}/specification.md"
 ```
 
 This skill's purpose is now fulfilled. Invoke the [technical-specification](../../../technical-specification/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded — it contains the instructions for how to proceed.
@@ -26,13 +26,13 @@ This skill's purpose is now fulfilled. Invoke the [technical-specification](../.
 ```
 Specification session for: {Title Case Name}
 
-Continuing existing: docs/workflow/specification/{kebab-case-name}/specification.md (concluded)
+Continuing existing: .workflows/specification/{kebab-case-name}/specification.md (concluded)
 
 New sources to extract:
-- docs/workflow/discussion/{new-discussion-name}.md
+- .workflows/discussion/{new-discussion-name}.md
 
 Previously extracted (for reference):
-- docs/workflow/discussion/{existing-discussion-name}.md
+- .workflows/discussion/{existing-discussion-name}.md
 
 Context: This specification was previously concluded. New source discussions have been identified. Extract and incorporate their content while maintaining consistency with the existing specification.
 

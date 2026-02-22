@@ -9,7 +9,7 @@
 ```
 Refining specification: {Title Case Name}
 
-Existing: docs/workflow/specification/{kebab-case-name}/specification.md (concluded)
+Existing: .workflows/specification/{kebab-case-name}/specification.md (concluded)
 
 All sources extracted:
   • {discussion-name}

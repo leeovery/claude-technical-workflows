@@ -122,7 +122,7 @@ No actionable tasks synthesized.
 
 ## C. Approval Gate
 
-Read the staging file from `docs/workflow/implementation/{topic}/review-tasks-c{cycle-number}.md`.
+Read the staging file from `.workflows/implementation/{topic}/review-tasks-c{cycle-number}.md`.
 
 Check `gate_mode` in the staging file frontmatter (`gated` or `auto`).
 
@@ -254,7 +254,7 @@ review({topic}): add review remediation ({K} tasks)
 
 For each plan that received new tasks:
 
-1. Read the implementation tracking file at `docs/workflow/implementation/{topic}/tracking.md`
+1. Read the implementation tracking file at `.workflows/implementation/{topic}/tracking.md`
 2. Update frontmatter:
    - `status: in-progress`
    - Remove `completed` field (if present)

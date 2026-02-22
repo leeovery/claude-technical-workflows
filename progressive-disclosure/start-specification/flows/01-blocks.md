@@ -6,7 +6,7 @@ These are terminal paths — the command stops and cannot proceed.
 
 ## Scenario A: No Discussions Exist
 
-**Entry state:** No discussion files in `docs/workflow/discussion/`
+**Entry state:** No discussion files in `.workflows/discussion/`
 
 **Steps:** 0 → 1 → 2 (STOP)
 

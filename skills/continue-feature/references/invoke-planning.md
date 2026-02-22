@@ -20,7 +20,7 @@ Saving session state so Claude can pick up where it left off and continue the fe
 .claude/hooks/workflows/write-session-state.sh \
   "{topic}" \
   "skills/technical-planning/SKILL.md" \
-  "docs/workflow/planning/{topic}/plan.md" \
+  ".workflows/planning/{topic}/plan.md" \
   --pipeline "This session is part of the feature pipeline. After the plan concludes, return to the continue-feature skill and execute Step 7 (Phase Bridge). Load: skills/continue-feature/references/phase-bridge.md"
 ```
 
@@ -30,7 +30,7 @@ Invoke the [begin-planning](../../begin-planning/SKILL.md) skill:
 
 ```
 Planning pre-flight for: {topic}
-Specification: docs/workflow/specification/{topic}/specification.md
+Specification: .workflows/specification/{topic}/specification.md
 
 PIPELINE CONTINUATION — When planning concludes (plan status: concluded),
 you MUST return to the continue-feature skill and execute Step 7 (Phase Bridge).

@@ -4,7 +4,7 @@
 
 ---
 
-This file defines the canonical structure for Plan Index Files (`docs/workflow/planning/{topic}/plan.md`). All agents and references that create or update plan index content **must** follow these templates.
+This file defines the canonical structure for Plan Index Files (`.workflows/planning/{topic}/plan.md`). All agents and references that create or update plan index content **must** follow these templates.
 
 ---
 

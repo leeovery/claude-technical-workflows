@@ -121,7 +121,7 @@ impl({topic}): analysis cycle {N} — synthesis
 
 ## E. Approval Gate
 
-Read the staging file from `docs/workflow/implementation/{topic}/analysis-tasks-c{cycle-number}.md`.
+Read the staging file from `.workflows/implementation/{topic}/analysis-tasks-c{cycle-number}.md`.
 
 Check `analysis_gate_mode` in the implementation tracking file (`gated` or `auto`).
 

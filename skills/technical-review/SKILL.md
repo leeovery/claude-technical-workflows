@@ -30,7 +30,7 @@ Either way: Verify plan tasks were implemented, tested adequately, and meet qual
 
 ```
 I need the implementation plan to review against. Could you point me to the
-plan file (e.g., docs/workflow/planning/{topic}/plan.md)?
+plan file (e.g., .workflows/planning/{topic}/plan.md)?
 ```
 
 **STOP.** Wait for user response.

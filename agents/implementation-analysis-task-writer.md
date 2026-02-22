@@ -32,7 +32,7 @@ You receive via the orchestrator's prompt:
 
 ## Update the Plan Index File
 
-The Plan Index File (`docs/workflow/planning/{topic}/plan.md`) is the single source of truth for planning progress. After creating task files, you **must** append the new phase and task table to its body.
+The Plan Index File (`.workflows/planning/{topic}/plan.md`) is the single source of truth for planning progress. After creating task files, you **must** append the new phase and task table to its body.
 
 Append at the end of the Plan Index File body, following the **Phase Entry** and **Task Table** templates from plan-index-schema:
 

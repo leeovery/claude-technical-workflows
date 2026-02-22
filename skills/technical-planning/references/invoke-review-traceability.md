@@ -14,7 +14,7 @@ Invoke `planning-review-traceability` with:
 
 1. **Review criteria path**: `review-traceability.md` (in this directory)
 2. **Specification path**: from the plan's `specification` frontmatter field (resolved relative to the plan directory)
-3. **Plan path**: `docs/workflow/planning/{topic}/plan.md`
+3. **Plan path**: `.workflows/planning/{topic}/plan.md`
 4. **Format reading.md path**: load **[output-formats.md](output-formats.md)**, find the entry matching the plan's `format:` field, and pass the format's `reading.md` path
 5. **Cycle number**: current `review_cycle` from the Plan Index File frontmatter
 6. **Topic name**: from the plan's `topic` frontmatter field

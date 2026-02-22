@@ -1,6 +1,6 @@
 ---
 name: technical-discussion
-description: "Document technical discussions as expert architect and meeting assistant. Capture context, decisions, edge cases, debates, and rationale without jumping to specification or implementation. Use when: (1) Users discuss/explore/debate architecture or design, (2) Working through edge cases before specification, (3) Need to document technical decisions and their rationale, (4) Capturing competing solutions and why choices were made. Creates documentation in docs/workflow/discussion/{topic}.md that can be used to build validated specifications."
+description: "Document technical discussions as expert architect and meeting assistant. Capture context, decisions, edge cases, debates, and rationale without jumping to specification or implementation. Use when: (1) Users discuss/explore/debate architecture or design, (2) Working through edge cases before specification, (3) Need to document technical decisions and their rationale, (4) Capturing competing solutions and why choices were made. Creates documentation in .workflows/discussion/{topic}.md that can be used to build validated specifications."
 user-invocable: false
 ---
 
@@ -76,7 +76,7 @@ See **[meeting-assistant.md](references/meeting-assistant.md)** for detailed app
 
 ## Structure
 
-**Output**: `docs/workflow/discussion/{topic}.md`
+**Output**: `.workflows/discussion/{topic}.md`
 
 Use **[template.md](references/template.md)** for structure:
 
@@ -135,7 +135,7 @@ Incorporate the user's context into the discussion, commit, then re-present the 
 
 1. Update frontmatter `status: concluded`
 2. Final commit
-3. Check for remaining in-progress discussions in `docs/workflow/discussion/`
+3. Check for remaining in-progress discussions in `.workflows/discussion/`
 
 **If other in-progress discussions exist:**
 

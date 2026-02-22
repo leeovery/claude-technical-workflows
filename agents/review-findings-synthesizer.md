@@ -26,8 +26,8 @@ You receive via the orchestrator's prompt:
 4. **Group related findings** — multiple findings about the same concern become one task (e.g., 3 QA findings about missing error handling in the same module = 1 "add error handling" task)
 5. **Filter** — discard low-severity non-blocking findings unless they cluster into a pattern. Never discard high-severity or blocking findings.
 6. **Normalize** — convert each group into a task using the canonical task template (Problem / Solution / Outcome / Do / Acceptance Criteria / Tests)
-7. **Write report** — output to `docs/workflow/implementation/{topic}/review-report-c{cycle}.md`
-8. **Write staging file** — if actionable tasks exist, write to `docs/workflow/implementation/{topic}/review-tasks-c{cycle}.md` with `status: pending` for each task
+7. **Write report** — output to `.workflows/implementation/{topic}/review-report-c{cycle}.md`
+8. **Write staging file** — if actionable tasks exist, write to `.workflows/implementation/{topic}/review-tasks-c{cycle}.md` with `status: pending` for each task
 
 ## Report Format
 
