@@ -177,6 +177,8 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
         specification=$(extract_field "$file" "specification")
         specification=${specification:-"${name}/specification.md"}
         plan_id=$(extract_field "$file" "plan_id")
+        work_type=$(extract_field "$file" "work_type")
+        work_type=${work_type:-"greenfield"}
 
         # Track plan data
         plan_names+=("$name")
@@ -196,6 +198,7 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
         echo "    - name: \"$name\""
         echo "      topic: \"$topic\""
         echo "      status: \"$status\""
+        echo "      work_type: \"$work_type\""
         echo "      date: \"$date\""
         echo "      format: \"$format\""
         echo "      specification: \"$specification\""

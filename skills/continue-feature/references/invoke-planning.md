@@ -31,6 +31,7 @@ Invoke the [begin-planning](../../begin-planning/SKILL.md) skill:
 ```
 Planning pre-flight for: {topic}
 Specification: .workflows/specification/{topic}/specification.md
+Work type: feature
 
 PIPELINE CONTINUATION — When planning concludes (plan status: concluded),
 you MUST return to the continue-feature skill and execute Step 7 (Phase Bridge).

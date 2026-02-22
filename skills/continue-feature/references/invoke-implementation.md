@@ -31,6 +31,7 @@ Invoke the [begin-implementation](../../begin-implementation/SKILL.md) skill:
 ```
 Implementation pre-flight for: {topic}
 Plan: .workflows/planning/{topic}/plan.md
+Work type: feature
 
 PIPELINE CONTINUATION — When implementation completes (tracking status: completed),
 you MUST return to the continue-feature skill and execute Step 7 (Phase Bridge).

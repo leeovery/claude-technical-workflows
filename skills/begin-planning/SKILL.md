@@ -1,6 +1,6 @@
 ---
 name: begin-planning
-description: "Bridge skill for the feature pipeline. Runs pre-flight checks for planning and invokes the technical-planning skill. Called by continue-feature — not directly by users."
+description: "Bridge skill for pipelines. Runs pre-flight checks for planning and invokes the technical-planning skill. Called by continue-* skills or workflow:start — not directly by users."
 user-invocable: false
 allowed-tools: Bash(.claude/skills/start-planning/scripts/discovery.sh)
 ---
@@ -13,7 +13,11 @@ Invoke the **technical-planning** skill for this conversation with pre-flight co
 
 Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
-This skill is a **bridge** — it runs pre-flight checks for planning and hands off to the processing skill. The topic has already been selected by the caller.
+This skill is a **bridge** — it runs pre-flight checks for planning and hands off to the processing skill. The topic and work_type have already been determined by the caller.
+
+The caller provides:
+- **Topic**: The topic name
+- **Work type**: greenfield, feature, or bugfix (default: greenfield)
 
 **CRITICAL**: This guidance is mandatory.
 
@@ -83,7 +87,7 @@ Construct the handoff and invoke the [technical-planning](../technical-planning/
 ```
 Planning session for: {topic}
 Specification: .workflows/specification/{topic}/specification.md
-Work type: feature
+Work type: {work_type from caller, default greenfield}
 Additional context: {summary of user's answer from Step 3, or "none"}
 Cross-cutting references: {list of applicable cross-cutting specs with brief summaries, or "none"}
 Recommended output format: {common_format from discovery if non-empty, otherwise "none"}

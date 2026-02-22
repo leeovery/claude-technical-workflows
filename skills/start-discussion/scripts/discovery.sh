@@ -83,9 +83,12 @@ if [ -d "$DISCUSSION_DIR" ] && [ -n "$(ls -A "$DISCUSSION_DIR" 2>/dev/null)" ]; 
         status=$(extract_field "$file" "status")
         status=${status:-"unknown"}
         date=$(extract_field "$file" "date")
+        work_type=$(extract_field "$file" "work_type")
+        work_type=${work_type:-"greenfield"}
 
         echo "    - name: \"$name\""
         echo "      status: \"$status\""
+        echo "      work_type: \"$work_type\""
         if [ -n "$date" ]; then
             echo "      date: \"$date\""
         fi

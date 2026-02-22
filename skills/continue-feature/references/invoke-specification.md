@@ -40,11 +40,19 @@ Invoke the [technical-specification](../../technical-specification/SKILL.md) ski
 
 ```
 Specification session for: {topic}
+Work type: feature
 
 Source material:
 - Discussion: .workflows/discussion/{topic}.md
 
 Topic name: {topic}
+
+The specification frontmatter should include:
+- topic: {topic}
+- status: in-progress
+- type: feature
+- work_type: feature
+- date: {today}
 
 PIPELINE CONTINUATION — When this specification concludes (status: concluded),
 you MUST return to the continue-feature skill and execute Step 7 (Phase Bridge).

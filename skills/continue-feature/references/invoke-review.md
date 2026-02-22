@@ -31,6 +31,7 @@ Invoke the [begin-review](../../begin-review/SKILL.md) skill:
 ```
 Review pre-flight for: {topic}
 Plan: .workflows/planning/{topic}/plan.md
+Work type: feature
 
 PIPELINE CONTINUATION — When review concludes,
 you MUST return to the continue-feature skill and execute Step 7 (Phase Bridge).

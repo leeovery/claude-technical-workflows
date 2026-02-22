@@ -6,46 +6,91 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Claude Code skills package for structured technical discussion and planning workflows. Installed via npm as `@leeovery/claude-technical-workflows`.
 
-## Six-Phase Workflow
+## Work Types
+
+The workflow system supports three work types, each with its own pipeline:
+
+**Greenfield**: Building a new product from scratch
+- Phase-centric, multi-session, long-running (days/weeks/months)
+- All artifacts in a phase complete before moving to next
+- Research → Discussion → Specification → Planning → Implementation → Review
+
+**Feature**: Adding functionality to an existing product
+- Topic-centric, single-session, linear pipeline
+- Optional research step if uncertainties exist
+- Discussion → Specification → Planning → Implementation → Review
+
+**Bugfix**: Fixing broken behavior
+- Investigation-centric, single-session
+- Investigation replaces discussion (combines symptom gathering + code analysis)
+- Investigation → Specification → Planning → Implementation → Review
+
+## Workflow Phases
 
 1. **Research** (`technical-research` skill): EXPLORE - feasibility, market, viability, early ideas
 2. **Discussion** (`technical-discussion` skill): Capture WHAT and WHY - decisions, architecture, edge cases, debates
-3. **Specification** (`technical-specification` skill): Validate and refine into standalone spec
-4. **Planning** (`technical-planning` skill): Define HOW - phases, tasks, acceptance criteria
-5. **Implementation** (`technical-implementation` skill): Execute plan via strict TDD
-6. **Review** (`technical-review` skill): Validate work against discussion, specification, and plan
+3. **Investigation** (`technical-investigation` skill): Bugfix-specific - symptom gathering + code analysis → root cause
+4. **Specification** (`technical-specification` skill): Validate and refine into standalone spec
+5. **Planning** (`technical-planning` skill): Define HOW - phases, tasks, acceptance criteria
+6. **Implementation** (`technical-implementation` skill): Execute plan via strict TDD
+7. **Review** (`technical-review` skill): Validate work against discussion, specification, and plan
 
 ## Structure
 
 ```
 skills/
   # Processing skills (model-invocable — do the work)
-  technical-research/        # Phase 1: Explore and validate ideas
-  technical-discussion/      # Phase 2: Document discussions
-  technical-specification/   # Phase 3: Build validated specifications
-  technical-planning/        # Phase 4: Create implementation plans
-  technical-implementation/  # Phase 5: Execute via TDD
-  technical-review/          # Phase 6: Validate against artifacts
+  technical-research/        # Explore and validate ideas
+  technical-discussion/      # Document discussions (feature/greenfield)
+  technical-investigation/   # Investigate bugs (bugfix pipeline)
+  technical-specification/   # Build validated specifications
+  technical-planning/        # Create implementation plans
+  technical-implementation/  # Execute via TDD
+  technical-review/          # Validate against artifacts
+
+  # Unified entry points
+  workflow/
+    start/                   # Unified entry point - discovers state, routes by work type
+      scripts/discovery.sh   #   Comprehensive cross-phase discovery
+      references/            #   Work type selection, routing references
+    bridge/                  # Pipeline continuation - enters plan mode with next steps
+
+  # Pipeline continuation skills
+  continue-feature/          # Continue feature through pipeline phases
+    scripts/discovery.sh     #   Cross-phase discovery
+    references/              #   Phase detection, bridges, handoffs
+  continue-bugfix/           # Continue bugfix through pipeline phases
+    scripts/discovery.sh     #   Cross-phase discovery
+    references/              #   Phase detection, bridges, handoffs
+  continue-greenfield/       # Continue greenfield (phase-centric suggestions)
+    scripts/discovery.sh     #   Cross-phase discovery
+    references/              #   State presentation
 
   # Entry-point skills (user-invocable — gather context, invoke processing skills)
-  # Each entry-point skill with a discovery script has a scripts/ subdirectory
   migrate/                   # Keep workflow files in sync with system design
     scripts/migrate.sh       #   Migration orchestrator
     scripts/migrations/      #   Individual migration scripts (numbered)
-  start-feature/             # Start feature pipeline (discussion → spec → plan → impl → review)
+  start-feature/             # Start feature pipeline (power user entry)
     references/              #   Interview questions, handoffs, phase bridge
-  continue-feature/          # Continue feature through next pipeline phase
-    scripts/discovery.sh     #   Cross-phase discovery script
-    references/              #   Phase detection, bridges, handoffs
+  start-bugfix/              # Start bugfix pipeline (power user entry)
+    references/              #   Bug context gathering, phase bridge
   link-dependencies/         # Link dependencies across topics
 
   # Bridge skills (model-invocable — pre-flight + handoff for pipeline)
+  begin-discussion/          # Pre-flight for discussion
+  begin-specification/       # Pre-flight for specification
+  begin-research/            # Pre-flight for research
+  begin-investigation/       # Pre-flight for investigation (bugfix)
   begin-planning/            # Pre-flight for planning, invokes technical-planning
     references/              #   Cross-cutting context
-  begin-implementation/      # Pre-flight for implementation, invokes technical-implementation
-  begin-review/              # Pre-flight for review, invokes technical-review
+  begin-implementation/      # Pre-flight for implementation
+  begin-review/              # Pre-flight for review
+
+  # Discovery entry points
   start-research/            # Begin research exploration
   start-discussion/          # Begin technical discussions
+    scripts/discovery.sh     #   Discovery script
+  start-investigation/       # Begin bug investigation
     scripts/discovery.sh     #   Discovery script
   start-specification/       # Begin specification building
     scripts/discovery.sh     #   Discovery script
@@ -119,10 +164,16 @@ Processing skills should **never hardcode references** to specific workflow phas
 Phase-first directory structure:
 - Research: `.workflows/research/` (flat, semantically named files)
 - Discussion: `.workflows/discussion/{topic}.md`
+- Investigation: `.workflows/investigation/{topic}/investigation.md` (bugfix pipeline)
 - Specification: `.workflows/specification/{topic}/specification.md`
 - Planning: `.workflows/planning/{topic}/plan.md` + format-specific task storage
 - Implementation: `.workflows/implementation/{topic}/tracking.md`
 - Review: `.workflows/review/{topic}/r{N}/review.md`
+
+**work_type field**: All artifacts include `work_type` in frontmatter (greenfield, feature, or bugfix). This enables:
+- Unified discovery across all phases
+- Correct pipeline routing via continue-* skills
+- Work-type-specific behavior in processing skills
 
 Commit docs frequently (natural breaks, before context refresh). Skills capture context, don't implement.
 

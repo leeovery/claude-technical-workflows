@@ -1,6 +1,6 @@
 ---
 name: begin-review
-description: "Bridge skill for the feature pipeline. Runs pre-flight checks for review and invokes the technical-review skill. Called by continue-feature — not directly by users."
+description: "Bridge skill for pipelines. Runs pre-flight checks for review and invokes the technical-review skill. Called by continue-* skills or workflow:start — not directly by users."
 user-invocable: false
 allowed-tools: Bash(.claude/skills/start-review/scripts/discovery.sh)
 ---
@@ -13,7 +13,11 @@ Invoke the **technical-review** skill for this conversation with pre-flight cont
 
 Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
-This skill is a **bridge** — it runs pre-flight checks for review and hands off to the processing skill. The topic has already been selected by the caller.
+This skill is a **bridge** — it runs pre-flight checks for review and hands off to the processing skill. The topic and work_type have already been determined by the caller.
+
+The caller provides:
+- **Topic**: The topic name
+- **Work type**: greenfield, feature, or bugfix (default: greenfield)
 
 **CRITICAL**: This guidance is mandatory.
 
