@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Update Workflow Explorer
 
-Audit `workflow-explorer.html` and sync its flowchart data with the actual command/skill/agent source files.
+Audit `workflow-explorer.html` and sync its flowchart data with the actual skill/agent source files.
 
 ## Step 0: Determine Scope
 
@@ -49,23 +49,23 @@ For each in-scope flowchart key, read its source file(s) and extract the logical
 
 | Key | Source Files |
 |---|---|
-| `research` | `commands/workflow/start-research.md` |
-| `discussion` | `commands/workflow/start-discussion.md` |
-| `specification` | `commands/workflow/start-specification.md` |
-| `planning` | `commands/workflow/start-planning.md` |
-| `implementation` | `commands/workflow/start-implementation.md` |
-| `review` | `commands/workflow/start-review.md` |
+| `research` | `skills/start-research/SKILL.md` |
+| `discussion` | `skills/start-discussion/SKILL.md` |
+| `specification` | `skills/start-specification/SKILL.md` |
+| `planning` | `skills/start-planning/SKILL.md` |
+| `implementation` | `skills/start-implementation/SKILL.md` |
+| `review` | `skills/start-review/SKILL.md` |
 | `skill-research` | `skills/technical-research/SKILL.md` |
 | `skill-discussion` | `skills/technical-discussion/SKILL.md` |
-| `skill-specification` | `skills/technical-specification/SKILL.md` + `skills/technical-specification/references/steps/*.md` |
-| `skill-planning` | `skills/technical-planning/SKILL.md` + `skills/technical-planning/references/steps/*.md` |
-| `skill-implementation` | `skills/technical-implementation/SKILL.md` + `skills/technical-implementation/references/steps/*.md` |
+| `skill-specification` | `skills/technical-specification/SKILL.md` + `skills/technical-specification/references/*.md` |
+| `skill-planning` | `skills/technical-planning/SKILL.md` + `skills/technical-planning/references/*.md` |
+| `skill-implementation` | `skills/technical-implementation/SKILL.md` + `skills/technical-implementation/references/*.md` |
 | `skill-review` | `skills/technical-review/SKILL.md` + `agents/review-task-verifier.md` |
-| `start-feature` | `commands/start-feature.md` |
-| `link-deps` | `commands/link-dependencies.md` |
-| `status` | `commands/workflow/status.md` |
-| `view-plan` | `commands/workflow/view-plan.md` |
-| `migrate` | `commands/migrate.md` |
+| `start-feature` | `skills/start-feature/SKILL.md` |
+| `link-deps` | `skills/link-dependencies/SKILL.md` |
+| `status` | `skills/status/SKILL.md` |
+| `view-plan` | `skills/view-plan/SKILL.md` |
+| `migrate` | `skills/migrate/SKILL.md` |
 | `planning-phase-designer` | `agents/planning-phase-designer.md` |
 | `planning-task-designer` | `agents/planning-task-designer.md` |
 | `planning-task-author` | `agents/planning-task-author.md` |
