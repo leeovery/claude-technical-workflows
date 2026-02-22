@@ -24,28 +24,64 @@ set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MIGRATIONS_DIR="$SCRIPT_DIR/migrations"
-TRACKING_FILE=".workflows/.state/migrations"
+
+# === LEGACY TRACKING SUPPORT (remove after 2026-06) ===
+#
+# Handles tracking file discovery across historical locations and formats.
+# Once all users have run migration 011, replace this section with:
+#   TRACKING_FILE=".workflows/.state/migrations"
+#   mkdir -p "$(dirname "$TRACKING_FILE")"
+
+find_tracking_file() {
+    for candidate in \
+        ".workflows/.state/migrations" \
+        "docs/workflow/.state/migrations" \
+        "docs/workflow/.cache/migrations" \
+        "docs/workflow/.cache/migrations.log"
+    do
+        [ -f "$candidate" ] && echo "$candidate" && return
+    done
+    echo ".workflows/.state/migrations"
+}
+
+normalize_tracking_format() {
+    local file="$1"
+    [ ! -f "$file" ] && return
+    # Old: "docs/workflow/discussion/auth.md: 001" → New: "001"
+    if grep -q ': [0-9]' "$file" 2>/dev/null; then
+        grep -oE '[0-9]+$' "$file" | sort -u > "${file}.tmp"
+        mv "${file}.tmp" "$file"
+    fi
+}
+
+stabilize_tracking_location() {
+    local file="$1"
+    local stable="docs/workflow/.state/migrations"
+    # If tracking is at a legacy .cache/ location, move to .state/ so it survives migration 010
+    case "$file" in
+        docs/workflow/.cache/*)
+            mkdir -p "$(dirname "$stable")"
+            mv "$file" "$stable"
+            echo "$stable"
+            ;;
+        *)
+            echo "$file"
+            ;;
+    esac
+}
+
+TRACKING_FILE=$(find_tracking_file)
+normalize_tracking_format "$TRACKING_FILE"
+TRACKING_FILE=$(stabilize_tracking_location "$TRACKING_FILE")
+mkdir -p "$(dirname "$TRACKING_FILE")"
+touch "$TRACKING_FILE"
+
+# === END LEGACY TRACKING SUPPORT ===
 
 # Track counts for final report
 FILES_UPDATED=0
 FILES_SKIPPED=0
 MIGRATIONS_RUN=0
-
-# Ensure state directory exists
-mkdir -p "$(dirname "$TRACKING_FILE")"
-
-# Self-healing: merge entries from old locations into .workflows/.state/migrations
-OLD_CACHE_LOG="docs/workflow/.cache/migrations.log"
-OLD_CACHE_FILE="docs/workflow/.cache/migrations"
-OLD_STATE_FILE="docs/workflow/.state/migrations"
-if [ -f "$OLD_CACHE_LOG" ] || [ -f "$OLD_CACHE_FILE" ] || [ -f "$OLD_STATE_FILE" ]; then
-    { cat "$OLD_CACHE_LOG" 2>/dev/null || true; cat "$OLD_CACHE_FILE" 2>/dev/null || true; cat "$OLD_STATE_FILE" 2>/dev/null || true; cat "$TRACKING_FILE" 2>/dev/null || true; } | sort -u > "${TRACKING_FILE}.tmp"
-    mv "${TRACKING_FILE}.tmp" "$TRACKING_FILE"
-    rm -f "$OLD_CACHE_LOG" "$OLD_CACHE_FILE" "$OLD_STATE_FILE"
-fi
-
-# Touch tracking file if it doesn't exist
-touch "$TRACKING_FILE"
 
 #
 # Helper function: Report a file update (for migration scripts to call)
@@ -89,14 +125,6 @@ if [ ${#MIGRATION_SCRIPTS[@]} -eq 0 ]; then
     exit 0
 fi
 
-# One-time: convert old per-file format to per-migration format
-# Old: "docs/workflow/discussion/auth.md: 001" → extracts "001"
-# New: "001" → already correct
-if grep -q ': [0-9]' "$TRACKING_FILE" 2>/dev/null; then
-    grep -oE '[0-9]+$' "$TRACKING_FILE" | sort -u > "${TRACKING_FILE}.tmp"
-    mv "${TRACKING_FILE}.tmp" "$TRACKING_FILE"
-fi
-
 for script in "${MIGRATION_SCRIPTS[@]}"; do
     # Extract migration ID from filename (e.g., "001" from "001-discussion-frontmatter.sh")
     migration_id=$(basename "$script" .sh | grep -oE '^[0-9]+')
@@ -116,6 +144,8 @@ for script in "${MIGRATION_SCRIPTS[@]}"; do
     # shellcheck source=/dev/null
     source "$script"
 
+    # Re-find tracking file (migration 011 moves it)
+    TRACKING_FILE=$(find_tracking_file)
     echo "$migration_id" >> "$TRACKING_FILE"
     MIGRATIONS_RUN=$((MIGRATIONS_RUN + 1))
 done
