@@ -2,7 +2,7 @@
 #
 # Cross-phase discovery script for /continue-feature.
 #
-# Scans all workflow directories (discussion, specification, planning,
+# Scans all workflow directories (research, discussion, specification, planning,
 # implementation) and builds a unified topic list with phase state
 # and next_phase computation.
 #
@@ -11,6 +11,7 @@
 
 set -eo pipefail
 
+RESEARCH_DIR=".workflows/research"
 DISC_DIR=".workflows/discussion"
 SPEC_DIR=".workflows/specification"
 PLAN_DIR=".workflows/planning"
@@ -40,10 +41,25 @@ echo "# Generated: $(date -Iseconds)"
 echo ""
 
 #
-# Collect all unique topic names from discussion + specification
+# Collect all unique topic names from research + discussion + specification
 #
 declare -a all_topics=()
 declare -A topic_seen=()
+
+# Scan research (feature research has topic in frontmatter or filename)
+if [ -d "$RESEARCH_DIR" ]; then
+    for file in "$RESEARCH_DIR"/*.md; do
+        [ -f "$file" ] || continue
+        work_type=$(extract_field "$file" "work_type")
+        # Only include feature research (has work_type: feature)
+        [ "$work_type" = "feature" ] || continue
+        name=$(basename "$file" .md)
+        if [ -z "${topic_seen[$name]+x}" ]; then
+            all_topics+=("$name")
+            topic_seen[$name]=1
+        fi
+    done
+fi
 
 # Scan discussions
 if [ -d "$DISC_DIR" ]; then
@@ -82,6 +98,19 @@ if [ ${#all_topics[@]} -eq 0 ]; then
     echo "  []"
 else
     for topic in "${all_topics[@]}"; do
+        # Research state (feature research)
+        research_exists="false"
+        research_status=""
+        research_file="$RESEARCH_DIR/${topic}.md"
+        if [ -f "$research_file" ]; then
+            work_type=$(extract_field "$research_file" "work_type")
+            if [ "$work_type" = "feature" ]; then
+                research_exists="true"
+                research_status=$(extract_field "$research_file" "status")
+                research_status=${research_status:-"in-progress"}
+            fi
+        fi
+
         # Discussion state
         disc_exists="false"
         disc_status=""
@@ -167,6 +196,10 @@ else
             next_phase="specification"
         elif [ "$disc_exists" = "true" ]; then
             next_phase="discussion"
+        elif [ "$research_exists" = "true" ] && [ "$research_status" = "concluded" ]; then
+            next_phase="discussion"  # Research done, ready for discussion
+        elif [ "$research_exists" = "true" ]; then
+            next_phase="research"
         else
             next_phase="unknown"
         fi
@@ -179,6 +212,12 @@ else
         fi
 
         echo "  - name: \"$topic\""
+
+        echo "    research:"
+        echo "      exists: $research_exists"
+        if [ "$research_exists" = "true" ]; then
+            echo "      status: \"$research_status\""
+        fi
 
         echo "    discussion:"
         echo "      exists: $disc_exists"

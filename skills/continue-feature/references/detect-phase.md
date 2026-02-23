@@ -31,9 +31,13 @@ Check artifacts in this order (first match wins):
 
 5. Check `.workflows/discussion/{topic}.md`
    - If exists with `status: concluded` → next_phase is **"specification"**
-   - If exists with other status → next_phase is **"discussion"**
+   - If exists with other status → next_phase is **"discussion_in_progress"**
 
-6. If none found → next_phase is **"unknown"**
+6. Check `.workflows/research/{topic}.md`
+   - If exists with `status: concluded` → next_phase is **"discussion"** (research done, ready for discussion)
+   - If exists with other status → next_phase is **"research"** (research in progress)
+
+7. If none found → next_phase is **"unknown"**
 
 ## Routing
 
@@ -68,7 +72,13 @@ Use /start-review to re-review or synthesize findings.
 
 **STOP.** Do not proceed — terminal condition.
 
-#### If next_phase is "discussion"
+#### If next_phase is "discussion" (research concluded, needs discussion)
+
+The topic has completed research and is ready to start discussion.
+
+→ Proceed to **Step 2a** (invoke begin-discussion).
+
+#### If next_phase is "discussion_in_progress"
 
 > *Output the next fenced block as a code block:*
 
@@ -79,6 +89,20 @@ Discussion In Progress
 
 Resume the discussion with /start-discussion, or use /start-feature
 to start a new feature from scratch.
+```
+
+**STOP.** Do not proceed — terminal condition.
+
+#### If next_phase is "research"
+
+> *Output the next fenced block as a code block:*
+
+```
+Research In Progress
+
+"{topic:(titlecase)}" has research that is not yet concluded.
+
+Resume the research by invoking technical-research for this topic.
 ```
 
 **STOP.** Do not proceed — terminal condition.

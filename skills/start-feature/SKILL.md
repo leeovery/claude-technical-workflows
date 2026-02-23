@@ -2,7 +2,7 @@
 name: start-feature
 description: "Start a new feature through the full pipeline. Gathers context via structured interview, creates a discussion, then bridges to continue-feature for specification, planning, and implementation."
 disable-model-invocation: true
-allowed-tools: Bash(ls .workflows/discussion/), Bash(.claude/hooks/workflows/write-session-state.sh)
+allowed-tools: Bash(ls .workflows/discussion/), Bash(ls .workflows/research/), Bash(.claude/hooks/workflows/write-session-state.sh)
 hooks:
   PreToolUse:
     - hooks:
@@ -11,7 +11,9 @@ hooks:
           once: true
 ---
 
-Start a new feature and route it through the pipeline: Discussion → Specification → Planning → Implementation.
+Start a new feature and route it through the pipeline: (Research) → Discussion → Specification → Planning → Implementation → Review.
+
+Research is optional — offered when significant uncertainties exist.
 
 > **⚠️ ZERO OUTPUT RULE**: Do not narrate your processing. Produce no output until a step or reference file explicitly specifies display content. No "proceeding with...", no discovery summaries, no routing decisions, no transition text. Your first output must be content explicitly called for by the instructions.
 
@@ -45,11 +47,13 @@ Invoke the `/migrate` skill and assess its output.
 Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
-2. **Identify the topic.** Check conversation history for the topic name. If unknown, check `.workflows/discussion/` for recently modified files via `git log --oneline -5`.
+2. **Identify the topic.** Check conversation history for the topic name. If unknown, check `.workflows/discussion/` or `.workflows/research/` for recently modified files.
 3. **Determine current step from artifacts:**
-   - No discussion file exists → resume at **Step 1**
-   - Discussion exists with `status: in-progress` → resume at **Step 3** (re-invoke technical-discussion)
-   - Discussion exists with `status: concluded` → resume at **Step 4** (phase bridge)
+   - No research or discussion file exists → resume at **Step 1**
+   - Research exists with `status: in-progress` → resume at **Step 4** (re-invoke technical-research)
+   - Research exists with `status: concluded`, no discussion → resume at **Step 5** (phase bridge for research → discussion)
+   - Discussion exists with `status: in-progress` → resume at **Step 4** (re-invoke technical-discussion)
+   - Discussion exists with `status: concluded` → resume at **Step 5** (phase bridge)
 4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 
 Do not guess at progress or continue from memory. The files on disk and git history are authoritative — your recollection is not.
@@ -110,13 +114,29 @@ A discussion named "{topic}" already exists.
 
 **STOP.** Wait for user response.
 
-If resuming, check the discussion status. If concluded → skip to Step 4. If in-progress → proceed to Step 3.
+If resuming, check the discussion status. If concluded → skip to Step 5. If in-progress → proceed to Step 4.
 
 → Proceed to **Step 3**.
 
 ---
 
-## Step 3: Invoke Discussion
+## Step 3: Research Gating
+
+Load **[research-gating.md](references/research-gating.md)** and follow its instructions.
+
+The reference will assess uncertainties and offer research if beneficial.
+
+#### If user chooses research
+
+→ Proceed to **Step 4** with `phase: research`
+
+#### If user declines research (or no uncertainties)
+
+→ Proceed to **Step 4** with `phase: discussion`
+
+---
+
+## Step 4: Invoke Processing Skill
 
 Before invoking the processing skill, save a session bookmark.
 
@@ -125,6 +145,22 @@ Before invoking the processing skill, save a session bookmark.
 ```
 Saving session state so Claude can pick up where it left off and continue the feature pipeline if the conversation is compacted.
 ```
+
+#### If phase is research
+
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-research/SKILL.md" \
+  ".workflows/research/{topic}.md" \
+  --pipeline "This session is part of the feature pipeline. After research concludes, load and follow the phase bridge at skills/start-feature/references/phase-bridge.md for topic '{topic}'."
+```
+
+Load **[invoke-research.md](references/invoke-research.md)** and follow its instructions.
+
+**CRITICAL**: When research concludes (status becomes "concluded"), you MUST proceed to **Step 5** below. Do not end the session — the feature pipeline continues via the phase bridge.
+
+#### If phase is discussion
 
 ```bash
 .claude/hooks/workflows/write-session-state.sh \
@@ -136,11 +172,11 @@ Saving session state so Claude can pick up where it left off and continue the fe
 
 Load **[invoke-discussion.md](references/invoke-discussion.md)** and follow its instructions.
 
-**CRITICAL**: When the discussion concludes (status becomes "concluded"), you MUST proceed to **Step 4** below. Do not end the session — the feature pipeline continues to specification via the phase bridge.
+**CRITICAL**: When the discussion concludes (status becomes "concluded"), you MUST proceed to **Step 5** below. Do not end the session — the feature pipeline continues to specification via the phase bridge.
 
 ---
 
-## Step 4: Phase Bridge
+## Step 5: Phase Bridge
 
 Load **[phase-bridge.md](references/phase-bridge.md)** and follow its instructions.
 

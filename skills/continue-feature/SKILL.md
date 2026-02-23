@@ -42,6 +42,8 @@ Context refresh (compaction) summarizes the conversation, losing procedural deta
    - Specification exists with other status → resume at **Step 3** (re-invoke technical-specification)
    - Discussion exists with `status: concluded` → resume at **Step 3** (invoke technical-specification)
    - Discussion exists with other status → terminal — suggest `/start-discussion`
+   - Research exists with `status: concluded`, no discussion → resume at **Step 2a** (invoke begin-discussion)
+   - Research exists with other status → terminal — suggest resuming technical-research
 4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 
 Do not guess at progress or continue from memory. The files on disk and git history are authoritative — your recollection is not.
@@ -110,7 +112,7 @@ Present the discovered state as context, then ask the user to select:
 Continue Feature
 
 This skill continues a feature through the pipeline phases:
-Discussion → Specification → Planning → Implementation → Review
+(Research) → Discussion → Specification → Planning → Implementation → Review
 
 It's designed for features started with /start-feature, but works
 with any topic that has workflow artifacts.
@@ -143,7 +145,17 @@ Select by number, or enter a topic name directly:
 
 Load **[detect-phase.md](references/detect-phase.md)** and follow its instructions.
 
-→ The reference file will route you to **Step 3**, **Step 4**, **Step 5**, **Step 6**, or a terminal condition. Follow its routing.
+→ The reference file will route you to **Step 2a**, **Step 3**, **Step 4**, **Step 5**, **Step 6**, or a terminal condition. Follow its routing.
+
+---
+
+## Step 2a: Discussion Phase (from Research)
+
+Load **[invoke-discussion.md](references/invoke-discussion.md)** and follow its instructions.
+
+This step is reached when research has concluded and the feature is ready for discussion. The topic and work_type are already known.
+
+**CRITICAL**: When the discussion concludes (status becomes "concluded"), you MUST proceed to **Step 7** below. Do not end the session — the feature pipeline continues to the phase bridge.
 
 ---
 
