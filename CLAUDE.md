@@ -313,6 +313,16 @@ Each part is optional — use only what's needed for clarity.
 
 Example: `@if(has_discussion) {topic}.md ({status:[in-progress|concluded]}) @else (no discussion) @endif`
 
+**Loop directives** for iterating over collections:
+
+```
+@foreach(item in collection)
+  • {item.name} ({item.status})
+@endforeach
+```
+
+Example with filter: `@foreach(inv in investigations.files where status is in-progress)`
+
 **When to use placeholders vs concrete examples:** Placeholders work well for structural templates (tree displays, status blocks) where each field has a clear source. Selection menus should use concrete examples instead — they encode conditional logic (which verb maps to which state) that placeholders obscure.
 
 ### Tree Structure

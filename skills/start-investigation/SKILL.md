@@ -94,16 +94,16 @@ Investigations Overview
 
 @if(investigations.counts.in_progress > 0)
 In Progress:
-{foreach inv in investigations.files where status is in-progress}
+@foreach(inv in investigations.files where status is in-progress)
   • {inv.topic}
-{/foreach}
+@endforeach
 @endif
 
 @if(investigations.counts.concluded > 0)
 Concluded:
-{foreach inv in investigations.files where status is concluded}
+@foreach(inv in investigations.files where status is concluded)
   • {inv.topic}
-{/foreach}
+@endforeach
 @endif
 ```
 
@@ -115,7 +115,7 @@ What would you like to do?
 
 @if(in_progress investigations exist)
 {N}. Resume "{topic}" investigation
-{/foreach}
+@endforeach
 @endif
 {N}. Start new investigation
 · · · · · · · · · · · ·
