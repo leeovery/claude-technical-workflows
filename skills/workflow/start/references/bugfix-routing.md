@@ -46,15 +46,26 @@ Bugfixes
 
 {bugfix_count} bugfix(es) in progress:
 
-{foreach topic in bugfixes.topics}
-1. {topic.name:(titlecase)}
-   └─ Next: {topic.next_phase}
-{/foreach}
+1. {topic:(titlecase)}
+   └─ Next: {next_phase}
+
+2. ...
 ```
+
+Build tree from `bugfixes.topics` array. Each topic shows `name` (titlecased) and `next_phase`.
 
 ## Build Menu Options
 
-Build a numbered menu with all in-progress bugfixes plus option to start new:
+Build a numbered menu with all in-progress bugfixes plus option to start new. The description maps `next_phase`:
+
+| next_phase | Description |
+|------------|-------------|
+| investigation | investigation in-progress |
+| specification | ready for specification |
+| planning | ready for planning |
+| implementation | ready for implementation |
+| review | ready for review |
+| done | pipeline complete |
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -62,20 +73,16 @@ Build a numbered menu with all in-progress bugfixes plus option to start new:
 · · · · · · · · · · · ·
 What would you like to do?
 
-{foreach topic in bugfixes.topics}
-{N}. Continue "{topic.name}" — {next_phase_description}
-{/foreach}
-{N+1}. Start new bugfix
+1. Continue "Login Timeout" — investigation in-progress
+2. Continue "Memory Leak" — ready for specification
+3. Continue "Race Condition" — ready for planning
+4. Start new bugfix
+
+Select an option (enter number):
 · · · · · · · · · · · ·
 ```
 
-Where `{next_phase_description}` maps next_phase to a human-readable description:
-- investigation → "investigation in progress"
-- specification → "ready for specification" or "specification in progress"
-- planning → "ready for planning" or "planning in progress"
-- implementation → "ready for implementation" or "implementation in progress"
-- review → "ready for review"
-- done → "pipeline complete"
+Recreate with actual topics and states from discovery.
 
 **STOP.** Wait for user response.
 

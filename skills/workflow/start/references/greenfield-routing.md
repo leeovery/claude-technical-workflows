@@ -63,24 +63,22 @@ Implementation:
 
 ## Build Menu Options
 
-Build a numbered menu of actionable items. Include:
+Build a numbered menu of actionable items. The verb depends on the state:
 
-1. **In-progress items** — discussions, specs, plans that can be continued
-2. **Phase transitions** — concluded artifacts ready for next phase
-3. **New work** — start new items in phases that are ready
+| State | Verb |
+|-------|------|
+| In-progress discussion | Continue |
+| Concluded discussion, no spec | Start specification from |
+| In-progress specification | Continue |
+| Concluded spec (feature), no plan | Start planning for |
+| In-progress plan | Continue |
+| Concluded plan, no implementation | Start implementation of |
+| In-progress implementation | Continue |
+| Completed implementation, no review | Start review for |
+| Research exists | Continue research |
+| No discussions yet | Start research / Start new discussion |
 
-**Menu construction rules:**
-- In-progress discussions → "Continue {name} discussion"
-- Concluded discussions with no spec → "Start specification from {name}"
-- In-progress specifications → "Continue {name} specification"
-- Concluded specs (feature type) with no plan → "Start planning for {name}"
-- In-progress plans → "Continue {name} plan"
-- Concluded plans with no implementation → "Start implementation of {name}"
-- In-progress implementations → "Continue {name} implementation"
-- Completed implementations with no review → "Start review for {name}"
-- Research exists → "Continue research exploration"
-- Always offer "Start new discussion" if there's room for new work
-- If no discussions exist, offer "Start research exploration"
+Always include "Start new discussion" as a final option.
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -88,9 +86,20 @@ Build a numbered menu of actionable items. Include:
 · · · · · · · · · · · ·
 What would you like to do?
 
-{numbered_options}
+1. Continue "Auth Flow" discussion — in-progress
+2. Start specification from "Data Model" — discussion concluded
+3. Continue "Billing" specification — in-progress
+4. Start planning for "User Profiles" — spec concluded
+5. Continue "Caching" plan — in-progress
+6. Start implementation of "Notifications" — plan concluded
+7. Continue research
+8. Start new discussion
+
+Select an option (enter number):
 · · · · · · · · · · · ·
 ```
+
+Recreate with actual topics and states from discovery. Only include options that apply based on current state.
 
 **STOP.** Wait for user response.
 

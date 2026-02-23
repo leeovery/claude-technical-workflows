@@ -63,24 +63,24 @@ Implementation:
 
 ## Build Menu Options
 
-Build a numbered menu of actionable items based on state. Include in priority order:
+Build a numbered menu of actionable items based on state. The verb depends on state:
 
-1. **In-progress items first** — work that's actively being done
-   - In-progress discussions → "Continue {name} discussion"
-   - In-progress specifications → "Continue {name} specification"
-   - In-progress plans → "Continue {name} plan"
-   - In-progress implementations → "Continue {name} implementation"
+| State | Verb |
+|-------|------|
+| In-progress discussion | Continue ... discussion |
+| In-progress specification | Continue ... specification |
+| In-progress plan | Continue ... plan |
+| In-progress implementation | Continue ... implementation |
+| Concluded discussion, no spec | Start specification from |
+| Concluded spec (feature), no plan | Start planning for |
+| Concluded plan, no impl | Start implementation of |
+| Completed impl, no review | Start review for |
+| Research exists | Continue research |
+| No research | Start research |
 
-2. **Phase transitions** — concluded artifacts ready for next phase
-   - Concluded discussions without spec → "Start specification from {name}"
-   - Concluded specs (feature type) without plan → "Start planning for {name}"
-   - Concluded plans without implementation → "Start implementation of {name}"
-   - Completed implementations without review → "Start review for {name}"
+Always include "Start new discussion" as a final option.
 
-3. **New work options** — always available
-   - If research exists → "Continue research exploration"
-   - If no research → "Start research exploration"
-   - "Start new discussion"
+**Priority order:** In-progress items first, then phase transitions, then new work options.
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -88,9 +88,18 @@ Build a numbered menu of actionable items based on state. Include in priority or
 · · · · · · · · · · · ·
 What would you like to do?
 
-{numbered_options}
+1. Continue "Auth Flow" discussion — in-progress
+2. Continue "Data Model" specification — in-progress
+3. Start specification from "Billing" — discussion concluded
+4. Start planning for "User Profiles" — spec concluded
+5. Continue research
+6. Start new discussion
+
+Select an option (enter number):
 · · · · · · · · · · · ·
 ```
+
+Recreate with actual topics and states from discovery. Only include options that apply.
 
 **STOP.** Wait for user response.
 

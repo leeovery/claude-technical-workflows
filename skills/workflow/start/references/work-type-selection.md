@@ -8,23 +8,51 @@ Present the current state and ask the user which work type they want to work on.
 
 ## Display State Overview
 
-Using the discovery output, build a concise state summary.
+Using the discovery output, render the appropriate state display.
+
+#### If `state.has_any_work` is false
 
 > *Output the next fenced block as a code block:*
 
 ```
 Workflow Overview
 
-{state_summary}
+No existing work found. Ready to start fresh.
 ```
 
-Where `{state_summary}` is built from the discovery:
+#### If `state.has_any_work` is true
 
-- If `state.has_any_work` is false: "No existing work found. Ready to start."
-- If there's existing work, summarize it:
-  - Greenfield: "{N} discussions, {M} specifications, ..."
-  - Features: "{N} features in progress"
-  - Bugfixes: "{N} bugfixes in progress"
+Build the summary from `state` counts. Only show sections with work.
+
+> *Output the next fenced block as a code block:*
+
+```
+Workflow Overview
+
+@if(state.greenfield has any counts > 0)
+Greenfield:
+  @if(research_count > 0)└─ Research: {research_count} @if(research_count == 1)file@else files@endif
+  @endif
+  @if(discussion_count > 0)└─ Discussions: {discussion_count} @if(discussion_concluded > 0)({discussion_concluded} concluded)@endif
+  @endif
+  @if(specification_count > 0)└─ Specifications: {specification_count} @if(specification_concluded > 0)({specification_concluded} concluded)@endif
+  @endif
+  @if(plan_count > 0)└─ Plans: {plan_count} @if(plan_concluded > 0)({plan_concluded} concluded)@endif
+  @endif
+  @if(implementation_count > 0)└─ Implementations: {implementation_count} @if(implementation_completed > 0)({implementation_completed} completed)@endif
+  @endif
+@endif
+
+@if(feature_count > 0)
+Features: {feature_count} in progress
+@endif
+
+@if(bugfix_count > 0)
+Bugfixes: {bugfix_count} in progress
+@endif
+```
+
+Use values from `state.greenfield.*`, `state.feature_count`, `state.bugfix_count`.
 
 ## Ask Work Type
 

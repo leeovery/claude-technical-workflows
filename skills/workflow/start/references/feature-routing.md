@@ -46,15 +46,26 @@ Features
 
 {feature_count} feature(s) in progress:
 
-{foreach topic in features.topics}
-1. {topic.name:(titlecase)}
-   └─ Next: {topic.next_phase}
-{/foreach}
+1. {topic:(titlecase)}
+   └─ Next: {next_phase}
+
+2. ...
 ```
+
+Build tree from `features.topics` array. Each topic shows `name` (titlecased) and `next_phase`.
 
 ## Build Menu Options
 
-Build a numbered menu with all in-progress features plus option to start new:
+Build a numbered menu with all in-progress features plus option to start new. The description maps `next_phase`:
+
+| next_phase | Description |
+|------------|-------------|
+| discussion | discussion in-progress |
+| specification | ready for specification |
+| planning | ready for planning |
+| implementation | ready for implementation |
+| review | ready for review |
+| done | pipeline complete |
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -62,20 +73,16 @@ Build a numbered menu with all in-progress features plus option to start new:
 · · · · · · · · · · · ·
 What would you like to do?
 
-{foreach topic in features.topics}
-{N}. Continue "{topic.name}" — {next_phase_description}
-{/foreach}
-{N+1}. Start new feature
+1. Continue "Auth Flow" — discussion in-progress
+2. Continue "Caching" — ready for specification
+3. Continue "Notifications" — ready for planning
+4. Start new feature
+
+Select an option (enter number):
 · · · · · · · · · · · ·
 ```
 
-Where `{next_phase_description}` maps next_phase to a human-readable description:
-- discussion → "discussion in progress"
-- specification → "ready for specification" or "specification in progress"
-- planning → "ready for planning" or "planning in progress"
-- implementation → "ready for implementation" or "implementation in progress"
-- review → "ready for review"
-- done → "pipeline complete"
+Recreate with actual topics and states from discovery.
 
 **STOP.** Wait for user response.
 
