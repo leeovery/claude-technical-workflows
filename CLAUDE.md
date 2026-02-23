@@ -79,7 +79,6 @@ skills/
   # Bridge skills (model-invocable — pre-flight + handoff for pipeline)
   begin-discussion/          # Pre-flight for discussion
   begin-specification/       # Pre-flight for specification
-  begin-research/            # Pre-flight for research
   begin-investigation/       # Pre-flight for investigation (bugfix)
   begin-planning/            # Pre-flight for planning, invokes technical-planning
     references/              #   Cross-cutting context
