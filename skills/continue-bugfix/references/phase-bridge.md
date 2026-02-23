@@ -4,16 +4,16 @@
 
 ---
 
-The phase bridge clears context between pipeline phases using plan mode. This is necessary because each phase can consume significant context, and starting fresh prevents degradation.
+The phase bridge clears context between pipeline phases. This is necessary because each phase can consume significant context, and starting fresh prevents degradation.
 
-## Determine Next Phase
+## Determine Completed Phase
 
-Check which step just completed to determine what continue-bugfix will route to next:
+Check which step just completed:
 
-- Just completed **specification** (Step 3) → next session routes to planning
-- Just completed **planning** (Step 4) → next session routes to implementation
-- Just completed **implementation** (Step 5) → next session routes to review
-- Just completed **review** (Step 6) → pipeline is done
+- Just completed **Step 3** (specification) → completed_phase is **specification**
+- Just completed **Step 4** (planning) → completed_phase is **planning**
+- Just completed **Step 5** (implementation) → completed_phase is **implementation**
+- Just completed **Step 6** (review) → completed_phase is **review**
 
 #### If review just completed
 
@@ -27,32 +27,16 @@ Bugfix Complete
 
 **STOP.** Do not proceed — terminal condition.
 
-## Enter Plan Mode
+## Invoke Workflow Bridge
 
-Enter plan mode and write the following plan:
+Invoke the [workflow:bridge](../../workflow/bridge/SKILL.md) skill:
 
 ```
-# Continue Bugfix: {topic}
+Pipeline bridge for: {topic}
+Work type: bugfix
+Completed phase: {completed_phase}
 
-The previous phase for "{topic}" has concluded. The next session should
-continue the bugfix pipeline.
-
-## Instructions
-
-1. Invoke the `/continue-bugfix` skill for topic "{topic}"
-2. The skill will detect the current phase and route accordingly
-
-## Context
-
-- Topic: {topic}
-- Work type: bugfix
-- Previous phase: {phase that just completed}
-- Expected next phase: {next phase based on routing above}
-
-## How to proceed
-
-Clear context and continue. Claude will invoke continue-bugfix
-with the topic above and route to the next phase automatically.
+Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
 ```
 
-Exit plan mode. The user will approve and clear context, and the fresh session will pick up with continue-bugfix routing to the correct phase.
+The workflow:bridge skill will enter plan mode with instructions to invoke continue-bugfix for the topic in the next session.

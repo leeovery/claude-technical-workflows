@@ -22,10 +22,7 @@ The discussion frontmatter should include:
 - work_type: feature
 - date: {today}
 
-PIPELINE CONTINUATION — When this discussion concludes (status: concluded),
-you MUST return to the start-feature skill and execute Step 5 (Phase Bridge).
-Load: skills/start-feature/references/phase-bridge.md
-Do not end the session after the discussion — the feature pipeline continues.
-
 Invoke the technical-discussion skill.
 ```
+
+When the discussion concludes, the processing skill will detect `work_type: feature` in the artifact and invoke workflow:bridge automatically.

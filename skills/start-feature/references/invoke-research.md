@@ -24,10 +24,7 @@ The research frontmatter should include:
 - work_type: feature
 - date: {today}
 
-PIPELINE CONTINUATION — When this research concludes (status: concluded),
-you MUST return to the start-feature skill and execute Step 5 (Phase Bridge).
-Load: skills/start-feature/references/phase-bridge.md
-Do not end the session after research — the feature pipeline continues.
-
 Invoke the technical-research skill.
 ```
+
+When research concludes, the processing skill will detect `work_type: feature` in the artifact and invoke workflow:bridge automatically.
