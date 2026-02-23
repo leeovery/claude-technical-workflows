@@ -53,9 +53,12 @@ if [ -d "$INVESTIGATION_DIR" ] && [ -n "$(ls -A "$INVESTIGATION_DIR" 2>/dev/null
         status=$(extract_field "$file" "status")
         status=${status:-"in-progress"}
         date=$(extract_field "$file" "date")
+        work_type=$(extract_field "$file" "work_type")
+        work_type=${work_type:-"bugfix"}
 
         echo "    - topic: \"$topic\""
         echo "      status: \"$status\""
+        echo "      work_type: \"$work_type\""
         [ -n "$date" ] && echo "      date: \"$date\""
 
         inv_count=$((inv_count + 1))

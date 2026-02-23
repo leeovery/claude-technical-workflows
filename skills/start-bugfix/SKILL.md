@@ -118,25 +118,24 @@ If resuming, check the investigation status. If concluded → skip to Step 4. If
 
 ## Step 3: Invoke Investigation
 
-Before invoking the processing skill, save a session bookmark.
+Before invoking the processing skill, save a session bookmark for compaction recovery.
 
 > *Output the next fenced block as a code block:*
 
 ```
-Saving session state so Claude can pick up where it left off and continue the bugfix pipeline if the conversation is compacted.
+Saving session state for compaction recovery.
 ```
 
 ```bash
 .claude/hooks/workflows/write-session-state.sh \
   "{topic}" \
   "skills/technical-investigation/SKILL.md" \
-  ".workflows/investigation/{topic}/investigation.md" \
-  --pipeline "This session is part of the bugfix pipeline. After the investigation concludes, load and follow the phase bridge at skills/start-bugfix/references/phase-bridge.md for topic '{topic}'."
+  ".workflows/investigation/{topic}/investigation.md"
 ```
 
 Load **[invoke-investigation.md](references/invoke-investigation.md)** and follow its instructions.
 
-**CRITICAL**: When the investigation concludes (status becomes "concluded"), you MUST proceed to **Step 4** below. Do not end the session — the bugfix pipeline continues to specification via the phase bridge.
+When the investigation concludes, the processing skill will detect `work_type: bugfix` in the artifact and invoke workflow:bridge automatically.
 
 ---
 

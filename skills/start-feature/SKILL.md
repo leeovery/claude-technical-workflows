@@ -138,12 +138,12 @@ The reference will assess uncertainties and offer research if beneficial.
 
 ## Step 4: Invoke Processing Skill
 
-Before invoking the processing skill, save a session bookmark.
+Before invoking the processing skill, save a session bookmark for compaction recovery.
 
 > *Output the next fenced block as a code block:*
 
 ```
-Saving session state so Claude can pick up where it left off and continue the feature pipeline if the conversation is compacted.
+Saving session state for compaction recovery.
 ```
 
 #### If phase is research
@@ -152,13 +152,12 @@ Saving session state so Claude can pick up where it left off and continue the fe
 .claude/hooks/workflows/write-session-state.sh \
   "{topic}" \
   "skills/technical-research/SKILL.md" \
-  ".workflows/research/{topic}.md" \
-  --pipeline "This session is part of the feature pipeline. After research concludes, load and follow the phase bridge at skills/start-feature/references/phase-bridge.md for topic '{topic}'."
+  ".workflows/research/{topic}.md"
 ```
 
 Load **[invoke-research.md](references/invoke-research.md)** and follow its instructions.
 
-**CRITICAL**: When research concludes (status becomes "concluded"), you MUST proceed to **Step 5** below. Do not end the session — the feature pipeline continues via the phase bridge.
+When research concludes, the processing skill will detect `work_type: feature` in the artifact and invoke workflow:bridge automatically.
 
 #### If phase is discussion
 
@@ -166,13 +165,12 @@ Load **[invoke-research.md](references/invoke-research.md)** and follow its inst
 .claude/hooks/workflows/write-session-state.sh \
   "{topic}" \
   "skills/technical-discussion/SKILL.md" \
-  ".workflows/discussion/{topic}.md" \
-  --pipeline "This session is part of the feature pipeline. After the discussion concludes, load and follow the phase bridge at skills/start-feature/references/phase-bridge.md for topic '{topic}'."
+  ".workflows/discussion/{topic}.md"
 ```
 
 Load **[invoke-discussion.md](references/invoke-discussion.md)** and follow its instructions.
 
-**CRITICAL**: When the discussion concludes (status becomes "concluded"), you MUST proceed to **Step 5** below. Do not end the session — the feature pipeline continues to specification via the phase bridge.
+When the discussion concludes, the processing skill will detect `work_type: feature` in the artifact and invoke workflow:bridge automatically.
 
 ---
 

@@ -30,6 +30,30 @@ Check the verdict(s) from the review(s) being analyzed.
 No actionable findings. All reviews passed with no required changes.
 ```
 
+**Check for pipeline continuation** — Read the plan file (`.workflows/planning/{topic}/plan.md`) and check for `work_type`
+
+**If work_type is set** (feature, bugfix, or greenfield):
+
+This review is part of a pipeline. The pipeline is complete. Invoke the `/workflow:bridge` skill:
+
+```
+Pipeline bridge for: {topic}
+Work type: {work_type from plan frontmatter}
+Completed phase: review
+
+Invoke the workflow:bridge skill to enter plan mode with completion confirmation.
+```
+
+**If work_type is not set:**
+
+> *Output the next fenced block as a code block:*
+
+```
+Review complete: {topic}
+
+All checks passed. The implementation has been validated.
+```
+
 **STOP.** Do not proceed — terminal condition.
 
 #### If any verdict is "Request Changes"
@@ -61,6 +85,24 @@ Proceed with synthesis?
 → Proceed to **B. Dispatch Review Synthesizer**.
 
 #### If no
+
+User has chosen to skip synthesis. This is a terminal condition, but check for pipeline continuation first.
+
+**Check for pipeline continuation** — Read the plan file (`.workflows/planning/{topic}/plan.md`) and check for `work_type`
+
+**If work_type is set** (feature, bugfix, or greenfield):
+
+This review is part of a pipeline. Invoke the `/workflow:bridge` skill:
+
+```
+Pipeline bridge for: {topic}
+Work type: {work_type from plan frontmatter}
+Completed phase: review
+
+Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
+```
+
+**If work_type is not set:**
 
 **STOP.** Do not proceed — terminal condition.
 

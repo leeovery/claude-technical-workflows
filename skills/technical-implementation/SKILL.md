@@ -333,4 +333,28 @@ Update the tracking file (`.workflows/implementation/{topic}/tracking.md`):
 
 Commit: `impl({topic}): complete implementation`
 
+**Check for pipeline continuation** — Read the plan file (`.workflows/planning/{topic}/plan.md`) and check for `work_type`
+
+**If work_type is set** (feature, bugfix, or greenfield):
+
+This implementation is part of a pipeline. Invoke the `/workflow:bridge` skill:
+
+```
+Pipeline bridge for: {topic}
+Work type: {work_type from plan frontmatter}
+Completed phase: implementation
+
+Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
+```
+
+**If work_type is not set:**
+
+> *Output the next fenced block as a code block:*
+
+```
+Implementation completed: {topic}
+
+The implementation is ready for review. Run /start-review to begin.
+```
+
 

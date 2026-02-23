@@ -32,18 +32,6 @@ topic=$(grep '^topic:' "$SESSION_FILE" | awk '{print $2}')
 skill=$(grep '^skill:' "$SESSION_FILE" | awk '{print $2}')
 artifact=$(grep '^artifact:' "$SESSION_FILE" | awk '{print $2}')
 
-# Check for pipeline section
-has_pipeline=false
-if grep -q '^pipeline:' "$SESSION_FILE"; then
-  has_pipeline=true
-  # Extract after_conclude content (indented block after "after_conclude: |")
-  pipeline_content=$(awk '
-    /^  after_conclude:/ { capture=1; next }
-    capture && /^[^ ]/ { exit }
-    capture && /^    / { sub(/^    /, ""); print }
-  ' "$SESSION_FILE")
-fi
-
 # Build additionalContext
 context="CONTEXT COMPACTION — SESSION RECOVERY
 
@@ -59,18 +47,10 @@ Skill: ${skill}
 3. Re-read the artifact: ${artifact}
 4. Continue working until the skill reaches its natural conclusion
 
-The files on disk are authoritative — not the conversation summary."
+The files on disk are authoritative — not the conversation summary.
 
-if [ "$has_pipeline" = true ] && [ -n "$pipeline_content" ]; then
-  context="${context}
-
-─── AFTER CONCLUSION ONLY ───
-
-${pipeline_content}
-
-Do NOT enter plan mode or invoke continue-feature until the current
-phase is complete. Finish the current phase first."
-fi
+When the processing skill concludes, it will invoke workflow:bridge automatically
+if the artifact has a work_type set. Do not manually handle pipeline continuation."
 
 # Escape context for JSON output
 json_context=$(printf '%s' "$context" | sed 's/\\/\\\\/g; s/"/\\"/g; s/$/\\n/' | tr -d '\n')

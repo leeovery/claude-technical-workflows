@@ -221,6 +221,24 @@ The investigation is ready for specification. The specification will
 detail the exact fix approach, acceptance criteria, and testing plan.
 ```
 
+4. Check the investigation frontmatter for `work_type`
+
+**If work_type is set** (bugfix):
+
+This investigation is part of a pipeline. Invoke the `/workflow:bridge` skill:
+
+```
+Pipeline bridge for: {topic}
+Work type: bugfix
+Completed phase: investigation
+
+Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
+```
+
+**If work_type is not set:**
+
+The session ends here. The investigation document can be used as input to `/start-specification`.
+
 ## Quick Reference
 
 - **Template**: **[template.md](references/template.md)** - Structure

@@ -112,3 +112,31 @@ If any of your sources were **existing specifications** (as opposed to discussio
    ```
 2. Inform the user which files were updated
 3. Commit: `spec({topic}): mark source specifications as superseded`
+
+---
+
+## Step 6: Pipeline Continuation
+
+Check the specification frontmatter for `work_type`.
+
+**If work_type is set** (feature, bugfix, or greenfield):
+
+This specification is part of a pipeline. Invoke the `/workflow:bridge` skill:
+
+```
+Pipeline bridge for: {topic}
+Work type: {work_type from artifact frontmatter}
+Completed phase: specification
+
+Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
+```
+
+**If work_type is not set:**
+
+> *Output the next fenced block as a code block:*
+
+```
+Specification concluded: {topic}
+
+The specification is ready for planning. Run /start-planning to begin.
+```

@@ -216,9 +216,12 @@ if [ -d "$DISCUSSION_DIR" ] && [ -n "$(ls -A "$DISCUSSION_DIR" 2>/dev/null)" ]; 
         name=$(basename "$file" .md)
         status=$(extract_field "$file" "status")
         status=${status:-"unknown"}
+        work_type=$(extract_field "$file" "work_type")
+        work_type=${work_type:-"greenfield"}
 
         echo "    - name: \"$name\""
         echo "      status: \"$status\""
+        echo "      work_type: \"$work_type\""
 
         disc_count=$((disc_count + 1))
         [ "$status" = "concluded" ] && disc_concluded=$((disc_concluded + 1))
@@ -258,11 +261,14 @@ if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
         status=${status:-"in-progress"}
         spec_type=$(extract_field "$file" "type")
         spec_type=${spec_type:-"feature"}
+        work_type=$(extract_field "$file" "work_type")
+        work_type=${work_type:-"greenfield"}
         superseded_by=$(extract_field "$file" "superseded_by")
 
         echo "    - name: \"$name\""
         echo "      status: \"$status\""
         echo "      type: \"$spec_type\""
+        echo "      work_type: \"$work_type\""
         [ -n "$superseded_by" ] && echo "      superseded_by: \"$superseded_by\""
 
         # Sources
@@ -323,12 +329,15 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
         status=${status:-"unknown"}
         format=$(extract_field "$file" "format")
         format=${format:-"unknown"}
+        work_type=$(extract_field "$file" "work_type")
+        work_type=${work_type:-"greenfield"}
         specification=$(extract_field "$file" "specification")
         specification=${specification:-"${name}/specification.md"}
 
         echo "    - name: \"$name\""
         echo "      status: \"$status\""
         echo "      format: \"$format\""
+        echo "      work_type: \"$work_type\""
         echo "      specification: \"$specification\""
 
         # External dependencies

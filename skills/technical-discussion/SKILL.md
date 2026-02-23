@@ -135,7 +135,23 @@ Incorporate the user's context into the discussion, commit, then re-present the 
 
 1. Update frontmatter `status: concluded`
 2. Final commit
-3. Check for remaining in-progress discussions in `.workflows/discussion/`
+3. Check the artifact frontmatter for `work_type`
+
+**If work_type is set** (feature, bugfix, or greenfield):
+
+This discussion is part of a pipeline. Invoke the `/workflow:bridge` skill:
+
+```
+Pipeline bridge for: {topic}
+Work type: {work_type from artifact frontmatter}
+Completed phase: discussion
+
+Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
+```
+
+**If work_type is not set:**
+
+Check for remaining in-progress discussions in `.workflows/discussion/`
 
 **If other in-progress discussions exist:**
 
