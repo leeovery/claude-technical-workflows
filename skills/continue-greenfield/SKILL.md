@@ -52,6 +52,10 @@ Invoke the `/migrate` skill and assess its output.
 
 ## Step 1: Run Discovery
 
+!`.claude/skills/continue-greenfield/scripts/discovery.sh`
+
+If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+
 ```bash
 .claude/skills/continue-greenfield/scripts/discovery.sh
 ```
