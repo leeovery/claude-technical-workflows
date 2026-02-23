@@ -71,12 +71,17 @@ Build a numbered menu of actionable items based on state. The verb depends on st
 | In-progress specification | Continue ... specification |
 | In-progress plan | Continue ... plan |
 | In-progress implementation | Continue ... implementation |
-| Concluded discussion, no spec | Start specification from |
 | Concluded spec (feature), no plan | Start planning for |
 | Concluded plan, no impl | Start implementation of |
 | Completed impl, no review | Start review for |
 | Research exists | Continue research |
 | No research | Start research |
+
+**Specification phase is different in greenfield**: Don't offer "Start specification from {topic}". Instead, when concluded discussions exist, offer "Start specification" which invokes `/start-specification`. The specification skill analyzes ALL concluded discussions and suggests groupings.
+
+**Specification readiness:**
+- All discussions concluded → "Start specification" (recommended)
+- Some discussions still in-progress → "Start specification" with note: "(some discussions still in-progress)"
 
 Always include "Start new discussion" as a final option.
 
@@ -90,8 +95,8 @@ What would you like to do?
 
 1. Continue "Auth Flow" discussion — in-progress
 2. Continue "Data Model" specification — in-progress
-3. Start specification from "Billing" — discussion concluded
-4. Start planning for "User Profiles" — spec concluded
+3. Start planning for "User Profiles" — spec concluded
+4. Start specification — 2 discussions concluded (1 still in-progress)
 5. Continue research
 6. Start new discussion
 

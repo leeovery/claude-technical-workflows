@@ -94,8 +94,8 @@ Based on the user's selection, route to the appropriate skill:
 
 | Selection | Action |
 |-----------|--------|
-| Continue a discussion | Invoke `begin-discussion` with topic + work_type: greenfield |
-| Start specification from discussion | Invoke `begin-specification` with topic + work_type: greenfield |
+| Continue a discussion | Invoke `technical-discussion` for topic (resumes from artifact) |
+| Start specification | Invoke `/start-specification` (analyzes all discussions, suggests groupings) |
 | Continue a specification | Invoke `technical-specification` for topic |
 | Start planning for spec | Invoke `begin-planning` with topic + work_type: greenfield |
 | Continue a plan | Invoke `technical-planning` for topic |
@@ -104,10 +104,8 @@ Based on the user's selection, route to the appropriate skill:
 | Start review | Invoke `begin-review` with topic + work_type: greenfield |
 | Continue research | Invoke `technical-research` |
 | Start research | Invoke `start-research` |
-| Start new discussion | Invoke `start-discussion` with work_type: greenfield |
+| Start new discussion | Invoke `start-discussion` |
 
-For skills that require a topic, pass:
-- `Topic: {topic}`
-- `Work type: greenfield`
+**Note on specification**: Unlike feature/bugfix pipelines, greenfield specification is NOT topic-centric. The `/start-specification` skill discovers all concluded discussions, analyzes them, and suggests how to group them into specifications.
 
-For processing skills, the handoff should include pipeline continuation instructions to return here when done.
+For "continue" actions on processing skills, they resume from artifact state and should include pipeline continuation instructions to return here when done.

@@ -68,7 +68,6 @@ Build a numbered menu of actionable items. The verb depends on the state:
 | State | Verb |
 |-------|------|
 | In-progress discussion | Continue |
-| Concluded discussion, no spec | Start specification from |
 | In-progress specification | Continue |
 | Concluded spec (feature), no plan | Start planning for |
 | In-progress plan | Continue |
@@ -77,6 +76,12 @@ Build a numbered menu of actionable items. The verb depends on the state:
 | Completed implementation, no review | Start review for |
 | Research exists | Continue research |
 | No discussions yet | Start research / Start new discussion |
+
+**Specification phase is different in greenfield**: Don't offer "Start specification from {topic}". Instead, when concluded discussions exist, offer "Start specification" which invokes `/start-specification`. The specification skill will analyze ALL concluded discussions and suggest groupings — multiple discussions may become one spec, or split differently.
+
+**Specification readiness:**
+- All discussions concluded → "Start specification" (recommended)
+- Some discussions still in-progress → "Start specification" with note: "(some discussions still in-progress)"
 
 Always include "Start new discussion" as a final option.
 
@@ -87,11 +92,11 @@ Always include "Start new discussion" as a final option.
 What would you like to do?
 
 1. Continue "Auth Flow" discussion — in-progress
-2. Start specification from "Data Model" — discussion concluded
-3. Continue "Billing" specification — in-progress
-4. Start planning for "User Profiles" — spec concluded
-5. Continue "Caching" plan — in-progress
-6. Start implementation of "Notifications" — plan concluded
+2. Continue "Billing" specification — in-progress
+3. Start planning for "User Profiles" — spec concluded
+4. Continue "Caching" plan — in-progress
+5. Start implementation of "Notifications" — plan concluded
+6. Start specification — 3 discussions concluded (recommended)
 7. Continue research
 8. Start new discussion
 
@@ -105,24 +110,22 @@ Recreate with actual topics and states from discovery. Only include options that
 
 ## Route Based on Selection
 
-Parse the user's selection and route to the appropriate skill with `work_type: greenfield`:
+Parse the user's selection and route to the appropriate skill:
 
 | Selection | Action |
 |-----------|--------|
-| Continue discussion | Invoke `begin-discussion` with topic + work_type |
-| Start specification | Invoke `begin-specification` with topic + work_type |
+| Continue discussion | Invoke `technical-discussion` for topic (resumes from artifact) |
+| Start specification | Invoke `/start-specification` (analyzes all discussions, suggests groupings) |
 | Continue specification | Invoke `technical-specification` for topic |
-| Start planning | Invoke `begin-planning` with topic + work_type |
+| Start planning | Invoke `begin-planning` with topic + work_type: greenfield |
 | Continue plan | Invoke `technical-planning` for topic |
-| Start implementation | Invoke `begin-implementation` with topic + work_type |
+| Start implementation | Invoke `begin-implementation` with topic + work_type: greenfield |
 | Continue implementation | Invoke `technical-implementation` for topic |
-| Start review | Invoke `begin-review` with topic + work_type |
+| Start review | Invoke `begin-review` with topic + work_type: greenfield |
 | Continue research | Invoke `technical-research` |
 | Start research | Invoke `start-research` |
-| Start new discussion | Invoke `start-discussion` with work_type: greenfield |
+| Start new discussion | Invoke `start-discussion` |
 
-For skills that require a topic, pass:
-- `Topic: {topic}`
-- `Work type: greenfield`
+**Note on specification**: Unlike feature/bugfix pipelines, greenfield specification is NOT topic-centric. The `/start-specification` skill discovers all concluded discussions, analyzes them, and suggests how to group them into specifications. Multiple discussions may become one spec, or vice versa.
 
-For "continue" actions on processing skills, they will resume from artifact state.
+For "continue" actions on processing skills, they resume from artifact state.
