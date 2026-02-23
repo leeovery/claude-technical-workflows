@@ -4,34 +4,24 @@
 
 ---
 
-The phase bridge clears context between the discussion phase and the rest of the pipeline. This is necessary because discussion can consume significant context, and starting fresh prevents degradation.
+The phase bridge clears context between phases. This is necessary because processing skills can consume significant context, and starting fresh prevents degradation.
 
-## Enter Plan Mode
+## Determine Completed Phase
 
-Enter plan mode and write the following plan:
+Check which phase just concluded:
+- If research file exists with `status: concluded` and no discussion exists → completed_phase is **research**
+- If discussion file exists with `status: concluded` → completed_phase is **discussion**
+
+## Invoke Workflow Bridge
+
+Invoke the [workflow:bridge](../../workflow/bridge/SKILL.md) skill:
 
 ```
-# Continue Feature: {topic}
+Pipeline bridge for: {topic}
+Work type: feature
+Completed phase: {completed_phase}
 
-The discussion for "{topic}" has concluded. The next session should
-continue the feature pipeline from specification onwards.
-
-## Instructions
-
-1. Invoke the `/continue-feature` skill for topic "{topic}"
-2. The skill will detect that a concluded discussion exists and route to specification
-
-## Context
-
-- Topic: {topic}
-- Completed phase: discussion
-- Expected next phase: specification
-- Discussion: .workflows/discussion/{topic}.md
-
-## How to proceed
-
-Clear context and continue. Claude will invoke continue-feature
-with the topic above and route to the specification phase automatically.
+Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
 ```
 
-Exit plan mode. The user will approve and clear context, and the fresh session will pick up with continue-feature routing to specification.
+The workflow:bridge skill will enter plan mode with instructions to invoke continue-feature for the topic in the next session.

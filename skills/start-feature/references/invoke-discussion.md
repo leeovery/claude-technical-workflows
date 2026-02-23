@@ -23,7 +23,7 @@ The discussion frontmatter should include:
 - date: {today}
 
 PIPELINE CONTINUATION — When this discussion concludes (status: concluded),
-you MUST return to the start-feature skill and execute Step 4 (Phase Bridge).
+you MUST return to the start-feature skill and execute Step 5 (Phase Bridge).
 Load: skills/start-feature/references/phase-bridge.md
 Do not end the session after the discussion — the feature pipeline continues.
 
