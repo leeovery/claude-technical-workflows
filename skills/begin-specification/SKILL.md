@@ -5,8 +5,6 @@ user-invocable: false
 allowed-tools: Bash(.claude/skills/start-specification/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh)
 ---
 
-Invoke the **technical-specification** skill for this conversation with pre-flight context.
-
 > **ZERO OUTPUT RULE**: Do not narrate your processing. Produce no output until a step or reference file explicitly specifies display content. No "proceeding with...", no discovery summaries, no routing decisions, no transition text. Your first output must be content explicitly called for by the instructions.
 
 ## Instructions
@@ -25,9 +23,15 @@ This skill is a **bridge** — it validates source material for a specification 
 
 ## Step 1: Run Discovery
 
+!`.claude/skills/start-specification/scripts/discovery.sh`
+
+If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+
 ```bash
 .claude/skills/start-specification/scripts/discovery.sh
 ```
+
+If YAML content is already displayed, it has been run on your behalf.
 
 Parse the output to understand:
 
