@@ -103,22 +103,10 @@ tick create "[NEEDS INFO] Rate limiting strategy" \
 
 ## Cleanup (Restart)
 
-Cancel the topic task and all its descendants. First, list the tasks to collect their IDs:
+Remove the topic task and all its descendants:
 
 ```bash
-tick list --parent <topic-id>
+tick remove <topic-id> --force
 ```
 
-Then cancel each task (leaf tasks first, then phases, then the topic):
-
-```bash
-tick cancel <task-id>
-```
-
-Cancelled tasks remain in the JSONL history but are excluded from `tick ready` and active listings.
-
-**Full reset** (removes all tasks across all topics):
-
-```bash
-rm -rf .tick && tick init
-```
+Removing a parent cascades to all children (phases and tasks). Dependency references to removed tasks are auto-cleaned from surviving tasks.
