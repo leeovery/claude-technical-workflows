@@ -94,18 +94,18 @@ Based on the user's selection, route to the appropriate skill:
 
 | Selection | Action |
 |-----------|--------|
-| Continue a discussion | Invoke `technical-discussion` for topic (resumes from artifact) |
-| Start specification | Invoke `/start-specification` (analyzes all discussions, suggests groupings) |
-| Continue a specification | Invoke `technical-specification` for topic |
+| Continue a discussion | Invoke `begin-discussion` with topic + work_type: greenfield |
+| Continue a specification | Invoke `begin-specification` with topic + work_type: greenfield |
+| Continue a plan | Invoke `begin-planning` with topic + work_type: greenfield |
+| Continue implementation | Invoke `begin-implementation` with topic + work_type: greenfield |
+| Continue research | Invoke `start-research` (handles resume from existing file) |
+| Start specification | Invoke `start-specification` (analyzes all discussions, suggests groupings) |
 | Start planning for spec | Invoke `begin-planning` with topic + work_type: greenfield |
-| Continue a plan | Invoke `technical-planning` for topic |
 | Start implementation | Invoke `begin-implementation` with topic + work_type: greenfield |
-| Continue implementation | Invoke `technical-implementation` for topic |
 | Start review | Invoke `begin-review` with topic + work_type: greenfield |
-| Continue research | Invoke `technical-research` |
 | Start research | Invoke `start-research` |
 | Start new discussion | Invoke `start-discussion` |
 
-**Note on specification**: Unlike feature/bugfix pipelines, greenfield specification is NOT topic-centric. The `/start-specification` skill discovers all concluded discussions, analyzes them, and suggests how to group them into specifications.
+**Routing principle**: `begin-*` skills handle cases where topic + work_type are already known (continue existing or start from concluded artifact). `start-*` skills handle full discovery and context gathering for new work.
 
-For "continue" actions on processing skills, they resume from artifact state and should include pipeline continuation instructions to return here when done.
+**Note on specification**: Unlike feature/bugfix pipelines, greenfield specification is NOT topic-centric. The `start-specification` skill discovers all concluded discussions, analyzes them, and suggests how to group them into specifications.

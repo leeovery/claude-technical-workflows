@@ -77,7 +77,7 @@ Build a numbered menu of actionable items based on state. The verb depends on st
 | Research exists | Continue research |
 | No research | Start research |
 
-**Specification phase is different in greenfield**: Don't offer "Start specification from {topic}". Instead, when concluded discussions exist, offer "Start specification" which invokes `/start-specification`. The specification skill analyzes ALL concluded discussions and suggests groupings.
+**Specification phase is different in greenfield**: Don't offer "Start specification from {topic}". Instead, when concluded discussions exist, offer "Start specification" which invokes `start-specification`. The specification skill analyzes ALL concluded discussions and suggests groupings.
 
 **Specification readiness:**
 - All discussions concluded → "Start specification" (recommended)

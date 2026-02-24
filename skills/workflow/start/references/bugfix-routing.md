@@ -33,7 +33,7 @@ Ready to start a new bugfix.
 
 **STOP.** Wait for user response.
 
-If yes, invoke `/start-bugfix`. It will set `work_type: bugfix` automatically.
+If yes, invoke `start-bugfix`. It will set `work_type: bugfix` automatically.
 
 If no, return to the main skill and re-run Step 2 (work type selection).
 
@@ -92,11 +92,11 @@ Parse the user's selection:
 
 #### If "start new bugfix"
 
-Invoke `/start-bugfix`. It will set `work_type: bugfix` and begin the investigation phase.
+Invoke `start-bugfix`. It will set `work_type: bugfix` and begin the investigation phase.
 
 #### If continuing existing bugfix
 
-Invoke `/continue-bugfix` with the selected topic:
+Invoke `continue-bugfix` with the selected topic:
 
 ```
 Topic: {topic}

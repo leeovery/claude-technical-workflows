@@ -33,7 +33,7 @@ Ready to start a new feature.
 
 **STOP.** Wait for user response.
 
-If yes, invoke `/start-feature`. It will set `work_type: feature` automatically.
+If yes, invoke `start-feature`. It will set `work_type: feature` automatically.
 
 If no, return to the main skill and re-run Step 2 (work type selection).
 
@@ -92,11 +92,11 @@ Parse the user's selection:
 
 #### If "start new feature"
 
-Invoke `/start-feature`. It will set `work_type: feature` automatically.
+Invoke `start-feature`. It will set `work_type: feature` automatically.
 
 #### If continuing existing feature
 
-Invoke `/continue-feature` with the selected topic:
+Invoke `continue-feature` with the selected topic:
 
 ```
 Topic: {topic}
