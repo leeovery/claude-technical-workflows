@@ -47,7 +47,7 @@ Research → Discussion → Specification → Planning → Implementation → Re
 ### Quick Install
 
 ```bash
-npm install -D @leeovery/claude-technical-workflows
+npx agntc add leeovery/claude-technical-workflows
 ```
 
 See [Installation](#installation) for details.
@@ -178,30 +178,16 @@ Choose a format when planning begins. New formats can be scaffolded with `/creat
 ## Installation
 
 ```bash
-npm install -D @leeovery/claude-technical-workflows
+npx agntc add leeovery/claude-technical-workflows
 ```
 
 Skills are copied to `.claude/` in your project and can be committed, giving you ownership and making them available everywhere including Claude Code for Web.
 
 <details>
-<summary>pnpm users</summary>
-
-pnpm doesn't expose binaries from transitive dependencies, so install the manager directly:
+<summary>Removal</summary>
 
 ```bash
-pnpm add -D @leeovery/claude-manager @leeovery/claude-technical-workflows
-pnpm approve-builds  # approve when prompted
-pnpm install         # triggers postinstall
-```
-</details>
-
-<details>
-<summary>Removal (npm/pnpm)</summary>
-
-Due to bugs in npm 7+ ([issue #3042](https://github.com/npm/cli/issues/3042)) and pnpm ([issue #3276](https://github.com/pnpm/pnpm/issues/3276)), preuninstall hooks don't run reliably. Remove files manually first:
-
-```bash
-npx claude-manager remove @leeovery/claude-technical-workflows && npm rm @leeovery/claude-technical-workflows
+npx agntc remove leeovery/claude-technical-workflows
 ```
 </details>
 
@@ -368,7 +354,6 @@ Subagents that skills can spawn for parallel task execution.
 ## Requirements
 
 - Node.js 18+
-- [@leeovery/claude-manager](https://github.com/leeovery/claude-manager) ^2.0.0 (installed automatically)
 
 ## Contributing
 
@@ -383,7 +368,7 @@ Please open an issue first to discuss significant changes.
 
 ## Related Packages
 
-- [**@leeovery/claude-manager**](https://github.com/leeovery/claude-manager) - The plugin manager that powers skill installation
+- [**Agntc**](https://github.com/leeovery/agntc) - The CLI that powers skill, agent, and hook installation
 - [**@leeovery/claude-laravel**](https://github.com/leeovery/claude-laravel) - Laravel development skills for Claude Code
 - [**@leeovery/claude-nuxt**](https://github.com/leeovery/claude-nuxt) - Nuxt.js development skills for Claude Code
 
