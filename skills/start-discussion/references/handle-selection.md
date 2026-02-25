@@ -59,4 +59,4 @@ Delete the cache file:
 rm .workflows/.state/research-analysis.md
 ```
 
-→ Return to **Step 5** to re-analyze.
+→ Return to **Step 6** to re-analyze.

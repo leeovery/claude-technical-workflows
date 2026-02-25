@@ -109,167 +109,82 @@ Check for arguments: topic = `$0`, work_type = `$1`
 
 #### Otherwise
 
-→ Proceed to **Step 4** (Route Based on Scenario).
+→ Proceed to **Step 5** (Route Based on Scenario).
 
 ---
 
 ## Step 3: Validate Topic
 
-Check if discussion already exists for this topic.
+Load **[validate-topic.md](references/validate-topic.md)** and follow its instructions as written.
 
-```bash
-ls .workflows/discussion/
-```
+#### If resume
 
-#### If discussion exists for this topic
-
-Read `.workflows/discussion/{topic}.md` frontmatter to check status.
-
-**If status is "in-progress":**
-
-> *Output the next fenced block as a code block:*
-
-```
-Discussion In Progress
-
-A discussion for "{topic:(titlecase)}" already exists and is in progress.
-```
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-- **`r`/`resume`** — Resume the existing discussion
-- **`n`/`new`** — Start a new topic with a different name
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-If resume → set path="continue", proceed to **Step 9**.
-If new → ask for a new topic name, then proceed to **Step 3** with new topic.
-
-**If status is "concluded":**
-
-> *Output the next fenced block as a code block:*
-
-```
-Discussion Concluded
-
-The discussion for "{topic:(titlecase)}" has already concluded.
-```
-
-**STOP.** Do not proceed — terminal condition. Suggest `/start-specification` to continue to spec.
+→ Proceed to **Step 9**.
 
 #### If no collision
 
-→ Proceed to **Step 8** (Gather Context - Bridge Mode).
+→ Proceed to **Step 4**.
 
 ---
 
-## Step 4: Route Based on Scenario
+## Step 4: Gather Context (Bridge Mode)
 
-Use `state.scenario` from the discovery output to determine the path:
+Load **[gather-context-bridge.md](references/gather-context-bridge.md)** and follow its instructions as written.
 
-#### If scenario is "research_only" or "research_and_discussions"
+→ Proceed to **Step 10**.
 
-Research exists and may need analysis.
+---
 
-→ Proceed to **Step 5**.
+## Step 5: Route Based on Scenario
 
-#### If scenario is "discussions_only"
+Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
 
-No research exists, but discussions do. Skip research analysis.
+#### If research exists
 
 → Proceed to **Step 6**.
 
-#### If scenario is "fresh"
+#### If discussions only
 
-No research or discussions exist yet.
+→ Proceed to **Step 7**.
 
-```
-Starting fresh - no prior research or discussions found.
+#### If fresh
 
-What topic would you like to discuss?
-```
-
-**STOP.** Wait for user response.
-
-When user responds, proceed with their topic.
-
-→ Proceed to **Step 9** (Gather Context - Discovery Mode).
+→ Proceed to **Step 9**.
 
 ---
 
-## Step 5: Research Analysis
+## Step 6: Research Analysis
 
 Load **[research-analysis.md](references/research-analysis.md)** and follow its instructions as written.
-
-→ Proceed to **Step 6**.
-
----
-
-## Step 6: Present Options
-
-Load **[display-options.md](references/display-options.md)** and follow its instructions as written.
 
 → Proceed to **Step 7**.
 
 ---
 
-## Step 7: Handle Selection
+## Step 7: Present Options
 
-Load **[handle-selection.md](references/handle-selection.md)** and follow its instructions as written.
+Load **[display-options.md](references/display-options.md)** and follow its instructions as written.
 
-→ Proceed to **Step 9** (Gather Context - Discovery Mode).
+→ Proceed to **Step 8**.
 
 ---
 
-## Step 8: Gather Context (Bridge Mode)
+## Step 8: Handle Selection
 
-> *Output the next fenced block as a code block:*
+Load **[handle-selection.md](references/handle-selection.md)** and follow its instructions as written.
 
-```
-Starting discussion: {topic:(titlecase)}
-Work type: {work_type}
-
-What would you like to discuss? Provide some initial context:
-- What's the problem or opportunity?
-- What prompted this?
-- Any initial thoughts or constraints?
-```
-
-**STOP.** Wait for user response.
-
-→ Proceed to **Step 10** (Invoke the Skill).
+→ Proceed to **Step 9**.
 
 ---
 
 ## Step 9: Gather Context (Discovery Mode)
 
-This step is reached from the discovery flow with a selected topic and path.
-
-Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
+Load **[gather-context-discovery.md](references/gather-context-discovery.md)** and follow its instructions as written.
 
 → Proceed to **Step 10**.
 
 ---
 
 ## Step 10: Invoke the Skill
-
-Before invoking the processing skill, save a session bookmark.
-
-> *Output the next fenced block as a code block:*
-
-```
-Saving session state so Claude can pick up where it left off if the conversation is compacted.
-```
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-discussion/SKILL.md" \
-  ".workflows/discussion/{topic}.md"
-```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
