@@ -1,6 +1,5 @@
 ---
 name: technical-planning
-description: "Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Use when: (1) User asks to create/write an implementation plan, (2) User asks to plan implementation from a specification, (3) Converting specifications from .workflows/specification/{topic}/specification.md into implementation plans, (4) User says 'plan this' or 'create a plan', (5) Need to structure how to build something with phases and concrete steps. Creates plans in .workflows/planning/{topic}/plan.md that can be executed via strict TDD."
 user-invocable: false
 ---
 

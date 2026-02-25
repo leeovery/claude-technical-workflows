@@ -1,6 +1,5 @@
 ---
 name: start-planning
-description: "Start a planning session. Supports two modes: discovery mode (bare invocation) discovers specifications and offers planning options; bridge mode (topic provided) skips discovery for pipeline continuation."
 disable-model-invocation: true
 allowed-tools: Bash(.claude/skills/start-planning/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/specification/)
 hooks:
@@ -101,24 +100,11 @@ Parse the discovery output to understand:
 
 Check for arguments: topic = `$0`, work_type = `$1`
 
-#### If topic and work_type are both provided (bridge mode)
-
-Pipeline continuation — skip discovery output and proceed directly to validation.
+#### If topic and work_type are both provided
 
 → Proceed to **Step 3** (Validate Specification).
 
-#### If only topic is provided
-
-Set work_type based on context:
-- If invoked from a bugfix pipeline → work_type = "bugfix"
-- If invoked from a feature pipeline → work_type = "feature"
-- If unclear, default to "greenfield"
-
-→ Proceed to **Step 3** (Validate Specification).
-
-#### If no topic provided (discovery mode)
-
-Use the discovery output from Step 1 to check prerequisites and present options.
+#### Otherwise
 
 → Proceed to **Step 6** (Route Based on Scenario).
 
@@ -126,7 +112,7 @@ Use the discovery output from Step 1 to check prerequisites and present options.
 
 ## Step 3: Validate Specification
 
-Bridge mode validation — check if specification exists and is ready.
+Check if specification exists and is ready.
 
 ```bash
 ls .workflows/specification/

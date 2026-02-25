@@ -1,6 +1,5 @@
 ---
 name: view-plan
-description: "View a plan's tasks and progress, regardless of output format."
 disable-model-invocation: true
 hooks:
   PreToolUse:

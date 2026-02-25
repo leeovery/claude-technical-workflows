@@ -1,6 +1,5 @@
 ---
 name: start-feature
-description: "Start a new feature through the full pipeline. Gathers context via structured interview, creates a discussion, then bridges to workflow:bridge for specification, planning, and implementation."
 disable-model-invocation: true
 allowed-tools: Bash(ls .workflows/discussion/), Bash(ls .workflows/research/), Bash(.claude/hooks/workflows/write-session-state.sh)
 hooks:

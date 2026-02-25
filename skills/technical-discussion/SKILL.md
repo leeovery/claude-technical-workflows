@@ -1,6 +1,5 @@
 ---
 name: technical-discussion
-description: "Document technical discussions as expert architect and meeting assistant. Capture context, decisions, edge cases, debates, and rationale without jumping to specification or implementation. Use when: (1) Users discuss/explore/debate architecture or design, (2) Working through edge cases before specification, (3) Need to document technical decisions and their rationale, (4) Capturing competing solutions and why choices were made. Creates documentation in .workflows/discussion/{topic}.md that can be used to build validated specifications."
 user-invocable: false
 ---
 

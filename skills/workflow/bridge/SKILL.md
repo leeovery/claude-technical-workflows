@@ -1,6 +1,5 @@
 ---
 name: workflow:bridge
-description: "Pipeline continuation bridge. Runs discovery, detects next phase, and enters plan mode with deterministic instructions to invoke start-{phase}. Called by processing skills at phase conclusion."
 user-invocable: false
 allowed-tools: Bash(.claude/skills/workflow/bridge/scripts/discovery.sh)
 ---

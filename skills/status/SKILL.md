@@ -1,6 +1,5 @@
 ---
 name: status
-description: "Show workflow status - what exists, where you are, and what to do next."
 disable-model-invocation: true
 allowed-tools: Bash(.claude/skills/status/scripts/discovery.sh)
 hooks:

@@ -1,6 +1,5 @@
 ---
 name: start-research
-description: "Start a research exploration using the technical-research skill. For early-stage ideas, feasibility checks, and broad exploration before formal discussion."
 disable-model-invocation: true
 allowed-tools: Bash(.claude/hooks/workflows/write-session-state.sh)
 hooks:

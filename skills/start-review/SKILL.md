@@ -1,6 +1,5 @@
 ---
 name: start-review
-description: "Start a review session. Supports two modes: discovery mode (bare invocation) discovers plans and reviews; bridge mode (topic provided) skips discovery for pipeline continuation."
 disable-model-invocation: true
 allowed-tools: Bash(.claude/skills/start-review/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/planning/), Bash(ls .workflows/implementation/)
 hooks:
@@ -98,24 +97,11 @@ Parse the discovery output to understand:
 
 Check for arguments: topic = `$0`, work_type = `$1`
 
-#### If topic and work_type are both provided (bridge mode)
-
-Pipeline continuation — skip discovery output and proceed directly to validation.
+#### If topic and work_type are both provided
 
 → Proceed to **Step 3** (Validate Plan and Implementation).
 
-#### If only topic is provided
-
-Set work_type based on context:
-- If invoked from a bugfix pipeline → work_type = "bugfix"
-- If invoked from a feature pipeline → work_type = "feature"
-- If unclear, default to "greenfield"
-
-→ Proceed to **Step 3** (Validate Plan and Implementation).
-
-#### If no topic provided (discovery mode)
-
-Use the discovery output from Step 1 to check prerequisites and present options.
+#### Otherwise
 
 → Proceed to **Step 5** (Route Based on Scenario).
 
@@ -123,7 +109,7 @@ Use the discovery output from Step 1 to check prerequisites and present options.
 
 ## Step 3: Validate Plan and Implementation
 
-Bridge mode validation — check if plan and implementation exist and are ready.
+Check if plan and implementation exist and are ready.
 
 ```bash
 ls .workflows/planning/

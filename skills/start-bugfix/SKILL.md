@@ -1,6 +1,5 @@
 ---
 name: start-bugfix
-description: "Start a new bugfix through the full pipeline. Gathers bug context, creates an investigation, then bridges to workflow:bridge for specification, planning, and implementation."
 disable-model-invocation: true
 allowed-tools: Bash(ls .workflows/investigation/), Bash(.claude/hooks/workflows/write-session-state.sh)
 hooks:

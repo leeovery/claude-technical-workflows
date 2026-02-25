@@ -1,6 +1,5 @@
 ---
 name: workflow:start
-description: "Unified entry point for all workflows. Discovers state across all phases, asks work type (greenfield, feature, bugfix), and routes to the appropriate skill."
 disable-model-invocation: true
 allowed-tools: Bash(.claude/skills/workflow/start/scripts/discovery.sh)
 hooks:

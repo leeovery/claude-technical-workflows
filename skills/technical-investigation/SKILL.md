@@ -1,6 +1,5 @@
 ---
 name: technical-investigation
-description: "Investigate bugs by combining symptom gathering and code analysis. Captures reproduction steps, traces code paths, identifies root cause, and assesses blast radius. Creates documentation in .workflows/investigation/{topic}/investigation.md that flows to specification and planning."
 user-invocable: false
 ---
 

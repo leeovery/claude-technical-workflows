@@ -1,6 +1,5 @@
 ---
 name: start-investigation
-description: "Start a bug investigation. Supports two modes: discovery mode (bare invocation) discovers existing investigations; bridge mode (topic provided) skips discovery for pipeline continuation."
 disable-model-invocation: true
 allowed-tools: Bash(.claude/skills/start-investigation/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/investigation/)
 hooks:
@@ -87,15 +86,11 @@ Check for arguments: topic = `$0`
 
 Investigation is always for bugfix work_type.
 
-#### If topic is provided (bridge mode)
-
-Pipeline continuation — skip discovery output and proceed directly to validation.
+#### If topic is provided
 
 → Proceed to **Step 3** (Validate Investigation).
 
-#### If no topic provided (discovery mode)
-
-Use the discovery output from Step 1 to present options.
+#### Otherwise
 
 → Proceed to **Step 4** (Route Based on Scenario).
 
@@ -103,7 +98,7 @@ Use the discovery output from Step 1 to present options.
 
 ## Step 3: Validate Investigation
 
-Bridge mode validation — check if investigation already exists for this topic.
+Check if investigation already exists for this topic.
 
 ```bash
 ls .workflows/investigation/
