@@ -4,7 +4,7 @@
 
 ---
 
-This step only applies for `single`, `multi`, or `all` scope chosen in Step 3.
+This step only applies for `single`, `multi`, or `all` scope chosen in Step 7.
 
 #### If scope is "analysis"
 
@@ -33,13 +33,13 @@ If `select`, present numbered list of reviewed plans for the user to choose from
 
 Automatically proceed with the only available review.
 
-→ Proceed to **Step 5**.
+→ Proceed to **Step 9**.
 
 #### If scope is "all"
 
 All reviewable plans are included. No selection needed. Each plan will be reviewed independently.
 
-→ Proceed directly to **Step 5**.
+→ Proceed directly to **Step 9**.
 
 #### If scope is "single"
 
@@ -47,13 +47,13 @@ All reviewable plans are included. No selection needed. Each plan will be review
 
 ```
 · · · · · · · · · · · ·
-Which plan would you like to review? (Enter a number from Step 3)
+Which plan would you like to review? (Enter a number from Step 7)
 · · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
 
-→ Proceed to **Step 5**.
+→ Proceed to **Step 9**.
 
 #### If scope is "multi"
 
@@ -67,4 +67,4 @@ Which plans to include? (Enter numbers separated by commas, e.g. 1,3)
 
 **STOP.** Wait for user response.
 
-→ Proceed to **Step 5**.
+→ Proceed to **Step 9**.

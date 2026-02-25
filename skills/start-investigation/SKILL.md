@@ -129,7 +129,7 @@ An investigation for "{topic:(titlecase)}" already exists and is in progress.
 
 **STOP.** Wait for user response.
 
-If resume → proceed to **Step 7**.
+If resume → proceed to **Step 8**.
 If new → ask for a new topic name, then proceed to **Step 3** with new topic.
 
 **If status is "concluded":**
@@ -192,7 +192,7 @@ What would you like to do?
 
 **STOP.** Wait for user response.
 
-If resuming → proceed to **Step 7** with that topic.
+If resuming → proceed to **Step 8** with that topic.
 If new → proceed to **Step 5**.
 
 #### If scenario is "fresh"
@@ -222,11 +222,11 @@ What bug are you investigating? Please provide:
 
 **STOP.** Wait for user response.
 
-→ Proceed to **Step 5a**.
+→ Proceed to **Step 6**.
 
 ---
 
-### Step 5a: Topic Name and Conflict Check
+## Step 6: Topic Name and Conflict Check
 
 If the user didn't provide a clear topic name, suggest one based on the bug description:
 
@@ -268,13 +268,13 @@ An investigation named "{topic}" already exists.
 
 **STOP.** Wait for user response.
 
-If resuming, check the investigation status. If concluded → suggest `/start-specification {topic} bugfix`. If in-progress → proceed to **Step 7**.
+If resuming, check the investigation status. If concluded → suggest `/start-specification {topic} bugfix`. If in-progress → proceed to **Step 8**.
 
-→ Proceed to **Step 7**.
+→ Proceed to **Step 8**.
 
 ---
 
-## Step 6: Gather Bug Context (Bridge Mode)
+## Step 7: Gather Bug Context (Bridge Mode)
 
 > *Output the next fenced block as a code block:*
 
@@ -288,11 +288,11 @@ What bug are you investigating? Please provide:
 
 **STOP.** Wait for user response.
 
-→ Proceed to **Step 7**.
+→ Proceed to **Step 8**.
 
 ---
 
-## Step 7: Invoke the Skill
+## Step 8: Invoke the Skill
 
 Before invoking the processing skill, save a session bookmark.
 

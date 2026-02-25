@@ -186,11 +186,11 @@ Set review_version = latest_version + 1.
 Starting review r{review_version} for "{topic:(titlecase)}".
 ```
 
-→ Proceed to **Step 4a** (Invoke Skill - Bridge Mode).
+→ Proceed to **Step 5** (Invoke Skill - Bridge Mode).
 
 ---
 
-### Step 4a: Invoke the Skill (Bridge Mode)
+## Step 5: Invoke the Skill (Bridge Mode)
 
 Before invoking the processing skill, save a session bookmark.
 
@@ -211,7 +211,7 @@ Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructio
 
 ---
 
-## Step 5: Route Based on Scenario
+## Step 6: Route Based on Scenario
 
 Discovery mode — use the discovery output from Step 1.
 
@@ -270,37 +270,37 @@ Select an option:
 
 #### If analysis
 
-→ Proceed to **Step 8** with scope set to "analysis".
+→ Proceed to **Step 9** with scope set to "analysis".
 
 #### If re-review
 
-→ Proceed to **Step 6** to select which plan, incrementing the review version.
+→ Proceed to **Step 7** to select which plan, incrementing the review version.
 
 #### If scenario is "single_plan" or "multiple_plans"
 
 Plans exist (some may have reviews, some may not).
 
-→ Proceed to **Step 6** to present options.
+→ Proceed to **Step 7** to present options.
 
 ---
 
-## Step 6: Display Plans
+## Step 7: Display Plans
 
 Load **[display-plans.md](references/display-plans.md)** and follow its instructions as written.
-
-→ Proceed to **Step 7**.
-
----
-
-## Step 7: Select Plans
-
-Load **[select-plans.md](references/select-plans.md)** and follow its instructions as written.
 
 → Proceed to **Step 8**.
 
 ---
 
-## Step 8: Invoke the Skill (Discovery Mode)
+## Step 8: Select Plans
+
+Load **[select-plans.md](references/select-plans.md)** and follow its instructions as written.
+
+→ Proceed to **Step 9**.
+
+---
+
+## Step 9: Invoke the Skill (Discovery Mode)
 
 Before invoking the processing skill, save a session bookmark.
 

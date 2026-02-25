@@ -12,7 +12,7 @@ Route based on the chosen path from earlier steps.
 
 **STOP.** Wait for user response.
 
-→ Proceed to **Step 7** with the gathered context.
+→ Proceed to **Step 10** with the gathered context.
 
 #### If starting fresh topic
 
@@ -20,7 +20,7 @@ Route based on the chosen path from earlier steps.
 
 **STOP.** Wait for user response.
 
-→ Proceed to **Step 7** with the gathered context.
+→ Proceed to **Step 10** with the gathered context.
 
 #### If continuing existing discussion
 
@@ -28,4 +28,4 @@ Route based on the chosen path from earlier steps.
 
 **STOP.** Wait for user response.
 
-→ Proceed to **Step 7** with the gathered context.
+→ Proceed to **Step 10** with the gathered context.

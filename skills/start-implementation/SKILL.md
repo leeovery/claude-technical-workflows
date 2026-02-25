@@ -214,11 +214,11 @@ Load **[environment-check.md](references/environment-check.md)** and follow its 
 
 **If requires_setup is false or unknown:**
 
-→ Proceed to **Step 5a** (Invoke Skill - Bridge Mode).
+→ Proceed to **Step 6** (Invoke Skill - Bridge Mode).
 
 ---
 
-### Step 5a: Invoke the Skill (Bridge Mode)
+## Step 6: Invoke the Skill (Bridge Mode)
 
 Before invoking the processing skill, save a session bookmark.
 
@@ -239,7 +239,7 @@ Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructio
 
 ---
 
-## Step 6: Route Based on Scenario
+## Step 7: Route Based on Scenario
 
 Discovery mode — use the discovery output from Step 1.
 
@@ -266,11 +266,11 @@ Run /start-planning first to create a plan from a specification.
 
 Plans exist.
 
-→ Proceed to **Step 7** to present options.
+→ Proceed to **Step 8** to present options.
 
 ---
 
-## Step 7: Present Plans and Select
+## Step 8: Present Plans and Select
 
 Present all discovered plans. Classify each plan into one of three categories based on its state.
 
@@ -368,7 +368,7 @@ Key:
 Automatically proceeding with "{topic:(titlecase)}".
 ```
 
-→ Proceed directly to **Step 8**.
+→ Proceed directly to **Step 9**.
 
 **If nothing selectable (no implementable or implemented):**
 
@@ -403,11 +403,11 @@ Select an option (enter number):
 
 **STOP.** Wait for user response.
 
-→ Proceed to **Step 8** with selected topic.
+→ Proceed to **Step 9** with selected topic.
 
 ---
 
-## Step 8: Check Dependencies (Discovery Mode)
+## Step 9: Check Dependencies (Discovery Mode)
 
 Check if selected plan has unresolved or blocking dependencies from the discovery output.
 
@@ -417,11 +417,11 @@ Handle as shown in Step 4.
 
 **If all dependencies satisfied:**
 
-→ Proceed to **Step 9**.
+→ Proceed to **Step 10**.
 
 ---
 
-## Step 9: Check Environment (Discovery Mode)
+## Step 10: Check Environment (Discovery Mode)
 
 Check environment setup from discovery output.
 
@@ -431,11 +431,11 @@ Load **[environment-check.md](references/environment-check.md)** and follow its 
 
 **If requires_setup is false or unknown:**
 
-→ Proceed to **Step 10**.
+→ Proceed to **Step 11**.
 
 ---
 
-## Step 10: Invoke the Skill (Discovery Mode)
+## Step 11: Invoke the Skill (Discovery Mode)
 
 Before invoking the processing skill, save a session bookmark.
 

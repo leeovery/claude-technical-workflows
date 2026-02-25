@@ -146,7 +146,7 @@ A discussion for "{topic:(titlecase)}" already exists and is in progress.
 
 **STOP.** Wait for user response.
 
-If resume → set path="continue", proceed to **Step 6**.
+If resume → set path="continue", proceed to **Step 9**.
 If new → ask for a new topic name, then proceed to **Step 3** with new topic.
 
 **If status is "concluded":**
@@ -163,7 +163,7 @@ The discussion for "{topic:(titlecase)}" has already concluded.
 
 #### If no collision
 
-→ Proceed to **Step 5** (Gather Context - Bridge Mode).
+→ Proceed to **Step 8** (Gather Context - Bridge Mode).
 
 ---
 
@@ -175,13 +175,13 @@ Use `state.scenario` from the discovery output to determine the path:
 
 Research exists and may need analysis.
 
-→ Proceed to **Step 4a**.
+→ Proceed to **Step 5**.
 
 #### If scenario is "discussions_only"
 
 No research exists, but discussions do. Skip research analysis.
 
-→ Proceed to **Step 4b**.
+→ Proceed to **Step 6**.
 
 #### If scenario is "fresh"
 
@@ -197,35 +197,35 @@ What topic would you like to discuss?
 
 When user responds, proceed with their topic.
 
-→ Proceed to **Step 6** (Gather Context - Discovery Mode).
+→ Proceed to **Step 9** (Gather Context - Discovery Mode).
 
 ---
 
-### Step 4a: Research Analysis
+## Step 5: Research Analysis
 
 Load **[research-analysis.md](references/research-analysis.md)** and follow its instructions as written.
 
-→ Proceed to **Step 4b**.
+→ Proceed to **Step 6**.
 
 ---
 
-### Step 4b: Present Options
+## Step 6: Present Options
 
 Load **[display-options.md](references/display-options.md)** and follow its instructions as written.
 
-→ Proceed to **Step 4c**.
+→ Proceed to **Step 7**.
 
 ---
 
-### Step 4c: Handle Selection
+## Step 7: Handle Selection
 
 Load **[handle-selection.md](references/handle-selection.md)** and follow its instructions as written.
 
-→ Proceed to **Step 6** (Gather Context - Discovery Mode).
+→ Proceed to **Step 9** (Gather Context - Discovery Mode).
 
 ---
 
-## Step 5: Gather Context (Bridge Mode)
+## Step 8: Gather Context (Bridge Mode)
 
 > *Output the next fenced block as a code block:*
 
@@ -241,21 +241,21 @@ What would you like to discuss? Provide some initial context:
 
 **STOP.** Wait for user response.
 
-→ Proceed to **Step 7** (Invoke the Skill).
+→ Proceed to **Step 10** (Invoke the Skill).
 
 ---
 
-## Step 6: Gather Context (Discovery Mode)
+## Step 9: Gather Context (Discovery Mode)
 
 This step is reached from the discovery flow with a selected topic and path.
 
 Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
 
-→ Proceed to **Step 7**.
+→ Proceed to **Step 10**.
 
 ---
 
-## Step 7: Invoke the Skill
+## Step 10: Invoke the Skill
 
 Before invoking the processing skill, save a session bookmark.
 
