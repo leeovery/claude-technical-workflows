@@ -6,9 +6,9 @@
 
 **If no cross-cutting specifications exist**:
 
-Skip this step.
+Skip this step. Control returns to the main skill.
 
-→ Proceed to **Step 7**.
+---
 
 Read each cross-cutting specification from `specifications.crosscutting` in the discovery output.
 

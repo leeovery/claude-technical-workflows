@@ -146,7 +146,7 @@ The investigation for "{topic:(titlecase)}" has already concluded.
 
 #### If no collision
 
-→ Proceed to **Step 6** (Gather Bug Context - Bridge Mode).
+→ Proceed to **Step 7** (Gather Bug Context - Bridge Mode).
 
 ---
 

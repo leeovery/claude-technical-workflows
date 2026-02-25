@@ -12,7 +12,7 @@ Invoke the [technical-planning](../../technical-planning/SKILL.md) skill for you
 ```
 Planning session for: {topic}
 Specification: .workflows/specification/{topic}/specification.md
-Additional context: {summary of user's answers from Step 5}
+Additional context: {summary of user's answers from Step 9}
 Cross-cutting references: {list of applicable cross-cutting specs with brief summaries, or "none"}
 Recommended output format: {common_format from discovery if non-empty, otherwise "none"}
 

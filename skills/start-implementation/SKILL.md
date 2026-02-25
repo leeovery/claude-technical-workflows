@@ -115,7 +115,7 @@ Check for arguments: topic = `$0`, work_type = `$1`
 
 #### Otherwise
 
-→ Proceed to **Step 6** (Route Based on Scenario).
+→ Proceed to **Step 7** (Route Based on Scenario).
 
 ---
 
