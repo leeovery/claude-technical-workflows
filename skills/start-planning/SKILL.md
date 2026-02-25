@@ -58,15 +58,54 @@ Invoke the `/migrate` skill and assess its output.
 
 ---
 
-## Step 1: Determine Mode
+## Step 1: Discovery State
+
+!`.claude/skills/start-planning/scripts/discovery.sh`
+
+If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+
+```bash
+.claude/skills/start-planning/scripts/discovery.sh
+```
+
+If YAML content is already displayed, it has been run on your behalf.
+
+Parse the discovery output to understand:
+
+**From `specifications` section:**
+- `exists` - whether any specifications exist
+- `feature` - list of feature specs (name, status, has_plan, plan_status, has_impl, impl_status)
+- `crosscutting` - list of cross-cutting specs (name, status)
+- `counts.feature` - total feature specifications
+- `counts.feature_ready` - feature specs ready for planning (concluded + no plan)
+- `counts.feature_with_plan` - feature specs that already have plans
+- `counts.feature_actionable_with_plan` - specs with plans that are NOT fully implemented
+- `counts.feature_implemented` - specs with `impl_status: completed`
+- `counts.crosscutting` - total cross-cutting specifications
+
+**From `plans` section:**
+- `exists` - whether any plans exist
+- `files` - each plan's name, format, status, and plan_id (if present)
+- `common_format` - the output format if all existing plans share the same one; empty string otherwise
+
+**From `state` section:**
+- `scenario` - one of: `"no_specs"`, `"nothing_actionable"`, `"has_options"`
+
+**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state.
+
+→ Proceed to **Step 2**.
+
+---
+
+## Step 2: Determine Mode
 
 Check for arguments: topic = `$0`, work_type = `$1`
 
 #### If topic and work_type are both provided (bridge mode)
 
-Pipeline continuation — skip discovery and proceed directly to validation.
+Pipeline continuation — skip discovery output and proceed directly to validation.
 
-→ Proceed to **Step 2** (Validate Specification).
+→ Proceed to **Step 3** (Validate Specification).
 
 #### If only topic is provided
 
@@ -75,21 +114,17 @@ Set work_type based on context:
 - If invoked from a feature pipeline → work_type = "feature"
 - If unclear, default to "greenfield"
 
-→ Proceed to **Step 2** (Validate Specification).
+→ Proceed to **Step 3** (Validate Specification).
 
 #### If no topic provided (discovery mode)
 
-Full discovery and selection flow.
+Use the discovery output from Step 1 to check prerequisites and present options.
 
-→ Load **[discovery-flow.md](references/discovery-flow.md)** and follow its instructions.
-
-When discovery completes, it returns with selection context.
-
-→ Proceed to **Step 4** (Route by Plan State).
+→ Proceed to **Step 6** (Route Based on Scenario).
 
 ---
 
-## Step 2: Validate Specification
+## Step 3: Validate Specification
 
 Bridge mode validation — check if specification exists and is ready.
 
@@ -128,43 +163,103 @@ Complete the specification first.
 
 **If specification exists and status is "concluded":**
 
-Run discovery to get cross-cutting context:
-
-```bash
-.claude/skills/start-planning/scripts/discovery.sh
-```
-
-Parse cross-cutting specs from `specifications.crosscutting`.
-
-→ Proceed to **Step 3**.
-
----
-
-## Step 3: Handle Cross-Cutting Context
-
-Load **[cross-cutting-context.md](references/cross-cutting-context.md)** and follow its instructions as written.
+Parse cross-cutting specs from `specifications.crosscutting` in the discovery output.
 
 → Proceed to **Step 4**.
 
 ---
 
-## Step 4: Route by Plan State
+## Step 4: Handle Cross-Cutting Context (Bridge Mode)
 
-Check whether the topic already has a plan (from discovery or by checking `.workflows/planning/{topic}/plan.md`).
+Load **[cross-cutting-context.md](references/cross-cutting-context.md)** and follow its instructions as written.
+
+→ Proceed to **Step 5**.
+
+---
+
+## Step 5: Invoke the Skill (Bridge Mode)
+
+Before invoking the processing skill, save a session bookmark.
+
+> *Output the next fenced block as a code block:*
+
+```
+Saving session state so Claude can pick up where it left off if the conversation is compacted.
+```
+
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-planning/SKILL.md" \
+  ".workflows/planning/{topic}/plan.md"
+```
+
+Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
+
+---
+
+## Step 6: Route Based on Scenario
+
+Discovery mode — use the discovery output from Step 1.
+
+Use `state.scenario` from the discovery output to determine the path:
+
+#### If scenario is "no_specs"
+
+No specifications exist yet.
+
+> *Output the next fenced block as a code block:*
+
+```
+Planning Overview
+
+No specifications found in .workflows/specification/
+
+The planning phase requires a concluded specification.
+Run /start-specification first.
+```
+
+**STOP.** Do not proceed — terminal condition.
+
+#### If scenario is "nothing_actionable"
+
+Specifications exist but none are actionable — all are still in-progress and no plans exist to continue.
+
+→ Proceed to **Step 7** to show the state.
+
+#### If scenario is "has_options"
+
+At least one specification is ready for planning, or an existing plan can be continued or reviewed.
+
+→ Proceed to **Step 7** to present options.
+
+---
+
+## Step 7: Present Workflow State and Options
+
+Load **[display-state.md](references/display-state.md)** and follow its instructions as written.
+
+→ Proceed to **Step 8**.
+
+---
+
+## Step 8: Route by Plan State
+
+Check whether the selected specification already has a plan (from `has_plan` in discovery output).
 
 #### If no existing plan (fresh start)
 
-→ Proceed to **Step 5** to gather context before invoking the skill.
+→ Proceed to **Step 9** to gather context before invoking the skill.
 
 #### If existing plan (continue or review)
 
 The plan already has its context from when it was created. Skip context gathering.
 
-→ Go directly to **Step 7** to invoke the skill.
+→ Go directly to **Step 11** to invoke the skill.
 
 ---
 
-## Step 5: Gather Additional Context
+## Step 9: Gather Additional Context
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -179,21 +274,19 @@ Any additional context since the specification was concluded?
 
 **STOP.** Wait for user response.
 
-→ Proceed to **Step 6**.
+→ Proceed to **Step 10**.
 
 ---
 
-## Step 6: Surface Cross-Cutting Context (Discovery Mode)
-
-This step is only reached from discovery mode after gathering additional context.
+## Step 10: Surface Cross-Cutting Context (Discovery Mode)
 
 Load **[cross-cutting-context.md](references/cross-cutting-context.md)** and follow its instructions as written.
 
-→ Proceed to **Step 7**.
+→ Proceed to **Step 11**.
 
 ---
 
-## Step 7: Invoke the Skill
+## Step 11: Invoke the Skill (Discovery Mode)
 
 Before invoking the processing skill, save a session bookmark.
 

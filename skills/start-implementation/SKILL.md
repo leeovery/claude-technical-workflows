@@ -1,6 +1,6 @@
 ---
 name: start-implementation
-description: "Start an implementation session. Supports two modes: discovery mode (bare invocation) discovers plans and offers options; bridge mode (topic provided) skips discovery for pipeline continuation."
+description: "Start an implementation session. Supports two modes: discovery mode (bare invocation) discovers plans and checks environment; bridge mode (topic provided) skips discovery for pipeline continuation."
 disable-model-invocation: true
 allowed-tools: Bash(.claude/skills/start-implementation/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/planning/)
 hooks:
@@ -58,15 +58,63 @@ Invoke the `/migrate` skill and assess its output.
 
 ---
 
-## Step 1: Determine Mode
+## Step 1: Discovery State
+
+!`.claude/skills/start-implementation/scripts/discovery.sh`
+
+If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+
+```bash
+.claude/skills/start-implementation/scripts/discovery.sh
+```
+
+If YAML content is already displayed, it has been run on your behalf.
+
+Parse the discovery output to understand:
+
+**From `plans` section:**
+- `exists` - whether any plans exist
+- `files` - list of plans with: name, topic, status, date, format, specification, specification_exists, plan_id (if present)
+- Per plan `external_deps` - array of dependencies with topic, state, task_id
+- Per plan `has_unresolved_deps` - whether plan has unresolved dependencies
+- Per plan `unresolved_dep_count` - count of unresolved dependencies
+- `count` - total number of plans
+
+**From `implementation` section:**
+- `exists` - whether any implementation tracking files exist
+- `files` - list of tracking files with: topic, status, current_phase, completed_phases, completed_tasks
+
+**From `dependency_resolution` section:**
+- Per plan `deps_satisfied` - whether all resolved deps have their tasks completed
+- Per plan `deps_blocking` - list of deps not yet satisfied with reason
+
+**From `environment` section:**
+- `setup_file_exists` - whether environment-setup.md exists
+- `requires_setup` - true, false, or unknown
+
+**From `state` section:**
+- `scenario` - one of: `"no_plans"`, `"single_plan"`, `"multiple_plans"`
+- `plans_concluded_count` - plans with status concluded
+- `plans_with_unresolved_deps` - plans with unresolved external deps
+- `plans_ready_count` - concluded plans with all deps satisfied
+- `plans_in_progress_count` - implementations in progress
+- `plans_completed_count` - implementations completed
+
+**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state.
+
+→ Proceed to **Step 2**.
+
+---
+
+## Step 2: Determine Mode
 
 Check for arguments: topic = `$0`, work_type = `$1`
 
 #### If topic and work_type are both provided (bridge mode)
 
-Pipeline continuation — skip discovery and proceed directly to validation.
+Pipeline continuation — skip discovery output and proceed directly to validation.
 
-→ Proceed to **Step 2** (Validate Plan).
+→ Proceed to **Step 3** (Validate Plan).
 
 #### If only topic is provided
 
@@ -75,21 +123,17 @@ Set work_type based on context:
 - If invoked from a feature pipeline → work_type = "feature"
 - If unclear, default to "greenfield"
 
-→ Proceed to **Step 2** (Validate Plan).
+→ Proceed to **Step 3** (Validate Plan).
 
 #### If no topic provided (discovery mode)
 
-Full discovery and selection flow.
+Use the discovery output from Step 1 to check prerequisites and present options.
 
-→ Load **[discovery-flow.md](references/discovery-flow.md)** and follow its instructions.
-
-When discovery completes, it returns with selected topic.
-
-→ Proceed to **Step 4** (Check External Dependencies).
+→ Proceed to **Step 6** (Route Based on Scenario).
 
 ---
 
-## Step 2: Validate Plan
+## Step 3: Validate Plan
 
 Bridge mode validation — check if plan exists and is ready.
 
@@ -128,123 +172,67 @@ Complete the plan first.
 
 **If plan exists and status is "concluded":**
 
-→ Proceed to **Step 3**.
-
----
-
-## Step 3: Run Discovery for Context
-
-Run discovery to get dependency and environment information:
-
-```bash
-.claude/skills/start-implementation/scripts/discovery.sh
-```
-
-Parse the output to extract for the selected topic:
-- `external_deps`, `has_unresolved_deps`
-- `deps_satisfied`, `deps_blocking`
-- `environment.setup_file_exists`, `environment.requires_setup`
-- `format`, `plan_id`, `specification`, `specification_exists`
-
 → Proceed to **Step 4**.
 
 ---
 
-## Step 4: Check External Dependencies
+## Step 4: Check Dependencies (Bridge Mode)
 
-**This step is a confirmation gate.** Dependencies have been pre-analyzed by the discovery script.
+Check if plan has unresolved or blocking dependencies from the discovery output.
 
-#### If all deps satisfied (or no deps)
-
-> *Output the next fenced block as a code block:*
-
-```
-External dependencies satisfied.
-```
-
-→ Proceed to **Step 5**.
-
-#### If any deps are blocking
+**If has_unresolved_deps is true:**
 
 > *Output the next fenced block as a code block:*
 
 ```
-Missing Dependencies
+Unresolved Dependencies
 
-Unresolved (not yet planned):
-  • {topic}: {description}
-    No plan exists. Create with /start-planning or mark as
-    satisfied externally.
+The plan for "{topic:(titlecase)}" has unresolved external dependencies.
 
-Incomplete (planned but not implemented):
-  • {topic}: {plan}:{task-id} not yet completed
-    This task must be completed first.
+These must be resolved before implementation can begin.
 ```
 
-> *Output the next fenced block as markdown (not a code block):*
+**STOP.** Do not proceed — terminal condition.
+
+**If deps_blocking contains entries:**
+
+> *Output the next fenced block as a code block:*
 
 ```
-· · · · · · · · · · · ·
-- **`i`/`implement`** — Implement the blocking dependencies first
-- **`l`/`link`** — Run /link-dependencies to wire up recently completed plans
-- **`s`/`satisfied`** — Mark a dependency as satisfied externally
-- **`c`/`continue`** — Continue anyway (at your own risk)
-· · · · · · · · · · · ·
+Blocking Dependencies
+
+The plan for "{topic:(titlecase)}" is blocked by incomplete tasks:
+
+@foreach(dep in deps_blocking)
+  • {dep.topic}:{dep.task_id} — {dep.reason}
+@endforeach
+
+Complete these tasks first, then re-run implementation.
 ```
 
-**STOP.** Wait for user response.
+**STOP.** Do not proceed — terminal condition.
 
-If `implement`, suggest running `/start-implementation` for the blocking topic. If `satisfied`, update the plan frontmatter (`state: satisfied_externally`) and continue. If `continue`, proceed.
+**If all dependencies satisfied:**
 
 → Proceed to **Step 5**.
 
 ---
 
-## Step 5: Check Environment Setup
+## Step 5: Check Environment (Bridge Mode)
 
-> **IMPORTANT**: This step is for **information gathering only**. Do NOT execute any setup commands at this stage.
+Check environment setup from discovery output.
 
-Use the `environment` section from the discovery output:
+**If requires_setup is true:**
 
-**If `setup_file_exists: true` and `requires_setup: false`:**
+Load **[environment-check.md](references/environment-check.md)** and follow its instructions as written.
 
-> *Output the next fenced block as a code block:*
+**If requires_setup is false or unknown:**
 
-```
-Environment: No special setup required.
-```
-
-→ Proceed to **Step 6**.
-
-**If `setup_file_exists: true` and `requires_setup: true`:**
-
-> *Output the next fenced block as a code block:*
-
-```
-Environment setup file found: .workflows/environment-setup.md
-```
-
-→ Proceed to **Step 6**.
-
-**If `setup_file_exists: false` or `requires_setup: unknown`:**
-
-> *Output the next fenced block as a code block:*
-
-```
-Are there any environment setup instructions I should follow before implementation?
-(Or "none" if no special setup is needed)
-```
-
-**STOP.** Wait for user response.
-
-- If the user provides instructions, save them to `.workflows/environment-setup.md`, commit
-- If the user says no/none, create `.workflows/environment-setup.md` with "No special setup required." and commit
-
-→ Proceed to **Step 6**.
+→ Proceed to **Step 5a** (Invoke Skill - Bridge Mode).
 
 ---
 
-## Step 6: Invoke the Skill
+### Step 5a: Invoke the Skill (Bridge Mode)
 
 Before invoking the processing skill, save a session bookmark.
 
@@ -261,22 +249,221 @@ Saving session state so Claude can pick up where it left off if the conversation
   ".workflows/implementation/{topic}/tracking.md"
 ```
 
-Determine the implementation tracking state:
-- If a tracking file exists for this topic → use its status
-- If no tracking file → status is "not-started"
+Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
 
-Invoke the [technical-implementation](../technical-implementation/SKILL.md) skill:
+---
+
+## Step 6: Route Based on Scenario
+
+Discovery mode — use the discovery output from Step 1.
+
+Use `state.scenario` from the discovery output to determine the path:
+
+#### If scenario is "no_plans"
+
+No plans exist yet.
+
+> *Output the next fenced block as a code block:*
 
 ```
-Implementation session for: {topic}
-Plan: .workflows/planning/{topic}/plan.md
-Format: {format}
-Plan ID: {plan_id} (if applicable)
-Specification: .workflows/specification/{topic}/specification.md (exists: {true|false})
-Implementation tracking: {exists | new} (status: {status})
+Implementation Overview
 
-Dependencies: {All satisfied | List any notes}
-Environment: {Setup required | No special setup required}
+No plans found in .workflows/planning/
 
-Invoke the technical-implementation skill.
+The implementation phase requires a plan.
+Run /start-planning first to create a plan from a specification.
 ```
+
+**STOP.** Do not proceed — terminal condition.
+
+#### If scenario is "single_plan" or "multiple_plans"
+
+Plans exist.
+
+→ Proceed to **Step 7** to present options.
+
+---
+
+## Step 7: Present Plans and Select
+
+Present all discovered plans. Classify each plan into one of three categories based on its state.
+
+**Classification logic:**
+
+A plan is **Implementable** if:
+- It has `status: concluded` AND all deps are satisfied (`deps_satisfied: true` or no deps) AND no tracking file or tracking `status: not-started`, OR
+- It has an implementation tracking file with `status: in-progress`
+
+A plan is **Implemented** if:
+- It has an implementation tracking file with `status: completed`
+
+A plan is **Not implementable** if:
+- It has `status: concluded` but deps are NOT satisfied (blocking deps exist)
+- It has `status: planning` or other non-concluded status
+- It has unresolved deps (`has_unresolved_deps: true`)
+
+**Present the full state:**
+
+Show implementable and implemented plans as numbered tree items.
+
+> *Output the next fenced block as a code block:*
+
+```
+Implementation Overview
+
+{N} plans found. {M} implementations in progress.
+
+1. {topic:(titlecase)}
+   └─ Plan: {plan_status:[concluded]} ({format})
+   └─ Implementation: @if(has_implementation) {impl_status:[in-progress|completed]} @else (not started) @endif
+
+2. ...
+```
+
+**Tree rules:**
+
+Implementable:
+- Implementation `status: in-progress` → `Implementation: in-progress (Phase N, Task M)`
+- Concluded plan, deps met, not started → `Implementation: (not started)`
+
+Implemented:
+- Implementation `status: completed` → `Implementation: completed`
+
+**Ordering:**
+1. Implementable first: in-progress, then new (foundational before dependent)
+2. Implemented next: completed
+3. Not implementable last (separate block below)
+
+Numbering is sequential across Implementable and Implemented. Omit any section entirely if it has no entries.
+
+**If non-implementable plans exist**, show them in a separate code block:
+
+> *Output the next fenced block as a code block:*
+
+```
+Plans not ready for implementation:
+These plans are either still in progress or have unresolved
+dependencies that must be addressed first.
+
+  • advanced-features (blocked by core-features:core-2-3)
+  • reporting (in-progress)
+```
+
+> *Output the next fenced block as a code block:*
+
+```
+If a blocked dependency has been resolved outside this workflow,
+name the plan and the dependency to unblock it.
+```
+
+**Key/Legend** — show only statuses that appear in the current display. No `---` separator before this section.
+
+> *Output the next fenced block as a code block:*
+
+```
+Key:
+
+  Implementation status:
+    in-progress — work is ongoing
+    completed   — all tasks implemented
+
+  Blocking reason:
+    blocked     — depends on another plan's task
+    in-progress — plan not yet concluded
+```
+
+**Then prompt based on what's actionable:**
+
+**If single implementable plan and no implemented plans (auto-select):**
+
+> *Output the next fenced block as a code block:*
+
+```
+Automatically proceeding with "{topic:(titlecase)}".
+```
+
+→ Proceed directly to **Step 8**.
+
+**If nothing selectable (no implementable or implemented):**
+
+Show "not ready" block only (with unblock hint above).
+
+> *Output the next fenced block as a code block:*
+
+```
+Implementation Overview
+
+No implementable plans found.
+
+Complete blocking dependencies first, or finish plans still
+in progress with /start-planning. Then re-run /start-implementation.
+```
+
+**STOP.** Do not proceed — terminal condition.
+
+**If multiple selectable plans:**
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+1. Continue "Billing" — in-progress (Phase 2, Task 3)
+2. Start "Core Features" — not yet started
+3. Re-review "User Auth" — completed
+
+Select an option (enter number):
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+→ Proceed to **Step 8** with selected topic.
+
+---
+
+## Step 8: Check Dependencies (Discovery Mode)
+
+Check if selected plan has unresolved or blocking dependencies from the discovery output.
+
+**If has_unresolved_deps is true or deps_blocking contains entries:**
+
+Handle as shown in Step 4.
+
+**If all dependencies satisfied:**
+
+→ Proceed to **Step 9**.
+
+---
+
+## Step 9: Check Environment (Discovery Mode)
+
+Check environment setup from discovery output.
+
+**If requires_setup is true:**
+
+Load **[environment-check.md](references/environment-check.md)** and follow its instructions as written.
+
+**If requires_setup is false or unknown:**
+
+→ Proceed to **Step 10**.
+
+---
+
+## Step 10: Invoke the Skill (Discovery Mode)
+
+Before invoking the processing skill, save a session bookmark.
+
+> *Output the next fenced block as a code block:*
+
+```
+Saving session state so Claude can pick up where it left off if the conversation is compacted.
+```
+
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-implementation/SKILL.md" \
+  ".workflows/implementation/{topic}/tracking.md"
+```
+
+Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

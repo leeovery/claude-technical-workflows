@@ -58,15 +58,43 @@ Invoke the `/migrate` skill and assess its output.
 
 ---
 
-## Step 1: Determine Mode
+## Step 1: Discovery State
+
+!`.claude/skills/start-specification/scripts/discovery.sh`
+
+If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+
+```bash
+.claude/skills/start-specification/scripts/discovery.sh
+```
+
+If YAML content is already displayed, it has been run on your behalf.
+
+Parse the discovery output to understand:
+
+**From `discussions` array:** Each discussion's name, status, and whether it has an individual specification.
+
+**From `specifications` array:** Each specification's name, status, sources, and superseded_by (if applicable). Specifications with `status: superseded` should be noted but excluded from active counts.
+
+**From `cache` section:** `status` (valid/stale/none), `reason`, `generated`, `anchored_names`.
+
+**From `current_state`:** `concluded_count`, `spec_count`, `has_discussions`, `has_concluded`, `has_specs`, and other counts/booleans for routing.
+
+**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state.
+
+→ Proceed to **Step 2**.
+
+---
+
+## Step 2: Determine Mode
 
 Check for arguments: topic = `$0`, work_type = `$1`
 
 #### If topic and work_type are both provided (bridge mode)
 
-Pipeline continuation — skip discovery and proceed directly to validation.
+Pipeline continuation — skip discovery output and proceed directly to validation.
 
-→ Proceed to **Step 2** (Validate Source Material).
+→ Proceed to **Step 3** (Validate Source Material).
 
 #### If only topic is provided
 
@@ -75,21 +103,17 @@ Set work_type based on context:
 - If invoked from a feature pipeline → work_type = "feature"
 - If unclear, default to "greenfield"
 
-→ Proceed to **Step 2** (Validate Source Material).
+→ Proceed to **Step 3** (Validate Source Material).
 
 #### If no topic provided (discovery mode)
 
-Full discovery and selection flow.
+Use the discovery output from Step 1 to check prerequisites and present options.
 
-→ Load **[discovery-flow.md](references/discovery-flow.md)** and follow its instructions.
-
-When discovery completes, it returns with selection context.
-
-→ Proceed to **Step 4** (Invoke the Skill).
+→ Proceed to **Step 6** (Check Prerequisites).
 
 ---
 
-## Step 2: Validate Source Material
+## Step 3: Validate Source Material
 
 Bridge mode validation — check if source material exists and is ready.
 
@@ -132,7 +156,7 @@ Complete the discussion first.
 
 **If discussion exists and status is "concluded":**
 
-→ Proceed to **Step 3**.
+→ Proceed to **Step 4**.
 
 #### For bugfix work_type
 
@@ -173,11 +197,11 @@ Complete the investigation first.
 
 **If investigation exists and status is "concluded":**
 
-→ Proceed to **Step 3**.
+→ Proceed to **Step 4**.
 
 ---
 
-## Step 3: Check Existing Specification
+## Step 4: Check Existing Specification
 
 Check if a specification already exists for this topic.
 
@@ -185,7 +209,7 @@ Read `.workflows/specification/{topic}/specification.md` if it exists.
 
 **If specification doesn't exist:**
 
-→ Proceed to **Step 4** with verb="Creating".
+→ Proceed to **Step 5** with verb="Creating".
 
 **If specification exists with status "in-progress":**
 
@@ -208,8 +232,8 @@ A specification for "{topic:(titlecase)}" already exists and is in progress.
 
 **STOP.** Wait for user response.
 
-If resume → proceed to **Step 4** with verb="Continuing".
-If start-fresh → archive the existing spec, proceed to **Step 4** with verb="Creating".
+If resume → proceed to **Step 5** with verb="Continuing".
+If start-fresh → archive the existing spec, proceed to **Step 5** with verb="Creating".
 
 **If specification exists with status "concluded":**
 
@@ -225,7 +249,7 @@ The specification for "{topic:(titlecase)}" has already concluded.
 
 ---
 
-## Step 4: Invoke the Skill
+## Step 5: Invoke the Skill (Bridge Mode)
 
 Before invoking the processing skill, save a session bookmark.
 
@@ -267,3 +291,68 @@ The specification frontmatter should include:
 
 Invoke the technical-specification skill.
 ```
+
+---
+
+## Step 6: Check Prerequisites
+
+Discovery mode — use the discovery output from Step 1 to check prerequisites.
+
+#### If has_discussions is false or has_concluded is false
+
+→ Load **[display-blocks.md](references/display-blocks.md)** and follow its instructions. **STOP.**
+
+#### Otherwise
+
+→ Proceed to **Step 7**.
+
+---
+
+## Step 7: Route Based on State
+
+Based on discovery state, load exactly ONE reference file:
+
+#### If concluded_count == 1
+
+→ Load **[display-single.md](references/display-single.md)** and follow its instructions.
+
+→ Proceed to **Step 8** with selection.
+
+#### If cache status is "valid"
+
+→ Load **[display-groupings.md](references/display-groupings.md)** and follow its instructions.
+
+→ Proceed to **Step 8** with selection.
+
+#### If spec_count == 0 and cache is "none" or "stale"
+
+→ Load **[display-analyze.md](references/display-analyze.md)** and follow its instructions.
+
+→ Proceed to **Step 8** with selection.
+
+#### Otherwise
+
+→ Load **[display-specs-menu.md](references/display-specs-menu.md)** and follow its instructions.
+
+→ Proceed to **Step 8** with selection.
+
+---
+
+## Step 8: Invoke the Skill (Discovery Mode)
+
+Before invoking the processing skill, save a session bookmark.
+
+> *Output the next fenced block as a code block:*
+
+```
+Saving session state so Claude can pick up where it left off if the conversation is compacted.
+```
+
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-specification/SKILL.md" \
+  ".workflows/specification/{topic}/specification.md"
+```
+
+Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
