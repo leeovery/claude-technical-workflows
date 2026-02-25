@@ -14,7 +14,7 @@ ls .workflows/investigation/
 
 Read `.workflows/investigation/{topic}/investigation.md` frontmatter to check status.
 
-**If status is "in-progress":**
+#### If status is "in-progress"
 
 > *Output the next fenced block as a code block:*
 
@@ -35,10 +35,15 @@ An investigation for "{topic:(titlecase)}" already exists and is in progress.
 
 **STOP.** Wait for user response.
 
-If resume → control returns to the main skill for **Step 8**.
-If new → ask for a new topic name, re-run validation with the new topic.
+#### If resume
 
-**If status is "concluded":**
+→ Return to **[the skill](../SKILL.md)** for **Step 8**.
+
+#### If new
+
+Ask for a new topic name, re-run validation with the new topic.
+
+#### If status is "concluded"
 
 > *Output the next fenced block as a code block:*
 
@@ -52,4 +57,4 @@ The investigation for "{topic:(titlecase)}" has already concluded.
 
 #### If no collision
 
-Control returns to the main skill.
+→ Return to **[the skill](../SKILL.md)**.

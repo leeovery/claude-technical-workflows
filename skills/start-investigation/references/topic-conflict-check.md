@@ -44,6 +44,12 @@ An investigation named "{topic}" already exists.
 
 **STOP.** Wait for user response.
 
-If resuming, check the investigation status. If concluded → suggest `/start-specification {topic} bugfix`. If in-progress → control returns to the main skill for **Step 8**.
+#### If resuming
 
-If no conflict, control returns to the main skill.
+Check the investigation status. If concluded → suggest `/start-specification {topic} bugfix`. If in-progress:
+
+→ Return to **[the skill](../SKILL.md)** for **Step 8**.
+
+#### If no conflict
+
+→ Return to **[the skill](../SKILL.md)**.

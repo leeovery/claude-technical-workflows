@@ -148,11 +148,7 @@ Completed phase: discussion
 Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
 ```
 
-**If work_type is not set:**
-
-Check for remaining in-progress discussions in `.workflows/discussion/`
-
-**If other in-progress discussions exist:**
+**If work_type is not set and other in-progress discussions exist:**
 
 > *Output the next fenced block as a code block:*
 
@@ -166,7 +162,7 @@ Remaining in-progress discussions:
 To continue, clear your context and run /start-discussion to pick up the next topic.
 ```
 
-**If no in-progress discussions remain:**
+**If work_type is not set and no in-progress discussions remain:**
 
 > *Output the next fenced block as a code block:*
 

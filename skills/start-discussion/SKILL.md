@@ -51,9 +51,13 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 Invoke the `/migrate` skill and assess its output.
 
-**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
+#### If files were updated
 
-**If no updates needed**: Proceed to Step 1.
+**STOP.** Wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding.
+
+#### If no updates needed
+
+→ Proceed to **Step 1**.
 
 ---
 

@@ -102,7 +102,7 @@ Key:
 Automatically proceeding with "{topic:(titlecase)}".
 ```
 
-Control returns to the main skill.
+→ Return to **[the skill](../SKILL.md)**.
 
 **If nothing selectable (no implementable or implemented):**
 
@@ -121,7 +121,12 @@ in progress with /start-planning. Then re-run /start-implementation.
 
 **STOP.** Do not proceed — terminal condition.
 
-**If multiple selectable plans:**
+**If multiple selectable plans (or implemented plans exist):**
+
+The verb in the menu depends on the implementation state:
+- Implementation in-progress → **Continue**
+- Not yet started → **Start**
+- Completed → **Re-review**
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -135,6 +140,20 @@ Select an option (enter number):
 · · · · · · · · · · · ·
 ```
 
+Recreate with actual topics and states from discovery.
+
 **STOP.** Wait for user response.
 
-Control returns to the main skill with selected topic.
+---
+
+## Unblock Request
+
+#### If the user requests an unblock
+
+1. Identify the plan and the specific dependency
+2. Confirm with the user which dependency to mark as satisfied
+3. Update the plan's `external_dependencies` frontmatter: set `state` to `satisfied_externally`
+4. Commit the change
+5. Re-run classification and re-present this display
+
+→ Return to **[the skill](../SKILL.md)** with selected topic.

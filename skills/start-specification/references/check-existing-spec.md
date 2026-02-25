@@ -8,11 +8,11 @@ Check if a specification already exists for this topic.
 
 Read `.workflows/specification/{topic}/specification.md` if it exists.
 
-**If specification doesn't exist:**
+#### If specification doesn't exist
 
-Control returns to the main skill with verb="Creating".
+→ Return to **[the skill](../SKILL.md)** with verb="Creating".
 
-**If specification exists with status "in-progress":**
+#### If specification exists with status "in-progress"
 
 > *Output the next fenced block as a code block:*
 
@@ -33,10 +33,17 @@ A specification for "{topic:(titlecase)}" already exists and is in progress.
 
 **STOP.** Wait for user response.
 
-If resume → control returns to the main skill with verb="Continuing".
-If start-fresh → archive the existing spec, control returns to the main skill with verb="Creating".
+#### If resume
 
-**If specification exists with status "concluded":**
+→ Return to **[the skill](../SKILL.md)** with verb="Continuing".
+
+#### If start-fresh
+
+Archive the existing spec.
+
+→ Return to **[the skill](../SKILL.md)** with verb="Creating".
+
+#### If specification exists with status "concluded"
 
 > *Output the next fenced block as a code block:*
 

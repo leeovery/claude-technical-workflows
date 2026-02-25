@@ -150,27 +150,7 @@ content=$(cat "$session_file")
 assert_contains "$content" "^topic: auth-flow$" "Topic field correct"
 assert_contains "$content" "^skill: .claude/skills/technical-discussion/SKILL.md$" "Skill field correct"
 assert_contains "$content" "^artifact: .workflows/discussion/auth-flow.md$" "Artifact field correct"
-assert_not_contains "$content" "pipeline" "No pipeline section without --pipeline flag"
-
-echo ""
-
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: write-session-state with --pipeline flag${NC}"
-setup_fixture
-
-CLAUDE_SESSION_ID="test-session-002" \
-CLAUDE_PROJECT_DIR="$TEST_DIR" \
-bash "$WRITE_SCRIPT" "billing" ".claude/skills/technical-specification/SKILL.md" ".workflows/specification/billing/specification.md" \
-  --pipeline 'Enter plan mode: "Clear context and continue with /start-specification billing feature"'
-
-session_file="$TEST_DIR/.workflows/.cache/sessions/test-session-002.yaml"
-assert_file_exists "$session_file" "Session file created"
-content=$(cat "$session_file")
-assert_contains "$content" "^topic: billing$" "Topic field correct"
-assert_contains "$content" "^pipeline:$" "Pipeline section present"
-assert_contains "$content" "after_conclude:" "after_conclude key present"
-assert_contains "$content" "start-specification" "Pipeline content includes instructions"
+assert_not_contains "$content" "pipeline" "No pipeline section in output"
 
 echo ""
 

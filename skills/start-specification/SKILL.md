@@ -51,9 +51,13 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 Invoke the `/migrate` skill and assess its output.
 
-**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
+#### If files were updated
 
-**If no updates needed**: Proceed to Step 1.
+**STOP.** Wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding.
+
+#### If no updates needed
+
+→ Proceed to **Step 1**.
 
 ---
 
@@ -127,7 +131,7 @@ Discovery mode — use the discovery output from Step 1 to check prerequisites.
 
 #### If has_discussions is false or has_concluded is false
 
-→ Load **[display-blocks.md](references/display-blocks.md)** and follow its instructions. **STOP.**
+Load **[display-blocks.md](references/display-blocks.md)** and follow its instructions as written. **STOP.**
 
 #### Otherwise
 
@@ -141,25 +145,25 @@ Based on discovery state, load exactly ONE reference file:
 
 #### If concluded_count == 1
 
-→ Load **[display-single.md](references/display-single.md)** and follow its instructions.
+Load **[display-single.md](references/display-single.md)** and follow its instructions as written.
 
 → Proceed to **Step 8** with selection.
 
 #### If cache status is "valid"
 
-→ Load **[display-groupings.md](references/display-groupings.md)** and follow its instructions.
+Load **[display-groupings.md](references/display-groupings.md)** and follow its instructions as written.
 
 → Proceed to **Step 8** with selection.
 
 #### If spec_count == 0 and cache is "none" or "stale"
 
-→ Load **[display-analyze.md](references/display-analyze.md)** and follow its instructions.
+Load **[display-analyze.md](references/display-analyze.md)** and follow its instructions as written.
 
 → Proceed to **Step 8** with selection.
 
 #### Otherwise
 
-→ Load **[display-specs-menu.md](references/display-specs-menu.md)** and follow its instructions.
+Load **[display-specs-menu.md](references/display-specs-menu.md)** and follow its instructions as written.
 
 → Proceed to **Step 8** with selection.
 

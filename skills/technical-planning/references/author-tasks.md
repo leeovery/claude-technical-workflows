@@ -8,7 +8,7 @@ This step uses the `planning-task-author` agent (`../../../agents/planning-task-
 
 ---
 
-## Section 1: Prepare the Scratch File
+## A. Prepare the Scratch File
 
 Scratch file path: `.workflows/.cache/planning/{topic}/phase-{N}.md`
 
@@ -16,7 +16,7 @@ Create the `.workflows/.cache/planning/{topic}/` directory if it does not exist.
 
 ---
 
-## Section 2: Invoke the Agent (Batch)
+## B. Invoke the Agent (Batch)
 
 > *Output the next fenced block as a code block:*
 
@@ -38,7 +38,7 @@ The agent writes all tasks to the scratch file and returns.
 
 ---
 
-## Section 3: Validate Scratch File
+## C. Validate Scratch File
 
 Read the scratch file and count tasks. Verify task count matches the task table in the Plan Index File for this phase.
 
@@ -48,11 +48,11 @@ Re-invoke the agent with the same inputs.
 
 #### If valid
 
-→ Proceed to **Section 4**.
+→ Proceed to **D. Check Gate Mode**.
 
 ---
 
-## Section 4: Check Gate Mode
+## D. Check Gate Mode
 
 Check `author_gate_mode` in the Plan Index File frontmatter.
 
@@ -64,15 +64,15 @@ Check `author_gate_mode` in the Plan Index File frontmatter.
 Phase {N}: {count} tasks authored. Auto-approved. Writing to plan.
 ```
 
-→ Jump to **Section 6**.
+→ Proceed to **F. Write to Plan**.
 
 #### If `author_gate_mode: gated`
 
-→ Enter **Section 5**.
+→ Proceed to **E. Approval Loop**.
 
 ---
 
-## Section 5: Approval Loop
+## E. Approval Loop
 
 For each task in the scratch file, in order:
 
@@ -114,7 +114,7 @@ Mark the task `approved` in the scratch file. Continue to the next task.
 
 Mark the task `approved` in the scratch file. Set all remaining `pending` tasks to `approved`. Update `author_gate_mode: auto` in the Plan Index File frontmatter.
 
-→ Jump to **Section 6**.
+→ Proceed to **F. Write to Plan**.
 
 #### If the user provides feedback
 
@@ -133,17 +133,17 @@ Continue to the next task.
 
 #### If the user navigates
 
-→ Return to **Plan Construction**. The scratch file preserves approval state.
+→ Return to **[plan-construction.md](plan-construction.md)**. The scratch file preserves approval state.
 
 ---
 
-### Section 5b: Revision
+### Revision
 
 After completing the approval loop, check for rejected tasks.
 
 #### If no rejected tasks
 
-→ Proceed to **Section 6**.
+→ Proceed to **F. Write to Plan**.
 
 #### If rejected tasks exist
 
@@ -153,11 +153,11 @@ After completing the approval loop, check for rejected tasks.
 {N} tasks need revision. Re-invoking author agent...
 ```
 
-→ Return to **Section 2**. The agent receives the scratch file with rejected tasks and feedback, rewrites only those, and the flow continues through validation, gate check, and approval as normal.
+→ Return to **B. Invoke the Agent (Batch)**. The agent receives the scratch file with rejected tasks and feedback, rewrites only those, and the flow continues through validation, gate check, and approval as normal.
 
 ---
 
-## Section 6: Write to Plan
+## F. Write to Plan
 
 > **CHECKPOINT**: If `author_gate_mode: gated`, verify all tasks in the scratch file are marked `approved` before writing.
 
@@ -181,10 +181,10 @@ Repeat for each task.
 
 ---
 
-## Section 7: Cleanup
+## G. Cleanup
 
 Delete the scratch file: `rm .workflows/.cache/planning/{topic}/phase-{N}.md`
 
 Remove the `.workflows/.cache/planning/{topic}/` directory if empty.
 
-→ Return to **Plan Construction**.
+→ Return to **[plan-construction.md](plan-construction.md)**.

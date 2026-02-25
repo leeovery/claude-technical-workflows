@@ -12,7 +12,7 @@ ls .workflows/specification/
 
 Read `.workflows/specification/{topic}/specification.md` frontmatter.
 
-**If specification doesn't exist:**
+#### If specification doesn't exist
 
 > *Output the next fenced block as a code block:*
 
@@ -26,7 +26,7 @@ A concluded specification is required for planning.
 
 **STOP.** Do not proceed — terminal condition. Suggest `/start-specification` with topic.
 
-**If specification exists but status is "in-progress":**
+#### If specification exists but status is "in-progress"
 
 > *Output the next fenced block as a code block:*
 
@@ -39,8 +39,8 @@ Complete the specification first.
 
 **STOP.** Do not proceed — terminal condition. Suggest `/start-specification` with topic to continue.
 
-**If specification exists and status is "concluded":**
+#### If specification exists and status is "concluded"
 
 Parse cross-cutting specs from `specifications.crosscutting` in the discovery output.
 
-Control returns to the main skill.
+→ Return to **[the skill](../SKILL.md)**.

@@ -22,7 +22,7 @@ F. Create tasks in plan → invoke-task-writer.md
 
 Increment `analysis_cycle` in the implementation tracking file.
 
-→ If `analysis_cycle <= 3`, proceed directly to **B. Git Checkpoint**.
+→ If `analysis_cycle <= 3`, proceed to **B. Git Checkpoint**.
 
 If `analysis_cycle > 3`:
 
@@ -43,8 +43,8 @@ Analysis has run {N-1} times so far. You can continue (recommended if issues wer
 
 **STOP.** Wait for user choice. You MUST NOT choose on the user's behalf.
 
-- **`proceed`**: → Continue to **B. Git Checkpoint**.
-- **`skip`**: → Return to the skill for **Step 8**.
+- **`proceed`**: → Proceed to **B. Git Checkpoint**.
+- **`skip`**: → Return to **[the skill](../SKILL.md)** for **Step 8**.
 
 ---
 
@@ -243,4 +243,4 @@ Commit all analysis and plan changes (staging file, plan tasks, Plan Index File,
 impl({topic}): add analysis phase {N} ({K} tasks)
 ```
 
-→ Return to the skill. New tasks are now in the plan.
+→ Return to **[the skill](../SKILL.md)**. New tasks are now in the plan.

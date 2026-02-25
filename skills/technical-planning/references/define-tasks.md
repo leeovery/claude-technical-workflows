@@ -68,7 +68,7 @@ Check `task_list_gate_mode` in the Plan Index File frontmatter.
 Phase {N}: {Phase Name} — task list approved. Proceeding to authoring.
 ```
 
-→ Skip to **If approved** below.
+→ Proceed to **If approved** below.
 
 #### If `task_list_gate_mode: gated`
 
@@ -110,4 +110,4 @@ Note that `task_list_gate_mode` should be updated to `auto` during the commit st
 
 **If the task list was already approved and unchanged:** No updates needed.
 
-→ Return to **Plan Construction**.
+→ Return to **[plan-construction.md](plan-construction.md)**.

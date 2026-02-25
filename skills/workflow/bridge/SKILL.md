@@ -56,15 +56,15 @@ Based on work type, load the appropriate continuation reference:
 
 #### If work type is "feature"
 
-→ Load **[feature-continuation.md](references/feature-continuation.md)** and follow its instructions.
+Load **[feature-continuation.md](references/feature-continuation.md)** and follow its instructions as written.
 
 #### If work type is "bugfix"
 
-→ Load **[bugfix-continuation.md](references/bugfix-continuation.md)** and follow its instructions.
+Load **[bugfix-continuation.md](references/bugfix-continuation.md)** and follow its instructions as written.
 
 #### If work type is "greenfield"
 
-→ Load **[greenfield-continuation.md](references/greenfield-continuation.md)** and follow its instructions.
+Load **[greenfield-continuation.md](references/greenfield-continuation.md)** and follow its instructions as written.
 
 ---
 

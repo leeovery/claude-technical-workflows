@@ -12,7 +12,8 @@ User chose to start from research (e.g., "research 1", "1", "from research", or 
 
 **If user specified a topic inline** (e.g., "research 2", "2", or topic name):
 - Identify the selected topic from the numbered list
-- Control returns to the backbone
+
+→ Return to **[the skill](../SKILL.md)**.
 
 **If user just said "from research" without specifying:**
 
@@ -30,7 +31,8 @@ User chose to continue a discussion (e.g., "continue auth-flow" or "continue dis
 
 **If user specified a discussion inline** (e.g., "continue auth-flow"):
 - Identify the selected discussion from the list
-- Control returns to the backbone
+
+→ Return to **[the skill](../SKILL.md)**.
 
 **If user just said "continue discussion" without specifying:**
 
@@ -44,7 +46,9 @@ Which discussion would you like to continue?
 
 #### If user chose "Fresh topic"
 
-User wants to start a fresh discussion. Control returns to the backbone.
+User wants to start a fresh discussion.
+
+→ Return to **[the skill](../SKILL.md)**.
 
 #### If user chose "refresh"
 
@@ -59,4 +63,4 @@ Delete the cache file:
 rm .workflows/.state/research-analysis.md
 ```
 
-→ Return to **Step 6** to re-analyze.
+→ Proceed to **[Step 6](../SKILL.md)** to re-analyze.

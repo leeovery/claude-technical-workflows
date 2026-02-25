@@ -33,13 +33,13 @@ If `select`, present numbered list of reviewed plans for the user to choose from
 
 Automatically proceed with the only available review.
 
-→ Proceed to **Step 9**.
+→ Proceed to **[Step 9](../SKILL.md)**.
 
 #### If scope is "all"
 
 All reviewable plans are included. No selection needed. Each plan will be reviewed independently.
 
-→ Proceed directly to **Step 9**.
+→ Proceed to **[Step 9](../SKILL.md)**.
 
 #### If scope is "single"
 
@@ -53,7 +53,7 @@ Which plan would you like to review? (Enter a number from Step 7)
 
 **STOP.** Wait for user response.
 
-→ Proceed to **Step 9**.
+→ Proceed to **[Step 9](../SKILL.md)**.
 
 #### If scope is "multi"
 
@@ -67,4 +67,4 @@ Which plans to include? (Enter numbers separated by commas, e.g. 1,3)
 
 **STOP.** Wait for user response.
 
-→ Proceed to **Step 9**.
+→ Proceed to **[Step 9](../SKILL.md)**.

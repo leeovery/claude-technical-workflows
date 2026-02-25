@@ -14,8 +14,9 @@ Ordered by complexity. Work through in order — simpler skills establish patter
 - [x] **start-specification** (851 lines → backbone + 14 reference files) — Complex: discovery + conditional routing + display redesign. *(PR #97)*
 - [x] **start-review** (243 lines → backbone + 3 reference files) — Linear discovery + display/select/invoke extraction. *(PR #106)*
 - [x] **start-planning** (310 lines → backbone + 3 reference files) — Linear discovery + display/cross-cutting/invoke extraction.
-- [ ] **start-implementation** (338 lines) — Linear with discovery script + plan reading + format loading. When refactored, de-duplicate `begin-implementation` Steps 2-3 (external dependencies, environment setup) by referencing start-implementation's new reference files — same pattern as begin-planning → start-planning cross-cutting-context.md.
+- [x] **start-implementation** (338 lines → backbone + 5 reference files) — Linear with discovery script + plan reading. References: validate-plan, check-dependencies, environment-check, display-plans, invoke-skill.
 - [x] **start-discussion** (391 lines → backbone + 8 reference files) — Discovery inline, 3-path gather-context router. *(PR #99)*
+- [x] **start-investigation** (backbone + 6 reference files) — Two-mode pattern (discovery vs bridge). References: validate-investigation, route-scenario, gather-context-discovery, gather-context-bridge, topic-conflict-check, invoke-skill.
 - [ ] **start-feature** (82 lines) — Standalone entry point (no prior phase). May not need splitting at this size.
 
 ---

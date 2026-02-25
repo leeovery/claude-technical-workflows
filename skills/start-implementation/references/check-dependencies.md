@@ -4,40 +4,62 @@
 
 ---
 
-Check if plan has unresolved or blocking dependencies from the discovery output.
+**This step is a confirmation gate.** Dependencies have been pre-analyzed by the discovery script.
 
-**If has_unresolved_deps is true:**
+After the plan is selected:
 
-> *Output the next fenced block as a code block:*
+1. **Check the plan's `external_deps` and `dependency_resolution`** from the discovery output
 
-```
-Unresolved Dependencies
-
-The plan for "{topic:(titlecase)}" has unresolved external dependencies.
-
-These must be resolved before implementation can begin.
-```
-
-**STOP.** Do not proceed — terminal condition.
-
-**If deps_blocking contains entries:**
+#### If all deps satisfied (or no deps)
 
 > *Output the next fenced block as a code block:*
 
 ```
-Blocking Dependencies
-
-The plan for "{topic:(titlecase)}" is blocked by incomplete tasks:
-
-@foreach(dep in deps_blocking)
-  • {dep.topic}:{dep.task_id} — {dep.reason}
-@endforeach
-
-Complete these tasks first, then re-run implementation.
+External dependencies satisfied.
 ```
 
-**STOP.** Do not proceed — terminal condition.
+→ Return to **[the skill](../SKILL.md)**.
 
-**If all dependencies satisfied:**
+#### If any deps are blocking
 
-Control returns to the main skill.
+This should not normally happen for plans classified as "Implementable" in display-plans.md. However, as an escape hatch:
+
+> *Output the next fenced block as a code block:*
+
+```
+Missing Dependencies
+
+Unresolved (not yet planned):
+  • {topic}: {description}
+    No plan exists. Create with /start-planning or mark as
+    satisfied externally.
+
+Incomplete (planned but not implemented):
+  • {topic}: {plan}:{task-id} not yet completed
+    This task must be completed first.
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+- **`i`/`implement`** — Implement the blocking dependencies first
+- **`l`/`link`** — Run /link-dependencies to wire up recently completed plans
+- **`s`/`satisfied`** — Mark a dependency as satisfied externally
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+---
+
+## Escape Hatch
+
+If the user says a dependency has been implemented outside the workflow:
+
+1. Ask which dependency to mark as satisfied
+2. Update the plan frontmatter: Change the dependency's `state` to `satisfied_externally`
+3. Commit the change
+4. Re-check dependencies
+
+→ Return to **[the skill](../SKILL.md)**.

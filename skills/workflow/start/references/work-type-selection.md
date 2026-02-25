@@ -80,4 +80,4 @@ Map the user's response to a work type:
 
 If the response doesn't map clearly, ask for clarification.
 
-Return to the main skill with the selected work type.
+→ Return to **[the skill](../SKILL.md)** with the selected work type.

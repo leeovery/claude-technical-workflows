@@ -54,7 +54,7 @@ Skip this step silently and proceed to discussion. Do not ask about research if 
 
 #### If user chooses research
 
-Return to the main skill with: `research_first: true`
+→ Return to **[the skill](../SKILL.md)** with: `research_first: true`
 
 The main skill will:
 1. Create a research file with topic + work_type: feature
@@ -63,6 +63,6 @@ The main skill will:
 
 #### If user declines research (or no uncertainties)
 
-Return to the main skill with: `research_first: false`
+→ Return to **[the skill](../SKILL.md)** with: `research_first: false`
 
 The main skill will proceed directly to discussion.

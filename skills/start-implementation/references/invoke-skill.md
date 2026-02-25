@@ -19,7 +19,7 @@ Saving session state so Claude can pick up where it left off if the conversation
   ".workflows/implementation/{topic}/tracking.md"
 ```
 
-This skill's purpose is now fulfilled.
+After completing the steps above, this skill's purpose is fulfilled.
 
 Invoke the [technical-implementation](../../technical-implementation/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
@@ -27,38 +27,16 @@ Invoke the [technical-implementation](../../technical-implementation/SKILL.md) s
 
 ## Handoff
 
-Construct the handoff based on the implementation state.
-
-#### If starting fresh implementation
-
 ```
 Implementation session for: {topic}
 Plan: .workflows/planning/{topic}/plan.md
-Format: {format from plan frontmatter}
+Format: {format}
+Plan ID: {plan_id} (if applicable)
+Specification: {specification} (exists: {true|false})
+Implementation tracking: {exists | new} (status: {in-progress | not-started | completed})
 
-Invoke the technical-implementation skill.
-```
-
-#### If continuing in-progress implementation
-
-```
-Implementation session for: {topic}
-Plan: .workflows/planning/{topic}/plan.md
-Tracking: .workflows/implementation/{topic}/tracking.md
-Format: {format from plan frontmatter}
-
-Invoke the technical-implementation skill.
-```
-
-#### If re-implementing completed topic
-
-```
-Implementation session for: {topic}
-Plan: .workflows/planning/{topic}/plan.md
-Tracking: .workflows/implementation/{topic}/tracking.md (completed)
-Format: {format from plan frontmatter}
-
-Re-implementation requested.
+Dependencies: {All satisfied | List any notes}
+Environment: {Setup required | No special setup required}
 
 Invoke the technical-implementation skill.
 ```

@@ -87,7 +87,7 @@ Automatically proceeding with "{topic:(titlecase)}".
 Scope: single
 ```
 
-→ Proceed directly to **Step 9**.
+→ Proceed to **[Step 9](../SKILL.md)**.
 
 #### If multiple reviewable plans
 
@@ -108,4 +108,4 @@ Select an option:
 
 **STOP.** Wait for user response.
 
-→ Based on user choice, proceed to **Step 8**.
+→ Based on user choice, proceed to **[Step 8](../SKILL.md)**.

@@ -123,7 +123,7 @@ Found existing specification for **{topic}**.
 
 Reset `finding_gate_mode` to `gated` in the specification frontmatter (fresh invocation = fresh gates).
 
-→ Skip Steps 1–2, proceed to **Step 3**.
+→ Proceed to **Step 3** (skipping Steps 1–2).
 
 #### If `restart`
 

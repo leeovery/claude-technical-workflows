@@ -51,9 +51,13 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 Invoke the `/migrate` skill and assess its output.
 
-**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
+#### If files were updated
 
-**If no updates needed**: Proceed to Step 1.
+**STOP.** Wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding.
+
+#### If no updates needed
+
+→ Proceed to **Step 1**.
 
 ---
 
@@ -139,13 +143,15 @@ Load **[check-dependencies.md](references/check-dependencies.md)** and follow it
 
 Check environment setup from discovery output.
 
-**If requires_setup is true:**
+#### If requires_setup is true
 
 Load **[environment-check.md](references/environment-check.md)** and follow its instructions as written.
 
-**If requires_setup is false or unknown:**
+→ Proceed to **Step 6**.
 
-→ Proceed to **Step 6** (Invoke Skill - Bridge Mode).
+#### If requires_setup is false or unknown
+
+→ Proceed to **Step 6**.
 
 ---
 
@@ -206,11 +212,13 @@ Load **[check-dependencies.md](references/check-dependencies.md)** and follow it
 
 Check environment setup from discovery output.
 
-**If requires_setup is true:**
+#### If requires_setup is true
 
 Load **[environment-check.md](references/environment-check.md)** and follow its instructions as written.
 
-**If requires_setup is false or unknown:**
+→ Proceed to **Step 11**.
+
+#### If requires_setup is false or unknown
 
 → Proceed to **Step 11**.
 

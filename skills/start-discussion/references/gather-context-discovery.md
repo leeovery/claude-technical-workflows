@@ -12,7 +12,7 @@ Load **[gather-context-research.md](gather-context-research.md)** and follow its
 
 **STOP.** Wait for user response.
 
-Control returns to the main skill.
+→ Return to **[the skill](../SKILL.md)**.
 
 #### If starting fresh topic
 
@@ -20,7 +20,7 @@ Load **[gather-context-fresh.md](gather-context-fresh.md)** and follow its instr
 
 **STOP.** Wait for user response.
 
-Control returns to the main skill.
+→ Return to **[the skill](../SKILL.md)**.
 
 #### If continuing existing discussion
 
@@ -28,4 +28,4 @@ Load **[gather-context-continue.md](gather-context-continue.md)** and follow its
 
 **STOP.** Wait for user response.
 
-Control returns to the main skill.
+→ Return to **[the skill](../SKILL.md)**.

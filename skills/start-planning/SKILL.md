@@ -51,9 +51,13 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 Invoke the `/migrate` skill and assess its output.
 
-**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
+#### If files were updated
 
-**If no updates needed**: Proceed to Step 1.
+**STOP.** Wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding.
+
+#### If no updates needed
+
+→ Proceed to **Step 1**.
 
 ---
 
@@ -189,7 +193,7 @@ Check whether the selected specification already has a plan (from `has_plan` in 
 
 The plan already has its context from when it was created. Skip context gathering.
 
-→ Go directly to **Step 11** to invoke the skill.
+→ Proceed to **Step 11** to invoke the skill.
 
 ---
 

@@ -16,7 +16,7 @@ ls .workflows/discussion/
 
 Read `.workflows/discussion/{topic}.md` frontmatter.
 
-**If discussion doesn't exist:**
+#### If discussion doesn't exist
 
 > *Output the next fenced block as a code block:*
 
@@ -30,7 +30,7 @@ A concluded discussion is required before specification.
 
 **STOP.** Do not proceed — terminal condition. Suggest `/start-discussion` with topic.
 
-**If discussion exists but status is "in-progress":**
+#### If discussion exists but status is "in-progress"
 
 > *Output the next fenced block as a code block:*
 
@@ -43,9 +43,9 @@ Complete the discussion first.
 
 **STOP.** Do not proceed — terminal condition. Suggest `/start-discussion` with topic to continue.
 
-**If discussion exists and status is "concluded":**
+#### If discussion exists and status is "concluded"
 
-Control returns to the main skill.
+→ Return to **[the skill](../SKILL.md)**.
 
 #### For bugfix work_type
 
@@ -57,7 +57,7 @@ ls .workflows/investigation/
 
 Read `.workflows/investigation/{topic}/investigation.md` frontmatter.
 
-**If investigation doesn't exist:**
+#### If investigation doesn't exist
 
 > *Output the next fenced block as a code block:*
 
@@ -71,7 +71,7 @@ A concluded investigation is required before specification.
 
 **STOP.** Do not proceed — terminal condition. Suggest `/start-investigation` with topic.
 
-**If investigation exists but status is "in-progress":**
+#### If investigation exists but status is "in-progress"
 
 > *Output the next fenced block as a code block:*
 
@@ -84,6 +84,6 @@ Complete the investigation first.
 
 **STOP.** Do not proceed — terminal condition. Suggest `/start-investigation` with topic to continue.
 
-**If investigation exists and status is "concluded":**
+#### If investigation exists and status is "concluded"
 
-Control returns to the main skill.
+→ Return to **[the skill](../SKILL.md)**.

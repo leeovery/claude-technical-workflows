@@ -16,4 +16,4 @@ What bug are you investigating? Please provide:
 
 **STOP.** Wait for user response.
 
-Control returns to the main skill.
+→ Return to **[the skill](../SKILL.md)**.

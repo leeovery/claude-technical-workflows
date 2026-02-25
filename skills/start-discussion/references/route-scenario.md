@@ -8,11 +8,15 @@ Use `state.scenario` from the discovery output to determine the path.
 
 #### If scenario is "research_only" or "research_and_discussions"
 
-Research exists and may need analysis. Control returns to the main skill for **Step 6**.
+Research exists and may need analysis.
+
+→ Return to **[the skill](../SKILL.md)** for **Step 6**.
 
 #### If scenario is "discussions_only"
 
-No research exists, but discussions do. Skip research analysis. Control returns to the main skill for **Step 7**.
+No research exists, but discussions do. Skip research analysis.
+
+→ Return to **[the skill](../SKILL.md)** for **Step 7**.
 
 #### If scenario is "fresh"
 
@@ -28,4 +32,6 @@ What topic would you like to discuss?
 
 **STOP.** Wait for user response.
 
-When user responds, proceed with their topic. Control returns to the main skill for **Step 9**.
+When user responds, proceed with their topic.
+
+→ Return to **[the skill](../SKILL.md)** for **Step 9**.

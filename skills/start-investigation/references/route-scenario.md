@@ -44,8 +44,13 @@ What would you like to do?
 
 **STOP.** Wait for user response.
 
-If resuming → control returns to the main skill for **Step 8** with that topic.
-If new → control returns to the main skill for **Step 5**.
+#### If resuming
+
+→ Return to **[the skill](../SKILL.md)** for **Step 8** with that topic.
+
+#### If new
+
+→ Return to **[the skill](../SKILL.md)** for **Step 5**.
 
 #### If scenario is "fresh"
 
@@ -55,4 +60,4 @@ If new → control returns to the main skill for **Step 5**.
 No existing investigations found.
 ```
 
-Control returns to the main skill for **Step 5**.
+→ Return to **[the skill](../SKILL.md)** for **Step 5**.

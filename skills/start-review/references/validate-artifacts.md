@@ -13,7 +13,7 @@ ls .workflows/implementation/
 
 Read `.workflows/planning/{topic}/plan.md` frontmatter.
 
-**If plan doesn't exist:**
+#### If plan doesn't exist
 
 > *Output the next fenced block as a code block:*
 
@@ -29,7 +29,7 @@ A concluded plan and implementation are required for review.
 
 Read `.workflows/implementation/{topic}/tracking.md` frontmatter.
 
-**If implementation tracking doesn't exist:**
+#### If implementation tracking doesn't exist
 
 > *Output the next fenced block as a code block:*
 
@@ -43,7 +43,7 @@ A completed implementation is required for review.
 
 **STOP.** Do not proceed — terminal condition. Suggest `/start-implementation` with topic.
 
-**If implementation status is not "completed":**
+#### If implementation status is not "completed"
 
 > *Output the next fenced block as a code block:*
 
@@ -56,6 +56,6 @@ Complete the implementation first.
 
 **STOP.** Do not proceed — terminal condition. Suggest `/start-implementation` with topic to continue.
 
-**If plan and implementation are both ready:**
+#### If plan and implementation are both ready
 
-Control returns to the main skill.
+→ Return to **[the skill](../SKILL.md)**.

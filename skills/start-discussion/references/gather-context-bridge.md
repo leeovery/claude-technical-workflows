@@ -20,4 +20,4 @@ What would you like to discuss? Provide some initial context:
 
 **STOP.** Wait for user response.
 
-Control returns to the main skill.
+→ Return to **[the skill](../SKILL.md)**.

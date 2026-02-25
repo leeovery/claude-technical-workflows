@@ -14,7 +14,7 @@ ls .workflows/discussion/
 
 Read `.workflows/discussion/{topic}.md` frontmatter to check status.
 
-**If status is "in-progress":**
+#### If status is "in-progress"
 
 > *Output the next fenced block as a code block:*
 
@@ -35,10 +35,17 @@ A discussion for "{topic:(titlecase)}" already exists and is in progress.
 
 **STOP.** Wait for user response.
 
-If resume → set path="continue", control returns to the main skill for **Step 9**.
-If new → ask for a new topic name, re-run validation with the new topic.
+#### If resume
 
-**If status is "concluded":**
+Set path="continue".
+
+→ Return to **[the skill](../SKILL.md)** for **Step 9**.
+
+#### If new
+
+Ask for a new topic name, re-run validation with the new topic.
+
+#### If status is "concluded"
 
 > *Output the next fenced block as a code block:*
 
@@ -52,4 +59,4 @@ The discussion for "{topic:(titlecase)}" has already concluded.
 
 #### If no collision
 
-Control returns to the main skill.
+→ Return to **[the skill](../SKILL.md)**.

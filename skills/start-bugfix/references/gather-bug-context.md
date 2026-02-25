@@ -33,4 +33,4 @@ From the user's response, extract:
 
 This context will be passed to the technical-investigation skill.
 
-Return to the main skill with the gathered context.
+→ Return to **[the skill](../SKILL.md)** with the gathered context.
