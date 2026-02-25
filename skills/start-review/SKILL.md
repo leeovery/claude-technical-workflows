@@ -109,59 +109,7 @@ Check for arguments: topic = `$0`, work_type = `$1`
 
 ## Step 3: Validate Plan and Implementation
 
-Check if plan and implementation exist and are ready.
-
-```bash
-ls .workflows/planning/
-ls .workflows/implementation/
-```
-
-Read `.workflows/planning/{topic}/plan.md` frontmatter.
-
-**If plan doesn't exist:**
-
-> *Output the next fenced block as a code block:*
-
-```
-Plan Missing
-
-No plan found for "{topic:(titlecase)}".
-
-A concluded plan and implementation are required for review.
-```
-
-**STOP.** Do not proceed — terminal condition. Suggest `/start-planning` with topic.
-
-Read `.workflows/implementation/{topic}/tracking.md` frontmatter.
-
-**If implementation tracking doesn't exist:**
-
-> *Output the next fenced block as a code block:*
-
-```
-Implementation Missing
-
-No implementation found for "{topic:(titlecase)}".
-
-A completed implementation is required for review.
-```
-
-**STOP.** Do not proceed — terminal condition. Suggest `/start-implementation` with topic.
-
-**If implementation status is not "completed":**
-
-> *Output the next fenced block as a code block:*
-
-```
-Implementation Not Complete
-
-The implementation for "{topic:(titlecase)}" is not yet completed.
-Complete the implementation first.
-```
-
-**STOP.** Do not proceed — terminal condition. Suggest `/start-implementation` with topic to continue.
-
-**If plan and implementation are both ready:**
+Load **[validate-artifacts.md](references/validate-artifacts.md)** and follow its instructions as written.
 
 → Proceed to **Step 4**.
 
@@ -191,21 +139,6 @@ Starting review r{review_version} for "{topic:(titlecase)}".
 ---
 
 ## Step 5: Invoke the Skill (Bridge Mode)
-
-Before invoking the processing skill, save a session bookmark.
-
-> *Output the next fenced block as a code block:*
-
-```
-Saving session state so Claude can pick up where it left off if the conversation is compacted.
-```
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-review/SKILL.md" \
-  ".workflows/review/{topic}/r{review_version}/review.md"
-```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
 
@@ -301,20 +234,5 @@ Load **[select-plans.md](references/select-plans.md)** and follow its instructio
 ---
 
 ## Step 9: Invoke the Skill (Discovery Mode)
-
-Before invoking the processing skill, save a session bookmark.
-
-> *Output the next fenced block as a code block:*
-
-```
-Saving session state so Claude can pick up where it left off if the conversation is compacted.
-```
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-review/SKILL.md" \
-  ".workflows/review/{topic}/r{review_version}/review.md"
-```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

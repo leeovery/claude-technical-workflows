@@ -101,87 +101,7 @@ Check for arguments: topic = `$0`, work_type = `$1`
 
 ## Step 3: Validate Source Material
 
-Check if source material exists and is ready.
-
-#### For greenfield or feature work_type
-
-Check if discussion exists and is concluded:
-
-```bash
-ls .workflows/discussion/
-```
-
-Read `.workflows/discussion/{topic}.md` frontmatter.
-
-**If discussion doesn't exist:**
-
-> *Output the next fenced block as a code block:*
-
-```
-Source Material Missing
-
-No discussion found for "{topic:(titlecase)}".
-
-A concluded discussion is required before specification.
-```
-
-**STOP.** Do not proceed — terminal condition. Suggest `/start-discussion` with topic.
-
-**If discussion exists but status is "in-progress":**
-
-> *Output the next fenced block as a code block:*
-
-```
-Discussion In Progress
-
-The discussion for "{topic:(titlecase)}" is not yet concluded.
-Complete the discussion first.
-```
-
-**STOP.** Do not proceed — terminal condition. Suggest `/start-discussion` with topic to continue.
-
-**If discussion exists and status is "concluded":**
-
-→ Proceed to **Step 4**.
-
-#### For bugfix work_type
-
-Check if investigation exists and is concluded:
-
-```bash
-ls .workflows/investigation/
-```
-
-Read `.workflows/investigation/{topic}/investigation.md` frontmatter.
-
-**If investigation doesn't exist:**
-
-> *Output the next fenced block as a code block:*
-
-```
-Source Material Missing
-
-No investigation found for "{topic:(titlecase)}".
-
-A concluded investigation is required before specification.
-```
-
-**STOP.** Do not proceed — terminal condition. Suggest `/start-investigation` with topic.
-
-**If investigation exists but status is "in-progress":**
-
-> *Output the next fenced block as a code block:*
-
-```
-Investigation In Progress
-
-The investigation for "{topic:(titlecase)}" is not yet concluded.
-Complete the investigation first.
-```
-
-**STOP.** Do not proceed — terminal condition. Suggest `/start-investigation` with topic to continue.
-
-**If investigation exists and status is "concluded":**
+Load **[validate-source.md](references/validate-source.md)** and follow its instructions as written.
 
 → Proceed to **Step 4**.
 
@@ -189,94 +109,15 @@ Complete the investigation first.
 
 ## Step 4: Check Existing Specification
 
-Check if a specification already exists for this topic.
+Load **[check-existing-spec.md](references/check-existing-spec.md)** and follow its instructions as written.
 
-Read `.workflows/specification/{topic}/specification.md` if it exists.
-
-**If specification doesn't exist:**
-
-→ Proceed to **Step 5** with verb="Creating".
-
-**If specification exists with status "in-progress":**
-
-> *Output the next fenced block as a code block:*
-
-```
-Specification In Progress
-
-A specification for "{topic:(titlecase)}" already exists and is in progress.
-```
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-- **`r`/`resume`** — Resume the existing specification
-- **`s`/`start-fresh`** — Archive and start fresh
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-If resume → proceed to **Step 5** with verb="Continuing".
-If start-fresh → archive the existing spec, proceed to **Step 5** with verb="Creating".
-
-**If specification exists with status "concluded":**
-
-> *Output the next fenced block as a code block:*
-
-```
-Specification Concluded
-
-The specification for "{topic:(titlecase)}" has already concluded.
-```
-
-**STOP.** Do not proceed — terminal condition. Suggest `/start-planning` with topic to continue to planning.
+→ Proceed to **Step 5**.
 
 ---
 
 ## Step 5: Invoke the Skill (Bridge Mode)
 
-Before invoking the processing skill, save a session bookmark.
-
-> *Output the next fenced block as a code block:*
-
-```
-Saving session state so Claude can pick up where it left off if the conversation is compacted.
-```
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-specification/SKILL.md" \
-  ".workflows/specification/{topic}/specification.md"
-```
-
-Construct the handoff and invoke the [technical-specification](../technical-specification/SKILL.md) skill:
-
-```
-Specification session for: {topic}
-Work type: {work_type}
-
-Source material:
-@if(work_type is feature or greenfield)
-- Discussion: .workflows/discussion/{topic}.md
-@else
-- Investigation: .workflows/investigation/{topic}/investigation.md
-@endif
-
-Topic name: {topic}
-Action: {verb} specification
-
-The specification frontmatter should include:
-- topic: {topic}
-- status: in-progress
-- type: feature
-- work_type: {work_type}
-- date: {today}
-
-Invoke the technical-specification skill.
-```
+Load **[invoke-skill-bridge.md](references/invoke-skill-bridge.md)** and follow its instructions as written.
 
 ---
 
@@ -326,19 +167,4 @@ Based on discovery state, load exactly ONE reference file:
 
 ## Step 8: Invoke the Skill (Discovery Mode)
 
-Before invoking the processing skill, save a session bookmark.
-
-> *Output the next fenced block as a code block:*
-
-```
-Saving session state so Claude can pick up where it left off if the conversation is compacted.
-```
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-specification/SKILL.md" \
-  ".workflows/specification/{topic}/specification.md"
-```
-
-Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
+Load **[confirm-and-handoff.md](references/confirm-and-handoff.md)** and follow its instructions as written.

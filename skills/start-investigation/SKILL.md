@@ -98,110 +98,27 @@ Investigation is always for bugfix work_type.
 
 ## Step 3: Validate Investigation
 
-Check if investigation already exists for this topic.
+Load **[validate-investigation.md](references/validate-investigation.md)** and follow its instructions as written.
 
-```bash
-ls .workflows/investigation/
-```
+#### If resume
 
-#### If investigation exists for this topic
-
-Read `.workflows/investigation/{topic}/investigation.md` frontmatter to check status.
-
-**If status is "in-progress":**
-
-> *Output the next fenced block as a code block:*
-
-```
-Investigation In Progress
-
-An investigation for "{topic:(titlecase)}" already exists and is in progress.
-```
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-- **`r`/`resume`** — Resume the existing investigation
-- **`n`/`new`** — Start a new topic with a different name
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-If resume → proceed to **Step 8**.
-If new → ask for a new topic name, then proceed to **Step 3** with new topic.
-
-**If status is "concluded":**
-
-> *Output the next fenced block as a code block:*
-
-```
-Investigation Concluded
-
-The investigation for "{topic:(titlecase)}" has already concluded.
-```
-
-**STOP.** Do not proceed — terminal condition. Suggest `/start-specification {topic} bugfix` to continue to spec.
+→ Proceed to **Step 8**.
 
 #### If no collision
 
-→ Proceed to **Step 7** (Gather Bug Context - Bridge Mode).
+→ Proceed to **Step 7**.
 
 ---
 
 ## Step 4: Route Based on Scenario
 
-Use `state.scenario` from the discovery output to determine the path:
+Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
 
-#### If scenario is "has_investigations"
+#### If resuming
 
-> *Output the next fenced block as a code block:*
+→ Proceed to **Step 8**.
 
-```
-Investigations Overview
-
-@if(investigations.counts.in_progress > 0)
-In Progress:
-@foreach(inv in investigations.files where status is in-progress)
-  • {inv.topic}
-@endforeach
-@endif
-
-@if(investigations.counts.concluded > 0)
-Concluded:
-@foreach(inv in investigations.files where status is concluded)
-  • {inv.topic}
-@endforeach
-@endif
-```
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-What would you like to do?
-
-@if(in_progress investigations exist)
-{N}. Resume "{topic}" investigation
-@endforeach
-@endif
-{N}. Start new investigation
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-If resuming → proceed to **Step 8** with that topic.
-If new → proceed to **Step 5**.
-
-#### If scenario is "fresh"
-
-> *Output the next fenced block as a code block:*
-
-```
-No existing investigations found.
-```
+#### If new or fresh
 
 → Proceed to **Step 5**.
 
@@ -209,18 +126,7 @@ No existing investigations found.
 
 ## Step 5: Gather Bug Context (Discovery Mode)
 
-> *Output the next fenced block as a code block:*
-
-```
-Starting new investigation.
-
-What bug are you investigating? Please provide:
-- A short identifier/name for tracking (e.g., "login-timeout-bug")
-- What's broken (expected vs actual behavior)
-- Any initial context (error messages, how it manifests)
-```
-
-**STOP.** Wait for user response.
+Load **[gather-context-discovery.md](references/gather-context-discovery.md)** and follow its instructions as written.
 
 → Proceed to **Step 6**.
 
@@ -228,47 +134,7 @@ What bug are you investigating? Please provide:
 
 ## Step 6: Topic Name and Conflict Check
 
-If the user didn't provide a clear topic name, suggest one based on the bug description:
-
-> *Output the next fenced block as a code block:*
-
-```
-Suggested topic name: {suggested-topic:(kebabcase)}
-
-This will create: .workflows/investigation/{suggested-topic}/investigation.md
-```
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-Is this name okay?
-
-- **`y`/`yes`** — Use this name
-- **`s`/`something else`** — Suggest a different name
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-Once the topic name is confirmed, check for naming conflicts in the discovery output.
-
-If an investigation with the same name exists, inform the user:
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-An investigation named "{topic}" already exists.
-
-- **`r`/`resume`** — Resume the existing investigation
-- **`n`/`new`** — Choose a different name
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-If resuming, check the investigation status. If concluded → suggest `/start-specification {topic} bugfix`. If in-progress → proceed to **Step 8**.
+Load **[topic-conflict-check.md](references/topic-conflict-check.md)** and follow its instructions as written.
 
 → Proceed to **Step 8**.
 
@@ -276,37 +142,12 @@ If resuming, check the investigation status. If concluded → suggest `/start-sp
 
 ## Step 7: Gather Bug Context (Bridge Mode)
 
-> *Output the next fenced block as a code block:*
-
-```
-Starting investigation: {topic:(titlecase)}
-
-What bug are you investigating? Please provide:
-- What's broken (expected vs actual behavior)
-- Any initial context (error messages, how it manifests)
-```
-
-**STOP.** Wait for user response.
+Load **[gather-context-bridge.md](references/gather-context-bridge.md)** and follow its instructions as written.
 
 → Proceed to **Step 8**.
 
 ---
 
 ## Step 8: Invoke the Skill
-
-Before invoking the processing skill, save a session bookmark.
-
-> *Output the next fenced block as a code block:*
-
-```
-Saving session state so Claude can pick up where it left off if the conversation is compacted.
-```
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-investigation/SKILL.md" \
-  ".workflows/investigation/{topic}/investigation.md"
-```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

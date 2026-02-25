@@ -121,42 +121,7 @@ Check for arguments: topic = `$0`, work_type = `$1`
 
 ## Step 3: Validate Plan
 
-Check if plan exists and is ready.
-
-```bash
-ls .workflows/planning/
-```
-
-Read `.workflows/planning/{topic}/plan.md` frontmatter.
-
-**If plan doesn't exist:**
-
-> *Output the next fenced block as a code block:*
-
-```
-Plan Missing
-
-No plan found for "{topic:(titlecase)}".
-
-A concluded plan is required for implementation.
-```
-
-**STOP.** Do not proceed — terminal condition. Suggest `/start-planning` with topic.
-
-**If plan exists but status is not "concluded":**
-
-> *Output the next fenced block as a code block:*
-
-```
-Plan Not Concluded
-
-The plan for "{topic:(titlecase)}" is not yet concluded.
-Complete the plan first.
-```
-
-**STOP.** Do not proceed — terminal condition. Suggest `/start-planning` with topic to continue.
-
-**If plan exists and status is "concluded":**
+Load **[validate-plan.md](references/validate-plan.md)** and follow its instructions as written.
 
 → Proceed to **Step 4**.
 
@@ -164,41 +129,7 @@ Complete the plan first.
 
 ## Step 4: Check Dependencies (Bridge Mode)
 
-Check if plan has unresolved or blocking dependencies from the discovery output.
-
-**If has_unresolved_deps is true:**
-
-> *Output the next fenced block as a code block:*
-
-```
-Unresolved Dependencies
-
-The plan for "{topic:(titlecase)}" has unresolved external dependencies.
-
-These must be resolved before implementation can begin.
-```
-
-**STOP.** Do not proceed — terminal condition.
-
-**If deps_blocking contains entries:**
-
-> *Output the next fenced block as a code block:*
-
-```
-Blocking Dependencies
-
-The plan for "{topic:(titlecase)}" is blocked by incomplete tasks:
-
-@foreach(dep in deps_blocking)
-  • {dep.topic}:{dep.task_id} — {dep.reason}
-@endforeach
-
-Complete these tasks first, then re-run implementation.
-```
-
-**STOP.** Do not proceed — terminal condition.
-
-**If all dependencies satisfied:**
+Load **[check-dependencies.md](references/check-dependencies.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
 
@@ -219,21 +150,6 @@ Load **[environment-check.md](references/environment-check.md)** and follow its 
 ---
 
 ## Step 6: Invoke the Skill (Bridge Mode)
-
-Before invoking the processing skill, save a session bookmark.
-
-> *Output the next fenced block as a code block:*
-
-```
-Saving session state so Claude can pick up where it left off if the conversation is compacted.
-```
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-implementation/SKILL.md" \
-  ".workflows/implementation/{topic}/tracking.md"
-```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
 
@@ -272,136 +188,7 @@ Plans exist.
 
 ## Step 8: Present Plans and Select
 
-Present all discovered plans. Classify each plan into one of three categories based on its state.
-
-**Classification logic:**
-
-A plan is **Implementable** if:
-- It has `status: concluded` AND all deps are satisfied (`deps_satisfied: true` or no deps) AND no tracking file or tracking `status: not-started`, OR
-- It has an implementation tracking file with `status: in-progress`
-
-A plan is **Implemented** if:
-- It has an implementation tracking file with `status: completed`
-
-A plan is **Not implementable** if:
-- It has `status: concluded` but deps are NOT satisfied (blocking deps exist)
-- It has `status: planning` or other non-concluded status
-- It has unresolved deps (`has_unresolved_deps: true`)
-
-**Present the full state:**
-
-Show implementable and implemented plans as numbered tree items.
-
-> *Output the next fenced block as a code block:*
-
-```
-Implementation Overview
-
-{N} plans found. {M} implementations in progress.
-
-1. {topic:(titlecase)}
-   └─ Plan: {plan_status:[concluded]} ({format})
-   └─ Implementation: @if(has_implementation) {impl_status:[in-progress|completed]} @else (not started) @endif
-
-2. ...
-```
-
-**Tree rules:**
-
-Implementable:
-- Implementation `status: in-progress` → `Implementation: in-progress (Phase N, Task M)`
-- Concluded plan, deps met, not started → `Implementation: (not started)`
-
-Implemented:
-- Implementation `status: completed` → `Implementation: completed`
-
-**Ordering:**
-1. Implementable first: in-progress, then new (foundational before dependent)
-2. Implemented next: completed
-3. Not implementable last (separate block below)
-
-Numbering is sequential across Implementable and Implemented. Omit any section entirely if it has no entries.
-
-**If non-implementable plans exist**, show them in a separate code block:
-
-> *Output the next fenced block as a code block:*
-
-```
-Plans not ready for implementation:
-These plans are either still in progress or have unresolved
-dependencies that must be addressed first.
-
-  • advanced-features (blocked by core-features:core-2-3)
-  • reporting (in-progress)
-```
-
-> *Output the next fenced block as a code block:*
-
-```
-If a blocked dependency has been resolved outside this workflow,
-name the plan and the dependency to unblock it.
-```
-
-**Key/Legend** — show only statuses that appear in the current display. No `---` separator before this section.
-
-> *Output the next fenced block as a code block:*
-
-```
-Key:
-
-  Implementation status:
-    in-progress — work is ongoing
-    completed   — all tasks implemented
-
-  Blocking reason:
-    blocked     — depends on another plan's task
-    in-progress — plan not yet concluded
-```
-
-**Then prompt based on what's actionable:**
-
-**If single implementable plan and no implemented plans (auto-select):**
-
-> *Output the next fenced block as a code block:*
-
-```
-Automatically proceeding with "{topic:(titlecase)}".
-```
-
-→ Proceed directly to **Step 9**.
-
-**If nothing selectable (no implementable or implemented):**
-
-Show "not ready" block only (with unblock hint above).
-
-> *Output the next fenced block as a code block:*
-
-```
-Implementation Overview
-
-No implementable plans found.
-
-Complete blocking dependencies first, or finish plans still
-in progress with /start-planning. Then re-run /start-implementation.
-```
-
-**STOP.** Do not proceed — terminal condition.
-
-**If multiple selectable plans:**
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-1. Continue "Billing" — in-progress (Phase 2, Task 3)
-2. Start "Core Features" — not yet started
-3. Re-review "User Auth" — completed
-
-Select an option (enter number):
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
+Load **[display-plans.md](references/display-plans.md)** and follow its instructions as written.
 
 → Proceed to **Step 9** with selected topic.
 
@@ -409,13 +196,7 @@ Select an option (enter number):
 
 ## Step 9: Check Dependencies (Discovery Mode)
 
-Check if selected plan has unresolved or blocking dependencies from the discovery output.
-
-**If has_unresolved_deps is true or deps_blocking contains entries:**
-
-Handle as shown in Step 4.
-
-**If all dependencies satisfied:**
+Load **[check-dependencies.md](references/check-dependencies.md)** and follow its instructions as written.
 
 → Proceed to **Step 10**.
 
@@ -436,20 +217,5 @@ Load **[environment-check.md](references/environment-check.md)** and follow its 
 ---
 
 ## Step 11: Invoke the Skill (Discovery Mode)
-
-Before invoking the processing skill, save a session bookmark.
-
-> *Output the next fenced block as a code block:*
-
-```
-Saving session state so Claude can pick up where it left off if the conversation is compacted.
-```
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-implementation/SKILL.md" \
-  ".workflows/implementation/{topic}/tracking.md"
-```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
