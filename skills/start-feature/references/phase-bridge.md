@@ -24,4 +24,4 @@ Completed phase: {completed_phase}
 Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
 ```
 
-The workflow:bridge skill will enter plan mode with instructions to invoke continue-feature for the topic in the next session.
+The workflow:bridge skill will run discovery, detect the next phase, and enter plan mode with instructions to invoke the appropriate start-{phase} skill with the topic and work_type.

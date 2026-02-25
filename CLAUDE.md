@@ -53,18 +53,9 @@ skills/
     start/                   # Unified entry point - discovers state, routes by work type
       scripts/discovery.sh   #   Comprehensive cross-phase discovery
       references/            #   Work type selection, routing references
-    bridge/                  # Pipeline continuation - enters plan mode with next steps
-
-  # Pipeline continuation skills
-  continue-feature/          # Continue feature through pipeline phases
-    scripts/discovery.sh     #   Cross-phase discovery
-    references/              #   Phase detection, bridges, handoffs
-  continue-bugfix/           # Continue bugfix through pipeline phases
-    scripts/discovery.sh     #   Cross-phase discovery
-    references/              #   Phase detection, bridges, handoffs
-  continue-greenfield/       # Continue greenfield (phase-centric suggestions)
-    scripts/discovery.sh     #   Cross-phase discovery
-    references/              #   State presentation
+    bridge/                  # Pipeline continuation - discovers next phase, enters plan mode
+      scripts/discovery.sh   #   Topic-specific or phase-centric discovery
+      references/            #   Work-type-specific continuation logic
 
   # Entry-point skills (user-invocable — gather context, invoke processing skills)
   migrate/                   # Keep workflow files in sync with system design
@@ -76,29 +67,26 @@ skills/
     references/              #   Bug context gathering, phase bridge
   link-dependencies/         # Link dependencies across topics
 
-  # Bridge skills (model-invocable — pre-flight + handoff for pipeline)
-  begin-discussion/          # Pre-flight for discussion
-  begin-specification/       # Pre-flight for specification
-  begin-investigation/       # Pre-flight for investigation (bugfix)
-  begin-planning/            # Pre-flight for planning, invokes technical-planning
-    references/              #   Cross-cutting context
-  begin-implementation/      # Pre-flight for implementation
-  begin-review/              # Pre-flight for review
-
-  # Discovery entry points
+  # Phase entry skills (two-mode: discovery OR bridge)
   start-research/            # Begin research exploration
-  start-discussion/          # Begin technical discussions
+  start-discussion/          # Discussion - discovery mode or bridge mode (topic+work_type)
     scripts/discovery.sh     #   Discovery script
-  start-investigation/       # Begin bug investigation
+    references/              #   Discovery flow, context gathering
+  start-investigation/       # Investigation - discovery mode or bridge mode
     scripts/discovery.sh     #   Discovery script
-  start-specification/       # Begin specification building
+    references/              #   Discovery flow
+  start-specification/       # Specification - discovery mode or bridge mode
     scripts/discovery.sh     #   Discovery script
-  start-planning/            # Begin implementation planning
+    references/              #   Discovery flow, grouping analysis
+  start-planning/            # Planning - discovery mode or bridge mode
     scripts/discovery.sh     #   Discovery script
-  start-implementation/      # Begin implementing a plan
+    references/              #   Discovery flow, cross-cutting context
+  start-implementation/      # Implementation - discovery mode or bridge mode
     scripts/discovery.sh     #   Discovery script
-  start-review/              # Begin review
+    references/              #   Discovery flow, dependency checking
+  start-review/              # Review - discovery mode or bridge mode
     scripts/discovery.sh     #   Discovery script
+    references/              #   Discovery flow, plan display
   status/                    # Show workflow status and next steps
     scripts/discovery.sh     #   Discovery script
   view-plan/                 # View plan tasks and progress
@@ -141,6 +129,23 @@ Skills are organised in two tiers:
 **Processing skills** (`technical-*`) are model-invocable. They receive inputs and process them without knowing where the inputs came from. Entry-point skills are responsible for gathering inputs.
 
 **Standalone entry points** (e.g., `/start-feature`) can invoke processing skills directly without requiring previous phase files.
+
+### Two-Mode Pattern for Phase Skills
+
+Phase entry skills (`start-discussion`, `start-specification`, etc.) support two invocation modes:
+
+**Discovery Mode** (bare invocation):
+- User invokes `/start-discussion` directly
+- Full discovery, topic selection, context gathering
+- Loads `references/discovery-flow.md` for the full interactive flow
+
+**Bridge Mode** (topic + work_type provided):
+- Invoked with arguments: `/start-discussion {topic} {work_type}`
+- Or invoked by `workflow:bridge` with topic + work_type in context
+- Skips discovery, validates topic exists, proceeds to pre-flight and processing
+- Enables deterministic pipeline continuation
+
+The two-mode pattern consolidates what was previously split between `start-*` (discovery) and `begin-*` (bridge) skills into a single skill with early mode detection.
 
 ### Keeping Processing Skills Workflow-Agnostic (IMPORTANT)
 

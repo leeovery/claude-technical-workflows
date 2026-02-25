@@ -1,8 +1,8 @@
 ---
 name: start-discussion
-description: "Start a technical discussion. Discovers research and existing discussions, offers multiple entry paths, and invokes the technical-discussion skill."
+description: "Start a technical discussion. Supports two modes: discovery mode (bare invocation) discovers research and discussions; bridge mode (topic provided) skips discovery for pipeline continuation."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/start-discussion/scripts/discovery.sh), Bash(mkdir -p .workflows/.state), Bash(rm .workflows/.state/research-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh)
+allowed-tools: Bash(.claude/skills/start-discussion/scripts/discovery.sh), Bash(mkdir -p .workflows/.state), Bash(rm .workflows/.state/research-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/discussion/)
 hooks:
   PreToolUse:
     - hooks:
@@ -58,115 +58,122 @@ Invoke the `/migrate` skill and assess its output.
 
 ---
 
-## Step 1: Discovery State
+## Step 1: Determine Mode
 
-!`.claude/skills/start-discussion/scripts/discovery.sh`
+Check for arguments: topic = `$0`, work_type = `$1`
 
-If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+#### If topic and work_type are both provided (bridge mode)
 
-```bash
-.claude/skills/start-discussion/scripts/discovery.sh
-```
+Pipeline continuation — skip discovery and proceed directly to validation.
 
-If YAML content is already displayed, it has been run on your behalf.
+→ Proceed to **Step 2** (Validate Topic).
 
-Parse the discovery output to understand:
+#### If only topic is provided
 
-**From `research` section:**
-- `exists` - whether research files exist
-- `files` - each research file's name and topic
-- `checksum` - current checksum of all research files
+Set work_type based on context:
+- If invoked from a feature pipeline → work_type = "feature"
+- If invoked from a greenfield context → work_type = "greenfield"
+- If unclear, default to "greenfield"
 
-**From `discussions` section:**
-- `exists` - whether discussion files exist
-- `files` - each discussion's name, status, and date
-- `counts.in_progress` and `counts.concluded` - totals for routing
+→ Proceed to **Step 2** (Validate Topic).
 
-**From `cache` section:**
-- `status` - one of three values:
-  - `"valid"` - cache exists and checksums match (safe to load)
-  - `"stale"` - cache exists but research has changed (needs re-analysis)
-  - `"none"` - no cache file exists
-- `reason` - explanation of the status
-- `generated` - when the cache was created (null if none)
-- `research_files` - list of files that were analyzed
+#### If no topic provided (discovery mode)
 
-**From `state` section:**
-- `scenario` - one of: `"fresh"`, `"research_only"`, `"discussions_only"`, `"research_and_discussions"`
+Full discovery and selection flow.
 
-**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
+→ Load **[discovery-flow.md](references/discovery-flow.md)** and follow its instructions.
 
-→ Proceed to **Step 2**.
+When discovery completes, it returns with a selected topic and path (research/continue/fresh).
+
+→ Proceed to **Step 4** (Gather Context).
 
 ---
 
-## Step 2: Route Based on Scenario
+## Step 2: Validate Topic
 
-Use `state.scenario` from the discovery output to determine the path:
+Bridge mode validation — check if discussion already exists for this topic.
 
-#### If scenario is "research_only" or "research_and_discussions"
+```bash
+ls .workflows/discussion/
+```
 
-Research exists and may need analysis.
+#### If discussion exists for this topic
 
-→ Proceed to **Step 3**.
+Read `.workflows/discussion/{topic}.md` frontmatter to check status.
 
-#### If scenario is "discussions_only"
+**If status is "in-progress":**
 
-No research exists, but discussions do. Skip research analysis.
-
-→ Proceed to **Step 4**.
-
-#### If scenario is "fresh"
-
-No research or discussions exist yet.
+> *Output the next fenced block as a code block:*
 
 ```
-Starting fresh - no prior research or discussions found.
+Discussion In Progress
 
-What topic would you like to discuss?
+A discussion for "{topic:(titlecase)}" already exists and is in progress.
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+- **`r`/`resume`** — Resume the existing discussion
+- **`n`/`new`** — Start a new topic with a different name
+· · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
 
-When user responds, proceed with their topic.
+If resume → set path="continue", proceed to **Step 3**.
+If new → ask for a new topic name, then proceed to **Step 2** with new topic.
 
-→ Proceed to **Step 6**.
+**If status is "concluded":**
+
+> *Output the next fenced block as a code block:*
+
+```
+Discussion Concluded
+
+The discussion for "{topic:(titlecase)}" has already concluded.
+```
+
+**STOP.** Do not proceed — terminal condition. Suggest `/start-specification` to continue to spec.
+
+#### If no collision
+
+→ Proceed to **Step 3**.
 
 ---
 
-## Step 3: Research Analysis
+## Step 3: Gather Initial Context (Bridge Mode)
 
-Load **[research-analysis.md](references/research-analysis.md)** and follow its instructions as written.
+> *Output the next fenced block as a code block:*
 
-→ Proceed to **Step 4**.
+```
+Starting discussion: {topic:(titlecase)}
+Work type: {work_type}
+
+What would you like to discuss? Provide some initial context:
+- What's the problem or opportunity?
+- What prompted this?
+- Any initial thoughts or constraints?
+```
+
+**STOP.** Wait for user response.
+
+→ Proceed to **Step 5** (Invoke the Skill).
 
 ---
 
-## Step 4: Present Options
+## Step 4: Gather Context (Discovery Mode)
 
-Load **[display-options.md](references/display-options.md)** and follow its instructions as written.
+This step is reached from the discovery flow with a selected topic and path.
+
+Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
 
 ---
 
-## Step 5: Handle Selection
-
-Load **[handle-selection.md](references/handle-selection.md)** and follow its instructions as written.
-
-→ Proceed to **Step 6**.
-
----
-
-## Step 6: Gather Context
-
-Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
-
-→ Proceed to **Step 7**.
-
----
-
-## Step 7: Invoke the Skill
+## Step 5: Invoke the Skill
 
 Before invoking the processing skill, save a session bookmark.
 
@@ -184,4 +191,3 @@ Saving session state so Claude can pick up where it left off if the conversation
 ```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
-

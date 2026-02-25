@@ -144,7 +144,7 @@ artifact: .workflows/specification/billing/specification.md
 pipeline:
   after_conclude: |
     Enter plan mode with this message:
-    "Clear context and continue with /continue-feature for billing"
+    "Clear context and continue with /start-specification billing feature"
 EOF
 
 output=$(run_hook "session-pipeline-001")
@@ -153,7 +153,7 @@ assert_contains "$output" "additionalContext" "Output contains additionalContext
 assert_contains "$output" "IMMEDIATE" "Output contains IMMEDIATE section"
 assert_contains "$output" "AFTER CONCLUSION" "Output contains AFTER CONCLUSION section"
 assert_contains "$output" "billing" "Output contains topic"
-assert_contains "$output" "continue-feature" "Output contains pipeline instructions"
+assert_contains "$output" "start-specification" "Output contains pipeline instructions"
 
 echo ""
 

@@ -1,8 +1,8 @@
 ---
 name: start-planning
-description: "Start a planning session from an existing specification. Discovers available specifications, gathers context, and invokes the technical-planning skill."
+description: "Start a planning session. Supports two modes: discovery mode (bare invocation) discovers specifications and offers planning options; bridge mode (topic provided) skips discovery for pipeline continuation."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/start-planning/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh)
+allowed-tools: Bash(.claude/skills/start-planning/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/specification/)
 hooks:
   PreToolUse:
     - hooks:
@@ -58,83 +58,91 @@ Invoke the `/migrate` skill and assess its output.
 
 ---
 
-## Step 1: Discovery State
+## Step 1: Determine Mode
 
-!`.claude/skills/start-planning/scripts/discovery.sh`
+Check for arguments: topic = `$0`, work_type = `$1`
 
-If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+#### If topic and work_type are both provided (bridge mode)
+
+Pipeline continuation — skip discovery and proceed directly to validation.
+
+→ Proceed to **Step 2** (Validate Specification).
+
+#### If only topic is provided
+
+Set work_type based on context:
+- If invoked from a bugfix pipeline → work_type = "bugfix"
+- If invoked from a feature pipeline → work_type = "feature"
+- If unclear, default to "greenfield"
+
+→ Proceed to **Step 2** (Validate Specification).
+
+#### If no topic provided (discovery mode)
+
+Full discovery and selection flow.
+
+→ Load **[discovery-flow.md](references/discovery-flow.md)** and follow its instructions.
+
+When discovery completes, it returns with selection context.
+
+→ Proceed to **Step 4** (Route by Plan State).
+
+---
+
+## Step 2: Validate Specification
+
+Bridge mode validation — check if specification exists and is ready.
+
+```bash
+ls .workflows/specification/
+```
+
+Read `.workflows/specification/{topic}/specification.md` frontmatter.
+
+**If specification doesn't exist:**
+
+> *Output the next fenced block as a code block:*
+
+```
+Specification Missing
+
+No specification found for "{topic:(titlecase)}".
+
+A concluded specification is required for planning.
+```
+
+**STOP.** Do not proceed — terminal condition. Suggest `/start-specification` with topic.
+
+**If specification exists but status is "in-progress":**
+
+> *Output the next fenced block as a code block:*
+
+```
+Specification In Progress
+
+The specification for "{topic:(titlecase)}" is not yet concluded.
+Complete the specification first.
+```
+
+**STOP.** Do not proceed — terminal condition. Suggest `/start-specification` with topic to continue.
+
+**If specification exists and status is "concluded":**
+
+Run discovery to get cross-cutting context:
 
 ```bash
 .claude/skills/start-planning/scripts/discovery.sh
 ```
 
-If YAML content is already displayed, it has been run on your behalf.
+Parse cross-cutting specs from `specifications.crosscutting`.
 
-Parse the discovery output to understand:
-
-**From `specifications` section:**
-- `exists` - whether any specifications exist
-- `feature` - list of feature specs (name, status, has_plan, plan_status, has_impl, impl_status)
-- `crosscutting` - list of cross-cutting specs (name, status)
-- `counts.feature` - total feature specifications
-- `counts.feature_ready` - feature specs ready for planning (concluded + no plan)
-- `counts.feature_with_plan` - feature specs that already have plans
-- `counts.feature_actionable_with_plan` - specs with plans that are NOT fully implemented
-- `counts.feature_implemented` - specs with `impl_status: completed`
-- `counts.crosscutting` - total cross-cutting specifications
-
-**From `plans` section:**
-- `exists` - whether any plans exist
-- `files` - each plan's name, format, status, and plan_id (if present)
-- `common_format` - the output format if all existing plans share the same one; empty string otherwise
-
-**From `state` section:**
-- `scenario` - one of: `"no_specs"`, `"nothing_actionable"`, `"has_options"`
-
-**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
-
-→ Proceed to **Step 2**.
+→ Proceed to **Step 3**.
 
 ---
 
-## Step 2: Route Based on Scenario
+## Step 3: Handle Cross-Cutting Context
 
-Use `state.scenario` from the discovery output to determine the path:
-
-#### If scenario is "no_specs"
-
-No specifications exist yet.
-
-> *Output the next fenced block as a code block:*
-
-```
-Planning Overview
-
-No specifications found in .workflows/specification/
-
-The planning phase requires a concluded specification.
-Run /start-specification first.
-```
-
-**STOP.** Do not proceed — terminal condition.
-
-#### If scenario is "nothing_actionable"
-
-Specifications exist but none are actionable — all are still in-progress and no plans exist to continue.
-
-→ Proceed to **Step 3** to show the state.
-
-#### If scenario is "has_options"
-
-At least one specification is ready for planning, or an existing plan can be continued or reviewed.
-
-→ Proceed to **Step 3** to present options.
-
----
-
-## Step 3: Present Workflow State and Options
-
-Load **[display-state.md](references/display-state.md)** and follow its instructions as written.
+Load **[cross-cutting-context.md](references/cross-cutting-context.md)** and follow its instructions as written.
 
 → Proceed to **Step 4**.
 
@@ -142,7 +150,7 @@ Load **[display-state.md](references/display-state.md)** and follow its instruct
 
 ## Step 4: Route by Plan State
 
-Check whether the selected specification already has a plan (from `has_plan` in discovery output).
+Check whether the topic already has a plan (from discovery or by checking `.workflows/planning/{topic}/plan.md`).
 
 #### If no existing plan (fresh start)
 
@@ -175,7 +183,9 @@ Any additional context since the specification was concluded?
 
 ---
 
-## Step 6: Surface Cross-Cutting Context
+## Step 6: Surface Cross-Cutting Context (Discovery Mode)
+
+This step is only reached from discovery mode after gathering additional context.
 
 Load **[cross-cutting-context.md](references/cross-cutting-context.md)** and follow its instructions as written.
 

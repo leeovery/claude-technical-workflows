@@ -59,8 +59,7 @@ Return to the main skill with: `research_first: true`
 The main skill will:
 1. Create a research file with topic + work_type: feature
 2. Invoke technical-research
-3. When research concludes → workflow:bridge → continue-feature
-4. continue-feature routes to begin-discussion (topic already known)
+3. When research concludes → workflow:bridge → start-discussion (with topic + feature)
 
 #### If user declines research (or no uncertainties)
 

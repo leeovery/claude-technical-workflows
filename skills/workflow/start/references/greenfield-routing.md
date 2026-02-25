@@ -114,18 +114,29 @@ Parse the user's selection and route to the appropriate skill:
 
 | Selection | Action |
 |-----------|--------|
-| Continue discussion | Invoke `begin-discussion` with topic + work_type: greenfield |
-| Continue specification | Invoke `begin-specification` with topic + work_type: greenfield |
-| Continue plan | Invoke `begin-planning` with topic + work_type: greenfield |
-| Continue implementation | Invoke `begin-implementation` with topic + work_type: greenfield |
+| Continue discussion | Invoke `start-discussion` with topic + "greenfield" |
+| Continue specification | Invoke `start-specification` with topic + "greenfield" |
+| Continue plan | Invoke `start-planning` with topic + "greenfield" |
+| Continue implementation | Invoke `start-implementation` with topic + "greenfield" |
 | Continue research | Invoke `start-research` (handles resume from existing file) |
 | Start specification | Invoke `start-specification` (analyzes all discussions, suggests groupings) |
-| Start planning | Invoke `begin-planning` with topic + work_type: greenfield |
-| Start implementation | Invoke `begin-implementation` with topic + work_type: greenfield |
-| Start review | Invoke `begin-review` with topic + work_type: greenfield |
+| Start planning | Invoke `start-planning` with topic + "greenfield" |
+| Start implementation | Invoke `start-implementation` with topic + "greenfield" |
+| Start review | Invoke `start-review` with topic + "greenfield" |
 | Start research | Invoke `start-research` |
 | Start new discussion | Invoke `start-discussion` |
 
-**Routing principle**: `begin-*` skills handle cases where topic + work_type are already known (continue existing or start from concluded artifact). `start-*` skills handle full discovery and context gathering for new work.
+**Routing principle**: When topic + work_type are known, pass them to trigger bridge mode in start-* skills (skipping discovery). When starting fresh or doing analysis (like specification), invoke bare start-* skill for full discovery.
 
 **Note on specification**: Unlike feature/bugfix pipelines, greenfield specification is NOT topic-centric. The `start-specification` skill discovers all concluded discussions, analyzes them, and suggests how to group them into specifications. Multiple discussions may become one spec, or vice versa.
+
+Example invocation for continue:
+
+```
+Topic: {topic}
+Work type: greenfield
+
+Invoke start-{phase} with the topic and work type.
+```
+
+The start-{phase} skill will validate the topic exists and proceed to the processing skill.

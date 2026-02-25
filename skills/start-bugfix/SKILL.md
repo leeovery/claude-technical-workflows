@@ -1,6 +1,6 @@
 ---
 name: start-bugfix
-description: "Start a new bugfix through the full pipeline. Gathers bug context, creates an investigation, then bridges to continue-bugfix for specification, planning, and implementation."
+description: "Start a new bugfix through the full pipeline. Gathers bug context, creates an investigation, then bridges to workflow:bridge for specification, planning, and implementation."
 disable-model-invocation: true
 allowed-tools: Bash(ls .workflows/investigation/), Bash(.claude/hooks/workflows/write-session-state.sh)
 hooks:
@@ -143,4 +143,4 @@ When the investigation concludes, the processing skill will detect `work_type: b
 
 Load **[phase-bridge.md](references/phase-bridge.md)** and follow its instructions.
 
-The bridge will enter plan mode with instructions to invoke continue-bugfix for the topic in the next session.
+The bridge will enter plan mode with instructions to invoke the appropriate start-{phase} skill for the topic in the next session.

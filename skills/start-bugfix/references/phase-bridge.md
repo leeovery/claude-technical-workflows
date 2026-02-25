@@ -6,33 +6,16 @@
 
 The phase bridge clears context between the investigation phase and the rest of the pipeline. This is necessary because investigation can consume significant context, and starting fresh prevents degradation.
 
-## Enter Plan Mode
+## Invoke Workflow Bridge
 
-Enter plan mode and write the following plan:
+Invoke the [workflow:bridge](../../workflow/bridge/SKILL.md) skill:
 
 ```
-# Continue Bugfix: {topic}
+Pipeline bridge for: {topic}
+Work type: bugfix
+Completed phase: investigation
 
-The investigation for "{topic}" has concluded. The next session should
-continue the bugfix pipeline from specification onwards.
-
-## Instructions
-
-1. Invoke the `/continue-bugfix` skill for topic "{topic}"
-2. The skill will detect that a concluded investigation exists and route to specification
-
-## Context
-
-- Topic: {topic}
-- Work type: bugfix
-- Completed phase: investigation
-- Expected next phase: specification
-- Investigation: .workflows/investigation/{topic}/investigation.md
-
-## How to proceed
-
-Clear context and continue. Claude will invoke continue-bugfix
-with the topic above and route to the specification phase automatically.
+Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
 ```
 
-Exit plan mode. The user will approve and clear context, and the fresh session will pick up with continue-bugfix routing to specification.
+The workflow:bridge skill will run discovery, detect the next phase (specification), and enter plan mode with instructions to invoke start-specification with the topic and work_type.

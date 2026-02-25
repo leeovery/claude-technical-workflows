@@ -1,8 +1,8 @@
 ---
 name: start-specification
-description: "Start a specification session from concluded discussions. Discovers available discussions, offers consolidation assessment for multiple discussions, and invokes the technical-specification skill."
+description: "Start a specification session. Supports two modes: discovery mode (bare invocation) discovers discussions and offers consolidation; bridge mode (topic provided) skips discovery for pipeline continuation."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/start-specification/scripts/discovery.sh), Bash(mkdir -p .workflows/.state), Bash(rm .workflows/.state/discussion-consolidation-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh)
+allowed-tools: Bash(.claude/skills/start-specification/scripts/discovery.sh), Bash(mkdir -p .workflows/.state), Bash(rm .workflows/.state/discussion-consolidation-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/discussion/), Bash(ls .workflows/investigation/)
 hooks:
   PreToolUse:
     - hooks:
@@ -58,63 +58,212 @@ Invoke the `/migrate` skill and assess its output.
 
 ---
 
-## Step 1: Discovery State
+## Step 1: Determine Mode
 
-!`.claude/skills/start-specification/scripts/discovery.sh`
+Check for arguments: topic = `$0`, work_type = `$1`
 
-If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+#### If topic and work_type are both provided (bridge mode)
 
-```bash
-.claude/skills/start-specification/scripts/discovery.sh
-```
+Pipeline continuation — skip discovery and proceed directly to validation.
 
-If YAML content is already displayed, it has been run on your behalf.
+→ Proceed to **Step 2** (Validate Source Material).
 
-Parse the discovery output to understand:
+#### If only topic is provided
 
-**From `discussions` array:** Each discussion's name, status, and whether it has an individual specification.
+Set work_type based on context:
+- If invoked from a bugfix pipeline → work_type = "bugfix"
+- If invoked from a feature pipeline → work_type = "feature"
+- If unclear, default to "greenfield"
 
-**From `specifications` array:** Each specification's name, status, sources, and superseded_by (if applicable). Specifications with `status: superseded` should be noted but excluded from active counts.
+→ Proceed to **Step 2** (Validate Source Material).
 
-**From `cache` section:** `status` (valid/stale/none), `reason`, `generated`, `anchored_names`.
+#### If no topic provided (discovery mode)
 
-**From `current_state`:** `concluded_count`, `spec_count`, `has_discussions`, `has_concluded`, `has_specs`, and other counts/booleans for routing.
+Full discovery and selection flow.
 
-**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
+→ Load **[discovery-flow.md](references/discovery-flow.md)** and follow its instructions.
 
-→ Proceed to **Step 2**.
+When discovery completes, it returns with selection context.
+
+→ Proceed to **Step 4** (Invoke the Skill).
 
 ---
 
-## Step 2: Check Prerequisites
+## Step 2: Validate Source Material
 
-#### If has_discussions is false or has_concluded is false
+Bridge mode validation — check if source material exists and is ready.
 
-→ Load **[display-blocks.md](references/display-blocks.md)** and follow its instructions. **STOP.**
+#### For greenfield or feature work_type
 
-#### Otherwise
+Check if discussion exists and is concluded:
+
+```bash
+ls .workflows/discussion/
+```
+
+Read `.workflows/discussion/{topic}.md` frontmatter.
+
+**If discussion doesn't exist:**
+
+> *Output the next fenced block as a code block:*
+
+```
+Source Material Missing
+
+No discussion found for "{topic:(titlecase)}".
+
+A concluded discussion is required before specification.
+```
+
+**STOP.** Do not proceed — terminal condition. Suggest `/start-discussion` with topic.
+
+**If discussion exists but status is "in-progress":**
+
+> *Output the next fenced block as a code block:*
+
+```
+Discussion In Progress
+
+The discussion for "{topic:(titlecase)}" is not yet concluded.
+Complete the discussion first.
+```
+
+**STOP.** Do not proceed — terminal condition. Suggest `/start-discussion` with topic to continue.
+
+**If discussion exists and status is "concluded":**
+
+→ Proceed to **Step 3**.
+
+#### For bugfix work_type
+
+Check if investigation exists and is concluded:
+
+```bash
+ls .workflows/investigation/
+```
+
+Read `.workflows/investigation/{topic}/investigation.md` frontmatter.
+
+**If investigation doesn't exist:**
+
+> *Output the next fenced block as a code block:*
+
+```
+Source Material Missing
+
+No investigation found for "{topic:(titlecase)}".
+
+A concluded investigation is required before specification.
+```
+
+**STOP.** Do not proceed — terminal condition. Suggest `/start-investigation` with topic.
+
+**If investigation exists but status is "in-progress":**
+
+> *Output the next fenced block as a code block:*
+
+```
+Investigation In Progress
+
+The investigation for "{topic:(titlecase)}" is not yet concluded.
+Complete the investigation first.
+```
+
+**STOP.** Do not proceed — terminal condition. Suggest `/start-investigation` with topic to continue.
+
+**If investigation exists and status is "concluded":**
 
 → Proceed to **Step 3**.
 
 ---
 
-## Step 3: Route
+## Step 3: Check Existing Specification
 
-Based on discovery state, load exactly ONE reference file:
+Check if a specification already exists for this topic.
 
-#### If concluded_count == 1
+Read `.workflows/specification/{topic}/specification.md` if it exists.
 
-→ Load **[display-single.md](references/display-single.md)** and follow its instructions.
+**If specification doesn't exist:**
 
-#### If cache status is "valid"
+→ Proceed to **Step 4** with verb="Creating".
 
-→ Load **[display-groupings.md](references/display-groupings.md)** and follow its instructions.
+**If specification exists with status "in-progress":**
 
-#### If spec_count == 0 and cache is "none" or "stale"
+> *Output the next fenced block as a code block:*
 
-→ Load **[display-analyze.md](references/display-analyze.md)** and follow its instructions.
+```
+Specification In Progress
 
-#### Otherwise
+A specification for "{topic:(titlecase)}" already exists and is in progress.
+```
 
-→ Load **[display-specs-menu.md](references/display-specs-menu.md)** and follow its instructions.
+> *Output the next fenced block as markdown (not a code block):*
 
+```
+· · · · · · · · · · · ·
+- **`r`/`resume`** — Resume the existing specification
+- **`s`/`start-fresh`** — Archive and start fresh
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+If resume → proceed to **Step 4** with verb="Continuing".
+If start-fresh → archive the existing spec, proceed to **Step 4** with verb="Creating".
+
+**If specification exists with status "concluded":**
+
+> *Output the next fenced block as a code block:*
+
+```
+Specification Concluded
+
+The specification for "{topic:(titlecase)}" has already concluded.
+```
+
+**STOP.** Do not proceed — terminal condition. Suggest `/start-planning` with topic to continue to planning.
+
+---
+
+## Step 4: Invoke the Skill
+
+Before invoking the processing skill, save a session bookmark.
+
+> *Output the next fenced block as a code block:*
+
+```
+Saving session state so Claude can pick up where it left off if the conversation is compacted.
+```
+
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-specification/SKILL.md" \
+  ".workflows/specification/{topic}/specification.md"
+```
+
+Construct the handoff and invoke the [technical-specification](../technical-specification/SKILL.md) skill:
+
+```
+Specification session for: {topic}
+Work type: {work_type}
+
+Source material:
+@if(work_type is feature or greenfield)
+- Discussion: .workflows/discussion/{topic}.md
+@else
+- Investigation: .workflows/investigation/{topic}/investigation.md
+@endif
+
+Topic name: {topic}
+Action: {verb} specification
+
+The specification frontmatter should include:
+- topic: {topic}
+- status: in-progress
+- type: feature
+- work_type: {work_type}
+- date: {today}
+
+Invoke the technical-specification skill.
+```

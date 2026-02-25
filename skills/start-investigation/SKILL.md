@@ -1,8 +1,8 @@
 ---
 name: start-investigation
-description: "Start a bug investigation. Discovers existing investigations, gathers bug context, and invokes the technical-investigation skill."
+description: "Start a bug investigation. Supports two modes: discovery mode (bare invocation) discovers existing investigations; bridge mode (topic provided) skips discovery for pipeline continuation."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/start-investigation/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh)
+allowed-tools: Bash(.claude/skills/start-investigation/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/investigation/)
 hooks:
   PreToolUse:
     - hooks:
@@ -55,157 +55,110 @@ Invoke the `/migrate` skill and assess its output.
 
 ---
 
-## Step 1: Discovery State
+## Step 1: Determine Mode
 
-!`.claude/skills/start-investigation/scripts/discovery.sh`
+Check for arguments: topic = `$0`, work_type = `$1`
 
-If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+#### If topic and work_type are both provided (bridge mode)
 
-```bash
-.claude/skills/start-investigation/scripts/discovery.sh
-```
+Pipeline continuation — skip discovery and proceed directly to validation.
 
-Parse the discovery output to understand:
+→ Proceed to **Step 2** (Validate Topic).
 
-**From `investigations` section:**
-- `exists` - whether investigation files exist
-- `files` - each investigation's topic, status, and date
-- `counts.in_progress` and `counts.concluded` - totals for routing
+#### If only topic is provided
 
-**From `state` section:**
-- `scenario` - one of: `"fresh"`, `"has_investigations"`
+Set work_type = "bugfix" (always for investigation).
 
-**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state.
+→ Proceed to **Step 2** (Validate Topic).
 
-→ Proceed to **Step 2**.
+#### If no topic provided (discovery mode)
+
+Full discovery and selection flow.
+
+→ Load **[discovery-flow.md](references/discovery-flow.md)** and follow its instructions.
+
+When discovery completes, it returns with a selected topic and context.
+
+→ Proceed to **Step 4** (Invoke the Skill).
 
 ---
 
-## Step 2: Route Based on Scenario
+## Step 2: Validate Topic
 
-Use `state.scenario` from the discovery output to determine the path:
+Bridge mode validation — check if investigation already exists for this topic.
 
-#### If scenario is "has_investigations"
+```bash
+ls .workflows/investigation/
+```
+
+#### If investigation exists for this topic
+
+Read `.workflows/investigation/{topic}/investigation.md` frontmatter to check status.
+
+**If status is "in-progress":**
 
 > *Output the next fenced block as a code block:*
 
 ```
-Investigations Overview
+Investigation In Progress
 
-@if(investigations.counts.in_progress > 0)
-In Progress:
-@foreach(inv in investigations.files where status is in-progress)
-  • {inv.topic}
-@endforeach
-@endif
-
-@if(investigations.counts.concluded > 0)
-Concluded:
-@foreach(inv in investigations.files where status is concluded)
-  • {inv.topic}
-@endforeach
-@endif
+An investigation for "{topic:(titlecase)}" already exists and is in progress.
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
-What would you like to do?
-
-@if(in_progress investigations exist)
-{N}. Resume "{topic}" investigation
-@endforeach
-@endif
-{N}. Start new investigation
+- **`r`/`resume`** — Resume the existing investigation
+- **`n`/`new`** — Start a new investigation with a different name
 · · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
 
-If resuming → proceed with that topic to Step 4.
-If new → proceed to Step 3.
+If resume → proceed to **Step 4**.
+If new → ask for a new topic name, then proceed to **Step 2** with new topic.
 
-#### If scenario is "fresh"
+**If status is "concluded":**
 
 > *Output the next fenced block as a code block:*
 
 ```
-No existing investigations found.
+Investigation Concluded
+
+The investigation for "{topic:(titlecase)}" has already concluded.
 ```
+
+**STOP.** Do not proceed — terminal condition. Suggest `/start-specification` with topic + bugfix to continue to specification.
+
+#### If no collision
 
 → Proceed to **Step 3**.
 
 ---
 
-## Step 3: Gather Bug Context
+## Step 3: Gather Bug Context (Bridge Mode)
 
 > *Output the next fenced block as a code block:*
 
 ```
-Starting new investigation.
+Starting investigation: {topic:(titlecase)}
 
-What bug are you investigating? Please provide:
-- A short identifier/name for tracking (e.g., "login-timeout-bug")
-- What's broken (expected vs actual behavior)
-- Any initial context (error messages, how it manifests)
+What's the bug? Provide initial context:
+- What's broken? (expected vs actual behavior)
+- How is it surfacing? (errors, user reports, monitoring)
+- Can you reproduce it? (steps to reproduce)
+- Any initial hypotheses?
+- Links to error tracking? (Sentry, logs, etc.)
 ```
 
 **STOP.** Wait for user response.
 
-→ Proceed to **Step 4**.
+→ Proceed to **Step 4** (Invoke the Skill).
 
 ---
 
-## Step 4: Topic Name and Conflict Check
-
-If the user didn't provide a clear topic name, suggest one based on the bug description:
-
-> *Output the next fenced block as a code block:*
-
-```
-Suggested topic name: {suggested-topic:(kebabcase)}
-
-This will create: .workflows/investigation/{suggested-topic}/investigation.md
-```
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-Is this name okay?
-
-- **`y`/`yes`** — Use this name
-- **`s`/`something else`** — Suggest a different name
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-Once the topic name is confirmed, check for naming conflicts in the discovery output.
-
-If an investigation with the same name exists, inform the user:
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-An investigation named "{topic}" already exists.
-
-- **`r`/`resume`** — Resume the existing investigation
-- **`n`/`new`** — Choose a different name
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-If resuming, check the investigation status. If concluded → suggest continue-bugfix. If in-progress → proceed to Step 5.
-
-→ Proceed to **Step 5**.
-
----
-
-## Step 5: Invoke the Skill
+## Step 4: Invoke the Skill
 
 Before invoking the processing skill, save a session bookmark.
 
@@ -227,7 +180,7 @@ Invoke the [technical-investigation](../technical-investigation/SKILL.md) skill:
 ```
 Investigation session for: {topic}
 Work type: bugfix
-Initial bug context: {summary of user's input from Step 3}
+Initial bug context: {summary of user's input from Step 3 or discovery}
 
 Create investigation file: .workflows/investigation/{topic}/investigation.md
 

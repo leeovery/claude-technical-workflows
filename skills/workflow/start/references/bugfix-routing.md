@@ -96,11 +96,25 @@ Invoke `start-bugfix`. It will set `work_type: bugfix` and begin the investigati
 
 #### If continuing existing bugfix
 
-Invoke `continue-bugfix` with the selected topic:
+Route to the appropriate start-* skill based on `next_phase`:
+
+| next_phase | Invoke |
+|------------|--------|
+| investigation | `start-investigation` with topic + "bugfix" |
+| specification | `start-specification` with topic + "bugfix" |
+| planning | `start-planning` with topic + "bugfix" |
+| implementation | `start-implementation` with topic + "bugfix" |
+| review | `start-review` with topic + "bugfix" |
+
+The start-* skill receives topic and work_type, which triggers bridge mode (skipping discovery).
+
+Example invocation:
 
 ```
 Topic: {topic}
 Work type: bugfix
+
+Invoke start-{next_phase} with the topic and work type.
 ```
 
-The continue-bugfix skill will detect the current phase and route appropriately.
+The start-{phase} skill will validate the topic exists and proceed to the processing skill.

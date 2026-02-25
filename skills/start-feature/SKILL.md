@@ -1,6 +1,6 @@
 ---
 name: start-feature
-description: "Start a new feature through the full pipeline. Gathers context via structured interview, creates a discussion, then bridges to continue-feature for specification, planning, and implementation."
+description: "Start a new feature through the full pipeline. Gathers context via structured interview, creates a discussion, then bridges to workflow:bridge for specification, planning, and implementation."
 disable-model-invocation: true
 allowed-tools: Bash(ls .workflows/discussion/), Bash(ls .workflows/research/), Bash(.claude/hooks/workflows/write-session-state.sh)
 hooks:
@@ -178,4 +178,4 @@ When the discussion concludes, the processing skill will detect `work_type: feat
 
 Load **[phase-bridge.md](references/phase-bridge.md)** and follow its instructions.
 
-The bridge will enter plan mode with instructions to invoke continue-feature for the topic in the next session.
+The bridge will enter plan mode with instructions to invoke the appropriate start-{phase} skill for the topic in the next session.

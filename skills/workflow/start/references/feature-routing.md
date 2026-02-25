@@ -96,11 +96,25 @@ Invoke `start-feature`. It will set `work_type: feature` automatically.
 
 #### If continuing existing feature
 
-Invoke `continue-feature` with the selected topic:
+Route to the appropriate start-* skill based on `next_phase`:
+
+| next_phase | Invoke |
+|------------|--------|
+| discussion | `start-discussion` with topic + "feature" |
+| specification | `start-specification` with topic + "feature" |
+| planning | `start-planning` with topic + "feature" |
+| implementation | `start-implementation` with topic + "feature" |
+| review | `start-review` with topic + "feature" |
+
+The start-* skill receives topic and work_type, which triggers bridge mode (skipping discovery).
+
+Example invocation:
 
 ```
 Topic: {topic}
 Work type: feature
+
+Invoke start-{next_phase} with the topic and work type.
 ```
 
-The continue-feature skill will detect the current phase and route appropriately.
+The start-{phase} skill will validate the topic exists and proceed to the processing skill.

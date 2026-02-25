@@ -162,7 +162,7 @@ setup_fixture
 CLAUDE_SESSION_ID="test-session-002" \
 CLAUDE_PROJECT_DIR="$TEST_DIR" \
 bash "$WRITE_SCRIPT" "billing" ".claude/skills/technical-specification/SKILL.md" ".workflows/specification/billing/specification.md" \
-  --pipeline 'Enter plan mode: "Clear context and continue with /continue-feature for billing"'
+  --pipeline 'Enter plan mode: "Clear context and continue with /start-specification billing feature"'
 
 session_file="$TEST_DIR/.workflows/.cache/sessions/test-session-002.yaml"
 assert_file_exists "$session_file" "Session file created"
@@ -170,7 +170,7 @@ content=$(cat "$session_file")
 assert_contains "$content" "^topic: billing$" "Topic field correct"
 assert_contains "$content" "^pipeline:$" "Pipeline section present"
 assert_contains "$content" "after_conclude:" "after_conclude key present"
-assert_contains "$content" "continue-feature" "Pipeline content includes instructions"
+assert_contains "$content" "start-specification" "Pipeline content includes instructions"
 
 echo ""
 

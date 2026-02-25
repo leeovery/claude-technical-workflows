@@ -1,8 +1,8 @@
 ---
 name: start-review
-description: "Start a review session from an existing plan and implementation. Discovers available plans, validates implementation exists, and invokes the technical-review skill."
+description: "Start a review session. Supports two modes: discovery mode (bare invocation) discovers plans and offers review options; bridge mode (topic provided) skips discovery for pipeline continuation."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/start-review/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh)
+allowed-tools: Bash(.claude/skills/start-review/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/planning/), Bash(ls .workflows/implementation/)
 hooks:
   PreToolUse:
     - hooks:
@@ -58,129 +58,125 @@ Invoke the `/migrate` skill and assess its output.
 
 ---
 
-## Step 1: Discovery State
+## Step 1: Determine Mode
 
-!`.claude/skills/start-review/scripts/discovery.sh`
+Check for arguments: topic = `$0`, work_type = `$1`
 
-If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+#### If topic and work_type are both provided (bridge mode)
+
+Pipeline continuation — skip discovery and proceed directly to validation.
+
+→ Proceed to **Step 2** (Validate Implementation).
+
+#### If only topic is provided
+
+Set work_type based on context:
+- If invoked from a bugfix pipeline → work_type = "bugfix"
+- If invoked from a feature pipeline → work_type = "feature"
+- If unclear, default to "greenfield"
+
+→ Proceed to **Step 2** (Validate Implementation).
+
+#### If no topic provided (discovery mode)
+
+Full discovery and selection flow.
+
+→ Load **[discovery-flow.md](references/discovery-flow.md)** and follow its instructions.
+
+When discovery completes, it returns with selection context.
+
+→ Proceed to **Step 4** (Invoke the Skill).
+
+---
+
+## Step 2: Validate Implementation
+
+Bridge mode validation — check if plan and implementation exist.
+
+```bash
+ls .workflows/planning/
+```
+
+```bash
+ls .workflows/implementation/
+```
+
+Read `.workflows/planning/{topic}/plan.md` frontmatter.
+
+**If plan doesn't exist:**
+
+> *Output the next fenced block as a code block:*
+
+```
+Plan Missing
+
+No plan found for "{topic:(titlecase)}".
+
+A plan is required before review can be performed.
+```
+
+**STOP.** Do not proceed — terminal condition. Suggest `/start-planning` with topic.
+
+Check `.workflows/implementation/{topic}/tracking.md`:
+
+**If implementation tracking doesn't exist or status is "not-started":**
+
+> *Output the next fenced block as a code block:*
+
+```
+Implementation Missing
+
+"{topic:(titlecase)}" has no implementation to review.
+
+Implementation must be completed or in-progress before review.
+```
+
+**STOP.** Do not proceed — terminal condition. Suggest `/start-implementation` with topic.
+
+**If implementation exists:**
+
+→ Proceed to **Step 3**.
+
+---
+
+## Step 3: Determine Review Version
+
+Run discovery to get review state:
 
 ```bash
 .claude/skills/start-review/scripts/discovery.sh
 ```
 
-If YAML content is already displayed, it has been run on your behalf.
+Parse the output to find the topic's review state:
+- `review_count` - number of existing reviews
+- `latest_review_version` - most recent review version number
 
-Parse the discovery output to understand:
+Determine review version:
+- If `review_count` is 0 → review version is `r1`
+- If `review_count` > 0 → review version is `r{latest_review_version + 1}`
 
-**From `plans` section:**
-- `exists` - whether any plans exist
-- `files` - list of plans with: name, topic, status, date, format, specification, specification_exists, plan_id (if present)
-- `count` - total number of plans
-
-**From `reviews` section:**
-- `exists` - whether any reviews exist
-- `entries` - list of reviews with: scope, type, plans, versions, latest_version, latest_verdict, latest_path, has_synthesis
-
-**From `state` section:**
-- `scenario` - one of: `"no_plans"`, `"single_plan"`, `"multiple_plans"`
-- `implemented_count` - plans with implementation_status != "none"
-- `completed_count` - plans with implementation_status == "completed"
-- `reviewed_plan_count` - plans that have been reviewed
-- `all_reviewed` - whether all implemented plans have reviews
-
-**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
-
-→ Proceed to **Step 2**.
-
----
-
-## Step 2: Route Based on Scenario
-
-Use `state.scenario` from the discovery output to determine the path:
-
-#### If scenario is "no_plans"
-
-No plans exist yet.
-
-> *Output the next fenced block as a code block:*
-
-```
-Review Overview
-
-No plans found in .workflows/planning/
-
-The review phase requires a completed implementation based on a plan.
-Run /start-planning first to create a plan, then /start-implementation
-to build it.
-```
-
-**STOP.** Do not proceed — terminal condition.
-
-#### If all_reviewed is true
-
-All implemented plans have been reviewed.
-
-> *Output the next fenced block as a code block:*
-
-```
-Review Overview
-
-All {N} implemented plans have been reviewed.
-
-1. {topic:(titlecase)}
-   └─ Review: x{review_count} — r{latest_review_version} ({latest_review_verdict})
-   └─ Synthesis: @if(has_synthesis) completed @else pending @endif
-
-2. ...
-```
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-All plans have been reviewed.
-
-- **`a`/`analysis`** — Synthesize findings from existing reviews into tasks
-- **`r`/`re-review`** — Re-review a plan (creates new review version)
-
-Select an option:
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-#### If analysis
-
-→ Proceed to **Step 4** with scope set to "analysis".
-
-#### If re-review
-
-→ Proceed to **Step 3**, incrementing the review version for the selected plan.
-
-#### If scenario is "single_plan" or "multiple_plans"
-
-Plans exist (some may have reviews, some may not).
-
-→ Proceed to **Step 3** to present options.
-
----
-
-## Step 3: Display Plans
-
-Load **[display-plans.md](references/display-plans.md)** and follow its instructions as written.
+Also extract:
+- `format`, `plan_id`, `specification`, `specification_exists`
 
 → Proceed to **Step 4**.
 
 ---
 
-## Step 4: Select Plans
+## Step 4: Invoke the Skill
 
-Load **[select-plans.md](references/select-plans.md)** and follow its instructions as written.
+Before invoking the processing skill, save a session bookmark.
 
-→ Proceed to **Step 5**.
+> *Output the next fenced block as a code block:*
 
----
+```
+Saving session state so Claude can pick up where it left off if the conversation is compacted.
+```
 
-## Step 5: Invoke the Skill
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-review/SKILL.md" \
+  ".workflows/review/{topic}/r{N}/review.md"
+```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
