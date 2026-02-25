@@ -26,23 +26,6 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 ---
 
-## Resuming After Context Refresh
-
-Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
-
-1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
-2. **Identify the work type.** Check conversation history for work type selection (greenfield, feature, bugfix).
-3. **Identify the topic.** If a topic was selected, find it in conversation history.
-4. **Determine current step from context:**
-   - No work type selected → resume at **Step 2**
-   - Work type selected, no topic → resume at **Step 3**
-   - Topic selected → continue from appropriate routing reference
-5. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
-
-Do not guess at progress or continue from memory. The files on disk and conversation history are authoritative — your recollection is not.
-
----
-
 ## Step 0: Run Migrations
 
 **This step is mandatory. You must complete it before proceeding.**
