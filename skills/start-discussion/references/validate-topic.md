@@ -19,31 +19,12 @@ Read `.workflows/discussion/{topic}.md` frontmatter to check status.
 > *Output the next fenced block as a code block:*
 
 ```
-Discussion In Progress
-
-A discussion for "{topic:(titlecase)}" already exists and is in progress.
+Resuming discussion: {topic:(titlecase)}
 ```
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-- **`r`/`resume`** — Resume the existing discussion
-- **`n`/`new`** — Start a new topic with a different name
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-#### If resume
 
 Set path="continue".
 
 → Return to **[the skill](../SKILL.md)** for **Step 9**.
-
-#### If new
-
-Ask for a new topic name, re-run validation with the new topic.
 
 #### If status is "concluded"
 
