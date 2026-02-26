@@ -39,27 +39,33 @@ Discussions:
 
 Specifications:
 @if(specifications.count > 0)
-  @foreach(spec in specifications.files)
-  • {spec.name} ({spec.status}, {spec.type})
-  @endforeach
+  1. {spec.name:(titlecase)}
+     └─ Spec: {spec.status} ({spec.type})
+     └─ Plan: @if(spec.has_plan) exists @else (no plan) @endif
+
+  2. ...
 @else
   (none)
 @endif
 
 Plans:
 @if(plans.count > 0)
-  @foreach(plan in plans.files)
-  • {plan.name} ({plan.status})
-  @endforeach
+  1. {plan.name:(titlecase)}
+     └─ Plan: {plan.status}
+     └─ Implementation: @if(plan.has_implementation) exists @else (not started) @endif
+
+  2. ...
 @else
   (none)
 @endif
 
 Implementation:
 @if(implementation.count > 0)
-  @foreach(impl in implementation.files)
-  • {impl.topic} ({impl.status})
-  @endforeach
+  1. {impl.topic:(titlecase)}
+     └─ Implementation: {impl.status}
+     └─ Review: @if(impl.has_review) exists @else (no review) @endif
+
+  2. ...
 @else
   (none)
 @endif

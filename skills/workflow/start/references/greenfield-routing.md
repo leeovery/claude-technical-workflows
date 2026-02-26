@@ -35,27 +35,30 @@ Discussions:
 
 Specifications:
 @if(greenfield.specifications.count > 0)
-  @foreach(spec in greenfield.specifications.files)
-  • {spec.name} ({spec.status}, {spec.type})
-  @endforeach
+  1. {spec.name:(titlecase)}
+     └─ Spec: {spec.status} ({spec.type})
+
+  2. ...
 @else
   (none)
 @endif
 
 Plans:
 @if(greenfield.plans.count > 0)
-  @foreach(plan in greenfield.plans.files)
-  • {plan.name} ({plan.status})
-  @endforeach
+  1. {plan.name:(titlecase)}
+     └─ Plan: {plan.status}
+
+  2. ...
 @else
   (none)
 @endif
 
 Implementation:
 @if(greenfield.implementation.count > 0)
-  @foreach(impl in greenfield.implementation.files)
-  • {impl.topic} ({impl.status})
-  @endforeach
+  1. {impl.topic:(titlecase)}
+     └─ Implementation: {impl.status}
+
+  2. ...
 @else
   (none)
 @endif
