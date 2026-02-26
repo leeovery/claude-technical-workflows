@@ -478,6 +478,338 @@ assert_not_contains "$output" "external_deps:" "No external_deps"
 
 echo ""
 
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Plan with implementation in-progress${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/.workflows/planning/impl-wip"
+mkdir -p "$TEST_DIR/.workflows/implementation/impl-wip"
+
+cat > "$TEST_DIR/.workflows/planning/impl-wip/plan.md" << 'EOF'
+---
+topic: impl-wip
+status: concluded
+format: local-markdown
+specification: impl-wip/specification.md
+---
+
+# Plan: Impl WIP
+EOF
+
+cat > "$TEST_DIR/.workflows/implementation/impl-wip/tracking.md" << 'EOF'
+---
+topic: impl-wip
+status: in-progress
+---
+
+# Implementation Tracking
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" 'implementation_status: "in-progress"' "Implementation status is in-progress"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Plan with implementation completed${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/.workflows/planning/impl-done"
+mkdir -p "$TEST_DIR/.workflows/implementation/impl-done"
+
+cat > "$TEST_DIR/.workflows/planning/impl-done/plan.md" << 'EOF'
+---
+topic: impl-done
+status: concluded
+format: local-markdown
+specification: impl-done/specification.md
+---
+
+# Plan: Impl Done
+EOF
+
+cat > "$TEST_DIR/.workflows/implementation/impl-done/tracking.md" << 'EOF'
+---
+topic: impl-done
+status: completed
+---
+
+# Implementation Tracking
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" 'implementation_status: "completed"' "Implementation status is completed"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Implemented count with mixed plans${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/.workflows/planning/has-impl"
+mkdir -p "$TEST_DIR/.workflows/planning/no-impl"
+mkdir -p "$TEST_DIR/.workflows/implementation/has-impl"
+
+cat > "$TEST_DIR/.workflows/planning/has-impl/plan.md" << 'EOF'
+---
+topic: has-impl
+status: concluded
+format: local-markdown
+specification: has-impl/specification.md
+---
+
+# Plan: Has Impl
+EOF
+
+cat > "$TEST_DIR/.workflows/implementation/has-impl/tracking.md" << 'EOF'
+---
+topic: has-impl
+status: in-progress
+---
+
+# Implementation Tracking
+EOF
+
+cat > "$TEST_DIR/.workflows/planning/no-impl/plan.md" << 'EOF'
+---
+topic: no-impl
+status: concluded
+format: local-markdown
+specification: no-impl/specification.md
+---
+
+# Plan: No Impl
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "implemented_count: 1" "Implemented count is 1 (one plan with tracking)"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Reviewed plan count${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/.workflows/planning/reviewed-topic"
+mkdir -p "$TEST_DIR/.workflows/planning/unreviewed-topic"
+mkdir -p "$TEST_DIR/.workflows/review/reviewed-topic/r1"
+
+cat > "$TEST_DIR/.workflows/planning/reviewed-topic/plan.md" << 'EOF'
+---
+topic: reviewed-topic
+status: concluded
+format: local-markdown
+specification: reviewed-topic/specification.md
+---
+
+# Plan: Reviewed Topic
+EOF
+
+cat > "$TEST_DIR/.workflows/planning/unreviewed-topic/plan.md" << 'EOF'
+---
+topic: unreviewed-topic
+status: concluded
+format: local-markdown
+specification: unreviewed-topic/specification.md
+---
+
+# Plan: Unreviewed Topic
+EOF
+
+cat > "$TEST_DIR/.workflows/review/reviewed-topic/r1/review.md" << 'EOF'
+---
+topic: reviewed-topic
+---
+
+**QA Verdict**: Approve
+
+# Review
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "reviewed_plan_count: 1" "Reviewed plan count is 1"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: All reviewed true${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/.workflows/planning/all-rev"
+mkdir -p "$TEST_DIR/.workflows/implementation/all-rev"
+mkdir -p "$TEST_DIR/.workflows/review/all-rev/r1"
+
+cat > "$TEST_DIR/.workflows/planning/all-rev/plan.md" << 'EOF'
+---
+topic: all-rev
+status: concluded
+format: local-markdown
+specification: all-rev/specification.md
+---
+
+# Plan
+EOF
+
+cat > "$TEST_DIR/.workflows/implementation/all-rev/tracking.md" << 'EOF'
+---
+topic: all-rev
+status: completed
+---
+
+# Tracking
+EOF
+
+cat > "$TEST_DIR/.workflows/review/all-rev/r1/review.md" << 'EOF'
+---
+topic: all-rev
+---
+
+**QA Verdict**: Approve
+
+# Review
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "all_reviewed: true" "All reviewed is true when all implemented plans are reviewed"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: All reviewed false${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/.workflows/planning/rev-yes"
+mkdir -p "$TEST_DIR/.workflows/planning/rev-no"
+mkdir -p "$TEST_DIR/.workflows/implementation/rev-yes"
+mkdir -p "$TEST_DIR/.workflows/implementation/rev-no"
+mkdir -p "$TEST_DIR/.workflows/review/rev-yes/r1"
+
+cat > "$TEST_DIR/.workflows/planning/rev-yes/plan.md" << 'EOF'
+---
+topic: rev-yes
+status: concluded
+format: local-markdown
+specification: rev-yes/specification.md
+---
+
+# Plan
+EOF
+
+cat > "$TEST_DIR/.workflows/planning/rev-no/plan.md" << 'EOF'
+---
+topic: rev-no
+status: concluded
+format: local-markdown
+specification: rev-no/specification.md
+---
+
+# Plan
+EOF
+
+cat > "$TEST_DIR/.workflows/implementation/rev-yes/tracking.md" << 'EOF'
+---
+topic: rev-yes
+status: completed
+---
+
+# Tracking
+EOF
+
+cat > "$TEST_DIR/.workflows/implementation/rev-no/tracking.md" << 'EOF'
+---
+topic: rev-no
+status: completed
+---
+
+# Tracking
+EOF
+
+cat > "$TEST_DIR/.workflows/review/rev-yes/r1/review.md" << 'EOF'
+---
+topic: rev-yes
+---
+
+**QA Verdict**: Approve
+
+# Review
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "all_reviewed: false" "All reviewed is false when not all implemented plans are reviewed"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Reviews section with existing review${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/.workflows/planning/rev-section"
+mkdir -p "$TEST_DIR/.workflows/review/rev-section/r1"
+
+cat > "$TEST_DIR/.workflows/planning/rev-section/plan.md" << 'EOF'
+---
+topic: rev-section
+status: concluded
+format: local-markdown
+specification: rev-section/specification.md
+---
+
+# Plan
+EOF
+
+cat > "$TEST_DIR/.workflows/review/rev-section/r1/review.md" << 'EOF'
+---
+topic: rev-section
+---
+
+**QA Verdict**: Approve
+
+# Review
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "reviews:" "Reviews section exists"
+assert_contains "$output" "exists: true" "Reviews exists is true"
+assert_contains "$output" 'topic: "rev-section"' "Review topic appears in reviews section"
+assert_contains "$output" "latest_version: 1" "Latest version is 1"
+assert_contains "$output" "Approve" "Latest verdict contains Approve"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Reviews section empty (no review dir)${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/.workflows/planning/no-rev-dir"
+
+cat > "$TEST_DIR/.workflows/planning/no-rev-dir/plan.md" << 'EOF'
+---
+topic: no-rev-dir
+status: concluded
+format: local-markdown
+specification: no-rev-dir/specification.md
+---
+
+# Plan
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "reviews:" "Reviews section exists"
+# The second "exists: false" in output corresponds to the reviews section
+# (first one is from plans section which is true here)
+# Use a more specific check: reviews section followed by exists: false
+assert_not_contains "$output" "entries:" "No entries in reviews section"
+
+echo ""
+
 # ============================================================================
 # SUMMARY
 # ============================================================================

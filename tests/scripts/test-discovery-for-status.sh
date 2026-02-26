@@ -823,6 +823,113 @@ EOF
 }
 
 #
+# Test: Discussion work_type output
+#
+test_discussion_work_type_output() {
+    echo -e "${YELLOW}Test: Discussion work_type output${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+    cat > "$TEST_DIR/.workflows/discussion/with-type.md" << 'EOF'
+---
+topic: with-type
+status: in-progress
+work_type: feature
+---
+Discussion
+EOF
+
+    cat > "$TEST_DIR/.workflows/discussion/no-type.md" << 'EOF'
+---
+topic: no-type
+status: in-progress
+---
+Discussion
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'work_type: "feature"' "Explicit work_type is feature"
+    assert_contains "$output" 'work_type: "greenfield"' "Missing work_type defaults to greenfield"
+
+    echo ""
+}
+
+#
+# Test: Spec work_type output
+#
+test_spec_work_type_output() {
+    echo -e "${YELLOW}Test: Spec work_type output${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/specification/bugfix-spec"
+    cat > "$TEST_DIR/.workflows/specification/bugfix-spec/specification.md" << 'EOF'
+---
+topic: bugfix-spec
+status: concluded
+type: feature
+work_type: bugfix
+---
+Spec
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'work_type: "bugfix"' "Spec work_type is bugfix"
+
+    echo ""
+}
+
+#
+# Test: Plan work_type output
+#
+test_plan_work_type_output() {
+    echo -e "${YELLOW}Test: Plan work_type output${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/planning/feature-plan"
+    cat > "$TEST_DIR/.workflows/planning/feature-plan/plan.md" << 'EOF'
+---
+topic: feature-plan
+status: concluded
+format: local-markdown
+work_type: feature
+---
+Plan
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'work_type: "feature"' "Plan work_type is feature"
+
+    echo ""
+}
+
+#
+# Test: Plan in-progress status counted
+#
+test_plan_in_progress_status_counted() {
+    echo -e "${YELLOW}Test: Plan in-progress status counted${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/planning/wip-plan"
+    cat > "$TEST_DIR/.workflows/planning/wip-plan/plan.md" << 'EOF'
+---
+topic: wip-plan
+status: in-progress
+format: local-markdown
+---
+Plan
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'in_progress: 1' "in-progress status counted in in_progress total"
+
+    echo ""
+}
+
+#
 # Run all tests
 #
 echo "=========================================="
@@ -849,6 +956,10 @@ test_plan_status_counts
 test_spec_default_type
 test_plan_spec_link
 test_plan_default_spec
+test_discussion_work_type_output
+test_spec_work_type_output
+test_plan_work_type_output
+test_plan_in_progress_status_counted
 
 #
 # Summary

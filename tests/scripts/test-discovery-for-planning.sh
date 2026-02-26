@@ -972,6 +972,119 @@ EOF
 }
 
 #
+# Test: Spec work_type output
+#
+test_spec_work_type_output() {
+    echo -e "${YELLOW}Test: Spec work_type output${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/specification/typed-spec"
+    cat > "$TEST_DIR/.workflows/specification/typed-spec/specification.md" << 'EOF'
+---
+topic: typed-spec
+status: concluded
+type: feature
+work_type: feature
+---
+
+# Specification: Typed Spec
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'work_type: "feature"' "work_type feature in spec output"
+
+    echo ""
+}
+
+#
+# Test: Plan work_type output
+#
+test_plan_work_type_output() {
+    echo -e "${YELLOW}Test: Plan work_type output${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/planning/bugfix-plan"
+    cat > "$TEST_DIR/.workflows/planning/bugfix-plan/plan.md" << 'EOF'
+---
+topic: bugfix-plan
+status: in-progress
+format: local-markdown
+work_type: bugfix
+---
+
+# Implementation Plan: Bugfix Plan
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'work_type: "bugfix"' "work_type bugfix in plan output"
+
+    echo ""
+}
+
+#
+# Test: Spec missing status defaults to active
+#
+test_spec_missing_status_defaults_active() {
+    echo -e "${YELLOW}Test: Spec missing status defaults to active${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/specification/no-status"
+    cat > "$TEST_DIR/.workflows/specification/no-status/specification.md" << 'EOF'
+---
+topic: no-status
+type: feature
+---
+
+# Specification: No Status
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'status: "active"' "Status defaults to active"
+
+    echo ""
+}
+
+#
+# Test: feature_actionable_with_plan count
+#
+test_feature_actionable_with_plan_count() {
+    echo -e "${YELLOW}Test: feature_actionable_with_plan count${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/specification/actionable-topic"
+    mkdir -p "$TEST_DIR/.workflows/planning/actionable-topic"
+
+    cat > "$TEST_DIR/.workflows/specification/actionable-topic/specification.md" << 'EOF'
+---
+topic: actionable-topic
+status: concluded
+type: feature
+---
+
+# Specification: Actionable Topic
+EOF
+
+    cat > "$TEST_DIR/.workflows/planning/actionable-topic/plan.md" << 'EOF'
+---
+topic: actionable-topic
+status: concluded
+format: local-markdown
+---
+
+# Implementation Plan: Actionable Topic
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'feature_actionable_with_plan: 1' "feature_actionable_with_plan is 1"
+
+    echo ""
+}
+
+#
 # Run all tests
 #
 echo "=========================================="
@@ -1002,6 +1115,10 @@ test_spec_with_completed_implementation
 test_spec_with_in_progress_implementation
 test_all_specs_implemented
 test_mix_implemented_and_ready
+test_spec_work_type_output
+test_plan_work_type_output
+test_spec_missing_status_defaults_active
+test_feature_actionable_with_plan_count
 
 #
 # Summary

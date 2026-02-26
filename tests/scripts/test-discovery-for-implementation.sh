@@ -1002,6 +1002,99 @@ assert_contains "$output" "plans_completed_count: 1" "Plans completed count is 1
 echo ""
 
 # ============================================================================
+# WORK TYPE
+# ============================================================================
+
+echo -e "${YELLOW}Test: Plan work_type output${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/.workflows/planning/typed-plan"
+
+cat > "$TEST_DIR/.workflows/planning/typed-plan/plan.md" << 'EOF'
+---
+topic: typed-plan
+status: in-progress
+format: local-markdown
+work_type: feature
+specification: typed-plan/specification.md
+---
+
+# Implementation Plan: Typed Plan
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" 'work_type: "feature"' "work_type feature in plan output"
+
+echo ""
+
+# ============================================================================
+# RESOLVED DEP WITHOUT TRACKING FILE
+# ============================================================================
+
+echo -e "${YELLOW}Test: Resolved dep with no tracking file for dep topic${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/.workflows/planning/needs-foo"
+
+cat > "$TEST_DIR/.workflows/planning/needs-foo/plan.md" << 'EOF'
+---
+topic: needs-foo
+status: concluded
+format: local-markdown
+specification: needs-foo/specification.md
+external_dependencies:
+  - topic: foo
+    description: Needs foo completed
+    state: resolved
+    task_id: foo-1-1
+---
+
+# Plan: Needs Foo
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "deps_satisfied: false" "Deps not satisfied when no tracking file"
+assert_contains "$output" "plans_ready_count: 0" "Plan not ready when dep tracking missing"
+
+echo ""
+
+# ============================================================================
+# HAS_PLANS STATE FIELD
+# ============================================================================
+
+echo -e "${YELLOW}Test: has_plans false when no planning directory${NC}"
+setup_fixture
+
+output=$(run_discovery)
+
+assert_contains "$output" "has_plans: false" "has_plans false with no plans"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: has_plans true when plans exist${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/.workflows/planning/some-plan"
+
+cat > "$TEST_DIR/.workflows/planning/some-plan/plan.md" << 'EOF'
+---
+topic: some-plan
+status: in-progress
+format: local-markdown
+specification: some-plan/specification.md
+---
+
+# Implementation Plan: Some Plan
+EOF
+
+output=$(run_discovery)
+
+assert_contains "$output" "has_plans: true" "has_plans true with plans"
+
+echo ""
+
+# ============================================================================
 # SUMMARY
 # ============================================================================
 
