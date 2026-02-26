@@ -4,7 +4,20 @@
 
 ---
 
-Invoke the technical-investigation skill for this bugfix.
+Save a session bookmark for compaction recovery, then invoke the processing skill.
+
+> *Output the next fenced block as a code block:*
+
+```
+Saving session state for compaction recovery.
+```
+
+```bash
+.claude/hooks/workflows/write-session-state.sh \
+  "{topic}" \
+  "skills/technical-investigation/SKILL.md" \
+  ".workflows/investigation/{topic}/investigation.md"
+```
 
 ## Handoff
 

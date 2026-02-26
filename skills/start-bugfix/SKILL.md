@@ -69,51 +69,7 @@ Load **[gather-bug-context.md](references/gather-bug-context.md)** and follow it
 
 ## Step 2: Topic Name and Conflict Check
 
-Based on the bug description, suggest a topic name:
-
-> *Output the next fenced block as a code block:*
-
-```
-Suggested topic name: {suggested-topic:(kebabcase)}
-
-This will create: .workflows/investigation/{suggested-topic}/investigation.md
-```
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-Is this name okay?
-
-- **`y`/`yes`** — Use this name
-- **`s`/`something else`** — Suggest a different name
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-Once the topic name is confirmed, check for naming conflicts:
-
-```bash
-ls .workflows/investigation/
-```
-
-If an investigation with the same name exists, inform the user:
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-An investigation named "{topic}" already exists.
-
-- **`r`/`resume`** — Resume the existing investigation
-- **`n`/`new`** — Choose a different name
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-If resuming, check the investigation status. If in-progress → proceed to Step 3.
+Load **[topic-name-check.md](references/topic-name-check.md)** and follow its instructions.
 
 → Proceed to **Step 3**.
 
@@ -121,21 +77,4 @@ If resuming, check the investigation status. If in-progress → proceed to Step 
 
 ## Step 3: Invoke Investigation
 
-Before invoking the processing skill, save a session bookmark for compaction recovery.
-
-> *Output the next fenced block as a code block:*
-
-```
-Saving session state for compaction recovery.
-```
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-investigation/SKILL.md" \
-  ".workflows/investigation/{topic}/investigation.md"
-```
-
 Load **[invoke-investigation.md](references/invoke-investigation.md)** and follow its instructions.
-
-When the investigation concludes, the processing skill will detect `work_type: bugfix` in the artifact and invoke workflow:bridge automatically.
