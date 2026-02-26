@@ -115,31 +115,24 @@ Recreate with actual topics and states from discovery. Only include options that
 
 Parse the user's selection and route to the appropriate skill:
 
-| Selection | Action |
-|-----------|--------|
-| Continue discussion | Invoke `start-discussion` with topic + "greenfield" |
-| Continue specification | Invoke `start-specification` with topic + "greenfield" |
-| Continue plan | Invoke `start-planning` with topic + "greenfield" |
-| Continue implementation | Invoke `start-implementation` with topic + "greenfield" |
-| Continue research | Invoke `start-research` (handles resume from existing file) |
-| Start specification | Invoke `start-specification` (analyzes all discussions, suggests groupings) |
-| Start planning | Invoke `start-planning` with topic + "greenfield" |
-| Start implementation | Invoke `start-implementation` with topic + "greenfield" |
-| Start review | Invoke `start-review` with topic + "greenfield" |
-| Start research | Invoke `start-research` |
-| Start new discussion | Invoke `start-discussion` |
+| Selection | Skill | Topic | Work Type |
+|-----------|-------|-------|-----------|
+| Continue discussion | `/start-discussion` | {topic} | greenfield |
+| Continue specification | `/start-specification` | {topic} | greenfield |
+| Continue plan | `/start-planning` | {topic} | greenfield |
+| Continue implementation | `/start-implementation` | {topic} | greenfield |
+| Continue research | `/start-research` | — | — |
+| Start specification | `/start-specification` | — | — |
+| Start planning | `/start-planning` | {topic} | greenfield |
+| Start implementation | `/start-implementation` | {topic} | greenfield |
+| Start review | `/start-review` | {topic} | greenfield |
+| Start research | `/start-research` | — | — |
+| Start new discussion | `/start-discussion` | — | — |
 
-**Routing principle**: When topic + work_type are known, pass them to trigger bridge mode in start-* skills (skipping discovery). When starting fresh or doing analysis (like specification), invoke bare start-* skill for full discovery.
+Skills receive positional arguments: `$0` = topic, `$1` = work_type.
 
-**Note on specification**: Unlike feature/bugfix pipelines, greenfield specification is NOT topic-centric. The `start-specification` skill discovers all concluded discussions, analyzes them, and suggests how to group them into specifications. Multiple discussions may become one spec, or vice versa.
+**With arguments** (bridge mode): `/start-discussion {topic} greenfield` — skill skips discovery, validates topic, proceeds to processing.
 
-Example invocation for continue:
+**Without arguments** (discovery mode): `/start-discussion` — skill runs full discovery and presents its own options.
 
-```
-Topic: {topic}
-Work type: greenfield
-
-Invoke start-{phase} with the topic and work type.
-```
-
-The start-{phase} skill will validate the topic exists and proceed to the processing skill.
+**Note on specification**: Unlike feature/bugfix pipelines, greenfield specification is NOT topic-centric. The `/start-specification` skill discovers all concluded discussions, analyzes them, and suggests how to group them into specifications. Always invoke without arguments.

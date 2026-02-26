@@ -151,25 +151,27 @@ current state and present all available options.
 
 #### Otherwise
 
-Map the selection to a skill invocation and determine the mode:
+Map the selection to a skill invocation:
 
-| Selection | Skill | Mode |
-|-----------|-------|------|
-| Continue discussion | `start-discussion` with topic + "greenfield" | bridge |
-| Continue specification | `start-specification` with topic + "greenfield" | bridge |
-| Continue plan | `start-planning` with topic + "greenfield" | bridge |
-| Continue implementation | `start-implementation` with topic + "greenfield" | bridge |
-| Continue research | `start-research` | discovery |
-| Start specification | `start-specification` | discovery |
-| Start planning for {topic} | `start-planning` with topic + "greenfield" | bridge |
-| Start implementation of {topic} | `start-implementation` with topic + "greenfield" | bridge |
-| Start review for {topic} | `start-review` with topic + "greenfield" | bridge |
-| Start new research | `start-research` | discovery |
-| Start new discussion | `start-discussion` | discovery |
+| Selection | Skill | Topic | Work Type |
+|-----------|-------|-------|-----------|
+| Continue discussion | `/start-discussion` | {topic} | greenfield |
+| Continue specification | `/start-specification` | {topic} | greenfield |
+| Continue plan | `/start-planning` | {topic} | greenfield |
+| Continue implementation | `/start-implementation` | {topic} | greenfield |
+| Continue research | `/start-research` | — | — |
+| Start specification | `/start-specification` | — | — |
+| Start planning for {topic} | `/start-planning` | {topic} | greenfield |
+| Start implementation of {topic} | `/start-implementation` | {topic} | greenfield |
+| Start review for {topic} | `/start-review` | {topic} | greenfield |
+| Start new research | `/start-research` | — | — |
+| Start new discussion | `/start-discussion` | — | — |
 
-**Bridge mode** (topic + work_type known): Skill skips discovery, validates topic, proceeds to processing.
+Skills receive positional arguments: `$0` = topic, `$1` = work_type.
 
-**Discovery mode** (bare invocation): Skill runs full discovery and presents its own options.
+**With arguments** (bridge mode): `/start-discussion {topic} greenfield` — skill skips discovery, validates topic, proceeds to processing.
+
+**Without arguments** (discovery mode): `/start-discussion` — skill runs full discovery and presents its own options.
 
 → Proceed to **D. Enter Plan Mode**.
 
@@ -177,7 +179,7 @@ Map the selection to a skill invocation and determine the mode:
 
 ## D. Enter Plan Mode
 
-#### If mode is "bridge"
+#### If Topic and Work Type are present
 
 Enter plan mode with the following content:
 
@@ -188,25 +190,17 @@ Continue {selected_phase} for "{selected_topic}".
 
 ## Next Step
 
-Invoke `/start-{selected_phase}` with:
-- Topic: {selected_topic}
-- Work type: greenfield
+Invoke `/start-{selected_phase} {selected_topic} greenfield`
 
+Arguments: topic = {selected_topic}, work_type = greenfield
 The skill will skip discovery and proceed directly to validation.
-
-## Context
-
-- Topic: {selected_topic}
-- Work type: greenfield
-- Phase: {selected_phase}
 
 ## How to proceed
 
-Clear context and continue. Claude will invoke start-{selected_phase}
-with the topic and work type above, skipping discovery to proceed directly.
+Clear context and continue.
 ```
 
-#### If mode is "discovery"
+#### If Topic and Work Type are absent
 
 Enter plan mode with the following content:
 
@@ -219,16 +213,11 @@ Start {selected_phase} phase.
 
 Invoke `/start-{selected_phase}`
 
-The skill will discover state and present options.
-
-## Context
-
-- Work type: greenfield (phase-centric)
+No arguments — the skill will run full discovery and present options.
 
 ## How to proceed
 
-Clear context and continue. Claude will invoke start-{selected_phase}
-to discover state and present options.
+Clear context and continue.
 ```
 
 Exit plan mode. The user will approve and clear context.

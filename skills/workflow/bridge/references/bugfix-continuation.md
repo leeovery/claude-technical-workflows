@@ -46,22 +46,14 @@ The previous phase has concluded. Continue the pipeline.
 
 ## Next Step
 
-Invoke `/start-{next_phase}` with:
-- Topic: {topic}
-- Work type: bugfix
+Invoke `/start-{next_phase} {topic} bugfix`
 
+Arguments: topic = {topic}, work_type = bugfix
 The skill will skip discovery and proceed directly to validation.
-
-## Context
-
-- Topic: {topic}
-- Work type: bugfix
-- Next phase: {next_phase}
 
 ## How to proceed
 
-Clear context and continue. Claude will invoke start-{next_phase}
-with the topic and work type above, skipping discovery to proceed directly.
+Clear context and continue.
 ```
 
-Exit plan mode. The user will approve and clear context, and the fresh session will invoke start-{next_phase} with topic + work_type.
+Exit plan mode. The user will approve and clear context.
