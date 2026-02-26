@@ -17,18 +17,18 @@ Greenfield Overview
 
 Research:
 @if(research_count > 0)
-  @foreach(file in research.files)
-  • {file}
-  @endforeach
+  1. {file}
+
+  2. ...
 @else
   (none)
 @endif
 
 Discussions:
 @if(greenfield.discussions.count > 0)
-  @foreach(disc in greenfield.discussions.files)
-  • {disc.name} ({disc.status})
-  @endforeach
+  1. {disc.name:(titlecase)} ({disc.status})
+
+  2. ...
 @else
   (none)
 @endif

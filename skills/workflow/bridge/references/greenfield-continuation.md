@@ -21,18 +21,18 @@ Greenfield — {completed_phase:(titlecase)} Complete
 
 Research:
 @if(research.count > 0)
-  @foreach(file in research.files)
-  • {file}
-  @endforeach
+  1. {file}
+
+  2. ...
 @else
   (none)
 @endif
 
 Discussions:
 @if(discussions.count > 0)
-  @foreach(disc in discussions.files)
-  • {disc.name} ({disc.status})
-  @endforeach
+  1. {disc.name:(titlecase)} ({disc.status})
+
+  2. ...
 @else
   (none)
 @endif
