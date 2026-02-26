@@ -95,11 +95,11 @@ Check for arguments: topic = `$0`, work_type = `$1`
 
 #### If topic and work_type are both provided
 
-→ Proceed to **Step 3** (Validate Source Material).
+→ Proceed to **Step 3**.
 
 #### Otherwise
 
-→ Proceed to **Step 6** (Check Prerequisites).
+→ Proceed to **Step 6**.
 
 ---
 
@@ -127,13 +127,7 @@ Load **[invoke-skill-bridge.md](references/invoke-skill-bridge.md)** and follow 
 
 ## Step 6: Check Prerequisites
 
-Discovery mode — use the discovery output from Step 1 to check prerequisites.
-
-#### If has_discussions is false or has_concluded is false
-
-Load **[display-blocks.md](references/display-blocks.md)** and follow its instructions as written. **STOP.**
-
-#### Otherwise
+Load **[check-prerequisites.md](references/check-prerequisites.md)** and follow its instructions as written.
 
 → Proceed to **Step 7**.
 
@@ -141,34 +135,4 @@ Load **[display-blocks.md](references/display-blocks.md)** and follow its instru
 
 ## Step 7: Route Based on State
 
-Based on discovery state, load exactly ONE reference file:
-
-#### If concluded_count == 1
-
-Load **[display-single.md](references/display-single.md)** and follow its instructions as written.
-
-→ Proceed to **Step 8** with selection.
-
-#### If cache status is "valid"
-
-Load **[display-groupings.md](references/display-groupings.md)** and follow its instructions as written.
-
-→ Proceed to **Step 8** with selection.
-
-#### If spec_count == 0 and cache is "none" or "stale"
-
-Load **[display-analyze.md](references/display-analyze.md)** and follow its instructions as written.
-
-→ Proceed to **Step 8** with selection.
-
-#### Otherwise
-
-Load **[display-specs-menu.md](references/display-specs-menu.md)** and follow its instructions as written.
-
-→ Proceed to **Step 8** with selection.
-
----
-
-## Step 8: Invoke the Skill (Discovery Mode)
-
-Load **[confirm-and-handoff.md](references/confirm-and-handoff.md)** and follow its instructions as written.
+Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
