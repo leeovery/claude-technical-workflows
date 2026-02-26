@@ -72,9 +72,11 @@ Load **[greenfield-continuation.md](references/greenfield-continuation.md)** and
 
 ## Notes
 
-The continuation references will:
-1. Use discovery output to determine routing
+**Feature/bugfix** continuation references:
+1. Use discovery output to compute a single `next_phase`
 2. Enter plan mode with instructions to invoke `start-{next_phase}` with topic + work_type
 3. Exit plan mode for user approval
 
 The user will then clear context, and the fresh session will invoke the appropriate start-* skill with the topic and work_type provided, causing it to skip discovery and proceed directly to validation/processing.
+
+**Greenfield** continuation is interactive — greenfield is phase-centric with multiple actionable items, so there is no single next phase. The reference displays state, presents a menu of choices, waits for user selection, then enters plan mode with that specific choice. The plan mode content is deterministic (same as feature/bugfix) once the user has chosen.
