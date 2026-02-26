@@ -26,9 +26,10 @@ Source Material Missing
 No discussion found for "{topic:(titlecase)}".
 
 A concluded discussion is required before specification.
+Run /start-discussion {topic} to start one.
 ```
 
-**STOP.** Do not proceed — terminal condition. Suggest `/start-discussion` with topic.
+**STOP.** Do not proceed — terminal condition.
 
 **If discussion exists but status is "in-progress":**
 
@@ -38,10 +39,10 @@ A concluded discussion is required before specification.
 Discussion In Progress
 
 The discussion for "{topic:(titlecase)}" is not yet concluded.
-Complete the discussion first.
+Run /start-discussion {topic} to continue.
 ```
 
-**STOP.** Do not proceed — terminal condition. Suggest `/start-discussion` with topic to continue.
+**STOP.** Do not proceed — terminal condition.
 
 **If discussion exists and status is "concluded":**
 
@@ -67,9 +68,10 @@ Source Material Missing
 No investigation found for "{topic:(titlecase)}".
 
 A concluded investigation is required before specification.
+Run /start-investigation {topic} to start one.
 ```
 
-**STOP.** Do not proceed — terminal condition. Suggest `/start-investigation` with topic.
+**STOP.** Do not proceed — terminal condition.
 
 **If investigation exists but status is "in-progress":**
 
@@ -79,10 +81,10 @@ A concluded investigation is required before specification.
 Investigation In Progress
 
 The investigation for "{topic:(titlecase)}" is not yet concluded.
-Complete the investigation first.
+Run /start-investigation {topic} to continue.
 ```
 
-**STOP.** Do not proceed — terminal condition. Suggest `/start-investigation` with topic to continue.
+**STOP.** Do not proceed — terminal condition.
 
 **If investigation exists and status is "concluded":**
 

@@ -34,9 +34,10 @@ Set source="continue".
 Discussion Concluded
 
 The discussion for "{topic:(titlecase)}" has already concluded.
+Run /start-specification to continue to spec.
 ```
 
-**STOP.** Do not proceed — terminal condition. Suggest `/start-specification` to continue to spec.
+**STOP.** Do not proceed — terminal condition.
 
 #### If no collision
 

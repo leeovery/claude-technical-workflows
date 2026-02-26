@@ -22,9 +22,10 @@ Plan Missing
 No plan found for "{topic:(titlecase)}".
 
 A concluded plan is required for implementation.
+Run /start-planning {topic} to create one.
 ```
 
-**STOP.** Do not proceed — terminal condition. Suggest `/start-planning` with topic.
+**STOP.** Do not proceed — terminal condition.
 
 #### If plan exists but status is not "concluded"
 
@@ -34,10 +35,10 @@ A concluded plan is required for implementation.
 Plan Not Concluded
 
 The plan for "{topic:(titlecase)}" is not yet concluded.
-Complete the plan first.
+Run /start-planning {topic} to continue.
 ```
 
-**STOP.** Do not proceed — terminal condition. Suggest `/start-planning` with topic to continue.
+**STOP.** Do not proceed — terminal condition.
 
 #### If plan exists and status is "concluded"
 

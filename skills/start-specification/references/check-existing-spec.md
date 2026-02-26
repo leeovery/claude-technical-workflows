@@ -51,6 +51,7 @@ Archive the existing spec.
 Specification Concluded
 
 The specification for "{topic:(titlecase)}" has already concluded.
+Run /start-planning {topic} to continue to planning.
 ```
 
-**STOP.** Do not proceed — terminal condition. Suggest `/start-planning` with topic to continue to planning.
+**STOP.** Do not proceed — terminal condition.

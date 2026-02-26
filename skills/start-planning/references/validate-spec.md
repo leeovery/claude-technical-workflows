@@ -22,9 +22,10 @@ Specification Missing
 No specification found for "{topic:(titlecase)}".
 
 A concluded specification is required for planning.
+Run /start-specification {topic} to create one.
 ```
 
-**STOP.** Do not proceed — terminal condition. Suggest `/start-specification` with topic.
+**STOP.** Do not proceed — terminal condition.
 
 #### If specification exists but status is "in-progress"
 
@@ -34,10 +35,10 @@ A concluded specification is required for planning.
 Specification In Progress
 
 The specification for "{topic:(titlecase)}" is not yet concluded.
-Complete the specification first.
+Run /start-specification {topic} to continue.
 ```
 
-**STOP.** Do not proceed — terminal condition. Suggest `/start-specification` with topic to continue.
+**STOP.** Do not proceed — terminal condition.
 
 #### If specification exists and status is "concluded"
 

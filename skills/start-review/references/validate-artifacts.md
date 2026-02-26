@@ -23,9 +23,10 @@ Plan Missing
 No plan found for "{topic:(titlecase)}".
 
 A concluded plan and implementation are required for review.
+Run /start-planning {topic} to create one.
 ```
 
-**STOP.** Do not proceed — terminal condition. Suggest `/start-planning` with topic.
+**STOP.** Do not proceed — terminal condition.
 
 Read `.workflows/implementation/{topic}/tracking.md` frontmatter.
 
@@ -39,9 +40,10 @@ Implementation Missing
 No implementation found for "{topic:(titlecase)}".
 
 A completed implementation is required for review.
+Run /start-implementation {topic} to start one.
 ```
 
-**STOP.** Do not proceed — terminal condition. Suggest `/start-implementation` with topic.
+**STOP.** Do not proceed — terminal condition.
 
 #### If implementation status is not "completed"
 
@@ -51,10 +53,10 @@ A completed implementation is required for review.
 Implementation Not Complete
 
 The implementation for "{topic:(titlecase)}" is not yet completed.
-Complete the implementation first.
+Run /start-implementation {topic} to continue.
 ```
 
-**STOP.** Do not proceed — terminal condition. Suggest `/start-implementation` with topic to continue.
+**STOP.** Do not proceed — terminal condition.
 
 #### If plan and implementation are both ready
 
