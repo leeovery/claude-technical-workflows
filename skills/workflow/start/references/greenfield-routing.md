@@ -71,7 +71,6 @@ Build a numbered menu of actionable items. The verb depends on the state:
 | State | Verb |
 |-------|------|
 | In-progress discussion | Continue |
-| In-progress specification | Continue |
 | Concluded spec (feature), no plan | Start planning for |
 | In-progress plan | Continue |
 | Concluded plan, no implementation | Start implementation of |
@@ -95,13 +94,12 @@ Always include "Start new discussion" as a final option.
 What would you like to do?
 
 1. Continue "Auth Flow" discussion — in-progress
-2. Continue "Billing" specification — in-progress
-3. Start planning for "User Profiles" — spec concluded
-4. Continue "Caching" plan — in-progress
-5. Start implementation of "Notifications" — plan concluded
-6. Start specification — 3 discussions concluded (recommended)
-7. Continue research
-8. Start new discussion
+2. Start planning for "User Profiles" — spec concluded
+3. Continue "Caching" plan — in-progress
+4. Start implementation of "Notifications" — plan concluded
+5. Start specification — 3 discussions concluded (recommended)
+6. Continue research
+7. Start new discussion
 
 Select an option (enter number):
 · · · · · · · · · · · ·
@@ -118,7 +116,6 @@ Parse the user's selection, then follow the instructions below the table to invo
 | Selection | Skill | Topic | Work Type |
 |-----------|-------|-------|-----------|
 | Continue discussion | `/start-discussion` | {topic} | greenfield |
-| Continue specification | `/start-specification` | {topic} | greenfield |
 | Continue plan | `/start-planning` | {topic} | greenfield |
 | Continue implementation | `/start-implementation` | {topic} | greenfield |
 | Continue research | `/start-research` | — | — |

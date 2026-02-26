@@ -6,7 +6,7 @@
 
 Check if source material exists and is ready.
 
-#### For greenfield or feature work_type
+#### For feature work_type
 
 Check if discussion exists and is concluded:
 
