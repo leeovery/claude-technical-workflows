@@ -72,51 +72,7 @@ Load **[gather-feature-context.md](references/gather-feature-context.md)** and f
 
 ## Step 2: Topic Name and Conflict Check
 
-Based on the feature description, suggest a topic name:
-
-> *Output the next fenced block as a code block:*
-
-```
-Suggested topic name: {suggested-topic:(kebabcase)}
-
-This will create: .workflows/discussion/{suggested-topic}.md
-```
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-Is this name okay?
-
-- **`y`/`yes`** — Use this name
-- **`s`/`something else`** — Suggest a different name
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-Once the topic name is confirmed, check for naming conflicts:
-
-```bash
-ls .workflows/discussion/
-```
-
-If a discussion with the same name exists, inform the user:
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-A discussion named "{topic}" already exists.
-
-- **`r`/`resume`** — Resume the existing discussion
-- **`n`/`new`** — Choose a different name
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-If resuming, check the discussion status. If in-progress → proceed to Step 4.
+Load **[topic-name-check.md](references/topic-name-check.md)** and follow its instructions.
 
 → Proceed to **Step 3**.
 
@@ -126,50 +82,10 @@ If resuming, check the discussion status. If in-progress → proceed to Step 4.
 
 Load **[research-gating.md](references/research-gating.md)** and follow its instructions.
 
-The reference will assess uncertainties and offer research if beneficial.
-
-#### If user chooses research
-
-→ Proceed to **Step 4** with `phase: research`
-
-#### If user declines research (or no uncertainties)
-
-→ Proceed to **Step 4** with `phase: discussion`
+→ Proceed to **Step 4**.
 
 ---
 
 ## Step 4: Invoke Processing Skill
 
-Before invoking the processing skill, save a session bookmark for compaction recovery.
-
-> *Output the next fenced block as a code block:*
-
-```
-Saving session state for compaction recovery.
-```
-
-#### If phase is research
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-research/SKILL.md" \
-  ".workflows/research/{topic}.md"
-```
-
-Load **[invoke-research.md](references/invoke-research.md)** and follow its instructions.
-
-When research concludes, the processing skill will detect `work_type: feature` in the artifact and invoke workflow:bridge automatically.
-
-#### If phase is discussion
-
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-discussion/SKILL.md" \
-  ".workflows/discussion/{topic}.md"
-```
-
-Load **[invoke-discussion.md](references/invoke-discussion.md)** and follow its instructions.
-
-When the discussion concludes, the processing skill will detect `work_type: feature` in the artifact and invoke workflow:bridge automatically.
+Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions.

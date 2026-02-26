@@ -54,15 +54,12 @@ Skip this step silently and proceed to discussion. Do not ask about research if 
 
 #### If user chooses research
 
-→ Return to **[the skill](../SKILL.md)** with: `research_first: true`
+Set phase="research".
 
-The main skill will:
-1. Create a research file with topic + work_type: feature
-2. Invoke technical-research
-3. When research concludes → workflow:bridge → start-discussion (with topic + feature)
+→ Return to **[the skill](../SKILL.md)**.
 
 #### If user declines research (or no uncertainties)
 
-→ Return to **[the skill](../SKILL.md)** with: `research_first: false`
+Set phase="discussion".
 
-The main skill will proceed directly to discussion.
+→ Return to **[the skill](../SKILL.md)**.
