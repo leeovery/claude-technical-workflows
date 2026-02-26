@@ -27,10 +27,7 @@ The investigation frontmatter should include:
 - work_type: bugfix
 - date: {today}
 
-PIPELINE CONTINUATION — When this investigation concludes (status: concluded),
-you MUST return to the start-bugfix skill and execute Step 4 (Phase Bridge).
-Load: skills/start-bugfix/references/phase-bridge.md
-Do not end the session after the investigation — the bugfix pipeline continues.
-
 Invoke the technical-investigation skill.
 ```
+
+When the investigation concludes, the processing skill will detect `work_type: bugfix` in the artifact and invoke workflow:bridge automatically.

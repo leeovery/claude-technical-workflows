@@ -37,10 +37,9 @@ Context refresh (compaction) summarizes the conversation, losing procedural deta
 2. **Identify the topic.** Check conversation history for the topic name. If unknown, check `.workflows/discussion/` or `.workflows/research/` for recently modified files.
 3. **Determine current step from artifacts:**
    - No research or discussion file exists → resume at **Step 1**
-   - Research exists with `status: in-progress` → resume at **Step 4** (re-invoke technical-research)
-   - Research exists with `status: concluded`, no discussion → resume at **Step 5** (phase bridge for research → discussion)
+   - Research file exists, no discussion → resume at **Step 4** (re-invoke technical-research)
    - Discussion exists with `status: in-progress` → resume at **Step 4** (re-invoke technical-discussion)
-   - Discussion exists with `status: concluded` → resume at **Step 5** (phase bridge)
+   - Discussion exists with `status: concluded` → already handled by processing skill's bridge invocation
 4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 
 Do not guess at progress or continue from memory. The files on disk and git history are authoritative — your recollection is not.
@@ -117,7 +116,7 @@ A discussion named "{topic}" already exists.
 
 **STOP.** Wait for user response.
 
-If resuming, check the discussion status. If concluded → skip to Step 5. If in-progress → proceed to Step 4.
+If resuming, check the discussion status. If in-progress → proceed to Step 4.
 
 → Proceed to **Step 3**.
 
@@ -174,11 +173,3 @@ When research concludes, the processing skill will detect `work_type: feature` i
 Load **[invoke-discussion.md](references/invoke-discussion.md)** and follow its instructions.
 
 When the discussion concludes, the processing skill will detect `work_type: feature` in the artifact and invoke workflow:bridge automatically.
-
----
-
-## Step 5: Phase Bridge
-
-Load **[phase-bridge.md](references/phase-bridge.md)** and follow its instructions.
-
-The bridge will enter plan mode with instructions to invoke the appropriate start-{phase} skill for the topic in the next session.

@@ -36,7 +36,7 @@ Context refresh (compaction) summarizes the conversation, losing procedural deta
 3. **Determine current step from artifacts:**
    - No investigation file exists → resume at **Step 1**
    - Investigation exists with `status: in-progress` → resume at **Step 3** (re-invoke technical-investigation)
-   - Investigation exists with `status: concluded` → resume at **Step 4** (phase bridge)
+   - Investigation exists with `status: concluded` → already handled by processing skill's bridge invocation
 4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 
 Do not guess at progress or continue from memory. The files on disk and git history are authoritative — your recollection is not.
@@ -113,7 +113,7 @@ An investigation named "{topic}" already exists.
 
 **STOP.** Wait for user response.
 
-If resuming, check the investigation status. If concluded → skip to Step 4. If in-progress → proceed to Step 3.
+If resuming, check the investigation status. If in-progress → proceed to Step 3.
 
 → Proceed to **Step 3**.
 
@@ -139,11 +139,3 @@ Saving session state for compaction recovery.
 Load **[invoke-investigation.md](references/invoke-investigation.md)** and follow its instructions.
 
 When the investigation concludes, the processing skill will detect `work_type: bugfix` in the artifact and invoke workflow:bridge automatically.
-
----
-
-## Step 4: Phase Bridge
-
-Load **[phase-bridge.md](references/phase-bridge.md)** and follow its instructions.
-
-The bridge will enter plan mode with instructions to invoke the appropriate start-{phase} skill for the topic in the next session.
