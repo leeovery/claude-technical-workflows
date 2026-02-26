@@ -92,33 +92,26 @@ Recreate with actual topics and states from discovery.
 
 ## Route Based on Selection
 
-Parse the user's selection:
+Parse the user's selection, then follow the instructions below.
 
 #### If "start new feature"
 
-Invoke `start-feature`. It will set `work_type: feature` automatically.
+Invoke `/start-feature`. It will set `work_type: feature` automatically.
 
 #### If continuing existing feature
 
-Route to the appropriate start-* skill based on `next_phase`:
+Map `next_phase` to the appropriate skill:
 
-| next_phase | Invoke |
-|------------|--------|
-| discussion | `start-discussion` with topic + "feature" |
-| specification | `start-specification` with topic + "feature" |
-| planning | `start-planning` with topic + "feature" |
-| implementation | `start-implementation` with topic + "feature" |
-| review | `start-review` with topic + "feature" |
+| next_phase | Skill | Topic | Work Type |
+|------------|-------|-------|-----------|
+| discussion | `/start-discussion` | {topic} | feature |
+| specification | `/start-specification` | {topic} | feature |
+| planning | `/start-planning` | {topic} | feature |
+| implementation | `/start-implementation` | {topic} | feature |
+| review | `/start-review` | {topic} | feature |
 
-The start-* skill receives topic and work_type, which triggers bridge mode (skipping discovery).
+Skills receive positional arguments: `$0` = topic, `$1` = work_type.
 
-Example invocation:
+**Example**: `/start-specification {topic} feature` — skill skips discovery, validates topic, proceeds to processing.
 
-```
-Topic: {topic}
-Work type: feature
-
-Invoke start-{next_phase} with the topic and work type.
-```
-
-The start-{phase} skill will validate the topic exists and proceed to the processing skill.
+Invoke the skill from the table with the topic and work type as positional arguments.

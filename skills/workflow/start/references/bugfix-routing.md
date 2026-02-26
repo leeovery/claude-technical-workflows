@@ -92,33 +92,26 @@ Recreate with actual topics and states from discovery.
 
 ## Route Based on Selection
 
-Parse the user's selection:
+Parse the user's selection, then follow the instructions below.
 
 #### If "start new bugfix"
 
-Invoke `start-bugfix`. It will set `work_type: bugfix` and begin the investigation phase.
+Invoke `/start-bugfix`. It will set `work_type: bugfix` and begin the investigation phase.
 
 #### If continuing existing bugfix
 
-Route to the appropriate start-* skill based on `next_phase`:
+Map `next_phase` to the appropriate skill:
 
-| next_phase | Invoke |
-|------------|--------|
-| investigation | `start-investigation` with topic + "bugfix" |
-| specification | `start-specification` with topic + "bugfix" |
-| planning | `start-planning` with topic + "bugfix" |
-| implementation | `start-implementation` with topic + "bugfix" |
-| review | `start-review` with topic + "bugfix" |
+| next_phase | Skill | Topic | Work Type |
+|------------|-------|-------|-----------|
+| investigation | `/start-investigation` | {topic} | bugfix |
+| specification | `/start-specification` | {topic} | bugfix |
+| planning | `/start-planning` | {topic} | bugfix |
+| implementation | `/start-implementation` | {topic} | bugfix |
+| review | `/start-review` | {topic} | bugfix |
 
-The start-* skill receives topic and work_type, which triggers bridge mode (skipping discovery).
+Skills receive positional arguments: `$0` = topic, `$1` = work_type.
 
-Example invocation:
+**Example**: `/start-specification {topic} bugfix` — skill skips discovery, validates topic, proceeds to processing.
 
-```
-Topic: {topic}
-Work type: bugfix
-
-Invoke start-{next_phase} with the topic and work type.
-```
-
-The start-{phase} skill will validate the topic exists and proceed to the processing skill.
+Invoke the skill from the table with the topic and work type as positional arguments.
