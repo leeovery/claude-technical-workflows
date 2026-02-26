@@ -46,13 +46,19 @@ What would you like to do?
 
 #### If resuming
 
+Set source="continue".
+
 → Return to **[the skill](../SKILL.md)** for **Step 8** with that topic.
 
 #### If new
 
+Set source="fresh".
+
 → Return to **[the skill](../SKILL.md)** for **Step 5**.
 
 #### If scenario is "fresh"
+
+Set source="fresh".
 
 > *Output the next fenced block as a code block:*
 

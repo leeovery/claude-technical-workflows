@@ -29,7 +29,7 @@ Invoke the [technical-investigation](../../technical-investigation/SKILL.md) ski
 
 Construct the handoff based on how this investigation was initiated.
 
-#### If starting fresh investigation
+#### If source is "fresh"
 
 ```
 Investigation session for: {topic}
@@ -43,7 +43,7 @@ Bug context:
 Invoke the technical-investigation skill.
 ```
 
-#### If resuming existing investigation
+#### If source is "continue"
 
 ```
 Investigation session for: {topic}

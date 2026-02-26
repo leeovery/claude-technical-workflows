@@ -10,6 +10,8 @@ Route based on the user's choice from the options display.
 
 User chose to start from research (e.g., "research 1", "1", "from research", or a topic name).
 
+Set source="research".
+
 **If user specified a topic inline** (e.g., "research 2", "2", or topic name):
 - Identify the selected topic from the numbered list
 
@@ -29,6 +31,8 @@ Which research topic would you like to discuss? (Enter a number or topic name)
 
 User chose to continue a discussion (e.g., "continue auth-flow" or "continue discussion").
 
+Set source="continue".
+
 **If user specified a discussion inline** (e.g., "continue auth-flow"):
 - Identify the selected discussion from the list
 
@@ -47,6 +51,8 @@ Which discussion would you like to continue?
 #### If user chose "Fresh topic"
 
 User wants to start a fresh discussion.
+
+Set source="fresh".
 
 → Return to **[the skill](../SKILL.md)**.
 

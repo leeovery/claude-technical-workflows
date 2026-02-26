@@ -22,6 +22,8 @@ No research exists, but discussions do. Skip research analysis.
 
 No research or discussions exist yet.
 
+Set source="fresh".
+
 > *Output the next fenced block as a code block:*
 
 ```

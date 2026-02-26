@@ -22,7 +22,7 @@ Read `.workflows/discussion/{topic}.md` frontmatter to check status.
 Resuming discussion: {topic:(titlecase)}
 ```
 
-Set path="continue".
+Set source="continue".
 
 → Return to **[the skill](../SKILL.md)** for **Step 9**.
 
@@ -39,5 +39,7 @@ The discussion for "{topic:(titlecase)}" has already concluded.
 **STOP.** Do not proceed — terminal condition. Suggest `/start-specification` to continue to spec.
 
 #### If no collision
+
+Set source="bridge".
 
 → Return to **[the skill](../SKILL.md)**.

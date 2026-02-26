@@ -46,6 +46,8 @@ An investigation named "{topic}" already exists.
 
 #### If resuming
 
+Set source="continue".
+
 Check the investigation status. If concluded → suggest `/start-specification {topic} bugfix`. If in-progress:
 
 → Return to **[the skill](../SKILL.md)** for **Step 8**.

@@ -4,9 +4,9 @@
 
 ---
 
-Route based on the chosen path from earlier steps.
+Route based on the `source` variable set in earlier steps.
 
-#### If starting from research
+#### If source is "research"
 
 Load **[gather-context-research.md](gather-context-research.md)** and follow its instructions.
 
@@ -14,7 +14,7 @@ Load **[gather-context-research.md](gather-context-research.md)** and follow its
 
 → Return to **[the skill](../SKILL.md)**.
 
-#### If starting fresh topic
+#### If source is "fresh"
 
 Load **[gather-context-fresh.md](gather-context-fresh.md)** and follow its instructions.
 
@@ -22,7 +22,7 @@ Load **[gather-context-fresh.md](gather-context-fresh.md)** and follow its instr
 
 → Return to **[the skill](../SKILL.md)**.
 
-#### If continuing existing discussion
+#### If source is "continue"
 
 Load **[gather-context-continue.md](gather-context-continue.md)** and follow its instructions.
 

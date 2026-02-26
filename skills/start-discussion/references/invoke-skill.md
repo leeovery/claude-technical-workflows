@@ -29,7 +29,7 @@ Invoke the [technical-discussion](../../technical-discussion/SKILL.md) skill for
 
 Construct the handoff based on how this discussion was initiated.
 
-#### If starting from research
+#### If source is "research"
 
 ```
 Discussion session for: {topic}
@@ -42,7 +42,7 @@ Summary: {the 1-2 sentence summary from the research analysis}
 Invoke the technical-discussion skill.
 ```
 
-#### If continuing existing discussion
+#### If source is "continue"
 
 ```
 Discussion session for: {topic}
@@ -52,7 +52,7 @@ Output: .workflows/discussion/{topic}.md
 Invoke the technical-discussion skill.
 ```
 
-#### If starting fresh topic
+#### If source is "fresh"
 
 ```
 Discussion session for: {topic}
@@ -62,7 +62,7 @@ Output: .workflows/discussion/{topic}.md
 Invoke the technical-discussion skill.
 ```
 
-#### If bridge mode (topic and work_type provided by caller)
+#### If source is "bridge"
 
 ```
 Discussion session for: {topic}

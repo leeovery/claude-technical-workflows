@@ -22,6 +22,8 @@ Read `.workflows/investigation/{topic}/investigation.md` frontmatter to check st
 Resuming investigation: {topic:(titlecase)}
 ```
 
+Set source="continue".
+
 → Return to **[the skill](../SKILL.md)** for **Step 8**.
 
 #### If status is "concluded"
@@ -37,5 +39,7 @@ The investigation for "{topic:(titlecase)}" has already concluded.
 **STOP.** Do not proceed — terminal condition. Suggest `/start-specification {topic} bugfix` to continue to spec.
 
 #### If no collision
+
+Set source="fresh".
 
 → Return to **[the skill](../SKILL.md)**.
