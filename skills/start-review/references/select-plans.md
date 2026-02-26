@@ -4,7 +4,7 @@
 
 ---
 
-This step only applies for `single`, `multi`, or `all` scope chosen in Step 7.
+This step only applies for `single`, `multi`, or `all` scope chosen in Step 6.
 
 #### If scope is "analysis"
 
@@ -29,17 +29,19 @@ Select an option:
 
 If `select`, present numbered list of reviewed plans for the user to choose from (comma-separated numbers).
 
+→ Return to **[the skill](../SKILL.md)**.
+
 #### If single review exists
 
 Automatically proceed with the only available review.
 
-→ Proceed to **[Step 9](../SKILL.md)**.
+→ Return to **[the skill](../SKILL.md)**.
 
 #### If scope is "all"
 
 All reviewable plans are included. No selection needed. Each plan will be reviewed independently.
 
-→ Proceed to **[Step 9](../SKILL.md)**.
+→ Return to **[the skill](../SKILL.md)**.
 
 #### If scope is "single"
 
@@ -47,13 +49,13 @@ All reviewable plans are included. No selection needed. Each plan will be review
 
 ```
 · · · · · · · · · · · ·
-Which plan would you like to review? (Enter a number from Step 7)
+Which plan would you like to review? (Enter a number from Step 6)
 · · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
 
-→ Proceed to **[Step 9](../SKILL.md)**.
+→ Return to **[the skill](../SKILL.md)**.
 
 #### If scope is "multi"
 
@@ -67,4 +69,4 @@ Which plans to include? (Enter numbers separated by commas, e.g. 1,3)
 
 **STOP.** Wait for user response.
 
-→ Proceed to **[Step 9](../SKILL.md)**.
+→ Return to **[the skill](../SKILL.md)**.

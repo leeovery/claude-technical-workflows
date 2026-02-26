@@ -103,11 +103,11 @@ Check for arguments: topic = `$0`, work_type = `$1`
 
 #### If topic and work_type are both provided
 
-→ Proceed to **Step 3** (Validate Plan and Implementation).
+→ Proceed to **Step 3**.
 
 #### Otherwise
 
-→ Proceed to **Step 6** (Route Based on Scenario).
+→ Proceed to **Step 4**.
 
 ---
 
@@ -115,128 +115,38 @@ Check for arguments: topic = `$0`, work_type = `$1`
 
 Load **[validate-artifacts.md](references/validate-artifacts.md)** and follow its instructions as written.
 
-→ Proceed to **Step 4**.
+→ Proceed to **Step 5**.
 
 ---
 
-## Step 4: Determine Review Version (Bridge Mode)
+## Step 4: Route Based on Scenario
 
-Check if reviews already exist for this topic from the discovery output.
-
-**If no reviews exist:**
-
-Set review_version = 1.
-
-**If reviews exist:**
-
-Find the latest review version for this topic.
-Set review_version = latest_version + 1.
-
-> *Output the next fenced block as a code block:*
-
-```
-Starting review r{review_version} for "{topic:(titlecase)}".
-```
-
-→ Proceed to **Step 5** (Invoke Skill - Bridge Mode).
+Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
 
 ---
 
-## Step 5: Invoke the Skill (Bridge Mode)
+## Step 5: Determine Review Version
 
-Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
-
----
-
-## Step 6: Route Based on Scenario
-
-Discovery mode — use the discovery output from Step 1.
-
-Use `state.scenario` from the discovery output to determine the path:
-
-#### If scenario is "no_plans"
-
-No plans exist yet.
-
-> *Output the next fenced block as a code block:*
-
-```
-Review Overview
-
-No plans found in .workflows/planning/
-
-The review phase requires a completed implementation based on a plan.
-Run /start-planning first to create a plan, then /start-implementation
-to build it.
-```
-
-**STOP.** Do not proceed — terminal condition.
-
-#### If all_reviewed is true
-
-All implemented plans have been reviewed.
-
-> *Output the next fenced block as a code block:*
-
-```
-Review Overview
-
-All {N} implemented plans have been reviewed.
-
-1. {topic:(titlecase)}
-   └─ Review: x{review_count} — r{latest_review_version} ({latest_review_verdict})
-   └─ Synthesis: @if(has_synthesis) completed @else pending @endif
-
-2. ...
-```
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-All plans have been reviewed.
-
-- **`a`/`analysis`** — Synthesize findings from existing reviews into tasks
-- **`r`/`re-review`** — Re-review a plan (creates new review version)
-
-Select an option:
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-#### If analysis
-
-→ Proceed to **Step 9** with scope set to "analysis".
-
-#### If re-review
-
-→ Proceed to **Step 7** to select which plan, incrementing the review version.
-
-#### If scenario is "single_plan" or "multiple_plans"
-
-Plans exist (some may have reviews, some may not).
-
-→ Proceed to **Step 7** to present options.
-
----
-
-## Step 7: Display Plans
-
-Load **[display-plans.md](references/display-plans.md)** and follow its instructions as written.
+Load **[determine-review-version.md](references/determine-review-version.md)** and follow its instructions as written.
 
 → Proceed to **Step 8**.
 
 ---
 
-## Step 8: Select Plans
+## Step 6: Display Plans
 
-Load **[select-plans.md](references/select-plans.md)** and follow its instructions as written.
-
-→ Proceed to **Step 9**.
+Load **[display-plans.md](references/display-plans.md)** and follow its instructions as written.
 
 ---
 
-## Step 9: Invoke the Skill (Discovery Mode)
+## Step 7: Select Plans
+
+Load **[select-plans.md](references/select-plans.md)** and follow its instructions as written.
+
+→ Proceed to **Step 8**.
+
+---
+
+## Step 8: Invoke the Skill
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
