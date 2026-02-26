@@ -113,7 +113,7 @@ Recreate with actual topics and states from discovery. Only include options that
 
 ## Route Based on Selection
 
-Parse the user's selection and route to the appropriate skill:
+Parse the user's selection, then follow the instructions below the table to invoke the appropriate skill.
 
 | Selection | Skill | Topic | Work Type |
 |-----------|-------|-------|-----------|
@@ -136,3 +136,5 @@ Skills receive positional arguments: `$0` = topic, `$1` = work_type.
 **Without arguments** (discovery mode): `/start-discussion` — skill runs full discovery and presents its own options.
 
 **Note on specification**: Unlike feature/bugfix pipelines, greenfield specification is NOT topic-centric. The `/start-specification` skill discovers all concluded discussions, analyzes them, and suggests how to group them into specifications. Always invoke without arguments.
+
+Invoke the skill from the table with the topic and work type as positional arguments. If no topic or work type is shown, invoke the skill bare.
