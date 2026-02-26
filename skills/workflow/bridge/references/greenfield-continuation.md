@@ -21,51 +21,51 @@ Greenfield — {completed_phase:(titlecase)} Complete
 
 Research:
 @if(research.count > 0)
-  1. {file}
-
-  2. ...
+  @foreach(file in research.files)
+  └─ {file}
+  @endforeach
 @else
   (none)
 @endif
 
 Discussions:
 @if(discussions.count > 0)
-  1. {disc.name:(titlecase)} ({disc.status})
-
-  2. ...
+  @foreach(disc in discussions.files)
+  └─ {disc.name:(titlecase)} ({disc.status})
+  @endforeach
 @else
   (none)
 @endif
 
 Specifications:
 @if(specifications.count > 0)
-  1. {spec.name:(titlecase)}
+  @foreach(spec in specifications.files)
+  └─ {spec.name:(titlecase)}
      └─ Spec: {spec.status} ({spec.type})
      └─ Plan: @if(spec.has_plan) exists @else (no plan) @endif
-
-  2. ...
+  @endforeach
 @else
   (none)
 @endif
 
 Plans:
 @if(plans.count > 0)
-  1. {plan.name:(titlecase)}
+  @foreach(plan in plans.files)
+  └─ {plan.name:(titlecase)}
      └─ Plan: {plan.status}
      └─ Implementation: @if(plan.has_implementation) exists @else (not started) @endif
-
-  2. ...
+  @endforeach
 @else
   (none)
 @endif
 
 Implementation:
 @if(implementation.count > 0)
-  1. {impl.topic:(titlecase)}
+  @foreach(impl in implementation.files)
+  └─ {impl.topic:(titlecase)}
      └─ Implementation: {impl.status}
      └─ Review: @if(impl.has_review) exists @else (no review) @endif
-
-  2. ...
+  @endforeach
 @else
   (none)
 @endif

@@ -17,48 +17,48 @@ Greenfield Overview
 
 Research:
 @if(research_count > 0)
-  1. {file}
-
-  2. ...
+  @foreach(file in research.files)
+  └─ {file}
+  @endforeach
 @else
   (none)
 @endif
 
 Discussions:
 @if(greenfield.discussions.count > 0)
-  1. {disc.name:(titlecase)} ({disc.status})
-
-  2. ...
+  @foreach(disc in greenfield.discussions.files)
+  └─ {disc.name:(titlecase)} ({disc.status})
+  @endforeach
 @else
   (none)
 @endif
 
 Specifications:
 @if(greenfield.specifications.count > 0)
-  1. {spec.name:(titlecase)}
+  @foreach(spec in greenfield.specifications.files)
+  └─ {spec.name:(titlecase)}
      └─ Spec: {spec.status} ({spec.type})
-
-  2. ...
+  @endforeach
 @else
   (none)
 @endif
 
 Plans:
 @if(greenfield.plans.count > 0)
-  1. {plan.name:(titlecase)}
+  @foreach(plan in greenfield.plans.files)
+  └─ {plan.name:(titlecase)}
      └─ Plan: {plan.status}
-
-  2. ...
+  @endforeach
 @else
   (none)
 @endif
 
 Implementation:
 @if(greenfield.implementation.count > 0)
-  1. {impl.topic:(titlecase)}
+  @foreach(impl in greenfield.implementation.files)
+  └─ {impl.topic:(titlecase)}
      └─ Implementation: {impl.status}
-
-  2. ...
+  @endforeach
 @else
   (none)
 @endif
