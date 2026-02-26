@@ -17,6 +17,7 @@ This is a single file per topic.
 topic: {topic-name}
 status: in-progress
 date: YYYY-MM-DD  # Use today's actual date
+research_source: {filename}.md  # Optional — only when handoff includes research source
 ---
 
 # Discussion: {Topic}
@@ -95,12 +96,19 @@ What we chose, why, the deciding factor, trade-offs accepted, confidence level.
 - [ ] Validate Y
 ```
 
+## Field Notes
+
+- `topic`: The discussion topic. Should match the filename (e.g., `auth-flow` for `auth-flow.md`).
+- `status`: Lifecycle state — `in-progress` or `concluded`.
+- `date`: Today's date when creating the document.
+- `research_source`: (optional) The research file this discussion originated from. Include only when the handoff provides a research source. Feature pipeline only — greenfield discussions may draw from multiple research files.
+
 ## Usage Notes
 
 **When creating**:
 1. Ensure discussion directory exists: `.workflows/discussion/`
 2. Create file: `{topic}.md`
-3. Fill frontmatter: topic, status, date
+3. Fill frontmatter: topic, status, date, and research_source if provided in handoff
 4. Start with context: why discussing?
 5. List questions: what needs deciding?
 

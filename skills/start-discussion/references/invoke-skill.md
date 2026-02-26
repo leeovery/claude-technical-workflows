@@ -42,6 +42,21 @@ Summary: {the 1-2 sentence summary from the research analysis}
 Invoke the technical-discussion skill.
 ```
 
+#### If source is "research-bridge"
+
+```
+Discussion session for: {topic}
+Work type: {work_type}
+Research source: .workflows/research/{topic}.md
+Output: .workflows/discussion/{topic}.md
+
+Research reference:
+Source: .workflows/research/{topic}.md
+Summary: {the discussion-ready summary from the research file}
+
+Invoke the technical-discussion skill.
+```
+
 #### If source is "continue"
 
 ```
