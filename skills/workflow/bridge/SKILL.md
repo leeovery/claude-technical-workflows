@@ -23,20 +23,22 @@ This skill receives context from the calling processing skill:
 
 Determine the next phase by running discovery.
 
-#### If work type is "feature" or "bugfix"
-
-Run topic-specific discovery:
+#### If work type is "feature"
 
 ```bash
-.claude/skills/workflow/bridge/scripts/discovery.sh "{topic}" "{work_type}"
+.claude/skills/workflow/bridge/scripts/discovery.sh --feature --topic "{topic}"
+```
+
+#### If work type is "bugfix"
+
+```bash
+.claude/skills/workflow/bridge/scripts/discovery.sh --bugfix --topic "{topic}"
 ```
 
 Parse the output to extract:
 - `next_phase`: The computed next phase for this topic
 
 #### If work type is "greenfield"
-
-Run phase-centric discovery:
 
 ```bash
 .claude/skills/workflow/bridge/scripts/discovery.sh --greenfield

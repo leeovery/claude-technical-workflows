@@ -3,7 +3,8 @@
 # Topic-specific discovery script for /workflow:bridge.
 #
 # Usage:
-#   discovery.sh <topic> <work_type>
+#   discovery.sh --feature --topic <topic>
+#   discovery.sh --bugfix --topic <topic>
 #   discovery.sh --greenfield
 #
 # For feature/bugfix: Checks artifacts for a specific topic and computes next_phase.
@@ -38,25 +39,52 @@ extract_field() {
     echo "$value"
 }
 
+#
+# Parse arguments
+#
+topic=""
+work_type=""
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --topic)
+            topic="$2"
+            shift 2
+            ;;
+        --greenfield)
+            work_type="greenfield"
+            shift
+            ;;
+        --feature)
+            work_type="feature"
+            shift
+            ;;
+        --bugfix)
+            work_type="bugfix"
+            shift
+            ;;
+        *)
+            echo "error: \"Unknown argument: $1\""
+            echo "error: \"Usage: discovery.sh --feature|--bugfix --topic <topic> OR discovery.sh --greenfield\""
+            exit 1
+            ;;
+    esac
+done
+
+if [ -z "$work_type" ]; then
+    echo "error: \"Work type flag required: --greenfield, --feature, or --bugfix\""
+    exit 1
+fi
+
+if [ "$work_type" != "greenfield" ] && [ -z "$topic" ]; then
+    echo "error: \"--topic is required for --feature and --bugfix\""
+    exit 1
+fi
+
 # Start YAML output
 echo "# Workflow Bridge Discovery"
 echo "# Generated: $(date -Iseconds)"
 echo ""
-
-#
-# Parse arguments
-#
-if [ "$1" = "--greenfield" ]; then
-    work_type="greenfield"
-    topic=""
-elif [ -n "$1" ] && [ -n "$2" ]; then
-    topic="$1"
-    work_type="$2"
-else
-    echo "error: \"Usage: discovery.sh <topic> <work_type> OR discovery.sh --greenfield\""
-    exit 1
-fi
-
 echo "work_type: \"$work_type\""
 echo "topic: \"$topic\""
 echo ""
