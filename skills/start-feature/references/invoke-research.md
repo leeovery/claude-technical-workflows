@@ -20,11 +20,10 @@ Create research file: .workflows/research/{topic}.md
 
 The research frontmatter should include:
 - topic: {topic}
-- status: in-progress
 - work_type: feature
 - date: {today}
 
 Invoke the technical-research skill.
 ```
 
-When research concludes, the processing skill will detect `work_type: feature` in the artifact and invoke workflow:bridge automatically.
+When a research topic is parked as discussion-ready, the processing skill will offer pipeline continuation via workflow:bridge.
