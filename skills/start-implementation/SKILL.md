@@ -115,11 +115,11 @@ Check for arguments: topic = `$0`, work_type = `$1`
 
 #### If topic and work_type are both provided
 
-→ Proceed to **Step 3** (Validate Plan).
+→ Proceed to **Step 3**.
 
 #### Otherwise
 
-→ Proceed to **Step 7** (Route Based on Scenario).
+→ Proceed to **Step 4**.
 
 ---
 
@@ -127,80 +127,42 @@ Check for arguments: topic = `$0`, work_type = `$1`
 
 Load **[validate-plan.md](references/validate-plan.md)** and follow its instructions as written.
 
-→ Proceed to **Step 4**.
+→ Proceed to **Step 6**.
 
 ---
 
-## Step 4: Check Dependencies (Bridge Mode)
+## Step 4: Route Based on Scenario
 
-Load **[check-dependencies.md](references/check-dependencies.md)** and follow its instructions as written.
+Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions.
 
 → Proceed to **Step 5**.
 
 ---
 
-## Step 5: Check Environment (Bridge Mode)
+## Step 5: Present Plans and Select
 
-Check environment setup from discovery output.
+Load **[display-plans.md](references/display-plans.md)** and follow its instructions as written.
 
-#### If requires_setup is true
+→ Proceed to **Step 6** with selected topic.
+
+---
+
+## Step 6: Check Dependencies
+
+Load **[check-dependencies.md](references/check-dependencies.md)** and follow its instructions as written.
+
+→ Proceed to **Step 7**.
+
+---
+
+## Step 7: Check Environment
 
 Load **[environment-check.md](references/environment-check.md)** and follow its instructions as written.
-
-→ Proceed to **Step 6**.
-
-#### If requires_setup is false or unknown
-
-→ Proceed to **Step 6**.
-
----
-
-## Step 6: Invoke the Skill (Bridge Mode)
-
-Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
-
----
-
-## Step 7: Route Based on Scenario
-
-Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions.
 
 → Proceed to **Step 8**.
 
 ---
 
-## Step 8: Present Plans and Select
-
-Load **[display-plans.md](references/display-plans.md)** and follow its instructions as written.
-
-→ Proceed to **Step 9** with selected topic.
-
----
-
-## Step 9: Check Dependencies (Discovery Mode)
-
-Load **[check-dependencies.md](references/check-dependencies.md)** and follow its instructions as written.
-
-→ Proceed to **Step 10**.
-
----
-
-## Step 10: Check Environment (Discovery Mode)
-
-Check environment setup from discovery output.
-
-#### If requires_setup is true
-
-Load **[environment-check.md](references/environment-check.md)** and follow its instructions as written.
-
-→ Proceed to **Step 11**.
-
-#### If requires_setup is false or unknown
-
-→ Proceed to **Step 11**.
-
----
-
-## Step 11: Invoke the Skill (Discovery Mode)
+## Step 8: Invoke the Skill
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
