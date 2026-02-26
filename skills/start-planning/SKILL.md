@@ -106,11 +106,11 @@ Check for arguments: topic = `$0`, work_type = `$1`
 
 #### If topic and work_type are both provided
 
-→ Proceed to **Step 3** (Validate Specification).
+→ Proceed to **Step 3**.
 
 #### Otherwise
 
-→ Proceed to **Step 6** (Route Based on Scenario).
+→ Proceed to **Step 4**.
 
 ---
 
@@ -118,112 +118,40 @@ Check for arguments: topic = `$0`, work_type = `$1`
 
 Load **[validate-spec.md](references/validate-spec.md)** and follow its instructions as written.
 
-→ Proceed to **Step 4**.
+→ Proceed to **Step 7**.
 
 ---
 
-## Step 4: Handle Cross-Cutting Context (Bridge Mode)
+## Step 4: Route Based on Scenario
 
-Load **[cross-cutting-context.md](references/cross-cutting-context.md)** and follow its instructions as written.
+Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
 
 ---
 
-## Step 5: Invoke the Skill (Bridge Mode)
-
-Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
-
----
-
-## Step 6: Route Based on Scenario
-
-Discovery mode — use the discovery output from Step 1.
-
-Use `state.scenario` from the discovery output to determine the path:
-
-#### If scenario is "no_specs"
-
-No specifications exist yet.
-
-> *Output the next fenced block as a code block:*
-
-```
-Planning Overview
-
-No specifications found in .workflows/specification/
-
-The planning phase requires a concluded specification.
-Run /start-specification first.
-```
-
-**STOP.** Do not proceed — terminal condition.
-
-#### If scenario is "nothing_actionable"
-
-Specifications exist but none are actionable — all are still in-progress and no plans exist to continue.
-
-→ Proceed to **Step 7** to show the state.
-
-#### If scenario is "has_options"
-
-At least one specification is ready for planning, or an existing plan can be continued or reviewed.
-
-→ Proceed to **Step 7** to present options.
-
----
-
-## Step 7: Present Workflow State and Options
+## Step 5: Present State and Options
 
 Load **[display-state.md](references/display-state.md)** and follow its instructions as written.
+
+→ Proceed to **Step 6**.
+
+---
+
+## Step 6: Route by Plan State
+
+Load **[route-plan-state.md](references/route-plan-state.md)** and follow its instructions as written.
+
+---
+
+## Step 7: Cross-Cutting Context
+
+Load **[cross-cutting-context.md](references/cross-cutting-context.md)** and follow its instructions as written.
 
 → Proceed to **Step 8**.
 
 ---
 
-## Step 8: Route by Plan State
-
-Check whether the selected specification already has a plan (from `has_plan` in discovery output).
-
-#### If no existing plan (fresh start)
-
-→ Proceed to **Step 9** to gather context before invoking the skill.
-
-#### If existing plan (continue or review)
-
-The plan already has its context from when it was created. Skip context gathering.
-
-→ Proceed to **Step 11** to invoke the skill.
-
----
-
-## Step 9: Gather Additional Context
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-Any additional context since the specification was concluded?
-
-- **`c`/`continue`** — Continue with the specification as-is
-- Or provide additional context (priorities, constraints, new considerations)
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-→ Proceed to **Step 10**.
-
----
-
-## Step 10: Surface Cross-Cutting Context (Discovery Mode)
-
-Load **[cross-cutting-context.md](references/cross-cutting-context.md)** and follow its instructions as written.
-
-→ Proceed to **Step 11**.
-
----
-
-## Step 11: Invoke the Skill (Discovery Mode)
+## Step 8: Invoke the Skill
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

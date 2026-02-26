@@ -34,7 +34,7 @@ Construct the handoff based on the plan state.
 ```
 Planning session for: {topic}
 Specification: .workflows/specification/{topic}/specification.md
-Additional context: {summary of user's answers from Step 9, or "none"}
+Additional context: {summary of user's additional context, or "none"}
 Cross-cutting references: {list of applicable cross-cutting specs with brief summaries, or "none"}
 Recommended output format: {common_format from discovery if non-empty, otherwise "none"}
 
