@@ -163,32 +163,9 @@ Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructio
 
 ## Step 7: Route Based on Scenario
 
-Discovery mode — use the discovery output from Step 1.
+Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions.
 
-Use `state.scenario` from the discovery output to determine the path:
-
-#### If scenario is "no_plans"
-
-No plans exist yet.
-
-> *Output the next fenced block as a code block:*
-
-```
-Implementation Overview
-
-No plans found in .workflows/planning/
-
-The implementation phase requires a plan.
-Run /start-planning first to create a plan from a specification.
-```
-
-**STOP.** Do not proceed — terminal condition.
-
-#### If scenario is "single_plan" or "multiple_plans"
-
-Plans exist.
-
-→ Proceed to **Step 8** to present options.
+→ Proceed to **Step 8**.
 
 ---
 
