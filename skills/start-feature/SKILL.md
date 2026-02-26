@@ -29,22 +29,6 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 ---
 
-## Step 0: Run Migrations
-
-**This step is mandatory. You must complete it before proceeding.**
-
-Invoke the `/migrate` skill and assess its output.
-
-#### If files were updated
-
-**STOP.** Wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding.
-
-#### If no updates needed
-
-→ Proceed to **Step 1**.
-
----
-
 ## Resuming After Context Refresh
 
 Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
@@ -60,6 +44,22 @@ Context refresh (compaction) summarizes the conversation, losing procedural deta
 4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 
 Do not guess at progress or continue from memory. The files on disk and git history are authoritative — your recollection is not.
+
+---
+
+## Step 0: Run Migrations
+
+**This step is mandatory. You must complete it before proceeding.**
+
+Invoke the `/migrate` skill and assess its output.
+
+#### If files were updated
+
+**STOP.** Wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding.
+
+#### If no updates needed
+
+→ Proceed to **Step 1**.
 
 ---
 
