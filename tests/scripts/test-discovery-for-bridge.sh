@@ -38,7 +38,7 @@ setup_fixture() {
 
 run_discovery() {
     cd "$TEST_DIR"
-    /bin/bash "$DISCOVERY_SCRIPT" "$@" 2>/dev/null
+    /bin/bash "$DISCOVERY_SCRIPT" 2>/dev/null
 }
 
 assert_contains() {
@@ -79,101 +79,26 @@ assert_not_contains() {
     fi
 }
 
-assert_exit_code() {
-    local actual="$1"
-    local expected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if [ "$actual" -eq "$expected" ]; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected exit code $expected, got $actual"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
-}
-
 # ──────────────────────────────────────
-# Argument parsing tests
+# Basic output structure tests
 # ──────────────────────────────────────
 
-test_missing_work_type_flag() {
-    echo -e "${YELLOW}Test: Missing work type flag${NC}"
+test_empty_state() {
+    echo -e "${YELLOW}Test: Empty state - all sections present${NC}"
     setup_fixture
 
-    cd "$TEST_DIR"
-    local output=$(/bin/bash "$DISCOVERY_SCRIPT" 2>&1 || true)
-    local exit_code=$?
+    local output=$(run_discovery)
 
-    assert_contains "$output" 'error:' "Outputs error message"
-    echo ""
-}
-
-test_unknown_argument() {
-    echo -e "${YELLOW}Test: Unknown argument${NC}"
-    setup_fixture
-
-    cd "$TEST_DIR"
-    local output=$(/bin/bash "$DISCOVERY_SCRIPT" --unknown 2>&1 || true)
-
-    assert_contains "$output" 'error:' "Outputs error for unknown flag"
-    echo ""
-}
-
-test_feature_without_topic() {
-    echo -e "${YELLOW}Test: --feature without --topic${NC}"
-    setup_fixture
-
-    cd "$TEST_DIR"
-    local output=$(/bin/bash "$DISCOVERY_SCRIPT" --feature 2>&1 || true)
-
-    assert_contains "$output" 'error:' "Outputs error when topic missing"
-    assert_contains "$output" '--topic' "Error mentions --topic"
-    echo ""
-}
-
-test_bugfix_without_topic() {
-    echo -e "${YELLOW}Test: --bugfix without --topic${NC}"
-    setup_fixture
-
-    cd "$TEST_DIR"
-    local output=$(/bin/bash "$DISCOVERY_SCRIPT" --bugfix 2>&1 || true)
-
-    assert_contains "$output" 'error:' "Outputs error when topic missing"
-    echo ""
-}
-
-test_greenfield_without_topic() {
-    echo -e "${YELLOW}Test: --greenfield works without --topic${NC}"
-    setup_fixture
-
-    local output=$(run_discovery --greenfield)
-
-    assert_contains "$output" 'work_type: "greenfield"' "Work type is greenfield"
-    assert_contains "$output" 'topic: ""' "Topic is empty"
+    assert_contains "$output" 'features:' "Has features section"
+    assert_contains "$output" 'bugfixes:' "Has bugfixes section"
+    assert_contains "$output" 'greenfield:' "Has greenfield section"
+    assert_contains "$output" 'has_any_work: false' "No work exists"
     echo ""
 }
 
 # ──────────────────────────────────────
 # Feature pipeline tests
 # ──────────────────────────────────────
-
-test_feature_fresh() {
-    echo -e "${YELLOW}Test: Feature - fresh state (no artifacts)${NC}"
-    setup_fixture
-
-    local output=$(run_discovery --feature --topic auth-flow)
-
-    assert_contains "$output" 'work_type: "feature"' "Work type is feature"
-    assert_contains "$output" 'topic: "auth-flow"' "Topic is auth-flow"
-    assert_contains "$output" 'next_phase: "unknown"' "Next phase is unknown (no artifacts)"
-    echo ""
-}
 
 test_feature_discussion_in_progress() {
     echo -e "${YELLOW}Test: Feature - discussion in progress${NC}"
@@ -189,10 +114,10 @@ work_type: feature
 # Discussion
 EOF
 
-    local output=$(run_discovery --feature --topic auth-flow)
+    local output=$(run_discovery)
 
+    assert_contains "$output" 'name: "auth-flow"' "Found auth-flow topic"
     assert_contains "$output" 'next_phase: "discussion"' "Next phase is discussion"
-    assert_contains "$output" 'discussion:' "Has discussion section"
     echo ""
 }
 
@@ -210,7 +135,7 @@ work_type: feature
 # Discussion
 EOF
 
-    local output=$(run_discovery --feature --topic auth-flow)
+    local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "specification"' "Next phase is specification"
     echo ""
@@ -237,7 +162,7 @@ work_type: feature
 ---
 EOF
 
-    local output=$(run_discovery --feature --topic auth-flow)
+    local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "planning"' "Next phase is planning"
     echo ""
@@ -272,7 +197,7 @@ work_type: feature
 ---
 EOF
 
-    local output=$(run_discovery --feature --topic auth-flow)
+    local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "implementation"' "Next phase is implementation"
     echo ""
@@ -302,7 +227,7 @@ work_type: feature
 # Specification
 EOF
 
-    local output=$(run_discovery --feature --topic auth-flow)
+    local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "superseded"' "Next phase is superseded"
     assert_contains "$output" 'status: "superseded"' "Spec status reported as superseded"
@@ -323,15 +248,13 @@ date: 2026-01-20
 # Research
 EOF
 
-    local output=$(run_discovery --feature --topic auth-flow)
+    local output=$(run_discovery)
 
-    assert_contains "$output" 'research:' "Has research section"
+    assert_contains "$output" 'name: "auth-flow"' "Found auth-flow in features"
     assert_contains "$output" 'exists: true' "Research exists"
     assert_contains "$output" 'next_phase: "discussion"' "Next phase is discussion (research doesn't conclude)"
     echo ""
 }
-
-
 
 test_feature_spec_in_progress() {
     echo -e "${YELLOW}Test: Feature - concluded discussion + in-progress spec${NC}"
@@ -356,7 +279,7 @@ work_type: feature
 # Specification
 EOF
 
-    local output=$(run_discovery --feature --topic auth-flow)
+    local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "specification"' "Next phase is specification"
     echo ""
@@ -391,7 +314,7 @@ work_type: feature
 ---
 EOF
 
-    local output=$(run_discovery --feature --topic auth-flow)
+    local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "planning"' "Next phase is planning"
     echo ""
@@ -418,7 +341,7 @@ work_type: feature
 ---
 EOF
 
-    local output=$(run_discovery --feature --topic auth-flow)
+    local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "implementation"' "Next phase is implementation"
     echo ""
@@ -445,7 +368,17 @@ work_type: feature
 # Review
 EOF
 
-    local output=$(run_discovery --feature --topic auth-flow)
+    # Feature discovered via plan (needs plan with work_type: feature)
+    mkdir -p "$TEST_DIR/.workflows/planning/auth-flow"
+    cat > "$TEST_DIR/.workflows/planning/auth-flow/plan.md" << 'EOF'
+---
+topic: auth-flow
+status: concluded
+work_type: feature
+---
+EOF
+
+    local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "done"' "Next phase is done"
     echo ""
@@ -455,15 +388,24 @@ EOF
 # Bugfix pipeline tests
 # ──────────────────────────────────────
 
-test_bugfix_fresh() {
-    echo -e "${YELLOW}Test: Bugfix - fresh state${NC}"
+test_bugfix_investigation_in_progress() {
+    echo -e "${YELLOW}Test: Bugfix - investigation in progress${NC}"
     setup_fixture
 
-    local output=$(run_discovery --bugfix --topic login-crash)
+    mkdir -p "$TEST_DIR/.workflows/investigation/login-crash"
+    cat > "$TEST_DIR/.workflows/investigation/login-crash/investigation.md" << 'EOF'
+---
+topic: login-crash
+status: in-progress
+work_type: bugfix
+---
+# Investigation
+EOF
 
-    assert_contains "$output" 'work_type: "bugfix"' "Work type is bugfix"
-    assert_contains "$output" 'topic: "login-crash"' "Topic is login-crash"
-    assert_contains "$output" 'next_phase: "unknown"' "Next phase is unknown"
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'name: "login-crash"' "Found login-crash in bugfixes"
+    assert_contains "$output" 'next_phase: "investigation"' "Next phase is investigation"
     echo ""
 }
 
@@ -481,7 +423,7 @@ work_type: bugfix
 # Investigation
 EOF
 
-    local output=$(run_discovery --bugfix --topic login-crash)
+    local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "specification"' "Next phase is specification"
     echo ""
@@ -525,29 +467,9 @@ work_type: bugfix
 ---
 EOF
 
-    local output=$(run_discovery --bugfix --topic login-crash)
+    local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "review"' "Next phase is review"
-    echo ""
-}
-
-test_bugfix_investigation_in_progress() {
-    echo -e "${YELLOW}Test: Bugfix - investigation in progress${NC}"
-    setup_fixture
-
-    mkdir -p "$TEST_DIR/.workflows/investigation/login-crash"
-    cat > "$TEST_DIR/.workflows/investigation/login-crash/investigation.md" << 'EOF'
----
-topic: login-crash
-status: in-progress
-work_type: bugfix
----
-# Investigation
-EOF
-
-    local output=$(run_discovery --bugfix --topic login-crash)
-
-    assert_contains "$output" 'next_phase: "investigation"' "Next phase is investigation"
     echo ""
 }
 
@@ -573,7 +495,7 @@ work_type: bugfix
 # Specification
 EOF
 
-    local output=$(run_discovery --bugfix --topic login-crash)
+    local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "specification"' "Next phase is specification"
     echo ""
@@ -600,7 +522,7 @@ work_type: bugfix
 ---
 EOF
 
-    local output=$(run_discovery --bugfix --topic login-crash)
+    local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "planning"' "Next phase is planning"
     echo ""
@@ -630,7 +552,7 @@ work_type: bugfix
 # Specification
 EOF
 
-    local output=$(run_discovery --bugfix --topic login-crash)
+    local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "superseded"' "Next phase is superseded"
     echo ""
@@ -682,7 +604,7 @@ work_type: bugfix
 # Review
 EOF
 
-    local output=$(run_discovery --bugfix --topic login-crash)
+    local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "done"' "Next phase is done"
     echo ""
@@ -692,66 +614,81 @@ EOF
 # Cross-pipeline isolation tests
 # ──────────────────────────────────────
 
-test_feature_ignores_investigation() {
-    echo -e "${YELLOW}Test: Feature - ignores investigation artifacts${NC}"
-    setup_fixture
-
-    mkdir -p "$TEST_DIR/.workflows/investigation/auth-flow"
-    cat > "$TEST_DIR/.workflows/investigation/auth-flow/investigation.md" << 'EOF'
----
-topic: auth-flow
-status: concluded
-work_type: bugfix
----
-# Investigation
-EOF
-
-    local output=$(run_discovery --feature --topic auth-flow)
-
-    assert_contains "$output" 'investigation:' "Has investigation section"
-    assert_contains "$output" 'exists: false' "Investigation shows exists: false"
-    echo ""
-}
-
-test_bugfix_ignores_research() {
-    echo -e "${YELLOW}Test: Bugfix - ignores research artifacts${NC}"
-    setup_fixture
-
-    mkdir -p "$TEST_DIR/.workflows/research"
-    cat > "$TEST_DIR/.workflows/research/login-crash.md" << 'EOF'
----
-topic: login-crash
-status: concluded
-work_type: feature
----
-# Research
-EOF
-
-    local output=$(run_discovery --bugfix --topic login-crash)
-
-    assert_contains "$output" 'research:' "Has research section"
-    assert_contains "$output" 'exists: false' "Research shows exists: false"
-    echo ""
-}
-
-test_bugfix_ignores_discussion() {
-    echo -e "${YELLOW}Test: Bugfix - ignores discussion artifacts${NC}"
+test_feature_not_in_bugfixes() {
+    echo -e "${YELLOW}Test: Feature topic does not appear in bugfixes section${NC}"
     setup_fixture
 
     mkdir -p "$TEST_DIR/.workflows/discussion"
-    cat > "$TEST_DIR/.workflows/discussion/login-crash.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/discussion/auth-flow.md" << 'EOF'
 ---
-topic: login-crash
-status: concluded
+topic: auth-flow
+status: in-progress
 work_type: feature
 ---
 # Discussion
 EOF
 
-    local output=$(run_discovery --bugfix --topic login-crash)
+    local output=$(run_discovery)
 
-    assert_contains "$output" 'discussion:' "Has discussion section"
-    assert_contains "$output" 'exists: false' "Discussion shows exists: false"
+    # Extract just the bugfixes section
+    local bugfixes_section=$(echo "$output" | sed -n '/^bugfixes:/,/^greenfield:/p')
+
+    assert_not_contains "$bugfixes_section" 'name: "auth-flow"' "auth-flow not in bugfixes section"
+    echo ""
+}
+
+test_bugfix_not_in_features() {
+    echo -e "${YELLOW}Test: Bugfix topic does not appear in features section${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/investigation/login-crash"
+    cat > "$TEST_DIR/.workflows/investigation/login-crash/investigation.md" << 'EOF'
+---
+topic: login-crash
+status: in-progress
+work_type: bugfix
+---
+# Investigation
+EOF
+
+    local output=$(run_discovery)
+
+    # Extract just the features section
+    local features_section=$(echo "$output" | sed -n '/^features:/,/^bugfixes:/p')
+
+    assert_not_contains "$features_section" 'name: "login-crash"' "login-crash not in features section"
+    echo ""
+}
+
+test_greenfield_excludes_feature_discussions() {
+    echo -e "${YELLOW}Test: Greenfield - excludes feature discussions${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+    cat > "$TEST_DIR/.workflows/discussion/gf-topic.md" << 'EOF'
+---
+topic: gf-topic
+status: concluded
+work_type: greenfield
+---
+# Greenfield Discussion
+EOF
+    cat > "$TEST_DIR/.workflows/discussion/feature-topic.md" << 'EOF'
+---
+topic: feature-topic
+status: concluded
+work_type: feature
+---
+# Feature Discussion
+EOF
+
+    local output=$(run_discovery)
+
+    # Extract greenfield section
+    local greenfield_section=$(echo "$output" | sed -n '/^greenfield:/,//p')
+
+    assert_contains "$greenfield_section" 'name: "gf-topic"' "Found greenfield topic"
+    assert_not_contains "$greenfield_section" 'name: "feature-topic"' "Excluded feature topic from greenfield"
     echo ""
 }
 
@@ -763,9 +700,9 @@ test_greenfield_fresh() {
     echo -e "${YELLOW}Test: Greenfield - fresh state${NC}"
     setup_fixture
 
-    local output=$(run_discovery --greenfield)
+    local output=$(run_discovery)
 
-    assert_contains "$output" 'work_type: "greenfield"' "Work type is greenfield"
+    assert_contains "$output" 'greenfield:' "Has greenfield section"
     assert_contains "$output" 'research:' "Has research section"
     assert_contains "$output" 'discussions:' "Has discussions section"
     assert_contains "$output" 'specifications:' "Has specifications section"
@@ -797,42 +734,12 @@ work_type: greenfield
 # Discussion B
 EOF
 
-    local output=$(run_discovery --greenfield)
+    local output=$(run_discovery)
 
-    assert_contains "$output" 'discussion_count: 2' "Discussion count is 2"
-    assert_contains "$output" 'discussion_concluded: 1' "One concluded discussion"
-    assert_contains "$output" 'discussion_in_progress: 1' "One in-progress discussion"
+    assert_contains "$output" 'count: 2' "Discussion count is 2"
+    assert_contains "$output" 'concluded: 1' "One concluded discussion"
+    assert_contains "$output" 'in_progress: 1' "One in-progress discussion"
     assert_contains "$output" 'has_any_work: true' "Has work"
-    echo ""
-}
-
-test_greenfield_filters_by_work_type() {
-    echo -e "${YELLOW}Test: Greenfield - filters out non-greenfield discussions${NC}"
-    setup_fixture
-
-    mkdir -p "$TEST_DIR/.workflows/discussion"
-    cat > "$TEST_DIR/.workflows/discussion/gf-topic.md" << 'EOF'
----
-topic: gf-topic
-status: concluded
-work_type: greenfield
----
-# Greenfield Discussion
-EOF
-    cat > "$TEST_DIR/.workflows/discussion/feature-topic.md" << 'EOF'
----
-topic: feature-topic
-status: concluded
-work_type: feature
----
-# Feature Discussion
-EOF
-
-    local output=$(run_discovery --greenfield)
-
-    assert_contains "$output" 'discussion_count: 1' "Only counts greenfield discussions"
-    assert_contains "$output" 'name: "gf-topic"' "Found greenfield topic"
-    assert_not_contains "$output" 'name: "feature-topic"' "Excluded feature topic"
     echo ""
 }
 
@@ -861,11 +768,14 @@ type: feature
 ---
 EOF
 
-    local output=$(run_discovery --greenfield)
+    local output=$(run_discovery)
 
-    assert_contains "$output" 'specification_count: 1' "Superseded spec excluded from count"
-    assert_contains "$output" 'specification_concluded: 1' "Only concluded spec counted"
-    assert_not_contains "$output" 'name: "zw"' "Superseded spec not listed"
+    # Extract greenfield section for targeted assertions
+    local greenfield_section=$(echo "$output" | sed -n '/^greenfield:/,//p')
+
+    assert_contains "$greenfield_section" 'count: 1' "Superseded spec excluded from count"
+    assert_contains "$greenfield_section" 'concluded: 1' "Only concluded spec counted"
+    assert_not_contains "$greenfield_section" 'name: "zw"' "Superseded spec not listed"
     echo ""
 }
 
@@ -892,12 +802,8 @@ work_type: greenfield
 ---
 EOF
 
-    local output=$(run_discovery --greenfield)
+    local output=$(run_discovery)
 
-    assert_contains "$output" 'specification_count: 1' "Spec count is 1"
-    assert_contains "$output" 'specification_concluded: 1' "Spec is concluded"
-    assert_contains "$output" 'plan_count: 1' "Plan count is 1"
-    assert_contains "$output" 'plan_in_progress: 1' "Plan is in-progress"
     assert_contains "$output" 'has_plan: true' "Spec shows has_plan"
     echo ""
 }
@@ -924,13 +830,11 @@ work_type: greenfield
 # Tech Stack
 EOF
 
-    local output=$(run_discovery --greenfield)
+    local output=$(run_discovery)
 
-    assert_contains "$output" 'research:' "Has research section"
     assert_contains "$output" 'exists: true' "Research exists"
     assert_contains "$output" '"market-analysis"' "Lists market-analysis file"
     assert_contains "$output" '"tech-stack"' "Lists tech-stack file"
-    assert_contains "$output" 'count: 2' "Research count is 2"
     echo ""
 }
 
@@ -948,12 +852,9 @@ work_type: greenfield
 # Implementation Tracking
 EOF
 
-    local output=$(run_discovery --greenfield)
+    local output=$(run_discovery)
 
-    assert_contains "$output" 'implementation:' "Has implementation section"
     assert_contains "$output" 'topic: "core-features"' "Has core-features entry"
-    assert_contains "$output" 'implementation_count: 1' "Implementation count is 1"
-    assert_contains "$output" 'implementation_in_progress: 1' "One in-progress implementation"
     echo ""
 }
 
@@ -979,9 +880,42 @@ work_type: greenfield
 # Review
 EOF
 
-    local output=$(run_discovery --greenfield)
+    local output=$(run_discovery)
 
     assert_contains "$output" 'has_review: true' "Has review flag is true"
+    echo ""
+}
+
+# ──────────────────────────────────────
+# Multiple topics test
+# ──────────────────────────────────────
+
+test_multiple_feature_topics() {
+    echo -e "${YELLOW}Test: Multiple feature topics discovered${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+    mkdir -p "$TEST_DIR/.workflows/specification/billing"
+    cat > "$TEST_DIR/.workflows/discussion/auth-flow.md" << 'EOF'
+---
+topic: auth-flow
+status: concluded
+work_type: feature
+---
+EOF
+    cat > "$TEST_DIR/.workflows/specification/billing/specification.md" << 'EOF'
+---
+topic: billing
+status: in-progress
+work_type: feature
+---
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'name: "auth-flow"' "Found auth-flow"
+    assert_contains "$output" 'name: "billing"' "Found billing"
+    assert_contains "$output" 'count: 2' "Feature count is 2"
     echo ""
 }
 
@@ -994,15 +928,10 @@ echo "Running bridge discovery script tests"
 echo "=========================================="
 echo ""
 
-# Argument parsing
-test_missing_work_type_flag
-test_unknown_argument
-test_feature_without_topic
-test_bugfix_without_topic
-test_greenfield_without_topic
+# Basic structure
+test_empty_state
 
 # Feature pipeline
-test_feature_fresh
 test_feature_discussion_in_progress
 test_feature_discussion_concluded
 test_feature_spec_concluded
@@ -1014,9 +943,7 @@ test_feature_impl_completed_with_review
 test_feature_spec_superseded
 test_feature_research_exists
 
-
 # Bugfix pipeline
-test_bugfix_fresh
 test_bugfix_investigation_in_progress
 test_bugfix_investigation_concluded
 test_bugfix_spec_in_progress
@@ -1026,19 +953,21 @@ test_bugfix_spec_superseded
 test_bugfix_impl_completed_with_review
 
 # Cross-pipeline isolation
-test_feature_ignores_investigation
-test_bugfix_ignores_research
-test_bugfix_ignores_discussion
+test_feature_not_in_bugfixes
+test_bugfix_not_in_features
+test_greenfield_excludes_feature_discussions
 
 # Greenfield
 test_greenfield_fresh
 test_greenfield_with_discussions
-test_greenfield_filters_by_work_type
 test_greenfield_superseded_spec_excluded
 test_greenfield_specs_and_plans
 test_greenfield_with_research
 test_greenfield_with_implementation
 test_greenfield_impl_with_review
+
+# Multi-topic
+test_multiple_feature_topics
 
 #
 # Summary

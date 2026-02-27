@@ -21,30 +21,27 @@ This skill receives context from the calling processing skill:
 
 ## Step 1: Run Discovery
 
-Determine the next phase by running discovery.
+!`.claude/skills/workflow-bridge/scripts/discovery.sh`
+
+If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+
+```bash
+.claude/skills/workflow-bridge/scripts/discovery.sh
+```
+
+The output contains three sections: `features:`, `bugfixes:`, and `greenfield:`. Use the known work type and topic from the calling context to extract the relevant data:
 
 #### If work type is "feature"
 
-```bash
-.claude/skills/workflow-bridge/scripts/discovery.sh --feature --topic "{topic}"
-```
+Find the topic entry under `features: > topics:` and extract its `next_phase`.
 
 #### If work type is "bugfix"
 
-```bash
-.claude/skills/workflow-bridge/scripts/discovery.sh --bugfix --topic "{topic}"
-```
-
-Parse the output to extract:
-- `next_phase`: The computed next phase for this topic
+Find the topic entry under `bugfixes: > topics:` and extract its `next_phase`.
 
 #### If work type is "greenfield"
 
-```bash
-.claude/skills/workflow-bridge/scripts/discovery.sh --greenfield
-```
-
-Parse the output to extract:
+Parse the `greenfield:` section for phase-centric state:
 - `state`: Counts of artifacts across all phases
 - Phase-specific file lists with their statuses
 
@@ -74,8 +71,8 @@ Load **[greenfield-continuation.md](references/greenfield-continuation.md)** and
 
 **Feature/bugfix** continuation references:
 1. Use discovery output to compute a single `next_phase`
-2. Enter plan mode with instructions to invoke `start-{next_phase}` with topic + work_type
-3. Exit plan mode for user approval
+2. Call `EnterPlanMode` tool, write plan file with instructions to invoke `start-{next_phase}` with topic + work_type
+3. Call `ExitPlanMode` tool for user approval
 
 The user will then clear context, and the fresh session will invoke the appropriate start-* skill with the topic and work_type provided, causing it to skip discovery and proceed directly to validation/processing.
 
