@@ -974,6 +974,103 @@ EOF
 #
 # Test: Spec work_type output
 #
+test_superseded_feature_spec_excluded() {
+    echo -e "${YELLOW}Test: Superseded feature spec excluded from counts${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/specification/auth-system"
+    mkdir -p "$TEST_DIR/.workflows/specification/old-auth"
+
+    cat > "$TEST_DIR/.workflows/specification/auth-system/specification.md" << 'EOF'
+---
+topic: auth-system
+status: concluded
+type: feature
+---
+
+# Specification: Auth System
+EOF
+
+    cat > "$TEST_DIR/.workflows/specification/old-auth/specification.md" << 'EOF'
+---
+topic: old-auth
+status: superseded
+superseded_by: auth-system
+type: feature
+---
+
+# Specification: Old Auth
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'feature: 1' "Only active feature spec counted"
+    assert_contains "$output" 'feature_ready: 1' "Only active spec is ready"
+    assert_not_contains "$output" 'name: "old-auth"' "Superseded spec not listed"
+    assert_contains "$output" 'name: "auth-system"' "Active spec listed"
+    echo ""
+}
+
+test_superseded_crosscutting_spec_excluded() {
+    echo -e "${YELLOW}Test: Superseded cross-cutting spec excluded from counts${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/specification/caching-v2"
+    mkdir -p "$TEST_DIR/.workflows/specification/caching-v1"
+
+    cat > "$TEST_DIR/.workflows/specification/caching-v2/specification.md" << 'EOF'
+---
+topic: caching-v2
+status: concluded
+type: cross-cutting
+---
+
+# Specification: Caching V2
+EOF
+
+    cat > "$TEST_DIR/.workflows/specification/caching-v1/specification.md" << 'EOF'
+---
+topic: caching-v1
+status: superseded
+superseded_by: caching-v2
+type: cross-cutting
+---
+
+# Specification: Caching V1
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'crosscutting: 1' "Only active cross-cutting spec counted"
+    assert_not_contains "$output" 'name: "caching-v1"' "Superseded cross-cutting spec not listed"
+    assert_contains "$output" 'name: "caching-v2"' "Active cross-cutting spec listed"
+    echo ""
+}
+
+test_superseded_spec_nothing_actionable() {
+    echo -e "${YELLOW}Test: Only superseded specs yields no_specs scenario${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/specification/old-feature"
+
+    cat > "$TEST_DIR/.workflows/specification/old-feature/specification.md" << 'EOF'
+---
+topic: old-feature
+status: superseded
+superseded_by: new-feature
+type: feature
+---
+
+# Specification: Old Feature
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'feature: 0' "Superseded spec not counted"
+    assert_contains "$output" 'scenario: "nothing_actionable"' "Nothing actionable with only superseded specs"
+    echo ""
+}
+
 test_spec_work_type_output() {
     echo -e "${YELLOW}Test: Spec work_type output${NC}"
     setup_fixture
@@ -1115,6 +1212,9 @@ test_spec_with_completed_implementation
 test_spec_with_in_progress_implementation
 test_all_specs_implemented
 test_mix_implemented_and_ready
+test_superseded_feature_spec_excluded
+test_superseded_crosscutting_spec_excluded
+test_superseded_spec_nothing_actionable
 test_spec_work_type_output
 test_plan_work_type_output
 test_spec_missing_status_defaults_active

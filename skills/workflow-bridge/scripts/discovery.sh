@@ -212,6 +212,8 @@ if [ "$work_type" = "feature" ] || [ "$work_type" = "bugfix" ]; then
             next_phase="implementation"
         elif [ "$plan_exists" = "true" ]; then
             next_phase="planning"
+        elif [ "$spec_exists" = "true" ] && [ "$spec_status" = "superseded" ]; then
+            next_phase="superseded"
         elif [ "$spec_exists" = "true" ] && [ "$spec_status" = "concluded" ]; then
             next_phase="planning"
         elif [ "$spec_exists" = "true" ]; then
@@ -242,6 +244,8 @@ if [ "$work_type" = "feature" ] || [ "$work_type" = "bugfix" ]; then
             next_phase="implementation"
         elif [ "$plan_exists" = "true" ]; then
             next_phase="planning"
+        elif [ "$spec_exists" = "true" ] && [ "$spec_status" = "superseded" ]; then
+            next_phase="superseded"
         elif [ "$spec_exists" = "true" ] && [ "$spec_status" = "concluded" ]; then
             next_phase="planning"
         elif [ "$spec_exists" = "true" ]; then
@@ -351,6 +355,9 @@ elif [ "$work_type" = "greenfield" ]; then
             status=${status:-"in-progress"}
             spec_type=$(extract_field "$file" "type")
             spec_type=${spec_type:-"feature"}
+
+            # Skip superseded specs — they've been absorbed into another spec
+            [ "$status" = "superseded" ] && continue
 
             has_plan="false"
             [ -f "$PLAN_DIR/${name}/plan.md" ] && has_plan="true"

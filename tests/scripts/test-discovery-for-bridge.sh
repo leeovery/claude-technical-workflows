@@ -278,6 +278,37 @@ EOF
     echo ""
 }
 
+test_feature_spec_superseded() {
+    echo -e "${YELLOW}Test: Feature - superseded spec → next_phase superseded${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+    mkdir -p "$TEST_DIR/.workflows/specification/auth-flow"
+    cat > "$TEST_DIR/.workflows/discussion/auth-flow.md" << 'EOF'
+---
+topic: auth-flow
+status: concluded
+work_type: feature
+---
+# Discussion
+EOF
+    cat > "$TEST_DIR/.workflows/specification/auth-flow/specification.md" << 'EOF'
+---
+topic: auth-flow
+status: superseded
+superseded_by: unified-auth
+work_type: feature
+---
+# Specification
+EOF
+
+    local output=$(run_discovery --feature --topic auth-flow)
+
+    assert_contains "$output" 'next_phase: "superseded"' "Next phase is superseded"
+    assert_contains "$output" 'status: "superseded"' "Spec status reported as superseded"
+    echo ""
+}
+
 test_feature_research_exists() {
     echo -e "${YELLOW}Test: Feature - research exists with work_type${NC}"
     setup_fixture
@@ -575,6 +606,36 @@ EOF
     echo ""
 }
 
+test_bugfix_spec_superseded() {
+    echo -e "${YELLOW}Test: Bugfix - superseded spec → next_phase superseded${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/investigation/login-crash"
+    mkdir -p "$TEST_DIR/.workflows/specification/login-crash"
+    cat > "$TEST_DIR/.workflows/investigation/login-crash/investigation.md" << 'EOF'
+---
+topic: login-crash
+status: concluded
+work_type: bugfix
+---
+# Investigation
+EOF
+    cat > "$TEST_DIR/.workflows/specification/login-crash/specification.md" << 'EOF'
+---
+topic: login-crash
+status: superseded
+superseded_by: auth-crash
+work_type: bugfix
+---
+# Specification
+EOF
+
+    local output=$(run_discovery --bugfix --topic login-crash)
+
+    assert_contains "$output" 'next_phase: "superseded"' "Next phase is superseded"
+    echo ""
+}
+
 test_bugfix_impl_completed_with_review() {
     echo -e "${YELLOW}Test: Bugfix - completed impl + review = done${NC}"
     setup_fixture
@@ -775,6 +836,39 @@ EOF
     echo ""
 }
 
+test_greenfield_superseded_spec_excluded() {
+    echo -e "${YELLOW}Test: Greenfield - superseded specs excluded from counts${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/specification/portal"
+    mkdir -p "$TEST_DIR/.workflows/specification/zw"
+
+    cat > "$TEST_DIR/.workflows/specification/portal/specification.md" << 'EOF'
+---
+topic: portal
+status: concluded
+work_type: greenfield
+type: feature
+---
+EOF
+    cat > "$TEST_DIR/.workflows/specification/zw/specification.md" << 'EOF'
+---
+topic: zw
+status: superseded
+superseded_by: portal
+work_type: greenfield
+type: feature
+---
+EOF
+
+    local output=$(run_discovery --greenfield)
+
+    assert_contains "$output" 'specification_count: 1' "Superseded spec excluded from count"
+    assert_contains "$output" 'specification_concluded: 1' "Only concluded spec counted"
+    assert_not_contains "$output" 'name: "zw"' "Superseded spec not listed"
+    echo ""
+}
+
 test_greenfield_specs_and_plans() {
     echo -e "${YELLOW}Test: Greenfield - specs and plans${NC}"
     setup_fixture
@@ -917,6 +1011,7 @@ test_feature_plan_concluded
 test_feature_plan_in_progress
 test_feature_impl_in_progress
 test_feature_impl_completed_with_review
+test_feature_spec_superseded
 test_feature_research_exists
 
 
@@ -927,6 +1022,7 @@ test_bugfix_investigation_concluded
 test_bugfix_spec_in_progress
 test_bugfix_spec_concluded
 test_bugfix_full_pipeline
+test_bugfix_spec_superseded
 test_bugfix_impl_completed_with_review
 
 # Cross-pipeline isolation
@@ -938,6 +1034,7 @@ test_bugfix_ignores_discussion
 test_greenfield_fresh
 test_greenfield_with_discussions
 test_greenfield_filters_by_work_type
+test_greenfield_superseded_spec_excluded
 test_greenfield_specs_and_plans
 test_greenfield_with_research
 test_greenfield_with_implementation

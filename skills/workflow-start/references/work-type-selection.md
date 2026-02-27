@@ -62,7 +62,7 @@ Use values from `state.greenfield.*`, `state.feature_count`, `state.bugfix_count
 · · · · · · · · · · · ·
 What would you like to work on?
 
-1. **Build the product** — Greenfield development (phase-centric, multi-session)
+1. **Large initiative** — MVP, new build, or multi-spec work (phase-centric, multi-session)
 2. **Add a feature** — Feature work (topic-centric, linear pipeline)
 3. **Fix a bug** — Bugfix (investigation-centric, focused pipeline)
 · · · · · · · · · · · ·
@@ -74,7 +74,7 @@ What would you like to work on?
 
 Map the user's response to a work type:
 
-- "1", "build", "greenfield", "product" → work type is **greenfield**
+- "1", "large", "initiative", "build", "greenfield", "mvp" → work type is **greenfield**
 - "2", "feature", "add" → work type is **feature**
 - "3", "bug", "fix", "bugfix" → work type is **bugfix**
 
