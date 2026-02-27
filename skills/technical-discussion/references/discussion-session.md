@@ -15,6 +15,8 @@ The discussion is a conversation. Follow this loop:
 
 ## Per-Question Approach
 
+**Per-question structure** keeps the reasoning contextual. Options considered, false paths, debates, and "aha" moments belong with the specific question they relate to - not as separate top-level sections. This preserves the journey alongside the decision.
+
 Work through questions one at a time. For each:
 
 - Explore options and trade-offs

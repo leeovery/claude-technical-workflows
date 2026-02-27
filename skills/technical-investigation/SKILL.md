@@ -75,6 +75,8 @@ The investigation file is your memory. Context compaction is lossy — what's no
 
 **Create the file early.** After understanding the initial symptoms, create the investigation file with frontmatter and symptoms section.
 
+**On length**: Investigations can vary widely. Capture what's needed to fully understand the bug. Don't summarize prematurely — document the trail.
+
 ---
 
 ## Step 0: Resume Detection

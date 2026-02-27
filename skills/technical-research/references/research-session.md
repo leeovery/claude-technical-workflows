@@ -16,7 +16,9 @@ Research is a conversation. Follow this loop:
 
 ## Convergence Detection
 
-As you explore, watch for these signals that a thread is moving from exploration toward decision-making:
+Research threads naturally converge. As you explore a topic, options narrow, tradeoffs clarify, and opinions start forming. This is healthy — but it's also a signal.
+
+Watch for these signals that a thread is moving from exploration toward decision-making:
 
 - "We should..." or "The best approach is..." language (from you or the user)
 - Options narrowing to a clear frontrunner with well-understood tradeoffs
