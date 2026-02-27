@@ -38,7 +38,7 @@ setup_fixture() {
 
 run_discovery() {
     cd "$TEST_DIR"
-    bash "$DISCOVERY_SCRIPT" "$@" 2>/dev/null
+    /bin/bash "$DISCOVERY_SCRIPT" "$@" 2>/dev/null
 }
 
 assert_contains() {
@@ -107,7 +107,7 @@ test_missing_work_type_flag() {
     setup_fixture
 
     cd "$TEST_DIR"
-    local output=$(bash "$DISCOVERY_SCRIPT" 2>&1 || true)
+    local output=$(/bin/bash "$DISCOVERY_SCRIPT" 2>&1 || true)
     local exit_code=$?
 
     assert_contains "$output" 'error:' "Outputs error message"
@@ -119,7 +119,7 @@ test_unknown_argument() {
     setup_fixture
 
     cd "$TEST_DIR"
-    local output=$(bash "$DISCOVERY_SCRIPT" --unknown 2>&1 || true)
+    local output=$(/bin/bash "$DISCOVERY_SCRIPT" --unknown 2>&1 || true)
 
     assert_contains "$output" 'error:' "Outputs error for unknown flag"
     echo ""
@@ -130,7 +130,7 @@ test_feature_without_topic() {
     setup_fixture
 
     cd "$TEST_DIR"
-    local output=$(bash "$DISCOVERY_SCRIPT" --feature 2>&1 || true)
+    local output=$(/bin/bash "$DISCOVERY_SCRIPT" --feature 2>&1 || true)
 
     assert_contains "$output" 'error:' "Outputs error when topic missing"
     assert_contains "$output" '--topic' "Error mentions --topic"
@@ -142,7 +142,7 @@ test_bugfix_without_topic() {
     setup_fixture
 
     cd "$TEST_DIR"
-    local output=$(bash "$DISCOVERY_SCRIPT" --bugfix 2>&1 || true)
+    local output=$(/bin/bash "$DISCOVERY_SCRIPT" --bugfix 2>&1 || true)
 
     assert_contains "$output" 'error:' "Outputs error when topic missing"
     echo ""

@@ -244,7 +244,7 @@ echo ""
 echo "features:"
 
 feature_topics=()
-declare -A feature_topic_seen=()
+feature_seen_list=""
 
 # Scan all phases for work_type: feature
 if [ -d "$DISCUSSION_DIR" ]; then
@@ -253,10 +253,13 @@ if [ -d "$DISCUSSION_DIR" ]; then
         work_type=$(extract_field "$file" "work_type")
         if [ "$work_type" = "feature" ]; then
             name=$(basename "$file" .md)
-            if [ -z "${feature_topic_seen[$name]+x}" ]; then
-                feature_topics+=("$name")
-                feature_topic_seen[$name]=1
-            fi
+            case ",$feature_seen_list," in
+                *,"$name",*) ;;
+                *)
+                    feature_topics+=("$name")
+                    feature_seen_list="${feature_seen_list:+$feature_seen_list,}$name"
+                    ;;
+            esac
         fi
     done
 fi
@@ -267,10 +270,13 @@ if [ -d "$SPEC_DIR" ]; then
         work_type=$(extract_field "$file" "work_type")
         if [ "$work_type" = "feature" ]; then
             name=$(basename "$(dirname "$file")")
-            if [ -z "${feature_topic_seen[$name]+x}" ]; then
-                feature_topics+=("$name")
-                feature_topic_seen[$name]=1
-            fi
+            case ",$feature_seen_list," in
+                *,"$name",*) ;;
+                *)
+                    feature_topics+=("$name")
+                    feature_seen_list="${feature_seen_list:+$feature_seen_list,}$name"
+                    ;;
+            esac
         fi
     done
 fi
@@ -281,10 +287,13 @@ if [ -d "$PLAN_DIR" ]; then
         work_type=$(extract_field "$file" "work_type")
         if [ "$work_type" = "feature" ]; then
             name=$(basename "$(dirname "$file")")
-            if [ -z "${feature_topic_seen[$name]+x}" ]; then
-                feature_topics+=("$name")
-                feature_topic_seen[$name]=1
-            fi
+            case ",$feature_seen_list," in
+                *,"$name",*) ;;
+                *)
+                    feature_topics+=("$name")
+                    feature_seen_list="${feature_seen_list:+$feature_seen_list,}$name"
+                    ;;
+            esac
         fi
     done
 fi
@@ -394,17 +403,20 @@ echo ""
 echo "bugfixes:"
 
 bugfix_topics=()
-declare -A bugfix_topic_seen=()
+bugfix_seen_list=""
 
 # Scan investigation directory first
 if [ -d "$INVESTIGATION_DIR" ]; then
     for file in "$INVESTIGATION_DIR"/*/investigation.md; do
         [ -f "$file" ] || continue
         name=$(basename "$(dirname "$file")")
-        if [ -z "${bugfix_topic_seen[$name]+x}" ]; then
-            bugfix_topics+=("$name")
-            bugfix_topic_seen[$name]=1
-        fi
+        case ",$bugfix_seen_list," in
+            *,"$name",*) ;;
+            *)
+                bugfix_topics+=("$name")
+                bugfix_seen_list="${bugfix_seen_list:+$bugfix_seen_list,}$name"
+                ;;
+        esac
     done
 fi
 
@@ -415,10 +427,13 @@ if [ -d "$DISCUSSION_DIR" ]; then
         work_type=$(extract_field "$file" "work_type")
         if [ "$work_type" = "bugfix" ]; then
             name=$(basename "$file" .md)
-            if [ -z "${bugfix_topic_seen[$name]+x}" ]; then
-                bugfix_topics+=("$name")
-                bugfix_topic_seen[$name]=1
-            fi
+            case ",$bugfix_seen_list," in
+                *,"$name",*) ;;
+                *)
+                    bugfix_topics+=("$name")
+                    bugfix_seen_list="${bugfix_seen_list:+$bugfix_seen_list,}$name"
+                    ;;
+            esac
         fi
     done
 fi
@@ -429,10 +444,13 @@ if [ -d "$SPEC_DIR" ]; then
         work_type=$(extract_field "$file" "work_type")
         if [ "$work_type" = "bugfix" ]; then
             name=$(basename "$(dirname "$file")")
-            if [ -z "${bugfix_topic_seen[$name]+x}" ]; then
-                bugfix_topics+=("$name")
-                bugfix_topic_seen[$name]=1
-            fi
+            case ",$bugfix_seen_list," in
+                *,"$name",*) ;;
+                *)
+                    bugfix_topics+=("$name")
+                    bugfix_seen_list="${bugfix_seen_list:+$bugfix_seen_list,}$name"
+                    ;;
+            esac
         fi
     done
 fi
@@ -443,10 +461,13 @@ if [ -d "$PLAN_DIR" ]; then
         work_type=$(extract_field "$file" "work_type")
         if [ "$work_type" = "bugfix" ]; then
             name=$(basename "$(dirname "$file")")
-            if [ -z "${bugfix_topic_seen[$name]+x}" ]; then
-                bugfix_topics+=("$name")
-                bugfix_topic_seen[$name]=1
-            fi
+            case ",$bugfix_seen_list," in
+                *,"$name",*) ;;
+                *)
+                    bugfix_topics+=("$name")
+                    bugfix_seen_list="${bugfix_seen_list:+$bugfix_seen_list,}$name"
+                    ;;
+            esac
         fi
     done
 fi
