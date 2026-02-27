@@ -1,6 +1,5 @@
 ---
 name: start-planning
-disable-model-invocation: true
 allowed-tools: Bash(.claude/skills/start-planning/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/specification/)
 hooks:
   PreToolUse:

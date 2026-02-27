@@ -1,6 +1,5 @@
 ---
 name: start-bugfix
-disable-model-invocation: true
 allowed-tools: Bash(ls .workflows/investigation/), Bash(.claude/hooks/workflows/write-session-state.sh)
 hooks:
   PreToolUse:

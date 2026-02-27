@@ -1,6 +1,5 @@
 ---
 name: start-feature
-disable-model-invocation: true
 allowed-tools: Bash(ls .workflows/discussion/), Bash(ls .workflows/research/), Bash(.claude/hooks/workflows/write-session-state.sh)
 hooks:
   PreToolUse:

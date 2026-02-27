@@ -1,6 +1,5 @@
 ---
 name: start-research
-disable-model-invocation: true
 allowed-tools: Bash(.claude/hooks/workflows/write-session-state.sh)
 hooks:
   PreToolUse:

@@ -1,6 +1,5 @@
 ---
 name: start-discussion
-disable-model-invocation: true
 allowed-tools: Bash(.claude/skills/start-discussion/scripts/discovery.sh), Bash(mkdir -p .workflows/.state), Bash(rm .workflows/.state/research-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/discussion/)
 hooks:
   PreToolUse:

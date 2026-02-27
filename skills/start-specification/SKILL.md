@@ -1,6 +1,5 @@
 ---
 name: start-specification
-disable-model-invocation: true
 allowed-tools: Bash(.claude/skills/start-specification/scripts/discovery.sh), Bash(mkdir -p .workflows/.state), Bash(rm .workflows/.state/discussion-consolidation-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/discussion/), Bash(ls .workflows/investigation/)
 hooks:
   PreToolUse:
