@@ -181,7 +181,7 @@ Skills receive positional arguments: `$0` = work_type, `$1` = topic.
 
 #### If topic is present
 
-Enter plan mode with the following content:
+Call the `EnterPlanMode` tool to enter plan mode. Then write the following content to the plan file:
 
 ```
 # Continue Greenfield: {selected_phase:(titlecase)}
@@ -202,7 +202,7 @@ Clear context and continue.
 
 #### If topic is absent
 
-Enter plan mode with the following content:
+Call the `EnterPlanMode` tool to enter plan mode. Then write the following content to the plan file:
 
 ```
 # Continue Greenfield: {selected_phase:(titlecase)}
@@ -221,4 +221,4 @@ The skill will run discovery with greenfield context.
 Clear context and continue.
 ```
 
-Exit plan mode. The user will approve and clear context.
+Call the `ExitPlanMode` tool to present the plan to the user for approval. The user will then clear context and continue.

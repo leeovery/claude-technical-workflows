@@ -71,8 +71,8 @@ Load **[greenfield-continuation.md](references/greenfield-continuation.md)** and
 
 **Feature/bugfix** continuation references:
 1. Use discovery output to compute a single `next_phase`
-2. Enter plan mode with instructions to invoke `start-{next_phase}` with topic + work_type
-3. Exit plan mode for user approval
+2. Call `EnterPlanMode` tool, write plan file with instructions to invoke `start-{next_phase}` with topic + work_type
+3. Call `ExitPlanMode` tool for user approval
 
 The user will then clear context, and the fresh session will invoke the appropriate start-* skill with the topic and work_type provided, causing it to skip discovery and proceed directly to validation/processing.
 

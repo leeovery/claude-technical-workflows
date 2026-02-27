@@ -38,7 +38,7 @@ Feature Complete
 
 #### Otherwise
 
-Enter plan mode with the following content:
+Call the `EnterPlanMode` tool to enter plan mode. Then write the following content to the plan file:
 
 ```
 # Continue Feature: {topic}
@@ -57,4 +57,4 @@ The skill will skip discovery and proceed directly to validation.
 Clear context and continue.
 ```
 
-Exit plan mode. The user will approve and clear context.
+Call the `ExitPlanMode` tool to present the plan to the user for approval. The user will then clear context and continue.
