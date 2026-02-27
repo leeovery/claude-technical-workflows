@@ -21,7 +21,7 @@ This will create: .workflows/discussion/{suggested-topic}.md
 Is this name okay?
 
 - **`y`/`yes`** — Use this name
-- **`s`/`something else`** — Suggest a different name
+- **something else** — Suggest a different name
 · · · · · · · · · · · ·
 ```
 

@@ -36,7 +36,7 @@ This will create: .workflows/investigation/{suggested-topic}/investigation.md
 Is this name okay?
 
 - **`y`/`yes`** — Use this name
-- **`s`/`something else`** — Suggest a different name
+- **something else** — Suggest a different name
 · · · · · · · · · · · ·
 ```
 
