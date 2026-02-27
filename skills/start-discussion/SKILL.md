@@ -1,8 +1,7 @@
 ---
 name: start-discussion
-description: "Start a technical discussion. Discovers research and existing discussions, offers multiple entry paths, and invokes the technical-discussion skill."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/start-discussion/scripts/discovery.sh), Bash(mkdir -p .workflows/.state), Bash(rm .workflows/.state/research-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh)
+allowed-tools: Bash(.claude/skills/start-discussion/scripts/discovery.sh), Bash(mkdir -p .workflows/.state), Bash(rm .workflows/.state/research-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/discussion/)
 hooks:
   PreToolUse:
     - hooks:
@@ -52,9 +51,13 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 Invoke the `/migrate` skill and assess its output.
 
-**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
+#### If files were updated
 
-**If no updates needed**: Proceed to Step 1.
+**STOP.** Wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding.
+
+#### If no updates needed
+
+→ Proceed to **Step 1**.
 
 ---
 
@@ -94,94 +97,96 @@ Parse the discovery output to understand:
 **From `state` section:**
 - `scenario` - one of: `"fresh"`, `"research_only"`, `"discussions_only"`, `"research_and_discussions"`
 
-**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
+**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state.
 
 → Proceed to **Step 2**.
 
 ---
 
-## Step 2: Route Based on Scenario
+## Step 2: Determine Mode
 
-Use `state.scenario` from the discovery output to determine the path:
+Check for arguments: work_type = `$0`, topic = `$1`
 
-#### If scenario is "research_only" or "research_and_discussions"
+#### If work_type and topic are both provided
 
-Research exists and may need analysis.
+→ Proceed to **Step 3** (Validate Topic).
 
-→ Proceed to **Step 3**.
+#### If work_type is provided without topic
 
-#### If scenario is "discussions_only"
+Store work_type for the handoff.
 
-No research exists, but discussions do. Skip research analysis.
+→ Proceed to **Step 4** (Route Based on Scenario).
 
-→ Proceed to **Step 4**.
+#### If neither is provided
 
-#### If scenario is "fresh"
-
-No research or discussions exist yet.
-
-```
-Starting fresh - no prior research or discussions found.
-
-What topic would you like to discuss?
-```
-
-**STOP.** Wait for user response.
-
-When user responds, proceed with their topic.
-
-→ Proceed to **Step 6**.
+→ Proceed to **Step 4** (Route Based on Scenario).
 
 ---
 
-## Step 3: Research Analysis
+## Step 3: Validate Topic
 
-Load **[research-analysis.md](references/research-analysis.md)** and follow its instructions as written.
+Load **[validate-topic.md](references/validate-topic.md)** and follow its instructions as written.
 
-→ Proceed to **Step 4**.
+#### If resume
+
+→ Proceed to **Step 8**.
+
+#### If no collision
+
+→ Proceed to **Step 8**.
 
 ---
 
-## Step 4: Present Options
+## Step 4: Route Based on Scenario
 
-Load **[display-options.md](references/display-options.md)** and follow its instructions as written.
+Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
+
+#### If research exists
 
 → Proceed to **Step 5**.
 
+#### If discussions only
+
+→ Proceed to **Step 6**.
+
+#### If fresh
+
+→ Proceed to **Step 8**.
+
 ---
 
-## Step 5: Handle Selection
+## Step 5: Research Analysis
 
-Load **[handle-selection.md](references/handle-selection.md)** and follow its instructions as written.
+Load **[research-analysis.md](references/research-analysis.md)** and follow its instructions as written.
 
 → Proceed to **Step 6**.
 
 ---
 
-## Step 6: Gather Context
+## Step 6: Present Options
 
-Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
+Load **[display-options.md](references/display-options.md)** and follow its instructions as written.
 
 → Proceed to **Step 7**.
 
 ---
 
-## Step 7: Invoke the Skill
+## Step 7: Handle Selection
 
-Before invoking the processing skill, save a session bookmark.
+Load **[handle-selection.md](references/handle-selection.md)** and follow its instructions as written.
 
-> *Output the next fenced block as a code block:*
+→ Proceed to **Step 8**.
 
-```
-Saving session state so Claude can pick up where it left off if the conversation is compacted.
-```
+---
 
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-discussion/SKILL.md" \
-  ".workflows/discussion/{topic}.md"
-```
+## Step 8: Gather Context
+
+Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
+
+→ Proceed to **Step 9**.
+
+---
+
+## Step 9: Invoke the Skill
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
-

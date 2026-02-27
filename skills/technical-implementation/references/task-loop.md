@@ -70,7 +70,7 @@ Task {id}: {Task Name} — {blocked/failed}
 
 #### If `stop`
 
-→ Return to the skill for **Step 7**.
+→ Return to **[the skill](../SKILL.md)** for **Step 7**.
 
 ---
 
@@ -211,4 +211,4 @@ This is the end of this iteration.
 All tasks complete. {M} tasks implemented.
 ```
 
-→ Return to the skill for **Step 7**.
+→ Return to **[the skill](../SKILL.md)** for **Step 7**.

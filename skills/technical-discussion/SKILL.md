@@ -1,6 +1,5 @@
 ---
 name: technical-discussion
-description: "Document technical discussions as expert architect and meeting assistant. Capture context, decisions, edge cases, debates, and rationale without jumping to specification or implementation. Use when: (1) Users discuss/explore/debate architecture or design, (2) Working through edge cases before specification, (3) Need to document technical decisions and their rationale, (4) Capturing competing solutions and why choices were made. Creates documentation in .workflows/discussion/{topic}.md that can be used to build validated specifications."
 user-invocable: false
 ---
 
@@ -135,9 +134,21 @@ Incorporate the user's context into the discussion, commit, then re-present the 
 
 1. Update frontmatter `status: concluded`
 2. Final commit
-3. Check for remaining in-progress discussions in `.workflows/discussion/`
+3. Check the artifact frontmatter for `work_type`
 
-**If other in-progress discussions exist:**
+**If work_type is set** (feature, bugfix, or greenfield):
+
+This discussion is part of a pipeline. Invoke the `/workflow:bridge` skill:
+
+```
+Pipeline bridge for: {topic}
+Work type: {work_type from artifact frontmatter}
+Completed phase: discussion
+
+Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
+```
+
+**If work_type is not set and other in-progress discussions exist:**
 
 > *Output the next fenced block as a code block:*
 
@@ -151,7 +162,7 @@ Remaining in-progress discussions:
 To continue, clear your context and run /start-discussion to pick up the next topic.
 ```
 
-**If no in-progress discussions remain:**
+**If work_type is not set and no in-progress discussions remain:**
 
 > *Output the next fenced block as a code block:*
 

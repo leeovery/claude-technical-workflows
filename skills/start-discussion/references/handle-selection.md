@@ -10,9 +10,12 @@ Route based on the user's choice from the options display.
 
 User chose to start from research (e.g., "research 1", "1", "from research", or a topic name).
 
+Set source="research".
+
 **If user specified a topic inline** (e.g., "research 2", "2", or topic name):
 - Identify the selected topic from the numbered list
-- Control returns to the backbone
+
+→ Return to **[the skill](../SKILL.md)**.
 
 **If user just said "from research" without specifying:**
 
@@ -28,9 +31,12 @@ Which research topic would you like to discuss? (Enter a number or topic name)
 
 User chose to continue a discussion (e.g., "continue auth-flow" or "continue discussion").
 
+Set source="continue".
+
 **If user specified a discussion inline** (e.g., "continue auth-flow"):
 - Identify the selected discussion from the list
-- Control returns to the backbone
+
+→ Return to **[the skill](../SKILL.md)**.
 
 **If user just said "continue discussion" without specifying:**
 
@@ -44,7 +50,11 @@ Which discussion would you like to continue?
 
 #### If user chose "Fresh topic"
 
-User wants to start a fresh discussion. Control returns to the backbone.
+User wants to start a fresh discussion.
+
+Set source="fresh".
+
+→ Return to **[the skill](../SKILL.md)**.
 
 #### If user chose "refresh"
 
@@ -59,4 +69,4 @@ Delete the cache file:
 rm .workflows/.state/research-analysis.md
 ```
 
-→ Return to **Step 3** to re-analyze.
+→ Proceed to **[Step 5](../SKILL.md)** to re-analyze.

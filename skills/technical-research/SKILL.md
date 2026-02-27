@@ -1,6 +1,5 @@
 ---
 name: technical-research
-description: "Explore ideas, validate concepts, and research broadly across technical, business, and market domains. Use when: (1) User has a new idea to explore, (2) Need to research a topic deeply, (3) Validating feasibility - technical, business, or market, (4) Learning and exploration without necessarily building anything, (5) User says 'research this' or 'explore this idea', (6) Brain dumping early thoughts before formal discussion. Creates research documents in .workflows/research/ that may feed into discussion or specification."
 user-invocable: false
 ---
 
@@ -123,7 +122,44 @@ Document the convergence point in the research file using this marker:
 > **Discussion-ready**: {Brief summary of what was explored and why it's ready for decision-making. Key tradeoffs or options identified.}
 ```
 
-Then continue with whatever's next — another topic, a different angle, or wrapping up the session.
+Commit the file.
+
+Check the research artifact frontmatter for `work_type`.
+
+**If work_type is set** (feature or greenfield):
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+This topic is marked discussion-ready. Would you like to:
+
+- **`c`/`continue`** — Continue exploring
+- **`d`/`discuss`** — Transition to discussion phase
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If continue
+
+Continue with whatever's next — another topic, a different angle, or wrapping up the session.
+
+#### If discuss
+
+Invoke the `/workflow:bridge` skill:
+
+```
+Pipeline bridge for: {topic}
+Work type: {work_type from artifact frontmatter}
+Completed phase: research
+
+Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
+```
+
+**If work_type is not set:**
+
+Continue with whatever's next — another topic, a different angle, or wrapping up the session.
 
 ### If the user keeps digging
 

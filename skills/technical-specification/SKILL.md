@@ -1,6 +1,5 @@
 ---
 name: technical-specification
-description: "Build validated specifications from source material through collaborative refinement. Use when: (1) User asks to create/build a specification from source material, (2) User wants to validate and refine content before planning, (3) Converting source material (discussions, research, requirements) into standalone specifications, (4) User says 'specify this' or 'create a spec', (5) Need to filter hallucinations and enrich gaps before formal planning. Creates specifications in .workflows/specification/{topic}/specification.md that can be used to build implementation plans."
 user-invocable: false
 ---
 
@@ -124,7 +123,7 @@ Found existing specification for **{topic}**.
 
 Reset `finding_gate_mode` to `gated` in the specification frontmatter (fresh invocation = fresh gates).
 
-→ Skip Steps 1–2, proceed to **Step 3**.
+→ Proceed to **Step 3** (skipping Steps 1–2).
 
 #### If `restart`
 

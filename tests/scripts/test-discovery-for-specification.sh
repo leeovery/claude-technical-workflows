@@ -904,6 +904,99 @@ EOF
 }
 
 #
+# Test: Discussion work_type output
+#
+test_discussion_work_type_output() {
+    echo -e "${YELLOW}Test: Discussion work_type output${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+
+    cat > "$TEST_DIR/.workflows/discussion/typed.md" << 'EOF'
+---
+topic: typed
+status: concluded
+work_type: feature
+date: 2026-01-20
+---
+
+# Discussion: Typed
+EOF
+
+    cat > "$TEST_DIR/.workflows/discussion/untyped.md" << 'EOF'
+---
+topic: untyped
+status: concluded
+date: 2026-01-20
+---
+
+# Discussion: Untyped
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'work_type: "feature"' "work_type feature present"
+    assert_contains "$output" 'work_type: "greenfield"' "work_type defaults to greenfield"
+
+    echo ""
+}
+
+#
+# Test: Spec work_type output
+#
+test_spec_work_type_output() {
+    echo -e "${YELLOW}Test: Spec work_type output${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/specification/buggy-thing"
+    cat > "$TEST_DIR/.workflows/specification/buggy-thing/specification.md" << 'EOF'
+---
+topic: buggy-thing
+status: in-progress
+type: feature
+work_type: bugfix
+date: 2026-01-20
+---
+
+# Specification: Buggy Thing
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'work_type: "bugfix"' "work_type bugfix present"
+
+    echo ""
+}
+
+#
+# Test: Cache stale when no discussions exist
+#
+test_cache_stale_no_discussions() {
+    echo -e "${YELLOW}Test: Cache stale when no discussions${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/.state"
+
+    cat > "$TEST_DIR/.workflows/.state/discussion-consolidation-analysis.md" << 'EOF'
+---
+checksum: abc123
+generated: 2026-01-20T10:00:00
+research_files:
+  - auth-flow.md
+---
+
+# Discussion Consolidation Analysis
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'status: "stale"' "Cache status is stale"
+    assert_contains "$output" 'reason: "no discussions to compare"' "Reason is no discussions to compare"
+
+    echo ""
+}
+
+#
 # Run all tests
 #
 echo "=========================================="
@@ -932,6 +1025,9 @@ test_spec_empty_sources
 test_discussion_with_hr_in_body
 test_spec_count_excludes_superseded
 test_spec_sources_discussion_status
+test_discussion_work_type_output
+test_spec_work_type_output
+test_cache_stale_no_discussions
 
 #
 # Summary

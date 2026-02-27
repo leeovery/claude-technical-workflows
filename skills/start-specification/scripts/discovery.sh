@@ -133,6 +133,8 @@ if [ -d "$DISCUSSION_DIR" ] && [ -n "$(ls -A "$DISCUSSION_DIR" 2>/dev/null)" ]; 
         name=$(basename "$file" .md)
         status=$(extract_field "$file" "status")
         status=${status:-"unknown"}
+        work_type=$(extract_field "$file" "work_type")
+        work_type=${work_type:-"greenfield"}
 
         # Check if this discussion has a corresponding individual spec
         has_individual_spec="false"
@@ -146,6 +148,7 @@ if [ -d "$DISCUSSION_DIR" ] && [ -n "$(ls -A "$DISCUSSION_DIR" 2>/dev/null)" ]; 
 
         echo "  - name: \"$name\""
         echo "    status: \"$status\""
+        echo "    work_type: \"$work_type\""
         echo "    has_individual_spec: $has_individual_spec"
         if [ "$has_individual_spec" = "true" ]; then
             echo "    spec_status: \"$spec_status\""
@@ -169,11 +172,14 @@ if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
         name=$(basename "$(dirname "$file")")
         status=$(extract_field "$file" "status")
         status=${status:-"active"}
+        work_type=$(extract_field "$file" "work_type")
+        work_type=${work_type:-"greenfield"}
 
         superseded_by=$(extract_field "$file" "superseded_by")
 
         echo "  - name: \"$name\""
         echo "    status: \"$status\""
+        echo "    work_type: \"$work_type\""
 
         if [ -n "$superseded_by" ]; then
             echo "    superseded_by: \"$superseded_by\""

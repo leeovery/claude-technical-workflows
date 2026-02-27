@@ -50,7 +50,7 @@ Record the current cycle number — passed to both review agents for tracking fi
 
 #### If no findings were surfaced in this cycle
 
-→ Proceed directly to **E. Completion**.
+→ Proceed to **E. Completion**.
 
 #### If findings were surfaced
 
@@ -101,7 +101,7 @@ with fresh context — 2-3 cycles typically surface anything cascading.
 
 #### If proceed
 
-→ Continue to **E. Completion**.
+→ Proceed to **E. Completion**.
 
 ---
 
@@ -119,4 +119,4 @@ with fresh context — 2-3 cycles typically surface anything cascading.
 Plan review complete — {N} cycle(s), all tracking files finalised.
 ```
 
-→ Return to **[technical-planning SKILL.md](../SKILL.md)** for **Step 8**.
+→ Return to **[the skill](../SKILL.md)** for **Step 8**.

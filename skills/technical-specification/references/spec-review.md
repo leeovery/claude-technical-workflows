@@ -56,11 +56,11 @@ were still found last cycle) or skip to completion.
 
 #### If `proceed`
 
-→ Continue to **B. Phase 1 — Input Review**.
+→ Proceed to **B. Phase 1 — Input Review**.
 
 #### If `skip`
 
-→ Jump to **E. Completion**.
+→ Proceed to **E. Completion**.
 
 ---
 
@@ -86,7 +86,7 @@ were still found last cycle) or skip to completion.
 
 #### If no findings were surfaced in either phase of this cycle
 
-→ Skip the re-loop prompt and proceed directly to **E. Completion** (nothing to re-analyse).
+→ Proceed to **E. Completion** (nothing to re-analyse).
 
 #### If findings were surfaced
 
@@ -133,7 +133,7 @@ Auto-review has not converged after 5 cycles — escalating for human review.
 
 #### If proceed
 
-→ Continue to **E. Completion**.
+→ Proceed to **E. Completion**.
 
 ---
 
@@ -151,4 +151,4 @@ Auto-review has not converged after 5 cycles — escalating for human review.
 Specification review complete — {N} cycle(s), all tracking files finalised.
 ```
 
-→ Return to **[technical-specification SKILL.md](../SKILL.md)** for **Step 7**.
+→ Return to **[the skill](../SKILL.md)** for **Step 7**.

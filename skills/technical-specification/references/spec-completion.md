@@ -4,7 +4,7 @@
 
 ---
 
-## Step 1: Determine Specification Type
+## A. Determine Specification Type
 
 Before asking for sign-off, assess whether this is a **feature** or **cross-cutting** specification. See **[specification-format.md](specification-format.md)** for type definitions.
 
@@ -37,7 +37,7 @@ Does this assessment seem correct?
 
 ---
 
-## Step 2: Verify Tracking Files Complete
+## B. Verify Tracking Files Complete
 
 Before proceeding to sign-off, confirm that all review tracking files across all cycles have `status: complete`:
 
@@ -50,7 +50,7 @@ If any tracking file still shows `status: in-progress`, mark it complete now.
 
 ---
 
-## Step 3: Sign-Off
+## C. Sign-Off
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -69,11 +69,11 @@ Discuss the user's context, apply any changes, then re-present the sign-off prom
 
 #### If yes
 
-→ Proceed to **Step 4**.
+→ Proceed to **D. Update Frontmatter and Conclude**.
 
 ---
 
-## Step 4: Update Frontmatter and Conclude
+## D. Update Frontmatter and Conclude
 
 Update the specification frontmatter:
 
@@ -101,7 +101,7 @@ Commit: `spec({topic}): conclude specification`
 
 ---
 
-## Step 5: Handle Source Specifications
+## E. Handle Source Specifications
 
 If any of your sources were **existing specifications** (as opposed to discussions, research, or other reference material), these have now been consolidated into the new specification.
 
@@ -112,3 +112,31 @@ If any of your sources were **existing specifications** (as opposed to discussio
    ```
 2. Inform the user which files were updated
 3. Commit: `spec({topic}): mark source specifications as superseded`
+
+---
+
+## F. Pipeline Continuation
+
+Check the specification frontmatter for `work_type`.
+
+#### If work_type is set (feature, bugfix, or greenfield)
+
+This specification is part of a pipeline. Invoke the `/workflow:bridge` skill:
+
+```
+Pipeline bridge for: {topic}
+Work type: {work_type from artifact frontmatter}
+Completed phase: specification
+
+Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
+```
+
+#### If work_type is not set
+
+> *Output the next fenced block as a code block:*
+
+```
+Specification concluded: {topic}
+
+The specification is ready for planning. Run /start-planning to begin.
+```

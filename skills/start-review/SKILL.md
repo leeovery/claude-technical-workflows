@@ -1,8 +1,7 @@
 ---
 name: start-review
-description: "Start a review session from an existing plan and implementation. Discovers available plans, validates implementation exists, and invokes the technical-review skill."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/start-review/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh)
+allowed-tools: Bash(.claude/skills/start-review/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/planning/), Bash(ls .workflows/implementation/)
 hooks:
   PreToolUse:
     - hooks:
@@ -52,9 +51,13 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 Invoke the `/migrate` skill and assess its output.
 
-**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
+#### If files were updated
 
-**If no updates needed**: Proceed to Step 1.
+**STOP.** Wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding.
+
+#### If no updates needed
+
+→ Proceed to **Step 1**.
 
 ---
 
@@ -88,99 +91,68 @@ Parse the discovery output to understand:
 - `reviewed_plan_count` - plans that have been reviewed
 - `all_reviewed` - whether all implemented plans have reviews
 
-**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
+**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state.
 
 → Proceed to **Step 2**.
 
 ---
 
-## Step 2: Route Based on Scenario
+## Step 2: Determine Mode
 
-Use `state.scenario` from the discovery output to determine the path:
+Check for arguments: work_type = `$0`, topic = `$1`
 
-#### If scenario is "no_plans"
+#### If work_type and topic are both provided
 
-No plans exist yet.
+→ Proceed to **Step 3**.
 
-> *Output the next fenced block as a code block:*
+#### If work_type is provided without topic
 
-```
-Review Overview
+Store work_type for the handoff.
 
-No plans found in .workflows/planning/
+→ Proceed to **Step 4**.
 
-The review phase requires a completed implementation based on a plan.
-Run /start-planning first to create a plan, then /start-implementation
-to build it.
-```
-
-**STOP.** Do not proceed — terminal condition.
-
-#### If all_reviewed is true
-
-All implemented plans have been reviewed.
-
-> *Output the next fenced block as a code block:*
-
-```
-Review Overview
-
-All {N} implemented plans have been reviewed.
-
-1. {topic:(titlecase)}
-   └─ Review: x{review_count} — r{latest_review_version} ({latest_review_verdict})
-   └─ Synthesis: @if(has_synthesis) completed @else pending @endif
-
-2. ...
-```
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-All plans have been reviewed.
-
-- **`a`/`analysis`** — Synthesize findings from existing reviews into tasks
-- **`r`/`re-review`** — Re-review a plan (creates new review version)
-
-Select an option:
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-#### If analysis
-
-→ Proceed to **Step 4** with scope set to "analysis".
-
-#### If re-review
-
-→ Proceed to **Step 3**, incrementing the review version for the selected plan.
-
-#### If scenario is "single_plan" or "multiple_plans"
-
-Plans exist (some may have reviews, some may not).
-
-→ Proceed to **Step 3** to present options.
-
----
-
-## Step 3: Display Plans
-
-Load **[display-plans.md](references/display-plans.md)** and follow its instructions as written.
+#### If neither is provided
 
 → Proceed to **Step 4**.
 
 ---
 
-## Step 4: Select Plans
+## Step 3: Validate Plan and Implementation
 
-Load **[select-plans.md](references/select-plans.md)** and follow its instructions as written.
+Load **[validate-artifacts.md](references/validate-artifacts.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
 
 ---
 
-## Step 5: Invoke the Skill
+## Step 4: Route Based on Scenario
+
+Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
+
+---
+
+## Step 5: Determine Review Version
+
+Load **[determine-review-version.md](references/determine-review-version.md)** and follow its instructions as written.
+
+→ Proceed to **Step 8**.
+
+---
+
+## Step 6: Display Plans
+
+Load **[display-plans.md](references/display-plans.md)** and follow its instructions as written.
+
+---
+
+## Step 7: Select Plans
+
+Load **[select-plans.md](references/select-plans.md)** and follow its instructions as written.
+
+→ Proceed to **Step 8**.
+
+---
+
+## Step 8: Invoke the Skill
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

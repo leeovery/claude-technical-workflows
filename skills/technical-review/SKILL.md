@@ -1,6 +1,5 @@
 ---
 name: technical-review
-description: "Validate completed implementation against plan tasks and acceptance criteria. Use when: (1) Implementation is complete, (2) User wants validation before merging/shipping, (3) Quality gate check needed after implementation. Reviews ALL plan tasks for implementation correctness, test adequacy, and code quality. Produces structured feedback (approve, request changes, or comments) - does NOT fix code."
 user-invocable: false
 ---
 
@@ -53,7 +52,7 @@ The specification is optional — the review can proceed with just the plan.
 
 Analysis of existing review findings was requested. The review has already been completed.
 
-→ Go directly to **Step 6**.
+→ Proceed to **Step 6**.
 
 ---
 

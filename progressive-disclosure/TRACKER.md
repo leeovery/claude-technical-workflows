@@ -2,21 +2,30 @@
 
 Split monolithic `start-*` entry-point skills into backbone + reference files pattern, matching the progressive disclosure structure already used by processing skills (`technical-planning`, `technical-implementation`).
 
-**Conventions:** [conventions.md](conventions.md)
+**Conventions:** See CLAUDE.md — "Skill File Structure (Progressive Disclosure)" and "Structural Conventions" sections. These are the authoritative source.
 
 ---
 
 ## Skills
 
-Ordered by complexity. Work through in order — simpler skills establish patterns for harder ones.
+All entry-point skills have been refactored to the backbone + reference files pattern.
 
 - [x] **start-research** (62 lines) — Simple linear flow. 2 references: gather-context, invoke-skill. *(PR #96)*
-- [x] **start-specification** (851 lines → backbone + 14 reference files) — Complex: discovery + conditional routing + display redesign. *(PR #97)*
-- [x] **start-review** (243 lines → backbone + 3 reference files) — Linear discovery + display/select/invoke extraction. *(PR #106)*
-- [x] **start-planning** (310 lines → backbone + 3 reference files) — Linear discovery + display/cross-cutting/invoke extraction.
-- [ ] **start-implementation** (338 lines) — Linear with discovery script + plan reading + format loading. When refactored, de-duplicate `begin-implementation` Steps 2-3 (external dependencies, environment setup) by referencing start-implementation's new reference files — same pattern as begin-planning → start-planning cross-cutting-context.md.
-- [x] **start-discussion** (391 lines → backbone + 8 reference files) — Discovery inline, 3-path gather-context router. *(PR #99)*
-- [ ] **start-feature** (82 lines) — Standalone entry point (no prior phase). May not need splitting at this size.
+- [x] **start-specification** (backbone + 20 reference files) — Complex: discovery + conditional routing + display redesign. *(PR #97)*
+- [x] **start-review** (backbone + 6 reference files) — Discovery + display/select/invoke extraction.
+- [x] **start-planning** (backbone + 6 reference files) — Discovery + display/cross-cutting/invoke extraction.
+- [x] **start-implementation** (backbone + 6 reference files) — Discovery + plan reading + dependency checking.
+- [x] **start-discussion** (backbone + 10 reference files) — Two-mode pattern. Unified gather-context router (bridge/fresh/research/continue).
+- [x] **start-investigation** (backbone + 5 reference files) — Two-mode pattern. Unified gather-context router (bridge/fresh). Topic-conflict-check merged into gather-context-fresh.
+- [x] **start-feature** (backbone + 6 reference files) — Standalone entry point with research gating.
+- [x] **start-bugfix** (backbone + 3 reference files) — Standalone entry point for bugfix pipeline.
+
+### Step consolidation passes
+
+After the initial progressive disclosure split, a second pass consolidated duplicate bridge/discovery gather-context steps:
+
+- **start-discussion** — Merged gather-context-bridge + gather-context-discovery into unified gather-context router with source-based routing. Reduced backbone from 10 steps to 8.
+- **start-investigation** — Merged gather-context-bridge + gather-context-discovery + topic-conflict-check into unified gather-context router. Reduced backbone from 9 steps to 7.
 
 ---
 
@@ -40,7 +49,6 @@ Ordered by complexity. Work through in order — simpler skills establish patter
    - H4 conditional headings (replacing bold conditionals)
    - Routing arrows (`→`) on load/proceed instructions
    - Separated numbered menu prompts
-   - See [conventions.md](conventions.md) — Interactive Formatting section
 4. **display-single.md extracted** into progressive disclosure:
    - Router: `display-single.md` (24 lines, pure routing)
    - `display-single-no-spec.md` — no spec path

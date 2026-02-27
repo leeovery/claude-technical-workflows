@@ -1,8 +1,7 @@
 ---
 name: start-specification
-description: "Start a specification session from concluded discussions. Discovers available discussions, offers consolidation assessment for multiple discussions, and invokes the technical-specification skill."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/start-specification/scripts/discovery.sh), Bash(mkdir -p .workflows/.state), Bash(rm .workflows/.state/discussion-consolidation-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh)
+allowed-tools: Bash(.claude/skills/start-specification/scripts/discovery.sh), Bash(mkdir -p .workflows/.state), Bash(rm .workflows/.state/discussion-consolidation-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/discussion/), Bash(ls .workflows/investigation/)
 hooks:
   PreToolUse:
     - hooks:
@@ -52,9 +51,13 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 Invoke the `/migrate` skill and assess its output.
 
-**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
+#### If files were updated
 
-**If no updates needed**: Proceed to Step 1.
+**STOP.** Wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding.
+
+#### If no updates needed
+
+→ Proceed to **Step 1**.
 
 ---
 
@@ -80,41 +83,62 @@ Parse the discovery output to understand:
 
 **From `current_state`:** `concluded_count`, `spec_count`, `has_discussions`, `has_concluded`, `has_specs`, and other counts/booleans for routing.
 
-**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
+**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state.
 
 → Proceed to **Step 2**.
 
 ---
 
-## Step 2: Check Prerequisites
+## Step 2: Determine Mode
 
-#### If has_discussions is false or has_concluded is false
+Check for arguments: work_type = `$0`, topic = `$1`
 
-→ Load **[display-blocks.md](references/display-blocks.md)** and follow its instructions. **STOP.**
-
-#### Otherwise
+#### If work_type and topic are both provided
 
 → Proceed to **Step 3**.
 
+#### If work_type is provided without topic
+
+Store work_type for the handoff.
+
+→ Proceed to **Step 6**.
+
+#### If neither is provided
+
+→ Proceed to **Step 6**.
+
 ---
 
-## Step 3: Route
+## Step 3: Validate Source Material
 
-Based on discovery state, load exactly ONE reference file:
+Load **[validate-source.md](references/validate-source.md)** and follow its instructions as written.
 
-#### If concluded_count == 1
+→ Proceed to **Step 4**.
 
-→ Load **[display-single.md](references/display-single.md)** and follow its instructions.
+---
 
-#### If cache status is "valid"
+## Step 4: Check Existing Specification
 
-→ Load **[display-groupings.md](references/display-groupings.md)** and follow its instructions.
+Load **[check-existing-spec.md](references/check-existing-spec.md)** and follow its instructions as written.
 
-#### If spec_count == 0 and cache is "none" or "stale"
+→ Proceed to **Step 5**.
 
-→ Load **[display-analyze.md](references/display-analyze.md)** and follow its instructions.
+---
 
-#### Otherwise
+## Step 5: Invoke the Skill (Bridge Mode)
 
-→ Load **[display-specs-menu.md](references/display-specs-menu.md)** and follow its instructions.
+Load **[invoke-skill-bridge.md](references/invoke-skill-bridge.md)** and follow its instructions as written.
 
+---
+
+## Step 6: Check Prerequisites
+
+Load **[check-prerequisites.md](references/check-prerequisites.md)** and follow its instructions as written.
+
+→ Proceed to **Step 7**.
+
+---
+
+## Step 7: Route Based on State
+
+Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.

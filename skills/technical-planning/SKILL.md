@@ -1,6 +1,5 @@
 ---
 name: technical-planning
-description: "Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Use when: (1) User asks to create/write an implementation plan, (2) User asks to plan implementation from a specification, (3) Converting specifications from .workflows/specification/{topic}/specification.md into implementation plans, (4) User says 'plan this' or 'create a plan', (5) Need to structure how to build something with phases and concrete steps. Creates plans in .workflows/planning/{topic}/plan.md that can be executed via strict TDD."
 user-invocable: false
 ---
 
@@ -263,4 +262,28 @@ Planning is complete for **{topic}**.
 The plan contains **{N} phases** with **{M} tasks** total, reviewed for traceability against the specification and structural integrity.
 
 Status has been marked as `concluded`. The plan is ready for implementation.
+```
+
+4. **Check for pipeline continuation** — Check the plan frontmatter for `work_type`
+
+**If work_type is set** (feature, bugfix, or greenfield):
+
+This plan is part of a pipeline. Invoke the `/workflow:bridge` skill:
+
+```
+Pipeline bridge for: {topic}
+Work type: {work_type from artifact frontmatter}
+Completed phase: planning
+
+Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
+```
+
+**If work_type is not set:**
+
+> *Output the next fenced block as a code block:*
+
+```
+Plan concluded: {topic}
+
+The plan is ready for implementation. Run /start-implementation to begin.
 ```

@@ -70,3 +70,5 @@ research_files:
 ```
 
 **Cross-reference**: For each topic, note if a discussion already exists (from `discussions.files` in discovery).
+
+→ Return to **[the skill](../SKILL.md)**.

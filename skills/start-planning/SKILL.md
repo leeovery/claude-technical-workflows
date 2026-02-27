@@ -1,8 +1,7 @@
 ---
 name: start-planning
-description: "Start a planning session from an existing specification. Discovers available specifications, gathers context, and invokes the technical-planning skill."
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/start-planning/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh)
+allowed-tools: Bash(.claude/skills/start-planning/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/specification/)
 hooks:
   PreToolUse:
     - hooks:
@@ -52,9 +51,13 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 Invoke the `/migrate` skill and assess its output.
 
-**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
+#### If files were updated
 
-**If no updates needed**: Proceed to Step 1.
+**STOP.** Wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding.
+
+#### If no updates needed
+
+→ Proceed to **Step 1**.
 
 ---
 
@@ -91,113 +94,70 @@ Parse the discovery output to understand:
 **From `state` section:**
 - `scenario` - one of: `"no_specs"`, `"nothing_actionable"`, `"has_options"`
 
-**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state - the script provides everything needed.
+**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state.
 
 → Proceed to **Step 2**.
 
 ---
 
-## Step 2: Route Based on Scenario
+## Step 2: Determine Mode
 
-Use `state.scenario` from the discovery output to determine the path:
+Check for arguments: work_type = `$0`, topic = `$1`
 
-#### If scenario is "no_specs"
+#### If work_type and topic are both provided
 
-No specifications exist yet.
+→ Proceed to **Step 3**.
 
-> *Output the next fenced block as a code block:*
+#### If work_type is provided without topic
 
-```
-Planning Overview
+Store work_type for the handoff.
 
-No specifications found in .workflows/specification/
+→ Proceed to **Step 4**.
 
-The planning phase requires a concluded specification.
-Run /start-specification first.
-```
-
-**STOP.** Do not proceed — terminal condition.
-
-#### If scenario is "nothing_actionable"
-
-Specifications exist but none are actionable — all are still in-progress and no plans exist to continue.
-
-→ Proceed to **Step 3** to show the state.
-
-#### If scenario is "has_options"
-
-At least one specification is ready for planning, or an existing plan can be continued or reviewed.
-
-→ Proceed to **Step 3** to present options.
-
----
-
-## Step 3: Present Workflow State and Options
-
-Load **[display-state.md](references/display-state.md)** and follow its instructions as written.
+#### If neither is provided
 
 → Proceed to **Step 4**.
 
 ---
 
-## Step 4: Route by Plan State
+## Step 3: Validate Specification
 
-Check whether the selected specification already has a plan (from `has_plan` in discovery output).
-
-#### If no existing plan (fresh start)
-
-→ Proceed to **Step 5** to gather context before invoking the skill.
-
-#### If existing plan (continue or review)
-
-The plan already has its context from when it was created. Skip context gathering.
-
-→ Go directly to **Step 7** to invoke the skill.
-
----
-
-## Step 5: Gather Additional Context
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-Any additional context since the specification was concluded?
-
-- **`c`/`continue`** — Continue with the specification as-is
-- Or provide additional context (priorities, constraints, new considerations)
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-→ Proceed to **Step 6**.
-
----
-
-## Step 6: Surface Cross-Cutting Context
-
-Load **[cross-cutting-context.md](references/cross-cutting-context.md)** and follow its instructions as written.
+Load **[validate-spec.md](references/validate-spec.md)** and follow its instructions as written.
 
 → Proceed to **Step 7**.
 
 ---
 
-## Step 7: Invoke the Skill
+## Step 4: Route Based on Scenario
 
-Before invoking the processing skill, save a session bookmark.
+Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
 
-> *Output the next fenced block as a code block:*
+→ Proceed to **Step 5**.
 
-```
-Saving session state so Claude can pick up where it left off if the conversation is compacted.
-```
+---
 
-```bash
-.claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
-  "skills/technical-planning/SKILL.md" \
-  ".workflows/planning/{topic}/plan.md"
-```
+## Step 5: Present State and Options
+
+Load **[display-state.md](references/display-state.md)** and follow its instructions as written.
+
+→ Proceed to **Step 6**.
+
+---
+
+## Step 6: Route by Plan State
+
+Load **[route-plan-state.md](references/route-plan-state.md)** and follow its instructions as written.
+
+---
+
+## Step 7: Cross-Cutting Context
+
+Load **[cross-cutting-context.md](references/cross-cutting-context.md)** and follow its instructions as written.
+
+→ Proceed to **Step 8**.
+
+---
+
+## Step 8: Invoke the Skill
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

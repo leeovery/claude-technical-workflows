@@ -6,55 +6,87 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Claude Code skills package for structured technical discussion and planning workflows. Installed via npm as `@leeovery/claude-technical-workflows`.
 
-## Six-Phase Workflow
+## Work Types
+
+The workflow system supports three work types, each with its own pipeline:
+
+**Greenfield**: Building a new product from scratch
+- Phase-centric, multi-session, long-running (days/weeks/months)
+- All artifacts in a phase complete before moving to next
+- Research → Discussion → Specification → Planning → Implementation → Review
+
+**Feature**: Adding functionality to an existing product
+- Topic-centric, single-session, linear pipeline
+- Optional research step if uncertainties exist
+- Discussion → Specification → Planning → Implementation → Review
+
+**Bugfix**: Fixing broken behavior
+- Investigation-centric, single-session
+- Investigation replaces discussion (combines symptom gathering + code analysis)
+- Investigation → Specification → Planning → Implementation → Review
+
+## Workflow Phases
 
 1. **Research** (`technical-research` skill): EXPLORE - feasibility, market, viability, early ideas
 2. **Discussion** (`technical-discussion` skill): Capture WHAT and WHY - decisions, architecture, edge cases, debates
-3. **Specification** (`technical-specification` skill): Validate and refine into standalone spec
-4. **Planning** (`technical-planning` skill): Define HOW - phases, tasks, acceptance criteria
-5. **Implementation** (`technical-implementation` skill): Execute plan via strict TDD
-6. **Review** (`technical-review` skill): Validate work against discussion, specification, and plan
+3. **Investigation** (`technical-investigation` skill): Bugfix-specific - symptom gathering + code analysis → root cause
+4. **Specification** (`technical-specification` skill): Validate and refine into standalone spec
+5. **Planning** (`technical-planning` skill): Define HOW - phases, tasks, acceptance criteria
+6. **Implementation** (`technical-implementation` skill): Execute plan via strict TDD
+7. **Review** (`technical-review` skill): Validate work against discussion, specification, and plan
 
 ## Structure
 
 ```
 skills/
   # Processing skills (model-invocable — do the work)
-  technical-research/        # Phase 1: Explore and validate ideas
-  technical-discussion/      # Phase 2: Document discussions
-  technical-specification/   # Phase 3: Build validated specifications
-  technical-planning/        # Phase 4: Create implementation plans
-  technical-implementation/  # Phase 5: Execute via TDD
-  technical-review/          # Phase 6: Validate against artifacts
+  technical-research/        # Explore and validate ideas
+  technical-discussion/      # Document discussions (feature/greenfield)
+  technical-investigation/   # Investigate bugs (bugfix pipeline)
+  technical-specification/   # Build validated specifications
+  technical-planning/        # Create implementation plans
+  technical-implementation/  # Execute via TDD
+  technical-review/          # Validate against artifacts
+
+  # Unified entry points
+  workflow/
+    start/                   # Unified entry point - discovers state, routes by work type
+      scripts/discovery.sh   #   Comprehensive cross-phase discovery
+      references/            #   Work type selection, routing references
+    bridge/                  # Pipeline continuation - discovers next phase, enters plan mode
+      scripts/discovery.sh   #   Topic-specific or phase-centric discovery
+      references/            #   Work-type-specific continuation logic
 
   # Entry-point skills (user-invocable — gather context, invoke processing skills)
-  # Each entry-point skill with a discovery script has a scripts/ subdirectory
   migrate/                   # Keep workflow files in sync with system design
     scripts/migrate.sh       #   Migration orchestrator
     scripts/migrations/      #   Individual migration scripts (numbered)
-  start-feature/             # Start feature pipeline (discussion → spec → plan → impl → review)
+  start-feature/             # Start feature pipeline (power user entry)
     references/              #   Interview questions, handoffs, phase bridge
-  continue-feature/          # Continue feature through next pipeline phase
-    scripts/discovery.sh     #   Cross-phase discovery script
-    references/              #   Phase detection, bridges, handoffs
+  start-bugfix/              # Start bugfix pipeline (power user entry)
+    references/              #   Bug context gathering, phase bridge
   link-dependencies/         # Link dependencies across topics
 
-  # Bridge skills (model-invocable — pre-flight + handoff for pipeline)
-  begin-planning/            # Pre-flight for planning, invokes technical-planning
-    references/              #   Cross-cutting context
-  begin-implementation/      # Pre-flight for implementation, invokes technical-implementation
-  begin-review/              # Pre-flight for review, invokes technical-review
+  # Phase entry skills (two-mode: discovery OR bridge)
   start-research/            # Begin research exploration
-  start-discussion/          # Begin technical discussions
+  start-discussion/          # Discussion - discovery mode or bridge mode (topic+work_type)
     scripts/discovery.sh     #   Discovery script
-  start-specification/       # Begin specification building
+    references/              #   Discovery flow, context gathering
+  start-investigation/       # Investigation - discovery mode or bridge mode
     scripts/discovery.sh     #   Discovery script
-  start-planning/            # Begin implementation planning
+    references/              #   Discovery flow
+  start-specification/       # Specification - discovery mode or bridge mode
     scripts/discovery.sh     #   Discovery script
-  start-implementation/      # Begin implementing a plan
+    references/              #   Discovery flow, grouping analysis
+  start-planning/            # Planning - discovery mode or bridge mode
     scripts/discovery.sh     #   Discovery script
-  start-review/              # Begin review
+    references/              #   Discovery flow, cross-cutting context
+  start-implementation/      # Implementation - discovery mode or bridge mode
     scripts/discovery.sh     #   Discovery script
+    references/              #   Discovery flow, dependency checking
+  start-review/              # Review - discovery mode or bridge mode
+    scripts/discovery.sh     #   Discovery script
+    references/              #   Discovery flow, plan display
   status/                    # Show workflow status and next steps
     scripts/discovery.sh     #   Discovery script
   view-plan/                 # View plan tasks and progress
@@ -98,6 +130,28 @@ Skills are organised in two tiers:
 
 **Standalone entry points** (e.g., `/start-feature`) can invoke processing skills directly without requiring previous phase files.
 
+### Two-Mode Pattern for Phase Skills
+
+Phase entry skills (`start-discussion`, `start-specification`, etc.) support three invocation patterns. Arguments are positional: `$0` = work_type, `$1` = topic.
+
+**Bridge Mode** (work_type + topic):
+- Invoked with both arguments: `/start-discussion feature {topic}`
+- Or invoked by `workflow:bridge` with work_type + topic in context
+- Skips discovery, validates topic exists, proceeds to pre-flight and processing
+- Enables deterministic pipeline continuation
+
+**Discovery Mode with pipeline context** (work_type only):
+- Invoked with work_type but no topic: `/start-specification greenfield`
+- Stores work_type for the handoff, then runs full discovery
+- Enables greenfield routing where topic isn't known until analysis
+
+**Standalone Discovery Mode** (no arguments):
+- User invokes `/start-discussion` directly
+- Full discovery, topic selection, context gathering
+- No pipeline context — artifacts created without work_type won't trigger bridge at conclusion
+
+The two-mode pattern consolidates what was previously split between `start-*` (discovery) and `begin-*` (bridge) skills into a single skill with early mode detection.
+
 ### Keeping Processing Skills Workflow-Agnostic (IMPORTANT)
 
 Processing skills should **never hardcode references** to specific workflow phases (e.g., "the research phase", "after discussion"). This allows them to be invoked from different entry points — whether via workflow skills or standalone skills like `/start-feature`.
@@ -119,10 +173,16 @@ Processing skills should **never hardcode references** to specific workflow phas
 Phase-first directory structure:
 - Research: `.workflows/research/` (flat, semantically named files)
 - Discussion: `.workflows/discussion/{topic}.md`
+- Investigation: `.workflows/investigation/{topic}/investigation.md` (bugfix pipeline)
 - Specification: `.workflows/specification/{topic}/specification.md`
 - Planning: `.workflows/planning/{topic}/plan.md` + format-specific task storage
 - Implementation: `.workflows/implementation/{topic}/tracking.md`
 - Review: `.workflows/review/{topic}/r{N}/review.md`
+
+**work_type field**: All artifacts include `work_type` in frontmatter (greenfield, feature, or bugfix). This enables:
+- Unified discovery across all phases
+- Correct pipeline routing via workflow:bridge
+- Work-type-specific behavior in processing skills
 
 Commit docs frequently (natural breaks, before context refresh). Skills capture context, don't implement.
 
@@ -262,6 +322,16 @@ Each part is optional — use only what's needed for clarity.
 ```
 
 Example: `@if(has_discussion) {topic}.md ({status:[in-progress|concluded]}) @else (no discussion) @endif`
+
+**Loop directives** for iterating over collections:
+
+```
+@foreach(item in collection)
+  • {item.name} ({item.status})
+@endforeach
+```
+
+Example with filter: `@foreach(inv in investigations.files where status is in-progress)`
 
 **When to use placeholders vs concrete examples:** Placeholders work well for structural templates (tree displays, status blocks) where each field has a clear source. Selection menus should use concrete examples instead — they encode conditional logic (which verb maps to which state) that placeholders obscure.
 
@@ -463,7 +533,40 @@ Use H4 headings for if/else branches within a step:
 {content}
 ```
 
-Never use else-if chains. Each condition gets its own `#### If` heading.
+**Nested conditionals** — use bold text for conditionals inside an H4 block:
+
+```
+#### If yes
+
+1. Shared setup steps...
+
+**If work_type is set** (feature, bugfix, or greenfield):
+
+{branch content}
+
+**If work_type is not set:**
+
+{branch content}
+```
+
+**Avoid double-nesting** — if a bold conditional would contain further bold conditionals, flatten by combining conditions:
+
+```
+**If work_type is not set and other discussions exist:**
+...
+**If work_type is not set and no discussions remain:**
+...
+```
+
+Rules:
+- Never use else-if chains — each condition gets its own `#### If` heading
+- Lowercase after "If" (e.g., `#### If concluded_count == 1`)
+- Use `#### Otherwise` for else branches
+- No backtick-wrapped code in H4 headings — write conditions as plain text
+- Use "and" between conditions, not commas
+- Drop implied conditions (e.g., if Step 2 already gates on `concluded_count >= 1`, Step 3 doesn't need to repeat it on every branch)
+- H4 for top-level conditionals, bold text for nested — never use H5/H6 for conditional nesting
+- If double-nesting would occur, flatten by combining the parent and child conditions into a single bold conditional
 
 ### Navigation Arrows
 
@@ -471,7 +574,7 @@ Use `→` for flow control between steps or to external files:
 
 ```
 → Proceed to **Step 4**.
-→ Go directly to **Step 7** to invoke the skill.
+→ Proceed to **Step 7** to invoke the skill.
 → Load **[file.md](file.md)** and follow its instructions.
 ```
 
@@ -550,3 +653,125 @@ What's on your mind?
 
 **STOP.** Wait for user response before proceeding.
 ```
+
+## Skill File Structure (Progressive Disclosure)
+
+Entry-point skills use a backbone + reference file pattern. The backbone (SKILL.md) is always loaded and reads like a table of contents. Reference files contain step detail, loaded on demand via Load directives.
+
+### Backbone Structure
+
+```
+Frontmatter
+One-liner purpose statement
+Workflow context table
+"Stay in your lane" instruction
+---
+Critical instructions (STOP/wait rules, mandatory guidance)
+---
+Step 0: Run Migrations (always inline)
+---
+Step 1: {Name}
+Load directive → reference file
+→ Proceed to Step 2.
+---
+Step 2: {Name}
+Load directive → reference file
+```
+
+**Stays inline:** Migrations (Step 0), simple routing conditionals (a few lines), frontmatter and critical instructions.
+
+**Gets extracted:** User interaction sequences, display/output formatting, handoff templates, discovery parsing, analysis logic, routing logic with significant conditional content.
+
+### Load Directive Format
+
+```markdown
+## Step N: {Step Name}
+
+Load **[name.md](references/name.md)** and follow its instructions as written.
+
+→ Proceed to **Step N+1**.
+```
+
+Rules:
+- No arrow (`→`) before the Load line — it's the step's content, not a routing instruction
+- Bold the markdown link: `**[name.md](path)**`
+- `→ Proceed to` appears after the Load directive, separated by a blank line
+- The final step has no `→ Proceed to` (it's terminal)
+- Within reference files routing to other reference files, use `→` before Load (it IS a routing instruction in that context)
+
+### Reference File Structure
+
+```markdown
+# {Step Name}
+
+*Reference for **[skill-name](../SKILL.md)***
+
+---
+
+{content}
+```
+
+- Header matches the step concept, not the filename
+- Italic attribution line links back to the parent SKILL.md
+- Horizontal rule separates header from content
+
+### Navigation & Return Patterns
+
+The same navigation conventions apply across all skill tiers (entry-point and processing).
+
+**Forward navigation** — moving to the next step or phase:
+```
+→ Proceed to **Step N**.
+→ Proceed to **B. Phase Name**.
+```
+
+**Return navigation** — returning to the parent skill or a previous phase:
+```
+→ Return to **[the skill](../SKILL.md)** for **Step N**.
+→ Return to **[the skill](../SKILL.md)**.
+→ Return to **[plan-review.md](plan-review.md)** for the next phase.
+→ Return to **A. Phase Name**.
+```
+
+Rules:
+- Only two routing verbs: `→ Proceed to` (forward) and `→ Return to` (backward/upward)
+- No adverbs — `→ Proceed to`, never `→ Proceed directly to`
+- No alternative verbs — never `→ Go to`, `→ Jump to`, `→ Skip to`, `→ Continue to`, `→ Enter`
+- Use links when routing to another file (parent SKILL.md or calling reference file)
+- No links for internal routing within the same file (lettered phases, named sections)
+- When skipping steps, use a parenthetical: `→ Proceed to **Step 5** (skipping Steps 1–3).`
+- Single-exit reference files end with `→ Return to **[the skill](../SKILL.md)**.` — the backbone's `→ Proceed to **Step N**.` handles onward sequencing
+- Multi-exit reference files end each path with `→ Return to **[the skill](../SKILL.md)** for **Step N**.`
+- Terminal reference files (invoke-skill.md, phase-bridge.md) invoke a processing skill as their final action — no return needed
+
+### Internal Reference File Phases
+
+Complex reference files with multiple sequential phases use lettered headings to avoid collision with backbone step numbers:
+
+```markdown
+## A. First Phase
+
+...
+→ Proceed to **B. Second Phase**.
+
+## B. Second Phase
+
+...
+→ Proceed to **C. Third Phase**.
+```
+
+Simple reference files use named sections (`## Seed Idea`, `## Current Knowledge`) without letters.
+
+### Reference File Naming
+
+| Name | Purpose |
+|------|---------|
+| `gather-context.md` | User interview / context gathering questions |
+| `invoke-skill.md` | Handoff to processing skill |
+| `route-scenario.md` | Scenario routing (for skills with branching) |
+| `validate-{thing}.md` | Pre-flight validation (plan exists, spec concluded, etc.) |
+| `display-{variant}.md` | Display outputs (for skills with multiple displays) |
+| `analysis-flow.md` | Multi-step analysis logic |
+| `confirm-and-handoff.md` | Confirmation prompt + skill invocation combined |
+
+Not every skill needs all of these.

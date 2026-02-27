@@ -81,8 +81,12 @@ if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
             impl_status=${impl_status:-"unknown"}
         fi
 
+        work_type=$(extract_field "$file" "work_type")
+        work_type=${work_type:-"greenfield"}
+
         echo "    - name: \"$name\""
         echo "      status: \"$status\""
+        echo "      work_type: \"$work_type\""
         echo "      has_plan: $has_plan"
         if [ "$has_plan" = "true" ]; then
             echo "      plan_status: \"$plan_status\""
@@ -192,10 +196,13 @@ if [ -d "$PLAN_DIR" ] && [ -n "$(ls -A "$PLAN_DIR" 2>/dev/null)" ]; then
         status=$(extract_field "$file" "status")
         status=${status:-"unknown"}
         plan_id=$(extract_field "$file" "plan_id")
+        work_type=$(extract_field "$file" "work_type")
+        work_type=${work_type:-"greenfield"}
 
         echo "    - name: \"$name\""
         echo "      format: \"$format\""
         echo "      status: \"$status\""
+        echo "      work_type: \"$work_type\""
         if [ -n "$plan_id" ]; then
             echo "      plan_id: \"$plan_id\""
         fi

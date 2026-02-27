@@ -1,6 +1,5 @@
 ---
 name: start-research
-description: "Start a research exploration using the technical-research skill. For early-stage ideas, feasibility checks, and broad exploration before formal discussion."
 disable-model-invocation: true
 allowed-tools: Bash(.claude/hooks/workflows/write-session-state.sh)
 hooks:
@@ -50,21 +49,33 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 Invoke the `/migrate` skill and assess its output.
 
-**If files were updated**: STOP and wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding to Step 1. Do not continue automatically.
+#### If files were updated
 
-**If no updates needed**: Proceed to Step 1.
+**STOP.** Wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding.
+
+#### If no updates needed
+
+→ Proceed to **Step 1**.
 
 ---
 
-## Step 1: Gather Context
+## Step 1: Check Arguments
 
-Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
+Check for arguments: work_type = `$0`. If provided, store for the handoff.
 
 → Proceed to **Step 2**.
 
 ---
 
-## Step 2: Invoke the Skill
+## Step 2: Gather Context
+
+Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
+
+→ Proceed to **Step 3**.
+
+---
+
+## Step 3: Invoke the Skill
 
 Before invoking the processing skill, save a session bookmark.
 

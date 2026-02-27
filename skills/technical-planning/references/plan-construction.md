@@ -4,26 +4,7 @@
 
 ---
 
-This step constructs the complete plan — defining phases, designing task lists, and authoring every task. It operates as a nested structure:
-
-    ┌─────────────────────────────────────────────────────┐
-    │                                                     │
-    │  Phase Structure — define or review all phases      │
-    │                                                     │
-    │  ┌─────────────────────────────────────────────┐    │
-    │  │  For each phase:                            │    │
-    │  │                                             │    │
-    │  │    Step A → Define tasks for the phase      │    │
-    │  │                                             │    │
-    │  │      ┌─────────────────────────────────┐    │    │
-    │  │      │  For each task in the phase:    │    │    │
-    │  │      │                                 │    │    │
-    │  │      │    Step B → Author the task     │    │    │
-    │  │      └─────────────────────────────────┘    │    │
-    │  │                                             │    │
-    │  └─────────────────────────────────────────────┘    │
-    │                                                     │
-    └─────────────────────────────────────────────────────┘
+This step constructs the complete plan — defining phases, designing task lists, and authoring every task.
 
 ---
 
@@ -65,9 +46,9 @@ every stage.
 
 This phase needs task design.
 
-→ Go to **Step A** with this phase.
+→ Proceed to **A. Define Tasks** with this phase.
 
-After Step A returns with an approved task table, continue to **Author Tasks for the Phase** below.
+After **A. Define Tasks** returns with an approved task table, proceed to **Author Tasks for the Phase** below.
 
 #### If the phase has a task table
 
@@ -89,7 +70,7 @@ Check `task_list_gate_mode` in the Plan Index File frontmatter.
 Phase {N}: {Phase Name} — task list confirmed. Proceeding to authoring.
 ```
 
-→ Continue to **Author Tasks for the Phase** below.
+→ Proceed to **Author Tasks for the Phase** below.
 
 #### If `task_list_gate_mode: gated` (existing task table)
 
@@ -108,11 +89,11 @@ Phase {N}: {Phase Name} — task list confirmed. Proceeding to authoring.
 
 #### If the user wants changes
 
-→ Go to **Step A** with this phase for revision.
+→ Proceed to **A. Define Tasks** with this phase for revision.
 
 #### If confirmed
 
-→ Continue to **Author Tasks for the Phase** below.
+→ Proceed to **Author Tasks for the Phase** below.
 
 ---
 
@@ -130,13 +111,13 @@ All tasks already written.
 Phase {N}: {Phase Name} — all tasks already authored.
 ```
 
-→ Continue to the next phase.
+→ Proceed to the next phase.
 
 #### If any tasks in the phase have status `pending`
 
-→ Go to **Step B** for the entire phase.
+→ Proceed to **B. Author Tasks** for the entire phase.
 
-After Step B returns, all tasks in the phase are authored.
+After **B. Author Tasks** returns, all tasks in the phase are authored.
 
 If the user navigates mid-approval, the scratch file preserves approval state. On return, resume from the first non-approved task.
 
@@ -166,12 +147,12 @@ All phases are complete. The plan has **{N} phases** with **{M} tasks** total.
 
 ---
 
-## Step A: Define Tasks
+## A. Define Tasks
 
 Load **[define-tasks.md](define-tasks.md)** and follow its instructions as written. This step designs and approves a task list for **one phase**.
 
 ---
 
-## Step B: Author Tasks
+## B. Author Tasks
 
 Load **[author-tasks.md](author-tasks.md)** and follow its instructions as written. This step authors **all tasks for the phase** via a batch agent and returns.

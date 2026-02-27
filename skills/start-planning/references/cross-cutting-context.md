@@ -4,15 +4,15 @@
 
 ---
 
-**If no cross-cutting specifications exist**:
+#### If no cross-cutting specifications exist
 
-Skip this step.
+→ Return to **[the skill](../SKILL.md)**.
 
-→ Proceed to **Step 7**.
+#### If cross-cutting specifications exist
 
 Read each cross-cutting specification from `specifications.crosscutting` in the discovery output.
 
-### 6a: Warn about in-progress cross-cutting specs
+### Warn about in-progress cross-cutting specs
 
 If any **in-progress** cross-cutting specifications exist, check whether they could be relevant to the feature being planned (by topic overlap — e.g., a caching strategy is relevant if the feature involves data retrieval or API calls).
 
@@ -36,7 +36,7 @@ These may contain architectural decisions relevant to this plan.
 
 If the user chooses to stop, end here. If they choose to continue, proceed.
 
-### 6b: Summarize concluded cross-cutting specs
+### Summarize concluded cross-cutting specs
 
 If any **concluded** cross-cutting specifications exist, identify which are relevant to the feature being planned and summarize for handoff:
 

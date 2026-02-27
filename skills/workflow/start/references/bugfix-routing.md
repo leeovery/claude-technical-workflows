@@ -1,0 +1,117 @@
+# Bugfix Routing
+
+*Reference for **[workflow:start](../SKILL.md)***
+
+---
+
+Bugfix work is investigation-centric. A topic flows through: Investigation → Specification → Planning → Implementation → Review. Investigation replaces discussion by combining symptom gathering + code analysis. This reference shows in-progress bugfixes and offers options to continue or start new.
+
+## Display Bugfix State
+
+Using the discovery output, check if there are any bugfixes in progress.
+
+#### If no bugfixes exist
+
+> *Output the next fenced block as a code block:*
+
+```
+Bugfixes
+
+No bugfixes in progress.
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+Ready to start a new bugfix.
+
+- **`y`/`yes`** — Start a new bugfix
+- **`n`/`no`** — Go back to work type selection
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If yes
+
+Invoke `start-bugfix`. It will set `work_type: bugfix` automatically.
+
+#### If no
+
+→ Return to **[the skill](../SKILL.md)** for **Step 2** (work type selection).
+
+#### If bugfixes exist
+
+> *Output the next fenced block as a code block:*
+
+```
+Bugfixes
+
+{bugfix_count} bugfix(es) in progress:
+
+1. {topic:(titlecase)}
+   └─ Next: {next_phase}
+
+2. ...
+```
+
+Build tree from `bugfixes.topics` array. Each topic shows `name` (titlecased) and `next_phase`.
+
+## Build Menu Options
+
+Build a numbered menu with all in-progress bugfixes plus option to start new. The description maps `next_phase`:
+
+| next_phase | Description |
+|------------|-------------|
+| investigation | investigation in-progress |
+| specification | ready for specification |
+| planning | ready for planning |
+| implementation | ready for implementation |
+| review | ready for review |
+| done | pipeline complete |
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+What would you like to do?
+
+1. Continue "Login Timeout" — investigation in-progress
+2. Continue "Memory Leak" — ready for specification
+3. Continue "Race Condition" — ready for planning
+4. Start new bugfix
+
+Select an option (enter number):
+· · · · · · · · · · · ·
+```
+
+Recreate with actual topics and states from discovery.
+
+**STOP.** Wait for user response.
+
+## Route Based on Selection
+
+Parse the user's selection, then follow the instructions below.
+
+#### If "start new bugfix"
+
+Invoke `/start-bugfix`. It will set `work_type: bugfix` and begin the investigation phase.
+
+#### If continuing existing bugfix
+
+Map `next_phase` to the appropriate skill:
+
+| next_phase | Skill | Work Type | Topic |
+|------------|-------|-----------|-------|
+| investigation | `/start-investigation` | bugfix | {topic} |
+| specification | `/start-specification` | bugfix | {topic} |
+| planning | `/start-planning` | bugfix | {topic} |
+| implementation | `/start-implementation` | bugfix | {topic} |
+| review | `/start-review` | bugfix | {topic} |
+
+Skills receive positional arguments: `$0` = work_type, `$1` = topic.
+
+**Example**: `/start-specification bugfix {topic}` — skill skips discovery, validates topic, proceeds to processing.
+
+Invoke the skill from the table with the work type and topic as positional arguments.

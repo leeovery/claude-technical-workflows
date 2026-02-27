@@ -482,6 +482,105 @@ EOF
 }
 
 #
+# Test: Discussion work_type field
+#
+test_discussion_work_type() {
+    echo -e "${YELLOW}Test: Discussion work_type field${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+
+    cat > "$TEST_DIR/.workflows/discussion/with-type.md" << 'EOF'
+---
+topic: with-type
+status: in-progress
+work_type: feature
+date: 2026-01-20
+---
+
+# Discussion: With Type
+EOF
+
+    cat > "$TEST_DIR/.workflows/discussion/no-type.md" << 'EOF'
+---
+topic: no-type
+status: in-progress
+date: 2026-01-20
+---
+
+# Discussion: No Type
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'work_type: "feature"' "work_type feature present"
+    assert_contains "$output" 'work_type: "greenfield"' "work_type defaults to greenfield"
+
+    echo ""
+}
+
+#
+# Test: Cache stale when no research files exist
+#
+test_cache_stale_no_research() {
+    echo -e "${YELLOW}Test: Cache stale when no research files${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/.state"
+
+    cat > "$TEST_DIR/.workflows/.state/research-analysis.md" << 'EOF'
+---
+checksum: abc123
+generated: 2026-01-20T10:00:00
+research_files:
+  - exploration.md
+---
+
+# Research Analysis Cache
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'status: "stale"' "Cache status is stale"
+    assert_contains "$output" 'reason: "no research files to compare"' "Reason is no research files to compare"
+
+    echo ""
+}
+
+#
+# Test: Empty research directory
+#
+test_empty_research_dir() {
+    echo -e "${YELLOW}Test: Empty research directory${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/research"
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'exists: false' "Research exists: false for empty dir"
+
+    echo ""
+}
+
+#
+# Test: Empty discussion directory
+#
+test_empty_discussion_dir() {
+    echo -e "${YELLOW}Test: Empty discussion directory${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'in_progress: 0' "in_progress count is 0"
+    assert_contains "$output" 'concluded: 0' "concluded count is 0"
+
+    echo ""
+}
+
+#
 # Run all tests
 #
 echo "=========================================="
@@ -500,6 +599,10 @@ test_cache_stale
 test_research_no_frontmatter
 test_discussion_no_status
 test_multiple_research_files
+test_discussion_work_type
+test_cache_stale_no_research
+test_empty_research_dir
+test_empty_discussion_dir
 
 #
 # Summary
