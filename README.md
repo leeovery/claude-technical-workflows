@@ -134,7 +134,7 @@ Discussion ──▶ Specification ──▶ Planning ──▶ Implementation �
 
 **How it works:** After each phase completes, a plan mode bridge clears context and advances to the next phase automatically. You approve each transition with "clear context and continue" — this keeps each phase in a clean context window.
 
-If a session is interrupted, run `/continue-feature` to pick up where you left off. It reads artifact state to determine the next phase.
+If a session is interrupted, run `/workflow-start` to pick up where you left off. It discovers artifact state and routes to the next phase.
 
 ### Under the Hood
 
@@ -233,29 +233,30 @@ skills/
 ├── # Processing skills (model-invocable)
 ├── technical-research/              # Explore and validate ideas
 ├── technical-discussion/            # Document discussions
+├── technical-investigation/         # Investigate bugs (bugfix pipeline)
 ├── technical-specification/         # Build validated specifications
 ├── technical-planning/              # Create implementation plans
 ├── technical-implementation/        # Execute via TDD
 ├── technical-review/                # Validate against artefacts
 │
+├── # Unified entry points
+├── workflow-start/                  # Discovers state, routes by work type
+├── workflow-bridge/                 # Pipeline continuation — next phase routing
+│
 ├── # Entry-point skills (user-invocable)
 ├── migrate/                         # Keep workflow files in sync with system design
 ├── start-feature/                   # Pipeline: discussion → spec → plan → impl → review
-├── continue-feature/                # Pipeline: route feature to next phase
+├── start-bugfix/                    # Pipeline: investigation → spec → plan → impl → review
 ├── link-dependencies/               # Standalone: wire cross-topic deps
 ├── start-research/                  # Begin research
 ├── start-discussion/                # Begin discussions
+├── start-investigation/             # Begin investigation (bugfix)
 ├── start-specification/             # Begin specification
 ├── start-planning/                  # Begin planning
 ├── start-implementation/            # Begin implementation
 ├── start-review/                    # Begin review
 ├── status/                          # Show workflow status
-├── view-plan/                       # View plan tasks
-│
-├── # Bridge skills (model-invocable — pipeline pre-flight)
-├── begin-planning/                  # Pre-flight for planning in pipeline
-├── begin-implementation/            # Pre-flight for implementation in pipeline
-└── begin-review/                    # Pre-flight for review in pipeline
+└── view-plan/                       # View plan tasks
 
 agents/
 ├── review-task-verifier.md           # Verifies single task implementation for review
@@ -322,7 +323,7 @@ Independent skills that gather inputs flexibly (inline context, files, or prompt
 | Skill                                                   | Description                                                                                                                                 |
 |---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
 | [**/start-feature**](skills/start-feature/)              | Start a new feature through the full pipeline. Gathers context, creates a discussion, then bridges through specification → planning → implementation → review. |
-| [**/continue-feature**](skills/continue-feature/)        | Continue a feature through its next pipeline phase. Routes automatically based on artifact state. Used manually or from plan mode bridges.  |
+| [**/start-bugfix**](skills/start-bugfix/)                | Start a bugfix through the pipeline. Gathers bug context, creates an investigation, then bridges through specification → planning → implementation → review. |
 | [**/link-dependencies**](skills/link-dependencies/)      | Link external dependencies across topics. Scans plans and wires up unresolved cross-topic dependencies.                                    |
 
 ### Creating Custom Skills
