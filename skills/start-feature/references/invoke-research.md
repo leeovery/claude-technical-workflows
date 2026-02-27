@@ -26,4 +26,4 @@ The research frontmatter should include:
 Invoke the technical-research skill.
 ```
 
-When a research topic is parked as discussion-ready, the processing skill will offer pipeline continuation via workflow:bridge.
+When a research topic is parked as discussion-ready, the processing skill will offer pipeline continuation via workflow-bridge.

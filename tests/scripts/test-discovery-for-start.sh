@@ -1,13 +1,13 @@
 #!/bin/bash
 #
-# Tests the discovery script for workflow:start (unified entry point).
+# Tests the discovery script for workflow-start (unified entry point).
 # Creates temporary fixtures and validates YAML output.
 #
 
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DISCOVERY_SCRIPT="$SCRIPT_DIR/../../skills/workflow/start/scripts/discovery.sh"
+DISCOVERY_SCRIPT="$SCRIPT_DIR/../../skills/workflow-start/scripts/discovery.sh"
 
 # Colors for output
 RED='\033[0;31m'

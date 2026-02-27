@@ -43,4 +43,4 @@ The investigation frontmatter should include:
 Invoke the technical-investigation skill.
 ```
 
-When the investigation concludes, the processing skill will detect `work_type: bugfix` in the artifact and invoke workflow:bridge automatically.
+When the investigation concludes, the processing skill will detect `work_type: bugfix` in the artifact and invoke workflow-bridge automatically.

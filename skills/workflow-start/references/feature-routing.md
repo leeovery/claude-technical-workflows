@@ -1,6 +1,6 @@
 # Feature Routing
 
-*Reference for **[workflow:start](../SKILL.md)***
+*Reference for **[workflow-start](../SKILL.md)***
 
 ---
 

@@ -1,7 +1,7 @@
 ---
-name: workflow:bridge
+name: workflow-bridge
 user-invocable: false
-allowed-tools: Bash(.claude/skills/workflow/bridge/scripts/discovery.sh)
+allowed-tools: Bash(.claude/skills/workflow-bridge/scripts/discovery.sh)
 ---
 
 Enter plan mode with deterministic continuation instructions.
@@ -26,13 +26,13 @@ Determine the next phase by running discovery.
 #### If work type is "feature"
 
 ```bash
-.claude/skills/workflow/bridge/scripts/discovery.sh --feature --topic "{topic}"
+.claude/skills/workflow-bridge/scripts/discovery.sh --feature --topic "{topic}"
 ```
 
 #### If work type is "bugfix"
 
 ```bash
-.claude/skills/workflow/bridge/scripts/discovery.sh --bugfix --topic "{topic}"
+.claude/skills/workflow-bridge/scripts/discovery.sh --bugfix --topic "{topic}"
 ```
 
 Parse the output to extract:
@@ -41,7 +41,7 @@ Parse the output to extract:
 #### If work type is "greenfield"
 
 ```bash
-.claude/skills/workflow/bridge/scripts/discovery.sh --greenfield
+.claude/skills/workflow-bridge/scripts/discovery.sh --greenfield
 ```
 
 Parse the output to extract:

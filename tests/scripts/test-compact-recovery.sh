@@ -130,7 +130,7 @@ assert_contains "$output" "auth-flow" "Output contains topic"
 assert_contains "$output" "technical-discussion" "Output contains skill path"
 assert_contains "$output" "discussion/auth-flow.md" "Output contains artifact path"
 assert_not_contains "$output" "AFTER CONCLUSION" "No AFTER CONCLUSION section"
-assert_contains "$output" "workflow:bridge" "Output contains workflow:bridge continuation note"
+assert_contains "$output" "workflow-bridge" "Output contains workflow-bridge continuation note"
 
 echo ""
 

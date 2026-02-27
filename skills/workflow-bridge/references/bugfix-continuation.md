@@ -1,12 +1,12 @@
-# Feature Continuation
+# Bugfix Continuation
 
-*Reference for **[workflow:bridge](../SKILL.md)***
+*Reference for **[workflow-bridge](../SKILL.md)***
 
 ---
 
-Route a feature to its next pipeline phase and enter plan mode with continuation instructions.
+Route a bugfix to its next pipeline phase and enter plan mode with continuation instructions.
 
-Feature pipeline: (Research) → Discussion → Specification → Planning → Implementation → Review
+Bugfix pipeline: Investigation → Specification → Planning → Implementation → Review
 
 ## Phase Routing
 
@@ -14,8 +14,7 @@ Use `next_phase` from discovery output to determine the target skill:
 
 | next_phase | Target Skill | Plan Mode Instructions |
 |------------|--------------|------------------------|
-| research | start-research | Resume research for topic |
-| discussion | start-discussion | Start/resume discussion for topic |
+| investigation | start-investigation | Resume investigation for topic |
 | specification | start-specification | Start/resume specification for topic |
 | planning | start-planning | Start/resume planning for topic |
 | implementation | start-implementation | Start/resume implementation for topic |
@@ -29,7 +28,7 @@ Use `next_phase` from discovery output to determine the target skill:
 > *Output the next fenced block as a code block:*
 
 ```
-Feature Complete
+Bugfix Complete
 
 "{topic:(titlecase)}" has completed all pipeline phases.
 ```
@@ -41,15 +40,15 @@ Feature Complete
 Enter plan mode with the following content:
 
 ```
-# Continue Feature: {topic}
+# Continue Bugfix: {topic}
 
 The previous phase has concluded. Continue the pipeline.
 
 ## Next Step
 
-Invoke `/start-{next_phase} feature {topic}`
+Invoke `/start-{next_phase} bugfix {topic}`
 
-Arguments: work_type = feature, topic = {topic}
+Arguments: work_type = bugfix, topic = {topic}
 The skill will skip discovery and proceed directly to validation.
 
 ## How to proceed
