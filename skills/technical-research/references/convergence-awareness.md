@@ -51,14 +51,14 @@ This topic is marked discussion-ready. Would you like to:
 
 **If discuss:**
 
-Invoke the `/workflow:bridge` skill:
+Invoke the `/workflow-bridge` skill:
 
 ```
 Pipeline bridge for: {topic}
 Work type: {work_type from artifact frontmatter}
 Completed phase: research
 
-Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
+Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
 ```
 
 **If work_type is not set:**

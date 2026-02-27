@@ -47,14 +47,14 @@ detail the exact fix approach, acceptance criteria, and testing plan.
 
 **If work_type is set** (bugfix):
 
-This investigation is part of a pipeline. Invoke the `/workflow:bridge` skill:
+This investigation is part of a pipeline. Invoke the `/workflow-bridge` skill:
 
 ```
 Pipeline bridge for: {topic}
 Work type: bugfix
 Completed phase: investigation
 
-Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
+Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
 ```
 
 **If work_type is not set:**

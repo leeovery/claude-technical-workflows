@@ -34,14 +34,14 @@ No actionable findings. All reviews passed with no required changes.
 
 **If work_type is set** (feature, bugfix, or greenfield):
 
-This review is part of a pipeline. The pipeline is complete. Invoke the `/workflow:bridge` skill:
+This review is part of a pipeline. The pipeline is complete. Invoke the `/workflow-bridge` skill:
 
 ```
 Pipeline bridge for: {topic}
 Work type: {work_type from plan frontmatter}
 Completed phase: review
 
-Invoke the workflow:bridge skill to enter plan mode with completion confirmation.
+Invoke the workflow-bridge skill to enter plan mode with completion confirmation.
 ```
 
 **If work_type is not set:**
@@ -92,14 +92,14 @@ User has chosen to skip synthesis. This is a terminal condition, but check for p
 
 **If work_type is set** (feature, bugfix, or greenfield):
 
-This review is part of a pipeline. Invoke the `/workflow:bridge` skill:
+This review is part of a pipeline. Invoke the `/workflow-bridge` skill:
 
 ```
 Pipeline bridge for: {topic}
 Work type: {work_type from plan frontmatter}
 Completed phase: review
 
-Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
+Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
 ```
 
 **If work_type is not set:**

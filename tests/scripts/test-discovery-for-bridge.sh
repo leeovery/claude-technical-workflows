@@ -7,7 +7,7 @@
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DISCOVERY_SCRIPT="$SCRIPT_DIR/../../skills/workflow/bridge/scripts/discovery.sh"
+DISCOVERY_SCRIPT="$SCRIPT_DIR/../../skills/workflow-bridge/scripts/discovery.sh"
 
 # Colors for output
 RED='\033[0;31m'
@@ -296,29 +296,11 @@ EOF
 
     assert_contains "$output" 'research:' "Has research section"
     assert_contains "$output" 'exists: true' "Research exists"
-    assert_contains "$output" 'next_phase: "research"' "Next phase is research"
+    assert_contains "$output" 'next_phase: "discussion"' "Next phase is discussion (research doesn't conclude)"
     echo ""
 }
 
-test_feature_research_concluded() {
-    echo -e "${YELLOW}Test: Feature - research concluded, next is discussion${NC}"
-    setup_fixture
 
-    mkdir -p "$TEST_DIR/.workflows/research"
-    cat > "$TEST_DIR/.workflows/research/auth-flow.md" << 'EOF'
----
-topic: auth-flow
-status: concluded
-work_type: feature
----
-# Research
-EOF
-
-    local output=$(run_discovery --feature --topic auth-flow)
-
-    assert_contains "$output" 'next_phase: "discussion"' "Next phase is discussion"
-    echo ""
-}
 
 test_feature_spec_in_progress() {
     echo -e "${YELLOW}Test: Feature - concluded discussion + in-progress spec${NC}"
@@ -936,7 +918,7 @@ test_feature_plan_in_progress
 test_feature_impl_in_progress
 test_feature_impl_completed_with_review
 test_feature_research_exists
-test_feature_research_concluded
+
 
 # Bugfix pipeline
 test_bugfix_fresh

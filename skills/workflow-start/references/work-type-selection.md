@@ -1,6 +1,6 @@
 # Work Type Selection
 
-*Reference for **[workflow:start](../SKILL.md)***
+*Reference for **[workflow-start](../SKILL.md)***
 
 ---
 

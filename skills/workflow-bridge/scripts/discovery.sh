@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Topic-specific discovery script for /workflow:bridge.
+# Topic-specific discovery script for /workflow-bridge.
 #
 # Usage:
 #   discovery.sh --feature --topic <topic>

@@ -49,7 +49,7 @@ Skill: ${skill}
 
 The files on disk are authoritative — not the conversation summary.
 
-When the processing skill concludes, it will invoke workflow:bridge automatically
+When the processing skill concludes, it will invoke workflow-bridge automatically
 if the artifact has a work_type set. Do not manually handle pipeline continuation."
 
 # Escape context for JSON output

@@ -1,7 +1,7 @@
 ---
-name: workflow:start
+name: workflow-start
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/workflow/start/scripts/discovery.sh)
+allowed-tools: Bash(.claude/skills/workflow-start/scripts/discovery.sh)
 hooks:
   PreToolUse:
     - hooks:
@@ -44,12 +44,12 @@ Invoke the `/migrate` skill and assess its output.
 
 ## Step 1: Run Discovery
 
-!`.claude/skills/workflow/start/scripts/discovery.sh`
+!`.claude/skills/workflow-start/scripts/discovery.sh`
 
 If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
 
 ```bash
-.claude/skills/workflow/start/scripts/discovery.sh
+.claude/skills/workflow-start/scripts/discovery.sh
 ```
 
 Parse the output to understand the current workflow state:
