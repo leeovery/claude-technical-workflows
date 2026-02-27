@@ -381,8 +381,50 @@ else
             next_phase="unknown"
         fi
 
+        # Compute phase_label
+        phase_label=""
+        case "$next_phase" in
+            discussion)
+                phase_label="discussion (in-progress)"
+                ;;
+            specification)
+                if [ "$spec_exists" = "true" ]; then
+                    phase_label="specification (in-progress)"
+                else
+                    phase_label="ready for specification"
+                fi
+                ;;
+            planning)
+                if [ "$plan_exists" = "true" ]; then
+                    phase_label="planning (in-progress)"
+                else
+                    phase_label="ready for planning"
+                fi
+                ;;
+            implementation)
+                if [ "$impl_exists" = "true" ]; then
+                    phase_label="implementation (in-progress)"
+                else
+                    phase_label="ready for implementation"
+                fi
+                ;;
+            review)
+                phase_label="ready for review"
+                ;;
+            done)
+                phase_label="pipeline complete"
+                ;;
+            superseded)
+                phase_label="superseded"
+                ;;
+            *)
+                phase_label="unknown"
+                ;;
+        esac
+
         echo "    - name: \"$topic\""
         echo "      next_phase: \"$next_phase\""
+        echo "      phase_label: \"$phase_label\""
         echo "      discussion:"
         echo "        exists: $disc_exists"
         [ "$disc_exists" = "true" ] && echo "        status: \"$disc_status\""
@@ -559,8 +601,50 @@ else
             next_phase="unknown"
         fi
 
+        # Compute phase_label
+        phase_label=""
+        case "$next_phase" in
+            investigation)
+                phase_label="investigation (in-progress)"
+                ;;
+            specification)
+                if [ "$spec_exists" = "true" ]; then
+                    phase_label="specification (in-progress)"
+                else
+                    phase_label="ready for specification"
+                fi
+                ;;
+            planning)
+                if [ "$plan_exists" = "true" ]; then
+                    phase_label="planning (in-progress)"
+                else
+                    phase_label="ready for planning"
+                fi
+                ;;
+            implementation)
+                if [ "$impl_exists" = "true" ]; then
+                    phase_label="implementation (in-progress)"
+                else
+                    phase_label="ready for implementation"
+                fi
+                ;;
+            review)
+                phase_label="ready for review"
+                ;;
+            done)
+                phase_label="pipeline complete"
+                ;;
+            superseded)
+                phase_label="superseded"
+                ;;
+            *)
+                phase_label="unknown"
+                ;;
+        esac
+
         echo "    - name: \"$topic\""
         echo "      next_phase: \"$next_phase\""
+        echo "      phase_label: \"$phase_label\""
         echo "      investigation:"
         echo "        exists: $inv_exists"
         [ "$inv_exists" = "true" ] && echo "        status: \"$inv_status\""

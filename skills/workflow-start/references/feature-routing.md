@@ -51,25 +51,16 @@ Features
 {feature_count} feature(s) in progress:
 
 1. {topic:(titlecase)}
-   └─ Next: {next_phase}
+   └─ {phase_label:(titlecase)}
 
 2. ...
 ```
 
-Build tree from `features.topics` array. Each topic shows `name` (titlecased) and `next_phase`.
+Build tree from `features.topics` array. Each topic shows `name` (titlecased) and `phase_label` (titlecased).
 
 ## Build Menu Options
 
-Build a numbered menu with all in-progress features plus option to start new. The description maps `next_phase`:
-
-| next_phase | Description |
-|------------|-------------|
-| discussion | discussion in-progress |
-| specification | ready for specification |
-| planning | ready for planning |
-| implementation | ready for implementation |
-| review | ready for review |
-| done | pipeline complete |
+Build a numbered menu with all in-progress features plus option to start new. Use `phase_label` from discovery for the description.
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -77,7 +68,7 @@ Build a numbered menu with all in-progress features plus option to start new. Th
 · · · · · · · · · · · ·
 What would you like to do?
 
-1. Continue "Auth Flow" — discussion in-progress
+1. Continue "Auth Flow" — discussion (in-progress)
 2. Continue "Caching" — ready for specification
 3. Continue "Notifications" — ready for planning
 4. Start new feature
@@ -86,7 +77,7 @@ Select an option (enter number):
 · · · · · · · · · · · ·
 ```
 
-Recreate with actual topics and states from discovery.
+Recreate with actual topics and `phase_label` values from discovery.
 
 **STOP.** Wait for user response.
 

@@ -294,6 +294,7 @@ EOF
     assert_contains "$output" 'feature_count: 1' "Feature count is 1"
     assert_contains "$output" 'name: "auth-flow"' "Found auth-flow topic"
     assert_contains "$output" 'next_phase: "specification"' "Next phase is specification"
+    assert_contains "$output" 'phase_label: "ready for specification"' "Phase label is ready for specification"
     echo ""
 }
 
@@ -331,6 +332,7 @@ EOF
 
     assert_contains "$output" 'feature_count: 1' "Feature count is 1 (deduplicated)"
     assert_contains "$output" 'next_phase: "planning"' "Next phase is planning (plan in-progress)"
+    assert_contains "$output" 'phase_label: "planning (in-progress)"' "Phase label is planning (in-progress)"
     echo ""
 }
 
@@ -359,6 +361,7 @@ EOF
     local output=$(run_discovery)
 
     assert_contains "$output" 'feature_count: 1' "Only one feature topic (deduplicated)"
+    assert_contains "$output" 'phase_label: "specification (in-progress)"' "Phase label is specification (in-progress)"
     echo ""
 }
 
@@ -471,6 +474,7 @@ EOF
     local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "discussion"' "Next phase is discussion"
+    assert_contains "$output" 'phase_label: "discussion (in-progress)"' "Phase label is discussion (in-progress)"
     echo ""
 }
 
@@ -507,6 +511,7 @@ EOF
     local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "implementation"' "Next phase is implementation"
+    assert_contains "$output" 'phase_label: "ready for implementation"' "Phase label is ready for implementation"
     echo ""
 }
 
@@ -551,6 +556,7 @@ EOF
     local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "review"' "Next phase is review"
+    assert_contains "$output" 'phase_label: "ready for review"' "Phase label is ready for review"
     echo ""
 }
 
@@ -601,6 +607,7 @@ EOF
     local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "done"' "Next phase is done"
+    assert_contains "$output" 'phase_label: "pipeline complete"' "Phase label is pipeline complete (feature)"
     echo ""
 }
 
@@ -651,6 +658,7 @@ EOF
     local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "superseded"' "Next phase is superseded"
+    assert_contains "$output" 'phase_label: "superseded"' "Phase label is superseded (feature)"
     echo ""
 }
 
@@ -679,6 +687,7 @@ EOF
     local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "planning"' "Next phase is planning"
+    assert_contains "$output" 'phase_label: "ready for planning"' "Phase label is ready for planning"
     echo ""
 }
 
@@ -704,6 +713,7 @@ EOF
     assert_contains "$output" 'bugfix_count: 1' "Bugfix count is 1"
     assert_contains "$output" 'name: "login-crash"' "Found login-crash bugfix"
     assert_contains "$output" 'next_phase: "investigation"' "Next phase is investigation"
+    assert_contains "$output" 'phase_label: "investigation (in-progress)"' "Phase label is investigation (in-progress)"
     echo ""
 }
 
@@ -723,6 +733,7 @@ EOF
     local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "specification"' "Next phase is specification"
+    assert_contains "$output" 'phase_label: "ready for specification"' "Phase label is ready for specification (bugfix)"
     echo ""
 }
 
@@ -773,6 +784,7 @@ EOF
     local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "done"' "Next phase is done"
+    assert_contains "$output" 'phase_label: "pipeline complete"' "Phase label is pipeline complete (bugfix)"
     echo ""
 }
 
@@ -823,6 +835,7 @@ EOF
     local output=$(run_discovery)
 
     assert_contains "$output" 'next_phase: "superseded"' "Next phase is superseded"
+    assert_contains "$output" 'phase_label: "superseded"' "Phase label is superseded (bugfix)"
     echo ""
 }
 
@@ -843,6 +856,7 @@ EOF
 
     assert_contains "$output" 'bugfix_count: 1' "Bugfix count is 1"
     assert_contains "$output" 'name: "null-pointer"' "Found null-pointer bugfix"
+    assert_contains "$output" 'phase_label: "unknown"' "Phase label is unknown (bugfix from discussion only)"
     echo ""
 }
 
@@ -863,6 +877,7 @@ EOF
 
     assert_contains "$output" 'bugfix_count: 1' "Bugfix count is 1"
     assert_contains "$output" 'name: "null-pointer"' "Found null-pointer bugfix"
+    assert_contains "$output" 'phase_label: "specification (in-progress)"' "Phase label is specification (in-progress)"
     echo ""
 }
 
@@ -899,6 +914,212 @@ EOF
     local output=$(run_discovery)
 
     assert_contains "$output" 'bugfix_count: 1' "Only one bugfix topic (deduplicated)"
+    assert_contains "$output" 'phase_label: "planning (in-progress)"' "Phase label is planning (in-progress) for bugfix"
+    echo ""
+}
+
+# ──────────────────────────────────────
+# Phase label disambiguation
+# ──────────────────────────────────────
+
+test_feature_phase_label_impl_in_progress() {
+    echo -e "${YELLOW}Test: Feature impl in-progress → phase_label implementation (in-progress)${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/discussion"
+    mkdir -p "$TEST_DIR/.workflows/specification/search"
+    mkdir -p "$TEST_DIR/.workflows/planning/search"
+    mkdir -p "$TEST_DIR/.workflows/implementation/search"
+
+    cat > "$TEST_DIR/.workflows/discussion/search.md" << 'EOF'
+---
+topic: search
+status: concluded
+work_type: feature
+---
+EOF
+    cat > "$TEST_DIR/.workflows/specification/search/specification.md" << 'EOF'
+---
+topic: search
+status: concluded
+work_type: feature
+---
+EOF
+    cat > "$TEST_DIR/.workflows/planning/search/plan.md" << 'EOF'
+---
+topic: search
+status: concluded
+work_type: feature
+---
+EOF
+    cat > "$TEST_DIR/.workflows/implementation/search/tracking.md" << 'EOF'
+---
+topic: search
+status: in-progress
+work_type: feature
+---
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'next_phase: "implementation"' "Next phase is implementation"
+    assert_contains "$output" 'phase_label: "implementation (in-progress)"' "Phase label is implementation (in-progress)"
+    echo ""
+}
+
+test_bugfix_phase_label_impl_in_progress() {
+    echo -e "${YELLOW}Test: Bugfix impl in-progress → phase_label implementation (in-progress)${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/investigation/login-crash"
+    mkdir -p "$TEST_DIR/.workflows/specification/login-crash"
+    mkdir -p "$TEST_DIR/.workflows/planning/login-crash"
+    mkdir -p "$TEST_DIR/.workflows/implementation/login-crash"
+
+    cat > "$TEST_DIR/.workflows/investigation/login-crash/investigation.md" << 'EOF'
+---
+topic: login-crash
+status: concluded
+work_type: bugfix
+---
+EOF
+    cat > "$TEST_DIR/.workflows/specification/login-crash/specification.md" << 'EOF'
+---
+topic: login-crash
+status: concluded
+work_type: bugfix
+---
+EOF
+    cat > "$TEST_DIR/.workflows/planning/login-crash/plan.md" << 'EOF'
+---
+topic: login-crash
+status: concluded
+work_type: bugfix
+---
+EOF
+    cat > "$TEST_DIR/.workflows/implementation/login-crash/tracking.md" << 'EOF'
+---
+topic: login-crash
+status: in-progress
+work_type: bugfix
+---
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'next_phase: "implementation"' "Next phase is implementation"
+    assert_contains "$output" 'phase_label: "implementation (in-progress)"' "Phase label is implementation (in-progress) for bugfix"
+    echo ""
+}
+
+test_bugfix_phase_label_ready_for_planning() {
+    echo -e "${YELLOW}Test: Bugfix spec concluded, no plan → phase_label ready for planning${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/investigation/login-crash"
+    mkdir -p "$TEST_DIR/.workflows/specification/login-crash"
+
+    cat > "$TEST_DIR/.workflows/investigation/login-crash/investigation.md" << 'EOF'
+---
+topic: login-crash
+status: concluded
+work_type: bugfix
+---
+EOF
+    cat > "$TEST_DIR/.workflows/specification/login-crash/specification.md" << 'EOF'
+---
+topic: login-crash
+status: concluded
+work_type: bugfix
+---
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'next_phase: "planning"' "Next phase is planning"
+    assert_contains "$output" 'phase_label: "ready for planning"' "Phase label is ready for planning (bugfix)"
+    echo ""
+}
+
+test_bugfix_phase_label_ready_for_impl() {
+    echo -e "${YELLOW}Test: Bugfix plan concluded → phase_label ready for implementation${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/investigation/login-crash"
+    mkdir -p "$TEST_DIR/.workflows/specification/login-crash"
+    mkdir -p "$TEST_DIR/.workflows/planning/login-crash"
+
+    cat > "$TEST_DIR/.workflows/investigation/login-crash/investigation.md" << 'EOF'
+---
+topic: login-crash
+status: concluded
+work_type: bugfix
+---
+EOF
+    cat > "$TEST_DIR/.workflows/specification/login-crash/specification.md" << 'EOF'
+---
+topic: login-crash
+status: concluded
+work_type: bugfix
+---
+EOF
+    cat > "$TEST_DIR/.workflows/planning/login-crash/plan.md" << 'EOF'
+---
+topic: login-crash
+status: concluded
+work_type: bugfix
+---
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'next_phase: "implementation"' "Next phase is implementation"
+    assert_contains "$output" 'phase_label: "ready for implementation"' "Phase label is ready for implementation (bugfix)"
+    echo ""
+}
+
+test_bugfix_phase_label_ready_for_review() {
+    echo -e "${YELLOW}Test: Bugfix impl completed → phase_label ready for review${NC}"
+    setup_fixture
+
+    mkdir -p "$TEST_DIR/.workflows/investigation/login-crash"
+    mkdir -p "$TEST_DIR/.workflows/specification/login-crash"
+    mkdir -p "$TEST_DIR/.workflows/planning/login-crash"
+    mkdir -p "$TEST_DIR/.workflows/implementation/login-crash"
+
+    cat > "$TEST_DIR/.workflows/investigation/login-crash/investigation.md" << 'EOF'
+---
+topic: login-crash
+status: concluded
+work_type: bugfix
+---
+EOF
+    cat > "$TEST_DIR/.workflows/specification/login-crash/specification.md" << 'EOF'
+---
+topic: login-crash
+status: concluded
+work_type: bugfix
+---
+EOF
+    cat > "$TEST_DIR/.workflows/planning/login-crash/plan.md" << 'EOF'
+---
+topic: login-crash
+status: concluded
+work_type: bugfix
+---
+EOF
+    cat > "$TEST_DIR/.workflows/implementation/login-crash/tracking.md" << 'EOF'
+---
+topic: login-crash
+status: completed
+work_type: bugfix
+---
+EOF
+
+    local output=$(run_discovery)
+
+    assert_contains "$output" 'next_phase: "review"' "Next phase is review"
+    assert_contains "$output" 'phase_label: "ready for review"' "Phase label is ready for review (bugfix)"
     echo ""
 }
 
@@ -1045,6 +1266,13 @@ test_bugfix_next_phase_superseded
 test_bugfix_from_discussion
 test_bugfix_from_spec
 test_bugfix_deduplication_across_phases
+
+# Phase label disambiguation
+test_feature_phase_label_impl_in_progress
+test_bugfix_phase_label_impl_in_progress
+test_bugfix_phase_label_ready_for_planning
+test_bugfix_phase_label_ready_for_impl
+test_bugfix_phase_label_ready_for_review
 
 # Mixed
 test_mixed_work_types
