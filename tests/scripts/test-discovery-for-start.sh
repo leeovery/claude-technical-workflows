@@ -38,7 +38,7 @@ setup_fixture() {
 
 run_discovery() {
     cd "$TEST_DIR"
-    bash "$DISCOVERY_SCRIPT" 2>/dev/null
+    /bin/bash "$DISCOVERY_SCRIPT" 2>/dev/null
 }
 
 assert_contains() {
