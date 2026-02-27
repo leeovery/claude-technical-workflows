@@ -237,9 +237,3 @@ Invoke the workflow:bridge skill to enter plan mode with continuation instructio
 **If work_type is not set:**
 
 The session ends here. The investigation document can be used as input to `/start-specification`.
-
-## Quick Reference
-
-- **Template**: **[template.md](references/template.md)** - Structure
-- **Analysis Patterns**: **[analysis-patterns.md](references/analysis-patterns.md)** - Code tracing techniques
-- **Symptom Gathering**: **[symptom-gathering.md](references/symptom-gathering.md)** - Interview questions
