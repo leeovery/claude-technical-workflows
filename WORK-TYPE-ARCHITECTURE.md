@@ -4,13 +4,13 @@ Captured during the unified entry point PR (`feat/unified-entry-point-work-type-
 
 ## Background
 
-The workflow system originally targeted greenfield development — research through to implementation for a new product. Work types (feature, bugfix, greenfield) were added to support different pipeline shapes on existing products. The current PR adds investigation for bugfix, unified entry points (`/workflow:start`, `/workflow:bridge`), and two-mode phase skills (bridge vs discovery).
+The workflow system originally targeted greenfield development — research through to implementation for a new product. Work types (feature, bugfix, greenfield) were added to support different pipeline shapes on existing products. The current PR adds investigation for bugfix, unified entry points (`/workflow-start`, `/workflow-bridge`), and two-mode phase skills (bridge vs discovery).
 
 ## Problem 1: Pipeline Continuity Is Fragile
 
 `work_type` in artifact frontmatter serves two purposes:
 1. **Pipeline shape** — determines which phases exist and how they connect
-2. **Pipeline continuity** — tells the processing skill to fire `workflow:bridge` at conclusion
+2. **Pipeline continuity** — tells the processing skill to fire `workflow-bridge` at conclusion
 
 These are conflated. If `work_type` is missing from an artifact, the pipeline silently stops — no bridge, no continuation. The user gets a terminal message instead of being routed forward.
 
@@ -68,7 +68,7 @@ If a user starts with `/start-feature` but research reveals the scope is larger 
 
 ## Problem 5: Direct Phase Entry Ambiguity
 
-When a user calls `/start-discussion` directly (no `/start-feature`, no `/workflow:start`), what work type applies?
+When a user calls `/start-discussion` directly (no `/start-feature`, no `/workflow-start`), what work type applies?
 
 Options discussed:
 1. **No pipeline** — direct entry is standalone, no work_type, no bridge at conclusion

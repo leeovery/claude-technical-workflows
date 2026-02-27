@@ -268,14 +268,14 @@ Status has been marked as `concluded`. The plan is ready for implementation.
 
 **If work_type is set** (feature, bugfix, or greenfield):
 
-This plan is part of a pipeline. Invoke the `/workflow:bridge` skill:
+This plan is part of a pipeline. Invoke the `/workflow-bridge` skill:
 
 ```
 Pipeline bridge for: {topic}
 Work type: {work_type from artifact frontmatter}
 Completed phase: planning
 
-Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
+Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
 ```
 
 **If work_type is not set:**

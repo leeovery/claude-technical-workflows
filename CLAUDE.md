@@ -49,13 +49,12 @@ skills/
   technical-review/          # Validate against artifacts
 
   # Unified entry points
-  workflow/
-    start/                   # Unified entry point - discovers state, routes by work type
-      scripts/discovery.sh   #   Comprehensive cross-phase discovery
-      references/            #   Work type selection, routing references
-    bridge/                  # Pipeline continuation - discovers next phase, enters plan mode
-      scripts/discovery.sh   #   Topic-specific or phase-centric discovery
-      references/            #   Work-type-specific continuation logic
+  workflow-start/              # Unified entry point - discovers state, routes by work type
+    scripts/discovery.sh       #   Comprehensive cross-phase discovery
+    references/                #   Work type selection, routing references
+  workflow-bridge/             # Pipeline continuation - discovers next phase, enters plan mode
+    scripts/discovery.sh       #   Topic-specific or phase-centric discovery
+    references/                #   Work-type-specific continuation logic
 
   # Entry-point skills (user-invocable — gather context, invoke processing skills)
   migrate/                   # Keep workflow files in sync with system design
@@ -136,7 +135,7 @@ Phase entry skills (`start-discussion`, `start-specification`, etc.) support thr
 
 **Bridge Mode** (work_type + topic):
 - Invoked with both arguments: `/start-discussion feature {topic}`
-- Or invoked by `workflow:bridge` with work_type + topic in context
+- Or invoked by `workflow-bridge` with work_type + topic in context
 - Skips discovery, validates topic exists, proceeds to pre-flight and processing
 - Enables deterministic pipeline continuation
 
@@ -181,7 +180,7 @@ Phase-first directory structure:
 
 **work_type field**: All artifacts include `work_type` in frontmatter (greenfield, feature, or bugfix). This enables:
 - Unified discovery across all phases
-- Correct pipeline routing via workflow:bridge
+- Correct pipeline routing via workflow-bridge
 - Work-type-specific behavior in processing skills
 
 Commit docs frequently (natural breaks, before context refresh). Skills capture context, don't implement.

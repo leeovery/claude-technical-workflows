@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Comprehensive workflow discovery for /workflow:start.
+# Comprehensive workflow discovery for /workflow-start.
 #
 # Scans all workflow directories and groups artifacts by work_type:
 # - greenfield: phase-centric, all topics (work_type: greenfield or unset)

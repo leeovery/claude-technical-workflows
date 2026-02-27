@@ -25,4 +25,4 @@ The discussion frontmatter should include:
 Invoke the technical-discussion skill.
 ```
 
-When the discussion concludes, the processing skill will detect `work_type: feature` in the artifact and invoke workflow:bridge automatically.
+When the discussion concludes, the processing skill will detect `work_type: feature` in the artifact and invoke workflow-bridge automatically.

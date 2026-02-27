@@ -138,14 +138,14 @@ Incorporate the user's context into the discussion, commit, then re-present the 
 
 **If work_type is set** (feature, bugfix, or greenfield):
 
-This discussion is part of a pipeline. Invoke the `/workflow:bridge` skill:
+This discussion is part of a pipeline. Invoke the `/workflow-bridge` skill:
 
 ```
 Pipeline bridge for: {topic}
 Work type: {work_type from artifact frontmatter}
 Completed phase: discussion
 
-Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
+Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
 ```
 
 **If work_type is not set and other in-progress discussions exist:**

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Topic-specific discovery script for /workflow:bridge.
+# Topic-specific discovery script for /workflow-bridge.
 #
 # Usage:
 #   discovery.sh --feature --topic <topic>
@@ -220,8 +220,10 @@ if [ "$work_type" = "feature" ] || [ "$work_type" = "bugfix" ]; then
             next_phase="specification"
         elif [ "$discussion_exists" = "true" ]; then
             next_phase="discussion"
-        elif [ "$research_exists" = "true" ]; then
+        elif [ "$research_exists" = "true" ] && [ "$research_status" = "concluded" ]; then
             next_phase="discussion"
+        elif [ "$research_exists" = "true" ]; then
+            next_phase="research"
         else
             next_phase="unknown"
         fi

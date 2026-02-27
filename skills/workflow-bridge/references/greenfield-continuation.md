@@ -1,6 +1,6 @@
 # Greenfield Continuation
 
-*Reference for **[workflow:bridge](../SKILL.md)***
+*Reference for **[workflow-bridge](../SKILL.md)***
 
 ---
 
@@ -120,7 +120,7 @@ What would you like to do next?
 7. Continue research
 8. Start new research
 9. Start new discussion
-10. Stop here — resume later with /workflow:start
+10. Stop here — resume later with /workflow-start
 
 Select an option (enter number):
 · · · · · · · · · · · ·
@@ -143,7 +143,7 @@ Recreate with actual topics and states from discovery. Only include options that
 ```
 Session Paused
 
-To resume later, run /workflow:start — it will discover your
+To resume later, run /workflow-start — it will discover your
 current state and present all available options.
 ```
 

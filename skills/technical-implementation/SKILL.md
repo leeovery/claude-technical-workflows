@@ -336,14 +336,14 @@ Commit: `impl({topic}): complete implementation`
 
 **If work_type is set** (feature, bugfix, or greenfield):
 
-This implementation is part of a pipeline. Invoke the `/workflow:bridge` skill:
+This implementation is part of a pipeline. Invoke the `/workflow-bridge` skill:
 
 ```
 Pipeline bridge for: {topic}
 Work type: {work_type from plan frontmatter}
 Completed phase: implementation
 
-Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
+Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
 ```
 
 **If work_type is not set:**
