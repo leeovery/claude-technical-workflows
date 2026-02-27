@@ -23,7 +23,7 @@ Plan Missing
 No plan found for "{topic:(titlecase)}".
 
 A concluded plan and implementation are required for review.
-Run /start-planning {topic} to create one.
+Run /start-planning {work_type} {topic} to create one.
 ```
 
 **STOP.** Do not proceed — terminal condition.
@@ -40,7 +40,7 @@ Implementation Missing
 No implementation found for "{topic:(titlecase)}".
 
 A completed implementation is required for review.
-Run /start-implementation {topic} to start one.
+Run /start-implementation {work_type} {topic} to start one.
 ```
 
 **STOP.** Do not proceed — terminal condition.
@@ -53,7 +53,7 @@ Run /start-implementation {topic} to start one.
 Implementation Not Complete
 
 The implementation for "{topic:(titlecase)}" is not yet completed.
-Run /start-implementation {topic} to continue.
+Run /start-implementation {work_type} {topic} to continue.
 ```
 
 **STOP.** Do not proceed — terminal condition.

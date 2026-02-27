@@ -26,7 +26,7 @@ Source Material Missing
 No discussion found for "{topic:(titlecase)}".
 
 A concluded discussion is required before specification.
-Run /start-discussion {topic} to start one.
+Run /start-discussion feature {topic} to start one.
 ```
 
 **STOP.** Do not proceed — terminal condition.
@@ -39,7 +39,7 @@ Run /start-discussion {topic} to start one.
 Discussion In Progress
 
 The discussion for "{topic:(titlecase)}" is not yet concluded.
-Run /start-discussion {topic} to continue.
+Run /start-discussion feature {topic} to continue.
 ```
 
 **STOP.** Do not proceed — terminal condition.
@@ -68,7 +68,7 @@ Source Material Missing
 No investigation found for "{topic:(titlecase)}".
 
 A concluded investigation is required before specification.
-Run /start-investigation {topic} to start one.
+Run /start-investigation bugfix {topic} to start one.
 ```
 
 **STOP.** Do not proceed — terminal condition.
@@ -81,7 +81,7 @@ Run /start-investigation {topic} to start one.
 Investigation In Progress
 
 The investigation for "{topic:(titlecase)}" is not yet concluded.
-Run /start-investigation {topic} to continue.
+Run /start-investigation bugfix {topic} to continue.
 ```
 
 **STOP.** Do not proceed — terminal condition.

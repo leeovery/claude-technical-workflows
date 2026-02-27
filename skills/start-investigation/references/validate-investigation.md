@@ -34,7 +34,7 @@ Set source="continue".
 Investigation Concluded
 
 The investigation for "{topic:(titlecase)}" has already concluded.
-Run /start-specification {topic} bugfix to continue to spec.
+Run /start-specification bugfix {topic} to continue to spec.
 ```
 
 **STOP.** Do not proceed — terminal condition.

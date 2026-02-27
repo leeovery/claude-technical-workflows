@@ -22,7 +22,7 @@ Specification Missing
 No specification found for "{topic:(titlecase)}".
 
 A concluded specification is required for planning.
-Run /start-specification {topic} to create one.
+Run /start-specification {work_type} {topic} to create one.
 ```
 
 **STOP.** Do not proceed — terminal condition.
@@ -35,7 +35,7 @@ Run /start-specification {topic} to create one.
 Specification In Progress
 
 The specification for "{topic:(titlecase)}" is not yet concluded.
-Run /start-specification {topic} to continue.
+Run /start-specification {work_type} {topic} to continue.
 ```
 
 **STOP.** Do not proceed — terminal condition.

@@ -22,7 +22,7 @@ Plan Missing
 No plan found for "{topic:(titlecase)}".
 
 A concluded plan is required for implementation.
-Run /start-planning {topic} to create one.
+Run /start-planning {work_type} {topic} to create one.
 ```
 
 **STOP.** Do not proceed — terminal condition.
@@ -35,7 +35,7 @@ Run /start-planning {topic} to create one.
 Plan Not Concluded
 
 The plan for "{topic:(titlecase)}" is not yet concluded.
-Run /start-planning {topic} to continue.
+Run /start-planning {work_type} {topic} to continue.
 ```
 
 **STOP.** Do not proceed — terminal condition.
