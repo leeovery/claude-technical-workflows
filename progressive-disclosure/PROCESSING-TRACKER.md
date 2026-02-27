@@ -18,7 +18,7 @@ Processing skills must have:
 - **Step separators** — `── ── ── ── ──` output between steps (matches planning/implementation)
 - **Checkpoint markers** — `**CHECKPOINT**` at natural review points
 
-See also: [conventions.md](conventions.md) for shared patterns (reference file format, navigation, interactive formatting).
+See also: CLAUDE.md — "Skill File Structure (Progressive Disclosure)" and "Structural Conventions" sections.
 
 ---
 
@@ -30,6 +30,7 @@ Ordered by estimated complexity.
 
 - [ ] **technical-research** (8.5 KB, 2 refs) — Conversational, no steps, informal STOP gates (`**STOP**` without period). Smallest scope.
 - [ ] **technical-discussion** (7.6 KB, 3 refs) — Conversational, no steps. Has proper STOP gates already.
+- [ ] **technical-investigation** (9.3 KB, 3 refs) — Narrative style, no steps. Has references but inline guidance sections instead of step-based backbone.
 - [ ] **technical-specification** (8.8 KB, 1 ref) — Conversational, no steps. Single monolithic `specification-guide.md` needs decomposition. Most complex of the three.
 
 ### Minor Fix
