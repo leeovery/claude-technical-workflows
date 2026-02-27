@@ -655,7 +655,7 @@ What's on your mind?
 
 ## Skill File Structure (Progressive Disclosure)
 
-Entry-point skills use a backbone + reference file pattern. The backbone (SKILL.md) is always loaded and reads like a table of contents. Reference files contain step detail, loaded on demand via Load directives.
+All skills (entry-point and processing) use a backbone + reference file pattern. The backbone (SKILL.md) is always loaded and reads like a table of contents. Reference files contain step detail, loaded on demand via Load directives.
 
 ### Backbone Structure
 
