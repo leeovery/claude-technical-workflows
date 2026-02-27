@@ -54,119 +54,13 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 ---
 
-## Investigation Process
+## Output Formatting
 
-### Phase 1: Symptom Gathering
-
-Start by understanding the bug from the user's perspective:
-
-1. **Problem description**: What's the expected vs actual behavior?
-2. **Manifestation**: How is it surfacing? (errors, UI issues, data corruption)
-3. **Reproduction steps**: Can it be reproduced? What triggers it?
-4. **Environment**: Where does it occur? (production, staging, specific browsers)
-5. **Links**: Error tracking (Sentry), logs, support tickets
-6. **Impact**: How severe? How many users affected?
-7. **Initial hypotheses**: What does the user suspect?
-
-Document symptoms in the investigation file as you gather them.
-
-### Phase 2: Code Analysis
-
-With symptoms understood, trace through the code:
-
-1. **Reproduce the issue**: If possible, confirm the bug exists
-2. **Identify entry points**: Where does the problematic flow start?
-3. **Trace code paths**: Follow the execution through the codebase
-4. **Isolate root cause**: What specific code/condition causes the bug?
-5. **Assess blast radius**: What else might be affected by a fix?
-6. **Identify related code**: Are there similar patterns elsewhere?
-
-Document findings in the investigation file as you analyze.
-
-### Phase 3: Root Cause Analysis
-
-Synthesize findings into a clear root cause:
-
-1. **Root cause statement**: Clear, precise description of the bug's cause
-2. **Contributing factors**: What conditions enable the bug?
-3. **Why it wasn't caught**: Testing gaps, edge cases, etc.
-4. **Fix direction**: High-level approach (detailed in specification)
+When announcing a new step, output `── ── ── ── ──` on its own line before the step heading.
 
 ---
 
-## What to Capture
-
-- **Symptom details**: Error messages, screenshots, logs
-- **Reproduction steps**: Precise steps to trigger the bug
-- **Code traces**: Which files/functions are involved
-- **Root cause**: The specific issue and why it occurs
-- **Blast radius**: What else might be affected
-- **Initial fix ideas**: Rough approaches to consider in specification
-
-**On length**: Investigations can vary widely. Capture what's needed to fully understand the bug. Don't summarize prematurely — document the trail.
-
-## Structure
-
-**Output**: `.workflows/investigation/{topic}/investigation.md`
-
-Use **[template.md](references/template.md)** for structure:
-
-```markdown
----
-topic: {topic}
-status: in-progress
-work_type: bugfix
-date: {YYYY-MM-DD}
----
-
-# Investigation: {Topic}
-
-## Symptoms
-
-### Problem Description
-{Expected vs actual behavior}
-
-### Manifestation
-{How the bug surfaces - errors, UI issues, etc.}
-
-### Reproduction Steps
-1. {Step}
-2. {Step}
-...
-
-### Environment
-{Where it occurs, conditions}
-
-### Impact
-{Severity, affected users}
-
-## Analysis
-
-### Code Trace
-{Entry points, code paths followed}
-
-### Root Cause
-{Clear statement of what causes the bug}
-
-### Contributing Factors
-{Conditions that enable the bug}
-
-### Blast Radius
-{What else might be affected}
-
-## Fix Direction
-
-### Proposed Approach
-{High-level fix direction for specification}
-
-### Alternatives Considered
-{Other approaches, why not chosen}
-
-### Testing Gaps
-{What testing should be added}
-```
-
-## Write to Disk and Commit Frequently
+## Investigation Discipline
 
 The investigation file is your memory. Context compaction is lossy — what's not on disk is lost.
 
@@ -181,59 +75,73 @@ The investigation file is your memory. Context compaction is lossy — what's no
 
 **Create the file early.** After understanding the initial symptoms, create the investigation file with frontmatter and symptoms section.
 
-## Concluding an Investigation
+---
 
-When the root cause is identified and documented:
+## Step 0: Resume Detection
 
-> *Output the next fenced block as markdown (not a code block):*
+Check if `.workflows/investigation/{topic}/investigation.md` already exists.
 
-```
-· · · · · · · · · · · ·
-Root cause identified. Ready to conclude?
+#### If the file exists
 
-- **`y`/`yes`** — Conclude investigation and proceed to specification
-- **`m`/`more`** — Continue investigating (more analysis needed)
-· · · · · · · · · · · ·
-```
+Read it. Announce what's been documented so far and what phase the investigation is in (symptoms, analysis, or root cause). Ask the user whether to continue or restart.
 
 **STOP.** Wait for user response.
 
-#### If more
+#### If the file does not exist
 
-Continue investigation. Ask what aspects need more analysis.
+→ Proceed to **Step 1**.
 
-#### If yes
+---
 
-1. Update frontmatter `status: concluded`
-2. Final commit
-3. Display conclusion:
+## Step 1: Initialize Investigation
 
-> *Output the next fenced block as a code block:*
+1. Create the investigation directory: `.workflows/investigation/{topic}/`
+2. Load **[template.md](references/template.md)** — use it to create `.workflows/investigation/{topic}/investigation.md`
+3. Fill frontmatter: topic, `status: in-progress`, `work_type: bugfix`, today's date
+4. Populate the Symptoms section with any context already gathered
+5. Commit the initial file
 
-```
-Investigation concluded: {topic}
+→ Proceed to **Step 2**.
 
-Root cause: {brief summary}
-Fix direction: {proposed approach}
+---
 
-The investigation is ready for specification. The specification will
-detail the exact fix approach, acceptance criteria, and testing plan.
-```
+## Step 2: Symptom Gathering
 
-4. Check the investigation frontmatter for `work_type`
+Load **[symptom-gathering.md](references/symptom-gathering.md)** and use its questions to gather symptoms from the user.
 
-**If work_type is set** (bugfix):
+Document symptoms in the investigation file as you gather them. Commit after each significant addition.
 
-This investigation is part of a pipeline. Invoke the `/workflow:bridge` skill:
+When symptoms are sufficiently understood to begin code analysis:
 
-```
-Pipeline bridge for: {topic}
-Work type: bugfix
-Completed phase: investigation
+→ Proceed to **Step 3**.
 
-Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
-```
+---
 
-**If work_type is not set:**
+## Step 3: Code Analysis
 
-The session ends here. The investigation document can be used as input to `/start-specification`.
+Load **[analysis-patterns.md](references/analysis-patterns.md)** and use its techniques to trace the bug through the code.
+
+Document findings in the investigation file as you analyze. Commit after each significant finding.
+
+→ Proceed to **Step 4**.
+
+---
+
+## Step 4: Root Cause Synthesis
+
+Synthesize findings into a clear root cause:
+
+1. **Root cause statement**: Clear, precise description of the bug's cause
+2. **Contributing factors**: What conditions enable the bug?
+3. **Why it wasn't caught**: Testing gaps, edge cases, etc.
+4. **Fix direction**: High-level approach (detailed in specification)
+
+Document in the investigation file and commit.
+
+→ Proceed to **Step 5**.
+
+---
+
+## Step 5: Conclude Investigation
+
+Load **[conclude-investigation.md](references/conclude-investigation.md)** and follow its instructions as written.
