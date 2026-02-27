@@ -59,169 +59,48 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 ---
 
-## Your Expertise
+## Output Formatting
 
-You bring knowledge across the full landscape:
+When announcing a new step, output `── ── ── ── ──` on its own line before the step heading.
 
-- **Technical**: Feasibility, architecture approaches, time to market, complexity
-- **Business**: Pricing models, profitability, business models, unit economics
-- **Market**: Competitors, market fit, timing, gaps, positioning
-- **Product**: User needs, value proposition, differentiation
+---
 
-Don't constrain yourself. Research goes wherever it needs to go.
+## Step 0: Resume Detection
 
-## Exploration Mindset
+Check if research files exist in `.workflows/research/`.
 
-**Follow tangents**: If something interesting comes up, pursue it.
+#### If files exist
 
-**Go broad**: Technical feasibility, pricing, competitors, timing, market fit - explore whatever's relevant.
-
-**Learning is valid**: Not everything leads to building something. Understanding has value on its own.
-
-**Be honest**: If something seems flawed or risky, say so. Challenge assumptions.
-
-**Explore, don't decide**: Your job is to surface options, tradeoffs, and understanding — not to pick winners. Synthesis is welcome ("the tradeoffs are X, Y, Z"), conclusions are not ("therefore we should do Y"). Decisions belong in the discussion phase.
-
-## Convergence Awareness
-
-Research threads naturally converge. As you explore a topic, options narrow, tradeoffs clarify, and opinions start forming. This is healthy — but it's also a signal.
-
-### Recognizing convergence
-
-Watch for these signs that a thread is moving from exploration toward decision-making:
-
-- "We should..." or "The best approach is..." language (from you or the user)
-- Options narrowing to a clear frontrunner with well-understood tradeoffs
-- The same conclusion being reached from multiple angles
-- Discussion shifting from "what are the options?" to "which option?"
-- You or the user starting to advocate for a particular approach
-
-### What to do
-
-When you notice convergence, **flag it and give the user options**:
-
-This thread seems to be converging — we've explored {topic} enough that the tradeoffs are clear and it's approaching decision territory.
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-- **`p`/`park`** — Mark as discussion-ready and move to another topic
-- **`k`/`keep`** — Keep digging, there's more to understand
-- Comment — your call
-· · · · · · · · · · · ·
-```
-
-**Never decide for the user.** Even if the answer seems obvious, flag it and ask.
-
-### If the user parks it
-
-Document the convergence point in the research file using this marker:
-
-```markdown
-> **Discussion-ready**: {Brief summary of what was explored and why it's ready for decision-making. Key tradeoffs or options identified.}
-```
-
-Commit the file.
-
-Check the research artifact frontmatter for `work_type`.
-
-**If work_type is set** (feature or greenfield):
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-This topic is marked discussion-ready. Would you like to:
-
-- **`c`/`continue`** — Continue exploring
-- **`d`/`discuss`** — Transition to discussion phase
-· · · · · · · · · · · ·
-```
+Read them. Announce what's been explored so far and what themes have emerged. Ask the user whether to continue or start fresh.
 
 **STOP.** Wait for user response.
 
-#### If continue
+#### If no files exist
 
-Continue with whatever's next — another topic, a different angle, or wrapping up the session.
+→ Proceed to **Step 1**.
 
-#### If discuss
-
-Invoke the `/workflow:bridge` skill:
-
-```
-Pipeline bridge for: {topic}
-Work type: {work_type from artifact frontmatter}
-Completed phase: research
-
-Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
-```
-
-**If work_type is not set:**
-
-Continue with whatever's next — another topic, a different angle, or wrapping up the session.
-
-### If the user keeps digging
-
-Continue exploring. The convergence signal isn't a stop sign — it's an awareness check. The user might want to stress-test the emerging conclusion, explore edge cases, or understand the problem more deeply before moving on. That's valid research work.
-
-### Synthesis vs decision
-
-This distinction matters:
-
-- **Synthesis** (research): "There are three viable approaches. A is simplest but limited. B scales better but costs more. C is future-proof but complex."
-- **Decision** (discussion): "We should go with B because scaling matters more than simplicity for this project."
-
-Synthesis is your job. Decisions are not. Present the landscape, don't pick the destination.
-
-## Questioning
-
-For structured questioning, use the interview reference (`references/interview.md`). Good research questions:
-
-- Reveal hidden complexity
-- Surface concerns early
-- Challenge comfortable assumptions
-- Probe the "why" behind ideas
-
-Ask one question at a time. Wait for the answer. Document. Then ask the next.
-
-## File Strategy
-
-**Output**: `.workflows/research/exploration.md`
-
-**Template**: Use `references/template.md` for document structure. All research documents use YAML frontmatter:
-
-```yaml
 ---
-topic: exploration
-date: YYYY-MM-DD  # Use today's actual date
+
+## Step 1: Initialize Research
+
+1. Ensure the research directory exists: `.workflows/research/`
+2. Load **[template.md](references/template.md)** — use it to create `.workflows/research/exploration.md`
+3. Fill frontmatter: `topic: exploration`, today's date
+4. Populate the Starting Point section with context from the user
+5. Commit the initial file
+
+→ Proceed to **Step 2**.
+
 ---
-```
 
-Start with one file. Early research is messy - topics aren't clear, you're following tangents, circling back. Don't force structure too early.
+## Step 2: Load Research Guidelines
 
-**Let themes emerge**: Over multiple sessions, topics may become distinct. When they do, split into semantic files (`market-landscape.md`, `technical-feasibility.md`). Update the `topic` field to match the filename.
+Load **[research-guidelines.md](references/research-guidelines.md)** and follow its instructions as written.
 
-**Periodic review**: Every few sessions, assess: are themes emerging? Split them out. Still fuzzy? Keep exploring. Ready for deeper discussion or specification? Research is complete.
+→ Proceed to **Step 3**.
 
-## Documentation Loop
+---
 
-Research without documentation is wasted. Follow this loop:
+## Step 3: Research Session
 
-1. **Ask** a question
-2. **Discuss** the answer
-3. **Document** the insight
-4. **Commit and push** immediately
-5. **Repeat**
-
-**Don't batch**. Every insight gets pushed before the next question. Context can refresh at any time—unpushed work is lost.
-
-## Critical Rules
-
-**No status field**: Research documents do NOT have a `status` field in their frontmatter. Only `topic` and `date`. Research is open-ended by nature — it doesn't "conclude." Even when a research exploration feels complete, do not add `status: concluded` or any similar field. The document stays as-is.
-
-**Don't hallucinate**: Only document what was actually discussed.
-
-**Don't expand**: Capture what was said, don't embellish.
-
-**Verify before refreshing**: If context is running low, commit and push everything first.
+Load **[research-session.md](references/research-session.md)** and follow its instructions as written.
