@@ -82,6 +82,7 @@ Build a numbered menu of actionable items. The verb depends on the state:
 | State | Verb |
 |-------|------|
 | In-progress discussion | Continue |
+| In-progress specification | Continue |
 | Concluded spec (feature type), no plan | Start planning for |
 | In-progress plan | Continue |
 | Concluded plan, no implementation | Start implementation of |
@@ -89,7 +90,7 @@ Build a numbered menu of actionable items. The verb depends on the state:
 | Completed implementation, no review | Start review for |
 | Research exists | Continue research |
 
-**Specification phase is different in greenfield**: Don't offer "Start specification from {topic}". Instead, when concluded discussions exist, offer "Start specification" which invokes bare `/start-specification`. The specification skill will analyze ALL concluded discussions and suggest groupings — multiple discussions may become one spec, or split differently.
+**Specification phase is different in greenfield**: Don't offer "Start specification from {topic}". Instead, when concluded discussions exist, offer "Start specification" which invokes `/start-specification greenfield`. Don't pass a topic. Always route through discovery mode so analysis can detect changed discussions.
 
 **Specification readiness:**
 - All discussions concluded → "Start specification" (recommended)
@@ -111,14 +112,15 @@ Always include "Start new research", "Start new discussion", and "Stop here" as 
 What would you like to do next?
 
 1. Continue "Auth Flow" discussion — in-progress
-2. Start planning for "User Profiles" — spec concluded
-3. Continue "Caching" plan — in-progress
-4. Start implementation of "Notifications" — plan concluded
-5. Start specification — 3 discussions concluded (recommended)
-6. Continue research
-7. Start new research
-8. Start new discussion
-9. Stop here — resume later with /workflow:start
+2. Continue "Data Model" specification — in-progress
+3. Start planning for "User Profiles" — spec concluded
+4. Continue "Caching" plan — in-progress
+5. Start implementation of "Notifications" — plan concluded
+6. Start specification — 3 discussions concluded (recommended)
+7. Continue research
+8. Start new research
+9. Start new discussion
+10. Stop here — resume later with /workflow:start
 
 Select an option (enter number):
 · · · · · · · · · · · ·
@@ -151,24 +153,25 @@ current state and present all available options.
 
 Map the selection to a skill invocation:
 
-| Selection | Skill | Topic | Work Type |
-|-----------|-------|-------|-----------|
-| Continue discussion | `/start-discussion` | {topic} | greenfield |
-| Continue plan | `/start-planning` | {topic} | greenfield |
-| Continue implementation | `/start-implementation` | {topic} | greenfield |
-| Continue research | `/start-research` | — | — |
-| Start specification | `/start-specification` | — | — |
-| Start planning for {topic} | `/start-planning` | {topic} | greenfield |
-| Start implementation of {topic} | `/start-implementation` | {topic} | greenfield |
-| Start review for {topic} | `/start-review` | {topic} | greenfield |
-| Start new research | `/start-research` | — | — |
-| Start new discussion | `/start-discussion` | — | — |
+| Selection | Skill | Work Type | Topic |
+|-----------|-------|-----------|-------|
+| Continue discussion | `/start-discussion` | greenfield | {topic} |
+| Continue specification | `/start-specification` | greenfield | — |
+| Continue plan | `/start-planning` | greenfield | {topic} |
+| Continue implementation | `/start-implementation` | greenfield | {topic} |
+| Continue research | `/start-research` | greenfield | — |
+| Start specification | `/start-specification` | greenfield | — |
+| Start planning for {topic} | `/start-planning` | greenfield | {topic} |
+| Start implementation of {topic} | `/start-implementation` | greenfield | {topic} |
+| Start review for {topic} | `/start-review` | greenfield | {topic} |
+| Start new research | `/start-research` | greenfield | — |
+| Start new discussion | `/start-discussion` | greenfield | — |
 
-Skills receive positional arguments: `$0` = topic, `$1` = work_type.
+Skills receive positional arguments: `$0` = work_type, `$1` = topic.
 
-**With arguments** (bridge mode): `/start-discussion {topic} greenfield` — skill skips discovery, validates topic, proceeds to processing.
+**With arguments** (bridge mode): `/start-discussion greenfield {topic}` — skill skips discovery, validates topic, proceeds to processing.
 
-**Without arguments** (discovery mode): `/start-discussion` — skill runs full discovery and presents its own options.
+**Without arguments** (discovery mode): `/start-discussion greenfield` — skill runs discovery with work_type context.
 
 → Proceed to **D. Enter Plan Mode**.
 

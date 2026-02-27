@@ -102,16 +102,16 @@ Invoke `/start-feature`. It will set `work_type: feature` automatically.
 
 Map `next_phase` to the appropriate skill:
 
-| next_phase | Skill | Topic | Work Type |
-|------------|-------|-------|-----------|
-| discussion | `/start-discussion` | {topic} | feature |
-| specification | `/start-specification` | {topic} | feature |
-| planning | `/start-planning` | {topic} | feature |
-| implementation | `/start-implementation` | {topic} | feature |
-| review | `/start-review` | {topic} | feature |
+| next_phase | Skill | Work Type | Topic |
+|------------|-------|-----------|-------|
+| discussion | `/start-discussion` | feature | {topic} |
+| specification | `/start-specification` | feature | {topic} |
+| planning | `/start-planning` | feature | {topic} |
+| implementation | `/start-implementation` | feature | {topic} |
+| review | `/start-review` | feature | {topic} |
 
-Skills receive positional arguments: `$0` = topic, `$1` = work_type.
+Skills receive positional arguments: `$0` = work_type, `$1` = topic.
 
-**Example**: `/start-specification {topic} feature` — skill skips discovery, validates topic, proceeds to processing.
+**Example**: `/start-specification feature {topic}` — skill skips discovery, validates topic, proceeds to processing.
 
-Invoke the skill from the table with the topic and work type as positional arguments.
+Invoke the skill from the table with the work type and topic as positional arguments.

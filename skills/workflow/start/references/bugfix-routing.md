@@ -102,16 +102,16 @@ Invoke `/start-bugfix`. It will set `work_type: bugfix` and begin the investigat
 
 Map `next_phase` to the appropriate skill:
 
-| next_phase | Skill | Topic | Work Type |
-|------------|-------|-------|-----------|
-| investigation | `/start-investigation` | {topic} | bugfix |
-| specification | `/start-specification` | {topic} | bugfix |
-| planning | `/start-planning` | {topic} | bugfix |
-| implementation | `/start-implementation` | {topic} | bugfix |
-| review | `/start-review` | {topic} | bugfix |
+| next_phase | Skill | Work Type | Topic |
+|------------|-------|-----------|-------|
+| investigation | `/start-investigation` | bugfix | {topic} |
+| specification | `/start-specification` | bugfix | {topic} |
+| planning | `/start-planning` | bugfix | {topic} |
+| implementation | `/start-implementation` | bugfix | {topic} |
+| review | `/start-review` | bugfix | {topic} |
 
-Skills receive positional arguments: `$0` = topic, `$1` = work_type.
+Skills receive positional arguments: `$0` = work_type, `$1` = topic.
 
-**Example**: `/start-specification {topic} bugfix` — skill skips discovery, validates topic, proceeds to processing.
+**Example**: `/start-specification bugfix {topic}` — skill skips discovery, validates topic, proceeds to processing.
 
-Invoke the skill from the table with the topic and work type as positional arguments.
+Invoke the skill from the table with the work type and topic as positional arguments.
