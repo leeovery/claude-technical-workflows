@@ -46,9 +46,9 @@ The previous phase has concluded. Continue the pipeline.
 
 ## Next Step
 
-Invoke `/start-{next_phase} {topic} bugfix`
+Invoke `/start-{next_phase} bugfix {topic}`
 
-Arguments: topic = {topic}, work_type = bugfix
+Arguments: work_type = bugfix, topic = {topic}
 The skill will skip discovery and proceed directly to validation.
 
 ## How to proceed

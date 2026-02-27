@@ -47,9 +47,9 @@ The previous phase has concluded. Continue the pipeline.
 
 ## Next Step
 
-Invoke `/start-{next_phase} {topic} feature`
+Invoke `/start-{next_phase} feature {topic}`
 
-Arguments: topic = {topic}, work_type = feature
+Arguments: work_type = feature, topic = {topic}
 The skill will skip discovery and proceed directly to validation.
 
 ## How to proceed

@@ -179,7 +179,7 @@ Skills receive positional arguments: `$0` = work_type, `$1` = topic.
 
 ## D. Enter Plan Mode
 
-#### If Topic and Work Type are present
+#### If topic is present
 
 Enter plan mode with the following content:
 
@@ -190,9 +190,9 @@ Continue {selected_phase} for "{selected_topic}".
 
 ## Next Step
 
-Invoke `/start-{selected_phase} {selected_topic} greenfield`
+Invoke `/start-{selected_phase} greenfield {selected_topic}`
 
-Arguments: topic = {selected_topic}, work_type = greenfield
+Arguments: work_type = greenfield, topic = {selected_topic}
 The skill will skip discovery and proceed directly to validation.
 
 ## How to proceed
@@ -200,7 +200,7 @@ The skill will skip discovery and proceed directly to validation.
 Clear context and continue.
 ```
 
-#### If Topic and Work Type are absent
+#### If topic is absent
 
 Enter plan mode with the following content:
 
@@ -211,9 +211,10 @@ Start {selected_phase} phase.
 
 ## Next Step
 
-Invoke `/start-{selected_phase}`
+Invoke `/start-{selected_phase} greenfield`
 
-No arguments — the skill will run full discovery and present options.
+Arguments: work_type = greenfield
+The skill will run discovery with greenfield context.
 
 ## How to proceed
 
