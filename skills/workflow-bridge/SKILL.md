@@ -21,30 +21,27 @@ This skill receives context from the calling processing skill:
 
 ## Step 1: Run Discovery
 
-Determine the next phase by running discovery.
+!`.claude/skills/workflow-bridge/scripts/discovery.sh`
+
+If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+
+```bash
+.claude/skills/workflow-bridge/scripts/discovery.sh
+```
+
+The output contains three sections: `features:`, `bugfixes:`, and `greenfield:`. Use the known work type and topic from the calling context to extract the relevant data:
 
 #### If work type is "feature"
 
-```bash
-.claude/skills/workflow-bridge/scripts/discovery.sh --feature --topic "{topic}"
-```
+Find the topic entry under `features: > topics:` and extract its `next_phase`.
 
 #### If work type is "bugfix"
 
-```bash
-.claude/skills/workflow-bridge/scripts/discovery.sh --bugfix --topic "{topic}"
-```
-
-Parse the output to extract:
-- `next_phase`: The computed next phase for this topic
+Find the topic entry under `bugfixes: > topics:` and extract its `next_phase`.
 
 #### If work type is "greenfield"
 
-```bash
-.claude/skills/workflow-bridge/scripts/discovery.sh --greenfield
-```
-
-Parse the output to extract:
+Parse the `greenfield:` section for phase-centric state:
 - `state`: Counts of artifacts across all phases
 - Phase-specific file lists with their statuses
 
