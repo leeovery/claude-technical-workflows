@@ -31,8 +31,11 @@ Construct the handoff based on how this discussion was initiated.
 
 #### If source is "research"
 
+**If work_type is available** (from Step 2), add the Work type line:
+
 ```
 Discussion session for: {topic}
+Work type: {work_type}
 Output: .workflows/discussion/{topic}.md
 
 Research reference:
@@ -59,8 +62,11 @@ Invoke the technical-discussion skill.
 
 #### If source is "continue"
 
+Read work_type from the existing discussion frontmatter.
+
 ```
 Discussion session for: {topic}
+Work type: {work_type}
 Source: existing discussion
 Output: .workflows/discussion/{topic}.md
 
@@ -69,8 +75,11 @@ Invoke the technical-discussion skill.
 
 #### If source is "fresh"
 
+**If work_type is available** (from Step 2), add the Work type line:
+
 ```
 Discussion session for: {topic}
+Work type: {work_type}
 Source: fresh
 Output: .workflows/discussion/{topic}.md
 
