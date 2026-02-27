@@ -132,18 +132,23 @@ Skills are organised in two tiers:
 
 ### Two-Mode Pattern for Phase Skills
 
-Phase entry skills (`start-discussion`, `start-specification`, etc.) support two invocation modes:
+Phase entry skills (`start-discussion`, `start-specification`, etc.) support three invocation patterns. Arguments are positional: `$0` = work_type, `$1` = topic.
 
-**Discovery Mode** (bare invocation):
-- User invokes `/start-discussion` directly
-- Full discovery, topic selection, context gathering
-- Loads `references/discovery-flow.md` for the full interactive flow
-
-**Bridge Mode** (topic + work_type provided):
-- Invoked with arguments: `/start-discussion {topic} {work_type}`
-- Or invoked by `workflow:bridge` with topic + work_type in context
+**Bridge Mode** (work_type + topic):
+- Invoked with both arguments: `/start-discussion feature {topic}`
+- Or invoked by `workflow:bridge` with work_type + topic in context
 - Skips discovery, validates topic exists, proceeds to pre-flight and processing
 - Enables deterministic pipeline continuation
+
+**Discovery Mode with pipeline context** (work_type only):
+- Invoked with work_type but no topic: `/start-specification greenfield`
+- Stores work_type for the handoff, then runs full discovery
+- Enables greenfield routing where topic isn't known until analysis
+
+**Standalone Discovery Mode** (no arguments):
+- User invokes `/start-discussion` directly
+- Full discovery, topic selection, context gathering
+- No pipeline context — artifacts created without work_type won't trigger bridge at conclusion
 
 The two-mode pattern consolidates what was previously split between `start-*` (discovery) and `begin-*` (bridge) skills into a single skill with early mode detection.
 
