@@ -104,6 +104,8 @@ If no specification exists, the plan is the sole source of truth for design deci
 
 #### If `.claude/skills/` does not exist or is empty
 
+> *Output the next fenced block as a code block:*
+
 ```
 No project skills found. Proceeding without project-specific conventions.
 ```
