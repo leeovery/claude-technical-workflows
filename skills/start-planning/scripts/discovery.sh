@@ -63,6 +63,9 @@ if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
         # Skip cross-cutting specs in this pass
         [ "$spec_type" = "cross-cutting" ] && continue
 
+        # Skip superseded specs — they've been absorbed into another spec
+        [ "$status" = "superseded" ] && continue
+
         # Check if plan exists and its status
         has_plan="false"
         plan_status=""
@@ -133,6 +136,9 @@ if [ -d "$SPEC_DIR" ] && [ -n "$(ls -A "$SPEC_DIR" 2>/dev/null)" ]; then
 
         status=$(extract_field "$file" "status")
         status=${status:-"active"}
+
+        # Skip superseded specs
+        [ "$status" = "superseded" ] && continue
 
         echo "    - name: \"$name\""
         echo "      status: \"$status\""
