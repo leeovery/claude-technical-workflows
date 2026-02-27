@@ -1,9 +1,0 @@
-{
-  "name": "claude-technical-workflows",
-  "description": "Six-phase workflow: research, discuss, specify, plan, implement, review",
-  "version": "2.2.1",
-  "author": {
-    "name": "Lee Overy",
-    "email": "me@leeovery.com"
-  }
-}

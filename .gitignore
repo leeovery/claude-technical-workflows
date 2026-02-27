@@ -1,14 +1,4 @@
-node_modules/
 .DS_Store
 .idea/
 .vscode/
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-
-
 .claude/settings.local.json
