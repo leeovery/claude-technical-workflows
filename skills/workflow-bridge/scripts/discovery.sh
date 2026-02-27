@@ -220,10 +220,8 @@ if [ "$work_type" = "feature" ] || [ "$work_type" = "bugfix" ]; then
             next_phase="specification"
         elif [ "$discussion_exists" = "true" ]; then
             next_phase="discussion"
-        elif [ "$research_exists" = "true" ] && [ "$research_status" = "concluded" ]; then
-            next_phase="discussion"
         elif [ "$research_exists" = "true" ]; then
-            next_phase="research"
+            next_phase="discussion"
         else
             next_phase="unknown"
         fi
