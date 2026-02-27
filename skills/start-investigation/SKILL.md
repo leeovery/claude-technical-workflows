@@ -86,15 +86,19 @@ Parse the discovery output to understand:
 
 ## Step 2: Determine Mode
 
-Check for arguments: topic = `$0`
+Check for arguments: work_type = `$0`, topic = `$1`
 
-Investigation is always for bugfix work_type.
+Investigation is always bugfix work_type. If work_type is provided, it should be `bugfix`.
 
-#### If topic is provided
+#### If work_type and topic are both provided
 
 → Proceed to **Step 3** (Validate Investigation).
 
-#### Otherwise
+#### If work_type is provided without topic
+
+→ Proceed to **Step 4** (Route Based on Scenario).
+
+#### If neither is provided
 
 → Proceed to **Step 4** (Route Based on Scenario).
 

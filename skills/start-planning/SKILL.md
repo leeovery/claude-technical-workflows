@@ -102,13 +102,19 @@ Parse the discovery output to understand:
 
 ## Step 2: Determine Mode
 
-Check for arguments: topic = `$0`, work_type = `$1`
+Check for arguments: work_type = `$0`, topic = `$1`
 
-#### If topic and work_type are both provided
+#### If work_type and topic are both provided
 
 → Proceed to **Step 3**.
 
-#### Otherwise
+#### If work_type is provided without topic
+
+Store work_type for the handoff.
+
+→ Proceed to **Step 4**.
+
+#### If neither is provided
 
 → Proceed to **Step 4**.
 

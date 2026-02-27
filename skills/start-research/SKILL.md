@@ -59,15 +59,23 @@ Invoke the `/migrate` skill and assess its output.
 
 ---
 
-## Step 1: Gather Context
+## Step 1: Check Arguments
 
-Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
+Check for arguments: work_type = `$0`. If provided, store for the handoff.
 
 → Proceed to **Step 2**.
 
 ---
 
-## Step 2: Invoke the Skill
+## Step 2: Gather Context
+
+Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
+
+→ Proceed to **Step 3**.
+
+---
+
+## Step 3: Invoke the Skill
 
 Before invoking the processing skill, save a session bookmark.
 
