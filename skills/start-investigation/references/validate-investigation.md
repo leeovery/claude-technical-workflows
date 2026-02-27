@@ -24,7 +24,7 @@ Resuming investigation: {topic:(titlecase)}
 
 Set source="continue".
 
-→ Return to **[the skill](../SKILL.md)** for **Step 8**.
+→ Return to **[the skill](../SKILL.md)** for **Step 6**.
 
 #### If status is "concluded"
 
@@ -41,6 +41,6 @@ Run /start-specification bugfix {topic} to continue to spec.
 
 #### If no collision
 
-Set source="fresh".
+Set source="bridge".
 
 → Return to **[the skill](../SKILL.md)**.

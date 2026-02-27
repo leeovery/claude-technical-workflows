@@ -48,7 +48,7 @@ What would you like to do?
 
 Set source="continue".
 
-→ Return to **[the skill](../SKILL.md)** for **Step 8** with that topic.
+→ Return to **[the skill](../SKILL.md)** for **Step 6** with that topic.
 
 #### If new
 

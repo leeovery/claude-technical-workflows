@@ -1,6 +1,21 @@
-# Topic Name and Conflict Check
+# Gather Bug Context (Fresh)
 
 *Reference for **[start-investigation](../SKILL.md)***
+
+---
+
+> *Output the next fenced block as a code block:*
+
+```
+Starting new investigation.
+
+What bug are you investigating? Please provide:
+- A short identifier/name for tracking (e.g., "login-timeout-bug")
+- What's broken (expected vs actual behavior)
+- Any initial context (error messages, how it manifests)
+```
+
+**STOP.** Wait for user response.
 
 ---
 
@@ -50,7 +65,7 @@ Set source="continue".
 
 Check the investigation status. If concluded → suggest `/start-specification bugfix {topic}`. If in-progress:
 
-→ Return to **[the skill](../SKILL.md)** for **Step 8**.
+→ Return to **[the skill](../SKILL.md)** for **Step 6**.
 
 #### If no conflict
 

@@ -110,11 +110,11 @@ Load **[validate-investigation.md](references/validate-investigation.md)** and f
 
 #### If resume
 
-→ Proceed to **Step 8**.
+→ Proceed to **Step 6**.
 
 #### If no collision
 
-→ Proceed to **Step 7**.
+→ Proceed to **Step 5**.
 
 ---
 
@@ -124,7 +124,7 @@ Load **[route-scenario.md](references/route-scenario.md)** and follow its instru
 
 #### If resuming
 
-→ Proceed to **Step 8**.
+→ Proceed to **Step 6**.
 
 #### If new or fresh
 
@@ -132,30 +132,14 @@ Load **[route-scenario.md](references/route-scenario.md)** and follow its instru
 
 ---
 
-## Step 5: Gather Bug Context (Discovery Mode)
+## Step 5: Gather Bug Context
 
-Load **[gather-context-discovery.md](references/gather-context-discovery.md)** and follow its instructions as written.
+Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
 
 → Proceed to **Step 6**.
 
 ---
 
-## Step 6: Topic Name and Conflict Check
-
-Load **[topic-conflict-check.md](references/topic-conflict-check.md)** and follow its instructions as written.
-
-→ Proceed to **Step 8**.
-
----
-
-## Step 7: Gather Bug Context (Bridge Mode)
-
-Load **[gather-context-bridge.md](references/gather-context-bridge.md)** and follow its instructions as written.
-
-→ Proceed to **Step 8**.
-
----
-
-## Step 8: Invoke the Skill
+## Step 6: Invoke the Skill
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
