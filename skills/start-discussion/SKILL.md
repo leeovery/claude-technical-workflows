@@ -115,11 +115,11 @@ Check for arguments: work_type = `$0`, topic = `$1`
 
 Store work_type for the handoff.
 
-→ Proceed to **Step 5** (Route Based on Scenario).
+→ Proceed to **Step 4** (Route Based on Scenario).
 
 #### If neither is provided
 
-→ Proceed to **Step 5** (Route Based on Scenario).
+→ Proceed to **Step 4** (Route Based on Scenario).
 
 ---
 
@@ -129,72 +129,64 @@ Load **[validate-topic.md](references/validate-topic.md)** and follow its instru
 
 #### If resume
 
-→ Proceed to **Step 9**.
+→ Proceed to **Step 8**.
 
 #### If no collision
-
-→ Proceed to **Step 4**.
-
----
-
-## Step 4: Gather Context (Bridge Mode)
-
-Load **[gather-context-bridge.md](references/gather-context-bridge.md)** and follow its instructions as written.
-
-→ Proceed to **Step 10**.
-
----
-
-## Step 5: Route Based on Scenario
-
-Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
-
-#### If research exists
-
-→ Proceed to **Step 6**.
-
-#### If discussions only
-
-→ Proceed to **Step 7**.
-
-#### If fresh
-
-→ Proceed to **Step 9**.
-
----
-
-## Step 6: Research Analysis
-
-Load **[research-analysis.md](references/research-analysis.md)** and follow its instructions as written.
-
-→ Proceed to **Step 7**.
-
----
-
-## Step 7: Present Options
-
-Load **[display-options.md](references/display-options.md)** and follow its instructions as written.
 
 → Proceed to **Step 8**.
 
 ---
 
-## Step 8: Handle Selection
+## Step 4: Route Based on Scenario
+
+Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
+
+#### If research exists
+
+→ Proceed to **Step 5**.
+
+#### If discussions only
+
+→ Proceed to **Step 6**.
+
+#### If fresh
+
+→ Proceed to **Step 8**.
+
+---
+
+## Step 5: Research Analysis
+
+Load **[research-analysis.md](references/research-analysis.md)** and follow its instructions as written.
+
+→ Proceed to **Step 6**.
+
+---
+
+## Step 6: Present Options
+
+Load **[display-options.md](references/display-options.md)** and follow its instructions as written.
+
+→ Proceed to **Step 7**.
+
+---
+
+## Step 7: Handle Selection
 
 Load **[handle-selection.md](references/handle-selection.md)** and follow its instructions as written.
+
+→ Proceed to **Step 8**.
+
+---
+
+## Step 8: Gather Context
+
+Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
 
 → Proceed to **Step 9**.
 
 ---
 
-## Step 9: Gather Context (Discovery Mode)
-
-Load **[gather-context-discovery.md](references/gather-context-discovery.md)** and follow its instructions as written.
-
-→ Proceed to **Step 10**.
-
----
-
-## Step 10: Invoke the Skill
+## Step 9: Invoke the Skill
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

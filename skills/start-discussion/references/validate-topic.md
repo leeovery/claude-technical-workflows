@@ -24,7 +24,7 @@ Resuming discussion: {topic:(titlecase)}
 
 Set source="continue".
 
-→ Return to **[the skill](../SKILL.md)** for **Step 9**.
+→ Return to **[the skill](../SKILL.md)** for **Step 8**.
 
 #### If status is "concluded"
 

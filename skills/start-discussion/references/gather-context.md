@@ -1,14 +1,18 @@
-# Gather Context (Bridge Mode)
+# Gather Context
 
 *Reference for **[start-discussion](../SKILL.md)***
 
 ---
 
+Route based on the `source` variable set in earlier steps.
+
+#### If source is "bridge"
+
 Bridge mode: topic and work_type were provided by the caller.
 
 Check if research exists for this topic. Read `.workflows/research/{topic}.md` and look for a `> **Discussion-ready**:` marker.
 
-#### If research exists with a discussion-ready marker
+**If research exists with a discussion-ready marker:**
 
 > *Output the next fenced block as a code block:*
 
@@ -28,7 +32,7 @@ Set source="research-bridge".
 
 → Return to **[the skill](../SKILL.md)**.
 
-#### Otherwise
+**Otherwise:**
 
 > *Output the next fenced block as a code block:*
 
@@ -41,6 +45,30 @@ What would you like to discuss? Provide some initial context:
 - What prompted this?
 - Any initial thoughts or constraints?
 ```
+
+**STOP.** Wait for user response.
+
+→ Return to **[the skill](../SKILL.md)**.
+
+#### If source is "research"
+
+Load **[gather-context-research.md](gather-context-research.md)** and follow its instructions.
+
+**STOP.** Wait for user response.
+
+→ Return to **[the skill](../SKILL.md)**.
+
+#### If source is "fresh"
+
+Load **[gather-context-fresh.md](gather-context-fresh.md)** and follow its instructions.
+
+**STOP.** Wait for user response.
+
+→ Return to **[the skill](../SKILL.md)**.
+
+#### If source is "continue"
+
+Load **[gather-context-continue.md](gather-context-continue.md)** and follow its instructions.
 
 **STOP.** Wait for user response.
 
