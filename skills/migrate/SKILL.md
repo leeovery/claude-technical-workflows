@@ -1,5 +1,6 @@
 ---
 name: migrate
+user-invocable: false
 allowed-tools: Bash(.claude/skills/migrate/scripts/migrate.sh)
 ---
 

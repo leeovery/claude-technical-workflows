@@ -123,7 +123,7 @@ hooks/
 
 Skills are organised in two tiers:
 
-**Entry-point skills** (`/start-*`, `/status`, `/migrate`, etc.) are user-invocable. They gather context from files, prompts, or inline input, then invoke a processing skill. They have `disable-model-invocation: true` in their frontmatter (except `/migrate`, which other skills invoke).
+**Entry-point skills** (`/start-*`, `/status`, `/migrate`, etc.) are user-invocable. They gather context from files, prompts, or inline input, then invoke a processing skill. Utility entry-points (`/status`, `/view-plan`, `/link-dependencies`, `/workflow-start`) have `disable-model-invocation: true`. Phase entry-points (`/start-*`) do not, since they are invoked by `workflow-start` routing and `workflow-bridge` continuations. `/migrate` has `user-invocable: false` — it is model-invoked only (Step 0 of every entry-point skill).
 
 **Processing skills** (`technical-*`) are model-invocable. They receive inputs and process them without knowing where the inputs came from. Entry-point skills are responsible for gathering inputs.
 

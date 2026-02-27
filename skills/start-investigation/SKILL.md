@@ -1,6 +1,5 @@
 ---
 name: start-investigation
-disable-model-invocation: true
 allowed-tools: Bash(.claude/skills/start-investigation/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/investigation/)
 hooks:
   PreToolUse:

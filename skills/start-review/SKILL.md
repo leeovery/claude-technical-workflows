@@ -1,6 +1,5 @@
 ---
 name: start-review
-disable-model-invocation: true
 allowed-tools: Bash(.claude/skills/start-review/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/planning/), Bash(ls .workflows/implementation/)
 hooks:
   PreToolUse:
