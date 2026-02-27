@@ -61,121 +61,56 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 ---
 
-## What to Capture
+## Output Formatting
 
-- **Back-and-forth debates**: Challenging, prolonged discussions show how we decided X over Y
-- **Small details**: If discussed, it mattered - edge cases, constraints, concerns
-- **Competing solutions**: Why A won over B and C when all looked good
-- **The journey**: False paths, "aha" moments, course corrections
-- **Goal**: Solve edge cases and problems before planning
+When announcing a new step, output `── ── ── ── ──` on its own line before the step heading.
 
-**On length**: Discussions can be thousands of lines. Length = whatever needed to fully capture discussion, debates, edge cases, false paths. Terseness preferred, but comprehensive documentation more important. Don't summarize - document.
+---
 
-See **[meeting-assistant.md](references/meeting-assistant.md)** for detailed approach.
+## Step 0: Resume Detection
 
-## Structure
+Check if `.workflows/discussion/{topic}.md` already exists.
 
-**Output**: `.workflows/discussion/{topic}.md`
+#### If the file exists
 
-Use **[template.md](references/template.md)** for structure:
-
-- **Document-level**: Context, references, questions list
-- **Per-question**: Each question gets its own section with options, journey, and decision
-- **Summary**: Key insights, current state, next steps
-
-**Per-question structure** keeps the reasoning contextual. Options considered, false paths, debates, and "aha" moments belong with the specific question they relate to - not as separate top-level sections. This preserves the journey alongside the decision.
-
-## Do / Don't
-
-**Do**: Capture debates, edge cases, why solutions won/lost, high-level context, focus on "why"
-
-**Don't**: Transcribe verbatim, write code/implementation, create build phases, skip context
-
-See **[guidelines.md](references/guidelines.md)** for best practices and anti-hallucination techniques.
-
-## Write to Disk and Commit Frequently
-
-The discussion file is your memory. Context compaction is lossy — what's not on disk is lost. Don't hold content in conversation waiting for a "complete" answer. Partial, provisional documentation is expected and valuable.
-
-**Write to the file at natural moments:**
-
-- A micro-decision is reached (even if provisional)
-- A piece of the puzzle is solved
-- The discussion is about to branch or fork
-- A question is answered or a new one uncovered
-- Before context refresh
-
-These are natural pauses, not every exchange. Document the reasoning and context — not a verbatim transcript.
-
-**After writing, git commit.** Commits let you track, backtrack, and recover after compaction. Don't batch — commit each time you write.
-
-**Create the file early.** After understanding the topic and initial questions, create the discussion file with frontmatter, context, and the questions list. Don't wait until you have answers.
-
-## Concluding a Discussion
-
-When the user indicates they want to conclude:
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-- **`y`/`yes`** — Conclude discussion and mark as concluded
-- **Comment** — Add context before concluding
-· · · · · · · · · · · ·
-```
+Read it. Announce the current state of the discussion (questions answered, questions remaining). Ask the user whether to continue or restart.
 
 **STOP.** Wait for user response.
 
-#### If comment
+#### If the file does not exist
 
-Incorporate the user's context into the discussion, commit, then re-present the sign-off prompt above.
+→ Proceed to **Step 1**.
 
-#### If yes
+---
 
-1. Update frontmatter `status: concluded`
-2. Final commit
-3. Check the artifact frontmatter for `work_type`
+## Step 1: Initialize Discussion
 
-**If work_type is set** (feature, bugfix, or greenfield):
+1. Ensure the discussion directory exists: `.workflows/discussion/`
+2. Load **[template.md](references/template.md)** — use it to create `.workflows/discussion/{topic}.md`
+3. Fill frontmatter: topic, `status: in-progress`, today's date, and `research_source` if provided in handoff
+4. Populate Context section and initial Questions list
+5. Commit the initial file
 
-This discussion is part of a pipeline. Invoke the `/workflow:bridge` skill:
+→ Proceed to **Step 2**.
 
-```
-Pipeline bridge for: {topic}
-Work type: {work_type from artifact frontmatter}
-Completed phase: discussion
+---
 
-Invoke the workflow:bridge skill to enter plan mode with continuation instructions.
-```
+## Step 2: Load Discussion Guidelines
 
-**If work_type is not set and other in-progress discussions exist:**
+Load **[discussion-guidelines.md](references/discussion-guidelines.md)** and follow its instructions as written.
 
-> *Output the next fenced block as a code block:*
+→ Proceed to **Step 3**.
 
-```
-Discussion concluded: {topic}
+---
 
-Remaining in-progress discussions:
-  • {topic-1}
-  • {topic-2}
+## Step 3: Discussion Session
 
-To continue, clear your context and run /start-discussion to pick up the next topic.
-```
+Load **[discussion-session.md](references/discussion-session.md)** and follow its instructions as written.
 
-**If work_type is not set and no in-progress discussions remain:**
+→ Proceed to **Step 4**.
 
-> *Output the next fenced block as a code block:*
+---
 
-```
-Discussion concluded: {topic}
+## Step 4: Conclude Discussion
 
-All discussions are now concluded.
-```
-
-**Do not offer to continue with another discussion in this session.** Each discussion benefits from a fresh context — continuing risks compaction-related information loss and reduced attention. Always advise the user to clear context first.
-
-## Quick Reference
-
-- **Approach**: **[meeting-assistant.md](references/meeting-assistant.md)** - Dual role, workflow
-- **Template**: **[template.md](references/template.md)** - Structure
-- **Guidelines**: **[guidelines.md](references/guidelines.md)** - Best practices
+Load **[conclude-discussion.md](references/conclude-discussion.md)** and follow its instructions as written.
