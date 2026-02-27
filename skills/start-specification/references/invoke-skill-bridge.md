@@ -29,7 +29,7 @@ Invoke the [technical-specification](../../technical-specification/SKILL.md) ski
 
 Construct the handoff based on the work type and verb.
 
-#### If work_type is feature or greenfield
+#### If work_type is feature
 
 ```
 Specification session for: {topic}
