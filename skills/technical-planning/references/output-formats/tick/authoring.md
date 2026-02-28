@@ -61,6 +61,14 @@ Acceptance criteria:
 - Passes user context to downstream handlers"
 ```
 
+## Post-Creation Verification
+
+After every `tick create`, run `tick show <task-id>` and confirm that the title, description, and parent were all set correctly.
+
+#### If any field is empty or wrong
+
+Load **[updating.md](updating.md)** and follow its instructions to correct the field using `tick update`.
+
 ## Task Properties
 
 ### Status
