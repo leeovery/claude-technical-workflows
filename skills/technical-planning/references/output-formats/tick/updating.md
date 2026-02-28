@@ -16,7 +16,7 @@ Tick uses dedicated commands for each status transition:
 
 ## Updating Task Content
 
-**Sandbox mode**: When updating large descriptions, use the Write tool + cat pattern to avoid sandbox temp file issues. See [authoring.md](authoring.md) for details.
+**CRITICAL**: Always pass descriptions as inline quoted strings. See [authoring.md](authoring.md) for constraints.
 
 To update a task's properties:
 
@@ -25,6 +25,10 @@ To update a task's properties:
 - **Priority**: `tick update <task-id> --priority 1`
 - **Parent**: `tick update <task-id> --parent <new-parent-id>` (pass empty string to clear)
 - **Dependencies**: See [graph.md](graph.md)
+
+## Post-Update Verification
+
+After every `tick update`, run `tick show <task-id>` and confirm that the updated fields were set correctly. If any field is empty or wrong, re-run the update.
 
 ## Phase / Parent Status
 
