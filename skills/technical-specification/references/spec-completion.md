@@ -1,4 +1,4 @@
-# Specification Completion
+# Assess Type & Conclude
 
 *Reference for **[technical-specification](../SKILL.md)***
 
@@ -20,20 +20,39 @@ Before asking for sign-off, assess whether this is a **feature** or **cross-cutt
 
 Present your assessment to the user:
 
+> *Output the next fenced block as a code block:*
+
+```
+Type Assessment
+
+This specification appears to be a {feature/cross-cutting} specification.
+
+{Brief rationale — e.g., "It defines a caching strategy that will inform how
+multiple features handle data retrieval, rather than being a standalone piece
+of functionality to build."}
+
+  Feature specs      — proceed to planning and implementation
+  Cross-cutting specs — referenced by feature plans, no own implementation plan
+```
+
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-This specification appears to be a **[feature/cross-cutting]** specification.
-
-[Brief rationale — e.g., "It defines a caching strategy that will inform how multiple features handle data retrieval, rather than being a standalone piece of functionality to build."]
-
-- **Feature specs** proceed to planning and implementation
-- **Cross-cutting specs** are referenced by feature plans but don't have their own implementation plan
-
-Does this assessment seem correct?
+· · · · · · · · · · · ·
+- **`y`/`yes`** — Confirm type assessment
+- **Comment** — Suggest a different classification
+· · · · · · · · · · · ·
 ```
 
-**STOP.** Wait for user confirmation before proceeding.
+**STOP.** Wait for user response.
+
+#### If comment
+
+Discuss the user's suggested classification, re-assess, and re-present the assessment display and prompt above.
+
+#### If yes
+
+→ Proceed to **B. Verify Tracking Files Complete**.
 
 ---
 

@@ -6,6 +6,8 @@
 
 Two-phase review of the specification. Phase 1 (Input Review) compares against source material. Phase 2 (Gap Analysis) reviews the specification as a standalone document.
 
+**CRITICAL**: Phases are strictly sequential — never dispatch both agents in parallel. Phase 1 findings are applied to the specification before Phase 2 runs, so gap analysis reviews the updated document.
+
 **Why this matters**: The specification is the golden document. Plans are built from it, and those plans inform implementation. If a detail isn't in the specification, it won't make it to the plan, and therefore won't be built. Worse, the implementation agent may hallucinate to fill gaps, potentially getting it wrong. The goal is a specification robust enough that an agent or human could pick it up, create plans, break it into tasks, and write the code.
 
 Load **[review-tracking-format.md](review-tracking-format.md)** — internalize the tracking file format for both phases.
@@ -66,8 +68,20 @@ were still found last cycle) or skip to completion.
 
 ## B. Phase 1 — Input Review
 
-1. Load **[review-input.md](review-input.md)** and follow its instructions (analysis + tracking file creation).
-2. Load **[process-review-findings.md](process-review-findings.md)** and follow its instructions to process findings with the user.
+Dispatch the `specification-review-input` agent via the Task tool:
+
+- **Agent file**: `../../../agents/specification-review-input.md`
+- **Specification path**: the specification file path
+- **Source material paths**: all source document paths from the specification frontmatter
+- **Topic name**: the current topic
+- **Cycle number**: the current cycle number
+- **Review tracking format path**: `review-tracking-format.md` (in this references directory)
+
+Wait for the agent to return. Record its STATUS as `phase_1_status`.
+
+**If the agent created a tracking file**, commit it: `spec({topic}): input review cycle {N}`
+
+Load **[process-review-findings.md](process-review-findings.md)** and follow its instructions to process findings with the user.
 
 → Proceed to **C. Phase 2 — Gap Analysis**.
 
@@ -75,8 +89,19 @@ were still found last cycle) or skip to completion.
 
 ## C. Phase 2 — Gap Analysis
 
-1. Load **[review-gap-analysis.md](review-gap-analysis.md)** and follow its instructions (analysis + tracking file creation).
-2. Load **[process-review-findings.md](process-review-findings.md)** and follow its instructions to process findings with the user.
+Dispatch the `specification-review-gap-analysis` agent via the Task tool:
+
+- **Agent file**: `../../../agents/specification-review-gap-analysis.md`
+- **Specification path**: the specification file path
+- **Topic name**: the current topic
+- **Cycle number**: the current cycle number
+- **Review tracking format path**: `review-tracking-format.md` (in this references directory)
+
+Wait for the agent to return. Record its STATUS as `phase_2_status`.
+
+**If the agent created a tracking file**, commit it: `spec({topic}): gap analysis cycle {N}`
+
+Load **[process-review-findings.md](process-review-findings.md)** and follow its instructions to process findings with the user.
 
 → Proceed to **D. Re-Loop Prompt**.
 
@@ -84,11 +109,11 @@ were still found last cycle) or skip to completion.
 
 ## D. Re-Loop Prompt
 
-#### If no findings were surfaced in either phase of this cycle
+#### If `phase_1_status` is "clean" and `phase_2_status` is "clean"
 
 → Proceed to **E. Completion** (nothing to re-analyse).
 
-#### If findings were surfaced
+#### If either status is "findings"
 
 Check `finding_gate_mode` and `review_cycle` in the specification frontmatter.
 

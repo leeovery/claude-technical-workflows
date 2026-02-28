@@ -193,7 +193,7 @@ Load **[spec-review.md](references/spec-review.md)** and follow its instructions
 
 ---
 
-## Step 7: Conclude Specification
+## Step 7: Assess Type & Conclude
 
 Load **[spec-completion.md](references/spec-completion.md)** and follow its instructions as written.
 
