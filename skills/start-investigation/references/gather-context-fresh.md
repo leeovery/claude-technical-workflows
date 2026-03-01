@@ -59,7 +59,7 @@ An investigation named "{topic}" already exists.
 
 **STOP.** Wait for user response.
 
-#### If resuming
+#### If `resuming`
 
 Set source="continue".
 

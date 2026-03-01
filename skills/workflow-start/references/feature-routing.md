@@ -33,11 +33,11 @@ Ready to start a new feature.
 
 **STOP.** Wait for user response.
 
-#### If yes
+#### If `yes`
 
 Invoke `start-feature`. It will set `work_type: feature` automatically.
 
-#### If no
+#### If `no`
 
 → Return to **[the skill](../SKILL.md)** for **Step 2** (work type selection).
 
@@ -85,7 +85,7 @@ Recreate with actual topics and `phase_label` values from discovery.
 
 Parse the user's selection, then follow the instructions below.
 
-#### If "start new feature"
+#### If `start new feature`
 
 Invoke `/start-feature`. It will set `work_type: feature` automatically.
 

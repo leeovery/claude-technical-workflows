@@ -48,7 +48,7 @@ A discussion named "{topic}" already exists.
 
 **STOP.** Wait for user response.
 
-#### If resuming
+#### If `resuming`
 
 Check the discussion status. If in-progress:
 

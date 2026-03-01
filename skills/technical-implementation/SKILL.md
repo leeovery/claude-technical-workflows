@@ -100,7 +100,7 @@ Complete ALL setup steps before proceeding.
 
 Load **[environment-setup.md](references/environment-setup.md)** and follow its instructions.
 
-#### If `.workflows/environment-setup.md` states "No special setup required"
+#### If `.workflows/environment-setup.md` states `No special setup required`
 
 → Proceed to **Step 2**.
 
@@ -319,11 +319,11 @@ Before marking complete, present the sign-off:
 
 **STOP.** Wait for user response.
 
-#### If comment
+#### If `comment`
 
 Discuss the user's context. If additional work is needed, route back to **Step 6** or **Step 7** as appropriate. Otherwise, re-present the sign-off prompt above.
 
-#### If yes
+#### If `yes`
 
 Update the tracking file (`.workflows/implementation/{topic}/tracking.md`):
 - Set `status: completed`

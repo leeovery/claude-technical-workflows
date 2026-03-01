@@ -89,11 +89,11 @@ Check for arguments: work_type = `$0`, topic = `$1`
 
 Investigation is always bugfix work_type. If work_type is provided, it should be `bugfix`.
 
-#### If work_type and topic are both provided
+#### If `work_type` and `topic` are both provided
 
 → Proceed to **Step 3** (Validate Investigation).
 
-#### If work_type is provided without topic
+#### If `work_type` is provided without `topic`
 
 → Proceed to **Step 4** (Route Based on Scenario).
 
@@ -107,7 +107,7 @@ Investigation is always bugfix work_type. If work_type is provided, it should be
 
 Load **[validate-investigation.md](references/validate-investigation.md)** and follow its instructions as written.
 
-#### If resume
+#### If `resume`
 
 → Proceed to **Step 6**.
 
@@ -121,7 +121,7 @@ Load **[validate-investigation.md](references/validate-investigation.md)** and f
 
 Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
 
-#### If resuming
+#### If `resuming`
 
 → Proceed to **Step 6**.
 

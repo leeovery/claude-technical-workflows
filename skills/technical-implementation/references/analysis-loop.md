@@ -97,6 +97,12 @@ Commit the analysis findings:
 impl({topic}): analysis cycle {N} — findings
 ```
 
+#### If all three agents returned `STATUS: clean`
+
+→ Return to **[the skill](../SKILL.md)** for **Step 8**.
+
+#### Otherwise
+
 → Proceed to **D. Dispatch Synthesis Agent**.
 
 ---
@@ -209,7 +215,7 @@ Update `status: skipped` in the staging file.
 
 → Present the next pending task, or proceed to routing below if all tasks processed.
 
-#### If comment
+#### If `comment`
 
 Revise the task content in the staging file based on the user's feedback. Re-present this task.
 
