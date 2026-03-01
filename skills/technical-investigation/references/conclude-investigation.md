@@ -4,26 +4,31 @@
 
 ---
 
-When the root cause is identified and documented:
+The user has already reviewed findings and agreed on fix direction. This step confirms the investigation is complete and handles pipeline continuation.
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
-Root cause identified. Ready to conclude?
+Investigation complete. Ready to conclude?
 
 - **`y`/`yes`** — Conclude investigation and proceed to specification
-- **`m`/`more`** — Continue investigating (more analysis needed)
+- **Comment** — Add context before concluding
+- **`r`/`reopen`** — Reopen investigation (more analysis needed)
 · · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
 
-#### If more
+#### If reopen
 
-Continue investigation. Ask what aspects need more analysis.
+Ask what aspects need more analysis.
 
 → Return to **[the skill](../SKILL.md)** for **Step 3**.
+
+#### If Comment
+
+Incorporate the user's context into the investigation file and commit. Re-present the same conclusion prompt.
 
 #### If yes
 
@@ -37,7 +42,7 @@ Continue investigation. Ask what aspects need more analysis.
 Investigation concluded: {topic}
 
 Root cause: {brief summary}
-Fix direction: {proposed approach}
+Fix direction: {chosen approach}
 
 The investigation is ready for specification. The specification will
 detail the exact fix approach, acceptance criteria, and testing plan.
