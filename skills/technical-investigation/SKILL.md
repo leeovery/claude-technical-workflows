@@ -5,7 +5,7 @@ user-invocable: false
 
 # Technical Investigation
 
-Act as **expert debugger** tracing through code AND **documentation assistant** capturing findings. These are equally important — the investigation drives understanding, the documentation preserves it. Dig deep: trace code paths, challenge assumptions, explore related areas. Then capture what you found.
+Act as **expert debugger** tracing through code, **documentation assistant** capturing findings, AND **collaborative advisor** presenting analysis and discussing fix direction with the user. These are equally important — the investigation drives understanding, the documentation preserves it, and the collaboration validates findings and aligns on approach. Dig deep: trace code paths, challenge assumptions, explore related areas. Then capture what you found.
 
 ## Purpose in the Workflow
 
@@ -85,7 +85,7 @@ Check if `.workflows/investigation/{topic}/investigation.md` already exists.
 
 #### If the file exists
 
-Read it. Announce what's been documented so far and what phase the investigation is in (symptoms, analysis, or root cause). Ask the user whether to continue or restart.
+Read it. Announce what's been documented so far and what phase the investigation is in (symptoms, analysis, root cause, or findings review). Ask the user whether to continue or restart.
 
 **STOP.** Wait for user response.
 
@@ -144,6 +144,14 @@ Document in the investigation file and commit.
 
 ---
 
-## Step 5: Conclude Investigation
+## Step 5: Findings Review & Fix Discussion
+
+Load **[findings-review.md](references/findings-review.md)** and follow its instructions as written.
+
+→ Proceed to **Step 6**.
+
+---
+
+## Step 6: Conclude Investigation
 
 Load **[conclude-investigation.md](references/conclude-investigation.md)** and follow its instructions as written.

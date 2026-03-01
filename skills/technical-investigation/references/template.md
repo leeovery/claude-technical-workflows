@@ -114,21 +114,29 @@ date: {YYYY-MM-DD}
 
 ## Fix Direction
 
-### Proposed Approach
+### Chosen Approach
 
-{High-level description of the fix direction}
+{High-level description of the chosen fix direction}
 
-### Alternatives Considered
+**Deciding factor:** {Why this approach was selected over alternatives}
 
-**Alternative 1:** {Approach}
-- Pros: {benefits}
-- Cons: {drawbacks}
-- Why not: {reason}
+### Options Explored
 
-**Alternative 2:** {Approach}
-- Pros: {benefits}
-- Cons: {drawbacks}
-- Why not: {reason}
+**Option 1:** {Approach} (chosen)
+- Trade-offs: {key pros and cons}
+- Fits when: {conditions where this is the right choice}
+
+**Option 2:** {Approach}
+- Trade-offs: {key pros and cons}
+- Why not: {reason this wasn't chosen}
+
+**Option 3:** {Approach}
+- Trade-offs: {key pros and cons}
+- Why not: {reason this wasn't chosen}
+
+### Discussion
+
+{Journey notes from the findings review — user priorities, concerns raised, edge cases surfaced, what shifted thinking. Brief for simple bugs, detailed for complex.}
 
 ### Testing Recommendations
 
@@ -161,4 +169,4 @@ Document your investigation journey. Even dead ends are valuable — they show w
 
 ### Fix Direction Section
 
-Don't detail the implementation here — that's for the specification. Focus on high-level direction, alternatives, and risk assessment.
+Don't detail the implementation here — that's for the specification. Focus on high-level direction, options explored, and risk assessment. The chosen approach and discussion notes reflect the collaborative findings review — capture the decision journey, not just the outcome.
