@@ -122,17 +122,7 @@ date: {YYYY-MM-DD}
 
 ### Options Explored
 
-**Option 1:** {Approach} (chosen)
-- Trade-offs: {key pros and cons}
-- Fits when: {conditions where this is the right choice}
-
-**Option 2:** {Approach}
-- Trade-offs: {key pros and cons}
-- Why not: {reason this wasn't chosen}
-
-**Option 3:** {Approach}
-- Trade-offs: {key pros and cons}
-- Why not: {reason this wasn't chosen}
+{List whatever approaches were discussed — could be one, could be several. For each unchosen option, note why it wasn't selected.}
 
 ### Discussion
 

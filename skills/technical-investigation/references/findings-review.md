@@ -57,72 +57,36 @@ Re-present findings using the same format above.
 
 ## B. Fix Direction Discussion
 
-Present 2-3 viable fix approaches. Each should be a genuinely different strategy, not variations of the same idea.
+Present what the analysis surfaced about how to fix this. Let the findings guide the shape — there's no required number of approaches:
 
-> *Output the next fenced block as a code block:*
+- **One obvious fix?** Present it clearly with trade-offs and any risks.
+- **Multiple viable approaches?** Present each with trade-offs so the user can compare.
+- **Unclear?** Say so — this is a discussion, not a presentation.
 
-```
-Fix Approaches for: {topic}
-
-1. {Approach Name}
-   What:       {one-line description}
-   Trade-offs: {key pros and cons}
-   Fits when:  {conditions where this is the right choice}
-
-2. {Approach Name}
-   What:       {one-line description}
-   Trade-offs: {key pros and cons}
-   Fits when:  {conditions where this is the right choice}
-
-3. {Approach Name}
-   What:       {one-line description}
-   Trade-offs: {key pros and cons}
-   Fits when:  {conditions where this is the right choice}
-```
+Use a code block. Format naturally based on what there is to present — a single approach doesn't need numbered alternatives, multiple approaches benefit from comparison structure.
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
-Which approach, or what direction?
+What are your thoughts?
 
-- **Enter a number** to select an approach
-- **`d`/`discuss`** — Talk through trade-offs before deciding
+- **`y`/`yes`** — Agree with this direction
+- **Or provide feedback** to discuss, challenge, or suggest alternatives.
 · · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
 
-#### If discuss
+#### If the user provides feedback
 
-Engage in collaborative discussion about the approaches. Stay bounded — focus on:
-- Challenging assumptions about each approach
+Engage collaboratively. Stay bounded — focus on:
+- Challenging assumptions about approaches
 - Surfacing edge cases and risks
-- Exploring how each interacts with existing code
+- Exploring how fixes interact with existing code
 - Understanding user priorities (speed, safety, maintainability)
 
-Do not go into implementation detail — that belongs in the specification. When discussion reaches a natural decision point, re-present the approaches (updated if discussion changed them) and ask for selection.
-
-#### If a number is selected
-
-Acknowledge the selection. Present for confirmation:
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-Confirm fix direction: **{chosen approach name}**
-
-- **`y`/`yes`** — Confirm and document
-- **Comment** — Add context before confirming
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-#### If Comment
-
-Incorporate the user's context into your understanding. Re-present the same confirmation prompt.
+Do not go into implementation detail — that belongs in the specification. When discussion reaches a natural decision point, summarize the agreed direction and present for confirmation.
 
 #### If yes
 
