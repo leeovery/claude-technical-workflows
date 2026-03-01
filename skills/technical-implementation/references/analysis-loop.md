@@ -97,6 +97,14 @@ Commit the analysis findings:
 impl({topic}): analysis cycle {N} — findings
 ```
 
+#### If all three agents returned `STATUS: clean`
+
+No findings to synthesize — skip straight to completion.
+
+→ Return to **[the skill](../SKILL.md)** for **Step 8**.
+
+#### Otherwise
+
 → Proceed to **D. Dispatch Synthesis Agent**.
 
 ---
