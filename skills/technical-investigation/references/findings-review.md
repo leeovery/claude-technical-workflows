@@ -37,22 +37,15 @@ Why It Wasn't Caught:
 Do these findings match your understanding?
 
 - **`y`/`yes`** — Findings are correct, discuss fix direction
-- **`n`/`no`** — Something's off
-- **`q`/`questions`** — Questions about the analysis
+- Or just state your questions or concerns
 · · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
 
-#### If no
+#### If the user raises questions or concerns
 
-Address the user's concerns. Re-trace code paths if needed. Update the investigation file with corrections and commit.
-
-Re-present findings using the same format above.
-
-#### If questions
-
-Answer the user's questions about the analysis. Provide supporting evidence from the code trace. Update the investigation file if answers reveal new information, and commit.
+Address them directly. Re-trace code paths if needed. Provide supporting evidence from the code trace. Update the investigation file with corrections or new information, and commit.
 
 Re-present findings using the same format above.
 
