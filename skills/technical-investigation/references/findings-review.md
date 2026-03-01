@@ -37,15 +37,15 @@ Why It Wasn't Caught:
 Do these findings match your understanding?
 
 - **`y`/`yes`** — Findings are correct, discuss fix direction
-- Or just state your questions or concerns
+- **Or provide feedback** on what's off or unclear.
 · · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
 
-#### If the user raises questions or concerns
+#### If the user provides feedback
 
-Address them directly. Re-trace code paths if needed. Provide supporting evidence from the code trace. Update the investigation file with corrections or new information, and commit.
+Address their concerns directly. Re-trace code paths if needed. Provide supporting evidence from the code trace. Update the investigation file with corrections or new information, and commit.
 
 Re-present findings using the same format above.
 
