@@ -121,7 +121,7 @@ Load **[validate-investigation.md](references/validate-investigation.md)** and f
 
 Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
 
-#### If resuming
+#### If `resuming`
 
 → Proceed to **Step 6**.
 

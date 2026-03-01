@@ -215,7 +215,7 @@ Update `status: skipped` in the staging file.
 
 → Present the next pending task, or proceed to routing below if all tasks processed.
 
-#### If comment
+#### If `comment`
 
 Revise the task content in the staging file based on the user's feedback. Re-present this task.
 
