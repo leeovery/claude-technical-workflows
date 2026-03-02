@@ -123,6 +123,59 @@ function withLock(name, fn) {
 }
 
 // ---------------------------------------------------------------------------
+// Flag Parsing
+// ---------------------------------------------------------------------------
+
+/**
+ * Extract --phase and --topic flags from args.
+ * Returns { phase, topic, positional } where positional is remaining args.
+ */
+function parseFlags(args) {
+  let phase = null;
+  let topic = null;
+  const positional = [];
+
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === '--phase' && i + 1 < args.length) {
+      phase = args[++i];
+    } else if (args[i] === '--topic' && i + 1 < args.length) {
+      topic = args[++i];
+    } else {
+      positional.push(args[i]);
+    }
+  }
+
+  return { phase, topic, positional };
+}
+
+/**
+ * Resolve the internal JSON path segments for a phase+topic operation.
+ * Routes based on work_type: feature/bugfix → flat, epic → items.
+ *
+ * @param {string} workType - The work unit's work_type
+ * @param {string} phase - The phase name
+ * @param {string|null} topic - The topic name (null = whole phase)
+ * @param {string[]} fieldSegments - Additional field path segments
+ * @returns {string[]} Full path segments from manifest root
+ */
+function resolvePhaseSegments(workType, phase, topic, fieldSegments) {
+  const base = ['phases', phase];
+
+  if (!topic) {
+    // No topic — return the whole phase object (+ any field path)
+    return [...base, ...fieldSegments];
+  }
+
+  if (workType === 'epic') {
+    // Epic: phases.<phase>.items.<topic>[.field.path]
+    return [...base, 'items', topic, ...fieldSegments];
+  }
+
+  // Feature/bugfix: phases.<phase>[.field.path] (flat — topic is implicit)
+  return [...base, ...fieldSegments];
+}
+
+// ---------------------------------------------------------------------------
 // Validation
 // ---------------------------------------------------------------------------
 
@@ -158,8 +211,8 @@ function validatePhaseStatus(phase, value) {
 }
 
 /**
- * Validate a set operation based on the dot path and value.
- * Paths are relative to the manifest root (work unit name already stripped).
+ * Validate a set operation based on the resolved internal path and value.
+ * Segments are the full internal path from manifest root.
  */
 function validateSet(segments, value) {
   // Top-level status
@@ -233,6 +286,14 @@ function parseValue(raw) {
   }
 }
 
+function outputValue(value) {
+  if (value !== null && typeof value === 'object') {
+    process.stdout.write(JSON.stringify(value, null, 2) + '\n');
+  } else {
+    process.stdout.write(String(value) + '\n');
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Commands
 // ---------------------------------------------------------------------------
@@ -280,55 +341,94 @@ function cmdInit(args) {
 }
 
 function cmdGet(args) {
-  if (args.length !== 1) die('Usage: get <name>[.dot.path]');
+  const { phase, topic, positional } = parseFlags(args);
 
-  const parts = args[0].split('.');
-  const name = parts[0];
-  const segments = parts.slice(1);
+  if (positional.length < 1) die('Usage: get <name> [--phase <phase>] [--topic <topic>] [field.path]');
 
+  const name = positional[0];
   const manifest = readManifest(name);
 
-  if (segments.length === 0) {
-    process.stdout.write(JSON.stringify(manifest, null, 2) + '\n');
+  if (!phase) {
+    // Work-unit-level: get <name> [field]
+    if (positional.length === 1) {
+      process.stdout.write(JSON.stringify(manifest, null, 2) + '\n');
+      return;
+    }
+
+    const segments = positional[1].split('.');
+    const value = getByPath(manifest, segments);
+    if (value === undefined) {
+      die(`Path "${positional[1]}" not found in "${name}"`);
+    }
+    outputValue(value);
     return;
   }
+
+  // Phase-level: get <name> --phase <phase> [--topic <topic>] [field.path]
+  validatePhase(phase);
+
+  const fieldSegments = positional.length > 1 ? positional[1].split('.') : [];
+  const segments = resolvePhaseSegments(manifest.work_type, phase, topic, fieldSegments);
 
   const value = getByPath(manifest, segments);
   if (value === undefined) {
     die(`Path "${segments.join('.')}" not found in "${name}"`);
   }
-
-  if (value !== null && typeof value === 'object') {
-    process.stdout.write(JSON.stringify(value, null, 2) + '\n');
-  } else {
-    process.stdout.write(String(value) + '\n');
-  }
+  outputValue(value);
 }
 
 function cmdSet(args) {
-  if (args.length !== 2) die('Usage: set <name>.<dot.path> <value>');
+  const { phase, topic, positional } = parseFlags(args);
 
-  const parts = args[0].split('.');
-  if (parts.length < 2) die('Set requires at least one path segment after the name');
+  if (!phase) {
+    // Work-unit-level: set <name> <field> <value>
+    if (positional.length !== 3) die('Usage: set <name> <field> <value>');
 
-  const name = parts[0];
-  const segments = parts.slice(1);
-  const value = parseValue(args[1]);
+    const name = positional[0];
+    const segments = positional[1].split('.');
+    const value = parseValue(positional[2]);
 
-  // Validate before acquiring lock
-  if (typeof value === 'string') {
-    validateSet(segments, value);
+    if (typeof value === 'string') {
+      validateSet(segments, value);
+    }
+
+    if (!fs.existsSync(manifestPath(name))) {
+      die(`Work unit "${name}" not found`);
+    }
+
+    withLock(name, () => {
+      const manifest = readManifest(name);
+      setByPath(manifest, segments, value);
+      writeManifestAtomic(name, manifest);
+    });
+    return;
   }
 
-  // Verify work unit exists
+  // Phase-level: set <name> --phase <phase> --topic <topic> <field.path> <value>
+  if (positional.length !== 3) die('Usage: set <name> --phase <phase> --topic <topic> <field.path> <value>');
+
+  const name = positional[0];
+  validatePhase(phase);
+  if (!topic) die('--topic is required for phase-level set');
+
+  const fieldSegments = positional[1].split('.');
+  const value = parseValue(positional[2]);
+
   if (!fs.existsSync(manifestPath(name))) {
     die(`Work unit "${name}" not found`);
   }
 
+  const manifest = readManifest(name);
+  const segments = resolvePhaseSegments(manifest.work_type, phase, topic, fieldSegments);
+
+  if (typeof value === 'string') {
+    validateSet(segments, value);
+  }
+
   withLock(name, () => {
-    const manifest = readManifest(name);
-    setByPath(manifest, segments, value);
-    writeManifestAtomic(name, manifest);
+    const fresh = readManifest(name);
+    setByPath(fresh, segments, value);
+    writeManifestAtomic(name, fresh);
   });
 }
 
@@ -375,10 +475,13 @@ function cmdList(args) {
 }
 
 function cmdAddItem(args) {
-  if (args.length !== 3) die('Usage: add-item <name> <phase> <item-name>');
+  const { phase, topic, positional } = parseFlags(args);
 
-  const [name, phase, itemName] = args;
+  if (positional.length !== 1 || !phase || !topic) {
+    die('Usage: add-item <name> --phase <phase> --topic <topic>');
+  }
 
+  const name = positional[0];
   validatePhase(phase);
 
   if (!fs.existsSync(manifestPath(name))) {
@@ -388,20 +491,32 @@ function cmdAddItem(args) {
   withLock(name, () => {
     const manifest = readManifest(name);
 
-    // Ensure phases.<phase>.items exists
     if (!manifest.phases) manifest.phases = {};
-    if (!manifest.phases[phase]) manifest.phases[phase] = {};
-    if (!manifest.phases[phase].items) manifest.phases[phase].items = {};
 
-    if (manifest.phases[phase].items[itemName]) {
-      die(`Item "${itemName}" already exists in phase "${phase}" of "${name}"`);
+    if (manifest.work_type === 'epic') {
+      // Epic: create phases.<phase>.items.<topic> = { status: "in-progress" }
+      if (!manifest.phases[phase]) manifest.phases[phase] = {};
+      if (!manifest.phases[phase].items) manifest.phases[phase].items = {};
+
+      if (manifest.phases[phase].items[topic]) {
+        die(`Item "${topic}" already exists in phase "${phase}" of "${name}"`);
+      }
+
+      manifest.phases[phase].items[topic] = { status: 'in-progress' };
+    } else {
+      // Feature/bugfix: create phases.<phase> = { status: "in-progress" }
+      if (manifest.phases[phase] && manifest.phases[phase].status) {
+        die(`Phase "${phase}" already exists in "${name}"`);
+      }
+
+      if (!manifest.phases[phase]) manifest.phases[phase] = {};
+      manifest.phases[phase].status = 'in-progress';
     }
 
-    manifest.phases[phase].items[itemName] = { status: 'in-progress' };
     writeManifestAtomic(name, manifest);
   });
 
-  process.stdout.write(`Added item "${itemName}" to ${phase} phase of "${name}"\n`);
+  process.stdout.write(`Added "${topic}" to ${phase} phase of "${name}"\n`);
 }
 
 function cmdArchive(args) {

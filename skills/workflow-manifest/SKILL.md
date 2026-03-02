@@ -8,13 +8,45 @@ allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
 
 CLI tool for reading and writing work unit manifest files. Single source of truth for all workflow state.
 
-**`{work_unit}`** in skill files refers to the work unit's **name** — the manifest `name` field and the directory name under `.workflows/`. Examples: `dark-mode`, `payments-overhaul`, `fix-auth-redirect`. This is the same value that was previously called `{topic}` in phase-first paths.
+**`{work_unit}`** is the top-level directory name under `.workflows/` (e.g., `dark-mode`, `payments-overhaul`). **`{topic}`** is the item within a phase (e.g., discussion name, spec name, plan name). For feature/bugfix they share the same value; for epic they're distinct.
 
 ## Invocation
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js <command> [args]
 ```
+
+## Domain-Aware Flag Syntax
+
+Skills provide logical coordinates via `--phase` and `--topic` flags. The CLI routes to the correct JSON path internally based on work_type. Skills never know or care about the manifest's internal structure (flat for feature/bugfix, items for epic).
+
+```bash
+MANIFEST="node .claude/skills/workflow-manifest/scripts/manifest.js"
+
+# Phase operations (--phase and --topic flags):
+$MANIFEST get {work_unit} --phase discussion --topic {topic} [field.path]
+$MANIFEST set {work_unit} --phase discussion --topic {topic} field.path value
+$MANIFEST add-item {work_unit} --phase discussion --topic {topic}
+
+# Work-unit operations (no flags):
+$MANIFEST get {work_unit} [field]
+$MANIFEST set {work_unit} field value
+
+# Management (unchanged):
+$MANIFEST init name --work-type type --description "..."
+$MANIFEST list [--status s] [--work-type t]
+$MANIFEST archive name
+```
+
+**`--topic` is optional for get** — if omitted, returns the whole phase object. Discovery scripts use this to iterate items:
+```bash
+$MANIFEST get {work_unit} --phase discussion              # whole phase (for iteration)
+$MANIFEST get {work_unit} --phase discussion --topic {topic} status  # specific item field
+```
+
+**Internal routing (CLI handles, skills don't know):**
+- Feature/bugfix: `--phase discussion --topic auth-flow status` → `phases.discussion.status`
+- Epic: `--phase discussion --topic payment-processing status` → `phases.discussion.items.payment-processing.status`
 
 ## Commands
 
@@ -30,27 +62,48 @@ Creates `.workflows/<name>/manifest.json` with identity fields and empty phases.
 
 ### `get`
 
-Read a value or subtree by dot path. First segment is the work unit name (directory), remaining segments are the JSON path.
+Read a value or subtree. Two modes:
 
+**Work-unit level** (no flags):
 ```bash
 # Full manifest
 node .claude/skills/workflow-manifest/scripts/manifest.js get <name>
 
 # Scalar value — output raw (no quotes)
-node .claude/skills/workflow-manifest/scripts/manifest.js get <name>.status
+node .claude/skills/workflow-manifest/scripts/manifest.js get <name> status
 
 # Subtree — output as formatted JSON
-node .claude/skills/workflow-manifest/scripts/manifest.js get <name>.phases.discussion
+node .claude/skills/workflow-manifest/scripts/manifest.js get <name> phases
+```
+
+**Phase level** (with flags):
+```bash
+# Whole phase object
+node .claude/skills/workflow-manifest/scripts/manifest.js get <name> --phase discussion
+
+# Specific field within phase+topic context
+node .claude/skills/workflow-manifest/scripts/manifest.js get <name> --phase discussion --topic auth-flow status
+
+# Nested field path
+node .claude/skills/workflow-manifest/scripts/manifest.js get <name> --phase specification --topic auth-flow sources.auth-api.status
 ```
 
 Errors to stderr with non-zero exit if the path does not exist.
 
 ### `set`
 
-Write a value by dot path. Auto-creates intermediate keys.
+Write a value. Two modes:
 
+**Work-unit level** (no flags):
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set <name>.phases.discussion.status concluded
+node .claude/skills/workflow-manifest/scripts/manifest.js set <name> description "Updated description"
+node .claude/skills/workflow-manifest/scripts/manifest.js set <name> status archived
+```
+
+**Phase level** (with flags):
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set <name> --phase discussion --topic auth-flow status concluded
+node .claude/skills/workflow-manifest/scripts/manifest.js set <name> --phase planning --topic auth-flow task_gate_mode auto
 ```
 
 Values are parsed as JSON first (for arrays, objects, numbers, booleans), falling back to string. Validates structural fields:
@@ -83,13 +136,16 @@ Output: JSON array of manifest objects.
 
 ### `add-item`
 
-Register an item within an epic's phase. Convenience for creating an item with `status: in-progress`.
+Register a topic within a phase. Behavior varies by work type:
+
+- **Epic**: creates `phases.<phase>.items.<topic>` with `{ "status": "in-progress" }`
+- **Feature/bugfix**: creates `phases.<phase>` with `{ "status": "in-progress" }` (flat — topic is implicit)
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js add-item <name> <phase> <item-name>
+node .claude/skills/workflow-manifest/scripts/manifest.js add-item <name> --phase discussion --topic <topic>
 ```
 
-Creates `phases.<phase>.items.<item-name>` with `{ "status": "in-progress" }`. Errors if item already exists.
+Errors if item/phase already exists.
 
 ### `archive`
 
@@ -131,4 +187,4 @@ Item-level statuses within epic phases follow the same phase-level rules.
 - **File locking**: `.lock` file next to manifest, exclusive create (`wx` flag), 30s stale detection. Prevents concurrent session conflicts.
 - **Atomic writes**: write to `.tmp` then `fs.renameSync`. No partial writes.
 - **Auto-creation**: `init` creates the work unit directory. Phase directories are created by skills when they enter that phase, not by the CLI.
-- **Dot path convention**: `<work_unit>.<json.path>` — first segment resolves to `.workflows/<work_unit>/manifest.json`, remaining segments navigate the JSON structure.
+- **Domain routing**: `--phase` and `--topic` flags let skills use logical coordinates. The CLI resolves to the correct internal JSON path based on work_type (flat for feature/bugfix, items for epic).
