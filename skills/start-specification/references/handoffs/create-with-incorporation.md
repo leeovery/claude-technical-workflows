@@ -16,12 +16,12 @@ Saving session state so Claude can pick up where it left off if the conversation
 .claude/hooks/workflows/write-session-state.sh \
   "{work_unit}" \
   "skills/technical-specification/SKILL.md" \
-  ".workflows/{work_unit}/specification/specification.md"
+  ".workflows/{work_unit}/specification/{topic}/specification.md"
 ```
 
 This skill's purpose is now fulfilled. Invoke the [technical-specification](../../../technical-specification/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded — it contains the instructions for how to proceed.
 
-Determine work_type: use the value from Step 2 if available. Otherwise, read work_type from the manifest (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.work_type`).
+Determine work_type: use the value from Step 2 if available. Otherwise, read work_type from the manifest (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type`).
 
 ```
 Specification session for: {Title Case Name}
@@ -32,9 +32,9 @@ Source discussions:
 - .workflows/{work_unit}/discussion/{discussion-name}.md
 
 Existing specifications to incorporate:
-- .workflows/{source_work_unit}/specification/specification.md (covers: {discussion-name} discussion)
+- .workflows/{work_unit}/specification/{source-topic}/specification.md (covers: {discussion-name} discussion)
 
-Output: .workflows/{work_unit}/specification/specification.md
+Output: .workflows/{work_unit}/specification/{topic}/specification.md
 
 Context: This consolidates multiple sources. The existing specification should be incorporated - extract and adapt its content alongside the discussion material. The result should be a unified specification, not a simple merge.
 

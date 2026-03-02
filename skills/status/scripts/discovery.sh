@@ -163,7 +163,7 @@ for (const u of units) {
         let totalTasks = 0;
         const planFmt = (phases.planning || {}).format || (phases.implementation || {}).format;
         if (planFmt === 'local-markdown') {
-            const tasksDir = path.join(baseDir, 'planning', 'tasks');
+            const tasksDir = path.join(baseDir, 'planning', name, 'tasks');
             try {
                 totalTasks = fs.readdirSync(tasksDir).filter(f => f.endsWith('.md')).length;
             } catch (_) {}

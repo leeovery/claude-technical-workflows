@@ -44,34 +44,34 @@ else
 
     for name in $unit_names; do
         # Check if planning phase exists
-        planning_status=$($MANIFEST get "$name".phases.planning.status 2>/dev/null || echo "")
+        planning_status=$($MANIFEST get "$name" --raw phases.planning.status 2>/dev/null || echo "")
         [ -z "$planning_status" ] && continue
 
         # Read planning phase data
-        work_type=$($MANIFEST get "$name".work_type 2>/dev/null || echo "unknown")
-        format=$($MANIFEST get "$name".phases.planning.format 2>/dev/null || echo "MISSING")
+        work_type=$($MANIFEST get "$name" work_type 2>/dev/null || echo "unknown")
+        format=$($MANIFEST get "$name" --raw phases.planning.format 2>/dev/null || echo "MISSING")
 
         # Check if planning.md file exists
-        plan_file=".workflows/${name}/planning/planning.md"
+        plan_file=".workflows/${name}/planning/${name}/planning.md"
         if [ ! -f "$plan_file" ]; then
             continue
         fi
 
         # Check if specification exists
-        spec_file=".workflows/${name}/specification/specification.md"
+        spec_file=".workflows/${name}/specification/${name}/specification.md"
         spec_exists="false"
         if [ -f "$spec_file" ]; then
             spec_exists="true"
         fi
 
         # Check implementation status via manifest
-        impl_status=$($MANIFEST get "$name".phases.implementation.status 2>/dev/null || echo "none")
+        impl_status=$($MANIFEST get "$name" --raw phases.implementation.status 2>/dev/null || echo "none")
 
         # Check review status via manifest
-        review_status=$($MANIFEST get "$name".phases.review.status 2>/dev/null || echo "")
+        review_status=$($MANIFEST get "$name" --raw phases.review.status 2>/dev/null || echo "")
 
         # Count review versions by scanning review directories
-        review_dir=".workflows/${name}/review"
+        review_dir=".workflows/${name}/review/${name}"
         review_count=0
         latest_review_version=0
         latest_review_verdict=""
@@ -91,7 +91,7 @@ else
         fi
 
         # Check for external plan ID (e.g., Linear project)
-        plan_id=$($MANIFEST get "$name".phases.planning.plan_id 2>/dev/null || echo "")
+        plan_id=$($MANIFEST get "$name" --raw phases.planning.plan_id 2>/dev/null || echo "")
 
         echo "    - name: \"$name\""
         echo "      work_type: \"$work_type\""
@@ -135,7 +135,7 @@ has_reviews="false"
 
 if [ "$units_json" != "[]" ]; then
     for name in $unit_names; do
-        review_dir=".workflows/${name}/review"
+        review_dir=".workflows/${name}/review/${name}"
         [ -d "$review_dir" ] || continue
 
         # Count r*/ versions
@@ -166,7 +166,7 @@ if [ "$units_json" != "[]" ]; then
 
         # Check for synthesis: look for review-tasks-c*.md in implementation dir
         has_synthesis="false"
-        impl_dir=".workflows/${name}/implementation"
+        impl_dir=".workflows/${name}/implementation/${name}"
         if ls "$impl_dir"/review-tasks-c*.md >/dev/null 2>&1; then
             has_synthesis="true"
         fi

@@ -24,7 +24,7 @@ Ask the user which plan to view.
 
 ## Step 2: Read the Plan Index
 
-Read the plan file from `.workflows/{work_unit}/planning/planning.md` and check the `format` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.phases.planning.format`).
+Read the plan file from `.workflows/{work_unit}/planning/{topic}/planning.md` and check the `format` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} format`).
 
 ## Step 3: Load Format Reading Reference
 

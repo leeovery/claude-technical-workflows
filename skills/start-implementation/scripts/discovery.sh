@@ -9,7 +9,7 @@
 set -eo pipefail
 
 MANIFEST_CLI="node .claude/skills/workflow-manifest/scripts/manifest.js"
-ENVIRONMENT_FILE=".workflows/environment-setup.md"
+ENVIRONMENT_FILE=".workflows/.state/environment-setup.md"
 
 # Start YAML output
 echo "# Implementation Command State Discovery"
@@ -50,11 +50,11 @@ if [ "$work_units_json" != "[]" ]; then
             [ -z "$wu_name" ] && continue
 
             # Check if planning phase exists
-            planning_status=$($MANIFEST_CLI get "$wu_name".phases.planning.status 2>/dev/null || echo "")
+            planning_status=$($MANIFEST_CLI get "$wu_name" --raw phases.planning.status 2>/dev/null || echo "")
             [ -z "$planning_status" ] && continue
 
             # Has planning data — check if plan file exists
-            plan_file=".workflows/${wu_name}/planning/planning.md"
+            plan_file=".workflows/${wu_name}/planning/${wu_name}/planning.md"
             [ -f "$plan_file" ] || continue
 
             if ! $has_plans; then
@@ -64,13 +64,13 @@ if [ "$work_units_json" != "[]" ]; then
             fi
 
             # Read fields from manifest
-            work_type=$($MANIFEST_CLI get "$wu_name".work_type 2>/dev/null || echo "feature")
-            format=$($MANIFEST_CLI get "$wu_name".phases.planning.format 2>/dev/null || echo "MISSING")
-            plan_id=$($MANIFEST_CLI get "$wu_name".phases.planning.plan_id 2>/dev/null || echo "")
+            work_type=$($MANIFEST_CLI get "$wu_name" work_type 2>/dev/null || echo "feature")
+            format=$($MANIFEST_CLI get "$wu_name" --raw phases.planning.format 2>/dev/null || echo "MISSING")
+            plan_id=$($MANIFEST_CLI get "$wu_name" --raw phases.planning.plan_id 2>/dev/null || echo "")
 
             # Read specification state
-            spec_status=$($MANIFEST_CLI get "$wu_name".phases.specification.status 2>/dev/null || echo "")
-            spec_file=".workflows/${wu_name}/specification/specification.md"
+            spec_status=$($MANIFEST_CLI get "$wu_name" --raw phases.specification.status 2>/dev/null || echo "")
+            spec_file=".workflows/${wu_name}/specification/${wu_name}/specification.md"
             spec_exists="false"
             [ -f "$spec_file" ] && spec_exists="true"
 
@@ -87,7 +87,7 @@ if [ "$work_units_json" != "[]" ]; then
             echo "      status: \"$planning_status\""
             echo "      work_type: \"$work_type\""
             echo "      format: \"$format\""
-            echo "      specification: \"${wu_name}/specification/specification.md\""
+            echo "      specification: \"${wu_name}/specification/${wu_name}/specification.md\""
             echo "      specification_exists: $spec_exists"
             if [ -n "$plan_id" ]; then
                 echo "      plan_id: \"$plan_id\""
@@ -96,7 +96,7 @@ if [ "$work_units_json" != "[]" ]; then
             #
             # External dependencies from manifest
             #
-            deps_json=$($MANIFEST_CLI get "$wu_name".phases.planning.external_dependencies 2>/dev/null || echo "")
+            deps_json=$($MANIFEST_CLI get "$wu_name" --raw phases.planning.external_dependencies 2>/dev/null || echo "")
             has_unresolved="false"
             unresolved_count=0
 
@@ -166,11 +166,11 @@ if [ "$work_units_json" != "[]" ] && [ -n "$work_unit_names" ]; then
         [ -z "$wu_name" ] && continue
 
         # Check if implementation phase exists in manifest
-        impl_status=$($MANIFEST_CLI get "$wu_name".phases.implementation.status 2>/dev/null || echo "")
+        impl_status=$($MANIFEST_CLI get "$wu_name" --raw phases.implementation.status 2>/dev/null || echo "")
         [ -z "$impl_status" ] && continue
 
         # Check if implementation file exists
-        impl_file=".workflows/${wu_name}/implementation/implementation.md"
+        impl_file=".workflows/${wu_name}/implementation/${wu_name}/implementation.md"
         [ -f "$impl_file" ] || continue
 
         if ! $has_impl; then
@@ -179,8 +179,8 @@ if [ "$work_units_json" != "[]" ] && [ -n "$work_unit_names" ]; then
             echo "  files:"
         fi
 
-        current_phase=$($MANIFEST_CLI get "$wu_name".phases.implementation.current_phase 2>/dev/null || echo "")
-        current_task=$($MANIFEST_CLI get "$wu_name".phases.implementation.current_task 2>/dev/null || echo "")
+        current_phase=$($MANIFEST_CLI get "$wu_name" --raw phases.implementation.current_phase 2>/dev/null || echo "")
+        current_task=$($MANIFEST_CLI get "$wu_name" --raw phases.implementation.current_task 2>/dev/null || echo "")
 
         echo "    - topic: \"$wu_name\""
         echo "      status: \"$impl_status\""
@@ -190,7 +190,7 @@ if [ "$work_units_json" != "[]" ] && [ -n "$work_unit_names" ]; then
         fi
 
         # Completed phases from manifest
-        completed_phases_json=$($MANIFEST_CLI get "$wu_name".phases.implementation.completed_phases 2>/dev/null || echo "[]")
+        completed_phases_json=$($MANIFEST_CLI get "$wu_name" --raw phases.implementation.completed_phases 2>/dev/null || echo "[]")
         if [ -n "$completed_phases_json" ] && [ "$completed_phases_json" != "[]" ]; then
             phases_inline=$(echo "$completed_phases_json" | node -e "
                 const data = JSON.parse(require('fs').readFileSync('/dev/stdin','utf8'));
@@ -206,7 +206,7 @@ if [ "$work_units_json" != "[]" ] && [ -n "$work_unit_names" ]; then
         fi
 
         # Completed tasks from manifest
-        completed_tasks_json=$($MANIFEST_CLI get "$wu_name".phases.implementation.completed_tasks 2>/dev/null || echo "[]")
+        completed_tasks_json=$($MANIFEST_CLI get "$wu_name" --raw phases.implementation.completed_tasks 2>/dev/null || echo "[]")
         if [ -n "$completed_tasks_json" ] && [ "$completed_tasks_json" != "[]" ]; then
             echo "      completed_tasks:"
             echo "$completed_tasks_json" | node -e "
@@ -249,7 +249,7 @@ if [ "$plan_count" -gt 0 ]; then
     for i in "${!plan_names[@]}"; do
         wu_name="${plan_names[$i]}"
 
-        deps_json=$($MANIFEST_CLI get "$wu_name".phases.planning.external_dependencies 2>/dev/null || echo "")
+        deps_json=$($MANIFEST_CLI get "$wu_name" --raw phases.planning.external_dependencies 2>/dev/null || echo "")
         [ -z "$deps_json" ] || [ "$deps_json" = "[]" ] && continue
 
         # Parse and check deps
@@ -314,7 +314,7 @@ if [ "$plan_count" -gt 0 ]; then
                 blocking_entries="${blocking_entries}      - topic: \"$dep_topic\"\n        reason: \"dependency unresolved\"\n"
             elif [ "$dep_reason" = "check_needed" ] && [ -n "$dep_task_id" ]; then
                 # Check if task is completed in the dep's implementation phase
-                completed_tasks_json=$($MANIFEST_CLI get "$dep_topic".phases.implementation.completed_tasks 2>/dev/null || echo "[]")
+                completed_tasks_json=$($MANIFEST_CLI get "$dep_topic" --raw phases.implementation.completed_tasks 2>/dev/null || echo "[]")
                 task_completed=false
 
                 if [ -n "$completed_tasks_json" ] && [ "$completed_tasks_json" != "[]" ]; then
@@ -394,12 +394,12 @@ if [ "$plan_count" -gt 0 ]; then
 
         if [ "$status" = "concluded" ]; then
             # Skip plans whose implementation is already started or completed
-            impl_status=$($MANIFEST_CLI get "$wu_name".phases.implementation.status 2>/dev/null || echo "")
+            impl_status=$($MANIFEST_CLI get "$wu_name" --raw phases.implementation.status 2>/dev/null || echo "")
             if [ "$impl_status" = "completed" ] || [ "$impl_status" = "in-progress" ]; then
                 continue
             fi
 
-            deps_json=$($MANIFEST_CLI get "$wu_name".phases.planning.external_dependencies 2>/dev/null || echo "")
+            deps_json=$($MANIFEST_CLI get "$wu_name" --raw phases.planning.external_dependencies 2>/dev/null || echo "")
             is_ready=true
 
             if [ -n "$deps_json" ] && [ "$deps_json" != "[]" ]; then
@@ -421,7 +421,7 @@ if [ "$plan_count" -gt 0 ]; then
                             if (dep.state === 'resolved' && dep.task_id) {
                                 try {
                                     const completedJson = execSync(
-                                        'node .claude/skills/workflow-manifest/scripts/manifest.js get ' + dep.topic + '.phases.implementation.completed_tasks',
+                                        'node .claude/skills/workflow-manifest/scripts/manifest.js get ' + dep.topic + ' --raw phases.implementation.completed_tasks',
                                         { encoding: 'utf8', stdio: ['pipe','pipe','pipe'] }
                                     ).trim();
                                     const completed = JSON.parse(completedJson);

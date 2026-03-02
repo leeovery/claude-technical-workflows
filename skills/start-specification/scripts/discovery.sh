@@ -13,7 +13,7 @@ set -eo pipefail
 
 MANIFEST="node .claude/skills/workflow-manifest/scripts/manifest.js"
 WORKFLOWS_DIR=".workflows"
-CACHE_FILE=".workflows/.state/discussion-consolidation-analysis.md"
+CACHE_DIR_SUFFIX=".state/discussion-consolidation-analysis.md"
 
 # Start YAML output
 echo "# Specification Command State Discovery"
@@ -58,16 +58,16 @@ while IFS=' ' read -r wu_name wu_type; do
         for file in "$disc_dir"/*.md; do
             [ -f "$file" ] || continue
             name=$(basename "$file" .md)
-            status=$($MANIFEST get "$wu_name".phases.discussion.items."$name".status 2>/dev/null || echo "")
+            status=$($MANIFEST get "$wu_name" --raw phases.discussion.items."$name".status 2>/dev/null || echo "")
             status=${status:-"unknown"}
 
             # Check if this discussion is tracked as a spec source via manifest
             has_individual_spec="false"
             spec_status=""
-            spec_phase_status=$($MANIFEST get "$wu_name".phases.specification.status 2>/dev/null || echo "")
+            spec_phase_status=$($MANIFEST get "$wu_name" --raw phases.specification.status 2>/dev/null || echo "")
             if [ -n "$spec_phase_status" ] && [ "$spec_phase_status" != "undefined" ]; then
                 # Check if there's a sources entry for this discussion
-                source_check=$($MANIFEST get "$wu_name".phases.specification.sources."$name".status 2>/dev/null || echo "")
+                source_check=$($MANIFEST get "$wu_name" --raw phases.specification.sources."$name".status 2>/dev/null || echo "")
                 if [ -n "$source_check" ] && [ "$source_check" != "undefined" ]; then
                     has_individual_spec="true"
                     spec_status="$spec_phase_status"
@@ -85,16 +85,16 @@ while IFS=' ' read -r wu_name wu_type; do
             discussion_found=true
         done
     else
-        # Feature/bugfix: single discussion file
-        file="$disc_dir/discussion.md"
+        # Feature/bugfix: single discussion file (topic = work_unit name)
+        file="$disc_dir/${wu_name}.md"
         [ -f "$file" ] || continue
-        status=$($MANIFEST get "$wu_name".phases.discussion.status 2>/dev/null || echo "")
+        status=$($MANIFEST get "$wu_name" --raw phases.discussion.status 2>/dev/null || echo "")
         status=${status:-"unknown"}
 
         # Check specification status via manifest
         has_individual_spec="false"
         spec_status=""
-        spec_phase_status=$($MANIFEST get "$wu_name".phases.specification.status 2>/dev/null || echo "")
+        spec_phase_status=$($MANIFEST get "$wu_name" --raw phases.specification.status 2>/dev/null || echo "")
         if [ -n "$spec_phase_status" ] && [ "$spec_phase_status" != "undefined" ]; then
             has_individual_spec="true"
             spec_status="$spec_phase_status"
@@ -127,14 +127,14 @@ spec_found=false
 
 while IFS=' ' read -r wu_name wu_type; do
     [ -z "$wu_name" ] && continue
-    spec_file="$WORKFLOWS_DIR/$wu_name/specification/specification.md"
+    spec_file="$WORKFLOWS_DIR/$wu_name/specification/${wu_name}/specification.md"
     [ -f "$spec_file" ] || continue
 
-    spec_status=$($MANIFEST get "$wu_name".phases.specification.status 2>/dev/null || echo "")
+    spec_status=$($MANIFEST get "$wu_name" --raw phases.specification.status 2>/dev/null || echo "")
     spec_status=${spec_status:-"in-progress"}
 
     # Check for superseded_by in manifest
-    superseded_by=$($MANIFEST get "$wu_name".phases.specification.superseded_by 2>/dev/null || echo "")
+    superseded_by=$($MANIFEST get "$wu_name" --raw phases.specification.superseded_by 2>/dev/null || echo "")
 
     echo "  - name: \"$wu_name\""
     echo "    work_unit: \"$wu_name\""
@@ -146,7 +146,7 @@ while IFS=' ' read -r wu_name wu_type; do
     fi
 
     # Extract sources from manifest with discussion_status lookup
-    sources_json=$($MANIFEST get "$wu_name".phases.specification.sources 2>/dev/null || echo "")
+    sources_json=$($MANIFEST get "$wu_name" --raw phases.specification.sources 2>/dev/null || echo "")
     if [ -n "$sources_json" ] && [ "$sources_json" != "undefined" ]; then
         echo "    sources:"
         # Emit each source with its discussion_status
@@ -165,9 +165,9 @@ while IFS=' ' read -r wu_name wu_type; do
 
             # Look up discussion status from manifest
             if [ "$wu_type" = "epic" ]; then
-                disc_status=$($MANIFEST get "$wu_name".phases.discussion.items."$src_name".status 2>/dev/null || echo "")
+                disc_status=$($MANIFEST get "$wu_name" --raw phases.discussion.items."$src_name".status 2>/dev/null || echo "")
             else
-                disc_status=$($MANIFEST get "$wu_name".phases.discussion.status 2>/dev/null || echo "")
+                disc_status=$($MANIFEST get "$wu_name" --raw phases.discussion.status 2>/dev/null || echo "")
             fi
             echo "        discussion_status: \"${disc_status:-unknown}\""
         done
@@ -192,54 +192,67 @@ echo ""
 #
 echo "cache:"
 
-if [ -f "$CACHE_FILE" ]; then
+cache_found=false
+
+while IFS=' ' read -r wu_name wu_type; do
+    [ -z "$wu_name" ] && continue
+    cache_file="$WORKFLOWS_DIR/$wu_name/$CACHE_DIR_SUFFIX"
+    [ -f "$cache_file" ] || continue
+
+    if ! $cache_found; then
+        cache_found=true
+        echo "  entries:"
+    fi
+
     # Read cache metadata from frontmatter (this is a scratch file the skill creates)
-    cached_checksum=$(awk 'BEGIN{c=0} /^---$/{c++; if(c==2) exit; next} c==1 && /^checksum:/{sub(/^checksum:[[:space:]]*/,""); print}' "$CACHE_FILE")
-    cached_date=$(awk 'BEGIN{c=0} /^---$/{c++; if(c==2) exit; next} c==1 && /^generated:/{sub(/^generated:[[:space:]]*/,""); print}' "$CACHE_FILE")
+    cached_checksum=$(awk 'BEGIN{c=0} /^---$/{c++; if(c==2) exit; next} c==1 && /^checksum:/{sub(/^checksum:[[:space:]]*/,""); print}' "$cache_file")
+    cached_date=$(awk 'BEGIN{c=0} /^---$/{c++; if(c==2) exit; next} c==1 && /^generated:/{sub(/^generated:[[:space:]]*/,""); print}' "$cache_file")
 
-    # Compute current checksum across all discussion files in all work units
-    all_discussion_files=$(find "$WORKFLOWS_DIR" -path "*/.archive" -prune -o -path "*/discussion/*.md" -print 2>/dev/null | sort)
+    # Compute current checksum across discussion files in this work unit
+    disc_dir="$WORKFLOWS_DIR/$wu_name/discussion"
+    disc_files=$(find "$disc_dir" -name "*.md" 2>/dev/null | sort)
 
-    if [ -n "$all_discussion_files" ]; then
-        current_checksum=$(echo "$all_discussion_files" | xargs cat 2>/dev/null | md5sum | cut -d' ' -f1)
+    cache_status="stale"
+    cache_reason="discussions have changed since cache was generated"
 
+    if [ -n "$disc_files" ]; then
+        current_checksum=$(echo "$disc_files" | xargs cat 2>/dev/null | md5sum | cut -d' ' -f1)
         if [ "$cached_checksum" = "$current_checksum" ]; then
-            echo "  status: \"valid\""
-            echo "  reason: \"checksums match\""
-        else
-            echo "  status: \"stale\""
-            echo "  reason: \"discussions have changed since cache was generated\""
+            cache_status="valid"
+            cache_reason="checksums match"
         fi
     else
-        echo "  status: \"stale\""
-        echo "  reason: \"no discussions to compare\""
+        cache_reason="no discussions to compare"
     fi
 
-    echo "  checksum: \"${cached_checksum:-unknown}\""
-    echo "  generated: \"${cached_date:-unknown}\""
+    echo "    - work_unit: \"$wu_name\""
+    echo "      status: \"$cache_status\""
+    echo "      reason: \"$cache_reason\""
+    echo "      checksum: \"${cached_checksum:-unknown}\""
+    echo "      generated: \"${cached_date:-unknown}\""
 
     # Extract anchored names (groupings that have existing specs)
-    echo "  anchored_names:"
-
     anchored_found=false
     while IFS= read -r grouping_name; do
-        # Clean the name (remove any trailing annotations, lowercase, spaces to hyphens)
         clean_name=$(echo "$grouping_name" | sed 's/[[:space:]]*(.*)//' | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
-        if [ -d "$WORKFLOWS_DIR/$clean_name/specification" ] && [ -f "$WORKFLOWS_DIR/$clean_name/specification/specification.md" ]; then
-            echo "    - \"$clean_name\""
-            anchored_found=true
+        if [ -d "$WORKFLOWS_DIR/$clean_name/specification" ] && ls "$WORKFLOWS_DIR/$clean_name/specification"/*/specification.md >/dev/null 2>&1; then
+            if ! $anchored_found; then
+                echo "      anchored_names:"
+                anchored_found=true
+            fi
+            echo "        - \"$clean_name\""
         fi
-    done < <(grep "^### " "$CACHE_FILE" 2>/dev/null | sed 's/^### //' || true)
+    done < <(grep "^### " "$cache_file" 2>/dev/null | sed 's/^### //' || true)
 
-    if [ "$anchored_found" = false ]; then
-        echo "    []  # No anchored names found"
+    if ! $anchored_found; then
+        echo "      anchored_names: []"
     fi
-else
+done < "$tmp_pairs"
+
+if ! $cache_found; then
     echo "  status: \"none\""
     echo "  reason: \"no cache exists\""
-    echo "  checksum: null"
-    echo "  generated: null"
-    echo "  anchored_names: []"
+    echo "  entries: []"
 fi
 
 echo ""

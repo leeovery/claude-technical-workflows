@@ -12,9 +12,7 @@ Before invoking the processing skill, save a session bookmark.
 Saving session state so Claude can pick up where it left off if the conversation is compacted.
 ```
 
-Determine the output path based on work_type:
-- Feature/bugfix: `.workflows/{work_unit}/discussion/discussion.md`
-- Epic: `.workflows/{work_unit}/discussion/{topic}.md`
+The output path is `.workflows/{work_unit}/discussion/{topic}.md`.
 
 ```bash
 .claude/hooks/workflows/write-session-state.sh \
@@ -71,7 +69,7 @@ Invoke the technical-discussion skill.
 Read work_type from the manifest:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.work_type
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type
 ```
 
 ```

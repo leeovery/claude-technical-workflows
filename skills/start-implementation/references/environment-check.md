@@ -23,7 +23,7 @@ Environment: No special setup required.
 > *Output the next fenced block as a code block:*
 
 ```
-Environment setup file found: .workflows/environment-setup.md
+Environment setup file found: .workflows/.state/environment-setup.md
 ```
 
 → Return to **[the skill](../SKILL.md)**.
@@ -39,7 +39,7 @@ Are there any environment setup instructions I should follow before implementati
 
 **STOP.** Wait for user response.
 
-- If the user provides instructions, save them to `.workflows/environment-setup.md`, commit and push
-- If the user says no/none, create `.workflows/environment-setup.md` with "No special setup required." and commit
+- If the user provides instructions, save them to `.workflows/.state/environment-setup.md`, commit and push
+- If the user says no/none, create `.workflows/.state/environment-setup.md` with "No special setup required." and commit
 
 → Return to **[the skill](../SKILL.md)**.

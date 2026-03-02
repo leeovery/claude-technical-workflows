@@ -9,20 +9,10 @@ Check if a discussion already exists for this work unit and topic.
 Use the manifest CLI to check discussion phase state:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.phases.discussion
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase discussion --topic {topic}
 ```
 
-#### If work_type is `epic`
-
-Check for an existing item matching the topic:
-
-```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.phases.discussion.items.{topic}
-```
-
-#### If work_type is `feature` or `bugfix`
-
-The topic is the work unit name itself. Check the discussion phase status.
+#### If discussion exists and status is `in-progress`
 
 #### If discussion exists and status is `in-progress`
 

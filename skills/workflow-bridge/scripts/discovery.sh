@@ -62,13 +62,13 @@ phase_file_exists() {
     local phase="$1"
     local dir=".workflows/$WORK_UNIT/$phase"
     case "$phase" in
-        research)        [ -f "$dir/research.md" ] ;;
-        discussion)      [ -f "$dir/discussion.md" ] ;;
-        investigation)   [ -f "$dir/investigation.md" ] ;;
-        specification)   [ -f "$dir/specification.md" ] ;;
-        planning)        [ -f "$dir/planning.md" ] ;;
-        implementation)  [ -f "$dir/implementation.md" ] ;;
-        review)          [ -d "$dir" ] && ls "$dir"/r*/review.md >/dev/null 2>&1 ;;
+        research)        [ -d "$dir" ] && ls "$dir"/*.md >/dev/null 2>&1 ;;
+        discussion)      ls "$dir"/*.md >/dev/null 2>&1 ;;
+        investigation)   ls "$dir"/*.md >/dev/null 2>&1 ;;
+        specification)   ls "$dir"/*/specification.md >/dev/null 2>&1 ;;
+        planning)        ls "$dir"/*/planning.md >/dev/null 2>&1 ;;
+        implementation)  ls "$dir"/*/implementation.md >/dev/null 2>&1 ;;
+        review)          ls "$dir"/*/r*/review.md >/dev/null 2>&1 ;;
         *)               return 1 ;;
     esac
 }

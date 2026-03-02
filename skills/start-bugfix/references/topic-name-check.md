@@ -11,7 +11,7 @@ Based on the bug description, suggest a topic name:
 ```
 Suggested topic name: {suggested-topic:(kebabcase)}
 
-This will create: .workflows/{suggested-topic}/investigation/investigation.md
+This will create: .workflows/{suggested-topic}/investigation/{suggested-topic}.md
 ```
 
 > *Output the next fenced block as markdown (not a code block):*

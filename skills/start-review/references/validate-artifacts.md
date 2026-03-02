@@ -7,7 +7,7 @@
 Check if plan and implementation exist and are ready via manifest CLI.
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.phases.planning.status
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} status
 ```
 
 #### If plan doesn't exist
@@ -26,7 +26,7 @@ Run /start-planning {work_type} {work_unit} to create one.
 **STOP.** Do not proceed — terminal condition.
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.phases.implementation.status
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase implementation --topic {topic} status
 ```
 
 #### If implementation doesn't exist

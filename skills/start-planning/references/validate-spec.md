@@ -7,7 +7,7 @@
 Check if specification exists and is ready using the manifest CLI.
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.phases.specification
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic}
 ```
 
 #### If specification phase doesn't exist or has no status

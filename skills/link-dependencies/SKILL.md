@@ -26,10 +26,10 @@ Scan the codebase for existing plans:
 
 1. **Find work units with plans**: Look in `.workflows/`
    - Run `ls .workflows/` to list work unit directories
-   - Each work unit may contain a `planning/planning.md` file
+   - Each work unit may contain a `planning/{topic}/planning.md` file
 
 2. **Extract plan metadata**: For each work unit with a plan
-   - Read the format via manifest CLI: `node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.phases.planning.format`
+   - Read the format via manifest CLI: `node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} format`
    - Note the format used by each plan
 
 **If no plans exist:**
@@ -86,7 +86,7 @@ format. Consolidate your plans to a single format before linking.
 
 For each plan, read the `external_dependencies` from the manifest:
 
-1. **Read `external_dependencies`** via manifest CLI: `node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.phases.planning.external_dependencies`
+1. **Read `external_dependencies`** via manifest CLI: `node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} external_dependencies`
 2. **Categorize each dependency** by its `state` field:
    - **Unresolved**: `state: unresolved` (no task linked)
    - **Resolved**: `state: resolved` (has `task_id`)
@@ -122,7 +122,7 @@ Key:
 
 For each unresolved dependency:
 
-1. **Search for matching plan**: Does `.workflows/{dependency-topic}/planning/planning.md` exist?
+1. **Search for matching plan**: Does `.workflows/{dependency-topic}/planning/{dependency-topic}/planning.md` exist?
    - If no match: Mark as "no plan exists" - cannot resolve yet
 
 2. **If plan exists**: Load the format's reading reference
@@ -174,7 +174,7 @@ Unresolved (no matching plan exists):
   • {source} → {target}: {description}
 
 Updated files:
-  • .workflows/{topic}/planning/planning.md
+  • .workflows/{topic}/planning/{topic}/planning.md
 ```
 
 If any dependencies remain unresolved:

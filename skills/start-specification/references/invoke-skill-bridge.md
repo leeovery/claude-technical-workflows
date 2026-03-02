@@ -16,7 +16,7 @@ Saving session state so Claude can pick up where it left off if the conversation
 .claude/hooks/workflows/write-session-state.sh \
   "{work_unit}" \
   "skills/technical-specification/SKILL.md" \
-  ".workflows/{work_unit}/specification/specification.md"
+  ".workflows/{work_unit}/specification/{topic}/specification.md"
 ```
 
 This skill's purpose is now fulfilled.
@@ -36,7 +36,7 @@ Specification session for: {work_unit}
 Work type: {work_type}
 
 Source material:
-- Discussion: .workflows/{work_unit}/discussion/discussion.md
+- Discussion: .workflows/{work_unit}/discussion/{topic}.md
 
 Work unit: {work_unit}
 Action: {verb} specification
@@ -51,7 +51,7 @@ Specification session for: {work_unit}
 Work type: {work_type}
 
 Source material:
-- Investigation: .workflows/{work_unit}/investigation/investigation.md
+- Investigation: .workflows/{work_unit}/investigation/{topic}.md
 
 Work unit: {work_unit}
 Action: {verb} specification

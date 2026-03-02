@@ -15,7 +15,7 @@ Sources:
   • {discussion-name}
   • {discussion-name}
 
-Output: .workflows/{work_unit}/specification/specification.md
+Output: .workflows/{work_unit}/specification/{topic}/specification.md
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -41,10 +41,10 @@ Sources:
   • {discussion-name} (has individual spec — will be incorporated)
   • {discussion-name}
 
-Output: .workflows/{work_unit}/specification/specification.md
+Output: .workflows/{work_unit}/specification/{topic}/specification.md
 
 After completion:
-  {source_work_unit}/specification/specification.md → marked as superseded
+  {work_unit}/specification/{source-topic}/specification.md → marked as superseded
 ```
 
 > *Output the next fenced block as markdown (not a code block):*

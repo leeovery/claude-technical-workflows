@@ -7,7 +7,7 @@
 Check if a work unit already exists for this name by querying the manifest:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.phases.investigation
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase investigation --topic {topic}
 ```
 
 #### If work unit exists with investigation phase

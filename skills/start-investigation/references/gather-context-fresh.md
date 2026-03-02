@@ -26,7 +26,7 @@ If the user didn't provide a clear work unit name, suggest one based on the bug 
 ```
 Suggested work unit name: {suggested-name:(kebabcase)}
 
-This will create: .workflows/{suggested-name}/investigation/investigation.md
+This will create: .workflows/{suggested-name}/investigation/{suggested-name}.md
 ```
 
 > *Output the next fenced block as markdown (not a code block):*

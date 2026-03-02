@@ -6,7 +6,7 @@
 
 Before invoking the skill, reset `finding_gate_mode` to `gated` via manifest CLI:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.specification.finding_gate_mode gated
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} finding_gate_mode gated
 ```
 Commit if changed: `spec({work_unit}): reset gate mode`
 
@@ -22,18 +22,18 @@ Saving session state so Claude can pick up where it left off if the conversation
 .claude/hooks/workflows/write-session-state.sh \
   "{work_unit}" \
   "skills/technical-specification/SKILL.md" \
-  ".workflows/{work_unit}/specification/specification.md"
+  ".workflows/{work_unit}/specification/{topic}/specification.md"
 ```
 
 This skill's purpose is now fulfilled. Invoke the [technical-specification](../../../technical-specification/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded — it contains the instructions for how to proceed.
 
-Determine work_type: use the value from Step 2 if available. Otherwise, read work_type from the manifest (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.work_type`).
+Determine work_type: use the value from Step 2 if available. Otherwise, read work_type from the manifest (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type`).
 
 ```
 Specification session for: {Title Case Name}
 Work type: {work_type}
 
-Continuing existing: .workflows/{work_unit}/specification/specification.md
+Continuing existing: .workflows/{work_unit}/specification/{topic}/specification.md
 
 Sources for reference:
 - .workflows/{work_unit}/discussion/{discussion-name}.md

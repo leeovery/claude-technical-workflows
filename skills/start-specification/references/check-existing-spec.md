@@ -6,7 +6,7 @@
 
 Check if a specification already exists for this work unit.
 
-Read `.workflows/{work_unit}/specification/specification.md` if it exists.
+Read `.workflows/{work_unit}/specification/{topic}/specification.md` if it exists.
 
 #### If specification doesn't exist
 

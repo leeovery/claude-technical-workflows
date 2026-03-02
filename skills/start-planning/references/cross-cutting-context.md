@@ -10,7 +10,7 @@
 
 #### If cross-cutting specifications exist
 
-Read each cross-cutting specification from `specifications.crosscutting` in the discovery output. For each, the specification file is at `.workflows/{work_unit}/specification/specification.md`.
+Read each cross-cutting specification from `specifications.crosscutting` in the discovery output. For each, the specification file is at `.workflows/{work_unit}/specification/{topic}/specification.md`.
 
 ### Warn about in-progress cross-cutting specs
 

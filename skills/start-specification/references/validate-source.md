@@ -8,7 +8,7 @@ Check if source material exists and is ready.
 
 #### If `work_type` is `feature`
 
-Check if discussion exists and is concluded. Read `.workflows/{work_unit}/discussion/discussion.md` frontmatter.
+Check if discussion exists and is concluded. Read `.workflows/{work_unit}/discussion/{topic}.md` frontmatter.
 
 **If discussion doesn't exist:**
 
@@ -44,7 +44,7 @@ Run /start-discussion feature {work_unit} to continue.
 
 #### If `work_type` is `bugfix`
 
-Check if investigation exists and is concluded. Read `.workflows/{work_unit}/investigation/investigation.md` frontmatter.
+Check if investigation exists and is concluded. Read `.workflows/{work_unit}/investigation/{topic}.md` frontmatter.
 
 **If investigation doesn't exist:**
 

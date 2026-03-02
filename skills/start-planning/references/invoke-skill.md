@@ -16,7 +16,7 @@ Saving session state so Claude can pick up where it left off if the conversation
 .claude/hooks/workflows/write-session-state.sh \
   "{work_unit}" \
   "skills/technical-planning/SKILL.md" \
-  ".workflows/{work_unit}/planning/planning.md"
+  ".workflows/{work_unit}/planning/{topic}/planning.md"
 ```
 
 This skill's purpose is now fulfilled.
@@ -36,7 +36,7 @@ Construct the handoff based on the plan state.
 ```
 Planning session for: {work_unit}
 Work type: {work_type}
-Specification: .workflows/{work_unit}/specification/specification.md
+Specification: .workflows/{work_unit}/specification/{topic}/specification.md
 Additional context: {summary of user's additional context, or "none"}
 Cross-cutting references: {list of applicable cross-cutting specs with brief summaries, or "none"}
 Recommended output format: {common_format from discovery if non-empty, otherwise "none"}
@@ -51,8 +51,8 @@ Invoke the technical-planning skill.
 ```
 Planning session for: {work_unit}
 Work type: {work_type}
-Specification: .workflows/{work_unit}/specification/specification.md
-Existing plan: .workflows/{work_unit}/planning/planning.md
+Specification: .workflows/{work_unit}/specification/{topic}/specification.md
+Existing plan: .workflows/{work_unit}/planning/{topic}/planning.md
 
 Invoke the technical-planning skill.
 ```

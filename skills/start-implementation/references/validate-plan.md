@@ -7,10 +7,10 @@
 Check if plan exists and is ready.
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.phases.planning.status
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} status
 ```
 
-Also verify the plan file exists at `.workflows/{work_unit}/planning/planning.md`.
+Also verify the plan file exists at `.workflows/{work_unit}/planning/{topic}/planning.md`.
 
 #### If plan doesn't exist
 

@@ -10,7 +10,7 @@
 set -eo pipefail
 
 MANIFEST_CLI="node .claude/skills/workflow-manifest/scripts/manifest.js"
-CACHE_FILE=".workflows/.state/research-analysis.md"
+CACHE_DIR_SUFFIX=".state/research-analysis.md"
 
 # Fetch all active work units as JSON array
 json=$($MANIFEST_CLI list --status active 2>/dev/null || echo '[]')
@@ -151,62 +151,74 @@ echo ""
 #
 echo "cache:"
 
-if [ -f "$CACHE_FILE" ]; then
-    # Read cache metadata from frontmatter (this is a scratch file the skill creates)
-    cached_checksum=$(awk 'BEGIN{c=0} /^---$/{c++; if(c==2) exit; next} c==1 && /^checksum:/{sub(/^checksum:[[:space:]]*/,""); print}' "$CACHE_FILE")
-    cached_date=$(awk 'BEGIN{c=0} /^---$/{c++; if(c==2) exit; next} c==1 && /^generated:/{sub(/^generated:[[:space:]]*/,""); print}' "$CACHE_FILE")
+cache_found=false
 
-    # Determine status based on checksum comparison
-    # Collect all research files across work units
+for _wu_dir in .workflows/*/; do
+    [ -d "$_wu_dir" ] || continue
+    _wu_name=$(basename "$_wu_dir")
+    case "$_wu_name" in .*) continue ;; esac
+
+    cache_file="$_wu_dir$CACHE_DIR_SUFFIX"
+    [ -f "$cache_file" ] || continue
+
+    if ! $cache_found; then
+        cache_found=true
+        echo "  entries:"
+    fi
+
+    # Read cache metadata from frontmatter
+    cached_checksum=$(awk 'BEGIN{c=0} /^---$/{c++; if(c==2) exit; next} c==1 && /^checksum:/{sub(/^checksum:[[:space:]]*/,""); print}' "$cache_file")
+    cached_date=$(awk 'BEGIN{c=0} /^---$/{c++; if(c==2) exit; next} c==1 && /^generated:/{sub(/^generated:[[:space:]]*/,""); print}' "$cache_file")
+
+    # Compute current checksum from this work unit's research files
     _cache_research_files=()
-    for _wu_dir in .workflows/*/; do
-        [ -d "$_wu_dir" ] || continue
-        _wu_name=$(basename "$_wu_dir")
-        case "$_wu_name" in .*) continue ;; esac
-        [ -d "${_wu_dir}research" ] || continue
+    if [ -d "${_wu_dir}research" ]; then
         for _rf in "${_wu_dir}research"/*.md; do
             [ -f "$_rf" ] && _cache_research_files+=("$_rf")
         done
-    done
+    fi
+
+    cache_status="stale"
+    cache_reason="research has changed since cache was generated"
 
     if [ ${#_cache_research_files[@]} -gt 0 ]; then
         current_checksum=$(cat "${_cache_research_files[@]}" 2>/dev/null | md5sum | cut -d' ' -f1)
-
         if [ "$cached_checksum" = "$current_checksum" ]; then
-            echo "  status: \"valid\""
-            echo "  reason: \"checksums match\""
-        else
-            echo "  status: \"stale\""
-            echo "  reason: \"research has changed since cache was generated\""
+            cache_status="valid"
+            cache_reason="checksums match"
         fi
     else
-        echo "  status: \"stale\""
-        echo "  reason: \"no research files to compare\""
+        cache_reason="no research files to compare"
     fi
 
-    echo "  checksum: \"${cached_checksum:-unknown}\""
-    echo "  generated: \"${cached_date:-unknown}\""
+    echo "    - work_unit: \"$_wu_name\""
+    echo "      status: \"$cache_status\""
+    echo "      reason: \"$cache_reason\""
+    echo "      checksum: \"${cached_checksum:-unknown}\""
+    echo "      generated: \"${cached_date:-unknown}\""
 
     # Extract cached research files list
-    echo "  research_files:"
-    files_found=false
+    _files_found=false
     while IFS= read -r file; do
         file=$(echo "$file" | sed 's/^[[:space:]]*-[[:space:]]*//' | tr -d ' ')
         if [ -n "$file" ]; then
-            echo "    - \"$file\""
-            files_found=true
+            if ! $_files_found; then
+                echo "      research_files:"
+                _files_found=true
+            fi
+            echo "        - \"$file\""
         fi
-    done < <(sed -n '/^research_files:/,/^---$/p' "$CACHE_FILE" 2>/dev/null | grep "^[[:space:]]*-" || true)
+    done < <(sed -n '/^research_files:/,/^---$/p' "$cache_file" 2>/dev/null | grep "^[[:space:]]*-" || true)
 
-    if [ "$files_found" = false ]; then
-        echo "    []  # No research files in cache"
+    if ! $_files_found; then
+        echo "      research_files: []"
     fi
-else
+done
+
+if ! $cache_found; then
     echo "  status: \"none\""
     echo "  reason: \"no cache exists\""
-    echo "  checksum: null"
-    echo "  generated: null"
-    echo "  research_files: []"
+    echo "  entries: []"
 fi
 
 echo ""

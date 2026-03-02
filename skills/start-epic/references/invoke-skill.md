@@ -29,7 +29,7 @@ Saving session state for compaction recovery.
 .claude/hooks/workflows/write-session-state.sh \
   "{work_unit}" \
   "skills/technical-discussion/SKILL.md" \
-  ".workflows/{work_unit}/discussion/discussion.md"
+  ".workflows/{work_unit}/discussion/{topic}.md"
 ```
 
 → Load **[invoke-discussion.md](invoke-discussion.md)** and follow its instructions.
