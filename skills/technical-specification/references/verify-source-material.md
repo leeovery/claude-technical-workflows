@@ -15,6 +15,6 @@ Verify that all source material exists and is accessible before beginning specif
 ### Example
 
 ```bash
-ls .workflows/discussion/auth-flow.md
+ls .workflows/auth-flow/discussion/discussion.md
 ls .workflows/research/api-patterns.md
 ```
