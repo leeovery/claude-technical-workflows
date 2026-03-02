@@ -33,10 +33,10 @@ No actionable findings. All reviews passed with no required changes.
 Set the review phase status to completed:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.review.status completed
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase review --topic {topic} status completed
 ```
 
-**Check for pipeline continuation** — Query the manifest (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.work_type`) and check for `work_type`
+**Check for pipeline continuation** — Query the manifest (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type`) and check for `work_type`
 
 **If work_type is set** (feature, bugfix, or epic):
 
@@ -94,7 +94,7 @@ Proceed with synthesis?
 
 User has chosen to skip synthesis. This is a terminal condition, but check for pipeline continuation first.
 
-**Check for pipeline continuation** — Query the manifest (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.work_type`) and check for `work_type`
+**Check for pipeline continuation** — Query the manifest (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type`) and check for `work_type`
 
 **If work_type is set** (feature, bugfix, or epic):
 
@@ -170,7 +170,7 @@ No actionable tasks synthesized.
 
 ## C. Approval Gate
 
-Read the staging file from `.workflows/{work_unit}/implementation/review-tasks-c{cycle-number}.md`.
+Read the staging file from `.workflows/{work_unit}/implementation/{topic}/review-tasks-c{cycle-number}.md`.
 
 Check `gate_mode` in the staging file frontmatter (`gated` or `auto`).
 
@@ -302,12 +302,12 @@ review({work_unit}): add review remediation ({K} tasks)
 
 For each plan that received new tasks:
 
-1. Read the implementation tracking file at `.workflows/{work_unit}/implementation/implementation.md`
+1. Read the implementation tracking file at `.workflows/{work_unit}/implementation/{topic}/implementation.md`
 2. Update the manifest via CLI:
-   - `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.implementation.status in-progress`
-   - `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.implementation.updated {today's date}`
-   - `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.implementation.analysis_cycle 0`
-   - Remove `completed` field if present: `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.implementation.completed ""`
+   - `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase implementation --topic {topic} status in-progress`
+   - `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase implementation --topic {topic} updated {today's date}`
+   - `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase implementation --topic {topic} analysis_cycle 0`
+   - Remove `completed` field if present: `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase implementation --topic {topic} completed ""`
 3. Commit tracking changes:
 
 ```

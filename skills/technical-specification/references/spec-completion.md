@@ -97,9 +97,9 @@ Discuss the user's context, apply any changes, then re-present the sign-off prom
 Update the specification metadata via manifest CLI:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.specification.status concluded
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.specification.type feature  # or cross-cutting, as confirmed
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.specification.date $(date +%Y-%m-%d)
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} status concluded
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} type feature  # or cross-cutting, as confirmed
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} date $(date +%Y-%m-%d)
 ```
 
 Specification is complete when:
@@ -121,17 +121,17 @@ If any of your sources were **existing specifications** (as opposed to discussio
 
 1. Mark each source specification as superseded via manifest CLI:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {source-work-unit}.phases.specification.status superseded
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {source-work-unit}.phases.specification.superseded_by {new-work-unit}
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {source-topic} status superseded
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {source-topic} superseded_by {topic}
    ```
-2. Inform the user which work units were updated
+2. Inform the user which topics were updated
 3. Commit: `spec({work_unit}): mark source specifications as superseded`
 
 ---
 
 ## F. Pipeline Continuation
 
-Check the work type via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.work_type`).
+Check the work type via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type`).
 
 #### If `work_type` is set (`feature`, `bugfix`, or `epic`)
 

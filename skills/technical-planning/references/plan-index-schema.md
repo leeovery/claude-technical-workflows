@@ -4,7 +4,7 @@
 
 ---
 
-This file defines the canonical structure for Plan Index Files (`.workflows/{work_unit}/planning/planning.md`). All agents and references that create or update plan index content **must** follow these templates.
+This file defines the canonical structure for Plan Index Files (`.workflows/{work_unit}/planning/{topic}/planning.md`). All agents and references that create or update plan index content **must** follow these templates.
 
 All metadata (topic, format, status, gate modes, progress tracking, etc.) is stored in the manifest via the manifest CLI -- not in file frontmatter. The Plan Index File contains only the plan body content (title, phases, task tables).
 
@@ -66,16 +66,16 @@ approved_at: {YYYY-MM-DD}
 
 All metadata is managed via the manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js`). The following fields are set during planning:
 
-| Field path | Set when |
+| Field (via `--phase planning --topic {topic}`) | Set when |
 |------------|----------|
-| `{work_unit}.phases.planning.status` | Plan creation -> `planning`; conclusion -> `concluded` |
-| `{work_unit}.phases.planning.format` | Plan creation -- user-chosen output format |
-| `{work_unit}.phases.planning.spec_commit` | Plan creation -- `git rev-parse HEAD`; updated on continue if spec changed |
-| `{work_unit}.phases.planning.ext_id` | First task authored -- external identifier for the plan |
-| `{work_unit}.phases.planning.external_dependencies` | Dependency resolution (Step 6) |
-| `{work_unit}.phases.planning.task_list_gate_mode` | Plan creation -> `gated`; user opts in -> `auto` |
-| `{work_unit}.phases.planning.author_gate_mode` | Plan creation -> `gated`; user opts in -> `auto` |
-| `{work_unit}.phases.planning.finding_gate_mode` | Plan creation -> `gated`; user opts in -> `auto` |
-| `{work_unit}.phases.planning.phase` | Tracks current phase position |
-| `{work_unit}.phases.planning.task` | Tracks current task position (`~` when between tasks) |
-| `{work_unit}.phases.planning.review_cycle` | Added by plan-review when review cycle begins |
+| `status` | Plan creation -> `in-progress`; conclusion -> `concluded` |
+| `format` | Plan creation -- user-chosen output format |
+| `spec_commit` | Plan creation -- `git rev-parse HEAD`; updated on continue if spec changed |
+| `ext_id` | First task authored -- external identifier for the plan |
+| `external_dependencies` | Dependency resolution (Step 6) |
+| `task_list_gate_mode` | Plan creation -> `gated`; user opts in -> `auto` |
+| `author_gate_mode` | Plan creation -> `gated`; user opts in -> `auto` |
+| `finding_gate_mode` | Plan creation -> `gated`; user opts in -> `auto` |
+| `phase` | Tracks current phase position |
+| `task` | Tracks current task position (`~` when between tasks) |
+| `review_cycle` | Added by plan-review when review cycle begins |

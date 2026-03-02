@@ -21,7 +21,7 @@ No external tools required. This format uses plain markdown files stored in the 
 
 | Concept | Local Markdown Entity |
 |---------|-----------------------|
-| Topic | Directory (`.workflows/{work_unit}/planning/`) |
+| Topic | Directory (`.workflows/{work_unit}/planning/{topic}/`) |
 | Phase | Encoded in task ID (`{work_unit}-{phase}-{seq}`) |
 | Task | Markdown file (`{task-id}.md`) |
 | Dependency | Task ID reference in frontmatter (no native blocking) |
@@ -31,7 +31,7 @@ No external tools required. This format uses plain markdown files stored in the 
 Tasks are stored as individual markdown files in a `tasks/` subdirectory under the topic directory:
 
 ```
-.workflows/{work_unit}/planning/
+.workflows/{work_unit}/planning/{topic}/
 ├── planning.md                 # Plan Index File (not a task)
 └── tasks/                      # Task files
     ├── {work_unit}-1-1.md          # Phase 1, task 1

@@ -25,16 +25,12 @@ Incorporate the user's context into the discussion, commit, then re-present the 
 
 1. Set discussion status to concluded via manifest CLI:
    ```bash
-   # Feature/bugfix (flat phase):
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.discussion.status concluded
-
-   # Epic (item within phase):
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.discussion.items.{work_unit}.status concluded
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase discussion --topic {topic} status concluded
    ```
 2. Final commit
 3. Read work_type from manifest:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.work_type
+   node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type
    ```
 
 **If work_type is set** (feature, bugfix, or epic):

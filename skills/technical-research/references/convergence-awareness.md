@@ -31,13 +31,13 @@ Commit the file.
 Set research status to concluded via manifest CLI:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.research.status concluded
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase research status concluded
 ```
 
 Check work_type from manifest:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.work_type
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type
 ```
 
 **If work_type is set** (feature or epic):
