@@ -32,7 +32,7 @@ You receive via the orchestrator's prompt:
 
 ## Update the Plan Index File
 
-The Plan Index File (`.workflows/{work_unit}/planning/planning.md`) is the single source of truth for planning progress. After creating task files, you **must** append the new phase and task table to its body.
+The Plan Index File (`.workflows/{work_unit}/planning/{topic}/planning.md`) is the single source of truth for planning progress. After creating task files, you **must** append the new phase and task table to its body.
 
 Append at the end of the Plan Index File body, following the **Phase Entry** and **Task Table** templates from plan-index-schema:
 
@@ -44,7 +44,7 @@ Append at the end of the Plan Index File body, following the **Phase Entry** and
 - Task `Status`: `authored` (task files are fully written)
 - Task `Ext ID`: external identifier for the task from the output format
 - Task IDs must match the IDs used in the created task files
-- If the manifest's `{work_unit}.phases.planning.ext_id` is empty, set it via the manifest CLI to the external identifier for the plan from the output format
+- If the manifest's planning `ext_id` is empty (under `--phase planning --topic {topic}`), set it via the manifest CLI to the external identifier for the plan from the output format
 
 ## Hard Rules
 

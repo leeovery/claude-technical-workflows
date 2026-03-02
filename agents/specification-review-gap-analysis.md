@@ -80,7 +80,7 @@ No source material — this phase looks inward only.
    - **Important**: Would require implementer to guess or make design decisions
    - **Minor**: Polish or clarification that improves understanding
 
-6. **Write findings** to `.workflows/{work_unit}/specification/review-gap-analysis-tracking-c{cycle-number}.md` using the tracking format
+6. **Write findings** to `.workflows/{work_unit}/specification/{topic}/review-gap-analysis-tracking-c{cycle-number}.md` using the tracking format
 
 ## Hard Rules
 
@@ -95,7 +95,7 @@ No source material — this phase looks inward only.
 
 ## Output File Format
 
-Write to `.workflows/{work_unit}/specification/review-gap-analysis-tracking-c{cycle-number}.md` using this format:
+Write to `.workflows/{work_unit}/specification/{topic}/review-gap-analysis-tracking-c{cycle-number}.md` using this format:
 
 ```markdown
 ---
