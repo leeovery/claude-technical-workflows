@@ -30,15 +30,15 @@ Check the verdict(s) from the review(s) being analyzed.
 No actionable findings. All reviews passed with no required changes.
 ```
 
-**Check for pipeline continuation** — Read the plan file (`.workflows/planning/{topic}/plan.md`) and check for `work_type`
+**Check for pipeline continuation** — Query the manifest (`node .claude/skills/workflow-manifest/scripts/manifest.js get {topic} work_type`) and check for `work_type`
 
-**If work_type is set** (feature, bugfix, or greenfield):
+**If work_type is set** (feature, bugfix, or epic):
 
 This review is part of a pipeline. The pipeline is complete. Invoke the `/workflow-bridge` skill:
 
 ```
 Pipeline bridge for: {topic}
-Work type: {work_type from plan frontmatter}
+Work type: {work_type from manifest}
 Completed phase: review
 
 Invoke the workflow-bridge skill to enter plan mode with completion confirmation.
@@ -88,15 +88,15 @@ Proceed with synthesis?
 
 User has chosen to skip synthesis. This is a terminal condition, but check for pipeline continuation first.
 
-**Check for pipeline continuation** — Read the plan file (`.workflows/planning/{topic}/plan.md`) and check for `work_type`
+**Check for pipeline continuation** — Query the manifest (`node .claude/skills/workflow-manifest/scripts/manifest.js get {topic} work_type`) and check for `work_type`
 
-**If work_type is set** (feature, bugfix, or greenfield):
+**If work_type is set** (feature, bugfix, or epic):
 
 This review is part of a pipeline. Invoke the `/workflow-bridge` skill:
 
 ```
 Pipeline bridge for: {topic}
-Work type: {work_type from plan frontmatter}
+Work type: {work_type from manifest}
 Completed phase: review
 
 Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
@@ -164,7 +164,7 @@ No actionable tasks synthesized.
 
 ## C. Approval Gate
 
-Read the staging file from `.workflows/implementation/{topic}/review-tasks-c{cycle-number}.md`.
+Read the staging file from `.workflows/{topic}/implementation/review-tasks-c{cycle-number}.md`.
 
 Check `gate_mode` in the staging file frontmatter (`gated` or `auto`).
 
@@ -296,12 +296,12 @@ review({topic}): add review remediation ({K} tasks)
 
 For each plan that received new tasks:
 
-1. Read the implementation tracking file at `.workflows/implementation/{topic}/tracking.md`
-2. Update frontmatter:
-   - `status: in-progress`
-   - Remove `completed` field (if present)
-   - `updated: {today's date}`
-   - `analysis_cycle: 0`
+1. Read the implementation tracking file at `.workflows/{topic}/implementation/implementation.md`
+2. Update the manifest via CLI:
+   - `node .claude/skills/workflow-manifest/scripts/manifest.js set {topic} implementation.status in-progress`
+   - `node .claude/skills/workflow-manifest/scripts/manifest.js set {topic} implementation.updated {today's date}`
+   - `node .claude/skills/workflow-manifest/scripts/manifest.js set {topic} implementation.analysis_cycle 0`
+   - Remove `completed` field if present: `node .claude/skills/workflow-manifest/scripts/manifest.js set {topic} implementation.completed ""`
 3. Commit tracking changes:
 
 ```

@@ -35,7 +35,7 @@ From each plan in scope, list every task across all phases:
 Ensure the review output directory exists:
 
 ```bash
-mkdir -p .workflows/review/{topic}/r{N}
+mkdir -p .workflows/{topic}/review/r{N}
 ```
 
 ---
@@ -56,7 +56,7 @@ Dispatch verifiers in **batches of 5** via the Task tool.
 Each verifier receives:
 
 1. **Plan task** — the specific task with acceptance criteria
-2. **Specification path** — from the plan's frontmatter (if available)
+2. **Specification path** — from the manifest (if available)
 3. **Plan path** — the full plan for phase context
 4. **Project skill paths** — from Step 2 discovery
 5. **Review checklist path** — `skills/technical-review/references/review-checklist.md`
@@ -78,7 +78,7 @@ FINDINGS_COUNT: {N blocking issues}
 SUMMARY: {1 sentence}
 ```
 
-Full findings are written to `.workflows/review/{topic}/r{N}/qa-task-{index}.md`.
+Full findings are written to `.workflows/{topic}/review/r{N}/qa-task-{index}.md`.
 
 ---
 
@@ -86,7 +86,7 @@ Full findings are written to `.workflows/review/{topic}/r{N}/qa-task-{index}.md`
 
 Once all batches have completed:
 
-1. Read all `.workflows/review/{topic}/r{N}/qa-task-*.md` files
+1. Read all `.workflows/{topic}/review/r{N}/qa-task-*.md` files
 2. Synthesize findings from file contents:
    - Collect all tasks with `STATUS: Incomplete` or `STATUS: Issues Found` as blocking issues
    - Collect all test issues (under/over-tested)
