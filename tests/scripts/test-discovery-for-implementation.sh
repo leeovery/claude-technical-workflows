@@ -8,7 +8,7 @@
 # - Implementation state from manifest CLI (phases.implementation)
 # - planning.md and implementation.md from work-unit dirs
 # - External dependencies from manifest CLI
-# - Environment setup from .workflows/environment-setup.md
+# - Environment setup from .workflows/.state/environment-setup.md
 #
 
 set -eo pipefail
@@ -77,8 +77,8 @@ create_planning_file() {
     local wu_name="$1"
     local content="$2"
 
-    mkdir -p "$TEST_DIR/.workflows/$wu_name/planning"
-    cat > "$TEST_DIR/.workflows/$wu_name/planning/planning.md" << EOF
+    mkdir -p "$TEST_DIR/.workflows/$wu_name/planning/$wu_name"
+    cat > "$TEST_DIR/.workflows/$wu_name/planning/$wu_name/planning.md" << EOF
 $content
 EOF
 }
@@ -87,8 +87,8 @@ create_implementation_file() {
     local wu_name="$1"
     local content="$2"
 
-    mkdir -p "$TEST_DIR/.workflows/$wu_name/implementation"
-    cat > "$TEST_DIR/.workflows/$wu_name/implementation/implementation.md" << EOF
+    mkdir -p "$TEST_DIR/.workflows/$wu_name/implementation/$wu_name"
+    cat > "$TEST_DIR/.workflows/$wu_name/implementation/$wu_name/implementation.md" << EOF
 $content
 EOF
 }
@@ -245,8 +245,8 @@ format: local-markdown
 ---
 
 # Implementation Plan: With Spec"
-mkdir -p "$TEST_DIR/.workflows/with-spec/specification"
-echo "# Spec" > "$TEST_DIR/.workflows/with-spec/specification/specification.md"
+mkdir -p "$TEST_DIR/.workflows/with-spec/specification/with-spec"
+echo "# Spec" > "$TEST_DIR/.workflows/with-spec/specification/with-spec/specification.md"
 
 output=$(run_discovery)
 
@@ -288,7 +288,8 @@ format: local-markdown
 
 # Implementation Plan: Test"
 
-cat > "$TEST_DIR/.workflows/environment-setup.md" << 'EOF'
+mkdir -p "$TEST_DIR/.workflows/.state"
+cat > "$TEST_DIR/.workflows/.state/environment-setup.md" << 'EOF'
 # Environment Setup
 
 Run the following commands:
@@ -318,7 +319,8 @@ format: local-markdown
 
 # Implementation Plan: Test"
 
-cat > "$TEST_DIR/.workflows/environment-setup.md" << 'EOF'
+mkdir -p "$TEST_DIR/.workflows/.state"
+cat > "$TEST_DIR/.workflows/.state/environment-setup.md" << 'EOF'
 # Environment Setup
 
 No special setup required.

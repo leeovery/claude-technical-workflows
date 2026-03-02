@@ -6,7 +6,7 @@
 # Discussion discovery reads:
 # - Research files from .workflows/{work_unit}/research/ directories
 # - Discussions from manifest CLI + discussion files in work-unit dirs
-# - Cache state from .workflows/.state/research-analysis.md
+# - Cache state from .workflows/{work_unit}/.state/research-analysis.md
 #
 
 set -eo pipefail
@@ -311,8 +311,7 @@ date: 2026-01-21
 
     assert_contains "$output" 'status: "none"' "Cache status is none"
     assert_contains "$output" 'reason: "no cache exists"' "Reason is no cache exists"
-    assert_contains "$output" 'checksum: null' "Cache checksum is null"
-    assert_contains "$output" 'generated: null' "Cache generated is null"
+    assert_contains "$output" 'entries: []' "No cache entries"
 
     echo ""
 }
@@ -324,8 +323,6 @@ test_cache_valid() {
     echo -e "${YELLOW}Test: Cache status valid (checksums match)${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/.workflows/.state"
-
     create_manifest "research-project" "epic" '{}'
     create_research_file "research-project" "exploration.md" "---
 topic: exploration
@@ -336,8 +333,9 @@ date: 2026-01-21
     # Compute the checksum of the research file
     local checksum=$(cat "$TEST_DIR/.workflows/research-project/research"/*.md | md5sum | cut -d' ' -f1)
 
-    # Create cache with matching checksum
-    cat > "$TEST_DIR/.workflows/.state/research-analysis.md" << EOF
+    # Create cache with matching checksum (per-work-unit .state/)
+    mkdir -p "$TEST_DIR/.workflows/research-project/.state"
+    cat > "$TEST_DIR/.workflows/research-project/.state/research-analysis.md" << EOF
 ---
 checksum: $checksum
 generated: 2026-01-21T10:00:00
@@ -366,8 +364,6 @@ test_cache_stale() {
     echo -e "${YELLOW}Test: Cache status stale (research changed)${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/.workflows/.state"
-
     create_manifest "research-project" "epic" '{}'
     create_research_file "research-project" "exploration.md" "---
 topic: exploration
@@ -377,8 +373,9 @@ date: 2026-01-21
 
 This content is different from when cache was created."
 
-    # Create cache with OLD checksum (doesn't match current)
-    cat > "$TEST_DIR/.workflows/.state/research-analysis.md" << 'EOF'
+    # Create cache with OLD checksum (doesn't match current, per-work-unit .state/)
+    mkdir -p "$TEST_DIR/.workflows/research-project/.state"
+    cat > "$TEST_DIR/.workflows/research-project/.state/research-analysis.md" << 'EOF'
 ---
 checksum: old_checksum_that_doesnt_match
 generated: 2026-01-20T10:00:00
@@ -488,9 +485,10 @@ test_cache_stale_no_research() {
     echo -e "${YELLOW}Test: Cache stale when no research files${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/.workflows/.state"
+    # Create a work unit dir with a cache but no research files
+    mkdir -p "$TEST_DIR/.workflows/orphan-cache/.state"
 
-    cat > "$TEST_DIR/.workflows/.state/research-analysis.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/orphan-cache/.state/research-analysis.md" << 'EOF'
 ---
 checksum: abc123
 generated: 2026-01-20T10:00:00

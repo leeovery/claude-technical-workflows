@@ -6,7 +6,7 @@
 # Specification discovery reads:
 # - Discussions from work-unit dirs (.workflows/{wu}/discussion/)
 # - Specifications from work-unit dirs (.workflows/{wu}/specification/)
-# - Cache state from .workflows/.state/discussion-consolidation-analysis.md
+# - Cache state from .workflows/{wu}/.state/discussion-consolidation-analysis.md
 #
 
 set -eo pipefail
@@ -86,8 +86,8 @@ create_spec_file() {
     local wu_name="$1"
     local content="$2"
 
-    mkdir -p "$TEST_DIR/.workflows/$wu_name/specification"
-    cat > "$TEST_DIR/.workflows/$wu_name/specification/specification.md" << EOF
+    mkdir -p "$TEST_DIR/.workflows/$wu_name/specification/$wu_name"
+    cat > "$TEST_DIR/.workflows/$wu_name/specification/$wu_name/specification.md" << EOF
 $content
 EOF
 }
@@ -168,13 +168,13 @@ test_discussions_only() {
     setup_fixture
 
     create_manifest "auth-flow" "feature" '{"discussion": {"status": "in-progress"}}'
-    create_discussion_file "auth-flow" "discussion.md" "---
+    create_discussion_file "auth-flow" "auth-flow.md" "---
 status: in-progress
 ---
 # Discussion: Auth Flow"
 
     create_manifest "api-design" "feature" '{"discussion": {"status": "concluded"}}'
-    create_discussion_file "api-design" "discussion.md" "---
+    create_discussion_file "api-design" "api-design.md" "---
 status: concluded
 ---
 # Discussion: API Design"
@@ -223,7 +223,7 @@ test_discussion_with_spec() {
     setup_fixture
 
     create_manifest "auth-flow" "feature" '{"discussion": {"status": "concluded"}, "specification": {"status": "in-progress"}}'
-    create_discussion_file "auth-flow" "discussion.md" "---
+    create_discussion_file "auth-flow" "auth-flow.md" "---
 status: concluded
 ---
 # Discussion: Auth Flow"
@@ -249,7 +249,7 @@ test_discussion_with_concluded_spec() {
     setup_fixture
 
     create_manifest "billing" "feature" '{"discussion": {"status": "concluded"}, "specification": {"status": "concluded"}}'
-    create_discussion_file "billing" "discussion.md" "---
+    create_discussion_file "billing" "billing.md" "---
 status: concluded
 ---
 # Discussion: Billing"
@@ -275,7 +275,7 @@ test_discussion_without_spec_no_status() {
     setup_fixture
 
     create_manifest "standalone" "feature" '{"discussion": {"status": "concluded"}}'
-    create_discussion_file "standalone" "discussion.md" "---
+    create_discussion_file "standalone" "standalone.md" "---
 status: concluded
 ---
 # Discussion: Standalone"
@@ -296,7 +296,7 @@ test_cache_none() {
     setup_fixture
 
     create_manifest "test" "feature" '{"discussion": {"status": "in-progress"}}'
-    create_discussion_file "test" "discussion.md" "---
+    create_discussion_file "test" "test.md" "---
 status: in-progress
 ---
 # Discussion: Test"
@@ -305,8 +305,7 @@ status: in-progress
 
     assert_contains "$output" 'status: "none"' "Cache status is none"
     assert_contains "$output" 'reason: "no cache exists"' "Reason is no cache exists"
-    assert_contains "$output" 'checksum: null' "Checksum is null"
-    assert_contains "$output" 'anchored_names: []' "No anchored names"
+    assert_contains "$output" 'entries: []' "No cache entries"
 
     echo ""
 }
@@ -319,17 +318,17 @@ test_cache_valid() {
     setup_fixture
 
     create_manifest "auth-flow" "feature" '{"discussion": {"status": "concluded"}}'
-    create_discussion_file "auth-flow" "discussion.md" "---
+    create_discussion_file "auth-flow" "auth-flow.md" "---
 status: concluded
 ---
 # Discussion: Auth Flow"
 
-    mkdir -p "$TEST_DIR/.workflows/.state"
+    mkdir -p "$TEST_DIR/.workflows/auth-flow/.state"
 
     # Compute the checksum of all discussion files
     local checksum=$(find "$TEST_DIR/.workflows" -path "*/discussion/*.md" -print0 2>/dev/null | sort -z | xargs -0 cat 2>/dev/null | md5sum | cut -d' ' -f1)
 
-    cat > "$TEST_DIR/.workflows/.state/discussion-consolidation-analysis.md" << EOF
+    cat > "$TEST_DIR/.workflows/auth-flow/.state/discussion-consolidation-analysis.md" << EOF
 ---
 checksum: $checksum
 generated: 2026-01-20T10:00:00
@@ -356,15 +355,15 @@ test_cache_stale() {
     setup_fixture
 
     create_manifest "auth-flow" "feature" '{"discussion": {"status": "concluded"}}'
-    create_discussion_file "auth-flow" "discussion.md" "---
+    create_discussion_file "auth-flow" "auth-flow.md" "---
 status: concluded
 ---
 # Discussion: Auth Flow"
 
-    mkdir -p "$TEST_DIR/.workflows/.state"
+    mkdir -p "$TEST_DIR/.workflows/auth-flow/.state"
 
     # Use a different checksum to make cache stale
-    cat > "$TEST_DIR/.workflows/.state/discussion-consolidation-analysis.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/auth-flow/.state/discussion-consolidation-analysis.md" << 'EOF'
 ---
 checksum: oldchecksum123
 generated: 2026-01-19T10:00:00
@@ -390,9 +389,11 @@ test_cache_stale_no_discussions() {
     echo -e "${YELLOW}Test: Cache stale when no discussions${NC}"
     setup_fixture
 
-    mkdir -p "$TEST_DIR/.workflows/.state"
+    # Create a work unit with a cache file but no discussions
+    create_manifest "orphan-cache" "feature" '{}'
+    mkdir -p "$TEST_DIR/.workflows/orphan-cache/.state"
 
-    cat > "$TEST_DIR/.workflows/.state/discussion-consolidation-analysis.md" << 'EOF'
+    cat > "$TEST_DIR/.workflows/orphan-cache/.state/discussion-consolidation-analysis.md" << 'EOF'
 ---
 checksum: abc123
 generated: 2026-01-20T10:00:00
@@ -419,7 +420,7 @@ test_current_state_checksum() {
     setup_fixture
 
     create_manifest "test" "feature" '{"discussion": {"status": "concluded"}}'
-    create_discussion_file "test" "discussion.md" "---
+    create_discussion_file "test" "test.md" "---
 status: concluded
 ---
 # Discussion: Test"

@@ -76,8 +76,8 @@ create_planning_file() {
     local wu_name="$1"
     local content="$2"
 
-    mkdir -p "$TEST_DIR/.workflows/$wu_name/planning"
-    cat > "$TEST_DIR/.workflows/$wu_name/planning/planning.md" << EOF
+    mkdir -p "$TEST_DIR/.workflows/$wu_name/planning/$wu_name"
+    cat > "$TEST_DIR/.workflows/$wu_name/planning/$wu_name/planning.md" << EOF
 $content
 EOF
 }
@@ -87,8 +87,8 @@ create_review_file() {
     local version="$2"
     local content="$3"
 
-    mkdir -p "$TEST_DIR/.workflows/$wu_name/review/r${version}"
-    cat > "$TEST_DIR/.workflows/$wu_name/review/r${version}/review.md" << EOF
+    mkdir -p "$TEST_DIR/.workflows/$wu_name/review/$wu_name/r${version}"
+    cat > "$TEST_DIR/.workflows/$wu_name/review/$wu_name/r${version}/review.md" << EOF
 $content
 EOF
 }
@@ -222,8 +222,8 @@ format: local-markdown
 ---
 
 # Implementation Plan: With Spec"
-mkdir -p "$TEST_DIR/.workflows/with-spec/specification"
-echo "# Spec" > "$TEST_DIR/.workflows/with-spec/specification/specification.md"
+mkdir -p "$TEST_DIR/.workflows/with-spec/specification/with-spec"
+echo "# Spec" > "$TEST_DIR/.workflows/with-spec/specification/with-spec/specification.md"
 
 output=$(run_discovery)
 
@@ -356,7 +356,7 @@ format: local-markdown
 # Plan: Empty Review"
 
 # r1 directory exists but no review.md inside it
-mkdir -p "$TEST_DIR/.workflows/empty-review/review/r1"
+mkdir -p "$TEST_DIR/.workflows/empty-review/review/empty-review/r1"
 
 output=$(run_discovery)
 

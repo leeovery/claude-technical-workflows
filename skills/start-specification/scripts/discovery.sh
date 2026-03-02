@@ -210,7 +210,7 @@ while IFS=' ' read -r wu_name wu_type; do
 
     # Compute current checksum across discussion files in this work unit
     disc_dir="$WORKFLOWS_DIR/$wu_name/discussion"
-    disc_files=$(find "$disc_dir" -name "*.md" 2>/dev/null | sort)
+    disc_files=$(find "$disc_dir" -name "*.md" 2>/dev/null | sort || true)
 
     cache_status="stale"
     cache_reason="discussions have changed since cache was generated"

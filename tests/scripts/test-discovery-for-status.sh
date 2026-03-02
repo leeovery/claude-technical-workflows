@@ -75,8 +75,8 @@ create_spec_file() {
     local wu_name="$1"
     local content="$2"
 
-    mkdir -p "$TEST_DIR/.workflows/$wu_name/specification"
-    cat > "$TEST_DIR/.workflows/$wu_name/specification/specification.md" << EOF
+    mkdir -p "$TEST_DIR/.workflows/$wu_name/specification/$wu_name"
+    cat > "$TEST_DIR/.workflows/$wu_name/specification/$wu_name/specification.md" << EOF
 $content
 EOF
 }
@@ -85,8 +85,8 @@ create_planning_file() {
     local wu_name="$1"
     local content="$2"
 
-    mkdir -p "$TEST_DIR/.workflows/$wu_name/planning"
-    cat > "$TEST_DIR/.workflows/$wu_name/planning/planning.md" << EOF
+    mkdir -p "$TEST_DIR/.workflows/$wu_name/planning/$wu_name"
+    cat > "$TEST_DIR/.workflows/$wu_name/planning/$wu_name/planning.md" << EOF
 $content
 EOF
 }
@@ -95,8 +95,8 @@ create_implementation_file() {
     local wu_name="$1"
     local content="$2"
 
-    mkdir -p "$TEST_DIR/.workflows/$wu_name/implementation"
-    cat > "$TEST_DIR/.workflows/$wu_name/implementation/implementation.md" << EOF
+    mkdir -p "$TEST_DIR/.workflows/$wu_name/implementation/$wu_name"
+    cat > "$TEST_DIR/.workflows/$wu_name/implementation/$wu_name/implementation.md" << EOF
 $content
 EOF
 }
@@ -105,8 +105,8 @@ create_task_file() {
     local wu_name="$1"
     local task_id="$2"
 
-    mkdir -p "$TEST_DIR/.workflows/$wu_name/planning/tasks"
-    cat > "$TEST_DIR/.workflows/$wu_name/planning/tasks/${task_id}.md" << EOF
+    mkdir -p "$TEST_DIR/.workflows/$wu_name/planning/$wu_name/tasks"
+    cat > "$TEST_DIR/.workflows/$wu_name/planning/$wu_name/tasks/${task_id}.md" << EOF
 ---
 task_id: $task_id
 ---

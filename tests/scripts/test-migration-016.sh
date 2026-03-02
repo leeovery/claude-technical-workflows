@@ -266,10 +266,10 @@ echo "task 1" > "$TEST_DIR/.workflows/planning/dark-mode/tasks/task-1.md"
 run_migration
 
 assert_file_exists "$TEST_DIR/.workflows/dark-mode/manifest.json" "manifest.json created"
-assert_file_exists "$TEST_DIR/.workflows/dark-mode/discussion/discussion.md" "discussion moved and renamed"
-assert_file_exists "$TEST_DIR/.workflows/dark-mode/specification/specification.md" "specification moved"
-assert_file_exists "$TEST_DIR/.workflows/dark-mode/planning/planning.md" "plan.md renamed to planning.md"
-assert_file_exists "$TEST_DIR/.workflows/dark-mode/planning/tasks/task-1.md" "tasks directory moved"
+assert_file_exists "$TEST_DIR/.workflows/dark-mode/discussion/dark-mode.md" "discussion moved as {name}.md"
+assert_file_exists "$TEST_DIR/.workflows/dark-mode/specification/dark-mode/specification.md" "specification in topic subdir"
+assert_file_exists "$TEST_DIR/.workflows/dark-mode/planning/dark-mode/planning.md" "plan.md renamed to planning.md in topic subdir"
+assert_file_exists "$TEST_DIR/.workflows/dark-mode/planning/dark-mode/tasks/task-1.md" "tasks directory in topic subdir"
 
 # Verify manifest content
 manifest=$(cat "$TEST_DIR/.workflows/dark-mode/manifest.json")
@@ -308,7 +308,7 @@ EOF
 run_migration
 
 assert_file_exists "$TEST_DIR/.workflows/login-timeout/manifest.json" "manifest.json created"
-assert_file_exists "$TEST_DIR/.workflows/login-timeout/investigation/investigation.md" "investigation moved"
+assert_file_exists "$TEST_DIR/.workflows/login-timeout/investigation/login-timeout.md" "investigation moved as {name}.md"
 
 manifest=$(cat "$TEST_DIR/.workflows/login-timeout/manifest.json")
 assert_contains "$manifest" '"work_type": "bugfix"' "manifest has bugfix work_type"
@@ -341,9 +341,9 @@ assert_file_exists "$TEST_DIR/.workflows/auth-flow/manifest.json" "auth-flow man
 assert_file_exists "$TEST_DIR/.workflows/dark-mode/manifest.json" "dark-mode manifest created"
 assert_file_exists "$TEST_DIR/.workflows/api-keys/manifest.json" "api-keys manifest created"
 
-assert_file_exists "$TEST_DIR/.workflows/auth-flow/discussion/discussion.md" "auth-flow discussion moved"
-assert_file_exists "$TEST_DIR/.workflows/dark-mode/discussion/discussion.md" "dark-mode discussion moved"
-assert_file_exists "$TEST_DIR/.workflows/api-keys/discussion/discussion.md" "api-keys discussion moved"
+assert_file_exists "$TEST_DIR/.workflows/auth-flow/discussion/auth-flow.md" "auth-flow discussion moved"
+assert_file_exists "$TEST_DIR/.workflows/dark-mode/discussion/dark-mode.md" "dark-mode discussion moved"
+assert_file_exists "$TEST_DIR/.workflows/api-keys/discussion/api-keys.md" "api-keys discussion moved"
 
 echo ""
 
@@ -464,7 +464,7 @@ EOF
 
 run_migration
 first_manifest=$(cat "$TEST_DIR/.workflows/idempotent-test/manifest.json")
-first_discussion=$(cat "$TEST_DIR/.workflows/idempotent-test/discussion/discussion.md")
+first_discussion=$(cat "$TEST_DIR/.workflows/idempotent-test/discussion/idempotent-test.md")
 
 # Reset counters and run again
 FILES_UPDATED=0
@@ -472,7 +472,7 @@ FILES_SKIPPED=0
 run_migration
 
 second_manifest=$(cat "$TEST_DIR/.workflows/idempotent-test/manifest.json")
-second_discussion=$(cat "$TEST_DIR/.workflows/idempotent-test/discussion/discussion.md")
+second_discussion=$(cat "$TEST_DIR/.workflows/idempotent-test/discussion/idempotent-test.md")
 
 assert_equals "$second_manifest" "$first_manifest" "Manifest unchanged on second run"
 assert_equals "$second_discussion" "$first_discussion" "Discussion unchanged on second run"
@@ -512,7 +512,7 @@ EOF
 
 run_migration
 
-content=$(cat "$TEST_DIR/.workflows/preserved/discussion/discussion.md")
+content=$(cat "$TEST_DIR/.workflows/preserved/discussion/preserved.md")
 assert_contains "$content" "^---$" "Frontmatter delimiters preserved"
 assert_contains "$content" "^topic: preserved$" "topic field preserved"
 assert_contains "$content" "^status: concluded$" "status field preserved"
@@ -679,11 +679,11 @@ EOF
 
 run_migration
 
-assert_file_exists "$TEST_DIR/.workflows/impl-rename/implementation/implementation.md" "tracking.md renamed to implementation.md"
-assert_file_not_exists "$TEST_DIR/.workflows/impl-rename/implementation/tracking.md" "old tracking.md not present"
+assert_file_exists "$TEST_DIR/.workflows/impl-rename/implementation/impl-rename/implementation.md" "tracking.md renamed to implementation.md in topic subdir"
+assert_file_not_exists "$TEST_DIR/.workflows/impl-rename/implementation/impl-rename/tracking.md" "old tracking.md not present"
 
 # Verify content preserved
-content=$(cat "$TEST_DIR/.workflows/impl-rename/implementation/implementation.md")
+content=$(cat "$TEST_DIR/.workflows/impl-rename/implementation/impl-rename/implementation.md")
 assert_contains "$content" "Some progress here" "implementation content preserved"
 
 echo ""
