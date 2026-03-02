@@ -180,15 +180,19 @@ Processing skills should **never hardcode references** to specific workflow phas
 
 ## Key Conventions
 
-Work-unit-first directory structure:
+Work-unit-first directory structure with uniform `{topic}` in all paths. For feature/bugfix, `{topic}` equals `{work_unit}`. For epic, `{topic}` is the item within a phase.
+
 - Manifest: `.workflows/{work_unit}/manifest.json`
-- Research: `.workflows/{work_unit}/research/`
-- Discussion: `.workflows/{work_unit}/discussion/discussion.md` (feature/bugfix) or `.workflows/{work_unit}/discussion/{topic}.md` (epic)
-- Investigation: `.workflows/{work_unit}/investigation/investigation.md`
-- Specification: `.workflows/{work_unit}/specification/specification.md`
-- Planning: `.workflows/{work_unit}/planning/planning.md` + format-specific task storage
-- Implementation: `.workflows/{work_unit}/implementation/implementation.md`
-- Review: `.workflows/{work_unit}/review/r{N}/review.md`
+- Research: `.workflows/{work_unit}/research/` (freeform, no topic)
+- Discussion: `.workflows/{work_unit}/discussion/{topic}.md` (flat file)
+- Investigation: `.workflows/{work_unit}/investigation/{topic}.md` (flat file)
+- Specification: `.workflows/{work_unit}/specification/{topic}/specification.md`
+- Planning: `.workflows/{work_unit}/planning/{topic}/planning.md` + `tasks/`
+- Implementation: `.workflows/{work_unit}/implementation/{topic}/implementation.md`
+- Review: `.workflows/{work_unit}/review/{topic}/r{N}/review.md`
+- State: `.workflows/{work_unit}/.state/` (per-work-unit analysis files)
+- Global state: `.workflows/.state/` (migrations, environment-setup.md)
+- Cache: `.workflows/.cache/` (sessions, planning scratch)
 
 **work_type field**: Each work unit's `work_type` (epic, feature, or bugfix) is stored in its `manifest.json` — the single source of truth for all workflow state. This enables:
 - Unified discovery across all phases
@@ -290,10 +294,21 @@ The manifest CLI at `skills/workflow-manifest/scripts/manifest.js` is the single
 
 Key properties:
 - JSON format, zero dependencies (Node handles JSON natively)
-- Dot notation for scoped reads/writes (e.g., `get {name}.phases.discussion`)
+- Domain-aware flag syntax: `--phase` and `--topic` flags route to correct internal path based on work_type
+- Skills never know manifest internal structure (flat for feature/bugfix, items for epic)
 - File locking for concurrent session safety
 - Validation of structural values (work_type, phase names, statuses, gate modes)
 - Manifest location: `.workflows/{work_unit}/manifest.json`
+
+Domain-aware CLI grammar:
+```bash
+MANIFEST="node .claude/skills/workflow-manifest/scripts/manifest.js"
+$MANIFEST get {work_unit} --phase discussion --topic {topic} status    # phase-level read
+$MANIFEST set {work_unit} --phase discussion --topic {topic} status concluded  # phase-level write
+$MANIFEST add-item {work_unit} --phase discussion --topic {topic}      # create phase entry
+$MANIFEST get {work_unit} work_type                                    # work-unit-level read
+$MANIFEST get {work_unit} --raw phases.discussion.status               # raw dot-path (discovery scripts only)
+```
 
 See `skills/workflow-manifest/SKILL.md` for the full API.
 
@@ -490,7 +505,7 @@ When a phase can't proceed — use the phase title pattern, then explain:
 ```
 Planning Overview
 
-No specification found in .workflows/{work_unit}/specification/
+No specification found in .workflows/{work_unit}/specification/{topic}/
 
 The planning phase requires a concluded specification.
 Run /start-specification first.

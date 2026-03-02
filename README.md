@@ -201,23 +201,35 @@ Documents are stored in your project using a **work-unit-first** organisation. E
 .workflows/
   {work_unit}/                           # One directory per work unit
     manifest.json                        #   Single source of truth for state
+    .state/                              #   Per-work-unit analysis files
+      research-analysis.md
     research/                            #   Flat, semantically named files
       exploration.md
-    discussion/                          #   discussion.md (feature/bugfix)
-      discussion.md                      #   or {topic}.md per discussion (epic)
+    discussion/                          #   {topic}.md flat files
+      {topic}.md
+    investigation/                       #   {topic}.md flat files (bugfix)
+      {topic}.md
     specification/
-      specification.md
+      {topic}/
+        specification.md                 #   Spec + review tracking files
     planning/
-      planning.md                        #   Plan index (phases, metadata)
-      tasks/                             #   Task files (local-markdown format)
-        {work_unit}-1-1.md
+      {topic}/
+        planning.md                      #   Plan index (phases, metadata)
+        tasks/                           #   Task files (local-markdown format)
+          {topic}-1-1.md
     implementation/
-      implementation.md                  #   Progress, gates, current task
+      {topic}/
+        implementation.md                #   Progress, gates, current task
     review/
-      r1/
-        review.md                        #   Review summary and verdict
-        qa-task-1.md                     #   Per-task QA verification
+      {topic}/
+        r1/
+          review.md                      #   Review summary and verdict
+          qa-task-1.md                   #   Per-task QA verification
+  .state/                                # Global state (migrations, env setup)
+  .cache/                                # Ephemeral (sessions, planning scratch)
 ```
+
+For feature/bugfix, `{topic}` equals `{work_unit}`. For epic, `{topic}` is the item within a phase (e.g., `payment-processing` within the `payments-overhaul` epic).
 
 Each work unit starts with just a manifest. Phase directories are created as you enter each phase. Planning task storage varies by [output format](#output-formats) -- the tree above shows local-markdown; Tick and Linear store tasks externally.
 
