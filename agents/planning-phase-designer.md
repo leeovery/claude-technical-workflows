@@ -17,7 +17,7 @@ You receive file paths via the orchestrator's prompt:
 2. **Specification path** — The validated specification to plan from
 3. **Cross-cutting spec paths** (if any) — Architectural decisions that influence planning
 4. **phase-design.md** — Phase design principles
-5. **Context-specific phase design** — Work-type guidance (greenfield, feature, or bugfix)
+5. **Context-specific phase design** — Work-type guidance (epic, feature, or bugfix)
 6. **task-design.md** — Task design principles (for phase granularity awareness)
 7. **plan-index-schema.md** — Canonical plan index structure
 

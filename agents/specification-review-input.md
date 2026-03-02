@@ -54,7 +54,7 @@ You receive via the orchestrator's prompt:
    - Integration points that seem implicit but aren't specified
    - Behaviors that are ambiguous without clarification
    This should be infrequent — most gaps come from source material. But occasionally sources have blind spots worth surfacing.
-8. **Write findings** to `.workflows/specification/{topic}/review-input-tracking-c{cycle-number}.md` using the tracking format
+8. **Write findings** to `.workflows/{work_unit}/specification/review-input-tracking-c{cycle-number}.md` using the tracking format
 
 ## Hard Rules
 
@@ -69,7 +69,7 @@ You receive via the orchestrator's prompt:
 
 ## Output File Format
 
-Write to `.workflows/specification/{topic}/review-input-tracking-c{cycle-number}.md` using this format:
+Write to `.workflows/{work_unit}/specification/review-input-tracking-c{cycle-number}.md` using this format:
 
 ```markdown
 ---
