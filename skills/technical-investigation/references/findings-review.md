@@ -13,7 +13,7 @@ Summarize the investigation findings in a structured display. Pull from the inve
 > *Output the next fenced block as a code block:*
 
 ```
-Investigation Findings: {topic}
+Investigation Findings: {work_unit}
 
 Root Cause:
   {clear, precise root cause statement}

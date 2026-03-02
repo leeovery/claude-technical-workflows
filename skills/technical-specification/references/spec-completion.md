@@ -111,7 +111,7 @@ Specification is complete when:
 - User confirms the specification is complete
 - No blocking gaps remain
 
-Commit: `spec({topic}): conclude specification`
+Commit: `spec({work_unit}): conclude specification`
 
 ---
 
@@ -125,7 +125,7 @@ If any of your sources were **existing specifications** (as opposed to discussio
    node .claude/skills/workflow-manifest/scripts/manifest.js set {source-work-unit}.phases.specification.superseded_by {new-work-unit}
    ```
 2. Inform the user which work units were updated
-3. Commit: `spec({topic}): mark source specifications as superseded`
+3. Commit: `spec({work_unit}): mark source specifications as superseded`
 
 ---
 
@@ -138,7 +138,7 @@ Check the work type via manifest CLI (`node .claude/skills/workflow-manifest/scr
 This specification is part of a pipeline. Invoke the `/workflow-bridge` skill:
 
 ```
-Pipeline bridge for: {topic}
+Pipeline bridge for: {work_unit}
 Work type: {work_type from manifest}
 Completed phase: specification
 
@@ -150,7 +150,7 @@ Invoke the workflow-bridge skill to enter plan mode with continuation instructio
 > *Output the next fenced block as a code block:*
 
 ```
-Specification concluded: {topic}
+Specification concluded: {work_unit}
 
 The specification is ready for planning. Run /start-planning to begin.
 ```

@@ -109,7 +109,7 @@ Read the specification status via manifest CLI (`node .claude/skills/workflow-ma
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-Found existing specification for **{topic}**.
+Found existing specification for **{work_unit}**.
 
 · · · · · · · · · · · ·
 - **`c`/`continue`** — Walk through the specification from its current state. You can review, amend, or navigate at any point.
@@ -128,7 +128,7 @@ Reset `finding_gate_mode` to `gated` via manifest CLI (`node .claude/skills/work
 #### If `restart`
 
 1. Delete the specification file and all review tracking files (`review-*-tracking-c*.md`) in the specification directory (`.workflows/{work_unit}/specification/`)
-2. Commit: `spec({topic}): restart specification`
+2. Commit: `spec({work_unit}): restart specification`
 
 → Proceed to **Step 1**.
 
@@ -162,7 +162,7 @@ Create the specification file at `.workflows/{work_unit}/specification/specifica
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.specification.sources.{source-name}.status pending
    ```
 
-Commit: `spec({topic}): initialize specification`
+Commit: `spec({work_unit}): initialize specification`
 
 → Proceed to **Step 3**.
 

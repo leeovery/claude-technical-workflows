@@ -79,7 +79,7 @@ Dispatch the `specification-review-input` agent via the Task tool:
 
 Wait for the agent to return. Record its STATUS as `phase_1_status`.
 
-**If the agent created a tracking file**, commit it: `spec({topic}): input review cycle {N}`
+**If the agent created a tracking file**, commit it: `spec({work_unit}): input review cycle {N}`
 
 Load **[process-review-findings.md](process-review-findings.md)** and follow its instructions to process findings with the user.
 
@@ -99,7 +99,7 @@ Dispatch the `specification-review-gap-analysis` agent via the Task tool:
 
 Wait for the agent to return. Record its STATUS as `phase_2_status`.
 
-**If the agent created a tracking file**, commit it: `spec({topic}): gap analysis cycle {N}`
+**If the agent created a tracking file**, commit it: `spec({work_unit}): gap analysis cycle {N}`
 
 Load **[process-review-findings.md](process-review-findings.md)** and follow its instructions to process findings with the user.
 
@@ -172,7 +172,7 @@ Auto-review has not converged after 5 cycles — escalating for human review.
 
 > **CHECKPOINT**: Do not confirm completion if any tracking files still show `status: in-progress`. They indicate incomplete review work.
 
-2. **Commit** all review tracking files: `spec({topic}): complete specification review (cycle {N})`
+2. **Commit** all review tracking files: `spec({work_unit}): complete specification review (cycle {N})`
 
 > *Output the next fenced block as a code block:*
 

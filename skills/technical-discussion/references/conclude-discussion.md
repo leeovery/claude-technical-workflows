@@ -29,7 +29,7 @@ Incorporate the user's context into the discussion, commit, then re-present the 
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.discussion.status concluded
 
    # Epic (item within phase):
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.discussion.items.{topic}.status concluded
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.discussion.items.{work_unit}.status concluded
    ```
 2. Final commit
 3. Read work_type from manifest:
@@ -54,7 +54,7 @@ Invoke the workflow-bridge skill to enter plan mode with continuation instructio
 > *Output the next fenced block as a code block:*
 
 ```
-Discussion concluded: {topic}
+Discussion concluded: {work_unit}
 
 Remaining in-progress discussions:
   • {topic-1}
@@ -68,7 +68,7 @@ To continue, clear your context and run /start-discussion to pick up the next to
 > *Output the next fenced block as a code block:*
 
 ```
-Discussion concluded: {topic}
+Discussion concluded: {work_unit}
 
 All discussions are now concluded.
 ```

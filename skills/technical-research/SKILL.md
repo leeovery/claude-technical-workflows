@@ -38,7 +38,7 @@ technical concept, a market opportunity — anything you want to investigate.
 > *Output the next fenced block as a code block:*
 
 ```
-You mentioned {topic}. That could cover a lot of ground — is there a specific
+You mentioned {work_unit}. That could cover a lot of ground — is there a specific
 angle you'd like to start with, or should I explore broadly?
 ```
 

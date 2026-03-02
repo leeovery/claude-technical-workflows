@@ -42,7 +42,7 @@ Incorporate the user's context into the investigation file and commit. Re-presen
 > *Output the next fenced block as a code block:*
 
 ```
-Investigation concluded: {topic}
+Investigation concluded: {work_unit}
 
 Root cause: {brief summary}
 Fix direction: {chosen approach}
