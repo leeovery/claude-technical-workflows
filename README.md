@@ -195,36 +195,31 @@ npx agntc remove leeovery/claude-technical-workflows
 
 ### Output Files
 
-Documents are stored in your project using a **phase-first** organisation. Early phases use flat files; later phases use topic directories with multiple files for tracking and analysis.
+Documents are stored in your project using a **work-unit-first** organisation. Each work unit (epic, feature, or bugfix) gets its own directory with phase subdirectories. A `manifest.json` in each work unit is the single source of truth for all workflow state.
 
 ```
 .workflows/
-├── research/                          # Phase 1 — flat, semantically named
-│   ├── exploration.md
-│   ├── competitor-analysis.md
-│   └── pricing-models.md
-├── discussion/                        # Phase 2 — one file per topic
-│   └── {topic}.md
-├── specification/                     # Phase 3 — directory per topic
-│   └── {topic}/
-│       └── specification.md
-├── planning/                          # Phase 4 — directory per topic
-│   └── {topic}/
-│       ├── plan.md                    #   Plan index (phases, metadata)
-│       └── tasks/                     #   Task files (local-markdown format)
-│           ├── {topic}-1-1.md
-│           └── {topic}-1-2.md
-├── implementation/                    # Phase 5 — directory per topic
-│   └── {topic}/
-│       └── tracking.md               #   Progress, gates, current task
-└── review/                            # Phase 6 — versioned per review
-    └── {topic}/
-        └── r1/
-            ├── review.md              #   Review summary and verdict
-            └── qa-task-1.md           #   Per-task QA verification
+  {work_unit}/                           # One directory per work unit
+    manifest.json                        #   Single source of truth for state
+    research/                            #   Flat, semantically named files
+      exploration.md
+    discussion/                          #   discussion.md (feature/bugfix)
+      discussion.md                      #   or {topic}.md per discussion (epic)
+    specification/
+      specification.md
+    planning/
+      planning.md                        #   Plan index (phases, metadata)
+      tasks/                             #   Task files (local-markdown format)
+        {work_unit}-1-1.md
+    implementation/
+      implementation.md                  #   Progress, gates, current task
+    review/
+      r1/
+        review.md                        #   Review summary and verdict
+        qa-task-1.md                     #   Per-task QA verification
 ```
 
-Research starts with `exploration.md` and splits into topic files as themes emerge. From specification onwards, each topic gets its own directory. Planning task storage varies by [output format](#output-formats) — the tree above shows local-markdown; Tick and Linear store tasks externally.
+Each work unit starts with just a manifest. Phase directories are created as you enter each phase. Planning task storage varies by [output format](#output-formats) -- the tree above shows local-markdown; Tick and Linear store tasks externally.
 
 ### Package Structure
 
@@ -242,9 +237,11 @@ skills/
 ├── # Unified entry points
 ├── workflow-start/                  # Discovers state, routes by work type
 ├── workflow-bridge/                 # Pipeline continuation — next phase routing
+├── workflow-manifest/               # Manifest CLI — single source of truth for state
 │
 ├── # Entry-point skills (user-invocable)
 ├── migrate/                         # Keep workflow files in sync with system design
+├── start-epic/                      # Pipeline: multi-topic, multi-session workflow
 ├── start-feature/                   # Pipeline: discussion → spec → plan → impl → review
 ├── start-bugfix/                    # Pipeline: investigation → spec → plan → impl → review
 ├── link-dependencies/               # Standalone: wire cross-topic deps

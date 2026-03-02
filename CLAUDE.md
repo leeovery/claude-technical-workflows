@@ -10,9 +10,9 @@ Claude Code skills package for structured technical discussion and planning work
 
 The workflow system supports three work types, each with its own pipeline:
 
-**Greenfield**: Building a new product from scratch
+**Epic**: Multi-topic work spanning multiple sessions (new products, large initiatives)
 - Phase-centric, multi-session, long-running (days/weeks/months)
-- All artifacts in a phase complete before moving to next
+- Topics move independently within phases
 - Research → Discussion → Specification → Planning → Implementation → Review
 
 **Feature**: Adding functionality to an existing product
@@ -41,7 +41,7 @@ The workflow system supports three work types, each with its own pipeline:
 skills/
   # Processing skills (model-invocable — do the work)
   technical-research/        # Explore and validate ideas
-  technical-discussion/      # Document discussions (feature/greenfield)
+  technical-discussion/      # Document discussions (feature/epic)
   technical-investigation/   # Investigate bugs (bugfix pipeline)
   technical-specification/   # Build validated specifications
   technical-planning/        # Create implementation plans
@@ -55,11 +55,15 @@ skills/
   workflow-bridge/             # Pipeline continuation - discovers next phase, enters plan mode
     scripts/discovery.sh       #   Topic-specific or phase-centric discovery
     references/                #   Work-type-specific continuation logic
+  workflow-manifest/           # Manifest CLI — single source of truth for workflow state
+    scripts/manifest.js        #   Node.js CLI (get/set/list/init/archive)
 
   # Entry-point skills (user-invocable — gather context, invoke processing skills)
   migrate/                   # Keep workflow files in sync with system design
     scripts/migrate.sh       #   Migration orchestrator
     scripts/migrations/      #   Individual migration scripts (numbered)
+  start-epic/                # Start epic pipeline (multi-topic, multi-session)
+    references/              #   Interview questions, handoffs, phase bridge
   start-feature/             # Start feature pipeline (power user entry)
     references/              #   Interview questions, handoffs, phase bridge
   start-bugfix/              # Start bugfix pipeline (power user entry)
@@ -140,9 +144,9 @@ Phase entry skills (`start-discussion`, `start-specification`, etc.) support thr
 - Enables deterministic pipeline continuation
 
 **Discovery Mode with pipeline context** (work_type only):
-- Invoked with work_type but no topic: `/start-specification greenfield`
+- Invoked with work_type but no topic: `/start-specification epic`
 - Stores work_type for the handoff, then runs full discovery
-- Enables greenfield routing where topic isn't known until analysis
+- Enables epic routing where topic isn't known until analysis
 
 **Standalone Discovery Mode** (no arguments):
 - User invokes `/start-discussion` directly
@@ -169,16 +173,17 @@ Processing skills should **never hardcode references** to specific workflow phas
 
 ## Key Conventions
 
-Phase-first directory structure:
-- Research: `.workflows/research/` (flat, semantically named files)
-- Discussion: `.workflows/discussion/{topic}.md`
-- Investigation: `.workflows/investigation/{topic}/investigation.md` (bugfix pipeline)
-- Specification: `.workflows/specification/{topic}/specification.md`
-- Planning: `.workflows/planning/{topic}/plan.md` + format-specific task storage
-- Implementation: `.workflows/implementation/{topic}/tracking.md`
-- Review: `.workflows/review/{topic}/r{N}/review.md`
+Work-unit-first directory structure:
+- Manifest: `.workflows/{work_unit}/manifest.json`
+- Research: `.workflows/{work_unit}/research/`
+- Discussion: `.workflows/{work_unit}/discussion/discussion.md` (feature/bugfix) or `.workflows/{work_unit}/discussion/{topic}.md` (epic)
+- Investigation: `.workflows/{work_unit}/investigation/investigation.md`
+- Specification: `.workflows/{work_unit}/specification/specification.md`
+- Planning: `.workflows/{work_unit}/planning/planning.md` + format-specific task storage
+- Implementation: `.workflows/{work_unit}/implementation/implementation.md`
+- Review: `.workflows/{work_unit}/review/r{N}/review.md`
 
-**work_type field**: All artifacts include `work_type` in frontmatter (greenfield, feature, or bugfix). This enables:
+**work_type field**: Each work unit's `work_type` (epic, feature, or bugfix) is stored in its `manifest.json` — the single source of truth for all workflow state. This enables:
 - Unified discovery across all phases
 - Correct pipeline routing via workflow-bridge
 - Work-type-specific behavior in processing skills
@@ -231,6 +236,9 @@ The `/migrate` skill keeps workflow files in sync with the current system design
 3. The orchestrator handles tracking — once a migration ID appears in the log, the script never runs again
 4. Use helper functions: `report_update`, `report_skip` (for display only)
 
+**Migration 016 — Work-unit restructure:**
+Migration 016 converts phase-first directories to work-unit-first, creates `manifest.json` files from artifact frontmatter, strips frontmatter from artifacts, renames `plan.md` to `planning.md` and `tracking.md` to `implementation.md`, and updates `work_type: greenfield` to `epic`.
+
 **Critical: Frontmatter extraction in bash scripts**
 
 Workflow documents may contain `---` horizontal rules in body content. NEVER use `sed -n '/^---$/,/^---$/p'` to extract frontmatter — it matches ALL `---` pairs, not just the first frontmatter block, causing body content to leak into extraction results and potential content loss during file rewrites.
@@ -268,6 +276,19 @@ Processing skills run long and may hit context compaction. The hook system provi
 - Installs hooks into `.claude/settings.json` (appends to existing settings, preserving user configuration) and stops with restart message
 - Uses jq if available for merging, falls back to node, then to manual instructions
 - One-time cost; self-healing if hooks are removed
+
+## Manifest CLI
+
+The manifest CLI at `skills/workflow-manifest/scripts/manifest.js` is the single source of truth for all workflow state. It replaces YAML frontmatter for state management — artifacts are pure markdown with no frontmatter.
+
+Key properties:
+- JSON format, zero dependencies (Node handles JSON natively)
+- Dot notation for scoped reads/writes (e.g., `get {name}.phases.discussion`)
+- File locking for concurrent session safety
+- Validation of structural values (work_type, phase names, statuses, gate modes)
+- Manifest location: `.workflows/{work_unit}/manifest.json`
+
+See `skills/workflow-manifest/SKILL.md` for the full API.
 
 ## Display & Output Conventions (IMPORTANT)
 
@@ -462,7 +483,7 @@ When a phase can't proceed — use the phase title pattern, then explain:
 ```
 Planning Overview
 
-No specifications found in .workflows/specification/
+No specification found in .workflows/{work_unit}/specification/
 
 The planning phase requires a concluded specification.
 Run /start-specification first.
@@ -539,7 +560,7 @@ Use H4 headings for if/else branches within a step:
 
 1. Shared setup steps...
 
-**If work_type is set** (feature, bugfix, or greenfield):
+**If work_type is set** (feature, bugfix, or epic):
 
 {branch content}
 
