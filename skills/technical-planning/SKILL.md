@@ -101,9 +101,9 @@ Check the planning status via manifest CLI:
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.phases.planning.status
 ```
 
-If `concluded`, update it to `planning`:
+If `concluded`, update it to `in-progress`:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.planning.status planning
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.planning.status in-progress
 ```
 
 Note the current phase and task position from the manifest:
@@ -119,7 +119,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.phases
 
 Load **[spec-change-detection.md](references/spec-change-detection.md)** to check whether the specification has changed since planning started. Then present the user with an informed choice:
 
-Found existing plan for **{topic}** (previously reached phase {N}, task {M}).
+Found existing plan for **{work_unit}** (previously reached phase {N}, task {M}).
 
 {spec change summary from spec-change-detection.md}
 
@@ -160,7 +160,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases
 3. Follow the authoring file's cleanup instructions to remove Authored Tasks for this topic
 4. Delete the scratch directory if it exists: `rm -rf .workflows/.cache/planning/{work_unit}/`
 5. Delete the Plan Index File
-6. Commit: `planning({topic}): restart planning`
+6. Commit: `planning({work_unit}): restart planning`
 
 → Proceed to **Step 1**.
 
@@ -213,7 +213,7 @@ Once selected:
 3. Create the Plan Index File at `.workflows/{work_unit}/planning/planning.md` using the **Title** template from **[plan-index-schema.md](references/plan-index-schema.md)**.
 4. Set metadata in the manifest:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.planning.status planning
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.planning.status in-progress
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.planning.format {chosen-format}
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.planning.spec_commit {commit-hash}
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.planning.task_list_gate_mode gated
@@ -223,7 +223,7 @@ Once selected:
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.planning.task ~
    ```
 
-5. Commit: `planning({topic}): initialize plan`
+5. Commit: `planning({work_unit}): initialize plan`
 
 → Proceed to **Step 2**.
 
@@ -302,13 +302,13 @@ Discuss the user's context. If additional work is needed, route back to **Step 6
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.planning.status concluded
    ```
-2. **Final commit** — Commit the concluded plan: `planning({topic}): conclude plan`
+2. **Final commit** — Commit the concluded plan: `planning({work_unit}): conclude plan`
 3. **Present completion summary**:
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-Planning is complete for **{topic}**.
+Planning is complete for **{work_unit}**.
 
 The plan contains **{N} phases** with **{M} tasks** total, reviewed for traceability against the specification and structural integrity.
 
@@ -325,7 +325,7 @@ Status has been marked as `concluded`. The plan is ready for implementation.
 This plan is part of a pipeline. Invoke the `/workflow-bridge` skill:
 
 ```
-Pipeline bridge for: {topic}
+Pipeline bridge for: {work_unit}
 Work type: {work_type from manifest}
 Completed phase: planning
 
@@ -337,7 +337,7 @@ Invoke the workflow-bridge skill to enter plan mode with continuation instructio
 > *Output the next fenced block as a code block:*
 
 ```
-Plan concluded: {topic}
+Plan concluded: {work_unit}
 
 The plan is ready for implementation. Run /start-implementation to begin.
 ```

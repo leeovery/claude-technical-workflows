@@ -57,7 +57,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.planning.task ~
 ```
 
-Commit: `planning({topic}): draft phase structure`
+Commit: `planning({work_unit}): draft phase structure`
 
 Continue to **Review and Approve** below.
 
@@ -95,6 +95,6 @@ Update the Plan Index File with the revised output, re-present, and ask again. R
 **If the phase structure is new or was amended:**
 
 1. Update each phase in the Plan Index File: set `status: approved` and `approved_at: YYYY-MM-DD` (use today's actual date). See **Phase Entry** in plan-index-schema for field definitions.
-2. Commit: `planning({topic}): approve phase structure`
+2. Commit: `planning({work_unit}): approve phase structure`
 
 **If the phase structure was already approved and unchanged:** No updates needed.

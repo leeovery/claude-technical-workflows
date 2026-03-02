@@ -102,4 +102,4 @@ topic: {Topic Name}
 ...
 ```
 
-Commit the tracking file after creation: `planning({topic}): traceability review cycle {N}`
+Commit the tracking file after creation: `planning({work_unit}): traceability review cycle {N}`

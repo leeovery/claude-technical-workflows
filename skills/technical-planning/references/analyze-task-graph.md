@@ -120,4 +120,4 @@ The agent will clear all existing graph data and re-analyze from scratch. Presen
 
 #### If `approved`
 
-Commit: `planning({topic}): analyze task dependencies and priorities`
+Commit: `planning({work_unit}): analyze task dependencies and priorities`

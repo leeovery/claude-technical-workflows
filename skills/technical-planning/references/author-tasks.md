@@ -181,7 +181,7 @@ For each approved task in the scratch file, in order:
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.planning.task {next-task-seq}
    ```
-7. Commit: `planning({topic}): author task {task-id} ({task name})`
+7. Commit: `planning({work_unit}): author task {task-id} ({task name})`
 
 > *Output the next fenced block as a code block:*
 

@@ -46,7 +46,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.planning.task ~
 ```
 
-Commit: `planning({topic}): draft Phase {N} task list`
+Commit: `planning({work_unit}): draft Phase {N} task list`
 
 Present the task overview to the user:
 
@@ -117,7 +117,7 @@ Note that `task_list_gate_mode` should be updated to `auto` in the manifest duri
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.planning.task_list_gate_mode auto
    ```
-3. Commit: `planning({topic}): approve Phase {N} task list`
+3. Commit: `planning({work_unit}): approve Phase {N} task list`
 
 **If the task list was already approved and unchanged:** No updates needed.
 

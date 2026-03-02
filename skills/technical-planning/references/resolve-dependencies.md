@@ -63,4 +63,4 @@ Incorporate feedback, re-present the updated dependency state, and ask again. Re
 
 #### If `approved`
 
-Commit: `planning({topic}): resolve external dependencies`
+Commit: `planning({work_unit}): resolve external dependencies`

@@ -124,4 +124,4 @@ topic: {Topic Name}
 ...
 ```
 
-Commit the tracking file after creation: `planning({topic}): integrity review cycle {N}`
+Commit the tracking file after creation: `planning({work_unit}): integrity review cycle {N}`

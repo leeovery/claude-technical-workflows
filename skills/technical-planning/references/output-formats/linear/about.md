@@ -39,7 +39,7 @@ Tasks are stored as issues in a Linear project:
 
 ```
 Linear:
-└── Project: {topic}
+└── Project: {work_unit}
     ├── Issue: Task 1 [label: phase-1, priority: urgent]
     ├── Issue: Task 2 [label: phase-1, priority: normal]
     └── Issue: Task 3 [label: phase-2, priority: high]

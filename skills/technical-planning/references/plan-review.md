@@ -124,7 +124,7 @@ with fresh context — 2-3 cycles typically surface anything cascading.
 
 > **CHECKPOINT**: Do not confirm completion if any tracking files still show `status: in-progress`. They indicate incomplete review work.
 
-2. **Commit** all review tracking files: `planning({topic}): complete plan review (cycle {N})`
+2. **Commit** all review tracking files: `planning({work_unit}): complete plan review (cycle {N})`
 
 > *Output the next fenced block as a code block:*
 

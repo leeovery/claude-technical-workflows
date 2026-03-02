@@ -132,7 +132,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.phases.planning.task ~
 ```
 
-Commit: `planning({topic}): complete Phase {N} tasks`
+Commit: `planning({work_unit}): complete Phase {N} tasks`
 
 > *Output the next fenced block as a code block:*
 
