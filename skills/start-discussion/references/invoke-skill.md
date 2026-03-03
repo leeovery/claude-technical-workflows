@@ -54,11 +54,11 @@ Invoke the technical-discussion skill.
 Discussion session for: {topic}
 Work unit: {work_unit}
 Work type: {work_type}
-Research source: .workflows/{work_unit}/research/{topic}.md
+Research source: .workflows/{work_unit}/research/{research_filename}.md
 Output: {output_path}
 
 Research reference:
-Source: .workflows/{work_unit}/research/{topic}.md
+Source: .workflows/{work_unit}/research/{research_filename}.md
 Summary: {the discussion-ready summary from the research file}
 
 Invoke the technical-discussion skill.

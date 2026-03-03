@@ -16,7 +16,7 @@ Initial context from epic interview:
 Uncertainties to explore:
 {list of unknowns identified in route-first-phase}
 
-Create research file: .workflows/{work_unit}/research/{work_unit}.md
+Research directory: .workflows/{work_unit}/research/
 
 Invoke the technical-research skill.
 ```

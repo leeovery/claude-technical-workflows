@@ -16,7 +16,7 @@ Initial context from feature interview:
 Uncertainties to explore:
 {list of uncertainties identified in research-gating}
 
-Create research file: .workflows/{topic}/research/{topic}.md
+Research directory: .workflows/{topic}/research/
 
 Invoke the technical-research skill.
 ```
