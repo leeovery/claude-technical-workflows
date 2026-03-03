@@ -12,6 +12,14 @@ hooks:
 
 Display a readable summary of a plan's phases, tasks, and status.
 
+## Step 0: Run Migrations
+
+**This step is mandatory. You must complete it before proceeding.**
+
+Invoke the `/migrate` skill and assess its output.
+
+---
+
 ## Step 1: Identify the Plan
 
 If no topic is specified, list available plans:
@@ -44,10 +52,10 @@ Follow the reading reference to locate and read the actual plan content.
 
 Display a readable summary:
 
-> *Output the next fenced block as a code block:*
+> *Output the next fenced block as markdown (not a code block):*
 
 ```
-Plan: {work_unit}
+**Plan: {work_unit}**
 
 **Format:** {format}
 

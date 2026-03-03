@@ -14,8 +14,6 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phas
 
 #### If discussion exists and status is `in-progress`
 
-#### If discussion exists and status is `in-progress`
-
 > *Output the next fenced block as a code block:*
 
 ```

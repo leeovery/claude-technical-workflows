@@ -1,6 +1,6 @@
 # Plan Index Schema
 
-*Reference for **[technical-planning](../SKILL.md)** and its agents*
+*Reference for **[technical-planning](../SKILL.md)***
 
 ---
 

@@ -4,13 +4,13 @@
 
 ---
 
-This step only applies for `single`, `multi`, or `all` scope chosen in Step 6.
+This step only applies for `analysis`, `single`, `multi`, or `all` scope chosen in Step 6.
 
 #### If scope is `analysis`
 
 Select which reviews to analyze.
 
-#### If multiple reviews exist
+**If multiple reviews exist:**
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -31,7 +31,7 @@ If `select`, present numbered list of reviewed plans for the user to choose from
 
 → Return to **[the skill](../SKILL.md)**.
 
-#### If single review exists
+**If single review exists:**
 
 Automatically proceed with the only available review.
 

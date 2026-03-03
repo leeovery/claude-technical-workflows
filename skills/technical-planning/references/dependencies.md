@@ -1,6 +1,6 @@
 # Dependencies
 
-*Reference for dependency handling across the technical workflow*
+*Reference for **[technical-planning](../SKILL.md)***
 
 ---
 

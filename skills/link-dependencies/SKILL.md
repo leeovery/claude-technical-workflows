@@ -20,6 +20,14 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 Use simple, individual commands. Never combine multiple operations into bash loops or one-liners. Execute commands one at a time.
 
+## Step 0: Run Migrations
+
+**This step is mandatory. You must complete it before proceeding.**
+
+Invoke the `/migrate` skill and assess its output.
+
+---
+
 ## Step 1: Discover All Plans
 
 Scan the codebase for existing plans:

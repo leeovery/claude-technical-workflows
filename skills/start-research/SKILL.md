@@ -11,6 +11,8 @@ hooks:
 
 Invoke the **technical-research** skill for this conversation.
 
+> **⚠️ ZERO OUTPUT RULE**: Do not narrate your processing. Produce no output until a step or reference file explicitly specifies display content. No "proceeding with...", no discovery summaries, no routing decisions, no transition text. Your first output must be content explicitly called for by the instructions.
+
 ## Workflow Context
 
 This is **Phase 1** of the six-phase workflow:

@@ -18,14 +18,18 @@ If any **in-progress** cross-cutting specifications exist, check whether they co
 
 If any are relevant:
 
-> *Output the next fenced block as markdown (not a code block):*
+> *Output the next fenced block as a code block:*
 
 ```
 Cross-cutting specifications still in progress:
 These may contain architectural decisions relevant to this plan.
 
   • {work_unit}
+```
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 · · · · · · · · · · · ·
 - **`c`/`continue`** — Plan without them
 - **`s`/`stop`** — Complete them first (/start-specification)
