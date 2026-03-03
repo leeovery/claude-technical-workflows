@@ -31,7 +31,7 @@ Your context (or 'none'):
 **This step is critical. You MUST read every concluded discussion document thoroughly.**
 
 For each concluded discussion:
-1. Read the ENTIRE document using the Read tool (not just frontmatter)
+1. Read the ENTIRE document using the Read tool (not just the header)
 2. Understand the decisions, systems, and concepts it defines
 3. Note dependencies on or references to other discussions
 4. Identify shared data structures, entities, or behaviors

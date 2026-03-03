@@ -230,8 +230,8 @@ test_feature_impl_completed_with_review() {
 
     create_manifest "auth-flow" "feature" '{"planning": {"status": "concluded"}, "implementation": {"status": "completed"}, "review": {"status": "completed"}}'
     create_phase_file "auth-flow" "implementation" "implementation.md" "---\nstatus: completed\n---"
-    mkdir -p "$TEST_DIR/.workflows/auth-flow/review/r1"
-    echo -e "---\ntopic: auth-flow\n---\n# Review" > "$TEST_DIR/.workflows/auth-flow/review/r1/review.md"
+    mkdir -p "$TEST_DIR/.workflows/auth-flow/review/auth-flow/r1"
+    echo -e "---\ntopic: auth-flow\n---\n# Review" > "$TEST_DIR/.workflows/auth-flow/review/auth-flow/r1/review.md"
 
     local output=$(run_discovery "auth-flow")
 
@@ -332,8 +332,8 @@ test_bugfix_impl_completed_with_review() {
 
     create_manifest "login-crash" "bugfix" '{"investigation": {"status": "concluded"}, "specification": {"status": "concluded"}, "planning": {"status": "concluded"}, "implementation": {"status": "completed"}, "review": {"status": "completed"}}'
     create_phase_file "login-crash" "implementation" "implementation.md" "---\nstatus: completed\n---"
-    mkdir -p "$TEST_DIR/.workflows/login-crash/review/r1"
-    echo -e "---\ntopic: login-crash\n---\n# Review" > "$TEST_DIR/.workflows/login-crash/review/r1/review.md"
+    mkdir -p "$TEST_DIR/.workflows/login-crash/review/login-crash/r1"
+    echo -e "---\ntopic: login-crash\n---\n# Review" > "$TEST_DIR/.workflows/login-crash/review/login-crash/r1/review.md"
 
     local output=$(run_discovery "login-crash")
 

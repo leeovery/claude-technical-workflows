@@ -162,7 +162,7 @@ create_planning_file "user-auth" "---
 topic: user-auth
 status: in-progress
 format: local-markdown
-specification: user-auth/specification/specification.md
+specification: user-auth/specification/user-auth/specification.md
 ---
 
 # Implementation Plan: User Authentication"
