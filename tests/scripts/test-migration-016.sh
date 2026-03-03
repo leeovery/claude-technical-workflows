@@ -753,6 +753,274 @@ assert_equals "$research_status" "in-progress" "research without Discussion-read
 
 echo ""
 
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Epic with spec/plan/impl/review — all phases migrated${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/.workflows/discussion"
+mkdir -p "$TEST_DIR/.workflows/specification/payment-processing"
+mkdir -p "$TEST_DIR/.workflows/planning/payment-processing/tasks"
+mkdir -p "$TEST_DIR/.workflows/implementation/payment-processing"
+mkdir -p "$TEST_DIR/.workflows/review/payment-processing/r1"
+
+cat > "$TEST_DIR/.workflows/discussion/payment-processing.md" << 'EOF'
+---
+topic: payment-processing
+status: concluded
+work_type: greenfield
+date: 2026-01-10
+---
+
+# Discussion: Payment Processing
+EOF
+
+cat > "$TEST_DIR/.workflows/specification/payment-processing/specification.md" << 'EOF'
+---
+topic: payment-processing
+status: concluded
+work_type: greenfield
+type: feature
+review_cycle: 1
+finding_gate_mode: gated
+---
+
+# Specification: Payment Processing
+EOF
+
+cat > "$TEST_DIR/.workflows/planning/payment-processing/plan.md" << 'EOF'
+---
+topic: payment-processing
+status: concluded
+work_type: greenfield
+format: local-markdown
+task_gate_mode: gated
+author_gate_mode: auto
+---
+
+# Plan: Payment Processing
+EOF
+
+echo "task content" > "$TEST_DIR/.workflows/planning/payment-processing/tasks/task-1.md"
+
+cat > "$TEST_DIR/.workflows/implementation/payment-processing/tracking.md" << 'EOF'
+---
+topic: payment-processing
+status: in-progress
+work_type: greenfield
+format: local-markdown
+task_gate_mode: gated
+fix_gate_mode: gated
+analysis_cycle: 2
+current_phase: phase-1
+current_task: task-3
+---
+
+# Implementation: Payment Processing
+EOF
+
+echo "review content" > "$TEST_DIR/.workflows/review/payment-processing/r1/review.md"
+
+run_migration
+
+assert_file_exists "$TEST_DIR/.workflows/v1/manifest.json" "v1 manifest created"
+assert_file_exists "$TEST_DIR/.workflows/v1/discussion/payment-processing.md" "epic discussion moved"
+assert_file_exists "$TEST_DIR/.workflows/v1/specification/payment-processing/specification.md" "epic spec moved to topic subdir"
+assert_file_exists "$TEST_DIR/.workflows/v1/planning/payment-processing/planning.md" "epic plan.md renamed to planning.md"
+assert_file_exists "$TEST_DIR/.workflows/v1/planning/payment-processing/tasks/task-1.md" "epic tasks dir moved"
+assert_file_exists "$TEST_DIR/.workflows/v1/implementation/payment-processing/implementation.md" "epic tracking.md renamed to implementation.md"
+assert_file_exists "$TEST_DIR/.workflows/v1/review/payment-processing/r1/review.md" "epic review moved"
+
+# Verify manifest items structure
+manifest=$(cat "$TEST_DIR/.workflows/v1/manifest.json")
+assert_contains "$manifest" '"work_type": "epic"' "manifest has epic work_type"
+
+# Spec items
+spec_status=$(node -e "var m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/v1/manifest.json','utf8')); var s=m.phases.specification; console.log(s && s.items && s.items['payment-processing'] ? s.items['payment-processing'].status : 'missing')")
+assert_equals "$spec_status" "concluded" "manifest spec items has correct status"
+
+spec_type=$(node -e "var m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/v1/manifest.json','utf8')); var s=m.phases.specification; console.log(s && s.items && s.items['payment-processing'] ? s.items['payment-processing'].type : 'missing')")
+assert_equals "$spec_type" "feature" "manifest spec items has type field"
+
+# Plan items
+plan_status=$(node -e "var m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/v1/manifest.json','utf8')); var p=m.phases.planning; console.log(p && p.items && p.items['payment-processing'] ? p.items['payment-processing'].status : 'missing')")
+assert_equals "$plan_status" "concluded" "manifest plan items has correct status"
+
+plan_format=$(node -e "var m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/v1/manifest.json','utf8')); var p=m.phases.planning; console.log(p && p.items && p.items['payment-processing'] ? p.items['payment-processing'].format : 'missing')")
+assert_equals "$plan_format" "local-markdown" "manifest plan items has format field"
+
+# Impl items
+impl_status=$(node -e "var m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/v1/manifest.json','utf8')); var i=m.phases.implementation; console.log(i && i.items && i.items['payment-processing'] ? i.items['payment-processing'].status : 'missing')")
+assert_equals "$impl_status" "in-progress" "manifest impl items has correct status"
+
+impl_cycle=$(node -e "var m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/v1/manifest.json','utf8')); var i=m.phases.implementation; console.log(i && i.items && i.items['payment-processing'] ? i.items['payment-processing'].analysis_cycle : 'missing')")
+assert_equals "$impl_cycle" "2" "manifest impl items has analysis_cycle field"
+
+# Review items
+review_status=$(node -e "var m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/v1/manifest.json','utf8')); var r=m.phases.review; console.log(r && r.items && r.items['payment-processing'] ? r.items['payment-processing'].status : 'missing')")
+assert_equals "$review_status" "completed" "manifest review items has completed status"
+
+# Source dirs cleaned up
+assert_dir_not_exists "$TEST_DIR/.workflows/discussion" "discussion phase dir cleaned up"
+assert_dir_not_exists "$TEST_DIR/.workflows/specification" "spec phase dir cleaned up"
+assert_dir_not_exists "$TEST_DIR/.workflows/planning" "planning phase dir cleaned up"
+assert_dir_not_exists "$TEST_DIR/.workflows/implementation" "impl phase dir cleaned up"
+assert_dir_not_exists "$TEST_DIR/.workflows/review" "review phase dir cleaned up"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: discussion-consolidation-analysis.md moved to v1/.state/${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/.workflows/discussion"
+mkdir -p "$TEST_DIR/.workflows/.state"
+
+cat > "$TEST_DIR/.workflows/discussion/some-topic.md" << 'EOF'
+---
+topic: some-topic
+status: concluded
+work_type: greenfield
+date: 2026-01-10
+---
+
+# Discussion: Some Topic
+EOF
+
+echo "consolidation analysis content" > "$TEST_DIR/.workflows/.state/discussion-consolidation-analysis.md"
+
+run_migration
+
+assert_file_exists "$TEST_DIR/.workflows/v1/.state/discussion-consolidation-analysis.md" "discussion-consolidation-analysis.md moved to v1/.state/"
+assert_file_not_exists "$TEST_DIR/.workflows/.state/discussion-consolidation-analysis.md" "original state file removed"
+
+# Verify content preserved
+content=$(cat "$TEST_DIR/.workflows/v1/.state/discussion-consolidation-analysis.md")
+assert_contains "$content" "consolidation analysis content" "state file content preserved"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Unmatched review topic routes to v1${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/.workflows/discussion"
+mkdir -p "$TEST_DIR/.workflows/review/doctor-installation-migration/r1"
+
+# Epic discussion to trigger v1 creation
+cat > "$TEST_DIR/.workflows/discussion/data-model.md" << 'EOF'
+---
+topic: data-model
+status: concluded
+work_type: greenfield
+date: 2026-01-05
+---
+
+# Discussion: Data Model
+EOF
+
+# Review dir with no matching topic in other phases
+echo "review findings" > "$TEST_DIR/.workflows/review/doctor-installation-migration/r1/review.md"
+
+run_migration
+
+assert_file_exists "$TEST_DIR/.workflows/v1/review/doctor-installation-migration/r1/review.md" "unmatched review topic moved to v1"
+assert_dir_not_exists "$TEST_DIR/.workflows/review" "review phase dir cleaned up"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Mixed feature + epic with all phases${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/.workflows/discussion"
+mkdir -p "$TEST_DIR/.workflows/specification/dark-mode"
+mkdir -p "$TEST_DIR/.workflows/specification/payment-processing"
+mkdir -p "$TEST_DIR/.workflows/planning/payment-processing/tasks"
+
+# Feature
+cat > "$TEST_DIR/.workflows/discussion/dark-mode.md" << 'EOF'
+---
+topic: dark-mode
+status: concluded
+work_type: feature
+date: 2026-01-15
+---
+
+# Discussion: Dark Mode
+EOF
+
+cat > "$TEST_DIR/.workflows/specification/dark-mode/specification.md" << 'EOF'
+---
+topic: dark-mode
+status: concluded
+work_type: feature
+type: feature
+---
+
+# Specification: Dark Mode
+EOF
+
+# Epic
+cat > "$TEST_DIR/.workflows/discussion/payment-processing.md" << 'EOF'
+---
+topic: payment-processing
+status: concluded
+work_type: greenfield
+date: 2026-01-10
+---
+
+# Discussion: Payment Processing
+EOF
+
+cat > "$TEST_DIR/.workflows/specification/payment-processing/specification.md" << 'EOF'
+---
+topic: payment-processing
+status: concluded
+work_type: greenfield
+type: feature
+---
+
+# Specification: Payment Processing
+EOF
+
+cat > "$TEST_DIR/.workflows/planning/payment-processing/plan.md" << 'EOF'
+---
+topic: payment-processing
+status: in-progress
+work_type: greenfield
+format: local-markdown
+---
+
+# Plan: Payment Processing
+EOF
+
+echo "task content" > "$TEST_DIR/.workflows/planning/payment-processing/tasks/task-1.md"
+
+run_migration
+
+# Feature goes to its own work unit
+assert_file_exists "$TEST_DIR/.workflows/dark-mode/manifest.json" "feature manifest created"
+assert_file_exists "$TEST_DIR/.workflows/dark-mode/specification/dark-mode/specification.md" "feature spec in own work unit"
+
+# Epic goes to v1
+assert_file_exists "$TEST_DIR/.workflows/v1/manifest.json" "v1 epic manifest created"
+assert_file_exists "$TEST_DIR/.workflows/v1/specification/payment-processing/specification.md" "epic spec in v1"
+assert_file_exists "$TEST_DIR/.workflows/v1/planning/payment-processing/planning.md" "epic plan in v1 (renamed)"
+assert_file_exists "$TEST_DIR/.workflows/v1/planning/payment-processing/tasks/task-1.md" "epic tasks in v1"
+
+# Manifests correct
+feat_manifest=$(cat "$TEST_DIR/.workflows/dark-mode/manifest.json")
+epic_manifest=$(cat "$TEST_DIR/.workflows/v1/manifest.json")
+assert_contains "$feat_manifest" '"work_type": "feature"' "dark-mode is feature"
+assert_contains "$epic_manifest" '"work_type": "epic"' "v1 is epic"
+
+# Source phase dirs cleaned up
+assert_dir_not_exists "$TEST_DIR/.workflows/discussion" "discussion phase dir cleaned up"
+assert_dir_not_exists "$TEST_DIR/.workflows/specification" "spec phase dir cleaned up"
+assert_dir_not_exists "$TEST_DIR/.workflows/planning" "planning phase dir cleaned up"
+
+echo ""
+
 # ============================================================================
 # SUMMARY
 # ============================================================================

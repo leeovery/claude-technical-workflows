@@ -176,10 +176,11 @@ if [ -d ".workflows/specification" ]; then
                 if [ -z "$(_016_get_wt "$topic")" ]; then
                     _016_register "$topic" "$wt"
                 fi
+                _016_store "spec" "$topic" "$dir"
             else
                 V1_EPIC_NEEDED=true
+                _016_append "epic_specifications" "$topic:$dir"
             fi
-            _016_store "spec" "$topic" "$dir"
         fi
     done
 fi
@@ -198,10 +199,11 @@ if [ -d ".workflows/planning" ]; then
                 if [ -z "$(_016_get_wt "$topic")" ]; then
                     _016_register "$topic" "$wt"
                 fi
+                _016_store "plan" "$topic" "$dir"
             else
                 V1_EPIC_NEEDED=true
+                _016_append "epic_planning" "$topic:$dir"
             fi
-            _016_store "plan" "$topic" "$dir"
         fi
     done
 fi
@@ -220,20 +222,28 @@ if [ -d ".workflows/implementation" ]; then
                 if [ -z "$(_016_get_wt "$topic")" ]; then
                     _016_register "$topic" "$wt"
                 fi
+                _016_store "impl" "$topic" "$dir"
             else
                 V1_EPIC_NEEDED=true
+                _016_append "epic_implementation" "$topic:$dir"
             fi
-            _016_store "impl" "$topic" "$dir"
         fi
     done
 fi
 
-# Scan review
+# Scan review (must be AFTER all other scans so _016_get_wt has seen all registrations)
 if [ -d ".workflows/review" ]; then
     for dir in ".workflows/review"/*/; do
         [ -d "$dir" ] || continue
         topic=$(basename "$dir")
-        _016_store "review" "$topic" "$dir"
+        existing_wt=$(_016_get_wt "$topic")
+        if [ "$existing_wt" = "feature" ] || [ "$existing_wt" = "bugfix" ]; then
+            _016_store "review" "$topic" "$dir"
+        else
+            # Unmatched topic or epic topic → goes to v1
+            V1_EPIC_NEEDED=true
+            _016_append "epic_reviews" "$topic:$dir"
+        fi
     done
 fi
 
@@ -322,65 +332,152 @@ while IFS= read -r name; do
         done
     fi
 
-    # Move specification (topic subdir: specification/{name}/)
-    spec_dir=$(_016_fetch "spec" "$name")
-    if [ -n "$spec_dir" ] && [ -d "$spec_dir" ]; then
-        mkdir -p ".workflows/$name/specification/$name"
-        for sfile in "$spec_dir"*; do
-            [ -e "$sfile" ] || continue
-            mv "$sfile" ".workflows/$name/specification/$name/"
-        done
-        report_update "$spec_dir" "moved to .workflows/$name/specification/$name/"
+    # Move specification (topic subdir: specification/{topic}/)
+    if [ "$name" = "v1" ]; then
+        epic_specs=$(_016_read_list "epic_specifications")
+        if [ -n "$epic_specs" ]; then
+            echo "$epic_specs" | while IFS= read -r entry; do
+                _topic="${entry%%:*}"
+                _dir="${entry#*:}"
+                if [ -d "$_dir" ]; then
+                    mkdir -p ".workflows/$name/specification/$_topic"
+                    for sfile in "$_dir"*; do
+                        [ -e "$sfile" ] || continue
+                        mv "$sfile" ".workflows/$name/specification/$_topic/"
+                    done
+                    report_update "$_dir" "moved to .workflows/$name/specification/$_topic/"
+                fi
+            done
+        fi
+    else
+        spec_dir=$(_016_fetch "spec" "$name")
+        if [ -n "$spec_dir" ] && [ -d "$spec_dir" ]; then
+            mkdir -p ".workflows/$name/specification/$name"
+            for sfile in "$spec_dir"*; do
+                [ -e "$sfile" ] || continue
+                mv "$sfile" ".workflows/$name/specification/$name/"
+            done
+            report_update "$spec_dir" "moved to .workflows/$name/specification/$name/"
+        fi
     fi
 
-    # Move planning (plan.md → planning.md, topic subdir: planning/{name}/)
-    plan_dir=$(_016_fetch "plan" "$name")
-    if [ -n "$plan_dir" ] && [ -d "$plan_dir" ]; then
-        mkdir -p ".workflows/$name/planning/$name"
-        if [ -f "${plan_dir}plan.md" ]; then
-            mv "${plan_dir}plan.md" ".workflows/$name/planning/$name/planning.md"
-            report_update "${plan_dir}plan.md" "moved and renamed to planning/$name/planning.md"
+    # Move planning (plan.md → planning.md, topic subdir: planning/{topic}/)
+    if [ "$name" = "v1" ]; then
+        epic_plans=$(_016_read_list "epic_planning")
+        if [ -n "$epic_plans" ]; then
+            echo "$epic_plans" | while IFS= read -r entry; do
+                _topic="${entry%%:*}"
+                _dir="${entry#*:}"
+                if [ -d "$_dir" ]; then
+                    mkdir -p ".workflows/$name/planning/$_topic"
+                    if [ -f "${_dir}plan.md" ]; then
+                        mv "${_dir}plan.md" ".workflows/$name/planning/$_topic/planning.md"
+                        report_update "${_dir}plan.md" "moved and renamed to planning/$_topic/planning.md"
+                    fi
+                    if [ -d "${_dir}tasks" ]; then
+                        mv "${_dir}tasks" ".workflows/$name/planning/$_topic/tasks"
+                        report_update "${_dir}tasks/" "moved to .workflows/$name/planning/$_topic/tasks/"
+                    fi
+                    for pfile in "$_dir"*; do
+                        [ -e "$pfile" ] || continue
+                        bname=$(basename "$pfile")
+                        if [ ! -e ".workflows/$name/planning/$_topic/$bname" ]; then
+                            mv "$pfile" ".workflows/$name/planning/$_topic/"
+                        fi
+                    done
+                fi
+            done
         fi
-        if [ -d "${plan_dir}tasks" ]; then
-            mv "${plan_dir}tasks" ".workflows/$name/planning/$name/tasks"
-            report_update "${plan_dir}tasks/" "moved to .workflows/$name/planning/$name/tasks/"
-        fi
-        # Move remaining files
-        for pfile in "$plan_dir"*; do
-            [ -e "$pfile" ] || continue
-            bname=$(basename "$pfile")
-            if [ ! -e ".workflows/$name/planning/$name/$bname" ]; then
-                mv "$pfile" ".workflows/$name/planning/$name/"
+    else
+        plan_dir=$(_016_fetch "plan" "$name")
+        if [ -n "$plan_dir" ] && [ -d "$plan_dir" ]; then
+            mkdir -p ".workflows/$name/planning/$name"
+            if [ -f "${plan_dir}plan.md" ]; then
+                mv "${plan_dir}plan.md" ".workflows/$name/planning/$name/planning.md"
+                report_update "${plan_dir}plan.md" "moved and renamed to planning/$name/planning.md"
             fi
-        done
-    fi
-
-    # Move implementation (tracking.md → implementation.md, topic subdir: implementation/{name}/)
-    impl_dir=$(_016_fetch "impl" "$name")
-    if [ -n "$impl_dir" ] && [ -d "$impl_dir" ]; then
-        mkdir -p ".workflows/$name/implementation/$name"
-        if [ -f "${impl_dir}tracking.md" ]; then
-            mv "${impl_dir}tracking.md" ".workflows/$name/implementation/$name/implementation.md"
-            report_update "${impl_dir}tracking.md" "moved and renamed to implementation/$name/implementation.md"
-        fi
-        for imfile in "$impl_dir"*; do
-            [ -e "$imfile" ] || continue
-            bname=$(basename "$imfile")
-            if [ ! -e ".workflows/$name/implementation/$name/$bname" ]; then
-                mv "$imfile" ".workflows/$name/implementation/$name/"
+            if [ -d "${plan_dir}tasks" ]; then
+                mv "${plan_dir}tasks" ".workflows/$name/planning/$name/tasks"
+                report_update "${plan_dir}tasks/" "moved to .workflows/$name/planning/$name/tasks/"
             fi
-        done
+            for pfile in "$plan_dir"*; do
+                [ -e "$pfile" ] || continue
+                bname=$(basename "$pfile")
+                if [ ! -e ".workflows/$name/planning/$name/$bname" ]; then
+                    mv "$pfile" ".workflows/$name/planning/$name/"
+                fi
+            done
+        fi
     fi
 
-    # Move review (topic subdir: review/{name}/)
-    review_dir=$(_016_fetch "review" "$name")
-    if [ -n "$review_dir" ] && [ -d "$review_dir" ]; then
-        mkdir -p ".workflows/$name/review/$name"
-        for ritem in "$review_dir"*; do
-            [ -e "$ritem" ] || continue
-            mv "$ritem" ".workflows/$name/review/$name/"
-        done
-        report_update "$review_dir" "moved to .workflows/$name/review/$name/"
+    # Move implementation (tracking.md → implementation.md, topic subdir: implementation/{topic}/)
+    if [ "$name" = "v1" ]; then
+        epic_impls=$(_016_read_list "epic_implementation")
+        if [ -n "$epic_impls" ]; then
+            echo "$epic_impls" | while IFS= read -r entry; do
+                _topic="${entry%%:*}"
+                _dir="${entry#*:}"
+                if [ -d "$_dir" ]; then
+                    mkdir -p ".workflows/$name/implementation/$_topic"
+                    if [ -f "${_dir}tracking.md" ]; then
+                        mv "${_dir}tracking.md" ".workflows/$name/implementation/$_topic/implementation.md"
+                        report_update "${_dir}tracking.md" "moved and renamed to implementation/$_topic/implementation.md"
+                    fi
+                    for imfile in "$_dir"*; do
+                        [ -e "$imfile" ] || continue
+                        bname=$(basename "$imfile")
+                        if [ ! -e ".workflows/$name/implementation/$_topic/$bname" ]; then
+                            mv "$imfile" ".workflows/$name/implementation/$_topic/"
+                        fi
+                    done
+                fi
+            done
+        fi
+    else
+        impl_dir=$(_016_fetch "impl" "$name")
+        if [ -n "$impl_dir" ] && [ -d "$impl_dir" ]; then
+            mkdir -p ".workflows/$name/implementation/$name"
+            if [ -f "${impl_dir}tracking.md" ]; then
+                mv "${impl_dir}tracking.md" ".workflows/$name/implementation/$name/implementation.md"
+                report_update "${impl_dir}tracking.md" "moved and renamed to implementation/$name/implementation.md"
+            fi
+            for imfile in "$impl_dir"*; do
+                [ -e "$imfile" ] || continue
+                bname=$(basename "$imfile")
+                if [ ! -e ".workflows/$name/implementation/$name/$bname" ]; then
+                    mv "$imfile" ".workflows/$name/implementation/$name/"
+                fi
+            done
+        fi
+    fi
+
+    # Move review (topic subdir: review/{topic}/)
+    if [ "$name" = "v1" ]; then
+        epic_revs=$(_016_read_list "epic_reviews")
+        if [ -n "$epic_revs" ]; then
+            echo "$epic_revs" | while IFS= read -r entry; do
+                _topic="${entry%%:*}"
+                _dir="${entry#*:}"
+                if [ -d "$_dir" ]; then
+                    mkdir -p ".workflows/$name/review/$_topic"
+                    for ritem in "$_dir"*; do
+                        [ -e "$ritem" ] || continue
+                        mv "$ritem" ".workflows/$name/review/$_topic/"
+                    done
+                    report_update "$_dir" "moved to .workflows/$name/review/$_topic/"
+                fi
+            done
+        fi
+    else
+        review_dir=$(_016_fetch "review" "$name")
+        if [ -n "$review_dir" ] && [ -d "$review_dir" ]; then
+            mkdir -p ".workflows/$name/review/$name"
+            for ritem in "$review_dir"*; do
+                [ -e "$ritem" ] || continue
+                mv "$ritem" ".workflows/$name/review/$name/"
+            done
+            report_update "$review_dir" "moved to .workflows/$name/review/$name/"
+        fi
     fi
 
     # Move research (for v1 epic)
@@ -397,11 +494,15 @@ while IFS= read -r name; do
         fi
     fi
 
-    # Move research analysis to per-work-unit state dir
-    if [ -f ".workflows/.state/research-analysis.md" ] && [ "$name" = "v1" ]; then
-        mkdir -p ".workflows/$name/.state"
-        mv ".workflows/.state/research-analysis.md" ".workflows/$name/.state/research-analysis.md"
-        report_update ".workflows/.state/research-analysis.md" "moved to .workflows/$name/.state/"
+    # Move state files to per-work-unit state dir
+    if [ "$name" = "v1" ]; then
+        for _state_file in research-analysis.md discussion-consolidation-analysis.md; do
+            if [ -f ".workflows/.state/$_state_file" ]; then
+                mkdir -p ".workflows/$name/.state"
+                mv ".workflows/.state/$_state_file" ".workflows/$name/.state/$_state_file"
+                report_update ".workflows/.state/$_state_file" "moved to .workflows/$name/.state/"
+            fi
+        done
     fi
 
     # ------------------------------------------------------------------
@@ -481,7 +582,7 @@ while IFS= read -r name; do
             if (fm.date && !manifest.created) manifest.created = fm.date;
         }
 
-        // Specification (topic subdir: specification/{name}/)
+        // Specification (feature/bugfix — topic subdir: specification/{name}/)
         var specFile = path.join(workDir, 'specification', name, 'specification.md');
         if (fs.existsSync(specFile)) {
             var fm = extractFrontmatter(specFile);
@@ -492,7 +593,34 @@ while IFS= read -r name; do
             manifest.phases.specification = spec;
         }
 
-        // Planning (topic subdir: planning/{name}/)
+        // Specification (epic — multiple topic subdirs, items structure)
+        if (name === 'v1') {
+            var specDir = path.join(workDir, 'specification');
+            if (fs.existsSync(specDir)) {
+                var specDirs = fs.readdirSync(specDir).filter(function(d) {
+                    return fs.statSync(path.join(specDir, d)).isDirectory();
+                });
+                if (specDirs.length > 0) {
+                    var items = {};
+                    specDirs.forEach(function(d) {
+                        var sf = path.join(specDir, d, 'specification.md');
+                        if (fs.existsSync(sf)) {
+                            var fm = extractFrontmatter(sf);
+                            var item = { status: fm.status || 'in-progress' };
+                            if (fm.type) item.type = fm.type;
+                            if (fm.review_cycle) item.review_cycle = parseInt(fm.review_cycle, 10) || 0;
+                            if (fm.finding_gate_mode) item.finding_gate_mode = fm.finding_gate_mode;
+                            items[d] = item;
+                        }
+                    });
+                    if (Object.keys(items).length > 0) {
+                        manifest.phases.specification = { items: items };
+                    }
+                }
+            }
+        }
+
+        // Planning (feature/bugfix — topic subdir: planning/{name}/)
         var planFile = path.join(workDir, 'planning', name, 'planning.md');
         if (fs.existsSync(planFile)) {
             var fm = extractFrontmatter(planFile);
@@ -507,7 +635,38 @@ while IFS= read -r name; do
             manifest.phases.planning = plan;
         }
 
-        // Implementation (topic subdir: implementation/{name}/)
+        // Planning (epic — multiple topic subdirs, items structure)
+        if (name === 'v1') {
+            var planDir = path.join(workDir, 'planning');
+            if (fs.existsSync(planDir)) {
+                var planDirs = fs.readdirSync(planDir).filter(function(d) {
+                    return fs.statSync(path.join(planDir, d)).isDirectory();
+                });
+                if (planDirs.length > 0) {
+                    var items = {};
+                    planDirs.forEach(function(d) {
+                        var pf = path.join(planDir, d, 'planning.md');
+                        if (fs.existsSync(pf)) {
+                            var fm = extractFrontmatter(pf);
+                            var item = { status: fm.status || 'in-progress' };
+                            if (fm.format) item.format = fm.format;
+                            if (fm.ext_id) item.ext_id = fm.ext_id;
+                            if (fm.specification) item.specification = fm.specification;
+                            if (fm.spec_commit) item.spec_commit = fm.spec_commit;
+                            if (fm.task_gate_mode) item.task_gate_mode = fm.task_gate_mode;
+                            if (fm.finding_gate_mode) item.finding_gate_mode = fm.finding_gate_mode;
+                            if (fm.author_gate_mode) item.author_gate_mode = fm.author_gate_mode;
+                            items[d] = item;
+                        }
+                    });
+                    if (Object.keys(items).length > 0) {
+                        manifest.phases.planning = { items: items };
+                    }
+                }
+            }
+        }
+
+        // Implementation (feature/bugfix — topic subdir: implementation/{name}/)
         var implFile = path.join(workDir, 'implementation', name, 'implementation.md');
         if (fs.existsSync(implFile)) {
             var fm = extractFrontmatter(implFile);
@@ -521,6 +680,55 @@ while IFS= read -r name; do
             if (fm.current_phase) impl.current_phase = fm.current_phase;
             if (fm.current_task) impl.current_task = fm.current_task;
             manifest.phases.implementation = impl;
+        }
+
+        // Implementation (epic — multiple topic subdirs, items structure)
+        if (name === 'v1') {
+            var implDir = path.join(workDir, 'implementation');
+            if (fs.existsSync(implDir)) {
+                var implDirs = fs.readdirSync(implDir).filter(function(d) {
+                    return fs.statSync(path.join(implDir, d)).isDirectory();
+                });
+                if (implDirs.length > 0) {
+                    var items = {};
+                    implDirs.forEach(function(d) {
+                        var imf = path.join(implDir, d, 'implementation.md');
+                        if (fs.existsSync(imf)) {
+                            var fm = extractFrontmatter(imf);
+                            var item = { status: fm.status || 'in-progress' };
+                            if (fm.format) item.format = fm.format;
+                            if (fm.task_gate_mode) item.task_gate_mode = fm.task_gate_mode;
+                            if (fm.fix_gate_mode) item.fix_gate_mode = fm.fix_gate_mode;
+                            if (fm.analysis_gate_mode) item.analysis_gate_mode = fm.analysis_gate_mode;
+                            if (fm.fix_attempts) item.fix_attempts = parseInt(fm.fix_attempts, 10) || 0;
+                            if (fm.analysis_cycle) item.analysis_cycle = parseInt(fm.analysis_cycle, 10) || 0;
+                            if (fm.current_phase) item.current_phase = fm.current_phase;
+                            if (fm.current_task) item.current_task = fm.current_task;
+                            items[d] = item;
+                        }
+                    });
+                    if (Object.keys(items).length > 0) {
+                        manifest.phases.implementation = { items: items };
+                    }
+                }
+            }
+        }
+
+        // Review (epic — multiple topic subdirs, items structure)
+        if (name === 'v1') {
+            var revDir = path.join(workDir, 'review');
+            if (fs.existsSync(revDir)) {
+                var revDirs = fs.readdirSync(revDir).filter(function(d) {
+                    return fs.statSync(path.join(revDir, d)).isDirectory();
+                });
+                if (revDirs.length > 0) {
+                    var items = {};
+                    revDirs.forEach(function(d) {
+                        items[d] = { status: 'completed' };
+                    });
+                    manifest.phases.review = { items: items };
+                }
+            }
         }
 
         // Research (v1 epic)
