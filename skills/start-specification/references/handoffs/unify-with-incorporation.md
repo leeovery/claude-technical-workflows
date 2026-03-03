@@ -40,10 +40,10 @@ Output: .workflows/unified/specification/unified/specification.md
 
 Context: This consolidates all discussions into a single unified specification. The existing specifications should be incorporated - extract and adapt their content alongside the discussion material.
 
-After the unified specification is complete, mark the incorporated specs as superseded by updating their frontmatter:
+After the unified specification is complete, mark the incorporated specs as superseded via manifest CLI:
 
-    status: superseded
-    superseded_by: unified
+    set {source-work-unit} --phase specification --topic {source-topic} status superseded
+    set {source-work-unit} --phase specification --topic {source-topic} superseded_by unified
 
 ---
 Invoke the technical-specification skill.

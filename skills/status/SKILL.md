@@ -192,4 +192,4 @@ Keep suggestions brief — the user knows their project better than we do.
 - Work units are the primary organizational unit — each has its own directory under `.workflows/`
 - Discussions may appear in multiple specifications' sources
 - A work unit with a discussion not appearing in any active spec's sources is "unlinked"
-- Discovery data comes from the manifest CLI; spec sources and plan dependencies come from file frontmatter
+- Discovery data comes from the manifest CLI (including spec sources and plan dependencies)

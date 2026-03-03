@@ -38,10 +38,10 @@ Output: .workflows/{work_unit}/specification/{topic}/specification.md
 
 Context: This consolidates multiple sources. The existing specification should be incorporated - extract and adapt its content alongside the discussion material. The result should be a unified specification, not a simple merge.
 
-After the specification is complete, mark the incorporated specs as superseded by updating their frontmatter:
+After the specification is complete, mark the incorporated specs as superseded via manifest CLI:
 
-    status: superseded
-    superseded_by: {work_unit}
+    set {source-work-unit} --phase specification --topic {source-topic} status superseded
+    set {source-work-unit} --phase specification --topic {source-topic} superseded_by {work_unit}
 
 ---
 Invoke the technical-specification skill.

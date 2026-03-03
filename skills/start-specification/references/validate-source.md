@@ -8,7 +8,7 @@ Check if source material exists and is ready.
 
 #### If `work_type` is `feature`
 
-Check if discussion exists and is concluded. Read `.workflows/{work_unit}/discussion/{topic}.md` frontmatter.
+Check if discussion exists and is concluded. Read status via manifest CLI: `get {work_unit} --phase discussion --topic {topic} status`.
 
 **If discussion doesn't exist:**
 
@@ -44,7 +44,7 @@ Run /start-discussion feature {work_unit} to continue.
 
 #### If `work_type` is `bugfix`
 
-Check if investigation exists and is concluded. Read `.workflows/{work_unit}/investigation/{topic}.md` frontmatter.
+Check if investigation exists and is concluded. Read status via manifest CLI: `get {work_unit} --phase investigation --topic {topic} status`.
 
 **If investigation doesn't exist:**
 
