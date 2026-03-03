@@ -26,6 +26,7 @@ echo ""
 echo "research:"
 
 research_files=()
+research_wu_names=()
 for wu_dir in .workflows/*/; do
     [ -d "$wu_dir" ] || continue
     wu_name=$(basename "$wu_dir")
@@ -38,17 +39,25 @@ for wu_dir in .workflows/*/; do
     for file in "$research_dir"/*.md; do
         [ -f "$file" ] || continue
         research_files+=("$file")
+        research_wu_names+=("$wu_name")
     done
 done
 
 if [ ${#research_files[@]} -gt 0 ]; then
     echo "  exists: true"
     echo "  files:"
-    for file in "${research_files[@]}"; do
+    for i in "${!research_files[@]}"; do
+        file="${research_files[$i]}"
+        wu="${research_wu_names[$i]}"
         name=$(basename "$file" .md)
+
+        # Read research phase status from manifest
+        res_status=$($MANIFEST_CLI get "$wu" --raw phases.research.status 2>/dev/null || echo "in-progress")
 
         echo "    - name: \"$name\""
         echo "      topic: \"$name\""
+        echo "      work_unit: \"$wu\""
+        echo "      status: \"$res_status\""
     done
 
     # Compute checksum of all research files (deterministic via sorted glob)
