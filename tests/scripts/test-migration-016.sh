@@ -686,6 +686,71 @@ assert_file_not_exists "$TEST_DIR/.workflows/impl-rename/implementation/impl-ren
 content=$(cat "$TEST_DIR/.workflows/impl-rename/implementation/impl-rename/implementation.md")
 assert_contains "$content" "Some progress here" "implementation content preserved"
 
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Research with Discussion-ready marker → concluded status${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/.workflows/discussion"
+mkdir -p "$TEST_DIR/.workflows/research"
+
+cat > "$TEST_DIR/.workflows/discussion/data-model.md" << 'EOF'
+---
+topic: data-model
+status: concluded
+work_type: greenfield
+date: 2026-01-05
+---
+
+# Discussion: Data Model
+EOF
+
+cat > "$TEST_DIR/.workflows/research/exploration.md" << 'EOF'
+# Research: Exploration
+
+Some research content here.
+
+> **Discussion-ready**: The data model approach is well-understood. Key decisions around normalization are ready for discussion.
+
+More content after the marker.
+EOF
+
+run_migration
+
+research_status=$(node -e "var m = JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/v1/manifest.json','utf8')); console.log(m.phases.research ? m.phases.research.status : 'missing')")
+assert_equals "$research_status" "concluded" "research with Discussion-ready marker gets concluded status"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: Research without Discussion-ready marker → in-progress status${NC}"
+setup_fixture
+mkdir -p "$TEST_DIR/.workflows/discussion"
+mkdir -p "$TEST_DIR/.workflows/research"
+
+cat > "$TEST_DIR/.workflows/discussion/api-design.md" << 'EOF'
+---
+topic: api-design
+status: in-progress
+work_type: greenfield
+date: 2026-01-08
+---
+
+# Discussion: API Design
+EOF
+
+cat > "$TEST_DIR/.workflows/research/exploration.md" << 'EOF'
+# Research: Exploration
+
+Some research content here. Still exploring options.
+No discussion-ready marker in this file.
+EOF
+
+run_migration
+
+research_status=$(node -e "var m = JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/v1/manifest.json','utf8')); console.log(m.phases.research ? m.phases.research.status : 'missing')")
+assert_equals "$research_status" "in-progress" "research without Discussion-ready marker gets in-progress status"
+
 echo ""
 
 # ============================================================================

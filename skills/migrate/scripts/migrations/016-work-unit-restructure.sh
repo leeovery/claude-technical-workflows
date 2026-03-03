@@ -525,8 +525,15 @@ while IFS= read -r name; do
 
         // Research (v1 epic)
         var resDir = path.join(workDir, 'research');
-        if (fs.existsSync(resDir) && fs.readdirSync(resDir).some(function(f) { return f.endsWith('.md'); })) {
-            manifest.phases.research = { status: 'in-progress' };
+        if (fs.existsSync(resDir)) {
+            var resFiles = fs.readdirSync(resDir).filter(function(f) { return f.endsWith('.md'); });
+            if (resFiles.length > 0) {
+                var hasConcluded = resFiles.some(function(f) {
+                    var content = fs.readFileSync(path.join(resDir, f), 'utf8');
+                    return /^> \*\*Discussion-ready\*\*:/m.test(content);
+                });
+                manifest.phases.research = { status: hasConcluded ? 'concluded' : 'in-progress' };
+            }
         }
 
         fs.writeFileSync(
