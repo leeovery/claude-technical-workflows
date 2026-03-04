@@ -400,6 +400,20 @@ echo ""
 
 # ----------------------------------------------------------------------------
 
+echo -e "${YELLOW}Test: set --phase without --topic fails for topic-required phases${NC}"
+setup_fixture
+run_cli init topic-req --work-type feature --description "Topic required" >/dev/null 2>&1
+assert_exit_nonzero "Discussion requires --topic" set topic-req --phase discussion status in-progress
+assert_exit_nonzero "Specification requires --topic" set topic-req --phase specification status in-progress
+assert_exit_nonzero "Planning requires --topic" set topic-req --phase planning status in-progress
+assert_exit_nonzero "Implementation requires --topic" set topic-req --phase implementation status in-progress
+assert_exit_nonzero "Review requires --topic" set topic-req --phase review status in-progress
+assert_exit_nonzero "Investigation requires --topic" set topic-req --phase investigation status in-progress
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
 echo -e "${YELLOW}Test: set rejects invalid phase names${NC}"
 setup_fixture
 run_cli init phase-check --work-type feature --description "Phase" >/dev/null 2>&1

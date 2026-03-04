@@ -182,6 +182,10 @@ Processing skills should **never hardcode references** to specific workflow phas
 
 ## Key Conventions
 
+**Work types and work units**: A *work type* is one of three pipeline shapes: epic, feature, or bugfix. A *work unit* is a named instance of a work type (e.g., "auth-flow" is a feature work unit, "payments-overhaul" is an epic work unit). Each work unit gets its own directory under `.workflows/` and its own `manifest.json`.
+
+**Topics**: A *topic* is the item within a phase. For feature/bugfix, the topic name equals the work unit name (single topic moving through the pipeline). For epic, topics are distinct from the work unit name (multiple topics per phase). Research is exempt — it has no topics.
+
 Work-unit-first directory structure with uniform `{topic}` in all paths. For feature/bugfix, `{topic}` equals `{work_unit}`. For epic, `{topic}` is the item within a phase.
 
 - Manifest: `.workflows/{work_unit}/manifest.json`

@@ -17,6 +17,9 @@ const VALID_PHASES = [
   'specification', 'planning', 'implementation', 'review'
 ];
 
+// Phases that have no topics — --topic is not required for these
+const TOPICLESS_PHASES = ['research'];
+
 const VALID_PHASE_STATUSES = {
   research:       ['in-progress', 'concluded'],
   discussion:     ['in-progress', 'concluded'],
@@ -409,6 +412,9 @@ function cmdSet(args) {
 
   const name = positional[0];
   validatePhase(phase);
+  if (!topic && !TOPICLESS_PHASES.includes(phase)) {
+    die(`--topic is required for phase "${phase}"`);
+  }
 
   const fieldSegments = positional[1].split('.');
   const value = parseValue(positional[2]);
