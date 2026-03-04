@@ -109,6 +109,8 @@ Route directly to the appropriate skill based on the work unit's `next_phase` an
 | implementation | feature/bugfix | `/start-implementation {work_type} {work_unit}` |
 | review | feature/bugfix | `/start-review {work_type} {work_unit}` |
 
+Skills receive positional arguments: `$0` = work_type, `$1` = work_unit. For feature/bugfix, topic is inferred from work_unit.
+
 Invoke the skill with positional arguments. This is terminal — do not return to the backbone.
 
 #### If user selected a start-new option

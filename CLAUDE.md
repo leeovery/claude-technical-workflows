@@ -144,16 +144,18 @@ Skills are organised in two tiers:
 
 ### Two-Mode Pattern for Phase Skills
 
-Phase entry skills (`start-discussion`, `start-specification`, etc.) support three invocation patterns. Arguments are positional: `$0` = work_type, `$1` = topic.
+Phase entry skills (`start-discussion`, `start-specification`, etc.) support three invocation patterns. Arguments are positional: `$0` = work_type, `$1` = work_unit, `$2` = topic (optional).
 
-**Bridge Mode** (work_type + topic):
-- Invoked with both arguments: `/start-discussion feature {topic}`
-- Or invoked by `workflow-bridge` with work_type + topic in context
+**Bridge Mode** (work_type + work_unit + topic):
+- Invoked with all arguments: `/start-discussion feature {work_unit} {topic}`
+- For feature/bugfix, topic can be omitted (inferred from work_unit): `/start-discussion feature {work_unit}`
+- Or invoked by `workflow-bridge` with work_type + work_unit + topic in context
 - Skips discovery, validates topic exists, proceeds to pre-flight and processing
 - Enables deterministic pipeline continuation
+- Skill resolution: `topic = $2 || (wt !== 'epic' ? $1 : null)`
 
-**Discovery Mode with pipeline context** (work_type only):
-- Invoked with work_type but no topic: `/start-specification epic`
+**Discovery Mode with pipeline context** (work_type + work_unit):
+- Invoked with work_type and work_unit but no topic: `/start-specification epic {work_unit}`
 - Stores work_type for the handoff, then runs full discovery
 - Enables epic routing where topic isn't known until analysis
 

@@ -101,8 +101,8 @@ Map `next_phase` to the appropriate skill:
 | implementation | `/start-implementation` | bugfix | {work_unit} |
 | review | `/start-review` | bugfix | {work_unit} |
 
-Skills receive positional arguments: `$0` = work_type, `$1` = work_unit.
+Skills receive positional arguments: `$0` = work_type, `$1` = work_unit. For bugfix, topic is inferred from work_unit (they share the same value).
 
-**Example**: `/start-specification bugfix {work_unit}` — skill skips discovery, validates work unit, proceeds to processing.
+**Example**: `/start-specification bugfix {work_unit}` — skill resolves topic from work_unit, skips discovery, proceeds to processing.
 
 Invoke the skill from the table with the work type and work unit as positional arguments.

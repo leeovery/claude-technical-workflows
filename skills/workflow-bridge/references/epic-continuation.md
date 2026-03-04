@@ -147,25 +147,25 @@ current state and present all available options.
 
 Map the selection to a skill invocation:
 
-| Selection | Skill | Work Type | Item |
-|-----------|-------|-----------|------|
-| Continue discussion | `/start-discussion` | epic | {item} |
-| Continue specification | `/start-specification` | epic | — |
-| Continue plan | `/start-planning` | epic | {item} |
-| Continue implementation | `/start-implementation` | epic | {item} |
-| Continue research | `/start-research` | epic | — |
-| Start specification | `/start-specification` | epic | — |
-| Start planning for {item} | `/start-planning` | epic | {item} |
-| Start implementation of {item} | `/start-implementation` | epic | {item} |
-| Start review for {item} | `/start-review` | epic | {item} |
-| Start new research | `/start-research` | epic | — |
-| Start new discussion | `/start-discussion` | epic | — |
+| Selection | Skill | Work Type | Work Unit | Topic |
+|-----------|-------|-----------|-----------|-------|
+| Continue discussion | `/start-discussion` | epic | {work_unit} | {topic} |
+| Continue specification | `/start-specification` | epic | {work_unit} | — |
+| Continue plan | `/start-planning` | epic | {work_unit} | {topic} |
+| Continue implementation | `/start-implementation` | epic | {work_unit} | {topic} |
+| Continue research | `/start-research` | epic | {work_unit} | — |
+| Start specification | `/start-specification` | epic | {work_unit} | — |
+| Start planning for {topic} | `/start-planning` | epic | {work_unit} | {topic} |
+| Start implementation of {topic} | `/start-implementation` | epic | {work_unit} | {topic} |
+| Start review for {topic} | `/start-review` | epic | {work_unit} | {topic} |
+| Start new research | `/start-research` | epic | {work_unit} | — |
+| Start new discussion | `/start-discussion` | epic | {work_unit} | — |
 
-Skills receive positional arguments: `$0` = work_type, `$1` = work_unit.
+Skills receive positional arguments: `$0` = work_type, `$1` = work_unit, `$2` = topic (optional).
 
-**With arguments** (bridge mode): `/start-discussion epic {work_unit}` — skill skips discovery, validates work unit, proceeds to processing.
+**With topic** (bridge mode): `/start-discussion epic {work_unit} {topic}` — skill skips discovery, validates topic, proceeds to processing.
 
-**Without arguments** (discovery mode): `/start-discussion epic` — skill runs discovery with work_type context.
+**Without topic** (discovery mode): `/start-specification epic {work_unit}` — skill runs discovery with work_type context.
 
 → Proceed to **D. Enter Plan Mode**.
 
@@ -173,20 +173,20 @@ Skills receive positional arguments: `$0` = work_type, `$1` = work_unit.
 
 ## D. Enter Plan Mode
 
-#### If item name is present
+#### If topic is present
 
 Call the `EnterPlanMode` tool to enter plan mode. Then write the following content to the plan file:
 
 ```
 # Continue Epic: {selected_phase:(titlecase)}
 
-Continue {selected_phase} for "{work_unit}".
+Continue {selected_phase} for "{topic}" in "{work_unit}".
 
 ## Next Step
 
-Invoke `/start-{selected_phase} epic {work_unit}`
+Invoke `/start-{selected_phase} epic {work_unit} {topic}`
 
-Arguments: work_type = epic, work_unit = {work_unit}
+Arguments: work_type = epic, work_unit = {work_unit}, topic = {topic}
 The skill will skip discovery and proceed directly to validation.
 
 ## How to proceed
@@ -194,20 +194,20 @@ The skill will skip discovery and proceed directly to validation.
 Clear context and continue.
 ```
 
-#### If item name is absent
+#### If topic is absent
 
 Call the `EnterPlanMode` tool to enter plan mode. Then write the following content to the plan file:
 
 ```
 # Continue Epic: {selected_phase:(titlecase)}
 
-Start {selected_phase} phase.
+Start {selected_phase} phase for "{work_unit}".
 
 ## Next Step
 
-Invoke `/start-{selected_phase} epic`
+Invoke `/start-{selected_phase} epic {work_unit}`
 
-Arguments: work_type = epic
+Arguments: work_type = epic, work_unit = {work_unit}
 The skill will run discovery with epic context.
 
 ## How to proceed

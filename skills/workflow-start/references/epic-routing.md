@@ -78,26 +78,26 @@ Recreate with actual work units and states from discovery. Only include options 
 
 Parse the user's selection, then follow the instructions below the table to invoke the appropriate skill.
 
-| Selection | Skill | Work Type | Work Unit |
-|-----------|-------|-----------|-----------|
-| Continue discussion | `/start-discussion` | epic | {work_unit} |
-| Continue specification | `/start-specification` | epic | — |
-| Continue plan | `/start-planning` | epic | {work_unit} |
-| Continue implementation | `/start-implementation` | epic | {work_unit} |
-| Continue research | `/start-research` | epic | — |
-| Start specification | `/start-specification` | epic | — |
-| Start planning | `/start-planning` | epic | {work_unit} |
-| Start implementation | `/start-implementation` | epic | {work_unit} |
-| Start review | `/start-review` | epic | {work_unit} |
-| Start research | `/start-research` | epic | — |
-| Start new epic | `/start-epic` | — | — |
+| Selection | Skill | Work Type | Work Unit | Topic |
+|-----------|-------|-----------|-----------|-------|
+| Continue discussion | `/start-discussion` | epic | {work_unit} | {topic} |
+| Continue specification | `/start-specification` | epic | {work_unit} | — |
+| Continue plan | `/start-planning` | epic | {work_unit} | {topic} |
+| Continue implementation | `/start-implementation` | epic | {work_unit} | {topic} |
+| Continue research | `/start-research` | epic | {work_unit} | — |
+| Start specification | `/start-specification` | epic | {work_unit} | — |
+| Start planning | `/start-planning` | epic | {work_unit} | {topic} |
+| Start implementation | `/start-implementation` | epic | {work_unit} | {topic} |
+| Start review | `/start-review` | epic | {work_unit} | {topic} |
+| Start research | `/start-research` | epic | {work_unit} | — |
+| Start new epic | `/start-epic` | — | — | — |
 
-Skills receive positional arguments: `$0` = work_type, `$1` = work_unit.
+Skills receive positional arguments: `$0` = work_type, `$1` = work_unit, `$2` = topic (optional).
 
-**With arguments** (bridge mode): `/start-discussion epic {work_unit}` — skill skips discovery, validates work unit, proceeds to processing.
+**With topic** (bridge mode): `/start-discussion epic {work_unit} {topic}` — skill skips discovery, validates topic, proceeds to processing.
 
-**Without arguments** (discovery mode): `/start-discussion epic` — skill runs discovery with work_type context.
+**Without topic** (discovery mode): `/start-specification epic {work_unit}` — skill runs discovery with work_type context.
 
-**Note on specification**: Unlike feature/bugfix pipelines, epic specification is NOT topic-centric. Don't pass a work unit. Always route through discovery mode so analysis can detect changed discussions.
+**Note on specification**: Unlike feature/bugfix pipelines, epic specification is NOT topic-centric. Don't pass a topic. Always route through discovery mode so analysis can detect changed discussions.
 
-Invoke the skill from the table with the work unit and work type as positional arguments. If no work unit or work type is shown, invoke the skill bare.
+Invoke the skill from the table with the positional arguments shown. If no work unit or work type is shown, invoke the skill bare.
