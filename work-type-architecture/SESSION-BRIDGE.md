@@ -1,4 +1,4 @@
-# Session Bridge — Audit Round 2
+# Session Bridge — Audit Round 3
 
 ## What We're Doing
 
@@ -6,49 +6,47 @@ This PR (`feat/work-type-architecture-v2`) implements work-type architecture for
 
 ## Current State
 
-All Round 1 fixes are committed and pushed. The branch is clean. Tests pass:
+Rounds 1 and 2 complete. All fixes committed. Tests pass:
 - 159/159 discovery tests
 - 80/80 manifest CLI tests
 - 118/118 migration tests
 
+### Round 2 Results
+
+5 agents dispatched. Sections 1–4, 6–9 all **CLEAN**. Section 5 had 5 findings:
+
+| # | Decision | Detail |
+|---|----------|--------|
+| 1 | **Fixed** | Missing rendering instructions in `/migrate` SKILL.md |
+| 2 | **False positive** | Fenced blocks for model instructions (bash commands, file paths) are exempt from rendering instructions |
+| 3 | **False positive** | Intentional split display block pattern (header + iteration + per-item template) |
+| 4 | **Fixed** | H3→H4 for conditionals in `/migrate` SKILL.md |
+| 5 | **Fixed differently** | Consolidated ALL Step 0s — removed duplicated conditionals from 12 entry-point skills; `/migrate` owns the branching |
+
+### Key Decisions Made in Round 2
+
+- **Rendering instruction scope**: Only user-facing output blocks need rendering instructions. Bash command blocks and file path references are model instructions and are exempt.
+- **Step 0 consolidation**: The `/migrate` skill owns the STOP gate and conditional branching for migration output. Entry-point skills just say "Invoke the `/migrate` skill and assess its output." — no duplicated conditionals.
+
 ## What Needs to Happen Next
 
-**Dispatch 5 audit agents** against the full checklist (`work-type-architecture/AUDIT-CHECKLIST.md`), which now includes both Round 1 and Round 2 checks (sections 1–9). Each agent covers one perspective:
-
-1. **Paths & Structure** (Sections 1, 6) — verify all `.workflows/` paths match the uniform pattern
-2. **Manifest CLI Usage** (Sections 2, 7) — verify domain-aware flag syntax, topicless phase support
-3. **Work Type Architecture** (Sections 3, 6, 8) — verify work_units naming, phaseData/phaseItems abstractions
-4. **Old System Remnants** (Section 4) — verify dead code is gone
-5. **CLAUDE.md Conventions** (Sections 5, 9) — verify display/structural conventions
-
-**Scope exclusion**: ALL agents must ignore `workflow-explorer.html`.
-
-Each agent should:
-- Read `work-type-architecture/AUDIT-CHECKLIST.md` for the full checklist
-- Read the relevant source plans (`work-type-architecture/ARCHITECTURE-FIX-PLAN.md`, `work-type-architecture/DISCOVERY-CLEANUP-PLAN.md`, `work-type-architecture/RESEARCH-STATUS-PLAN.md`)
-- Report findings by section number, file path, and line number
-- NOT suggest fixes — just report findings
-
-## After Agents Report
-
-1. Present consolidated findings to the user
-2. Discuss any ambiguous items one at a time (not as a wall of text)
-3. Fix agreed items
-4. Update `work-type-architecture/AUDIT-ROUND1-FIXES.md` status fields (or create Round 2 equivalent)
-5. Append new checks to `work-type-architecture/AUDIT-CHECKLIST.md` if fixes introduce new patterns
-6. Re-dispatch agents if needed
+**Dispatch Round 3 agents** against the full checklist (`work-type-architecture/AUDIT-CHECKLIST.md`), which now includes sections 1–12. The new sections (10–12) verify Round 2 fixes:
+- §10: Step 0 consolidation
+- §11: Rendering instruction scope
+- §12: Migrate skill convention compliance
 
 ## Key Context
 
-- **work_units not items**: workflow-start discovery uses `epics.work_units`, `features.work_units`, `bugfixes.work_units` (renamed from `items` in Round 1)
-- **Topicless phases**: manifest CLI allows `--phase` without `--topic` ONLY for research (enforced by `TOPICLESS_PHASES` constant). All other phases require `--topic` on `set`.
-- **phaseData/phaseItems**: discovery scripts must use these abstractions from `discovery-utils.js`, not access `m.phases` directly
-- **Status discovery `work_units`**: the `work_units` key in `skills/status/scripts/discovery.js` is correct — different semantic context from workflow-start
-- **1Password signing**: git commits may fail with "failed to fill whole buffer" — this is a 1Password agent timeout, retry usually works
+- **work_units not items**: workflow-start discovery uses `epics.work_units`, `features.work_units`, `bugfixes.work_units`
+- **Topicless phases**: manifest CLI allows `--phase` without `--topic` ONLY for research
+- **phaseData/phaseItems**: discovery scripts must use these abstractions from `discovery-utils.js`
+- **Status discovery `work_units`**: the `work_units` key in `skills/status/scripts/discovery.js` is correct — different semantic context
+- **Rendering instructions**: Only for user-facing output blocks, not model instruction blocks
+- **Step 0**: `/migrate` owns the branching; callers just invoke and assess
 
 ## Files to Read
 
-- `work-type-architecture/AUDIT-CHECKLIST.md` — the living audit checklist (Round 1 + Round 2 checks)
+- `work-type-architecture/AUDIT-CHECKLIST.md` — the living audit checklist (sections 1–12)
 - `work-type-architecture/AUDIT-ROUND1-FIXES.md` — fix tracker from Round 1 (all completed)
 - `work-type-architecture/ARCHITECTURE-FIX-PLAN.md` — the original 8-fix architecture plan
 - `work-type-architecture/DISCOVERY-CLEANUP-PLAN.md` — the 7-fix discovery cleanup plan

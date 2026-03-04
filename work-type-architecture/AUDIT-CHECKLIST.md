@@ -171,6 +171,50 @@ Verify the specific convention fixes from Round 1 are correct:
 
 ---
 
+## Round 3 Checks
+
+Source: Round 2 fixes — verifying correctness and new conventions.
+
+### 10. Step 0 Consolidation
+
+Round 2 consolidated Step 0 migration handling. The `/migrate` skill owns the conditional branching and STOP gate. Entry-point skills delegate entirely.
+
+**Correct Step 0 pattern** (all entry-point skills):
+```
+## Step 0: Run Migrations
+
+**This step is mandatory. You must complete it before proceeding.**
+
+Invoke the `/migrate` skill and assess its output.
+```
+
+**What to flag**:
+- Any entry-point skill Step 0 that still contains `#### If files were updated` / `#### If no updates needed` conditionals
+- Missing Step 0 in any entry-point skill
+
+### 11. Rendering Instruction Scope
+
+Round 2 clarified: rendering instructions are required only for **user-facing output blocks** — fenced blocks that will be displayed to the user.
+
+**Exempt from rendering instructions**:
+- Bash command blocks (model instructions to execute)
+- File path references (model instructions to load/read)
+- Any fenced block that is an instruction to the model, not output to the user
+
+**What to flag**:
+- User-facing output blocks missing rendering instructions
+- Do NOT flag bash command blocks or file path references that lack rendering instructions
+
+### 12. Migrate Skill Convention Compliance
+
+Round 2 fixed the `/migrate` skill to use H4 for conditionals and rendering instructions for output blocks.
+
+**What to flag**:
+- H3 or other heading levels used for conditional routing (should be H4)
+- User-facing fenced blocks in `/migrate` missing rendering instructions
+
+---
+
 ## How to Use This Document
 
 1. Dispatch audit agents — each agent gets this full checklist plus the relevant source plans
