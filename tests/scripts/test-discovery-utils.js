@@ -206,9 +206,9 @@ describe('discovery-utils', () => {
       assert.strictEqual(r.next_phase, 'discussion');
     });
 
-    it('returns research for fresh epic', () => {
+    it('returns discussion for fresh epic (research is optional)', () => {
       const r = computeNextPhase({ work_type: 'epic', phases: {} });
-      assert.strictEqual(r.next_phase, 'research');
+      assert.strictEqual(r.next_phase, 'discussion');
     });
 
     it('returns investigation for fresh bugfix', () => {
@@ -266,6 +266,17 @@ describe('discovery-utils', () => {
       const r = computeNextPhase({ work_type: 'epic', phases: { research: { status: 'in-progress' } } });
       assert.strictEqual(r.next_phase, 'research');
       assert.strictEqual(r.phase_label, 'research (in-progress)');
+    });
+
+    it('returns in-progress research (feature)', () => {
+      const r = computeNextPhase({ work_type: 'feature', phases: { research: { status: 'in-progress' } } });
+      assert.strictEqual(r.next_phase, 'research');
+      assert.strictEqual(r.phase_label, 'research (in-progress)');
+    });
+
+    it('returns discussion when research concluded (feature)', () => {
+      const r = computeNextPhase({ work_type: 'feature', phases: { research: { status: 'concluded' } } });
+      assert.strictEqual(r.next_phase, 'discussion');
     });
 
     it('higher priority phase takes precedence', () => {

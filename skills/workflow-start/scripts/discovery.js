@@ -11,11 +11,14 @@ function discover(cwd) {
   for (const m of manifests) {
     const state = computeNextPhase(m);
     const phases = {};
+    const featureKeys = phaseStatus(m, 'research')
+      ? ['research', 'discussion', 'specification', 'planning', 'implementation', 'review']
+      : ['discussion', 'specification', 'planning', 'implementation', 'review'];
     const keys = m.work_type === 'epic'
       ? ['research', 'discussion', 'specification', 'planning', 'implementation', 'review']
       : m.work_type === 'bugfix'
         ? ['investigation', 'specification', 'planning', 'implementation', 'review']
-        : ['discussion', 'specification', 'planning', 'implementation', 'review'];
+        : featureKeys;
 
     for (const k of keys) {
       phases[k] = phaseStatus(m, k) || 'none';
