@@ -44,7 +44,7 @@ Findings from 5 audit agents run against AUDIT-CHECKLIST.md. Each fix has a stat
 
 ### 2.3: Stale `--raw` in plan doc
 **Status**: TODO
-**Decision**: Fix. Update wording in plans/RESEARCH-STATUS-PLAN.md line 54.
+**Decision**: Fix. Update wording in work-type-architecture/RESEARCH-STATUS-PLAN.md line 54.
 
 ---
 

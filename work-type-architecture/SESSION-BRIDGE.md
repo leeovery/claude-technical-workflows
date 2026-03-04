@@ -2,7 +2,7 @@
 
 ## What We're Doing
 
-This PR (`feat/work-type-architecture-v2`) implements work-type architecture for the workflow system. We've been through multiple rounds of implementation and auditing. The audit process uses a living checklist at `plans/AUDIT-CHECKLIST.md` and dispatches 5 parallel agents to verify different aspects of the codebase.
+This PR (`feat/work-type-architecture-v2`) implements work-type architecture for the workflow system. We've been through multiple rounds of implementation and auditing. The audit process uses a living checklist at `work-type-architecture/AUDIT-CHECKLIST.md` and dispatches 5 parallel agents to verify different aspects of the codebase.
 
 ## Current State
 
@@ -13,7 +13,7 @@ All Round 1 fixes are committed and pushed. The branch is clean. Tests pass:
 
 ## What Needs to Happen Next
 
-**Dispatch 5 audit agents** against the full checklist (`plans/AUDIT-CHECKLIST.md`), which now includes both Round 1 and Round 2 checks (sections 1–9). Each agent covers one perspective:
+**Dispatch 5 audit agents** against the full checklist (`work-type-architecture/AUDIT-CHECKLIST.md`), which now includes both Round 1 and Round 2 checks (sections 1–9). Each agent covers one perspective:
 
 1. **Paths & Structure** (Sections 1, 6) — verify all `.workflows/` paths match the uniform pattern
 2. **Manifest CLI Usage** (Sections 2, 7) — verify domain-aware flag syntax, topicless phase support
@@ -24,8 +24,8 @@ All Round 1 fixes are committed and pushed. The branch is clean. Tests pass:
 **Scope exclusion**: ALL agents must ignore `workflow-explorer.html`.
 
 Each agent should:
-- Read `plans/AUDIT-CHECKLIST.md` for the full checklist
-- Read the relevant source plans (`plans/ARCHITECTURE-FIX-PLAN.md`, `plans/DISCOVERY-CLEANUP-PLAN.md`, `plans/RESEARCH-STATUS-PLAN.md`)
+- Read `work-type-architecture/AUDIT-CHECKLIST.md` for the full checklist
+- Read the relevant source plans (`work-type-architecture/ARCHITECTURE-FIX-PLAN.md`, `work-type-architecture/DISCOVERY-CLEANUP-PLAN.md`, `work-type-architecture/RESEARCH-STATUS-PLAN.md`)
 - Report findings by section number, file path, and line number
 - NOT suggest fixes — just report findings
 
@@ -34,8 +34,8 @@ Each agent should:
 1. Present consolidated findings to the user
 2. Discuss any ambiguous items one at a time (not as a wall of text)
 3. Fix agreed items
-4. Update `plans/AUDIT-ROUND1-FIXES.md` status fields (or create Round 2 equivalent)
-5. Append new checks to `plans/AUDIT-CHECKLIST.md` if fixes introduce new patterns
+4. Update `work-type-architecture/AUDIT-ROUND1-FIXES.md` status fields (or create Round 2 equivalent)
+5. Append new checks to `work-type-architecture/AUDIT-CHECKLIST.md` if fixes introduce new patterns
 6. Re-dispatch agents if needed
 
 ## Key Context
@@ -48,9 +48,9 @@ Each agent should:
 
 ## Files to Read
 
-- `plans/AUDIT-CHECKLIST.md` — the living audit checklist (Round 1 + Round 2 checks)
-- `plans/AUDIT-ROUND1-FIXES.md` — fix tracker from Round 1 (all completed)
-- `plans/ARCHITECTURE-FIX-PLAN.md` — the original 8-fix architecture plan
-- `plans/DISCOVERY-CLEANUP-PLAN.md` — the 7-fix discovery cleanup plan
-- `plans/RESEARCH-STATUS-PLAN.md` — research status support plan
+- `work-type-architecture/AUDIT-CHECKLIST.md` — the living audit checklist (Round 1 + Round 2 checks)
+- `work-type-architecture/AUDIT-ROUND1-FIXES.md` — fix tracker from Round 1 (all completed)
+- `work-type-architecture/ARCHITECTURE-FIX-PLAN.md` — the original 8-fix architecture plan
+- `work-type-architecture/DISCOVERY-CLEANUP-PLAN.md` — the 7-fix discovery cleanup plan
+- `work-type-architecture/RESEARCH-STATUS-PLAN.md` — research status support plan
 - `CLAUDE.md` — project conventions (the authority for all convention checks)
