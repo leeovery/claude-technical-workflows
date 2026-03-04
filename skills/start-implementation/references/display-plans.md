@@ -94,7 +94,7 @@ Key:
 
 ## Selection
 
-**If single implementable plan and no implemented plans (auto-select):**
+#### If single implementable plan and no implemented plans (auto-select)
 
 > *Output the next fenced block as a code block:*
 
@@ -104,7 +104,7 @@ Automatically proceeding with "{work_unit:(titlecase)}".
 
 → Return to **[the skill](../SKILL.md)**.
 
-**If nothing selectable (no implementable or implemented):**
+#### If nothing selectable (no implementable or implemented)
 
 Show "not ready" block only (with unblock hint above).
 
@@ -121,7 +121,7 @@ in progress with /start-planning. Then re-run /start-implementation.
 
 **STOP.** Do not proceed — terminal condition.
 
-**If multiple selectable plans (or implemented plans exist):**
+#### If multiple selectable plans (or implemented plans exist)
 
 The verb in the menu depends on the implementation state:
 - Implementation in-progress → **Continue**

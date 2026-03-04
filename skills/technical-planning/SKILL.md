@@ -205,7 +205,7 @@ Existing plans use **{format}**. Use the same format for consistency?
 
 **STOP.** Wait for user choice. If declined, fall through to the full list below.
 
-**If no recommendation, or user declined:**
+#### If no recommendation, or user declined
 
 Present the formats from **[output-formats.md](references/output-formats.md)** to the user — including description, pros, cons, and "best for". Number each format and ask the user to pick.
 
@@ -325,7 +325,7 @@ Status has been marked as `concluded`. The plan is ready for implementation.
    node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type
    ```
 
-**If work_type is set** (feature, bugfix, or epic):
+#### If work_type is set (feature, bugfix, or epic)
 
 This plan is part of a pipeline. Invoke the `/workflow-bridge` skill:
 
@@ -337,7 +337,7 @@ Completed phase: planning
 Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
 ```
 
-**If work_type is not set:**
+#### If work_type is not set
 
 > *Output the next fenced block as a code block:*
 

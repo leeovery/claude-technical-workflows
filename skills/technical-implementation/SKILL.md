@@ -354,7 +354,7 @@ Commit: `impl({work_unit}): complete implementation`
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type
 ```
 
-**If work_type is set** (feature, bugfix, or epic):
+#### If work_type is set (feature, bugfix, or epic)
 
 This implementation is part of a pipeline. Invoke the `/workflow-bridge` skill:
 
@@ -366,7 +366,7 @@ Completed phase: implementation
 Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
 ```
 
-**If work_type is not set:**
+#### If work_type is not set
 
 > *Output the next fenced block as a code block:*
 

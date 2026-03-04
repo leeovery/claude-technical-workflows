@@ -59,11 +59,11 @@ Select an option:
 
 **STOP.** Wait for user response.
 
-**If analysis:**
+#### If analysis
 
 → Return to **[the skill](../SKILL.md)** for **Step 8**.
 
-**If re-review:**
+#### If re-review
 
 → Return to **[the skill](../SKILL.md)** for **Step 6**.
 
