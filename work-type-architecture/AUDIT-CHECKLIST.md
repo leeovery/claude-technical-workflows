@@ -215,6 +215,29 @@ Round 2 fixed the `/migrate` skill to use H4 for conditionals and rendering inst
 
 ---
 
+## Round 4 Checks
+
+Source: Round 3 fixes — verifying correctness of heading and rendering instruction changes.
+
+### 13. Conditional Routing Heading Levels
+
+Round 3 fixed H2/H3 headings used for conditional routing to H4. Bold conditionals are valid only when nested under an H4.
+
+**What to flag**:
+- H2 or H3 headings that follow `If {condition}` / `Otherwise` pattern (should be H4)
+- Bold conditionals (`**If ...:**`) that are top-level within a step (should be H4)
+- Note: bold conditionals nested under an H4 are correct and should NOT be flagged
+
+### 14. Dynamic Output Templates
+
+Round 3 added rendering instructions for dynamic output. Even when content varies, a placeholder template should follow the rendering instruction.
+
+**What to flag**:
+- Instructions to "use a code block" or present output without a rendering instruction + fenced block template
+- User-facing inline text (not in a fenced block) that should be wrapped in a rendering instruction + code block
+
+---
+
 ## How to Use This Document
 
 1. Dispatch audit agents — each agent gets this full checklist plus the relevant source plans
