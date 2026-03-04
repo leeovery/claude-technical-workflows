@@ -1,4 +1,4 @@
-# Session Bridge — Audit Round 6 Complete
+# Session Bridge — Audit Round 7 Complete
 
 ## What We're Doing
 
@@ -6,25 +6,50 @@ This PR (`feat/work-type-architecture-v2`) implements work-type architecture for
 
 ## Current State
 
-Rounds 1–6 complete. All fixes committed. Tests pass:
-- 161/161 discovery tests
+Rounds 1–7 complete. All fixes committed. Tests pass:
+- 172/172 discovery tests (11 new epic tests in Round 7)
 - 88/88 manifest CLI tests
 - 540/540 migration tests
 
-Round 6 dispatched 20 agents in two waves:
-- **Wave 1** (10 agents): Focused regression + convention checks. Found 3 minor issues, all fixed.
-- **Wave 2** (10 agents): Comprehensive full-codebase audit — every file, every line, against all plans and conventions. 227 files total. **Zero findings.**
+Round 7 was a breakthrough — switched from Haiku to **Opus-only agents** with five distinct audit strategies: semantic, adversarial, cross-file handoff, coherence, and completeness. Found 14 real issues that 6 rounds of Haiku agents completely missed, including logic bugs, epic blindness, and pipeline dead ends.
 
-Round 6 fixes:
-1. `→ Present` non-standard navigation verb → `→ Return to` (3 instances in process-review-findings.md)
-2. Bare user-facing text moved into rendered menu block (technical-planning/SKILL.md)
-3. Dynamic format selection output given rendering instruction + @foreach template (technical-planning/SKILL.md)
-
-Full discussion log at `work-type-architecture/AUDIT-ROUND6-DISCUSSION.md`.
+Full discussion log at `work-type-architecture/AUDIT-ROUND7-DISCUSSION.md`.
 
 ## What Needs to Happen Next
 
-The audit is converging. Round 4 found 12 issues, Round 5 found 2, Round 6 found 3 minor convention issues. The comprehensive wave 2 audit read every file and found nothing. The PR is ready for final review or merge.
+Dispatch Round 8 agents to verify Round 7 fixes and do a final comprehensive pass. Use the same Opus-only, multi-strategy approach from Round 7.
+
+### Agent Strategy (CRITICAL — learned from Rounds 1–7)
+
+**NEVER use Haiku** for this codebase. It pattern-matches without reasoning and reports false CLEANs. **Opus only.**
+
+**Five agent strategies**, each finding different classes of issues:
+
+1. **Semantic audit** — Read files as if executing them step by step. Ask: "Would I know exactly what to do? Are there ambiguities? Logic gaps? Dead instructions? Cross-file mismatches in variable names or paths?"
+
+2. **Adversarial audit** — Try to break things. Edge cases: empty manifests, missing phases, epic with zero items, null access paths. What happens with bad input? What about concurrent access?
+
+3. **Cross-file handoff audit** — Trace actual data flow between files. Entry-point → processing skill: do variable names match? Discovery → display → route → invoke: do field names match? Session state → compact recovery: consistent?
+
+4. **Coherence audit** — Check CLAUDE.md claims against implementation. Trace complete workflows for all 3 work types through every phase transition. Does the documented behaviour match reality?
+
+5. **Completeness audit** — Search EVERY file for remnants of old patterns. Check test coverage. Verify the PR diff is complete — no half-finished renames, no orphaned references.
+
+**Every agent reads EVERY file in its assigned segment. No spot checks. No sampling.**
+
+**Every agent must be told:**
+- Read the audit checklist, all plan documents, and CLAUDE.md
+- Use `git diff main` to understand what changed in this PR
+- Report findings only — do not fix anything
+- Be skeptical — assume there ARE problems
+
+### Key Decisions Made in Round 7
+
+- **Investigation is exclusively bugfix** — hardcoding `Work type: bugfix` in conclude-investigation.md is correct, not fragile.
+- **Specification sources are discussions** — source names map to `.workflows/{work_unit}/discussion/{source-name}.md`. Research feeds discussions, not specs directly.
+- **Output format files are intentionally exempt** from attribution headers — they're adapters, not standard references.
+- **Reference-to-reference Load directives** without `→` in sub-backbone files are acceptable — pre-existing, functionally correct.
+- **Don't assume anything** — verify against actual files and the tick project before making changes. If unsure, ask the user.
 
 ### Key Decisions Made in Round 6
 
@@ -32,40 +57,42 @@ The audit is converging. Round 4 found 12 issues, Round 5 found 2, Round 6 found
 
 ### Key Decisions Made in Round 5
 
-- **Routing vs instructional conditionals**: H4 (`#### If`) is only for routing — choosing between mutually exclusive execution paths. Bold "if" text that provides guidance or suggestions within a single path stays as bold. Example: "If you catch yourself violating TDD..." is instructional, not routing.
-- **Mode detection three-arg pattern**: All start-{phase} skills must document $0, $1, $2 and include the resolution formula. The mode detection was missed in Phase 7 of the Round 4 fixes.
+- **Routing vs instructional conditionals**: H4 (`#### If`) is only for routing — choosing between mutually exclusive execution paths. Bold "if" text that provides guidance or suggestions within a single path stays as bold.
+- **Mode detection three-arg pattern**: All start-{phase} skills must document $0, $1, $2 and include the resolution formula.
 
 ### Key Decisions Made in Round 4
 
 - **Rename `add-item` → `init-phase`**: The current `add-item` command initiates a phase entry, it doesn't add to a collection. `init-phase` parallels `init` (which creates work units).
 - **Add `push` command**: New manifest CLI command to append values to arrays. Needed for `completed_tasks` and `completed_phases` in the task loop.
-- **Convert `external_dependencies` to object-keyed-by-topic**: Eliminates need for a `set-where`/`patch-item` command. Individual deps updated via dot-path `set`. Simplifies discovery scripts.
-- **No `set-where`/`patch-item` needed**: With `external_dependencies` as an object, `push` is the only new command required.
-- **Research is optional for both epic and feature**: `computeNextPhase` should check research for both work types, defaulting to "ready for discussion" (not "ready for research"). Research only appears if already started.
-- **Three positional arguments**: `$0` = work_type, `$1` = work_unit, `$2` = topic (optional). Feature/bugfix always two args (topic inferred). Epic with known topic uses three args. Epic without topic uses two args (scoped discovery).
-- **Topic and work_unit are different concepts**: Even when they share the same string value for feature/bugfix, they represent different things. Never assume interchangeable.
-- **"Unified" is a topic, not a work unit**: In spec handoff files, "unified" is the grouping name when all discussions combine into one spec. The work_unit position in paths should be `{work_unit}`, not "unified".
-- **Future direction**: `continue-{type}` skills will be introduced to simplify continuation. `start-{phase}` skills will become non-user-invokable. Current fixes are stepping stones.
+- **Convert `external_dependencies` to object-keyed-by-topic**: Eliminates need for a `set-where`/`patch-item` command.
+- **Research is optional for both epic and feature**: `computeNextPhase` should check research for both work types, defaulting to "ready for discussion".
+- **Three positional arguments**: `$0` = work_type, `$1` = work_unit, `$2` = topic (optional).
+- **Topic and work_unit are different concepts**: Even when they share the same string value for feature/bugfix, they represent different things.
+- **"Unified" is a topic, not a work unit**.
 
 ### Key Decisions from Rounds 1–3
 
-- **Rendering instruction scope**: Only user-facing output blocks need rendering instructions. Bash command blocks and file path references are exempt.
-- **Step 0 consolidation**: `/migrate` skill owns the STOP gate and conditional branching. Entry-point skills just say "Invoke the `/migrate` skill and assess its output."
+- **Rendering instruction scope**: Only user-facing output blocks need rendering instructions.
+- **Step 0 consolidation**: `/migrate` skill owns the STOP gate and conditional branching.
 - **Dynamic output**: Even for variable content, provide a rendering instruction + fenced block with placeholder template.
-- **Bold vs H4 conditionals**: Bold is valid only when nested under an H4. Top-level routing conditionals within a step must use H4. Instructional/guidance "if" text stays bold.
-- **Split display blocks**: Intentional pattern for header + iteration + per-item template (not a violation).
+- **Bold vs H4 conditionals**: Bold is valid only when nested under an H4. Top-level routing conditionals within a step must use H4.
 
 ## Process Rules
 
 - **Present findings one at a time** — no batch changes
 - **No changes without user approval** — report and discuss only until agreed
 - **Verify before presenting** — read actual files to confirm agent findings before presenting to user
+- **Don't assume** — if unsure about the system's design intent, ask. Don't guess.
 
 ## Key Context
 
 - **work_units not items**: workflow-start discovery uses `epics.work_units`, `features.work_units`, `bugfixes.work_units`
 - **Topicless phases**: manifest CLI allows `--phase` without `--topic` ONLY for research
 - **phaseData/phaseItems**: discovery scripts must use these abstractions from `discovery-utils.js`
+- **Epic discovery**: all phase discovery scripts now iterate `phaseItems()` for epic work types (fixed in Round 7)
+- **computeNextPhase**: now epic-aware — aggregates item statuses (all concluded → phase done, any in-progress → in-progress)
+- **Investigation is bugfix-only**: hardcoded bugfix work_type is correct
+- **Spec sources are discussions**: `.workflows/{work_unit}/discussion/{source-name}.md`
 - **Status discovery `work_units`**: the `work_units` key in `skills/status/scripts/discovery.js` is correct — different semantic context
 - **Rendering instructions**: Only for user-facing output blocks, not model instruction blocks
 - **Step 0**: `/migrate` owns the branching; callers just invoke and assess
@@ -73,8 +100,9 @@ The audit is converging. Round 4 found 12 issues, Round 5 found 2, Round 6 found
 
 ## Files to Read
 
-- `work-type-architecture/AUDIT-ROUND6-DISCUSSION.md` — **READ FIRST** — Round 6 findings and comprehensive audit results
-- `work-type-architecture/AUDIT-ROUND5-DISCUSSION.md` — Round 5 findings, dispositions, and fixes
+- `work-type-architecture/AUDIT-ROUND7-DISCUSSION.md` — **READ FIRST** — Round 7 findings, strategies, and all fixes
+- `work-type-architecture/AUDIT-ROUND6-DISCUSSION.md` — Round 6 findings
+- `work-type-architecture/AUDIT-ROUND5-DISCUSSION.md` — Round 5 findings
 - `work-type-architecture/AUDIT-ROUND4-DISCUSSION.md` — Round 4 discussion log with all architectural decisions
 - `work-type-architecture/AUDIT-CHECKLIST.md` — the living audit checklist (sections 1–22)
 - `work-type-architecture/AUDIT-ROUND1-FIXES.md` — fix tracker from Round 1 (all completed)

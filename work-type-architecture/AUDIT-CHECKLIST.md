@@ -322,6 +322,65 @@ Round 5 converted 13 bold routing conditionals to H4. One finding was rejected b
 
 ---
 
+## Round 7 Checks
+
+Source: Round 7 Opus audit — semantic, adversarial, cross-file, coherence, and completeness strategies (AUDIT-ROUND7-DISCUSSION.md).
+
+### 23. Epic Discovery Script Support
+
+Round 7 found all phase discovery scripts (specification, planning, implementation, review, status) were blind to epic work units. Fixed to iterate `phaseItems()` for epic.
+
+**What to flag**:
+- Discovery scripts that use `phaseData(m, '{phase}').status` without epic handling — for epic, status is per-item, not at the phase level
+- File paths constructed with `m.name` as topic — for epic, topic differs from work unit name
+- Missing `phaseItems` import in discovery scripts that need epic support
+- `computeNextPhase` not checking item-level statuses for epic
+
+### 24. Processing Skill Logic Flow
+
+Round 7 found STOP gates before menus, contradictory routing between reference files and SKILL.md, and unreachable code paths.
+
+**What to flag**:
+- `**STOP.**` appearing before the menu/prompt it guards (user gets blank stop with no options)
+- Reference file routing that contradicts the parent SKILL.md's post-loop routing
+- Auto-mode gates that are blocked by unconditional STOP gates in earlier sections
+- Review/completion status never set before terminal conditions or pipeline continuation
+
+### 25. Pipeline Continuation Correctness
+
+Round 7 found cross-cutting specs triggering planning and review dead ends.
+
+**What to flag**:
+- Pipeline continuation (`/workflow-bridge` invocation) without gating on specification type — cross-cutting specs should NOT proceed to planning
+- Terminal conditions that leave phase status as `in-progress` when the phase is actually complete
+- Hardcoded work_type values where the manifest should be read (exception: `conclude-investigation.md` correctly hardcodes `bugfix` since investigation is exclusively bugfix)
+
+### 26. Navigation Verb `→ If` Pattern
+
+Round 7 found 13 instances of `→ If {condition}` used as conditional routing. CLAUDE.md only allows `→ Proceed to`, `→ Return to`, and `→ Load`.
+
+**What to flag**:
+- `→ If` or `→ Otherwise` — should be H4 headings (top-level) or bold (nested under H4)
+- Plain-text `If {condition}:` used for top-level routing without H4 heading
+
+### 27. Source Path Resolution
+
+Round 7 found spec-review.md passing manifest metadata (source names) where the agent expects file paths.
+
+**What to flag**:
+- Instructions that pass manifest field values directly to agents when the agent expects file paths
+- Missing path construction from manifest names to filesystem paths
+
+### 28. Recovery Instructions Accuracy
+
+Round 7 found copy-pasted recovery text referencing files the skill doesn't create.
+
+**What to flag**:
+- "Resuming After Context Refresh" sections that reference files from other skills
+- Generic file lists instead of skill-specific file paths
+
+---
+
 ## How to Use This Document
 
 1. Dispatch audit agents — each agent gets this full checklist plus the relevant source plans
