@@ -25,11 +25,16 @@ function discover(cwd) {
         else if (item.status === 'in-progress') inProgressCount++;
 
         // Check if this discussion has an individual spec via sources
+        // For epic, sources are per spec item, not phase-level
         let hasIndividualSpec = false;
         let specStatus = '';
-        if (specPhase.sources && specPhase.sources[item.name]) {
-          hasIndividualSpec = true;
-          specStatus = specPhase.status || '';
+        const specItems = phaseItems(m, 'specification');
+        for (const si of specItems) {
+          if (si.sources && si.sources[item.name]) {
+            hasIndividualSpec = true;
+            specStatus = si.status || '';
+            break;
+          }
         }
 
         discussions.push({

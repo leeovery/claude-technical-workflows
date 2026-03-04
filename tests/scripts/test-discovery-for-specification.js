@@ -78,8 +78,12 @@ describe('start-specification discovery', () => {
           },
         },
         specification: {
-          status: 'in-progress',
-          sources: { 'auth-design': { status: 'extracted' } },
+          items: {
+            'auth-spec': {
+              status: 'in-progress',
+              sources: { 'auth-design': { status: 'extracted' } },
+            },
+          },
         },
       },
     });
