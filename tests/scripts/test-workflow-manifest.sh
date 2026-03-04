@@ -659,6 +659,88 @@ assert_exit_nonzero "Invalid phase in init-phase rejected" init-phase bad-phase-
 echo ""
 
 # ============================================================================
+# PUSH TESTS
+# ============================================================================
+
+echo -e "${YELLOW}Test: push to non-existent field creates array${NC}"
+setup_fixture
+run_cli init push-new --work-type feature --description "Push new" >/dev/null 2>&1
+run_cli init-phase push-new --phase implementation --topic push-new >/dev/null 2>&1
+run_cli push push-new --phase implementation --topic push-new completed_tasks "task-1" >/dev/null 2>&1
+output=$(run_cli_stdout get push-new --phase implementation --topic push-new completed_tasks)
+
+assert_contains "$output" '"task-1"' "Push creates array with value"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: push to existing array appends${NC}"
+setup_fixture
+run_cli init push-append --work-type feature --description "Push append" >/dev/null 2>&1
+run_cli init-phase push-append --phase implementation --topic push-append >/dev/null 2>&1
+run_cli push push-append --phase implementation --topic push-append completed_tasks "task-1" >/dev/null 2>&1
+run_cli push push-append --phase implementation --topic push-append completed_tasks "task-2" >/dev/null 2>&1
+output=$(run_cli_stdout get push-append --phase implementation --topic push-append completed_tasks)
+
+assert_contains "$output" '"task-1"' "First value present"
+assert_contains "$output" '"task-2"' "Second value appended"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: push to non-array field errors${NC}"
+setup_fixture
+run_cli init push-bad --work-type feature --description "Push bad" >/dev/null 2>&1
+run_cli init-phase push-bad --phase implementation --topic push-bad >/dev/null 2>&1
+output=$(run_cli push push-bad --phase implementation --topic push-bad status "value" || true)
+
+assert_contains "$output" "not an array" "Push to non-array errors"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: push with --phase/--topic for feature${NC}"
+setup_fixture
+run_cli init push-feat --work-type feature --description "Push feat" >/dev/null 2>&1
+run_cli init-phase push-feat --phase implementation --topic push-feat >/dev/null 2>&1
+run_cli push push-feat --phase implementation --topic push-feat completed_phases 1 >/dev/null 2>&1
+output=$(run_cli_stdout get push-feat --phase implementation --topic push-feat completed_phases)
+
+assert_contains "$output" "1" "Push numeric value to feature"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: push with --phase/--topic for epic${NC}"
+setup_fixture
+run_cli init push-epic --work-type epic --description "Push epic" >/dev/null 2>&1
+run_cli init-phase push-epic --phase implementation --topic my-topic >/dev/null 2>&1
+run_cli push push-epic --phase implementation --topic my-topic completed_tasks "task-a" >/dev/null 2>&1
+output=$(run_cli_stdout get push-epic --phase implementation --topic my-topic completed_tasks)
+
+assert_contains "$output" '"task-a"' "Push routes through items for epic"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: push at work-unit level${NC}"
+setup_fixture
+run_cli init push-wu --work-type feature --description "Push WU" >/dev/null 2>&1
+run_cli push push-wu tags "v1" >/dev/null 2>&1
+run_cli push push-wu tags "v2" >/dev/null 2>&1
+output=$(run_cli_stdout get push-wu tags)
+
+assert_contains "$output" '"v1"' "First tag present"
+assert_contains "$output" '"v2"' "Second tag appended"
+
+echo ""
+
+# ============================================================================
 # ARCHIVE TESTS
 # ============================================================================
 

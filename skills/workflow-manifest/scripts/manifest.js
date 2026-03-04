@@ -527,6 +527,77 @@ function cmdInitPhase(args) {
   process.stdout.write(`Initialized ${phase} phase for "${topic}" in "${name}"\n`);
 }
 
+function cmdPush(args) {
+  const { phase, topic, positional } = parseFlags(args);
+
+  if (!phase) {
+    // Work-unit-level: push <name> <field> <value>
+    if (positional.length !== 3) die('Usage: push <name> <field> <value>');
+
+    const name = positional[0];
+    const segments = positional[1].split('.');
+    const value = parseValue(positional[2]);
+
+    if (!fs.existsSync(manifestPath(name))) {
+      die(`Work unit "${name}" not found`);
+    }
+
+    withLock(name, () => {
+      const manifest = readManifest(name);
+      const current = getByPath(manifest, segments);
+
+      if (current !== undefined && !Array.isArray(current)) {
+        die(`Path "${positional[1]}" is not an array`);
+      }
+
+      if (current === undefined) {
+        setByPath(manifest, segments, [value]);
+      } else {
+        current.push(value);
+      }
+
+      writeManifestAtomic(name, manifest);
+    });
+    return;
+  }
+
+  // Phase-level: push <name> --phase <phase> [--topic <topic>] <field.path> <value>
+  if (positional.length !== 3) {
+    die('Usage: push <name> --phase <phase> [--topic <topic>] <field.path> <value>');
+  }
+
+  const name = positional[0];
+  validatePhase(phase);
+  if (!topic && !TOPICLESS_PHASES.includes(phase)) {
+    die(`--topic is required for phase "${phase}"`);
+  }
+
+  const fieldSegments = positional[1].split('.');
+  const value = parseValue(positional[2]);
+
+  if (!fs.existsSync(manifestPath(name))) {
+    die(`Work unit "${name}" not found`);
+  }
+
+  withLock(name, () => {
+    const manifest = readManifest(name);
+    const segments = resolvePhaseSegments(manifest.work_type, phase, topic, fieldSegments);
+    const current = getByPath(manifest, segments);
+
+    if (current !== undefined && !Array.isArray(current)) {
+      die(`Path "${segments.join('.')}" is not an array`);
+    }
+
+    if (current === undefined) {
+      setByPath(manifest, segments, [value]);
+    } else {
+      current.push(value);
+    }
+
+    writeManifestAtomic(name, manifest);
+  });
+}
+
 function cmdArchive(args) {
   if (args.length !== 1) die('Usage: archive <name>');
 
@@ -574,6 +645,7 @@ switch (command) {
   case 'set':      cmdSet(args); break;
   case 'list':     cmdList(args); break;
   case 'init-phase': cmdInitPhase(args); break;
+  case 'push':     cmdPush(args); break;
   case 'archive':  cmdArchive(args); break;
   default:         die(`Unknown command "${command}"`);
 }

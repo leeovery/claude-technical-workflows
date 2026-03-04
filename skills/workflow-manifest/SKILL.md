@@ -147,6 +147,21 @@ node .claude/skills/workflow-manifest/scripts/manifest.js init-phase <name> --ph
 
 Errors if item/phase already exists.
 
+### `push`
+
+Append a value to an array field. Creates the array if it doesn't exist. Errors if the field exists but is not an array. Two modes:
+
+**Work-unit level** (no flags):
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js push <name> tags "v1"
+```
+
+**Phase level** (with flags):
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js push <name> --phase implementation --topic <topic> completed_tasks "task-1"
+node .claude/skills/workflow-manifest/scripts/manifest.js push <name> --phase implementation --topic <topic> completed_phases 1
+```
+
 ### `archive`
 
 Move a work unit to `.workflows/.archive/<name>/` and set status to `archived`.
