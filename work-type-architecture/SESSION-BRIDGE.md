@@ -6,21 +6,26 @@ This PR (`feat/work-type-architecture-v2`) implements work-type architecture for
 
 ## Current State
 
-Rounds 1–3 complete. All fixes committed. Tests pass:
-- 159/159 discovery tests
-- 80/80 manifest CLI tests
-- 118/118 migration tests
+Rounds 1–4 complete. All fixes committed. Tests pass:
+- 161/161 discovery tests (was 159, added 2 research tests)
+- 88/88 manifest CLI tests (was 80, added 8 push tests)
+- 540/540 migration tests (was 118 for m016, added 13 for m017, others unchanged)
 
-Round 4 dispatched 10 agents (5 logic/integrity + 5 convention). All agents complete. **All findings discussed and dispositioned.** Full discussion log at `work-type-architecture/AUDIT-ROUND4-DISCUSSION.md`.
+Round 4 fixes implemented across 11 commits:
+1. `add-item` → `init-phase` rename (all call sites, tests, docs)
+2. New `push` command for array append
+3. `external_dependencies` array → object conversion (+ migration 017)
+4. `completed_tasks`/`completed_phases` writes in task loop
+5. `computeNextPhase` research handling for all non-bugfix types
+6. Epic spec sources checked at item level
+7. Positional argument redesign ($0=wt, $1=wu, $2=topic)
+8. Small targeted fixes (Findings 7, 8, 10, 11)
+9. Em-dash conventions and epic status rule (Findings 9, 13)
+10. Heading conventions — H4 for conditionals (Findings 16, 17)
 
 ## What Needs to Happen Next
 
-Implement the 12 agreed fixes from Round 4. Then re-run tests. Then update audit checklist and re-dispatch agents for Round 5.
-
-The fixes fall into three categories:
-1. **Large architectural changes** (Findings 1, 2, 3, 6) — manifest CLI, discovery scripts, routing tables, positional arguments
-2. **Small targeted fixes** (Findings 7, 8, 9, 10, 11, 13) — one-liner or few-line changes
-3. **Convention fixes** (Findings 16, 17) — heading level changes
+Dispatch 10 Round 5 agents to verify all fixes. Audit checklist updated with sections 15–20.
 
 See the "Summary: Agreed Fixes" table at the bottom of `AUDIT-ROUND4-DISCUSSION.md` for the full list.
 

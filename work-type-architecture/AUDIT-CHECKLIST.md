@@ -238,6 +238,65 @@ Round 3 added rendering instructions for dynamic output. Even when content varie
 
 ---
 
+## Round 5 Checks
+
+Source: Round 4 audit findings and fixes (AUDIT-ROUND4-DISCUSSION.md).
+
+### 15. No `add-item` References Remain
+
+Round 4 renamed the manifest CLI command `add-item` → `init-phase`. Verify no references to `add-item` remain anywhere in the codebase (excluding audit docs and git history).
+
+**What to flag**:
+- Any `add-item` in skill files, scripts, tests, or CLAUDE.md
+- Any `cmdAddItem` function references
+
+### 16. `external_dependencies` Format Consistency
+
+Round 4 converted `external_dependencies` from array-of-objects to object-keyed-by-topic. Verify all references use the object format.
+
+**What to flag**:
+- Array syntax for `external_dependencies` in discovery scripts, tests, or skill references
+- `Array.isArray(external_dependencies)` checks (should use object iteration)
+- Array-based YAML/JSON illustrations in documentation
+
+### 17. Positional Argument Documentation
+
+Round 4 redesigned positional arguments: `$0`=work_type, `$1`=work_unit, `$2`=topic (optional).
+
+**What to flag**:
+- References to `$0`=work_type, `$1`=topic (old two-arg pattern)
+- Routing tables missing Topic column (for epic routing)
+- Skill invocations missing work_unit between work_type and topic
+
+### 18. `push` Command Usage in Task Loop
+
+Round 4 added the `push` command and wired it into the task loop for `completed_tasks` and `completed_phases`.
+
+**What to flag**:
+- Task loop missing `push` calls for completed_tasks/completed_phases
+- `push` command not documented in manifest SKILL.md
+- `push` not in the usage line of manifest.js
+
+### 19. `computeNextPhase` Research Handling
+
+Round 4 fixed research handling for all non-bugfix work types. Research is optional — fresh work units default to "ready for discussion".
+
+**What to flag**:
+- `computeNextPhase` returning "ready for research" for fresh epic/feature
+- Epic-only research checks (should be all non-bugfix)
+- Feature phase lists missing conditional research inclusion
+
+### 20. Heading Conventions — H4 for Conditionals
+
+Round 4 fixed remaining instances of bold text and H2 used for top-level conditionals.
+
+**What to flag**:
+- H2 headings following `If {condition}` pattern in reference files (should be H4)
+- Bold conditionals that are top-level within a step (not nested under H4)
+- `---` separators used for em dashes in prose
+
+---
+
 ## How to Use This Document
 
 1. Dispatch audit agents — each agent gets this full checklist plus the relevant source plans
