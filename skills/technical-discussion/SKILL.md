@@ -41,7 +41,7 @@ technical discussion.
 > *Output the next fenced block as a code block:*
 
 ```
-You mentioned {work_unit}. To keep the discussion focused, is there a specific
+You mentioned {topic}. To keep the discussion focused, is there a specific
 aspect or decision you want to work through first?
 ```
 
