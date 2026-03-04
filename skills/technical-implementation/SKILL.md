@@ -175,7 +175,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phas
 
 1. Set implementation state via manifest CLI:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js add-item {work_unit} --phase implementation --topic {topic}
+   node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit} --phase implementation --topic {topic}
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase implementation --topic {topic} format {format from plan}
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase implementation --topic {topic} task_gate_mode gated
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase implementation --topic {topic} fix_gate_mode gated

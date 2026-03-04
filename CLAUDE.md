@@ -311,7 +311,7 @@ Domain-aware CLI grammar:
 MANIFEST="node .claude/skills/workflow-manifest/scripts/manifest.js"
 $MANIFEST get {work_unit} --phase discussion --topic {topic} status    # phase-level read
 $MANIFEST set {work_unit} --phase discussion --topic {topic} status concluded  # phase-level write
-$MANIFEST add-item {work_unit} --phase discussion --topic {topic}      # create phase entry
+$MANIFEST init-phase {work_unit} --phase discussion --topic {topic}    # create phase entry
 $MANIFEST get {work_unit} work_type                                    # work-unit-level read
 $MANIFEST set {work_unit} phases.research.analysis_cache '{"checksum":"..."}' # work-unit-level write (dot-path)
 ```

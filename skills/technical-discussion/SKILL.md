@@ -91,7 +91,7 @@ Read it. Announce the current state of the discussion (questions answered, quest
 3. Populate Context section and initial Questions list
 4. Register discussion in manifest:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js add-item {work_unit} --phase discussion --topic {topic}
+   node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit} --phase discussion --topic {topic}
    ```
 5. Commit the initial file
 

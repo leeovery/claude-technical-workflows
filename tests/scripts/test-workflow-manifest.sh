@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Tests for the workflow manifest CLI (manifest.js)
-# Validates init, get, set, list, add-item, archive commands.
+# Validates init, get, set, list, init-phase, archive commands.
 # Uses domain-aware flag syntax (--phase, --topic).
 #
 
@@ -261,7 +261,7 @@ echo ""
 echo -e "${YELLOW}Test: get subtree at work-unit level${NC}"
 setup_fixture
 run_cli init subtree-test --work-type feature --description "Subtree" >/dev/null 2>&1
-run_cli add-item subtree-test --phase discussion --topic subtree-test >/dev/null 2>&1
+run_cli init-phase subtree-test --phase discussion --topic subtree-test >/dev/null 2>&1
 output=$(run_cli_stdout get subtree-test --phase discussion)
 
 assert_contains "$output" '"status": "in-progress"' "Subtree output as JSON"
@@ -273,7 +273,7 @@ echo ""
 echo -e "${YELLOW}Test: get phase-level value for feature (flat routing)${NC}"
 setup_fixture
 run_cli init feat-get --work-type feature --description "Get test" >/dev/null 2>&1
-run_cli add-item feat-get --phase discussion --topic feat-get >/dev/null 2>&1
+run_cli init-phase feat-get --phase discussion --topic feat-get >/dev/null 2>&1
 output=$(run_cli_stdout get feat-get --phase discussion --topic feat-get status)
 
 assert_equals "$output" "in-progress" "Feature phase-level get returns flat status"
@@ -285,7 +285,7 @@ echo ""
 echo -e "${YELLOW}Test: get phase-level value for epic (items routing)${NC}"
 setup_fixture
 run_cli init epic-get --work-type epic --description "Get test" >/dev/null 2>&1
-run_cli add-item epic-get --phase discussion --topic my-topic >/dev/null 2>&1
+run_cli init-phase epic-get --phase discussion --topic my-topic >/dev/null 2>&1
 output=$(run_cli_stdout get epic-get --phase discussion --topic my-topic status)
 
 assert_equals "$output" "in-progress" "Epic phase-level get routes through items"
@@ -328,7 +328,7 @@ echo ""
 echo -e "${YELLOW}Test: set phase-level value for feature${NC}"
 setup_fixture
 run_cli init feat-set --work-type feature --description "Set" >/dev/null 2>&1
-run_cli add-item feat-set --phase discussion --topic feat-set >/dev/null 2>&1
+run_cli init-phase feat-set --phase discussion --topic feat-set >/dev/null 2>&1
 run_cli set feat-set --phase discussion --topic feat-set status concluded >/dev/null 2>&1
 output=$(run_cli_stdout get feat-set --phase discussion --topic feat-set status)
 
@@ -341,7 +341,7 @@ echo ""
 echo -e "${YELLOW}Test: set phase-level value for epic${NC}"
 setup_fixture
 run_cli init epic-set --work-type epic --description "Set" >/dev/null 2>&1
-run_cli add-item epic-set --phase discussion --topic my-topic >/dev/null 2>&1
+run_cli init-phase epic-set --phase discussion --topic my-topic >/dev/null 2>&1
 run_cli set epic-set --phase discussion --topic my-topic status concluded >/dev/null 2>&1
 output=$(run_cli_stdout get epic-set --phase discussion --topic my-topic status)
 
@@ -584,13 +584,13 @@ assert_not_contains "$output" '"name": "old-thing"' "Dot-prefixed directory skip
 echo ""
 
 # ============================================================================
-# ADD-ITEM TESTS
+# INIT-PHASE TESTS
 # ============================================================================
 
-echo -e "${YELLOW}Test: add-item for epic creates item with in-progress status${NC}"
+echo -e "${YELLOW}Test: init-phase for epic creates item with in-progress status${NC}"
 setup_fixture
 run_cli init my-epic --work-type epic --description "My Epic" >/dev/null 2>&1
-run_cli add-item my-epic --phase discussion --topic payment-processing >/dev/null 2>&1
+run_cli init-phase my-epic --phase discussion --topic payment-processing >/dev/null 2>&1
 output=$(run_cli_stdout get my-epic --phase discussion --topic payment-processing status)
 
 assert_equals "$output" "in-progress" "Epic item created with in-progress status"
@@ -599,10 +599,10 @@ echo ""
 
 # ----------------------------------------------------------------------------
 
-echo -e "${YELLOW}Test: add-item for feature creates flat phase status${NC}"
+echo -e "${YELLOW}Test: init-phase for feature creates flat phase status${NC}"
 setup_fixture
 run_cli init my-feat --work-type feature --description "My Feature" >/dev/null 2>&1
-run_cli add-item my-feat --phase discussion --topic my-feat >/dev/null 2>&1
+run_cli init-phase my-feat --phase discussion --topic my-feat >/dev/null 2>&1
 output=$(run_cli_stdout get my-feat --phase discussion --topic my-feat status)
 
 assert_equals "$output" "in-progress" "Feature phase created with in-progress status"
@@ -615,10 +615,10 @@ echo ""
 
 # ----------------------------------------------------------------------------
 
-echo -e "${YELLOW}Test: add-item for bugfix creates flat phase status${NC}"
+echo -e "${YELLOW}Test: init-phase for bugfix creates flat phase status${NC}"
 setup_fixture
 run_cli init my-bug --work-type bugfix --description "My Bug" >/dev/null 2>&1
-run_cli add-item my-bug --phase investigation --topic my-bug >/dev/null 2>&1
+run_cli init-phase my-bug --phase investigation --topic my-bug >/dev/null 2>&1
 output=$(run_cli_stdout get my-bug --phase investigation --topic my-bug status)
 
 assert_equals "$output" "in-progress" "Bugfix phase created with in-progress status"
@@ -627,11 +627,11 @@ echo ""
 
 # ----------------------------------------------------------------------------
 
-echo -e "${YELLOW}Test: add-item rejects duplicate epic items${NC}"
+echo -e "${YELLOW}Test: init-phase rejects duplicate epic items${NC}"
 setup_fixture
 run_cli init dup-epic --work-type epic --description "Dup" >/dev/null 2>&1
-run_cli add-item dup-epic --phase discussion --topic my-item >/dev/null 2>&1
-output=$(run_cli add-item dup-epic --phase discussion --topic my-item || true)
+run_cli init-phase dup-epic --phase discussion --topic my-item >/dev/null 2>&1
+output=$(run_cli init-phase dup-epic --phase discussion --topic my-item || true)
 
 assert_contains "$output" "already exists" "Duplicate epic item rejected"
 
@@ -639,11 +639,11 @@ echo ""
 
 # ----------------------------------------------------------------------------
 
-echo -e "${YELLOW}Test: add-item rejects duplicate feature phase${NC}"
+echo -e "${YELLOW}Test: init-phase rejects duplicate feature phase${NC}"
 setup_fixture
 run_cli init dup-feat --work-type feature --description "Dup" >/dev/null 2>&1
-run_cli add-item dup-feat --phase discussion --topic dup-feat >/dev/null 2>&1
-output=$(run_cli add-item dup-feat --phase discussion --topic dup-feat || true)
+run_cli init-phase dup-feat --phase discussion --topic dup-feat >/dev/null 2>&1
+output=$(run_cli init-phase dup-feat --phase discussion --topic dup-feat || true)
 
 assert_contains "$output" "already exists" "Duplicate feature phase rejected"
 
@@ -651,10 +651,10 @@ echo ""
 
 # ----------------------------------------------------------------------------
 
-echo -e "${YELLOW}Test: add-item rejects invalid phase${NC}"
+echo -e "${YELLOW}Test: init-phase rejects invalid phase${NC}"
 setup_fixture
 run_cli init bad-phase-epic --work-type epic --description "Bad" >/dev/null 2>&1
-assert_exit_nonzero "Invalid phase in add-item rejected" add-item bad-phase-epic --phase cooking --topic soup
+assert_exit_nonzero "Invalid phase in init-phase rejected" init-phase bad-phase-epic --phase cooking --topic soup
 
 echo ""
 
@@ -697,7 +697,7 @@ echo ""
 echo -e "${YELLOW}Test: feature get/set routes to flat structure${NC}"
 setup_fixture
 run_cli init routing-feat --work-type feature --description "Routing" >/dev/null 2>&1
-run_cli add-item routing-feat --phase discussion --topic routing-feat >/dev/null 2>&1
+run_cli init-phase routing-feat --phase discussion --topic routing-feat >/dev/null 2>&1
 run_cli set routing-feat --phase discussion --topic routing-feat status concluded >/dev/null 2>&1
 
 # Verify internal structure is flat
@@ -713,8 +713,8 @@ echo ""
 echo -e "${YELLOW}Test: epic get/set routes through items${NC}"
 setup_fixture
 run_cli init routing-epic --work-type epic --description "Routing" >/dev/null 2>&1
-run_cli add-item routing-epic --phase discussion --topic topic-a >/dev/null 2>&1
-run_cli add-item routing-epic --phase discussion --topic topic-b >/dev/null 2>&1
+run_cli init-phase routing-epic --phase discussion --topic topic-a >/dev/null 2>&1
+run_cli init-phase routing-epic --phase discussion --topic topic-b >/dev/null 2>&1
 run_cli set routing-epic --phase discussion --topic topic-a status concluded >/dev/null 2>&1
 
 # Verify internal structure has items
@@ -736,7 +736,7 @@ echo ""
 echo -e "${YELLOW}Test: get phase without topic returns whole phase object${NC}"
 setup_fixture
 run_cli init phase-obj --work-type epic --description "Phase obj" >/dev/null 2>&1
-run_cli add-item phase-obj --phase discussion --topic topic-x >/dev/null 2>&1
+run_cli init-phase phase-obj --phase discussion --topic topic-x >/dev/null 2>&1
 output=$(run_cli_stdout get phase-obj --phase discussion)
 
 assert_contains "$output" '"items"' "Phase object contains items"
@@ -776,7 +776,7 @@ echo ""
 echo -e "${YELLOW}Test: epic item-level status validation${NC}"
 setup_fixture
 run_cli init epic-validation --work-type epic --description "Validate items" >/dev/null 2>&1
-run_cli add-item epic-validation --phase discussion --topic my-topic >/dev/null 2>&1
+run_cli init-phase epic-validation --phase discussion --topic my-topic >/dev/null 2>&1
 assert_exit_nonzero "Invalid item status rejected" set epic-validation --phase discussion --topic my-topic status completed
 
 # Valid item status should work

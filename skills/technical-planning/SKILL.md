@@ -218,7 +218,7 @@ Once selected:
 3. Create the Plan Index File at `.workflows/{work_unit}/planning/{topic}/planning.md` using the **Title** template from **[plan-index-schema.md](references/plan-index-schema.md)**.
 4. Register planning and set metadata in the manifest:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js add-item {work_unit} --phase planning --topic {topic}
+   node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit} --phase planning --topic {topic}
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} format {chosen-format}
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} spec_commit {commit-hash}
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} task_list_gate_mode gated

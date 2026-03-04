@@ -9,7 +9,7 @@ After completing the steps above, this skill's purpose is fulfilled.
 ## Set Review Status
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js add-item {work_unit} --phase review --topic {topic}
+node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit} --phase review --topic {topic}
 ```
 
 ## Save Session Bookmark

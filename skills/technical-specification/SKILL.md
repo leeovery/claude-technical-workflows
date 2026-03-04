@@ -152,7 +152,7 @@ Create the specification file at `.workflows/{work_unit}/specification/{topic}/s
 1. Use the body template from specification-format.md (title + specification section + working notes section)
 2. Register specification and initialize state via manifest CLI:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js add-item {work_unit} --phase specification --topic {topic}
+   node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit} --phase specification --topic {topic}
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} type feature
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} review_cycle 0
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} finding_gate_mode gated

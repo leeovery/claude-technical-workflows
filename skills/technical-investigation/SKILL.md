@@ -100,7 +100,7 @@ Read it. Announce what's been documented so far and what phase the investigation
 3. Populate the Symptoms section with any context already gathered
 4. Register investigation in manifest:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js add-item {work_unit} --phase investigation --topic {topic}
+   node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit} --phase investigation --topic {topic}
    ```
 5. Commit the initial file
 

@@ -26,7 +26,7 @@ MANIFEST="node .claude/skills/workflow-manifest/scripts/manifest.js"
 # Phase operations (--phase and --topic flags):
 $MANIFEST get {work_unit} --phase discussion --topic {topic} [field.path]
 $MANIFEST set {work_unit} --phase discussion --topic {topic} field.path value
-$MANIFEST add-item {work_unit} --phase discussion --topic {topic}
+$MANIFEST init-phase {work_unit} --phase discussion --topic {topic}
 
 # Work-unit operations (no flags):
 $MANIFEST get {work_unit} [field]
@@ -134,7 +134,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js list --status active -
 
 Output: JSON array of manifest objects.
 
-### `add-item`
+### `init-phase`
 
 Register a topic within a phase. Behavior varies by work type:
 
@@ -142,7 +142,7 @@ Register a topic within a phase. Behavior varies by work type:
 - **Feature/bugfix**: creates `phases.<phase>` with `{ "status": "in-progress" }` (flat — topic is implicit)
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js add-item <name> --phase discussion --topic <topic>
+node .claude/skills/workflow-manifest/scripts/manifest.js init-phase <name> --phase discussion --topic <topic>
 ```
 
 Errors if item/phase already exists.
@@ -161,18 +161,18 @@ Errors if work unit does not exist.
 
 The CLI validates structural values to prevent invalid state:
 
-| Field | Valid Values |
-|-------|-------------|
-| `work_type` | `epic`, `feature`, `bugfix` |
-| `status` (work unit) | `active`, `archived` |
-| `phases.research.status` | `in-progress`, `concluded` |
-| `phases.discussion.status` | `in-progress`, `concluded` |
-| `phases.investigation.status` | `in-progress`, `concluded` |
-| `phases.specification.status` | `in-progress`, `concluded`, `superseded` |
-| `phases.planning.status` | `in-progress`, `concluded` |
-| `phases.implementation.status` | `in-progress`, `completed` |
-| `phases.review.status` | `in-progress`, `completed` |
-| Gate modes (`*_gate_mode`) | `gated`, `auto` |
+| Field                          | Valid Values                             |
+|--------------------------------|------------------------------------------|
+| `work_type`                    | `epic`, `feature`, `bugfix`              |
+| `status` (work unit)           | `active`, `archived`                     |
+| `phases.research.status`       | `in-progress`, `concluded`               |
+| `phases.discussion.status`     | `in-progress`, `concluded`               |
+| `phases.investigation.status`  | `in-progress`, `concluded`               |
+| `phases.specification.status`  | `in-progress`, `concluded`, `superseded` |
+| `phases.planning.status`       | `in-progress`, `concluded`               |
+| `phases.implementation.status` | `in-progress`, `completed`               |
+| `phases.review.status`         | `in-progress`, `completed`               |
+| Gate modes (`*_gate_mode`)     | `gated`, `auto`                          |
 
 Item-level statuses within epic phases follow the same phase-level rules.
 

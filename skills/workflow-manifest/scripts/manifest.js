@@ -14,7 +14,8 @@ const VALID_WORK_TYPES = ['epic', 'feature', 'bugfix'];
 
 const VALID_PHASES = [
   'research', 'discussion', 'investigation',
-  'specification', 'planning', 'implementation', 'review'
+  'specification', 'planning', 'implementation',
+  'review'
 ];
 
 // Phases that have no topics — --topic is not required for these
@@ -408,7 +409,9 @@ function cmdSet(args) {
   }
 
   // Phase-level: set <name> --phase <phase> [--topic <topic>] <field.path> <value>
-  if (positional.length !== 3) die('Usage: set <name> --phase <phase> [--topic <topic>] <field.path> <value>');
+  if (positional.length !== 3) {
+    die('Usage: set <name> --phase <phase> [--topic <topic>] <field.path> <value>');
+  }
 
   const name = positional[0];
   validatePhase(phase);
@@ -479,11 +482,11 @@ function cmdList(args) {
   process.stdout.write(JSON.stringify(results, null, 2) + '\n');
 }
 
-function cmdAddItem(args) {
+function cmdInitPhase(args) {
   const { phase, topic, positional } = parseFlags(args);
 
   if (positional.length !== 1 || !phase || !topic) {
-    die('Usage: add-item <name> --phase <phase> --topic <topic>');
+    die('Usage: init-phase <name> --phase <phase> --topic <topic>');
   }
 
   const name = positional[0];
@@ -521,7 +524,7 @@ function cmdAddItem(args) {
     writeManifestAtomic(name, manifest);
   });
 
-  process.stdout.write(`Added "${topic}" to ${phase} phase of "${name}"\n`);
+  process.stdout.write(`Initialized ${phase} phase for "${topic}" in "${name}"\n`);
 }
 
 function cmdArchive(args) {
@@ -562,7 +565,7 @@ function cmdArchive(args) {
 const [command, ...args] = process.argv.slice(2);
 
 if (!command) {
-  die('Usage: manifest.js <command> [args]\nCommands: init, get, set, list, add-item, archive');
+  die('Usage: manifest.js <command> [args]\nCommands: init, get, set, list, init-phase, push, archive');
 }
 
 switch (command) {
@@ -570,7 +573,7 @@ switch (command) {
   case 'get':      cmdGet(args); break;
   case 'set':      cmdSet(args); break;
   case 'list':     cmdList(args); break;
-  case 'add-item': cmdAddItem(args); break;
+  case 'init-phase': cmdInitPhase(args); break;
   case 'archive':  cmdArchive(args); break;
   default:         die(`Unknown command "${command}"`);
 }
