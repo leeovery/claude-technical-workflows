@@ -229,6 +229,12 @@ The routing tables pass `{work_unit}` as $1 for epics. But the start-{phase} ski
 
 ### Discussion
 
+**Routing architecture analysis**: A deep investigation of all routing files revealed how phase transitions actually work across work types:
+- **Feature/bugfix**: Continuation is deterministic. `computeNextPhase()` computes the single next phase, `workflow-bridge` loads `feature-continuation.md` or `bugfix-continuation.md`, which enters plan mode with `Invoke /start-{next_phase} {work_type} {work_unit}`. No user choice.
+- **Epic**: Continuation is interactive. `epic-continuation.md` displays ALL actionable items across ALL phases and lets the user choose what to work on next — they can pick any phase, not just the computed "next" one.
+- **Pipeline shape**: There is no central "pipeline definition" file. The sequence (research → discussion → specification → planning → implementation → review) emerges from three things: (1) entry-point skills conditionally invoking the first phase, (2) processing skills invoking workflow-bridge when done, (3) `computeNextPhase()` computing what comes next. This is important context because `computeNextPhase` is the **single point of truth** for continuation routing — if it's wrong, the entire pipeline breaks.
+- **Discovery mode with pipeline context** (`/start-specification epic`) requires the work_unit to know which manifest to load. The old pattern of just passing work_type without work_unit would fail for this reason.
+
 **Background**: The positional argument pattern (`$0` = work_type, `$1` = topic) was introduced before this PR when feature and bugfix pipelines were added. At that time there was no concept of work units — everything was one big group of artifacts. The work-unit concept was added in this PR to constrain analysis scope (e.g., preventing cross-feature data from leaking into analysis). During implementation, an agent did a find-and-replace changing "topic" to "work_unit", which conflated the two concepts.
 
 **Key principle from user**: Topic and work_unit are **different concepts** even when they have the same string value (feature/bugfix). They represent different things. We should never assume they're interchangeable, and the system should handle them consistently across all work types.
@@ -296,7 +302,9 @@ The claim was that the investigation handoff omits `Work type: bugfix`. Verified
 
 **Problem**: `start-specification/scripts/discovery.js` line 30 reads `specPhase.sources` at the phase level, but for epics, sources are stored inside `items.{topic}` — so they'd always be empty for epics.
 
-**Context**: In epic specification, a "source" represents a discussion topic that was incorporated into a spec grouping. The spec topic represents the derived grouping. Multiple discussions may combine into one spec.
+**Context** (from user's explanation): When starting specification for an epic, the system analyses all concluded discussions and groups them. You might have 10 discussions that become 5 specifications. Each grouping gets a derived name based on its constituent discussions (e.g., three auth-related discussions → "authentication" spec topic). A "source" in a spec's manifest represents a discussion topic that was incorporated into that grouping. So `sources.payment-processing.status = "incorporated"` means the "payment-processing" discussion was consumed by this spec. The spec topic is the grouping name, not a discussion name — it's a derived concept.
+
+The discovery script needs to answer: "has this discussion been incorporated into any spec?" For feature/bugfix (flat structure), checking `specPhase.sources` works. For epic (items structure), it needs to check across all spec items.
 
 **Fix**: For epic, check all spec items' sources for the discussion topic:
 
