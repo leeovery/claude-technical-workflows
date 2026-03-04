@@ -53,6 +53,18 @@ Investigating how to fix this led to a broader discussion about the manifest CLI
 | `completed_tasks` | Array of strings | Needs append (every task iteration) |
 | `completed_phases` | Array of numbers | Needs append (on phase completion) |
 
+**Deep investigation of `linters` and `sources`**: Both were checked for whether they need converting. `linters` is set once during implementation setup (Step 5 of technical-implementation), then read by `invoke-executor.md` (passes to executor agent) and `tdd-workflow.md` (runs during LINT step). Never appended to, never partially updated — full replacement is fine. `sources` is already stored as an object in the manifest (`sources.auth-flow.status`), updated via dot-path `set`, and converted to array in discovery output via `Object.entries().map()`. Already the correct pattern.
+
+### Discussion: Naming the Commands
+
+**Renaming `add-item`**: The user questioned what `add-item` actually does. Investigation showed it only creates a phase entry with hardcoded `{ status: "in-progress" }` — it's initiating phase tracking, not adding to a collection. It normalises epic vs feature/bugfix structure and guards against duplicates. Alternatives considered: `register`, `add-phase`, `init-phase`. Chose `init-phase` for symmetry with `init` (which creates work units). The user confirmed keeping it as a separate command (rather than replacing with `set`) because the duplicate guard has value.
+
+**New array commands**: Initially proposed two commands — `add-item` (append to array) and `patch-item` (update matched item in array by key). The user raised that `add-item` and `patch-item` aren't clear names, and `add-item` conflicts with the existing command's conceptual space. This led to investigating whether `external_dependencies` could be an object instead of an array — which it can, eliminating the need for `patch-item` entirely.
+
+**Naming `push`**: Alternatives considered: `append`, `array-push`, `add-to`. Chose `push` — universally understood for arrays, no collision with other commands.
+
+**Whether `remove` is needed**: Investigated all array mutation patterns. Nothing in the codebase ever removes items from arrays. `completed_tasks` only grows. `external_dependencies` items change state but are never deleted. No `remove` command needed.
+
 ### Decisions
 
 #### Decision 1: Rename `add-item` → `init-phase`
@@ -111,6 +123,8 @@ $MANIFEST set {work_unit} --phase planning --topic {topic} external_dependencies
 
 **Not converting `linters`**: Written once during setup as a full JSON array, read-only after that. No incremental updates, no partial modifications. Array is fine.
 
+**Not converting `sources`**: Already stored as object-keyed in manifest. Dot-path updates via `set` already work. Discovery converts to array via `Object.entries().map()` for output. Already the correct pattern.
+
 #### Decision 4: No `set-where`/`patch-item` command needed
 
 With `external_dependencies` converted to object-keyed-by-topic, the only new command needed is `push`. All other array-of-objects either use write-once patterns (linters) or are already object-keyed (sources). This keeps the CLI surface minimal.
@@ -148,13 +162,21 @@ Additionally, the epic default (line 96) returns "ready for research", implying 
 
 ### Discussion: Research Optionality
 
-**How research actually works**:
+**How research actually works** (from user's detailed explanation):
 - Research is **optional** for both features and epics
-- On fresh start (`start-feature` or `start-epic`), the user is offered a choice: go to research or skip to discussion
-- This is a human+agent decision based on complexity, not a programmatic default
+- On fresh start (`start-feature` or `start-epic`), the user is offered a choice: "Do you want to go into research or are you happy to skip forward to discussion?" This is presented as a STOP gate choice, potentially influenced by Claude's assessment of complexity
+- If complexity is low, Claude may suggest skipping research without even asking
+- This is a human+agent decision based on knowledge in the moment — **not a programmatic decision**
 - Once research is started (`in-progress`), it must be concluded before moving to discussion
-- If research doesn't exist, discussion is the natural starting point — no research is implied
+- If the user exits and comes back with research in-progress, the system should continue research — not skip to discussion
+- If research is concluded, proceed to discussion
+- If there's no research but an in-progress discussion, go straight to discussion — the choice has already been made
+- If nothing exists (fresh start), present the choice again
 - Bugfixes never have research (they use investigation instead)
+
+**User's concern about codifying routing**: The user expressed concern about `computeNextPhase` being too rigid. Before this PR, phase routing was handled through natural language in skill instructions — each start skill would analyse state and provide options. Now with `computeNextPhase`, it's codified as a deterministic state machine. The user's view: this is acceptable as long as it correctly handles optionality. Research being optional is the key test case. The function should reflect what the skills know, not impose a rigid pipeline. If it's too rigid, it will restrict how the system works.
+
+**Historical context**: Research didn't have a state on main branch — it was always open-ended, never "concluded." This PR introduced `in-progress` and `concluded` states for research. The `computeNextPhase` function wasn't updated to handle this for features (only for epics), and the epic handling defaults to "ready for research" which implies it's mandatory.
 
 **The two routing mechanisms**:
 1. **First phase selection** (fresh start): Natural language in skill references (`research-gating.md`, `route-first-phase.md`). User chooses at a STOP gate. Not programmatic.
@@ -182,7 +204,7 @@ if (wt !== 'bugfix') {
 
 Also: make the workflow-start phase list dynamic for features — include research conditionally if it exists in the manifest.
 
-**Future context**: The user plans to introduce `continue-feature`, `continue-bugfix`, `continue-epic` skills to simplify continuation logic. The `start-{phase}` skills will become non-user-invokable (internal routing targets only). The `computeNextPhase` fix is a prerequisite — it needs to correctly understand research optionality before `continue-feature` can rely on it. This is a stepping stone toward that destination.
+**Future context**: The user plans to introduce `continue-feature`, `continue-bugfix`, `continue-epic` skills to sit alongside and help simplify the corresponding start skills. The `start-{phase}` skills (`start-discussion`, `start-specification`, etc.) will all become non-user-invokable — purely mechanisms for gathering information and doing discovery before routing into the technical-level processing skills. The continue skills will handle the continuation/resume flow that currently lives split between `workflow-start` (the "continue X" menu), `workflow-bridge` (phase computation), and the routing references. The `computeNextPhase` fix is a prerequisite — it needs to correctly understand research optionality before `continue-feature` can rely on it. The current architecture already has the right separation of concerns; the continue skills consolidate pieces that already exist. This is a stepping stone toward that destination — no continue skills work in this PR, but the fixes should align with that direction.
 
 ---
 
@@ -214,9 +236,10 @@ The routing tables pass `{work_unit}` as $1 for epics. But the start-{phase} ski
 **The problem**: For epic, the skill needs two pieces of information — the work_unit (to find the manifest) and the topic (to know which item within the phase). The original single-argument pattern can't express both.
 
 **Considered and rejected**:
-- Colon-delimited syntax (`epic payments-overhaul:payment-processing`) — adds parsing complexity, edge cases with colons in names, no real benefit over positional
+- Colon-delimited syntax (`epic payments-overhaul:payment-processing`) — user suggested, then agreed it would add parsing complexity everywhere (mode detection, routing tables, tests), edge cases with colons in names, and the positional approach is already implicit so no real benefit
 - $1 = topic with reverse lookup to find work_unit — expensive, fragile
 - Different bridge semantics per work type — inconsistent
+- Passing same value twice for feature/bugfix (`feature auth-flow auth-flow`) — explicit but redundant and error-prone. The skill knows from work_type that topic = work_unit for feature/bugfix
 
 ### Decision
 
@@ -452,7 +475,9 @@ The template uses generic `{status}`, `{work_unit}` etc. which are placeholder c
 
 `start-specification/references/handoffs/unify.md` and `unify-with-incorporation.md` use `"unified"` where `{work_unit}` should be. "Unified" is a **topic** name (the grouping name when a user chooses to combine all discussions into one specification), not a work unit name.
 
-Lines affected in both files: session state path (line 17/19), manifest get (line 24), output path (line 35/39). The topic position ("unified" as the second segment in spec paths) is correct — only the work_unit position needs to become `{work_unit}`.
+**What "unified" means** (from user's explanation): When starting a specification for an epic, the system analyses all discussions and groups them. You might have 10 discussions that become 5 specifications — each grouping gets a derived name based on its constituent discussions (e.g., three auth-related discussions become the "authentication" spec topic). However, the user can override and say "I just want one big specification" — that single grouping is given the topic name "unified." So "unified" is a topic representing a group of discussions within an epic work unit — it is NOT a work unit name.
+
+Lines affected in both files: session state path (line 17/19), manifest get (line 24), output path (line 35/39). The topic position ("unified" as the second segment in spec paths like `.workflows/{work_unit}/specification/unified/specification.md`) is correct — only the work_unit position needs to become `{work_unit}`.
 
 Fix is part of Finding 3's positional argument cleanup scope.
 
