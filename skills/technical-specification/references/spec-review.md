@@ -84,7 +84,11 @@ Dispatch the `specification-review-input` agent via the Task tool:
 
 - **Agent file**: `../../../agents/specification-review-input.md`
 - **Specification path**: the specification file path
-- **Source material paths**: all source document paths from the manifest (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} sources`)
+- **Source material paths**: resolve source names to discussion file paths. Read source names from the manifest:
+  ```bash
+  node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} sources
+  ```
+  This returns an object keyed by source name (e.g., `{"auth-design": {"status": "incorporated"}}`). For each source name, construct the discussion file path: `.workflows/{work_unit}/discussion/{source-name}.md`. Pass all resolved paths to the agent.
 - **Topic name**: the current topic
 - **Cycle number**: the current cycle number
 - **Review tracking format path**: `review-tracking-format.md` (in this references directory)
