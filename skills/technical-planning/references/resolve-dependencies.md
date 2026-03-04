@@ -33,10 +33,10 @@ The specification's Dependencies section lists what this feature needs from outs
 
 #### If the specification has no Dependencies section
 
-Set the manifest field to an empty array:
+Set the manifest field to an empty object:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} external_dependencies []
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} external_dependencies '{}'
 ```
 
 This makes it clear that dependencies were considered and none exist — not that they were overlooked.
