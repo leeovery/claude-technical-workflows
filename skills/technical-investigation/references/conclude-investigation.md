@@ -61,7 +61,7 @@ This investigation is part of a pipeline. Invoke the `/workflow-bridge` skill:
 
 ```
 Pipeline bridge for: {work_unit}
-Work type: {work_type from manifest}
+Work type: bugfix
 Completed phase: investigation
 
 Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
