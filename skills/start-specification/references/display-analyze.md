@@ -23,7 +23,7 @@ Concluded discussions:
 
 List all concluded discussions from discovery output.
 
-### If in-progress discussions exist
+#### If in-progress discussions exist
 
 > *Output the next fenced block as a code block:*
 

@@ -21,7 +21,7 @@ Single concluded discussion found.
       └─ {discussion-name} (ready)
 ```
 
-### If in-progress discussions exist
+#### If in-progress discussions exist
 
 > *Output the next fenced block as a code block:*
 

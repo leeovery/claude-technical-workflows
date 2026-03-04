@@ -23,7 +23,7 @@ Single concluded discussion found with existing specification.
       └─ {discussion-name} (extracted)
 ```
 
-### If in-progress discussions exist
+#### If in-progress discussions exist
 
 > *Output the next fenced block as a code block:*
 

@@ -66,7 +66,7 @@ Recommended breakdown for specifications with their source discussions.
 2. ...
 ```
 
-### If in-progress discussions exist
+#### If in-progress discussions exist
 
 > *Output the next fenced block as a code block:*
 

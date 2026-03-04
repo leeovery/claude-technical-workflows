@@ -120,9 +120,13 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phas
 
 Load **[spec-change-detection.md](references/spec-change-detection.md)** to check whether the specification has changed since planning started. Then present the user with an informed choice:
 
-Found existing plan for **{work_unit}** (previously reached phase {N}, task {M}).
+> *Output the next fenced block as a code block:*
+
+```
+Found existing plan for {work_unit} (previously reached phase {N}, task {M}).
 
 {spec change summary from spec-change-detection.md}
+```
 
 > *Output the next fenced block as markdown (not a code block):*
 

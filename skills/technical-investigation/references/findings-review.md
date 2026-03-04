@@ -63,7 +63,15 @@ Present what the analysis surfaced about how to fix this. Let the findings guide
 - **Multiple viable approaches?** Present each with trade-offs so the user can compare.
 - **Unclear?** Say so — this is a discussion, not a presentation.
 
-Use a code block. Format naturally based on what there is to present — a single approach doesn't need numbered alternatives, multiple approaches benefit from comparison structure.
+> *Output the next fenced block as a code block:*
+
+```
+Fix Direction: {work_unit}
+
+{fix direction content — format naturally based on what there is
+to present. A single approach doesn't need numbered alternatives;
+multiple approaches benefit from comparison structure.}
+```
 
 > *Output the next fenced block as markdown (not a code block):*
 

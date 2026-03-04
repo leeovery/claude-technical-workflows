@@ -40,7 +40,7 @@ Scan the codebase for existing plans:
    - Read the format via manifest CLI: `node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} format`
    - Note the format used by each plan
 
-**If no plans exist:**
+#### If no plans exist
 
 > *Output the next fenced block as a code block:*
 
@@ -54,7 +54,7 @@ There are no plans to link. Create plans first.
 
 **STOP.** Do not proceed — terminal condition.
 
-**If only one plan exists:**
+#### If only one plan exists
 
 > *Output the next fenced block as a code block:*
 
@@ -72,7 +72,7 @@ Cross-topic dependency linking requires at least two plans.
 
 Compare the `format:` field across all discovered plans.
 
-**If plans use different output formats:**
+#### If plans use different output formats
 
 > *Output the next fenced block as a code block:*
 

@@ -49,7 +49,7 @@ Concluded discussions not in a specification:
   • {discussion-name}
 ```
 
-### If in-progress discussions exist
+#### If in-progress discussions exist
 
 > *Output the next fenced block as a code block:*
 
