@@ -1,6 +1,6 @@
 ---
 name: start-feature
-allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(ls .workflows/), Bash(.claude/hooks/workflows/write-session-state.sh)
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(.claude/hooks/workflows/write-session-state.sh)
 hooks:
   PreToolUse:
     - hooks:
@@ -61,7 +61,7 @@ Load **[gather-feature-context.md](references/gather-feature-context.md)** and f
 
 ---
 
-## Step 2: Topic Name and Conflict Check
+## Step 2: Topic Name
 
 Load **[topic-name-check.md](references/topic-name-check.md)** and follow its instructions.
 
