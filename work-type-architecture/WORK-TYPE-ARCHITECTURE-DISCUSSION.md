@@ -623,6 +623,13 @@ Cross-routing: `/start-feature` with existing active features offers handoff to 
 
 Each phase skill becomes a thin routing layer: validate the topic exists, set up session state, invoke the processing skill. The resume/conflict logic moves entirely to continue skills.
 
+**Known issue — flat cross-work-unit display**: All phase entry skills (start-discussion, start-specification, start-planning, start-implementation, start-review) have discovery modes that scan across ALL work units and present a flat list of topics. This has two problems:
+1. **No work unit context** — if two work units both have a topic called "auth-flow", the display shows two identical entries with no way to distinguish them.
+2. **Discovery script data gap** — plan entries in start-implementation's discovery output don't include `work_unit`, only `topic`. Downstream steps need both for manifest CLI calls.
+3. **`{work_unit}` used where `{topic}` is meant** — display templates show `{work_unit}` as the selectable item name, but they're iterating topics (plans), not work units. For epic, a single work unit contains multiple plans/topics.
+
+This is not being fixed now because the start/continue split (PR 4) and phase skills going internal (PR 5) eliminate standalone discovery entirely. For feature/bugfix, the caller provides work_unit and there's only one topic. For epic, continue-epic picks the work unit first, then shows topics within it. The flat cross-work-unit display simply won't exist.
+
 ### PR 5: Phase Skills Internal
 
 Phase entry skills (`/start-discussion`, `/start-specification`, etc.) become model-invocable only, no longer user-invocable. Users enter through `/workflow-start` or the type-specific start/continue skills. This eliminates standalone/no-pipeline edge cases (e.g., resuming a concluded phase, creating work units without work_type).
