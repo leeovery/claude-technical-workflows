@@ -31,7 +31,7 @@ Your context (or 'none'):
 **This step is critical. You MUST read every concluded discussion document thoroughly.**
 
 For each concluded discussion:
-1. Read the ENTIRE document using the Read tool (not just frontmatter)
+1. Read the ENTIRE document using the Read tool (not just the header)
 2. Understand the decisions, systems, and concepts it defines
 3. Note dependencies on or references to other discussions
 4. Identify shared data structures, entities, or behaviors
@@ -63,39 +63,37 @@ When forming groupings:
 
 ## C. Save to Cache
 
-Create the cache directory if needed:
+Write cache metadata to manifest:
 ```bash
-mkdir -p .workflows/.state
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} phases.discussion.analysis_cache.checksum "{checksum from current_state.discussions_checksum}"
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} phases.discussion.analysis_cache.generated "{ISO date}"
 ```
 
-Write to `.workflows/.state/discussion-consolidation-analysis.md`:
+Create the cache directory if needed:
+```bash
+mkdir -p .workflows/{work_unit}/.state
+```
+
+Write to `.workflows/{work_unit}/.state/discussion-consolidation-analysis.md` (pure markdown, no frontmatter):
 
 ```markdown
----
-checksum: {checksum from current_state.discussions_checksum}
-generated: {ISO date}
-discussion_files:
-  - {topic1}.md
-  - {topic2}.md
----
-
 # Discussion Consolidation Analysis
 
 ## Recommended Groupings
 
 ### {Suggested Specification Name}
-- **{topic-a}**: {why it belongs in this group}
-- **{topic-b}**: {why it belongs in this group}
+- **{discussion-a}**: {why it belongs in this group}
+- **{discussion-b}**: {why it belongs in this group}
 
 **Coupling**: {Brief explanation of what binds these together}
 
 ### {Another Specification Name}
-- **{topic-d}**: {why it belongs}
+- **{discussion-d}**: {why it belongs}
 
 **Coupling**: {Brief explanation}
 
 ## Independent Discussions
-- **{topic-f}**: {Why this stands alone}
+- **{discussion-f}**: {Why this stands alone}
 
 ## Analysis Notes
 {Any additional context about the relationships discovered}

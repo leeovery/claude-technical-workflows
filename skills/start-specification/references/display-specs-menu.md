@@ -4,7 +4,7 @@
 
 ---
 
-Shows when multiple concluded discussions exist, specifications exist, and cache is none or stale. Displays existing specs from discovery frontmatter (NOT from cache), lists unassigned discussions, and offers analysis or continue options.
+Shows when multiple concluded discussions exist, specifications exist, and cache is none or stale. Displays existing specs from discovery manifest data (NOT from cache), lists unassigned discussions, and offers analysis or continue options.
 
 ## A. Display
 
@@ -23,7 +23,7 @@ For each non-superseded specification from discovery output, display as nested t
 > *Output the next fenced block as a code block:*
 
 ```
-1. {topic:(titlecase)}
+1. {work_unit:(titlecase)}
    └─ Spec: {spec_status:[in-progress|concluded]} ({X} of {Y} sources extracted)
    └─ Discussions:
       ├─ {source-name} (extracted)
@@ -49,7 +49,7 @@ Concluded discussions not in a specification:
   • {discussion-name}
 ```
 
-### If in-progress discussions exist
+#### If in-progress discussions exist
 
 > *Output the next fenced block as a code block:*
 
@@ -139,7 +139,7 @@ Menu descriptions are wrapped in backticks to visually distinguish them from the
 
 If cache is stale, delete it first:
 ```bash
-rm .workflows/.state/discussion-consolidation-analysis.md
+rm .workflows/{work_unit}/.state/discussion-consolidation-analysis.md
 ```
 
 → Load **[analysis-flow.md](analysis-flow.md)** and follow its instructions.

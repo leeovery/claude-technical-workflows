@@ -30,15 +30,21 @@ Check the verdict(s) from the review(s) being analyzed.
 No actionable findings. All reviews passed with no required changes.
 ```
 
-**Check for pipeline continuation** — Read the plan file (`.workflows/planning/{topic}/plan.md`) and check for `work_type`
+Set the review phase status to completed:
 
-**If work_type is set** (feature, bugfix, or greenfield):
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase review --topic {topic} status completed
+```
+
+**Check for pipeline continuation** — Query the manifest (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type`) and check for `work_type`
+
+**If work_type is set** (feature, bugfix, or epic):
 
 This review is part of a pipeline. The pipeline is complete. Invoke the `/workflow-bridge` skill:
 
 ```
-Pipeline bridge for: {topic}
-Work type: {work_type from plan frontmatter}
+Pipeline bridge for: {work_unit}
+Work type: {work_type from manifest}
 Completed phase: review
 
 Invoke the workflow-bridge skill to enter plan mode with completion confirmation.
@@ -49,7 +55,7 @@ Invoke the workflow-bridge skill to enter plan mode with completion confirmation
 > *Output the next fenced block as a code block:*
 
 ```
-Review complete: {topic}
+Review complete: {work_unit}
 
 All checks passed. The implementation has been validated.
 ```
@@ -86,17 +92,21 @@ Proceed with synthesis?
 
 #### If `no`
 
-User has chosen to skip synthesis. This is a terminal condition, but check for pipeline continuation first.
+User has chosen to skip synthesis. Set review status to completed — the review produced a verdict, even if the user declines to act on it now.
 
-**Check for pipeline continuation** — Read the plan file (`.workflows/planning/{topic}/plan.md`) and check for `work_type`
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase review --topic {topic} status completed
+```
 
-**If work_type is set** (feature, bugfix, or greenfield):
+**Check for pipeline continuation** — Query the manifest (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type`) and check for `work_type`
+
+**If work_type is set** (feature, bugfix, or epic):
 
 This review is part of a pipeline. Invoke the `/workflow-bridge` skill:
 
 ```
-Pipeline bridge for: {topic}
-Work type: {work_type from plan frontmatter}
+Pipeline bridge for: {work_unit}
+Work type: {work_type from manifest}
 Completed phase: review
 
 Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
@@ -136,6 +146,36 @@ Synthesize non-blocking findings?
 
 #### If `no`
 
+Set review status to completed — the review produced a verdict, even if the user declines to act on non-blocking comments.
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase review --topic {topic} status completed
+```
+
+**Check for pipeline continuation** — Query the manifest (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type`) and check for `work_type`
+
+**If work_type is set** (feature, bugfix, or epic):
+
+This review is part of a pipeline. Invoke the `/workflow-bridge` skill:
+
+```
+Pipeline bridge for: {work_unit}
+Work type: {work_type from manifest}
+Completed phase: review
+
+Invoke the workflow-bridge skill to enter plan mode with completion confirmation.
+```
+
+**If work_type is not set:**
+
+> *Output the next fenced block as a code block:*
+
+```
+Review complete: {work_unit}
+
+Non-blocking comments noted. The implementation has been validated.
+```
+
 **STOP.** Do not proceed — terminal condition.
 
 ---
@@ -148,11 +188,33 @@ Load **[invoke-review-synthesizer.md](invoke-review-synthesizer.md)** and follow
 
 #### If `STATUS` is `clean`
 
+No actionable tasks from synthesis. Set review status to completed — the review produced a verdict and synthesis was attempted.
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase review --topic {topic} status completed
+```
+
 > *Output the next fenced block as a code block:*
 
 ```
-No actionable tasks synthesized.
+No actionable tasks synthesized. Review complete.
 ```
+
+**Check for pipeline continuation** — Query the manifest (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type`) and check for `work_type`
+
+**If work_type is set** (feature, bugfix, or epic):
+
+This review is part of a pipeline. Invoke the `/workflow-bridge` skill:
+
+```
+Pipeline bridge for: {work_unit}
+Work type: {work_type from manifest}
+Completed phase: review
+
+Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
+```
+
+**If work_type is not set:**
 
 **STOP.** Do not proceed — terminal condition.
 
@@ -164,7 +226,7 @@ No actionable tasks synthesized.
 
 ## C. Approval Gate
 
-Read the staging file from `.workflows/implementation/{topic}/review-tasks-c{cycle-number}.md`.
+Read the staging file from `.workflows/{work_unit}/implementation/{topic}/review-tasks-c{cycle-number}.md`.
 
 Check `gate_mode` in the staging file frontmatter (`gated` or `auto`).
 
@@ -226,7 +288,7 @@ Approve this task?
 Task {current} of {total}: {title} — approved (auto).
 ```
 
-→ Continue to next task without stopping.
+→ Proceed to next task without stopping.
 
 ---
 
@@ -258,15 +320,39 @@ Revise the task content in the staging file based on the user's feedback. Re-pre
 
 After all tasks processed:
 
-→ If any tasks have `status: approved`, proceed to **D. Create Tasks in Plan**.
+#### If any tasks have `status: approved`
 
-→ If all tasks were skipped:
+→ Proceed to **D. Create Tasks in Plan**.
+
+#### If all tasks were skipped
+
+Set review status to completed — the review produced a verdict and synthesis tasks were offered, but the user chose to skip them all.
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase review --topic {topic} status completed
+```
 
 Commit the staging file updates:
 
 ```
-review({topic}): synthesis cycle {N} — tasks skipped
+review({work_unit}): synthesis cycle {N} — tasks skipped
 ```
+
+**Check for pipeline continuation** — Query the manifest (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type`) and check for `work_type`
+
+**If work_type is set** (feature, bugfix, or epic):
+
+This review is part of a pipeline. Invoke the `/workflow-bridge` skill:
+
+```
+Pipeline bridge for: {work_unit}
+Work type: {work_type from manifest}
+Completed phase: review
+
+Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
+```
+
+**If work_type is not set:**
 
 **STOP.** Do not proceed — terminal condition.
 
@@ -285,7 +371,7 @@ For approved tasks in the staging file, invoke the task writer.
 Commit all changes (staging file, plan tasks, Plan Index Files):
 
 ```
-review({topic}): add review remediation ({K} tasks)
+review({work_unit}): add review remediation ({K} tasks)
 ```
 
 → Proceed to **E. Re-open Implementation + Plan Mode Handoff**.
@@ -296,22 +382,21 @@ review({topic}): add review remediation ({K} tasks)
 
 For each plan that received new tasks:
 
-1. Read the implementation tracking file at `.workflows/implementation/{topic}/tracking.md`
-2. Update frontmatter:
-   - `status: in-progress`
-   - Remove `completed` field (if present)
-   - `updated: {today's date}`
-   - `analysis_cycle: 0`
+1. Read the implementation tracking file at `.workflows/{work_unit}/implementation/{topic}/implementation.md`
+2. Update the manifest via CLI:
+   - `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase implementation --topic {topic} status in-progress`
+   - `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase implementation --topic {topic} updated {today's date}`
+   - `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase implementation --topic {topic} analysis_cycle 0`
 3. Commit tracking changes:
 
 ```
-review({topic}): re-open implementation tracking
+review({work_unit}): re-open implementation tracking
 ```
 
 Then enter plan mode and write the following plan:
 
 ```
-# Review Actions Complete: {topic}
+# Review Actions Complete: {work_unit}
 
 Review findings have been synthesized into {N} implementation tasks.
 
@@ -326,7 +411,7 @@ Review findings have been synthesized into {N} implementation tasks.
 
 ## Context
 
-- Plan updated: {topic}
+- Plan updated: {work_unit}
 - Tasks created: {total count}
 - Implementation tracking: re-opened
 

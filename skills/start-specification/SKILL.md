@@ -1,6 +1,6 @@
 ---
 name: start-specification
-allowed-tools: Bash(.claude/skills/start-specification/scripts/discovery.sh), Bash(mkdir -p .workflows/.state), Bash(rm .workflows/.state/discussion-consolidation-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/discussion/), Bash(ls .workflows/investigation/)
+allowed-tools: Bash(node .claude/skills/start-specification/scripts/discovery.js), Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(mkdir -p .workflows/*/.state), Bash(rm .workflows/*/.state/discussion-consolidation-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh)
 hooks:
   PreToolUse:
     - hooks:
@@ -50,35 +50,27 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 Invoke the `/migrate` skill and assess its output.
 
-#### If files were updated
-
-**STOP.** Wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding.
-
-#### If no updates needed
-
-→ Proceed to **Step 1**.
-
 ---
 
 ## Step 1: Discovery State
 
-!`.claude/skills/start-specification/scripts/discovery.sh`
+!`node .claude/skills/start-specification/scripts/discovery.js`
 
-If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+If the above shows a script invocation rather than discovery output, the dynamic content preprocessor did not run. Execute the script before continuing:
 
 ```bash
-.claude/skills/start-specification/scripts/discovery.sh
+node .claude/skills/start-specification/scripts/discovery.js
 ```
 
-If YAML content is already displayed, it has been run on your behalf.
+If discovery output is already displayed, it has been run on your behalf.
 
 Parse the discovery output to understand:
 
-**From `discussions` array:** Each discussion's name, status, and whether it has an individual specification.
+**From `discussions` array:** Each discussion's name, work_unit, status, work_type, and whether it has an individual specification.
 
-**From `specifications` array:** Each specification's name, status, sources, and superseded_by (if applicable). Specifications with `status: superseded` should be noted but excluded from active counts.
+**From `specifications` array:** Each specification's name, work_unit, status, work_type, sources, and superseded_by (if applicable). Specifications with `status: superseded` should be noted but excluded from active counts.
 
-**From `cache` section:** `status` (valid/stale/none), `reason`, `generated`, `anchored_names`.
+**From `cache` section:** `entries` array — each entry has `status` (valid/stale), `reason`, `generated`, `anchored_names`. Empty array if no cache exists.
 
 **From `current_state`:** `concluded_count`, `spec_count`, `has_discussions`, `has_concluded`, `has_specs`, and other counts/booleans for routing.
 
@@ -90,13 +82,14 @@ Parse the discovery output to understand:
 
 ## Step 2: Determine Mode
 
-Check for arguments: work_type = `$0`, topic = `$1`
+Check for arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional)
+Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, topic = `$1`
 
-#### If `work_type` and `topic` are both provided
+#### If `topic` resolved (bridge mode)
 
 → Proceed to **Step 3**.
 
-#### If `work_type` is provided without `topic`
+#### If `work_type` and `work_unit` provided but no `topic` (scoped discovery)
 
 Store work_type for the handoff.
 

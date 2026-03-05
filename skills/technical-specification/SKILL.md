@@ -1,6 +1,7 @@
 ---
 name: technical-specification
 user-invocable: false
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
 ---
 
 # Technical Specification
@@ -34,8 +35,8 @@ Either way: Transform unvalidated reference material into a specification that's
 
 ```
 I need source material to build a specification from. Could you point me to the
-source files (e.g., .workflows/discussion/{topic}.md), or provide the content
-directly?
+source files (e.g., .workflows/{work_unit}/discussion/{topic}.md), or provide
+the content directly?
 ```
 
 **STOP.** Wait for user response.
@@ -46,7 +47,7 @@ directly?
 
 ```
 What should the specification be named? This determines the output file:
-.workflows/specification/{name}/specification.md
+.workflows/{work_unit}/specification/{topic}/specification.md
 ```
 
 **STOP.** Wait for user response.
@@ -74,7 +75,7 @@ Context refresh (compaction) summarizes the conversation, losing procedural deta
 2. **Read all tracking and state files** for the current topic — the specification file, review tracking files, or any working documents this skill creates. These are your source of truth for progress.
 3. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
-5. **Check `finding_gate_mode`** in the specification frontmatter — if `auto`, the user previously opted in during this session. Preserve this value.
+5. **Check `finding_gate_mode`** via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} finding_gate_mode`) — if `auto`, the user previously opted in during this session. Preserve this value.
 
 Do not guess at progress or continue from memory. The files on disk and git history are authoritative — your recollection is not.
 
@@ -96,7 +97,7 @@ When announcing a new step, output `── ── ── ── ──` on its o
 
 ## Step 0: Resume Detection
 
-Check if `.workflows/specification/{topic}/specification.md` exists.
+Check if `.workflows/{work_unit}/specification/{topic}/specification.md` exists.
 
 #### If no file exists
 
@@ -104,12 +105,12 @@ Check if `.workflows/specification/{topic}/specification.md` exists.
 
 #### If file exists
 
-Read the specification frontmatter.
+Read the specification status via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} status`).
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-Found existing specification for **{topic}**.
+Found existing specification for **{work_unit}**.
 
 · · · · · · · · · · · ·
 - **`c`/`continue`** — Walk through the specification from its current state. You can review, amend, or navigate at any point.
@@ -121,14 +122,14 @@ Found existing specification for **{topic}**.
 
 #### If `continue`
 
-Reset `finding_gate_mode` to `gated` in the specification frontmatter (fresh invocation = fresh gates).
+Reset `finding_gate_mode` to `gated` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} finding_gate_mode gated`) (fresh invocation = fresh gates).
 
 → Proceed to **Step 3** (skipping Steps 1–2).
 
 #### If `restart`
 
-1. Delete the specification file and all review tracking files (`review-*-tracking-c*.md`) in the topic directory
-2. Commit: `spec({topic}): restart specification`
+1. Delete the specification file and all review tracking files (`review-*-tracking-c*.md`) in the specification directory (`.workflows/{work_unit}/specification/{topic}/`)
+2. Commit: `spec({work_unit}): restart specification`
 
 → Proceed to **Step 1**.
 
@@ -146,16 +147,23 @@ Load **[verify-source-material.md](references/verify-source-material.md)** and f
 
 Load **[specification-format.md](references/specification-format.md)** for the template.
 
-Create the specification file at `.workflows/specification/{topic}/specification.md`:
+Create the specification file at `.workflows/{work_unit}/specification/{topic}/specification.md`:
 
-1. Use the frontmatter template from specification-format.md
-2. Set `topic` to the kebab-case topic name
-3. Set `status: in-progress`, `type: feature`, `review_cycle: 0`, `finding_gate_mode: gated`
-4. Set `date` to today's actual date
-5. Add all sources with `status: pending`
-6. Add the body template (title + specification section + working notes section)
+1. Use the body template from specification-format.md (title + specification section + working notes section)
+2. Register specification and initialize state via manifest CLI:
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit} --phase specification --topic {topic}
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} type feature
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} review_cycle 0
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} finding_gate_mode gated
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} date $(date +%Y-%m-%d)
+   ```
+3. Add all sources with `status: pending` via manifest CLI:
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} sources.{source-name}.status pending
+   ```
 
-Commit: `spec({topic}): initialize specification`
+Commit: `spec({work_unit}): initialize specification`
 
 → Proceed to **Step 3**.
 

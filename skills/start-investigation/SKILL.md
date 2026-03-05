@@ -1,6 +1,6 @@
 ---
 name: start-investigation
-allowed-tools: Bash(.claude/skills/start-investigation/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/investigation/)
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(node .claude/skills/start-investigation/scripts/discovery.js), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/)
 hooks:
   PreToolUse:
     - hooks:
@@ -11,7 +11,7 @@ hooks:
 
 Invoke the **technical-investigation** skill for this conversation.
 
-> **ZERO OUTPUT RULE**: Do not narrate your processing. Produce no output until a step or reference file explicitly specifies display content. No "proceeding with...", no discovery summaries, no routing decisions, no transition text. Your first output must be content explicitly called for by the instructions.
+> **⚠️ ZERO OUTPUT RULE**: Do not narrate your processing. Produce no output until a step or reference file explicitly specifies display content. No "proceeding with...", no discovery summaries, no routing decisions, no transition text. Your first output must be content explicitly called for by the instructions.
 
 ## Workflow Context
 
@@ -47,31 +47,23 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 Invoke the `/migrate` skill and assess its output.
 
-#### If files were updated
-
-**STOP.** Wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding.
-
-#### If no updates needed
-
-→ Proceed to **Step 1**.
-
 ---
 
 ## Step 1: Discovery State
 
-!`.claude/skills/start-investigation/scripts/discovery.sh`
+!`node .claude/skills/start-investigation/scripts/discovery.js`
 
-If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+If the above shows a script invocation rather than discovery output, the dynamic content preprocessor did not run. Execute the script before continuing:
 
 ```bash
-.claude/skills/start-investigation/scripts/discovery.sh
+node .claude/skills/start-investigation/scripts/discovery.js
 ```
 
 Parse the discovery output to understand:
 
 **From `investigations` section:**
 - `exists` - whether investigation files exist
-- `files` - each investigation's topic, status, and date
+- `files` - each investigation's work_unit, status, and work_type
 - `counts.in_progress` and `counts.concluded` - totals for routing
 
 **From `state` section:**
@@ -85,15 +77,16 @@ Parse the discovery output to understand:
 
 ## Step 2: Determine Mode
 
-Check for arguments: work_type = `$0`, topic = `$1`
+Check for arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional)
+Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, topic = `$1`
 
 Investigation is always bugfix work_type. If work_type is provided, it should be `bugfix`.
 
-#### If `work_type` and `topic` are both provided
+#### If `topic` resolved (bridge mode)
 
 → Proceed to **Step 3** (Validate Investigation).
 
-#### If `work_type` is provided without `topic`
+#### If `work_type` and `work_unit` provided but no `topic` (scoped discovery)
 
 → Proceed to **Step 4** (Route Based on Scenario).
 
@@ -103,7 +96,7 @@ Investigation is always bugfix work_type. If work_type is provided, it should be
 
 ---
 
-## Step 3: Validate Investigation
+## Step 3: Validate Work Unit
 
 Load **[validate-investigation.md](references/validate-investigation.md)** and follow its instructions as written.
 

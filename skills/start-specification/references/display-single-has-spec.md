@@ -17,13 +17,13 @@ Specification Overview
 
 Single concluded discussion found with existing specification.
 
-1. {topic:(titlecase)}
+1. {work_unit:(titlecase)}
    └─ Spec: {spec_status:[in-progress|concluded]} ({X} of {Y} sources extracted)
    └─ Discussions:
       └─ {discussion-name} (extracted)
 ```
 
-### If in-progress discussions exist
+#### If in-progress discussions exist
 
 > *Output the next fenced block as a code block:*
 
@@ -57,7 +57,7 @@ Key:
 > *Output the next fenced block as a code block:*
 
 ```
-Automatically proceeding with "{topic:(titlecase)}".
+Automatically proceeding with "{work_unit:(titlecase)}".
 ```
 
 Auto-proceed. Verb rule:

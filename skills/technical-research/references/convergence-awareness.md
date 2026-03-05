@@ -10,7 +10,7 @@
 
 ```
 · · · · · · · · · · · ·
-- **`p`/`park`** — Mark as discussion-ready and move to another topic
+- **`c`/`conclude`** — Conclude research and move forward
 - **`k`/`keep`** — Keep digging, there's more to understand
 - Comment — your call
 · · · · · · · · · · · ·
@@ -18,44 +18,27 @@
 
 **STOP.** Wait for user response.
 
-#### If the user parks it
+#### If the user concludes
 
-Document the convergence point in the research file using this marker:
+Set research status to concluded via manifest CLI:
 
-```markdown
-> **Discussion-ready**: {Brief summary of what was explored and why it's ready for decision-making. Key tradeoffs or options identified.}
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase research status concluded
 ```
 
-Commit the file.
+Check work_type from manifest:
 
-Check the research artifact frontmatter for `work_type`.
-
-**If work_type is set** (feature or greenfield):
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-This topic is marked discussion-ready. Would you like to:
-
-- **`c`/`continue`** — Continue exploring
-- **`d`/`discuss`** — Transition to discussion phase
-· · · · · · · · · · · ·
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type
 ```
 
-**STOP.** Wait for user response.
-
-**If continue:**
-
-→ Return to **[research-session.md](research-session.md)**.
-
-**If discuss:**
+**If work_type is set** (feature or epic):
 
 Invoke the `/workflow-bridge` skill:
 
 ```
-Pipeline bridge for: {topic}
-Work type: {work_type from artifact frontmatter}
+Pipeline bridge for: {work_unit}
+Work type: {work_type from manifest}
 Completed phase: research
 
 Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
@@ -63,7 +46,15 @@ Invoke the workflow-bridge skill to enter plan mode with continuation instructio
 
 **If work_type is not set:**
 
-→ Return to **[research-session.md](research-session.md)**.
+> *Output the next fenced block as a code block:*
+
+```
+Research concluded for {work_unit}.
+
+Run /start-discussion to begin structured discussion.
+```
+
+**STOP.** Do not proceed — terminal condition.
 
 #### If the user keeps digging
 

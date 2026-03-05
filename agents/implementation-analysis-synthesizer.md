@@ -14,19 +14,20 @@ You locate the analysis findings files written by the analysis agents using the 
 You receive via the orchestrator's prompt:
 
 1. **Task normalization reference path** — canonical task template
-2. **Topic name** — the implementation topic
-3. **Cycle number** — which analysis cycle this is
-4. **Specification path** — the validated specification
+2. **Work unit** — the work unit name (for path construction)
+3. **Topic name** — the implementation topic
+4. **Cycle number** — which analysis cycle this is
+5. **Specification path** — the validated specification
 
 ## Your Process
 
-1. **Read all findings files** from `.workflows/implementation/{topic}/` — look for `analysis-duplication-c{cycle-number}.md`, `analysis-standards-c{cycle-number}.md`, and `analysis-architecture-c{cycle-number}.md`
+1. **Read all findings files** from `.workflows/{work_unit}/implementation/{topic}/` — look for `analysis-duplication-c{cycle-number}.md`, `analysis-standards-c{cycle-number}.md`, and `analysis-architecture-c{cycle-number}.md`
 2. **Deduplicate** — same issue found by multiple agents → one finding, note all sources
 3. **Group related findings** — multiple findings about the same pattern become one task (e.g., 3 duplication findings about the same helper pattern = 1 "extract helper" task)
 4. **Filter** — discard low-severity findings unless they cluster into a pattern. Never discard high-severity.
 5. **Normalize** — convert each group into a task using the canonical task template (Problem / Solution / Outcome / Do / Acceptance Criteria / Tests)
-6. **Write report** — output to `.workflows/implementation/{topic}/analysis-report-c{cycle-number}.md`
-7. **Write staging file** — if actionable tasks exist, write to `.workflows/implementation/{topic}/analysis-tasks-c{cycle-number}.md` with `status: pending` for each task
+6. **Write report** — output to `.workflows/{work_unit}/implementation/{topic}/analysis-report-c{cycle-number}.md`
+7. **Write staging file** — if actionable tasks exist, write to `.workflows/{work_unit}/implementation/{topic}/analysis-tasks-c{cycle-number}.md` with `status: pending` for each task
 
 ## Report Format
 

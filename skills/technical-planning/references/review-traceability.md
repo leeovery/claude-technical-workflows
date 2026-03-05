@@ -59,7 +59,7 @@ Is everything in the plan actually from the specification? This is the anti-hall
 
 ## Tracking File
 
-After completing the analysis, create a tracking file at `.workflows/planning/{topic}/review-traceability-tracking-c{N}.md` (where N is the current review cycle).
+After completing the analysis, create a tracking file at `.workflows/{work_unit}/planning/{topic}/review-traceability-tracking-c{N}.md` (where N is the current review cycle).
 
 Tracking files are **never deleted**. After all findings are processed, the orchestrator marks `status: complete`. Previous cycles' files persist as review history.
 
@@ -102,4 +102,4 @@ topic: {Topic Name}
 ...
 ```
 
-Commit the tracking file after creation: `planning({topic}): traceability review cycle {N}`
+Commit the tracking file after creation: `planning({work_unit}): traceability review cycle {N}`

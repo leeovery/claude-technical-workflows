@@ -28,7 +28,7 @@ Watch for these signals that a thread is moving from exploration toward decision
 
 When you notice convergence, **flag it and give the user options**:
 
-This thread seems to be converging — we've explored {topic} enough that the tradeoffs are clear and it's approaching decision territory.
+This thread seems to be converging — we've explored {work_unit} enough that the tradeoffs are clear and it's approaching decision territory.
 
 → Load **[convergence-awareness.md](convergence-awareness.md)** and follow its instructions.
 

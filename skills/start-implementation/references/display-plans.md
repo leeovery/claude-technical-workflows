@@ -9,11 +9,11 @@ Present all discovered plans. Classify each plan into one of three categories ba
 **Classification logic:**
 
 A plan is **Implementable** if:
-- It has `status: concluded` AND all deps are satisfied (`deps_satisfied: true` or no deps) AND no tracking file or tracking `status: not-started`, OR
-- It has an implementation tracking file with `status: in-progress`
+- It has `status: concluded` AND all deps are satisfied (`deps_satisfied: true` or no deps) AND no implementation file or implementation `status: not-started`, OR
+- It has an implementation file with `status: in-progress`
 
 A plan is **Implemented** if:
-- It has an implementation tracking file with `status: completed`
+- It has an implementation file with `status: completed`
 
 A plan is **Not implementable** if:
 - It has `status: concluded` but deps are NOT satisfied (blocking deps exist)
@@ -31,7 +31,7 @@ Implementation Overview
 
 {N} plans found. {M} implementations in progress.
 
-1. {topic:(titlecase)}
+1. {work_unit:(titlecase)}
    └─ Plan: {plan_status:[concluded]} ({format})
    └─ Implementation: @if(has_implementation) {impl_status:[in-progress|completed]} @else (not started) @endif
 
@@ -94,17 +94,17 @@ Key:
 
 ## Selection
 
-**If single implementable plan and no implemented plans (auto-select):**
+#### If single implementable plan and no implemented plans (auto-select)
 
 > *Output the next fenced block as a code block:*
 
 ```
-Automatically proceeding with "{topic:(titlecase)}".
+Automatically proceeding with "{work_unit:(titlecase)}".
 ```
 
 → Return to **[the skill](../SKILL.md)**.
 
-**If nothing selectable (no implementable or implemented):**
+#### If nothing selectable (no implementable or implemented)
 
 Show "not ready" block only (with unblock hint above).
 
@@ -121,7 +121,7 @@ in progress with /start-planning. Then re-run /start-implementation.
 
 **STOP.** Do not proceed — terminal condition.
 
-**If multiple selectable plans (or implemented plans exist):**
+#### If multiple selectable plans (or implemented plans exist)
 
 The verb in the menu depends on the implementation state:
 - Implementation in-progress → **Continue**
@@ -140,7 +140,7 @@ Select an option (enter number):
 · · · · · · · · · · · ·
 ```
 
-Recreate with actual topics and states from discovery.
+Recreate with actual work unit names and states from discovery.
 
 **STOP.** Wait for user response.
 
@@ -152,8 +152,8 @@ Recreate with actual topics and states from discovery.
 
 1. Identify the plan and the specific dependency
 2. Confirm with the user which dependency to mark as satisfied
-3. Update the plan's `external_dependencies` frontmatter: set `state` to `satisfied_externally`
+3. Update the dependency's `state` to `satisfied_externally` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} external_dependencies.{dep-topic}.state satisfied_externally`)
 4. Commit the change
 5. Re-run classification and re-present this display
 
-→ Return to **[the skill](../SKILL.md)** with selected topic.
+→ Return to **[the skill](../SKILL.md)** with selected work unit.

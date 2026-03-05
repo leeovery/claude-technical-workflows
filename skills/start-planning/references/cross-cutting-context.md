@@ -10,7 +10,7 @@
 
 #### If cross-cutting specifications exist
 
-Read each cross-cutting specification from `specifications.crosscutting` in the discovery output.
+Read each cross-cutting specification from `specifications.crosscutting` in the discovery output. For each, the specification file is at `.workflows/{work_unit}/specification/{topic}/specification.md`.
 
 ### Warn about in-progress cross-cutting specs
 
@@ -18,14 +18,18 @@ If any **in-progress** cross-cutting specifications exist, check whether they co
 
 If any are relevant:
 
-> *Output the next fenced block as markdown (not a code block):*
+> *Output the next fenced block as a code block:*
 
 ```
 Cross-cutting specifications still in progress:
 These may contain architectural decisions relevant to this plan.
 
-  • {topic}
+  • {work_unit}
+```
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 · · · · · · · · · · · ·
 - **`c`/`continue`** — Plan without them
 - **`s`/`stop`** — Complete them first (/start-specification)
@@ -44,7 +48,7 @@ If any **concluded** cross-cutting specifications exist, identify which are rele
 
 ```
 Cross-cutting specifications to reference:
-- caching-strategy.md: [brief summary of key decisions]
+- caching-strategy: [brief summary of key decisions]
 ```
 
 These specifications contain validated architectural decisions that should inform the plan. The planning skill will incorporate these as a "Cross-Cutting References" section in the plan.

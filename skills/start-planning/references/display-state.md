@@ -89,7 +89,7 @@ Omit any section entirely if it has no entries.
 
 **Then prompt based on what's actionable:**
 
-**If multiple actionable items:**
+#### If multiple actionable items
 
 The verb in the menu depends on the plan state:
 - No plan exists → **Create**
@@ -114,7 +114,7 @@ Recreate with actual topics and states from discovery.
 
 **STOP.** Wait for user response.
 
-**If single actionable item (auto-select):**
+#### If single actionable item (auto-select)
 
 > *Output the next fenced block as a code block:*
 
@@ -122,7 +122,7 @@ Recreate with actual topics and states from discovery.
 Automatically proceeding with "{topic:(titlecase)}".
 ```
 
-**If nothing actionable:**
+#### If nothing actionable
 
 > *Output the next fenced block as a code block:*
 

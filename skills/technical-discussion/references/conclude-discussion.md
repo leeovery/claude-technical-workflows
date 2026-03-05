@@ -23,23 +23,37 @@ Incorporate the user's context into the discussion, commit, then re-present the 
 
 #### If `yes`
 
-1. Update frontmatter `status: concluded`
+1. Set discussion status to concluded via manifest CLI:
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase discussion --topic {topic} status concluded
+   ```
 2. Final commit
-3. Check the artifact frontmatter for `work_type`
+3. Read work_type from manifest:
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type
+   ```
 
-**If work_type is set** (feature, bugfix, or greenfield):
+**If work_type is set** (feature or epic):
 
 This discussion is part of a pipeline. Invoke the `/workflow-bridge` skill:
 
 ```
-Pipeline bridge for: {topic}
-Work type: {work_type from artifact frontmatter}
+Pipeline bridge for: {work_unit}
+Work type: {work_type from manifest}
 Completed phase: discussion
 
 Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
 ```
 
-**If work_type is not set and other in-progress discussions exist:**
+**If work_type is not set:**
+
+Check for other in-progress discussions by querying the manifest's discussion phase:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase discussion
+```
+Inspect the returned object for any topics with `status: in-progress` (excluding the current `{topic}` which was just concluded).
+
+**If other in-progress discussions exist:**
 
 > *Output the next fenced block as a code block:*
 
@@ -53,7 +67,7 @@ Remaining in-progress discussions:
 To continue, clear your context and run /start-discussion to pick up the next topic.
 ```
 
-**If work_type is not set and no in-progress discussions remain:**
+**If no in-progress discussions remain:**
 
 > *Output the next fenced block as a code block:*
 

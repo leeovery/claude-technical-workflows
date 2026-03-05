@@ -2,11 +2,11 @@
 
 ## Task Storage
 
-Each task is written to `.workflows/planning/{topic}/tasks/{task-id}.md` — a markdown file with frontmatter and a description body.
+Each task is written to `.workflows/{work_unit}/planning/{topic}/tasks/{task-id}.md` — a markdown file with frontmatter and a description body.
 
 ```markdown
 ---
-id: {topic}-{phase}-{seq}
+id: {work_unit}-{phase}-{seq}
 phase: {phase-number}
 status: pending
 created: YYYY-MM-DD
@@ -35,7 +35,7 @@ Stored in frontmatter. Defaults to `pending` if omitted.
 
 ### Phase Grouping
 
-Phases are encoded in the task ID: `{topic}-{phase}-{seq}`. The `phase` frontmatter field also stores the phase number for querying.
+Phases are encoded in the task ID: `{work_unit}-{phase}-{seq}`. The `phase` frontmatter field also stores the phase number for querying.
 
 ### Labels / Tags (optional)
 
@@ -57,8 +57,8 @@ In the task file, add a **Needs Clarification** section:
 
 ## Cleanup (Restart)
 
-Delete the tasks directory — preserves `plan.md` (the Plan Index) and any review tracking files:
+Delete the tasks directory — preserves `planning.md` (the Plan Index) and any review tracking files:
 
 ```bash
-rm -rf .workflows/planning/{topic}/tasks/
+rm -rf .workflows/{work_unit}/planning/{topic}/tasks/
 ```

@@ -75,7 +75,7 @@ Read the plan end-to-end — carefully, as if you were about to implement it. Fo
 
 ## Tracking File
 
-After completing the analysis, create a tracking file at `.workflows/planning/{topic}/review-integrity-tracking-c{N}.md` (where N is the current review cycle).
+After completing the analysis, create a tracking file at `.workflows/{work_unit}/planning/{topic}/review-integrity-tracking-c{N}.md` (where N is the current review cycle).
 
 Categorize each finding by severity:
 
@@ -124,4 +124,4 @@ topic: {Topic Name}
 ...
 ```
 
-Commit the tracking file after creation: `planning({topic}): integrity review cycle {N}`
+Commit the tracking file after creation: `planning({work_unit}): integrity review cycle {N}`

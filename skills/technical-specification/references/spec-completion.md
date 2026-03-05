@@ -31,8 +31,8 @@ This specification appears to be a {feature/cross-cutting} specification.
 multiple features handle data retrieval, rather than being a standalone piece
 of functionality to build."}
 
-  Feature specs      — proceed to planning and implementation
-  Cross-cutting specs — referenced by feature plans, no own implementation plan
+  Feature specs      — standalone, directly actionable
+  Cross-cutting specs — referenced by feature specs, no own action plan
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -88,23 +88,18 @@ Discuss the user's context, apply any changes, then re-present the sign-off prom
 
 #### If `yes`
 
-→ Proceed to **D. Update Frontmatter and Conclude**.
+→ Proceed to **D. Update Manifest and Conclude**.
 
 ---
 
-## D. Update Frontmatter and Conclude
+## D. Update Manifest and Conclude
 
-Update the specification frontmatter:
+Update the specification metadata via manifest CLI:
 
-```yaml
----
-topic: {topic-name}
-status: concluded
-type: feature  # or cross-cutting, as confirmed
-date: YYYY-MM-DD  # Use today's actual date
-review_cycle: {N}
-finding_gate_mode: gated
----
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} status concluded
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} type {type}  # feature or cross-cutting, as confirmed in Section A
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} date $(date +%Y-%m-%d)
 ```
 
 Specification is complete when:
@@ -116,7 +111,7 @@ Specification is complete when:
 - User confirms the specification is complete
 - No blocking gaps remain
 
-Commit: `spec({topic}): conclude specification`
+Commit: `spec({work_unit}): conclude specification`
 
 ---
 
@@ -124,38 +119,56 @@ Commit: `spec({topic}): conclude specification`
 
 If any of your sources were **existing specifications** (as opposed to discussions, research, or other reference material), these have now been consolidated into the new specification.
 
-1. Mark each source specification as superseded by updating its frontmatter:
-   ```yaml
-   status: superseded
-   superseded_by: {new-specification-name}
+1. Mark each source specification as superseded via manifest CLI:
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {source-topic} status superseded
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {source-topic} superseded_by {topic}
    ```
-2. Inform the user which files were updated
-3. Commit: `spec({topic}): mark source specifications as superseded`
+2. Inform the user which topics were updated
+3. Commit: `spec({work_unit}): mark source specifications as superseded`
 
 ---
 
 ## F. Pipeline Continuation
 
-Check the specification frontmatter for `work_type`.
+Read the specification type from the manifest:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} type
+```
 
-#### If `work_type` is set (`feature`, `bugfix`, or `greenfield`)
+#### If `type` is `cross-cutting`
+
+> *Output the next fenced block as a code block:*
+
+```
+Cross-cutting specification concluded: {topic}
+
+This specification defines patterns/policies referenced by feature plans.
+It does not proceed to planning independently.
+```
+
+#### If `type` is `feature` (or not set)
+
+Check the work type via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type`).
+
+**If `work_type` is set** (`feature`, `bugfix`, or `epic`):
 
 This specification is part of a pipeline. Invoke the `/workflow-bridge` skill:
 
 ```
-Pipeline bridge for: {topic}
-Work type: {work_type from artifact frontmatter}
+Pipeline bridge for: {work_unit}
+Work type: {work_type from manifest}
 Completed phase: specification
 
 Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
 ```
 
-#### If `work_type` is not set
+**If `work_type` is not set:**
 
 > *Output the next fenced block as a code block:*
 
 ```
-Specification concluded: {topic}
+Specification concluded: {work_unit}
 
 The specification is ready for planning. Run /start-planning to begin.
 ```

@@ -1,6 +1,6 @@
 # Dependencies
 
-*Reference for dependency handling across the technical workflow*
+*Reference for **[technical-planning](../SKILL.md)***
 
 ---
 
@@ -18,26 +18,37 @@ External dependencies are things a feature needs from other topics or systems th
 
 ## Format
 
-In Plan Index Files, external dependencies are stored in the **frontmatter** as a YAML array:
+External dependencies are stored in the **manifest** as `external_dependencies` (under `--phase planning --topic {topic}`), keyed by topic:
 
-```yaml
-external_dependencies:
-  - topic: billing-system
-    description: Invoice generation for order completion
-    state: unresolved
-  - topic: user-authentication
-    description: User context for permissions
-    state: resolved
-    task_id: auth-1-3
-  - topic: payment-gateway
-    description: Payment processing
-    state: satisfied_externally
+```json
+{
+  "billing-system": {
+    "description": "Invoice generation for order completion",
+    "state": "unresolved"
+  },
+  "user-authentication": {
+    "description": "User context for permissions",
+    "state": "resolved",
+    "task_id": "auth-1-3"
+  },
+  "payment-gateway": {
+    "description": "Payment processing",
+    "state": "satisfied_externally"
+  }
+}
 ```
 
-If there are no external dependencies, use an empty array:
+Set individual dependencies via dot-path:
 
-```yaml
-external_dependencies: []
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} external_dependencies.billing-system.description "Invoice generation"
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} external_dependencies.billing-system.state unresolved
+```
+
+If there are no external dependencies, use an empty object:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} external_dependencies '{}'
 ```
 
 This makes it explicit for downstream stages that dependencies were considered and none exist.
@@ -55,7 +66,7 @@ This makes it explicit for downstream stages that dependencies were considered a
 ```
 SPECIFICATION                    PLANNING
 ───────────────────────────────────────────────────────────────────
-Dependencies section    →    Added to plan frontmatter as unresolved
+Dependencies section    →    Added to manifest as unresolved
 (natural language)                      ↓
                              Resolved when linked to specific task ID
                              (via planning or /link-dependencies)

@@ -1,6 +1,7 @@
 ---
 name: technical-planning
 user-invocable: false
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
 ---
 
 # Technical Planning
@@ -23,7 +24,7 @@ Either way: Transform specifications into actionable phases, tasks, and acceptan
 - **Topic name** (optional) - Will derive from specification if not provided
 - **Output format preference** (optional) - Will ask if not specified
 - **Recommended output format** (optional) - A format suggestion for consistency with existing plans
-- **Work type** (optional) — `greenfield`, `feature`, or `bugfix`. Determines which context-specific guidance is loaded during phase and task design. Defaults to `greenfield` when not provided.
+- **Work type** (optional) — `epic`, `feature`, or `bugfix`. Determines which context-specific guidance is loaded during phase and task design. Defaults to `epic` when not provided.
 - **Cross-cutting references** (optional) - Cross-cutting specifications that inform technical decisions in this plan
 
 **Before proceeding**, verify the required input is available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.
@@ -34,7 +35,7 @@ Either way: Transform specifications into actionable phases, tasks, and acceptan
 
 ```
 I need the specification content to plan from. Could you point me to the
-specification file (e.g., .workflows/specification/{topic}/specification.md),
+specification file (e.g., .workflows/{work_unit}/specification/{topic}/specification.md),
 or provide the content directly?
 ```
 
@@ -59,10 +60,13 @@ this, or is there a more complete version?
 Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
-2. **Read all tracking and state files** for the current topic — plan index files, review tracking files, implementation tracking files, or any working documents this skill creates. These are your source of truth for progress. Check for scratch files at `.workflows/.cache/planning/{topic}/`. If a scratch file exists, you are mid-authoring for that phase — resume the approval loop in author-tasks.md.
+2. **Read all tracking and state files** for the current topic — the Plan Index File (`.workflows/{work_unit}/planning/{topic}/planning.md`), task files in the `tasks/` subdirectory, and plan review tracking files (`review-*-tracking-c*.md`). These are your source of truth for progress. Check for scratch files at `.workflows/.cache/planning/{work_unit}/{topic}/`. If a scratch file exists, you are mid-authoring for that phase — resume the approval loop in author-tasks.md.
 3. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
-5. **Check `task_list_gate_mode`, `author_gate_mode`, and `finding_gate_mode`** in the Plan Index File frontmatter — if `auto`, the user previously opted in during this session. Preserve these values.
+5. **Check gate modes** via manifest CLI — if `auto`, the user previously opted in during this session. Preserve these values.
+   - `node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} task_list_gate_mode`
+   - `node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} author_gate_mode`
+   - `node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} finding_gate_mode`
 
 Do not guess at progress or continue from memory. The files on disk and git history are authoritative — your recollection is not.
 
@@ -72,7 +76,7 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 This process constructs a plan from a specification. A plan consists of:
 
-- **Plan Index File** — `.workflows/planning/{topic}/plan.md`. Contains frontmatter (topic, format, status, progress), phases with acceptance criteria, and task tables tracking status. This is the single source of truth for planning progress.
+- **Plan Index File** — `.workflows/{work_unit}/planning/{topic}/planning.md`. Contains phases with acceptance criteria, and task tables tracking status. Metadata (topic, format, status, progress, gate modes) is stored in the manifest. This is the single source of truth for planning progress.
 - **Authored Tasks** — Detailed task files written to the chosen **Output Format** (selected during planning). The output format determines where and how task detail is stored.
 
 Follow every step in sequence. No steps are optional.
@@ -85,7 +89,7 @@ When announcing a new step, output `── ── ── ── ──` on its o
 
 ## Step 0: Resume Detection
 
-Check if a Plan Index File already exists at `.workflows/planning/{topic}/plan.md`.
+Check if a Plan Index File already exists at `.workflows/{work_unit}/planning/{topic}/planning.md`.
 
 #### If no Plan Index File exists
 
@@ -93,15 +97,36 @@ Check if a Plan Index File already exists at `.workflows/planning/{topic}/plan.m
 
 #### If Plan Index File exists
 
-If `status: concluded`, update it to `status: planning`.
+Check the planning status via manifest CLI:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} status
+```
 
-Note the current phase and task position from the `planning:` block.
+If `concluded`, update it to `in-progress`:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} status in-progress
+```
+
+Note the current phase and task position from the manifest:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} phase
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} task
+```
+
+Check `spec_commit` from the manifest:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} spec_commit
+```
 
 Load **[spec-change-detection.md](references/spec-change-detection.md)** to check whether the specification has changed since planning started. Then present the user with an informed choice:
 
-Found existing plan for **{topic}** (previously reached phase {N}, task {M}).
+> *Output the next fenced block as a code block:*
+
+```
+Found existing plan for {work_unit} (previously reached phase {N}, task {M}).
 
 {spec change summary from spec-change-detection.md}
+```
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -116,19 +141,31 @@ Found existing plan for **{topic}** (previously reached phase {N}, task {M}).
 
 #### If `continue`
 
-If the specification changed, update `spec_commit` in the Plan Index File frontmatter to the current commit hash.
+If the specification changed, update `spec_commit` in the manifest:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} spec_commit $(git rev-parse HEAD)
+```
 
-Reset `task_list_gate_mode`, `author_gate_mode`, and `finding_gate_mode` to `gated` in the Plan Index File frontmatter (fresh invocation = fresh gates).
+Reset gate modes to `gated` in the manifest (fresh invocation = fresh gates):
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} task_list_gate_mode gated
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} author_gate_mode gated
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} finding_gate_mode gated
+```
 
 → Proceed to **Step 1**.
 
 #### If `restart`
 
-1. Read **[output-formats.md](references/output-formats.md)**, find the entry matching the `format:` field in the Plan Index File, and load the format's **[authoring.md](references/output-formats/{format}/authoring.md)**
-2. Follow the authoring file's cleanup instructions to remove Authored Tasks for this topic
-3. Delete the scratch directory if it exists: `rm -rf .workflows/.cache/planning/{topic}/`
-4. Delete the Plan Index File
-5. Commit: `planning({topic}): restart planning`
+1. Read the `format` from the manifest:
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} format
+   ```
+2. Read **[output-formats.md](references/output-formats.md)**, find the entry matching the format, and load the format's **[authoring.md](references/output-formats/{format}/authoring.md)**
+3. Follow the authoring file's cleanup instructions to remove Authored Tasks for this topic
+4. Delete the scratch directory if it exists: `rm -rf .workflows/.cache/planning/{work_unit}/{topic}/`
+5. Delete the Plan Index File
+6. Commit: `planning({work_unit}): restart planning`
 
 → Proceed to **Step 1**.
 
@@ -138,7 +175,12 @@ Reset `task_list_gate_mode`, `author_gate_mode`, and `finding_gate_mode` to `gat
 
 #### If Plan Index File already exists
 
-Read **[output-formats.md](references/output-formats.md)**, find the entry matching the `format:` field, and load the format's **[about.md](references/output-formats/{format}/about.md)** and **[authoring.md](references/output-formats/{format}/authoring.md)**.
+Read the `format` from the manifest:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} format
+```
+
+Read **[output-formats.md](references/output-formats.md)**, find the entry matching the format, and load the format's **[about.md](references/output-formats/{format}/about.md)** and **[authoring.md](references/output-formats/{format}/authoring.md)**.
 
 → Proceed to **Step 2**.
 
@@ -150,12 +192,12 @@ First, choose the Output Format.
 
 Present the recommendation:
 
-Existing plans use **{format}**. Use the same format for consistency?
-
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
+Existing plans use **{format}**. Use the same format for consistency?
+
 - **`y`/`yes`** — Use {format}
 - **`n`/`no`** — See all available formats
 · · · · · · · · · · · ·
@@ -163,9 +205,22 @@ Existing plans use **{format}**. Use the same format for consistency?
 
 **STOP.** Wait for user choice. If declined, fall through to the full list below.
 
-**If no recommendation, or user declined:**
+#### If no recommendation, or user declined
 
-Present the formats from **[output-formats.md](references/output-formats.md)** to the user — including description, pros, cons, and "best for". Number each format and ask the user to pick.
+Read **[output-formats.md](references/output-formats.md)** and present each format to the user.
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+@foreach(format in output_formats)
+{N}. **{format.name}** — {format.description}
+   Best for: {format.best_for}
+@endforeach
+
+Select a format (enter number):
+· · · · · · · · · · · ·
+```
 
 **STOP.** Wait for the user to choose.
 
@@ -173,9 +228,20 @@ Once selected:
 
 1. Read **[output-formats.md](references/output-formats.md)**, find the chosen format entry, and load the format's **[about.md](references/output-formats/{format}/about.md)** and **[authoring.md](references/output-formats/{format}/authoring.md)**
 2. Capture the current git commit hash: `git rev-parse HEAD`
-3. Create the Plan Index File at `.workflows/planning/{topic}/plan.md` using the **Frontmatter** and **Title** templates from **[plan-index-schema.md](references/plan-index-schema.md)**. Set `status: planning`, `spec_commit` to the captured git hash, today's actual date for `created` and `updated`, and `work_type` to the value provided by the caller (or `greenfield` if not provided).
+3. Create the Plan Index File at `.workflows/{work_unit}/planning/{topic}/planning.md` using the **Title** template from **[plan-index-schema.md](references/plan-index-schema.md)**.
+4. Register planning and set metadata in the manifest:
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit} --phase planning --topic {topic}
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} format {chosen-format}
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} spec_commit {commit-hash}
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} task_list_gate_mode gated
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} author_gate_mode gated
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} finding_gate_mode gated
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} phase 1
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} task ~
+   ```
 
-3. Commit: `planning({topic}): initialize plan`
+5. Commit: `planning({work_unit}): initialize plan`
 
 → Proceed to **Step 2**.
 
@@ -250,40 +316,46 @@ Discuss the user's context. If additional work is needed, route back to **Step 6
 
 #### If `yes`
 
-1. **Update plan status** — Set `status: concluded` in the Plan Index File frontmatter
-2. **Final commit** — Commit the concluded plan: `planning({topic}): conclude plan`
+1. **Update plan status** via manifest CLI:
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} status concluded
+   ```
+2. **Final commit** — Commit the concluded plan: `planning({work_unit}): conclude plan`
 3. **Present completion summary**:
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-Planning is complete for **{topic}**.
+Planning is complete for **{work_unit}**.
 
 The plan contains **{N} phases** with **{M} tasks** total, reviewed for traceability against the specification and structural integrity.
 
 Status has been marked as `concluded`. The plan is ready for implementation.
 ```
 
-4. **Check for pipeline continuation** — Check the plan frontmatter for `work_type`
+4. **Check for pipeline continuation** — Check work_type via manifest CLI:
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type
+   ```
 
-**If work_type is set** (feature, bugfix, or greenfield):
+#### If work_type is set (feature, bugfix, or epic)
 
 This plan is part of a pipeline. Invoke the `/workflow-bridge` skill:
 
 ```
-Pipeline bridge for: {topic}
-Work type: {work_type from artifact frontmatter}
+Pipeline bridge for: {work_unit}
+Work type: {work_type from manifest}
 Completed phase: planning
 
 Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
 ```
 
-**If work_type is not set:**
+#### If work_type is not set
 
 > *Output the next fenced block as a code block:*
 
 ```
-Plan concluded: {topic}
+Plan concluded: {work_unit}
 
 The plan is ready for implementation. Run /start-implementation to begin.
 ```

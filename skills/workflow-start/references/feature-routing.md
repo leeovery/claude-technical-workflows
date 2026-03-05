@@ -4,7 +4,7 @@
 
 ---
 
-Feature development is topic-centric. A single topic flows through the pipeline: Discussion → Specification → Planning → Implementation → Review. This reference shows in-progress features and offers options to continue or start new.
+Feature development is topic-centric. A single work unit flows through the pipeline: Discussion → Specification → Planning → Implementation → Review. This reference shows in-progress features and offers options to continue or start new.
 
 ## Display Feature State
 
@@ -15,7 +15,7 @@ Using the discovery output, check if there are any features in progress.
 > *Output the next fenced block as a code block:*
 
 ```
-Features
+Feature Overview
 
 No features in progress.
 ```
@@ -33,11 +33,11 @@ Ready to start a new feature.
 
 **STOP.** Wait for user response.
 
-#### If `yes`
+**If `yes`:**
 
 Invoke `start-feature`. It will set `work_type: feature` automatically.
 
-#### If `no`
+**If `no`:**
 
 → Return to **[the skill](../SKILL.md)** for **Step 2** (work type selection).
 
@@ -46,17 +46,17 @@ Invoke `start-feature`. It will set `work_type: feature` automatically.
 > *Output the next fenced block as a code block:*
 
 ```
-Features
+Feature Overview
 
 {feature_count} feature(s) in progress:
 
-1. {topic:(titlecase)}
+1. {work_unit:(titlecase)}
    └─ {phase_label:(titlecase)}
 
 2. ...
 ```
 
-Build tree from `features.topics` array. Each topic shows `name` (titlecased) and `phase_label` (titlecased).
+Build tree from `features.work_units` array. Each work unit shows `name` (titlecased) and `phase_label` (titlecased).
 
 ## Build Menu Options
 
@@ -77,7 +77,7 @@ Select an option (enter number):
 · · · · · · · · · · · ·
 ```
 
-Recreate with actual topics and `phase_label` values from discovery.
+Recreate with actual work units and `phase_label` values from discovery.
 
 **STOP.** Wait for user response.
 
@@ -93,16 +93,17 @@ Invoke `/start-feature`. It will set `work_type: feature` automatically.
 
 Map `next_phase` to the appropriate skill:
 
-| next_phase | Skill | Work Type | Topic |
-|------------|-------|-----------|-------|
-| discussion | `/start-discussion` | feature | {topic} |
-| specification | `/start-specification` | feature | {topic} |
-| planning | `/start-planning` | feature | {topic} |
-| implementation | `/start-implementation` | feature | {topic} |
-| review | `/start-review` | feature | {topic} |
+| next_phase | Skill | Work Type | Work Unit |
+|------------|-------|-----------|-----------|
+| research | `/start-research` | feature | {work_unit} |
+| discussion | `/start-discussion` | feature | {work_unit} |
+| specification | `/start-specification` | feature | {work_unit} |
+| planning | `/start-planning` | feature | {work_unit} |
+| implementation | `/start-implementation` | feature | {work_unit} |
+| review | `/start-review` | feature | {work_unit} |
 
-Skills receive positional arguments: `$0` = work_type, `$1` = topic.
+Skills receive positional arguments: `$0` = work_type, `$1` = work_unit. For feature, topic is inferred from work_unit (they share the same value).
 
-**Example**: `/start-specification feature {topic}` — skill skips discovery, validates topic, proceeds to processing.
+**Example**: `/start-specification feature {work_unit}` — skill resolves topic from work_unit, skips discovery, proceeds to processing.
 
-Invoke the skill from the table with the work type and topic as positional arguments.
+Invoke the skill from the table with the work type and work unit as positional arguments.

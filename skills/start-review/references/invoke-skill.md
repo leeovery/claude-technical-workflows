@@ -6,6 +6,12 @@
 
 After completing the steps above, this skill's purpose is fulfilled.
 
+## Set Review Status
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit} --phase review --topic {topic}
+```
+
 ## Save Session Bookmark
 
 > *Output the next fenced block as a code block:*
@@ -16,9 +22,9 @@ Saving session state so Claude can pick up where it left off if the conversation
 
 ```bash
 .claude/hooks/workflows/write-session-state.sh \
-  "{topic}" \
+  "{work_unit}" \
   "skills/technical-review/SKILL.md" \
-  ".workflows/review/{scope}/r{N}/review.md"
+  ".workflows/{work_unit}/review/{topic}/r{N}/review.md"
 ```
 
 ---
@@ -32,17 +38,17 @@ Each plan is reviewed independently. When multiple plans are selected, pass all 
 **Example handoff:**
 ```
 Review session
+Work type: {work_type}
 Plans to review:
-  - topic: {topic-1}
-    plan: .workflows/planning/{topic-1}/plan.md
+  - work_unit: {work_unit_1}
+    plan: .workflows/{work_unit_1}/planning/{topic}/planning.md
     format: {format}
-    plan_id: {plan_id} (if applicable)
-    specification: {specification} (exists: {true|false})
+    specification: .workflows/{work_unit_1}/specification/{topic}/specification.md (exists: {true|false})
     review_version: r{N}
-  - topic: {topic-2}
-    plan: .workflows/planning/{topic-2}/plan.md
+  - work_unit: {work_unit_2}
+    plan: .workflows/{work_unit_2}/planning/{topic}/planning.md
     format: {format}
-    specification: {specification} (exists: {true|false})
+    specification: .workflows/{work_unit_2}/specification/{topic}/specification.md (exists: {true|false})
     review_version: r{N}
 
 Invoke the technical-review skill.
@@ -50,11 +56,12 @@ Invoke the technical-review skill.
 
 **Example handoff (analysis-only):**
 ```
-Analysis session for: {topic}
+Analysis session for: {work_unit}
+Work type: {work_type}
 Review mode: analysis-only
-Review path: .workflows/review/{topic}/r{N}/
+Review path: .workflows/{work_unit}/review/{topic}/r{N}/
 Format: {format}
-Specification: {spec path}
+Specification: .workflows/{work_unit}/specification/{topic}/specification.md
 
 Invoke the technical-review skill.
 ```

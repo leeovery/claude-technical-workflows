@@ -8,7 +8,7 @@
 
 After the plan is selected:
 
-1. **Check the plan's `external_deps` and `dependency_resolution`** from the discovery output
+1. **Check the plan's `deps_satisfied` and `deps_blocking`** from the discovery output
 
 #### If all deps satisfied (or no deps)
 
@@ -58,7 +58,7 @@ Incomplete (planned but not implemented):
 If the user says a dependency has been implemented outside the workflow:
 
 1. Ask which dependency to mark as satisfied
-2. Update the plan frontmatter: Change the dependency's `state` to `satisfied_externally`
+2. Update the dependency's `state` to `satisfied_externally` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} external_dependencies.{dep-topic}.state satisfied_externally`)
 3. Commit the change
 4. Re-check dependencies
 

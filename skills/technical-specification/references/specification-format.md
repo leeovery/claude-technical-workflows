@@ -4,7 +4,7 @@
 
 ---
 
-This file defines the canonical structure for specification files (`.workflows/specification/{topic}/specification.md`).
+This file defines the canonical structure for specification files (`.workflows/{work_unit}/specification/{topic}/specification.md`).
 
 The specification is a single file per topic. Structure is **flexible** — organize around phases and subject matter, not rigid sections. This is a working document.
 
@@ -12,25 +12,25 @@ The specification is a single file per topic. Structure is **flexible** — orga
 
 ---
 
-## Frontmatter
+## Metadata (Manifest CLI)
 
-```yaml
----
-topic: {topic-name}
-status: in-progress
-type: feature
-date: YYYY-MM-DD
-review_cycle: 0
-finding_gate_mode: gated
-sources:
-  - name: {source-name}
-    status: pending
----
+Specification metadata is stored in the work-unit manifest, not in file frontmatter. Access via the manifest CLI:
+
+```bash
+# Read fields
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} status
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} type
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} review_cycle
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} finding_gate_mode
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} sources.{source-name}.status
+
+# Write fields
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} status concluded
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} sources.{source-name}.status incorporated
 ```
 
 | Field | Set when |
 |-------|----------|
-| `topic` | Spec creation (Step 2) — kebab-case identifier matching the directory name |
 | `status` | Spec creation → `in-progress`; conclusion → `concluded` |
 | `type` | Spec creation → `feature` (default); completion → `feature` or `cross-cutting` |
 | `date` | Spec creation — today's date; update on each commit |
@@ -62,14 +62,14 @@ sources:
 
 **All specifications must track their sources**, even when built from a single source. This enables proper tracking when additional material is later added.
 
-Track each source with its incorporation status:
+Track each source with its incorporation status via the manifest CLI:
 
-```yaml
-sources:
-  - name: auth-flow
-    status: incorporated
-  - name: api-design
-    status: pending
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} sources.auth-flow.status
+# → incorporated
+
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} sources.api-design.status
+# → pending
 ```
 
 **Status values:**
@@ -78,9 +78,9 @@ sources:
 
 **When to update source status:**
 
-1. **When creating the specification**: All sources start as `pending`
-2. **After completing exhaustive extraction from a source**: Mark that source as `incorporated`
-3. **When adding a new source to an existing spec**: Add it with `status: pending`
+1. **When creating the specification**: All sources start as `pending` — `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} sources.{source-name}.status pending`
+2. **After completing exhaustive extraction from a source**: Mark that source as `incorporated` — `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} sources.{source-name}.status incorporated`
+3. **When adding a new source to an existing spec**: Add it with `status: pending` via the same command
 
 **How to determine if a source is incorporated:**
 
@@ -89,12 +89,12 @@ A source is `incorporated` when you have:
 - Presented and logged all relevant content from that source
 - No more content from that source needs to be extracted
 
-**Important**: The specification's overall `status: concluded` should only be set when:
+**Important**: The specification's overall status should only be set to `concluded` (via `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} status concluded`) when:
 - All sources are marked as `incorporated`
 - Both review phases are complete
 - User has signed off
 
-If a new source is added to a concluded specification (via grouping analysis), the specification effectively needs updating — even if the file still says `status: concluded`, the presence of `pending` sources indicates work remains.
+If a new source is added to a concluded specification (via grouping analysis), the specification effectively needs updating — even if the manifest still shows `status: concluded`, the presence of `pending` sources indicates work remains.
 
 ---
 

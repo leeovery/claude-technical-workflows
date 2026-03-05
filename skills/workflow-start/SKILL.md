@@ -1,7 +1,7 @@
 ---
 name: workflow-start
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/workflow-start/scripts/discovery.sh)
+allowed-tools: Bash(node .claude/skills/workflow-start/scripts/discovery.js)
 hooks:
   PreToolUse:
     - hooks:
@@ -12,7 +12,7 @@ hooks:
 
 Unified workflow entry point. Discovers state, determines work type, and routes appropriately.
 
-> **ZERO OUTPUT RULE**: Do not narrate your processing. Produce no output until a step or reference file explicitly specifies display content. No "proceeding with...", no discovery summaries, no routing decisions, no transition text. Your first output must be content explicitly called for by the instructions.
+> **⚠️ ZERO OUTPUT RULE**: Do not narrate your processing. Produce no output until a step or reference file explicitly specifies display content. No "proceeding with...", no discovery summaries, no routing decisions, no transition text. Your first output must be content explicitly called for by the instructions.
 
 ## Instructions
 
@@ -32,36 +32,28 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 Invoke the `/migrate` skill and assess its output.
 
-#### If files were updated
-
-**STOP.** Wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding.
-
-#### If no updates needed
-
-→ Proceed to **Step 1**.
-
 ---
 
 ## Step 1: Run Discovery
 
-!`.claude/skills/workflow-start/scripts/discovery.sh`
+!`node .claude/skills/workflow-start/scripts/discovery.js`
 
-If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+If the above shows a script invocation rather than discovery output, the dynamic content preprocessor did not run. Execute the script before continuing:
 
 ```bash
-.claude/skills/workflow-start/scripts/discovery.sh
+node .claude/skills/workflow-start/scripts/discovery.js
 ```
 
 Parse the output to understand the current workflow state:
 
-**From `greenfield` section:**
-- Research files, discussions (name, status, work_type), specifications (name, status, work_type, type), plans, implementations
+**From `epics` section:**
+- `work_units` — work units with `work_type: epic` — name, next_phase, phase_label, per-phase statuses
 
 **From `features` section:**
-- Topics with `work_type: feature` at any phase
+- `work_units` — work units with `work_type: feature` — name, next_phase, phase_label, per-phase statuses
 
 **From `bugfixes` section:**
-- Topics with `work_type: bugfix` at any phase (includes investigations)
+- `work_units` — work units with `work_type: bugfix` — name, next_phase, phase_label, per-phase statuses (includes investigation)
 
 **From `state` section:**
 - Counts for each work type, `has_any_work` flag
@@ -84,9 +76,9 @@ The reference will present the current state and ask the user which work type th
 
 Based on the selected work type, load the appropriate routing reference:
 
-#### If work type is `greenfield`
+#### If work type is `epic`
 
-Load **[greenfield-routing.md](references/greenfield-routing.md)** and follow its instructions.
+Load **[epic-routing.md](references/epic-routing.md)** and follow its instructions.
 
 #### If work type is `feature`
 

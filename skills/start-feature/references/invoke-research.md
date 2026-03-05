@@ -16,12 +16,7 @@ Initial context from feature interview:
 Uncertainties to explore:
 {list of uncertainties identified in research-gating}
 
-Create research file: .workflows/research/{topic}.md
-
-The research frontmatter should include:
-- topic: {topic}
-- work_type: feature
-- date: {today}
+Research directory: .workflows/{work_unit}/research/
 
 Invoke the technical-research skill.
 ```

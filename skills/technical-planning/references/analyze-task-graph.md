@@ -17,13 +17,18 @@ All tasks are authored. Now I'll analyze internal dependencies and
 priorities across the full plan.
 ```
 
-Read **[output-formats.md](output-formats.md)**, find the entry matching the `format:` field in the Plan Index File, and load the format's **[reading.md](output-formats/{format}/reading.md)** and **[graph.md](output-formats/{format}/graph.md)**.
+Read the `format` from the manifest:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} format
+```
+
+Read **[output-formats.md](output-formats.md)**, find the entry matching the format, and load the format's **[reading.md](output-formats/{format}/reading.md)** and **[graph.md](output-formats/{format}/graph.md)**.
 
 ### Invoke the Agent
 
 Invoke `planning-dependency-grapher` with these file paths:
 
-1. **Plan Index File path**: `.workflows/planning/{topic}/plan.md`
+1. **Plan Index File path**: `.workflows/{work_unit}/planning/{topic}/planning.md`
 2. **reading.md**: the format's reading reference loaded above
 3. **graph.md**: the format's graph reference loaded above
 
@@ -115,4 +120,4 @@ The agent will clear all existing graph data and re-analyze from scratch. Presen
 
 #### If `approved`
 
-Commit: `planning({topic}): analyze task dependencies and priorities`
+Commit: `planning({work_unit}): analyze task dependencies and priorities`

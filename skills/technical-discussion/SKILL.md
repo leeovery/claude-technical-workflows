@@ -1,6 +1,7 @@
 ---
 name: technical-discussion
 user-invocable: false
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
 ---
 
 # Technical Discussion
@@ -53,7 +54,7 @@ aspect or decision you want to work through first?
 Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
-2. **Read all tracking and state files** for the current topic — plan index files, review tracking files, implementation tracking files, or any working documents this skill creates. These are your source of truth for progress.
+2. **Read the discussion file** at `.workflows/{work_unit}/discussion/{topic}.md`. This is the only working document this skill creates. Its content is your source of truth for progress.
 3. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 
@@ -69,7 +70,7 @@ When announcing a new step, output `── ── ── ── ──` on its o
 
 ## Step 0: Resume Detection
 
-Check if `.workflows/discussion/{topic}.md` already exists.
+Check if the discussion file already exists at `.workflows/{work_unit}/discussion/{topic}.md`.
 
 #### If the file exists
 
@@ -85,10 +86,13 @@ Read it. Announce the current state of the discussion (questions answered, quest
 
 ## Step 1: Initialize Discussion
 
-1. Ensure the discussion directory exists: `.workflows/discussion/`
-2. Load **[template.md](references/template.md)** — use it to create `.workflows/discussion/{topic}.md`
-3. Fill frontmatter: topic, `status: in-progress`, today's date, and `research_source` if provided in handoff
-4. Populate Context section and initial Questions list
+1. Ensure the discussion directory exists: `.workflows/{work_unit}/discussion/`
+2. Load **[template.md](references/template.md)** — use it to create the discussion file at `.workflows/{work_unit}/discussion/{topic}.md`.
+3. Populate Context section and initial Questions list
+4. Register discussion in manifest:
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit} --phase discussion --topic {topic}
+   ```
 5. Commit the initial file
 
 → Proceed to **Step 2**.

@@ -13,13 +13,14 @@ You receive the path to a staging file containing approved analysis tasks. Your 
 
 You receive via the orchestrator's prompt:
 
-1. **Topic name** — the implementation topic (used to scope tasks to the correct plan)
-2. **Staging file path** — path to the staging file with approved tasks
-3. **Plan path** — the implementation plan path
-4. **Plan format reading adapter path** — how to read tasks from the plan (for determining next phase number)
-5. **Plan format authoring adapter path** — how to create tasks in the plan
-6. **plan-index-schema.md** — Canonical plan index structure
-7. **Phase label** — the label for the new phase (e.g., "Analysis (Cycle 1)", "Review Remediation (Cycle 1)")
+1. **Work unit** — the work unit name (for path construction)
+2. **Topic name** — the implementation topic (used to scope tasks to the correct plan)
+3. **Staging file path** — path to the staging file with approved tasks
+4. **Plan path** — the implementation plan path
+5. **Plan format reading adapter path** — how to read tasks from the plan (for determining next phase number)
+6. **Plan format authoring adapter path** — how to create tasks in the plan
+7. **plan-index-schema.md** — Canonical plan index structure
+8. **Phase label** — the label for the new phase (e.g., "Analysis (Cycle 1)", "Review Remediation (Cycle 1)")
 
 ## Your Process
 
@@ -32,7 +33,7 @@ You receive via the orchestrator's prompt:
 
 ## Update the Plan Index File
 
-The Plan Index File (`.workflows/planning/{topic}/plan.md`) is the single source of truth for planning progress. After creating task files, you **must** append the new phase and task table to its body.
+The Plan Index File (`.workflows/{work_unit}/planning/{topic}/planning.md`) is the single source of truth for planning progress. After creating task files, you **must** append the new phase and task table to its body.
 
 Append at the end of the Plan Index File body, following the **Phase Entry** and **Task Table** templates from plan-index-schema:
 
@@ -44,7 +45,14 @@ Append at the end of the Plan Index File body, following the **Phase Entry** and
 - Task `Status`: `authored` (task files are fully written)
 - Task `Ext ID`: external identifier for the task from the output format
 - Task IDs must match the IDs used in the created task files
-- If the Plan Index File frontmatter `ext_id` is empty, set it to the external identifier for the plan from the output format
+- Check the planning `ext_id` via the manifest CLI:
+  ```bash
+  node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} ext_id
+  ```
+  If the command errors (field doesn't exist) or returns empty, set it to the external identifier for the plan from the output format:
+  ```bash
+  node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} ext_id "{ext_id_value}"
+  ```
 
 ## Hard Rules
 

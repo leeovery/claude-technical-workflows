@@ -4,17 +4,15 @@
 
 ---
 
-Check if discussion already exists for this topic.
+Check if a discussion already exists for this work unit and topic.
+
+Use the manifest CLI to check discussion phase state:
 
 ```bash
-ls .workflows/discussion/
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase discussion --topic {topic}
 ```
 
-#### If discussion exists for this topic
-
-Read `.workflows/discussion/{topic}.md` frontmatter to check status.
-
-#### If status is `in-progress`
+#### If discussion exists and status is `in-progress`
 
 > *Output the next fenced block as a code block:*
 
@@ -26,7 +24,7 @@ Set source="continue".
 
 → Return to **[the skill](../SKILL.md)** for **Step 8**.
 
-#### If status is `concluded`
+#### If discussion exists and status is `concluded`
 
 > *Output the next fenced block as a code block:*
 

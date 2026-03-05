@@ -34,28 +34,30 @@ independently testable stages.
 
 ### Invoke the Agent
 
-Read `work_type` from the Plan Index File frontmatter.
+Read `work_type` from the manifest:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type
+```
 
 Invoke `planning-phase-designer` with these file paths:
 
 1. **read-specification.md**: `read-specification.md`
-2. **Specification**: path from the Plan Index File's `specification:` field
-3. **Cross-cutting specs**: paths from the Plan Index File's `cross_cutting_specs:` field (if any)
+2. **Specification**: specification path from the manifest or `.workflows/{work_unit}/specification/{topic}/specification.md`
+3. **Cross-cutting specs**: cross-cutting spec paths if any
 4. **phase-design.md**: `phase-design.md`
-5. **Context guidance**: `phase-design/{work_type}.md` (default to `greenfield` if `work_type` is empty)
+5. **Context guidance**: `phase-design/{work_type}.md` (default to `epic` if `work_type` is empty)
 6. **task-design.md**: `task-design.md`
 7. **plan-index-schema.md**: `plan-index-schema.md`
 
 The agent returns a complete phase structure. Write it directly to the Plan Index File body.
 
-Update the frontmatter `planning:` block:
-```yaml
-planning:
-  phase: 1
-  task: ~
+Update the manifest planning position:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} phase 1
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} task ~
 ```
 
-Commit: `planning({topic}): draft phase structure`
+Commit: `planning({work_unit}): draft phase structure`
 
 Continue to **Review and Approve** below.
 
@@ -64,10 +66,6 @@ Continue to **Review and Approve** below.
 ## Review and Approve
 
 Present the phase structure to the user as rendered markdown (not in a code block). Then, separately, present the choices:
-
-**STOP.** Ask:
-
-**Phase Structure**
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -79,6 +77,8 @@ Present the phase structure to the user as rendered markdown (not in a code bloc
 - **Or navigate** — a different phase or task, or the leading edge.
 · · · · · · · · · · · ·
 ```
+
+**STOP.** Wait for user response.
 
 #### If the user provides feedback
 
@@ -93,6 +93,6 @@ Update the Plan Index File with the revised output, re-present, and ask again. R
 **If the phase structure is new or was amended:**
 
 1. Update each phase in the Plan Index File: set `status: approved` and `approved_at: YYYY-MM-DD` (use today's actual date). See **Phase Entry** in plan-index-schema for field definitions.
-2. Commit: `planning({topic}): approve phase structure`
+2. Commit: `planning({work_unit}): approve phase structure`
 
 **If the phase structure was already approved and unchanged:** No updates needed.

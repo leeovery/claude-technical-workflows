@@ -16,7 +16,7 @@ format: `local-markdown`
 adapter: [local-markdown/](output-formats/local-markdown/)
 
 
-Plan Index File with task detail stored as individual markdown files in a `{topic}/` subdirectory. No external tools or setup required.
+Plan Index File with task detail stored as individual markdown files in a `{work_unit}/` subdirectory. No external tools or setup required.
 
 - **Pros**: Zero setup, works offline, human-readable, easy to edit in any text editor
 - **Cons**: No visual board, everything in markdown can get long for complex features, no dependency graph

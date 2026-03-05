@@ -16,23 +16,35 @@ Load **[review-tracking-format.md](review-tracking-format.md)** — internalize 
 
 ## A. Cycle Management
 
-Check the `review_cycle` field in the specification frontmatter.
+Check the `review_cycle` field via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} review_cycle`).
 
 #### If `review_cycle` is 0 or not set
 
-Set `review_cycle: 1` in the specification frontmatter.
+Set `review_cycle` to 1 via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} review_cycle 1`).
 
 #### If `review_cycle` is already set
 
-Increment `review_cycle` by 1.
+Increment `review_cycle` by 1 via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} review_cycle {N}`).
 
 Record the current cycle number — used for tracking file naming (`c{N}`).
 
-Commit the updated frontmatter.
+Commit the updated manifest.
 
-→ If `review_cycle <= 3`, proceed to **B. Phase 1 — Input Review**.
+**If `review_cycle` <= 3:**
 
-#### If `review_cycle > 3`
+→ Proceed to **B. Phase 1 — Input Review**.
+
+#### If `review_cycle` > 3
+
+Check `finding_gate_mode` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} finding_gate_mode`).
+
+**If `finding_gate_mode: auto`:**
+
+Auto mode is active — pass through to review. Section D's safety cap (cycle 5) handles escalation.
+
+→ Proceed to **B. Phase 1 — Input Review**.
+
+**If `finding_gate_mode: gated` (or not set):**
 
 **Do NOT skip review autonomously.** This gate is an escape hatch for the user — not a signal to stop. The expected default is to continue running review until no issues are found. Present the choice and let the user decide.
 
@@ -72,14 +84,29 @@ Dispatch the `specification-review-input` agent via the Task tool:
 
 - **Agent file**: `../../../agents/specification-review-input.md`
 - **Specification path**: the specification file path
-- **Source material paths**: all source document paths from the specification frontmatter
+- **Source material paths**: resolve source names to file paths. Read source names and work type from the manifest:
+  ```bash
+  node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} sources
+  node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type
+  ```
+  Sources returns an object keyed by source name (e.g., `{"auth-design": {"status": "incorporated"}}`). For each source name, construct the source file path based on work type:
+
+  #### If work type is `bugfix`
+
+  `.workflows/{work_unit}/investigation/{source-name}.md`
+
+  #### Otherwise
+
+  `.workflows/{work_unit}/discussion/{source-name}.md`
+
+  Pass all resolved paths to the agent.
 - **Topic name**: the current topic
 - **Cycle number**: the current cycle number
 - **Review tracking format path**: `review-tracking-format.md` (in this references directory)
 
 Wait for the agent to return. Record its STATUS as `phase_1_status`.
 
-**If the agent created a tracking file**, commit it: `spec({topic}): input review cycle {N}`
+**If the agent created a tracking file**, commit it: `spec({work_unit}): input review cycle {N}`
 
 Load **[process-review-findings.md](process-review-findings.md)** and follow its instructions to process findings with the user.
 
@@ -99,7 +126,7 @@ Dispatch the `specification-review-gap-analysis` agent via the Task tool:
 
 Wait for the agent to return. Record its STATUS as `phase_2_status`.
 
-**If the agent created a tracking file**, commit it: `spec({topic}): gap analysis cycle {N}`
+**If the agent created a tracking file**, commit it: `spec({work_unit}): gap analysis cycle {N}`
 
 Load **[process-review-findings.md](process-review-findings.md)** and follow its instructions to process findings with the user.
 
@@ -115,7 +142,11 @@ Load **[process-review-findings.md](process-review-findings.md)** and follow its
 
 #### If either status is `findings`
 
-Check `finding_gate_mode` and `review_cycle` in the specification frontmatter.
+Check `finding_gate_mode` and `review_cycle` via manifest CLI:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} finding_gate_mode
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} review_cycle
+```
 
 #### If `finding_gate_mode: auto` and `review_cycle < 5`
 
@@ -168,7 +199,7 @@ Auto-review has not converged after 5 cycles — escalating for human review.
 
 > **CHECKPOINT**: Do not confirm completion if any tracking files still show `status: in-progress`. They indicate incomplete review work.
 
-2. **Commit** all review tracking files: `spec({topic}): complete specification review (cycle {N})`
+2. **Commit** all review tracking files: `spec({work_unit}): complete specification review (cycle {N})`
 
 > *Output the next fenced block as a code block:*
 

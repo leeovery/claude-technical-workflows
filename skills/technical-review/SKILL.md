@@ -1,6 +1,7 @@
 ---
 name: technical-review
 user-invocable: false
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
 ---
 
 # Technical Review
@@ -29,7 +30,7 @@ Either way: Verify plan tasks were implemented, tested adequately, and meet qual
 
 ```
 I need the implementation plan to review against. Could you point me to the
-plan file (e.g., .workflows/planning/{topic}/plan.md)?
+plan file (e.g., .workflows/{work_unit}/planning/{topic}/planning.md)?
 ```
 
 **STOP.** Wait for user response.
@@ -52,7 +53,7 @@ The specification is optional — the review can proceed with just the plan.
 
 Analysis of existing review findings was requested. The review has already been completed.
 
-→ Proceed to **Step 6**.
+→ Proceed to **Step 5**.
 
 ---
 
@@ -61,7 +62,7 @@ Analysis of existing review findings was requested. The review has already been 
 Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
-2. **Read all tracking and state files** for the current topic — plan index files, review tracking files, implementation tracking files, or any working documents this skill creates. These are your source of truth for progress.
+2. **Read review and synthesis files** for the current topic. Review documents are at `.workflows/{work_unit}/review/{topic}/r{N}/review.md` with per-task QA files alongside. Synthesis staging files are at `.workflows/{work_unit}/implementation/{topic}/review-tasks-c{N}.md`. These are your source of truth for progress.
 3. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 

@@ -1,6 +1,7 @@
 ---
 name: technical-research
 user-invocable: false
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
 ---
 
 # Technical Research
@@ -38,7 +39,7 @@ technical concept, a market opportunity — anything you want to investigate.
 > *Output the next fenced block as a code block:*
 
 ```
-You mentioned {topic}. That could cover a lot of ground — is there a specific
+You mentioned {work_unit}. That could cover a lot of ground — is there a specific
 angle you'd like to start with, or should I explore broadly?
 ```
 
@@ -51,7 +52,7 @@ angle you'd like to start with, or should I explore broadly?
 Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
-2. **Read all tracking and state files** for the current topic — plan index files, review tracking files, implementation tracking files, or any working documents this skill creates. These are your source of truth for progress.
+2. **Read all research files** in `.workflows/{work_unit}/research/`. These are the working documents this skill creates. Their content is your source of truth for progress.
 3. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 
@@ -67,7 +68,7 @@ When announcing a new step, output `── ── ── ── ──` on its o
 
 ## Step 0: Resume Detection
 
-Check if research files exist in `.workflows/research/`.
+Check if research files exist in `.workflows/{work_unit}/research/`.
 
 #### If files exist
 
@@ -83,10 +84,13 @@ Read them. Announce what's been explored so far and what themes have emerged. As
 
 ## Step 1: Initialize Research
 
-1. Ensure the research directory exists: `.workflows/research/`
-2. Load **[template.md](references/template.md)** — use it to create `.workflows/research/exploration.md`
-3. Fill frontmatter: `topic: exploration`, today's date
-4. Populate the Starting Point section with context from the user
+1. Ensure the research directory exists: `.workflows/{work_unit}/research/`
+2. Load **[template.md](references/template.md)** — use it to create `.workflows/{work_unit}/research/exploration.md`
+3. Populate the Starting Point section with context from the user
+4. Set research status via manifest CLI:
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase research status in-progress
+   ```
 5. Commit the initial file
 
 → Proceed to **Step 2**.

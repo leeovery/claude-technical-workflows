@@ -1,6 +1,6 @@
 ---
 name: start-discussion
-allowed-tools: Bash(.claude/skills/start-discussion/scripts/discovery.sh), Bash(mkdir -p .workflows/.state), Bash(rm .workflows/.state/research-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/discussion/)
+allowed-tools: Bash(node .claude/skills/start-discussion/scripts/discovery.js), Bash(mkdir -p .workflows/*/.state), Bash(rm .workflows/*/.state/research-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(ls .workflows/)
 hooks:
   PreToolUse:
     - hooks:
@@ -50,27 +50,19 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 Invoke the `/migrate` skill and assess its output.
 
-#### If files were updated
-
-**STOP.** Wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding.
-
-#### If no updates needed
-
-→ Proceed to **Step 1**.
-
 ---
 
 ## Step 1: Discovery State
 
-!`.claude/skills/start-discussion/scripts/discovery.sh`
+!`node .claude/skills/start-discussion/scripts/discovery.js`
 
-If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+If the above shows a script invocation rather than discovery output, the dynamic content preprocessor did not run. Execute the script before continuing:
 
 ```bash
-.claude/skills/start-discussion/scripts/discovery.sh
+node .claude/skills/start-discussion/scripts/discovery.js
 ```
 
-If YAML content is already displayed, it has been run on your behalf.
+If discovery output is already displayed, it has been run on your behalf.
 
 Parse the discovery output to understand:
 
@@ -80,18 +72,16 @@ Parse the discovery output to understand:
 - `checksum` - current checksum of all research files
 
 **From `discussions` section:**
-- `exists` - whether discussion files exist
-- `files` - each discussion's name, status, and date
+- `exists` - whether discussion entries exist (from manifests)
+- `files` - each discussion's name, work_unit, status, and work_type
 - `counts.in_progress` and `counts.concluded` - totals for routing
 
 **From `cache` section:**
-- `status` - one of three values:
-  - `"valid"` - cache exists and checksums match (safe to load)
-  - `"stale"` - cache exists but research has changed (needs re-analysis)
-  - `"none"` - no cache file exists
-- `reason` - explanation of the status
-- `generated` - when the cache was created (null if none)
-- `research_files` - list of files that were analyzed
+- `entries` - array of cache entries (empty if no cache exists). Each entry has:
+  - `status` - `"valid"` (checksums match) or `"stale"` (research changed)
+  - `reason` - explanation of the status
+  - `generated` - when the cache was created
+  - `research_files` - list of files that were analyzed
 
 **From `state` section:**
 - `scenario` - one of: `"fresh"`, `"research_only"`, `"discussions_only"`, `"research_and_discussions"`
@@ -104,13 +94,14 @@ Parse the discovery output to understand:
 
 ## Step 2: Determine Mode
 
-Check for arguments: work_type = `$0`, topic = `$1`
+Check for arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional)
+Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, topic = `$1`
 
-#### If `work_type` and `topic` are both provided
+#### If `topic` resolved (bridge mode)
 
 → Proceed to **Step 3** (Validate Topic).
 
-#### If `work_type` is provided without `topic`
+#### If `work_type` and `work_unit` provided but no `topic` (scoped discovery)
 
 Store work_type for the handoff.
 

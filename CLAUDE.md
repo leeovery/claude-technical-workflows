@@ -10,9 +10,9 @@ Claude Code skills package for structured technical discussion and planning work
 
 The workflow system supports three work types, each with its own pipeline:
 
-**Greenfield**: Building a new product from scratch
+**Epic**: Multi-topic work spanning multiple sessions (new products, large initiatives)
 - Phase-centric, multi-session, long-running (days/weeks/months)
-- All artifacts in a phase complete before moving to next
+- Topics move independently within phases
 - Research → Discussion → Specification → Planning → Implementation → Review
 
 **Feature**: Adding functionality to an existing product
@@ -41,7 +41,7 @@ The workflow system supports three work types, each with its own pipeline:
 skills/
   # Processing skills (model-invocable — do the work)
   technical-research/        # Explore and validate ideas
-  technical-discussion/      # Document discussions (feature/greenfield)
+  technical-discussion/      # Document discussions (feature/epic)
   technical-investigation/   # Investigate bugs (bugfix pipeline)
   technical-specification/   # Build validated specifications
   technical-planning/        # Create implementation plans
@@ -50,16 +50,22 @@ skills/
 
   # Unified entry points
   workflow-start/              # Unified entry point - discovers state, routes by work type
-    scripts/discovery.sh       #   Comprehensive cross-phase discovery
+    scripts/discovery.js       #   Comprehensive cross-phase discovery
     references/                #   Work type selection, routing references
   workflow-bridge/             # Pipeline continuation - discovers next phase, enters plan mode
-    scripts/discovery.sh       #   Topic-specific or phase-centric discovery
+    scripts/discovery.js       #   Topic-specific or phase-centric discovery
     references/                #   Work-type-specific continuation logic
+  workflow-shared/             # Shared utilities used by other workflow skills
+    scripts/discovery-utils.js #   Discovery helpers (manifest loading, phase state, checksums)
+  workflow-manifest/           # Manifest CLI — single source of truth for workflow state
+    scripts/manifest.js        #   Node.js CLI (get/set/list/init/init-phase/push/archive)
 
   # Entry-point skills (user-invocable — gather context, invoke processing skills)
   migrate/                   # Keep workflow files in sync with system design
     scripts/migrate.sh       #   Migration orchestrator
     scripts/migrations/      #   Individual migration scripts (numbered)
+  start-epic/                # Start epic pipeline (multi-topic, multi-session)
+    references/              #   Interview questions, handoffs, phase bridge
   start-feature/             # Start feature pipeline (power user entry)
     references/              #   Interview questions, handoffs, phase bridge
   start-bugfix/              # Start bugfix pipeline (power user entry)
@@ -68,47 +74,54 @@ skills/
 
   # Phase entry skills (two-mode: discovery OR bridge)
   start-research/            # Begin research exploration
+    references/              #   Context gathering, handoffs
   start-discussion/          # Discussion - discovery mode or bridge mode (topic+work_type)
-    scripts/discovery.sh     #   Discovery script
+    scripts/discovery.js     #   Discovery script
     references/              #   Discovery flow, context gathering
   start-investigation/       # Investigation - discovery mode or bridge mode
-    scripts/discovery.sh     #   Discovery script
+    scripts/discovery.js     #   Discovery script
     references/              #   Discovery flow
   start-specification/       # Specification - discovery mode or bridge mode
-    scripts/discovery.sh     #   Discovery script
+    scripts/discovery.js     #   Discovery script
     references/              #   Discovery flow, grouping analysis
   start-planning/            # Planning - discovery mode or bridge mode
-    scripts/discovery.sh     #   Discovery script
+    scripts/discovery.js     #   Discovery script
     references/              #   Discovery flow, cross-cutting context
   start-implementation/      # Implementation - discovery mode or bridge mode
-    scripts/discovery.sh     #   Discovery script
+    scripts/discovery.js     #   Discovery script
     references/              #   Discovery flow, dependency checking
   start-review/              # Review - discovery mode or bridge mode
-    scripts/discovery.sh     #   Discovery script
+    scripts/discovery.js     #   Discovery script
     references/              #   Discovery flow, plan display
   status/                    # Show workflow status and next steps
-    scripts/discovery.sh     #   Discovery script
+    scripts/discovery.js     #   Discovery script
   view-plan/                 # View plan tasks and progress
 
 .claude/skills/
   create-output-format/      # Dev-time skill: scaffold new output format adapters
-  skill-creator/             # Dev-time skill: guide for creating effective skills
   update-workflow-explorer/  # Dev-time skill: sync workflow-explorer.html with source
 
 agents/
-  review-task-verifier.md           # Verifies single task implementation for review
-  review-findings-synthesizer.md   # Synthesizes QA findings into remediation tasks
-  implementation-task-executor.md  # TDD executor for single plan tasks
-  implementation-task-reviewer.md  # Post-task review for spec conformance
-  planning-phase-designer.md       # Design phases from specification
-  planning-task-designer.md        # Break phases into task lists
-  planning-task-author.md          # Write full task detail
-  planning-dependency-grapher.md   # Analyze task dependencies and priorities
-  planning-review-traceability.md  # Spec-to-plan traceability analysis
-  planning-review-integrity.md     # Plan structural quality review
+  review-task-verifier.md                # Verifies single task implementation for review
+  review-findings-synthesizer.md         # Synthesizes QA findings into remediation tasks
+  implementation-task-executor.md        # TDD executor for single plan tasks
+  implementation-task-reviewer.md        # Post-task review for spec conformance
+  implementation-analysis-architecture.md # Architecture conformance analysis
+  implementation-analysis-duplication.md  # Duplication and DRY analysis
+  implementation-analysis-standards.md    # Coding standards analysis
+  implementation-analysis-synthesizer.md  # Synthesize analysis findings
+  implementation-analysis-task-writer.md  # Write tasks from analysis findings
+  planning-phase-designer.md             # Design phases from specification
+  planning-task-designer.md              # Break phases into task lists
+  planning-task-author.md                # Write full task detail
+  planning-dependency-grapher.md         # Analyze task dependencies and priorities
+  planning-review-traceability.md        # Spec-to-plan traceability analysis
+  planning-review-integrity.md           # Plan structural quality review
+  specification-review-gap-analysis.md   # Specification gap analysis
+  specification-review-input.md          # Specification input review
 
 tests/
-  scripts/                   # Shell script tests for discovery and migrations
+  scripts/                   # Tests for discovery scripts and migrations
 
 hooks/
   workflows/
@@ -131,18 +144,20 @@ Skills are organised in two tiers:
 
 ### Two-Mode Pattern for Phase Skills
 
-Phase entry skills (`start-discussion`, `start-specification`, etc.) support three invocation patterns. Arguments are positional: `$0` = work_type, `$1` = topic.
+Phase entry skills (`start-discussion`, `start-specification`, etc.) support three invocation patterns. Arguments are positional: `$0` = work_type, `$1` = work_unit, `$2` = topic (optional).
 
-**Bridge Mode** (work_type + topic):
-- Invoked with both arguments: `/start-discussion feature {topic}`
-- Or invoked by `workflow-bridge` with work_type + topic in context
+**Bridge Mode** (work_type + work_unit + topic):
+- Invoked with all arguments: `/start-discussion feature {work_unit} {topic}`
+- For feature/bugfix, topic can be omitted (inferred from work_unit): `/start-discussion feature {work_unit}`
+- Or invoked by `workflow-bridge` with work_type + work_unit + topic in context
 - Skips discovery, validates topic exists, proceeds to pre-flight and processing
 - Enables deterministic pipeline continuation
+- Skill resolution: `topic = $2 || (wt !== 'epic' ? $1 : null)`
 
-**Discovery Mode with pipeline context** (work_type only):
-- Invoked with work_type but no topic: `/start-specification greenfield`
+**Discovery Mode with pipeline context** (work_type + work_unit):
+- Invoked with work_type and work_unit but no topic: `/start-specification epic {work_unit}`
 - Stores work_type for the handoff, then runs full discovery
-- Enables greenfield routing where topic isn't known until analysis
+- Enables epic routing where topic isn't known until analysis
 
 **Standalone Discovery Mode** (no arguments):
 - User invokes `/start-discussion` directly
@@ -169,16 +184,25 @@ Processing skills should **never hardcode references** to specific workflow phas
 
 ## Key Conventions
 
-Phase-first directory structure:
-- Research: `.workflows/research/` (flat, semantically named files)
-- Discussion: `.workflows/discussion/{topic}.md`
-- Investigation: `.workflows/investigation/{topic}/investigation.md` (bugfix pipeline)
-- Specification: `.workflows/specification/{topic}/specification.md`
-- Planning: `.workflows/planning/{topic}/plan.md` + format-specific task storage
-- Implementation: `.workflows/implementation/{topic}/tracking.md`
-- Review: `.workflows/review/{topic}/r{N}/review.md`
+**Work types and work units**: A *work type* is one of three pipeline shapes: epic, feature, or bugfix. A *work unit* is a named instance of a work type (e.g., "auth-flow" is a feature work unit, "payments-overhaul" is an epic work unit). Each work unit gets its own directory under `.workflows/` and its own `manifest.json`.
 
-**work_type field**: All artifacts include `work_type` in frontmatter (greenfield, feature, or bugfix). This enables:
+**Topics**: A *topic* is the item within a phase. For feature/bugfix, the topic name equals the work unit name (single topic moving through the pipeline). For epic, topics are distinct from the work unit name (multiple topics per phase). Research is exempt — it may contain multiple files (especially for epics) but they are not tracked as individual topics in the manifest. The discussion phase analyses all research files collectively to derive discussion topics.
+
+Work-unit-first directory structure with uniform `{topic}` in all paths. For feature/bugfix, `{topic}` equals `{work_unit}`. For epic, `{topic}` is the item within a phase.
+
+- Manifest: `.workflows/{work_unit}/manifest.json`
+- Research: `.workflows/{work_unit}/research/` (freeform, no topic)
+- Discussion: `.workflows/{work_unit}/discussion/{topic}.md` (flat file)
+- Investigation: `.workflows/{work_unit}/investigation/{topic}.md` (flat file)
+- Specification: `.workflows/{work_unit}/specification/{topic}/specification.md`
+- Planning: `.workflows/{work_unit}/planning/{topic}/planning.md` + `tasks/`
+- Implementation: `.workflows/{work_unit}/implementation/{topic}/implementation.md`
+- Review: `.workflows/{work_unit}/review/{topic}/r{N}/review.md`
+- State: `.workflows/{work_unit}/.state/` (per-work-unit analysis files)
+- Global state: `.workflows/.state/` (migrations, environment-setup.md)
+- Cache: `.workflows/.cache/` (sessions, planning scratch)
+
+**work_type field**: Each work unit's `work_type` (epic, feature, or bugfix) is stored in its `manifest.json` — the single source of truth for all workflow state. This enables:
 - Unified discovery across all phases
 - Correct pipeline routing via workflow-bridge
 - Work-type-specific behavior in processing skills
@@ -210,7 +234,7 @@ The contract and scaffolding templates live in `.claude/skills/create-output-for
 **Why this matters:** Listing formats elsewhere creates maintenance dependencies. If a format is added or removed, we should only need to update the planning references - not hunt through other skills or documentation.
 
 **How other phases reference formats:**
-- Plans include a `format:` field in their frontmatter
+- Plans include a `format` field in their manifest
 - Consumers load only the per-concern file they need (e.g., `{format}/reading.md` for implementation)
 
 This keeps format knowledge centralized in the planning phase where it belongs.
@@ -230,6 +254,9 @@ The `/migrate` skill keeps workflow files in sync with the current system design
 2. The script will be run automatically in numeric order
 3. The orchestrator handles tracking — once a migration ID appears in the log, the script never runs again
 4. Use helper functions: `report_update`, `report_skip` (for display only)
+
+**Migration 016 — Work-unit restructure:**
+Migration 016 converts phase-first directories to work-unit-first, creates `manifest.json` files from artifact frontmatter, renames `plan.md` to `planning.md` and `tracking.md` to `implementation.md`, and updates `work_type: greenfield` to `epic`. Frontmatter is preserved in migrated artifacts as a safety net — a follow-up migration will strip it once the manifest system is proven.
 
 **Critical: Frontmatter extraction in bash scripts**
 
@@ -260,7 +287,7 @@ Processing skills run long and may hit context compaction. The hook system provi
 **Session state files:**
 - Stored at `.workflows/.cache/sessions/{session_id}.yaml`
 - Created by entry-point skills before invoking processing skills
-- Contain: topic, skill path, artifact path, optional pipeline context
+- Contain: topic, skill path, artifact path
 - Ephemeral — cleaned up on session end, gitignored
 
 **First-run bootstrap:**
@@ -269,13 +296,38 @@ Processing skills run long and may hit context compaction. The hook system provi
 - Uses jq if available for merging, falls back to node, then to manual instructions
 - One-time cost; self-healing if hooks are removed
 
+## Manifest CLI
+
+The manifest CLI at `skills/workflow-manifest/scripts/manifest.js` is the single source of truth for all workflow state. It replaces YAML frontmatter for state management — artifacts are pure markdown with no frontmatter.
+
+Key properties:
+- JSON format, zero dependencies (Node handles JSON natively)
+- Domain-aware flag syntax: `--phase` and `--topic` flags route to correct internal path based on work_type
+- Skills never know manifest internal structure (flat for feature/bugfix, items for epic)
+- File locking for concurrent session safety
+- Validation of structural values (work_type, phase names, statuses, gate modes)
+- Manifest location: `.workflows/{work_unit}/manifest.json`
+
+Domain-aware CLI grammar:
+```bash
+MANIFEST="node .claude/skills/workflow-manifest/scripts/manifest.js"
+$MANIFEST get {work_unit} --phase discussion --topic {topic} status    # phase-level read
+$MANIFEST set {work_unit} --phase discussion --topic {topic} status concluded  # phase-level write
+$MANIFEST init-phase {work_unit} --phase discussion --topic {topic}    # create phase entry
+$MANIFEST push {work_unit} --phase implementation --topic {topic} completed_tasks "task-1"  # append to array
+$MANIFEST get {work_unit} work_type                                    # work-unit-level read
+$MANIFEST set {work_unit} phases.research.analysis_cache '{"checksum":"..."}' # work-unit-level write (dot-path)
+```
+
+See `skills/workflow-manifest/SKILL.md` for the full API.
+
 ## Display & Output Conventions (IMPORTANT)
 
 All entry-point skills that present discovery state, menus, or interactive choices MUST follow these conventions. This ensures a consistent, scannable experience across all phases.
 
 ### Rendering Instructions
 
-Every fenced block in skill files must be preceded by a rendering instruction:
+Every **user-facing output** fenced block in skill files must be preceded by a rendering instruction. Fenced blocks that are model instructions (bash commands to execute, file paths to load) are exempt — they are not displayed to the user.
 
 ```
 > *Output the next fenced block as a code block:*
@@ -287,7 +339,7 @@ or:
 > *Output the next fenced block as markdown (not a code block):*
 ```
 
-Code blocks are used for informational displays (overviews, status, keys). Markdown is used for interactive elements (menus, prompts) where bold formatting is needed.
+Code blocks are used for informational displays (overviews, status, keys) — they preserve indentation for tree structures and aligned lists. Markdown is used for interactive elements (menus, prompts) where bold formatting is needed. When content benefits from rendered formatting (headings, checkboxes, bold) and indentation control isn't needed, prefer markdown rendering even for informational displays.
 
 ### Title Pattern
 
@@ -462,7 +514,7 @@ When a phase can't proceed — use the phase title pattern, then explain:
 ```
 Planning Overview
 
-No specifications found in .workflows/specification/
+No specification found in .workflows/{work_unit}/specification/{topic}/
 
 The planning phase requires a concluded specification.
 Run /start-specification first.
@@ -539,7 +591,7 @@ Use H4 headings for if/else branches within a step:
 
 1. Shared setup steps...
 
-**If work_type is set** (feature, bugfix, or greenfield):
+**If work_type is set** (feature, bugfix, or epic):
 
 {branch content}
 
@@ -611,7 +663,7 @@ Entry-point skills that invoke processing skills use this exact blockquote to pr
 
 Per-item approval gates can offer `a`/`auto` to let the user bypass repeated STOP gates. This pattern is used in implementation (task + fix gates), planning (task list approval + task authoring + review findings), and specification (review findings).
 
-**Frontmatter tracking**: Gate modes are stored in the relevant frontmatter file (`gated` or `auto`). This ensures they survive context refresh.
+**Manifest tracking**: Gate modes are stored in the manifest via CLI (`gated` or `auto`). This ensures they survive context refresh.
 
 **Behavior when `auto`**: Content is always rendered above the gate check (so both modes see identical output). Auto mode proceeds without a STOP gate. Use a rendering instruction + code block for the one-line announcement:
 
@@ -624,10 +676,10 @@ Task {M} of {total}: {Task Name} — authored. Logging to plan.
 ```
 
 **Lifecycle**:
-- Default: `gated` (set in frontmatter template on creation)
-- Opt-in: user chooses `a`/`auto` at any per-item gate → frontmatter updated before next commit
+- Default: `gated` (set in manifest on creation)
+- Opt-in: user chooses `a`/`auto` at any per-item gate → manifest updated via CLI before next commit
 - Reset: entry-point skills reset gates to `gated` on fresh invocation (not on `continue`)
-- Context refresh: read gate modes from frontmatter and preserve
+- Context refresh: read gate modes from manifest and preserve
 
 **Menu option format**: Add between the primary action and secondary options:
 ```

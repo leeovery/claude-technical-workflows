@@ -1,40 +1,40 @@
-# Validate Investigation
+# Validate Work Unit
 
 *Reference for **[start-investigation](../SKILL.md)***
 
 ---
 
-Check if investigation already exists for this topic.
+Check if a work unit already exists for this name by querying the manifest:
 
 ```bash
-ls .workflows/investigation/
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase investigation --topic {topic}
 ```
 
-#### If investigation exists for this topic
+#### If work unit exists with investigation phase
 
-Read `.workflows/investigation/{topic}/investigation.md` frontmatter to check status.
+Read the investigation status from the manifest output.
 
-#### If status is `in-progress`
+**If status is `in-progress`:**
 
 > *Output the next fenced block as a code block:*
 
 ```
-Resuming investigation: {topic:(titlecase)}
+Resuming investigation: {work_unit:(titlecase)}
 ```
 
 Set source="continue".
 
 → Return to **[the skill](../SKILL.md)** for **Step 6**.
 
-#### If status is `concluded`
+**If status is `concluded`:**
 
 > *Output the next fenced block as a code block:*
 
 ```
 Investigation Concluded
 
-The investigation for "{topic:(titlecase)}" has already concluded.
-Run /start-specification bugfix {topic} to continue to spec.
+The investigation for "{work_unit:(titlecase)}" has already concluded.
+Run /start-specification bugfix {work_unit} to continue to spec.
 ```
 
 **STOP.** Do not proceed — terminal condition.

@@ -1,6 +1,6 @@
 ---
 name: start-implementation
-allowed-tools: Bash(.claude/skills/start-implementation/scripts/discovery.sh), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/planning/)
+allowed-tools: Bash(node .claude/skills/start-implementation/scripts/discovery.js), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
 hooks:
   PreToolUse:
     - hooks:
@@ -50,57 +50,42 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 Invoke the `/migrate` skill and assess its output.
 
-#### If files were updated
-
-**STOP.** Wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding.
-
-#### If no updates needed
-
-→ Proceed to **Step 1**.
-
 ---
 
 ## Step 1: Discovery State
 
-!`.claude/skills/start-implementation/scripts/discovery.sh`
+!`node .claude/skills/start-implementation/scripts/discovery.js`
 
-If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+If the above shows a script invocation rather than discovery output, the dynamic content preprocessor did not run. Execute the script before continuing:
 
 ```bash
-.claude/skills/start-implementation/scripts/discovery.sh
+node .claude/skills/start-implementation/scripts/discovery.js
 ```
 
-If YAML content is already displayed, it has been run on your behalf.
+If discovery output is already displayed, it has been run on your behalf.
 
 Parse the discovery output to understand:
 
 **From `plans` section:**
 - `exists` - whether any plans exist
-- `files` - list of plans with: name, topic, status, date, format, specification, specification_exists, plan_id (if present)
+- `files` - list of plans with: name, topic, status, format, specification, specification_exists, ext_id (if present)
 - Per plan `external_deps` - array of dependencies with topic, state, task_id
 - Per plan `has_unresolved_deps` - whether plan has unresolved dependencies
 - Per plan `unresolved_dep_count` - count of unresolved dependencies
+- Per plan `deps_satisfied` - whether all resolved deps have their tasks completed
+- Per plan `deps_blocking` - list of deps not yet satisfied with reason
 - `count` - total number of plans
 
 **From `implementation` section:**
-- `exists` - whether any implementation tracking files exist
-- `files` - list of tracking files with: topic, status, current_phase, completed_phases, completed_tasks
-
-**From `dependency_resolution` section:**
-- Per plan `deps_satisfied` - whether all resolved deps have their tasks completed
-- Per plan `deps_blocking` - list of deps not yet satisfied with reason
+- `exists` - whether any implementation files exist
+- `files` - list of implementation files with: topic, status, current_phase, completed_phases, completed_tasks
 
 **From `environment` section:**
 - `setup_file_exists` - whether environment-setup.md exists
-- `requires_setup` - true, false, or unknown
+- `requires_setup` - true, false, or null (null when file doesn't exist)
 
 **From `state` section:**
 - `scenario` - one of: `"no_plans"`, `"single_plan"`, `"multiple_plans"`
-- `plans_concluded_count` - plans with status concluded
-- `plans_with_unresolved_deps` - plans with unresolved external deps
-- `plans_ready_count` - concluded plans with all deps satisfied
-- `plans_in_progress_count` - implementations in progress
-- `plans_completed_count` - implementations completed
 
 **IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state.
 
@@ -110,13 +95,14 @@ Parse the discovery output to understand:
 
 ## Step 2: Determine Mode
 
-Check for arguments: work_type = `$0`, topic = `$1`
+Check for arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional)
+Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, topic = `$1`
 
-#### If `work_type` and `topic` are both provided
+#### If `topic` resolved (bridge mode)
 
 → Proceed to **Step 3**.
 
-#### If `work_type` is provided without `topic`
+#### If `work_type` and `work_unit` provided but no `topic` (scoped discovery)
 
 Store work_type for the handoff.
 
@@ -148,7 +134,7 @@ Load **[route-scenario.md](references/route-scenario.md)** and follow its instru
 
 Load **[display-plans.md](references/display-plans.md)** and follow its instructions as written.
 
-→ Proceed to **Step 6** with selected topic.
+→ Proceed to **Step 6** with selected work unit.
 
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: technical-investigation
 user-invocable: false
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
 ---
 
 # Technical Investigation
@@ -8,9 +9,6 @@ user-invocable: false
 Act as **expert debugger** tracing through code, **documentation assistant** capturing findings, AND **collaborative advisor** presenting analysis and discussing fix direction with the user. These are equally important — the investigation drives understanding, the documentation preserves it, and the collaboration validates findings and aligns on approach. Dig deep: trace code paths, challenge assumptions, explore related areas. Then capture what you found.
 
 ## Purpose in the Workflow
-
-This skill is the first phase of the **bugfix pipeline**:
-Investigation → Specification → Planning → Implementation → Review
 
 Investigation combines:
 - **Symptom gathering**: What's broken, how it manifests, reproduction steps
@@ -46,7 +44,7 @@ What bug would you like to investigate? Provide:
 Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
-2. **Read the investigation file** at `.workflows/investigation/{topic}/investigation.md` — this is your source of truth for what's been discovered.
+2. **Read the investigation file** at `.workflows/{work_unit}/investigation/{topic}.md` — this is your source of truth for what's been discovered.
 3. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 4. **Announce your position** to the user before continuing: what you've found so far, what's still to investigate, and what comes next. Wait for confirmation.
 
@@ -73,7 +71,7 @@ The investigation file is your memory. Context compaction is lossy — what's no
 
 **After writing, git commit.** Commits let you track and recover after compaction. Don't batch — commit each time you write.
 
-**Create the file early.** After understanding the initial symptoms, create the investigation file with frontmatter and symptoms section.
+**Create the file early.** After understanding the initial symptoms, create the investigation file with the symptoms section.
 
 **On length**: Investigations can vary widely. Capture what's needed to fully understand the bug. Don't summarize prematurely — document the trail.
 
@@ -81,7 +79,7 @@ The investigation file is your memory. Context compaction is lossy — what's no
 
 ## Step 0: Resume Detection
 
-Check if `.workflows/investigation/{topic}/investigation.md` already exists.
+Check if `.workflows/{work_unit}/investigation/{topic}.md` already exists.
 
 #### If the file exists
 
@@ -97,10 +95,13 @@ Read it. Announce what's been documented so far and what phase the investigation
 
 ## Step 1: Initialize Investigation
 
-1. Create the investigation directory: `.workflows/investigation/{topic}/`
-2. Load **[template.md](references/template.md)** — use it to create `.workflows/investigation/{topic}/investigation.md`
-3. Fill frontmatter: topic, `status: in-progress`, `work_type: bugfix`, today's date
-4. Populate the Symptoms section with any context already gathered
+1. Create the investigation directory: `.workflows/{work_unit}/investigation/`
+2. Load **[template.md](references/template.md)** — use it to create `.workflows/{work_unit}/investigation/{topic}.md`
+3. Populate the Symptoms section with any context already gathered
+4. Register investigation in manifest:
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit} --phase investigation --topic {topic}
+   ```
 5. Commit the initial file
 
 → Proceed to **Step 2**.

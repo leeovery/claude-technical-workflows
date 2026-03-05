@@ -16,7 +16,7 @@ Saving session state for compaction recovery.
 .claude/hooks/workflows/write-session-state.sh \
   "{topic}" \
   "skills/technical-investigation/SKILL.md" \
-  ".workflows/investigation/{topic}/investigation.md"
+  ".workflows/{work_unit}/investigation/{topic}.md"
 ```
 
 ## Handoff
@@ -32,15 +32,9 @@ Initial bug context:
 - Reproduction: {steps if provided, otherwise "unknown"}
 - Initial hypothesis: {user's suspicion if any}
 
-Create investigation file: .workflows/investigation/{topic}/investigation.md
-
-The investigation frontmatter should include:
-- topic: {topic}
-- status: in-progress
-- work_type: bugfix
-- date: {today}
+Create investigation file: .workflows/{work_unit}/investigation/{topic}.md
 
 Invoke the technical-investigation skill.
 ```
 
-When the investigation concludes, the processing skill will detect `work_type: bugfix` in the artifact and invoke workflow-bridge automatically.
+When the investigation concludes, the processing skill will read `work_type` from the manifest and invoke workflow-bridge automatically.

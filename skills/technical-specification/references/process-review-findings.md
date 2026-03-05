@@ -81,7 +81,7 @@ Show the finding with its proposed content, read directly from the tracking file
 
 ### Check Gate Mode
 
-Check `finding_gate_mode` in the specification frontmatter.
+Check `finding_gate_mode` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} finding_gate_mode`).
 
 #### If `finding_gate_mode: auto`
 
@@ -95,7 +95,7 @@ Check `finding_gate_mode` in the specification frontmatter.
 Finding {N} of {total}: {brief_title:(titlecase)} — approved. Added to specification.
 ```
 
-→ Present the next pending finding, or proceed to **C. After All Findings Processed**.
+→ Return to **B. Process One Item at a Time** for the next pending finding, or proceed to **C. After All Findings Processed**.
 
 #### If `finding_gate_mode: gated`
 
@@ -129,13 +129,13 @@ Incorporate feedback and re-present the proposed content **in full**. Update the
 Finding {N} of {total}: {brief_title:(titlecase)} — added.
 ```
 
-→ Present the next pending finding, or proceed to **C. After All Findings Processed**.
+→ Return to **B. Process One Item at a Time** for the next pending finding, or proceed to **C. After All Findings Processed**.
 
 #### If `auto`
 
 1. Log the content (same as "If approved" above)
 2. Update the tracking file: set resolution to "Approved"
-3. Update `finding_gate_mode: auto` in the specification frontmatter
+3. Update `finding_gate_mode` to `auto` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase specification --topic {topic} finding_gate_mode auto`)
 4. Commit
 5. Process all remaining findings using the auto-mode flow above
 
@@ -152,7 +152,7 @@ Finding {N} of {total}: {brief_title:(titlecase)} — added.
 Finding {N} of {total}: {brief_title:(titlecase)} — skipped.
 ```
 
-→ Present the next pending finding, or proceed to **C. After All Findings Processed**.
+→ Return to **B. Process One Item at a Time** for the next pending finding, or proceed to **C. After All Findings Processed**.
 
 ---
 

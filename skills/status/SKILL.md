@@ -1,7 +1,7 @@
 ---
 name: status
 disable-model-invocation: true
-allowed-tools: Bash(.claude/skills/status/scripts/discovery.sh)
+allowed-tools: Bash(node .claude/skills/status/scripts/discovery.js), Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
 hooks:
   PreToolUse:
     - hooks:
@@ -18,27 +18,19 @@ Show the current state of the workflow for this project.
 
 Invoke the `/migrate` skill and assess its output.
 
-#### If files were updated
-
-**STOP.** Wait for the user to review the changes (e.g., via `git diff`) and confirm before proceeding.
-
-#### If no updates needed
-
-→ Proceed to **Step 1**.
-
 ---
 
 ## Step 1: Discovery State
 
-!`.claude/skills/status/scripts/discovery.sh`
+!`node .claude/skills/status/scripts/discovery.js`
 
-If the above shows a script invocation rather than YAML output, the dynamic content preprocessor did not run. Execute the script before continuing:
+If the above shows a script invocation rather than discovery output, the dynamic content preprocessor did not run. Execute the script before continuing:
 
 ```bash
-.claude/skills/status/scripts/discovery.sh
+node .claude/skills/status/scripts/discovery.js
 ```
 
-If YAML content is already displayed, it has been run on your behalf.
+If discovery output is already displayed, it has been run on your behalf.
 
 Parse the discovery output. **IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state.
 
@@ -48,9 +40,7 @@ Parse the discovery output. **IMPORTANT**: Use ONLY this script for discovery. D
 
 ## Step 2: Present Status
 
-Build the display from discovery data. Only show sections for phases that have content.
-
-**CRITICAL**: Entities don't flow one-to-one across phases. Multiple discussions may combine into one specification, topic names may change between phases, and specs may be superseded. The display must make these relationships visible — primarily through the specification's `sources` array.
+Build the display from discovery data. Group work units by work type. Only show sections that have content.
 
 ### 2a: Summary
 
@@ -59,14 +49,16 @@ Build the display from discovery data. Only show sections for phases that have c
 ```
 Workflow Status
 
-  Research:       {count} file(s)
+  Work units: {total} active ({epic} epic, {feature} feature, {bugfix} bugfix)
+
+  Research:       {count} with research
   Discussion:     {count} ({concluded} concluded, {in_progress} in-progress)
-  Specification:  {active} active ({feature} feature, {crosscutting} cross-cutting)
+  Specification:  {active} active ({feature_spec} feature, {crosscutting} cross-cutting)
   Planning:       {count} ({concluded} concluded, {in_progress} in-progress)
   Implementation: {count} ({completed} completed, {in_progress} in-progress)
 ```
 
-Only show lines for phases that have content. If a phase has zero items but a later phase has content, show the line as `(none)` to highlight the gap.
+Only show phase lines that have content. If a phase has zero items but a later phase has content, show the line as `(none)` to highlight the gap. Omit work type counts that are zero.
 
 #### If no workflow content exists at all
 
@@ -75,7 +67,7 @@ Only show lines for phases that have content. If a phase has zero items but a la
 ```
 Workflow Status
 
-No workflow files found in .workflows/
+No active work units found in .workflows/
 
 Start with /start-research to explore ideas,
 or /start-discussion if you already know what to build.
@@ -83,94 +75,70 @@ or /start-discussion if you already know what to build.
 
 **STOP.** Do not proceed — terminal condition.
 
-### 2b: Specifications
+### 2b: Work Units by Type
 
-Show if any specifications exist. This is the most important section — it reveals many-to-one relationships between discussions and specifications.
+Group work units by work type (epic, feature, bugfix). Only show groups that have entries.
+
+For each group, show a header then numbered entries with phase state:
 
 > *Output the next fenced block as a code block:*
 
 ```
-Specifications
+{work_type:(titlecase)} Work
 
-  1. {name:(titlecase)} ({status})
-     └─ Sources: @if(no_sources) (none) @else
-        ├─ {src} ({src_status})
-        └─ ...
-     @endif
+  1. {work_unit:(titlecase)}
+     └─ Discussion: @if(has_discussion) {status} @else (none) @endif
+     └─ Specification: @if(has_spec) {status} @if(cross_cutting) (cross-cutting) @endif @else (none) @endif
+     └─ Planning: @if(has_plan) {status} @else (none) @endif
+     └─ Implementation: @if(has_impl) {status} @else (none) @endif
 
   2. ...
 ```
 
 **Rules:**
 
-- Each numbered item is an active (non-superseded) specification
-- Show `(cross-cutting)` after status for cross-cutting specs; omit type label for feature specs
+- Show investigation instead of discussion for bugfix work units
+- For epic work units, show research phase and individual topics within each phase (discussion items, spec items, etc.)
+- Show `(cross-cutting)` after spec status for cross-cutting specs; omit type label for feature specs
 - Blank line between numbered items
-- If superseded specs exist, show after the numbered list:
+- For implementation: `in-progress` shows phase and task progress (e.g., `in-progress — phase 2, 5/12 tasks done`); `completed` shows `completed`
+- For planning: map raw `planning` status to `in-progress` in the display
+- Omit phase lines that are `(none)` unless a later phase has content (to highlight gaps)
+- If a spec has sources, show them:
+
+```
+     └─ Specification: {status}
+        ├─ Source: {src} ({src_status})
+        └─ Source: ...
+```
+
+- If superseded specs exist, show after the group's numbered list:
 
 ```
   Superseded:
-    • {name} → {superseded_by}
+    • {work_unit} → {superseded_by}
 ```
 
-### 2c: Plans
-
-Show if any plans exist.
-
-> *Output the next fenced block as a code block:*
+- If a plan has unresolved external dependencies, show them:
 
 ```
-Plans
-
-  1. {name:(titlecase)} ({status})
-     └─ Spec: {specification_name}
-     @if(has_unresolved_deps) └─ Blocked:
-        ├─ {dep_topic}:{dep_task_id} ({dep_state})
-        └─ ...
-     @endif
-
-  2. ...
+     └─ Planning: {status}
+        └─ Blocked: {dep_work_unit}:{dep_task_id} ({dep_state})
 ```
 
-**Rules:**
+### 2c: Unlinked Discussions
 
-- Map raw `planning` status to `in-progress` in the display
-- Show spec name without `.md` extension
-
-### 2d: Implementation
-
-Show if any implementations exist.
-
-> *Output the next fenced block as a code block:*
-
-```
-Implementation
-
-  1. {topic:(titlecase)} ({status})
-     └─ Phase {current_phase}, {completed_tasks}/{total_tasks} tasks done
-
-  2. ...
-```
-
-**Rules:**
-
-- `not-started` → `└─ Not started`
-- `in-progress` → phase and task progress; if `total_tasks` is 0, show `{completed_tasks} tasks done` without denominator
-- `completed` → `└─ Complete`
-
-### 2e: Unlinked Discussions
-
-Derive which discussions are NOT referenced in any active (non-superseded) specification's `sources` array. Show only if unlinked discussions exist.
+Derive which work units have a discussion phase but are NOT referenced in any active (non-superseded) specification's `sources` array. Show only if unlinked discussions exist.
 
 > *Output the next fenced block as a code block:*
 
 ```
 Discussions not yet in a specification:
 
-  • {name} ({status})
+  • {work_unit} ({status})
 ```
 
-### 2f: Key
+### 2d: Key
 
 Show if the display uses statuses that benefit from explanation. Only include statuses actually shown. No `---` separator before this section.
 
@@ -186,6 +154,11 @@ Key:
 
   Spec type:
     cross-cutting — architectural policy, not directly plannable
+
+  Work type:
+    epic    — phase-centric, multi-session, long-running
+    feature — topic-centric, single-session, linear pipeline
+    bugfix  — investigation-centric, single-session
 ```
 
 Omit categories with no entries.
@@ -209,7 +182,7 @@ Keep suggestions brief — the user knows their project better than we do.
 ## Notes
 
 - Keep output scannable — this is a status check, not a deep analysis
+- Work units are the primary organizational unit — each has its own directory under `.workflows/`
 - Discussions may appear in multiple specifications' sources
-- A discussion not appearing in any active spec's sources is "unlinked"
-- Research files are project-wide, not topic-specific
-- Topic names may differ across phases (e.g., discussions "auth-flow" and "session-mgmt" may combine into specification "auth-system")
+- A work unit with a discussion not appearing in any active spec's sources is "unlinked"
+- Discovery data comes from the manifest CLI (including spec sources and plan dependencies)

@@ -10,9 +10,15 @@ Route based on the `source` variable set in earlier steps.
 
 Bridge mode: topic and work_type were provided by the caller.
 
-Check if research exists for this topic. Read `.workflows/research/{topic}.md` and look for a `> **Discussion-ready**:` marker.
+Check research status via manifest:
 
-**If research exists with a discussion-ready marker:**
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase research status
+```
+
+**If research status is `concluded`:**
+
+Read `.workflows/{work_unit}/research/*.md` for context to include in the handoff.
 
 > *Output the next fenced block as a code block:*
 
@@ -21,7 +27,7 @@ Starting discussion: {topic:(titlecase)}
 Work type: {work_type}
 
 Research context:
-{discussion-ready summary extracted from research file}
+{key findings and context from research files}
 
 Anything to add or adjust before we begin, or "go" to proceed:
 ```
