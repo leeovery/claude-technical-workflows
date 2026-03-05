@@ -50,11 +50,25 @@ A work unit named "{topic}" already exists.
 
 #### If `resuming`
 
-Check the discussion status. If in-progress:
+Check the discussion status via manifest CLI: `get {work_unit} --phase discussion --topic {work_unit} status`
+
+**If in-progress:**
 
 Set phase="discussion".
 
 → Return to **[the skill](../SKILL.md)** for **Step 4**.
+
+**Otherwise:**
+
+> *Output the next fenced block as a code block:*
+
+```
+"{work_unit:(titlecase)}" already exists and is past the discussion phase.
+
+Run /workflow-start to continue from where you left off.
+```
+
+**STOP.** Do not proceed — terminal condition.
 
 #### If no conflict
 

@@ -50,9 +50,23 @@ A work unit named "{topic}" already exists.
 
 #### If `resuming`
 
-Check the investigation status. If in-progress:
+Check the investigation status via manifest CLI: `get {work_unit} --phase investigation --topic {work_unit} status`
+
+**If in-progress:**
 
 → Return to **[the skill](../SKILL.md)** for **Step 3**.
+
+**Otherwise:**
+
+> *Output the next fenced block as a code block:*
+
+```
+"{work_unit:(titlecase)}" already exists and is past the investigation phase.
+
+Run /workflow-start to continue from where you left off.
+```
+
+**STOP.** Do not proceed — terminal condition.
 
 #### If no conflict
 

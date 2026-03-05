@@ -609,9 +609,26 @@ Six new entry point skills:
 
 Cross-routing: `/start-feature` with existing active features offers handoff to `/continue-feature`.
 
+**Notes from Round 8 audit**: Currently, `/start-feature` and `/start-bugfix` handle the "resume" case inline when a name conflict is detected. This is awkward — start skills are for starting, not continuing. When the start/continue split happens:
+- Start skills should reject name conflicts outright: "That name already exists. Run `/continue-feature` to resume, or choose a different name."
+- Continue skills own all continuation logic: use `computeNextPhase` to determine where the work unit is and route to the correct phase skill.
+- For feature/bugfix (linear), continue drops you into the right phase automatically.
+- For epic (freeform), continue presents the state and lets the user choose.
+
 ### PR 5: Phase Skills Internal
 
-Phase entry skills (`/start-discussion`, `/start-specification`, etc.) become model-invocable only, no longer user-invocable. Users enter through `/workflow-start` or the type-specific start/continue skills.
+Phase entry skills (`/start-discussion`, `/start-specification`, etc.) become model-invocable only, no longer user-invocable. Users enter through `/workflow-start` or the type-specific start/continue skills. This eliminates standalone/no-pipeline edge cases (e.g., resuming a concluded phase, creating work units without work_type).
+
+### PR 6: Processing Skills Pipeline-Aware
+
+Remove the "workflow-agnostic" constraint from processing skills. Currently, CLAUDE.md mandates that processing skills never reference specific workflow phases — the idea was that anyone could write a custom entry-point skill and invoke the processing skill with the right handoff contract. In practice, processing skills are tightly coupled to the workflow's file structure, manifest state, and phase ordering. The "agnostic" design just adds awkward conditional language — "use the specification you were given, or find it at this location" — without enabling meaningful reuse.
+
+Changes:
+- Processing skills assume pipeline context: work_type is set, prior phases are complete, artifacts are in expected locations
+- Remove "if work_type is not set" standalone branches
+- Remove dual-path language ("use the spec provided OR look here") — just reference the canonical path
+- Update CLAUDE.md to remove the "keeping processing skills workflow-agnostic" section
+- Cleaner instructions, less ambiguity for the LLM
 
 ---
 
