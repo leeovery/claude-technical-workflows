@@ -2,7 +2,7 @@
 
 const { describe, it, beforeEach, afterEach } = require('node:test');
 const assert = require('node:assert');
-const { setupFixture, cleanupFixture, createManifest } = require('./discovery-test-utils');
+const { setupFixture, cleanupFixture, createManifest, createFile } = require('./discovery-test-utils');
 const { discover } = require('../../skills/workflow-start/scripts/discovery');
 
 describe('workflow-start discovery', () => {
@@ -146,8 +146,9 @@ describe('workflow-start discovery', () => {
     const r = discover(dir);
     const p = r.epics.work_units[0].phases;
 
-    // Research is topicless — flat string
-    assert.strictEqual(p.research, 'concluded');
+    // Research has status + file listing
+    assert.strictEqual(p.research.status, 'concluded');
+    assert.strictEqual(p.research.files.length, 0); // no research files on disk
 
     // Discussion has items
     assert.strictEqual(p.discussion.total, 3);
@@ -165,6 +166,33 @@ describe('workflow-start discovery', () => {
     // Planning has no items
     assert.strictEqual(p.planning.total, 0);
     assert.strictEqual(p.planning.items.length, 0);
+  });
+
+  it('epic research lists files from filesystem', () => {
+    createManifest(dir, 'v4', {
+      work_type: 'epic',
+      phases: { research: { status: 'in-progress' } },
+    });
+    createFile(dir, '.workflows/v4/research/exploration.md', '# Exploration');
+    createFile(dir, '.workflows/v4/research/architecture.md', '# Architecture');
+    createFile(dir, '.workflows/v4/research/data-modelling.md', '# Data Modelling');
+    const r = discover(dir);
+    const res = r.epics.work_units[0].phases.research;
+    assert.strictEqual(res.status, 'in-progress');
+    assert.strictEqual(res.files.length, 3);
+    assert.ok(res.files.includes('exploration'));
+    assert.ok(res.files.includes('architecture'));
+    assert.ok(res.files.includes('data-modelling'));
+  });
+
+  it('epic research with no files returns empty array', () => {
+    createManifest(dir, 'v5', {
+      work_type: 'epic',
+      phases: { research: { status: 'none' } },
+    });
+    const r = discover(dir);
+    const res = r.epics.work_units[0].phases.research;
+    assert.strictEqual(res.files.length, 0);
   });
 
   it('format() produces valid output', () => {

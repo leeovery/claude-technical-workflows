@@ -95,6 +95,7 @@ Map `next_phase` to the appropriate skill:
 
 | next_phase | Skill | Work Type | Work Unit |
 |------------|-------|-----------|-----------|
+| research | `/start-research` | feature | {work_unit} |
 | discussion | `/start-discussion` | feature | {work_unit} |
 | specification | `/start-specification` | feature | {work_unit} |
 | planning | `/start-planning` | feature | {work_unit} |

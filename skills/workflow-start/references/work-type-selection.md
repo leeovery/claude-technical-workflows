@@ -102,6 +102,7 @@ Route directly to the appropriate skill based on the work unit's `next_phase` an
 
 | next_phase | work_type | Skill |
 |------------|-----------|-------|
+| research | feature | `/start-research feature {work_unit}` |
 | discussion | feature | `/start-discussion feature {work_unit}` |
 | investigation | bugfix | `/start-investigation bugfix {work_unit}` |
 | specification | feature/bugfix | `/start-specification {work_type} {work_unit}` |
