@@ -615,6 +615,14 @@ Cross-routing: `/start-feature` with existing active features offers handoff to 
 - For feature/bugfix (linear), continue drops you into the right phase automatically.
 - For epic (freeform), continue presents the state and lets the user choose.
 
+**Notes from PR review (Round 10)**: The start/continue split significantly simplifies phase skills. When phase skills (start-discussion, start-investigation, etc.) become internal-only (PR 5), the caller always provides work_unit and work_type. This eliminates:
+- **Standalone discovery mode** — no need to scan all manifests and present selection menus. The caller already picked the work unit.
+- **Fresh paths** in phase skills — context gathering (naming, bug description) is handled by the start skill before invoking the phase skill.
+- **The "no topic provided" gate** in processing skills — the caller always provides it.
+- **Two-mode pattern collapse** — bridge mode is the only mode. Discovery lives exclusively in workflow-start and the three start/continue skill pairs.
+
+Each phase skill becomes a thin routing layer: validate the topic exists, set up session state, invoke the processing skill. The resume/conflict logic moves entirely to continue skills.
+
 ### PR 5: Phase Skills Internal
 
 Phase entry skills (`/start-discussion`, `/start-specification`, etc.) become model-invocable only, no longer user-invocable. Users enter through `/workflow-start` or the type-specific start/continue skills. This eliminates standalone/no-pipeline edge cases (e.g., resuming a concluded phase, creating work units without work_type).
