@@ -1,4 +1,4 @@
-# Session Bridge — Audit Round 7 Complete
+# Session Bridge — Audit Round 8 Complete
 
 ## What We're Doing
 
@@ -6,20 +6,23 @@ This PR (`feat/work-type-architecture-v2`) implements work-type architecture for
 
 ## Current State
 
-Rounds 1–7 complete. All fixes committed. Tests pass:
-- 172/172 discovery tests (11 new epic tests in Round 7)
+Rounds 1–8 complete. All fixes committed. Tests pass:
+- 175/175 discovery tests (3 new epic tests in Round 8)
 - 88/88 manifest CLI tests
-- 540/540 migration tests
+- 118/118 migration 016 tests
+- 13/13 migration 017 tests
 
-Round 7 was a breakthrough — switched from Haiku to **Opus-only agents** with five distinct audit strategies: semantic, adversarial, cross-file handoff, coherence, and completeness. Found 14 real issues that 6 rounds of Haiku agents completely missed, including logic bugs, epic blindness, and pipeline dead ends.
+Round 7 switched to Opus-only agents with semantic, adversarial, cross-file, coherence, and completeness strategies — found 14 real issues. Round 8 verified all Round 7 fixes (all correct) and found 12 more issues through the same deep-audit approach.
 
-Full discussion log at `work-type-architecture/AUDIT-ROUND7-DISCUSSION.md`.
+Full discussion logs:
+- `work-type-architecture/AUDIT-ROUND8-DISCUSSION.md` — Round 8 findings
+- `work-type-architecture/AUDIT-ROUND7-DISCUSSION.md` — Round 7 findings
 
 ## What Needs to Happen Next
 
-Dispatch Round 8 agents to verify Round 7 fixes and do a final comprehensive pass. Use the same Opus-only, multi-strategy approach from Round 7.
+Dispatch Round 9 agents to verify Round 8 fixes and do another comprehensive pass. Use the same Opus-only, multi-strategy approach.
 
-### Agent Strategy (CRITICAL — learned from Rounds 1–7)
+### Agent Strategy (CRITICAL — learned from Rounds 1–8)
 
 **NEVER use Haiku** for this codebase. It pattern-matches without reasoning and reports false CLEANs. **Opus only.**
 
@@ -43,13 +46,23 @@ Dispatch Round 8 agents to verify Round 7 fixes and do a final comprehensive pas
 - Report findings only — do not fix anything
 - Be skeptical — assume there ARE problems
 
+### Key Decisions Made in Round 8
+
+- **Epic specification always uses discovery mode** — validate-source.md and invoke-skill-bridge.md don't need epic branches. Epic goes through Steps 6-7 (discovery), not Steps 3-5 (bridge).
+- **Research `{work_unit}` is correct** — research is topicless, the user mentioned the work unit, not a topic.
+- **Start skills are for starting** — when a work unit exists past the initial phase, direct to `/workflow-start`. PR4 will properly split start/continue.
+- **`ext_id` is the canonical name** — replaces `plan_id` everywhere. No real project ever had `plan_id` in its manifest.
+- **Research convergence uses single prompt** — "conclude" replaces the old two-step park/continue/discuss flow. Legacy `Discussion-ready` marker removed from active skills (migration 016 still uses it for legacy data).
+- **Epic research includes file listing** — workflow-start discovery scans filesystem for research files. Broader multi-file research design deferred to `research-refactor/DESIGN-BRIEF.md`.
+- **PR5 (phase skills internal)** and **PR6 (processing skills pipeline-aware)** noted in implementation sequencing.
+
 ### Key Decisions Made in Round 7
 
 - **Investigation is exclusively bugfix** — hardcoding `Work type: bugfix` in conclude-investigation.md is correct, not fragile.
-- **Specification sources are discussions** — source names map to `.workflows/{work_unit}/discussion/{source-name}.md`. Research feeds discussions, not specs directly.
+- **Specification sources are discussions** — source names map to `.workflows/{work_unit}/discussion/{source-name}.md`. Research feeds discussions, not specs directly. Exception: bugfix sources are investigations (fixed in Round 8).
 - **Output format files are intentionally exempt** from attribution headers — they're adapters, not standard references.
 - **Reference-to-reference Load directives** without `→` in sub-backbone files are acceptable — pre-existing, functionally correct.
-- **Don't assume anything** — verify against actual files and the tick project before making changes. If unsure, ask the user.
+- **Don't assume anything** — verify against actual files before making changes. If unsure, ask the user.
 
 ### Key Decisions Made in Round 6
 
@@ -87,12 +100,14 @@ Dispatch Round 8 agents to verify Round 7 fixes and do a final comprehensive pas
 ## Key Context
 
 - **work_units not items**: workflow-start discovery uses `epics.work_units`, `features.work_units`, `bugfixes.work_units`
+- **Epic per-item detail**: workflow-start discovery now includes per-item name+status for epic non-research phases, and file listing for epic research
 - **Topicless phases**: manifest CLI allows `--phase` without `--topic` ONLY for research
 - **phaseData/phaseItems**: discovery scripts must use these abstractions from `discovery-utils.js`
-- **Epic discovery**: all phase discovery scripts now iterate `phaseItems()` for epic work types (fixed in Round 7)
-- **computeNextPhase**: now epic-aware — aggregates item statuses (all concluded → phase done, any in-progress → in-progress)
+- **Epic discovery**: all phase discovery scripts iterate `phaseItems()` for epic work types (fixed in Round 7)
+- **computeNextPhase**: epic-aware — aggregates item statuses (all concluded → phase done, any in-progress → in-progress)
 - **Investigation is bugfix-only**: hardcoded bugfix work_type is correct
-- **Spec sources are discussions**: `.workflows/{work_unit}/discussion/{source-name}.md`
+- **Spec sources are discussions (or investigation for bugfix)**: `.workflows/{work_unit}/discussion/{source-name}.md` or `.workflows/{work_unit}/investigation/{source-name}.md`
+- **`ext_id` is canonical**: replaces `plan_id` everywhere — plan-level external identifier from output format
 - **Status discovery `work_units`**: the `work_units` key in `skills/status/scripts/discovery.js` is correct — different semantic context
 - **Rendering instructions**: Only for user-facing output blocks, not model instruction blocks
 - **Step 0**: `/migrate` owns the branching; callers just invoke and assess
@@ -100,7 +115,8 @@ Dispatch Round 8 agents to verify Round 7 fixes and do a final comprehensive pas
 
 ## Files to Read
 
-- `work-type-architecture/AUDIT-ROUND7-DISCUSSION.md` — **READ FIRST** — Round 7 findings, strategies, and all fixes
+- `work-type-architecture/AUDIT-ROUND8-DISCUSSION.md` — **READ FIRST** — Round 8 findings, strategies, and all fixes
+- `work-type-architecture/AUDIT-ROUND7-DISCUSSION.md` — Round 7 findings
 - `work-type-architecture/AUDIT-ROUND6-DISCUSSION.md` — Round 6 findings
 - `work-type-architecture/AUDIT-ROUND5-DISCUSSION.md` — Round 5 findings
 - `work-type-architecture/AUDIT-ROUND4-DISCUSSION.md` — Round 4 discussion log with all architectural decisions

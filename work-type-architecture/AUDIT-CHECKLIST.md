@@ -382,6 +382,66 @@ Round 7 found copy-pasted recovery text referencing files the skill doesn't crea
 
 ---
 
+## Round 8 Checks
+
+Source: Round 8 Opus audit — regression verification + deep semantic/adversarial/cross-file/completeness analysis (AUDIT-ROUND8-DISCUSSION.md).
+
+### 29. Review Terminal Paths Set Status
+
+Round 8 found two more paths (in addition to Round 7's two) where review status was never set to `completed`.
+
+**What to flag**:
+- Any terminal path in review-actions-loop.md that hits `**STOP.**` without first setting `status completed` via manifest CLI
+- Any terminal path that doesn't check for pipeline continuation when it should
+
+### 30. Source Path Resolution Work-Type-Aware
+
+Round 8 found spec-review.md hardcoded all source paths to discussion. Bugfix sources are investigation files.
+
+**What to flag**:
+- Source path construction that assumes discussion without checking work_type
+- Missing bugfix → investigation path mapping
+
+### 31. `ext_id` Not `plan_id`
+
+Round 8 converged `plan_id` → `ext_id`. The planning skill writes `ext_id`, the plan-index-schema documents `ext_id`.
+
+**What to flag**:
+- Any `plan_id` in discovery scripts, tests, SKILL.md field docs, or handoff templates (excluding audit docs and migration 003)
+
+### 32. Research Convergence Single Prompt
+
+Round 8 simplified convergence to a single "conclude" prompt. No legacy `Discussion-ready` marker in active skills.
+
+**What to flag**:
+- Any `Discussion-ready` marker reference in active skill files (migration 016 is exempt — it reads legacy data)
+- Multi-step park/continue/discuss prompts in convergence-awareness.md
+
+### 33. Epic Discovery Per-Item Detail
+
+Round 8 added per-item detail to workflow-start discovery for epic phases and research file listing.
+
+**What to flag**:
+- workflow-start discovery using `phaseStatus()` for epic non-research phases (should use `phaseItems()`)
+- Epic research showing flat status without file listing
+
+### 34. Feature/Bugfix Routing Includes Research
+
+Round 8 added `research` row to feature routing tables.
+
+**What to flag**:
+- Feature routing tables (feature-routing.md, work-type-selection.md) missing `research` row
+
+### 35. Resume Paths Handle All States
+
+Round 8 patched start-feature, start-bugfix, and start-epic resume paths to handle concluded/later phases.
+
+**What to flag**:
+- Resume paths in start-* skills that only check `in-progress` without handling other states
+- Resume paths that fall through silently when phase status is unexpected
+
+---
+
 ## How to Use This Document
 
 1. Dispatch audit agents — each agent gets this full checklist plus the relevant source plans
