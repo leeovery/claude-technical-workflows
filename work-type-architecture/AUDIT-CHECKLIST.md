@@ -442,6 +442,50 @@ Round 8 patched start-feature, start-bugfix, and start-epic resume paths to hand
 
 ---
 
+## Round 9 Checks
+
+Source: Round 9 Opus audit — 5 regression + 5 deep-audit agents (AUDIT-ROUND9-DISCUSSION.md).
+
+### 36. Agent Input Documentation Includes Work Unit
+
+Round 9 found 7 agent files listing "Topic name" as input but using `{work_unit}` in output paths. For epic, work_unit != topic. Added Work unit as explicit input.
+
+**What to flag**:
+- Agent files that use `{work_unit}` in paths but don't list Work unit in "Your Input" section
+- Agents that list Topic but not Work unit when both are needed for path construction
+
+### 37. Handoff Templates Include Work Type
+
+Round 9 added `Work type: {work_type}` to implementation and review handoffs for consistency with all other phase handoffs.
+
+**What to flag**:
+- Phase handoff templates missing `Work type: {work_type}` line
+- Inconsistency across invoke-skill.md files in different phases
+
+### 38. Anchored Name Check Uses Work Unit Path
+
+Round 9 fixed spec discovery anchored name check to look in `.workflows/{work_unit}/specification/{topic}/` instead of `.workflows/{topic}/specification/`.
+
+**What to flag**:
+- Path construction that treats topic names as work unit directory names
+- Discovery scripts constructing `.workflows/{topic}/` paths for epic work units
+
+### 39. Bugfix Discovery Test Coverage
+
+Round 9 added bugfix-specific tests to specification, planning, implementation, and review discovery test files.
+
+**What to flag**:
+- Discovery test files without bugfix work_type test cases
+
+### 40. Nested H4 Conditionals in Processing Skills
+
+Round 9 fixed nested H4 headings in plan-construction.md. Conditionals logically nested under a parent H4 should use bold text per CLAUDE.md.
+
+**What to flag**:
+- H4 headings that are contextually dependent on a prior H4 branch (should be bold)
+
+---
+
 ## How to Use This Document
 
 1. Dispatch audit agents — each agent gets this full checklist plus the relevant source plans

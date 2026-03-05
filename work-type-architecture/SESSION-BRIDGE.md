@@ -1,26 +1,27 @@
-# Session Bridge — Audit Round 8 Complete
+# Session Bridge — Audit Round 9 Complete
 
 ## What We're Doing
 
-This PR (`feat/work-type-architecture-v2`) implements work-type architecture for the workflow system. We've been through multiple rounds of implementation and auditing. The audit process uses a living checklist at `work-type-architecture/AUDIT-CHECKLIST.md` and dispatches parallel agents to verify different aspects of the codebase.
+This PR (`feat/work-type-architecture-v2`) implements work-type architecture for the workflow system. We've been through multiple rounds of implementation and auditing. The audit process uses a living checklist at `work-type-architecture/AUDIT-CHECKLIST.md` (sections 1–40) and dispatches parallel agents to verify different aspects of the codebase.
 
 ## Current State
 
-Rounds 1–8 complete. All fixes committed. Tests pass:
-- 175/175 discovery tests (3 new epic tests in Round 8)
+Rounds 1–9 complete. All fixes committed. Tests pass:
+- 179/179 discovery tests (4 new bugfix tests in Round 9)
 - 88/88 manifest CLI tests
 - 118/118 migration 016 tests
 - 13/13 migration 017 tests
 
-Round 7 switched to Opus-only agents with semantic, adversarial, cross-file, coherence, and completeness strategies — found 14 real issues. Round 8 verified all Round 7 fixes (all correct) and found 12 more issues through the same deep-audit approach.
+Round 9 dispatched 10 Opus agents (5 regression, 5 deep-audit). All Round 8 fixes verified correct. 7 new findings fixed, mostly documentation/consistency issues. Significantly fewer findings than Rounds 7-8, suggesting the codebase is stabilizing.
 
 Full discussion logs:
+- `work-type-architecture/AUDIT-ROUND9-DISCUSSION.md` — Round 9 findings
 - `work-type-architecture/AUDIT-ROUND8-DISCUSSION.md` — Round 8 findings
 - `work-type-architecture/AUDIT-ROUND7-DISCUSSION.md` — Round 7 findings
 
 ## What Needs to Happen Next
 
-Dispatch Round 9 agents to verify Round 8 fixes and do another comprehensive pass. Use the same Opus-only, multi-strategy approach.
+The audit is converging. Round 9 found no HIGH issues and only documentation/consistency fixes. Consider whether another round is needed or if the PR is ready for final review.
 
 ### Agent Strategy (CRITICAL — learned from Rounds 1–8)
 
@@ -45,6 +46,13 @@ Dispatch Round 9 agents to verify Round 8 fixes and do another comprehensive pas
 - Use `git diff main` to understand what changed in this PR
 - Report findings only — do not fix anything
 - Be skeptical — assume there ARE problems
+
+### Key Decisions Made in Round 9
+
+- **Review Section E status is correct** — review stays `in-progress` when delegating remediation tasks to implementation. Review isn't complete — it's still in the review loop, just delegating a step back. `computeNextPhase` will route back to review after implementation completes.
+- **Session state system to be removed** — the compaction recovery hook system doesn't work reliably. Captured in `session-state-removal/DESIGN-BRIEF.md` for follow-up.
+- **Standalone-only issues are deferred** — standalone mode (no pipeline) will be removed. Don't fix issues that only affect standalone use.
+- **Agents need explicit Work unit input** — for epic where work_unit != topic, agents must document both as inputs.
 
 ### Key Decisions Made in Round 8
 
@@ -120,7 +128,7 @@ Dispatch Round 9 agents to verify Round 8 fixes and do another comprehensive pas
 - `work-type-architecture/AUDIT-ROUND6-DISCUSSION.md` — Round 6 findings
 - `work-type-architecture/AUDIT-ROUND5-DISCUSSION.md` — Round 5 findings
 - `work-type-architecture/AUDIT-ROUND4-DISCUSSION.md` — Round 4 discussion log with all architectural decisions
-- `work-type-architecture/AUDIT-CHECKLIST.md` — the living audit checklist (sections 1–28)
+- `work-type-architecture/AUDIT-CHECKLIST.md` — the living audit checklist (sections 1–40)
 - `work-type-architecture/AUDIT-ROUND1-FIXES.md` — fix tracker from Round 1 (all completed)
 - `work-type-architecture/ARCHITECTURE-FIX-PLAN.md` — the original 8-fix architecture plan
 - `work-type-architecture/DISCOVERY-CLEANUP-PLAN.md` — the 7-fix discovery cleanup plan
