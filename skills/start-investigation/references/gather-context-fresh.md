@@ -43,10 +43,12 @@ Is this name okay?
 Once the name is confirmed, check for naming conflicts:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type
 ```
 
-If a work unit with the same name exists, inform the user:
+If a work unit with the same name exists, read the `work_type` from the command output.
+
+**If the existing work unit is a bugfix:**
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -55,6 +57,19 @@ If a work unit with the same name exists, inform the user:
 A bugfix named "{work_unit}" already exists.
 
 - **`r`/`resume`** — Resume the existing investigation
+- **`n`/`new`** — Choose a different name
+· · · · · · · · · · · ·
+```
+
+**If the existing work unit is a different type (feature or epic):**
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+A {work_type} named "{work_unit}" already exists.
+Work unit names must be unique across all work types.
+
 - **`n`/`new`** — Choose a different name
 · · · · · · · · · · · ·
 ```
