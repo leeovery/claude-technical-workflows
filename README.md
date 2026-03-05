@@ -41,9 +41,6 @@ Research → Discussion → Specification → Planning → Implementation → Re
 > [!NOTE]
 > **Work in progress.** The workflow is being refined through real-world usage. Expect updates as patterns evolve.
 
-> [!IMPORTANT]
-> **Model compatibility:** These skills have been developed and refined for Claude Code running on **Opus 4.5**. Different models may exhibit different edge cases, and future model releases may require adjustments to the prompts and workflows.
-
 ### Quick Install
 
 ```bash
@@ -118,7 +115,8 @@ Not every task needs the full workflow. These skills gather inputs flexibly and 
 
 | Skill | What it does |
 |-------|-------------|
-| `/start-feature` | Create a spec directly from inline context (skip research/discussion) |
+| `/start-feature` | Start a feature through the full pipeline: discussion → spec → plan → impl → review |
+| `/start-bugfix` | Start a bugfix through the pipeline: investigation → spec → plan → impl → review |
 | `/link-dependencies` | Wire cross-topic dependencies across plans |
 
 ### Feature Pipeline
@@ -249,6 +247,7 @@ skills/
 ├── # Unified entry points
 ├── workflow-start/                  # Discovers state, routes by work type
 ├── workflow-bridge/                 # Pipeline continuation — next phase routing
+├── workflow-shared/                 # Shared discovery utilities
 ├── workflow-manifest/               # Manifest CLI — single source of truth for state
 │
 ├── # Entry-point skills (user-invocable)
@@ -293,6 +292,7 @@ Processing skills are **input-agnostic**: they receive inputs and process them w
 |------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [**technical-research**](skills/technical-research/)             | Explore ideas from their earliest seed. Investigate market fit, technical feasibility, business viability. Free-flowing exploration across technical, business, and market domains.                          |
 | [**technical-discussion**](skills/technical-discussion/)         | Document technical discussions as expert architect and meeting assistant. Captures context, decisions, edge cases, competing solutions, debates, and rationale.                                              |
+| [**technical-investigation**](skills/technical-investigation/)   | Investigate bugs through symptom gathering and code analysis. Combines context collection with root cause identification for the bugfix pipeline.                                                            |
 | [**technical-specification**](skills/technical-specification/)   | Build validated specifications from source material through collaborative refinement. Filters hallucinations, enriches gaps, produces standalone spec.                                                       |
 | [**technical-planning**](skills/technical-planning/)             | Transform specifications into actionable implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats.                                                                 |
 | [**technical-implementation**](skills/technical-implementation/) | Execute implementation plans using strict TDD workflow. Writes tests first, implements to pass, commits frequently, and gates phases on user approval.                                                       |
@@ -310,6 +310,7 @@ Sequential skills that expect files from previous phases and pass content to pro
 |------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [**/start-research**](skills/start-research/)                                | Begin research exploration. For early-stage ideas, feasibility checks, and broad exploration before formal discussion.                                                                                     |
 | [**/start-discussion**](skills/start-discussion/)                            | Begin a new technical discussion. Gathers topic, context, background information, and relevant codebase areas before starting documentation.                                                               |
+| [**/start-investigation**](skills/start-investigation/)                      | Begin a bug investigation. Gathers symptoms and context, then drives root cause analysis through the bugfix pipeline.                                                                                      |
 | [**/start-specification**](skills/start-specification/)                      | Start a specification session from existing discussion(s). Automatically analyses multiple discussions for natural groupings and consolidates them into unified specifications.                            |
 | [**/start-planning**](skills/start-planning/)                                | Start a planning session from an existing specification. Creates implementation plans with phases, tasks, and acceptance criteria. Supports multiple output formats. |
 | [**/start-implementation**](skills/start-implementation/)                    | Start implementing a plan. Executes tasks via strict TDD, committing after each passing test.                                                                                                              |
@@ -331,6 +332,7 @@ Independent skills that gather inputs flexibly (inline context, files, or prompt
 
 | Skill                                                   | Description                                                                                                                                 |
 |---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| [**/start-epic**](skills/start-epic/)                    | Start an epic — multi-topic, multi-session workflow. Gathers context, routes to research or discussion, then progresses phase by phase. |
 | [**/start-feature**](skills/start-feature/)              | Start a new feature through the full pipeline. Gathers context, creates a discussion, then bridges through specification → planning → implementation → review. |
 | [**/start-bugfix**](skills/start-bugfix/)                | Start a bugfix through the pipeline. Gathers bug context, creates an investigation, then bridges through specification → planning → implementation → review. |
 | [**/link-dependencies**](skills/link-dependencies/)      | Link external dependencies across topics. Scans plans and wires up unresolved cross-topic dependencies.                                    |
@@ -359,6 +361,13 @@ Subagents that skills can spawn for parallel task execution.
 | [**planning-dependency-grapher**](agents/planning-dependency-grapher.md) | technical-planning | Analyzes authored tasks to establish internal dependencies and priorities. |
 | [**planning-review-traceability**](agents/planning-review-traceability.md) | technical-planning | Spec-to-plan traceability analysis. |
 | [**planning-review-integrity**](agents/planning-review-integrity.md) | technical-planning | Plan structural quality review. |
+| [**specification-review-input**](agents/specification-review-input.md) | technical-specification | Reviews specification against source material for completeness and accuracy. |
+| [**specification-review-gap-analysis**](agents/specification-review-gap-analysis.md) | technical-specification | Analyses specification as a standalone document for gaps, ambiguity, and missing detail. |
+| [**implementation-analysis-architecture**](agents/implementation-analysis-architecture.md) | technical-implementation | Architecture conformance analysis of completed implementation. |
+| [**implementation-analysis-duplication**](agents/implementation-analysis-duplication.md) | technical-implementation | Duplication and DRY analysis of completed implementation. |
+| [**implementation-analysis-standards**](agents/implementation-analysis-standards.md) | technical-implementation | Coding standards analysis of completed implementation. |
+| [**implementation-analysis-synthesizer**](agents/implementation-analysis-synthesizer.md) | technical-implementation | Synthesizes analysis findings from architecture, duplication, and standards agents. |
+| [**implementation-analysis-task-writer**](agents/implementation-analysis-task-writer.md) | technical-implementation | Writes remediation tasks from synthesized analysis findings into the plan. |
 | [**review-findings-synthesizer**](agents/review-findings-synthesizer.md) | technical-review | Synthesizes review findings into normalized remediation tasks for plan integration. |
 
 ## Requirements
