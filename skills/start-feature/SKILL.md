@@ -62,7 +62,7 @@ Load **[gather-feature-context.md](references/gather-feature-context.md)** and f
 
 ---
 
-## Step 2: Feature Name
+## Step 2: Feature Name and Conflict Check
 
 Load **[name-check.md](references/name-check.md)** and follow its instructions.
 
