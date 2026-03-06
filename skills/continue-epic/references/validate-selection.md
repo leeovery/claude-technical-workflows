@@ -6,20 +6,6 @@
 
 Validate the selected work unit against the discovery output and store its data.
 
-#### If `count` is 0
-
-> *Output the next fenced block as a code block:*
-
-```
-Continue Epic
-
-No epics in progress.
-
-Run /start-epic to begin a new one.
-```
-
-**STOP.** Do not proceed — terminal condition.
-
 #### If `work_unit` not found in epics array
 
 > *Output the next fenced block as a code block:*

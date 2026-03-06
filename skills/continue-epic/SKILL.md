@@ -70,11 +70,23 @@ Parse the discovery output to understand:
 
 ---
 
-## Step 2: Check Arguments
+## Step 2: Check Count and Arguments
 
-Check for arguments: work_unit = `$0` (optional).
+#### If `count` is 0
 
-#### If `work_unit` provided
+> *Output the next fenced block as a code block:*
+
+```
+Continue Epic
+
+No epics in progress.
+
+Run /start-epic to begin a new one.
+```
+
+**STOP.** Do not proceed — terminal condition.
+
+#### If `work_unit` argument `$0` provided
 
 Store the work_unit.
 
