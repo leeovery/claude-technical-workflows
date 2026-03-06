@@ -70,9 +70,9 @@ Check for arguments: work_unit = `$0` (optional).
 
 #### If `work_unit` provided
 
-Validate it against the discovery output's `features` array. If a match is found, store that feature's data and skip display.
+Store the work_unit.
 
-→ Proceed to **Step 3**.
+→ Proceed to **Step 4** (skipping Step 3).
 
 #### If `work_unit` not provided
 
@@ -80,23 +80,31 @@ Validate it against the discovery output's `features` array. If a match is found
 
 ---
 
-## Step 3: Display and Route
+## Step 3: Select Feature
 
-Load **[display-and-select.md](references/display-and-select.md)** and follow its instructions as written.
+Load **[select-feature.md](references/select-feature.md)** and follow its instructions as written.
 
 → Proceed to **Step 4**.
 
 ---
 
-## Step 4: Backwards Navigation
+## Step 4: Validate Selection
 
-Load **[revisit-phase.md](references/revisit-phase.md)** and follow its instructions as written.
+Load **[validate-selection.md](references/validate-selection.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
 
 ---
 
-## Step 5: Route to Phase Skill
+## Step 5: Backwards Navigation
+
+Load **[revisit-phase.md](references/revisit-phase.md)** and follow its instructions as written.
+
+→ Proceed to **Step 6**.
+
+---
+
+## Step 6: Route to Phase Skill
 
 Using the selected feature's `next_phase`, invoke the appropriate phase skill:
 
@@ -111,6 +119,6 @@ Using the selected feature's `next_phase`, invoke the appropriate phase skill:
 
 Skills receive positional arguments: `$0` = work_type (`feature`), `$1` = work_unit. Topic is inferred from work_unit.
 
-If the user chose to revisit a concluded phase in Step 4, use that phase instead of `next_phase`.
+If the user chose to revisit a concluded phase in Step 5, use that phase instead of `next_phase`.
 
 Invoke the skill. This is terminal — do not return to the backbone.

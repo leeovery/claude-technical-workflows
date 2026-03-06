@@ -76,9 +76,9 @@ Check for arguments: work_unit = `$0` (optional).
 
 #### If `work_unit` provided
 
-Validate it against the discovery output's `epics` array. If a match is found, store that epic's data and skip epic selection.
+Store the work_unit.
 
-→ Proceed to **Step 3**.
+→ Proceed to **Step 4** (skipping Step 3).
 
 #### If `work_unit` not provided
 
@@ -94,23 +94,31 @@ Load **[select-epic.md](references/select-epic.md)** and follow its instructions
 
 ---
 
-## Step 4: Display State
+## Step 4: Validate Selection
 
-Load **[display-state.md](references/display-state.md)** and follow its instructions as written.
+Load **[validate-selection.md](references/validate-selection.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
 
 ---
 
-## Step 5: Build Menu and Route
+## Step 5: Display State
 
-Load **[build-menu.md](references/build-menu.md)** and follow its instructions as written.
+Load **[display-state.md](references/display-state.md)** and follow its instructions as written.
 
 → Proceed to **Step 6**.
 
 ---
 
-## Step 6: Route Selection
+## Step 6: Build Menu and Route
+
+Load **[build-menu.md](references/build-menu.md)** and follow its instructions as written.
+
+→ Proceed to **Step 7**.
+
+---
+
+## Step 7: Route Selection
 
 Based on the user's menu selection, invoke the appropriate skill:
 
