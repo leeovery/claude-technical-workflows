@@ -73,7 +73,7 @@ Recreate with actual work units from discovery.
 
 **STOP.** Wait for user response.
 
-## Route Selection
+Invoke the selected skill:
 
 | Selection | Invoke |
 |-----------|--------|

@@ -30,7 +30,7 @@ Select an option (enter number):
 
 **STOP.** Wait for user response.
 
-Route based on selection:
+Invoke the selected skill:
 
 | Selection | Invoke |
 |-----------|--------|
