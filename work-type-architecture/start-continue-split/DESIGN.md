@@ -254,7 +254,45 @@ Read manifest, get `next_phase` from `computeNextPhase`, route:
 
 **Filtering:** Continue-feature only lists work units with `status: active` (once PR 7 adds lifecycle states). Until then, `computeNextPhase` returning `done` means the work unit simply doesn't appear as a selectable option. If invoked directly with a `work_unit` arg that's done, treat it the same as an invalid work unit (terminal message, redirect).
 
-**Note on backwards navigation for feature/bugfix:** Unlike epic, the continue-feature/bugfix skills don't offer a "resume concluded topic" option — they route linearly to the next phase. If a user needs to go backwards (e.g., reopen a discussion while at implementation), they invoke the phase skill directly. This is an edge case; the common path is forward. If this proves insufficient, a "resume concluded" option could be added later.
+### Backwards Navigation (Revisit Earlier Phase)
+
+After selecting a feature and determining the next phase, offer a choice before routing. This is required because PR 5 makes phase skills model-invocable only — without this, there's no way for users to go backwards in a linear pipeline.
+
+**If no earlier phases exist** (e.g., next phase is discussion — nothing to revisit), skip this and route directly.
+
+**If earlier concluded phases exist:**
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+- - - - - - - - - - - -
+Continuing "Auth Flow" -- ready for specification.
+
+- **`y`/`yes`** -- Proceed to specification
+- **`r`/`revisit`** -- Revisit an earlier phase
+
+- - - - - - - - - - - -
+```
+
+If they pick revisit, show concluded phases:
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+- - - - - - - - - - - -
+Which phase would you like to revisit?
+
+1. Research -- concluded
+2. Discussion -- concluded
+3. Back
+
+Select an option (enter number):
+- - - - - - - - - - - -
+```
+
+Only show phases that have concluded artifacts. "Back" returns to the proceed/revisit prompt.
+
+When the user picks a phase, route to that phase skill (e.g., `/start-discussion feature {work_unit}`). The phase entry skill handles setting status back to `in-progress`.
 
 ---
 
@@ -322,6 +360,10 @@ Same as continue-feature but includes investigation:
 | implementation | `start-implementation bugfix {work_unit}` |
 | review | `start-review bugfix {work_unit}` |
 | done | Not shown — done work units are filtered from the active list |
+
+### Backwards Navigation
+
+Same pattern as continue-feature. After selecting a bugfix and determining the next phase, offer proceed/revisit choice if earlier concluded phases exist. See "Backwards Navigation" under Continue-Feature for the full design.
 
 ---
 
@@ -639,6 +681,38 @@ Select an option (enter number):
 **"Back to main menu":** Returns to the continue-epic main display and menu.
 
 **Scope:** All phases appear — research, discussion, specification, planning, implementation, review. If a concluded plan is resumed, the user can add tasks and re-enter implementation. This is a supported workflow.
+
+---
+
+## Workflow-Bridge — Backwards Navigation for Linear Pipelines
+
+The workflow-bridge fires after each phase concludes and routes to the next phase. Currently for feature/bugfix it auto-routes forward. This PR adds a choice point.
+
+**Why this is needed:** PR 5 makes phase skills model-invocable only. Without this bridge enhancement, once a phase concludes and the bridge fires, the user has no opportunity to go backwards — they're locked into the forward path.
+
+**Epic is unaffected:** Epic bridge already shows a full menu with all phases and topics. Backwards navigation is inherent.
+
+**Feature/bugfix bridge change:**
+
+Instead of auto-routing to the next phase, offer a choice:
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+- - - - - - - - - - - -
+Discussion concluded for "Auth Flow".
+
+- **`y`/`yes`** -- Proceed to specification
+- **`r`/`revisit`** -- Revisit an earlier phase
+
+- - - - - - - - - - - -
+```
+
+If they pick revisit, show the same concluded-phases menu as continue-feature/bugfix (see "Backwards Navigation" under Continue-Feature). Route to the selected phase skill.
+
+**When there's nothing to revisit** (e.g., discussion just concluded, only research before it and research doesn't exist), skip the choice and route forward directly.
+
+This gives the user a decision point at every phase boundary — the moment they're most likely to think "I need to go back." The common path (press `y`) adds minimal friction.
 
 ---
 
