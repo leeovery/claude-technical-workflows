@@ -6,7 +6,51 @@
 
 Display active features and let the user select one.
 
-## Display
+## A. Check for Terminal Conditions
+
+#### If `count` is 0
+
+> *Output the next fenced block as a code block:*
+
+```
+Continue Feature
+
+No features in progress.
+
+Run /start-feature to begin a new one.
+```
+
+**STOP.** Do not proceed — terminal condition.
+
+#### If `work_unit` was provided but not found in features array
+
+> *Output the next fenced block as a code block:*
+
+```
+Continue Feature
+
+No active feature named "{work_unit}" found.
+
+Run /continue-feature to see available features, or /start-feature to begin a new one.
+```
+
+**STOP.** Do not proceed — terminal condition.
+
+→ Proceed to **B. Route by Context**.
+
+## B. Route by Context
+
+#### If `work_unit` was provided and matched a feature
+
+Store the matched feature's data (name, next_phase, phase_label, concluded_phases). Skip display.
+
+→ Return to **[the skill](../SKILL.md)**.
+
+#### If `work_unit` was not provided
+
+→ Proceed to **C. Display and Menu**.
+
+## C. Display and Menu
 
 > *Output the next fenced block as a code block:*
 
@@ -23,8 +67,6 @@ Continue Feature
 ```
 
 Build from the discovery output's `features` array. Each feature shows `name` (titlecased) and `phase_label` (titlecased). Blank line between each numbered item.
-
-## Menu
 
 > *Output the next fenced block as markdown (not a code block):*
 
