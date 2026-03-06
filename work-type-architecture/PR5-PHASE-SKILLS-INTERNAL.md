@@ -14,6 +14,10 @@ Phase entry skills (`/start-discussion`, `/start-specification`, `/start-plannin
 - **Two-mode pattern collapse** — bridge mode is the only mode. Discovery lives exclusively in workflow-start and the three start/continue skill pairs.
 - **Display files** that show flat cross-work-unit lists (display-plans.md, display-state.md, display-options.md, etc.) — replaced by the continue skill's scoped display.
 
+## Rename
+
+Rename phase entry skills from `start-*` to `workflow-enter-*` (e.g., `start-discussion` → `workflow-enter-discussion`). "Start" implies creation, but these skills enter an existing phase within an already-created work unit. The `workflow-` prefix groups them with other internal workflow skills (`workflow-start`, `workflow-bridge`, `workflow-manifest`, `workflow-shared`).
+
 ## What Remains
 
 Each phase skill becomes a thin routing layer:
