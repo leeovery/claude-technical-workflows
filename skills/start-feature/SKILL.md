@@ -1,6 +1,6 @@
 ---
 name: start-feature
-allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(.claude/hooks/workflows/write-session-state.sh)
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(ls .workflows/)
 hooks:
   PreToolUse:
     - hooks:
@@ -9,9 +9,7 @@ hooks:
           once: true
 ---
 
-Start a new feature and route it through the pipeline: (Research) → Discussion → Specification → Planning → Implementation → Review.
-
-Research is optional — offered when significant uncertainties exist.
+Start a new feature. Gather a brief description, create the work unit, and route to the first phase.
 
 > **⚠️ ZERO OUTPUT RULE**: Do not narrate your processing. Produce no output until a step or reference file explicitly specifies display content. No "proceeding with...", no discovery summaries, no routing decisions, no transition text. Your first output must be content explicitly called for by the instructions.
 
@@ -23,7 +21,6 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 - After each user interaction, STOP and wait for their response before proceeding
 - Never assume or anticipate user choices
-- Even if the user's initial prompt seems to answer a question, still confirm with them at the appropriate step
 - Complete each step fully before moving to the next
 
 ---
@@ -52,7 +49,7 @@ Load **[name-check.md](references/name-check.md)** and follow its instructions.
 
 ---
 
-## Step 3: Research Gating
+## Step 3: Route to First Phase
 
 Load **[research-gating.md](references/research-gating.md)** and follow its instructions.
 
@@ -60,6 +57,13 @@ Load **[research-gating.md](references/research-gating.md)** and follow its inst
 
 ---
 
-## Step 4: Invoke Processing Skill
+## Step 4: Invoke Entry-Point Skill
 
-Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions.
+Invoke the appropriate entry-point skill based on the selected phase:
+
+| Phase | Invoke |
+|-------|--------|
+| research | `/start-research feature {work_unit}` |
+| discussion | `/start-discussion feature {work_unit}` |
+
+This skill ends. The invoked skill will load into context and provide additional instructions. Terminal.

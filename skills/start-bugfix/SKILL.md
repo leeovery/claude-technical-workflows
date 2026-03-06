@@ -1,6 +1,6 @@
 ---
 name: start-bugfix
-allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(.claude/hooks/workflows/write-session-state.sh)
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(ls .workflows/)
 hooks:
   PreToolUse:
     - hooks:
@@ -9,7 +9,7 @@ hooks:
           once: true
 ---
 
-Start a new bugfix and route it through the pipeline: Investigation → Specification → Planning → Implementation → Review.
+Start a new bugfix. Gather a brief description, create the work unit, and route to investigation.
 
 > **⚠️ ZERO OUTPUT RULE**: Do not narrate your processing. Produce no output until a step or reference file explicitly specifies display content. No "proceeding with...", no discovery summaries, no routing decisions, no transition text. Your first output must be content explicitly called for by the instructions.
 
@@ -21,7 +21,6 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 - After each user interaction, STOP and wait for their response before proceeding
 - Never assume or anticipate user choices
-- Even if the user's initial prompt seems to answer a question, still confirm with them at the appropriate step
 - Complete each step fully before moving to the next
 
 ---
@@ -50,6 +49,8 @@ Load **[name-check.md](references/name-check.md)** and follow its instructions.
 
 ---
 
-## Step 3: Invoke Investigation
+## Step 3: Invoke Entry-Point Skill
 
-Load **[invoke-investigation.md](references/invoke-investigation.md)** and follow its instructions.
+Invoke `/start-investigation bugfix {work_unit}`.
+
+This skill ends. The invoked skill will load into context and provide additional instructions. Terminal.

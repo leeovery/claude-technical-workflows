@@ -55,4 +55,12 @@ If they choose a new name, return to the name suggestion prompt above.
 
 #### If no conflict
 
+Create the work unit manifest:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js init {work_unit} --work-type epic --description "{description}"
+```
+
+Where `{description}` is a concise one-line summary compiled from the epic context gathered in Step 1.
+
 → Return to **[the skill](../SKILL.md)**.
