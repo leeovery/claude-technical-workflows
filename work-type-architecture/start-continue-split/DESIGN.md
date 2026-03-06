@@ -12,6 +12,20 @@ New state: Start skills only create. Continue skills only resume. Workflow-start
 
 ---
 
+## Display Convention Note
+
+Examples in this document use simplified formatting for readability. When implemented as actual skill files, apply the project's display conventions from CLAUDE.md:
+
+- **Menu separators**: Use `· · · · · · · · · · · ·` (middle dots), not `- - - -`
+- **Dashes in descriptions**: Use `—` (em dash), not `--`
+- **Rendering instructions**: Each user-facing fenced block must be preceded by `> *Output the next fenced block as a code block:*` or `> *Output the next fenced block as markdown (not a code block):*`
+- **Bold in menus**: Menu options use `**backtick-wrapped**` bold formatting as per existing conventions
+- **Stop gates**: Use `**STOP.** Wait for user response.` at interaction boundaries
+
+The examples here show the content and structure; the skill files apply the full formatting conventions.
+
+---
+
 ## Skill Responsibilities
 
 | Skill | Responsibility | Args |
@@ -220,6 +234,10 @@ Select an option (enter number):
 
 No auto-select, even with one item. Consistent with workflow-start.
 
+### Invalid Work Unit Arg
+
+If `work_unit` is provided but no manifest exists or it's the wrong type, show terminal message and redirect (same pattern as continue-epic, see that section for details).
+
 ### Phase Routing
 
 Read manifest, get `next_phase` from `computeNextPhase`, route:
@@ -232,7 +250,11 @@ Read manifest, get `next_phase` from `computeNextPhase`, route:
 | planning | `start-planning feature {work_unit}` |
 | implementation | `start-implementation feature {work_unit}` |
 | review | `start-review feature {work_unit}` |
-| done | Show "Feature complete" message, terminal |
+| done | Not shown — done work units are filtered from the active list |
+
+**Filtering:** Continue-feature only lists work units with `status: active` (once PR 7 adds lifecycle states). Until then, `computeNextPhase` returning `done` means the work unit simply doesn't appear as a selectable option. If invoked directly with a `work_unit` arg that's done, treat it the same as an invalid work unit (terminal message, redirect).
+
+**Note on backwards navigation for feature/bugfix:** Unlike epic, the continue-feature/bugfix skills don't offer a "resume concluded topic" option — they route linearly to the next phase. If a user needs to go backwards (e.g., reopen a discussion while at implementation), they invoke the phase skill directly. This is an edge case; the common path is forward. If this proves insufficient, a "resume concluded" option could be added later.
 
 ---
 
@@ -284,6 +306,10 @@ Select an option (enter number):
 
 No auto-select.
 
+### Invalid Work Unit Arg
+
+Same pattern as continue-feature and continue-epic.
+
 ### Phase Routing
 
 Same as continue-feature but includes investigation:
@@ -295,7 +321,7 @@ Same as continue-feature but includes investigation:
 | planning | `start-planning bugfix {work_unit}` |
 | implementation | `start-implementation bugfix {work_unit}` |
 | review | `start-review bugfix {work_unit}` |
-| done | Show "Bugfix complete" message, terminal |
+| done | Not shown — done work units are filtered from the active list |
 
 ---
 
@@ -338,6 +364,36 @@ Select an option (enter number):
 ```
 
 No auto-select.
+
+### No Epics Exist
+
+> *Output the next fenced block as a code block:*
+
+```
+Continue Epic
+
+No epics in progress.
+
+Run /start-epic to begin a new one.
+```
+
+Terminal stop.
+
+### Invalid Work Unit Arg
+
+If `work_unit` is provided but no manifest exists for it:
+
+> *Output the next fenced block as a code block:*
+
+```
+Continue Epic
+
+No epic named "{work_unit}" found.
+
+Run /continue-epic to see available epics, or /start-epic to begin a new one.
+```
+
+Terminal stop. This applies to all three continue skills (feature, bugfix, epic).
 
 ### State Display
 
@@ -421,6 +477,41 @@ Above the menu, show a short contextual recommendation when applicable. These in
 
 Only one recommendation shown at a time. If none apply, no recommendation block.
 
+**Placement:** Recommendations render as a line within the code block display, between the state tree and the menu. They are part of the state display, not the menu.
+
+**Example with recommendation** (some specs concluded, some in-progress):
+
+> *Output the next fenced block as a code block:*
+
+```
+Payments Overhaul
+
+  Research
+    └─ Exploration (concluded)
+
+  Discussion
+    └─ Payment Providers (concluded)
+    └─ Transaction Handling (concluded)
+    └─ Refund Policy (concluded)
+    └─ Webhook Handling (concluded)
+
+  Specification
+    └─ Payment Processing (concluded)
+       ├─ Payment Providers (incorporated)
+       └─ Transaction Handling (incorporated)
+    └─ Refund And Webhooks (in-progress)
+       ├─ Refund Policy (incorporated)
+       └─ Webhook Handling (pending)
+
+  Planning
+    └─ Payment Processing (in-progress)
+
+Concluding all specifications before planning helps identify
+cross-cutting dependencies.
+```
+
+The recommendation sits at the bottom of the code block, separated by a blank line from the last phase section.
+
 ### Menu
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -450,13 +541,47 @@ Select an option (enter number):
 - Concluded spec with no plan: `Start planning for "{Topic}" -- spec concluded`
 - Concluded plan with no implementation: `Start implementation of "{Topic}" -- plan concluded`
 - Completed implementation with no review: `Start review for "{Topic}" -- implementation completed`
-- Concluded discussions not sourced in any spec: `Start specification -- {N} discussion(s) not yet in a spec`
+- Concluded discussions not sourced in any spec: `Start specification -- {N} discussion(s) not yet in a spec`. Determined by collecting all `sources` entries across all specification items in the manifest and checking which concluded discussion topics are absent.
 - No "(recommended)" labels — ordering implies priority
 
 **Section 3 — Standing options** (always present):
 - `Start new discussion topic`
 - `Start new research`
 - `Resume a concluded topic`
+
+**Menu example with next-phase-ready items** (1 spec in-progress, 1 concluded, 1 plan in-progress, 1 implementation completed):
+
+```
+- - - - - - - - - - - -
+What would you like to do?
+
+1. Continue "Refund And Webhooks" -- specification (in-progress)
+2. Continue "Payment Processing" -- planning (in-progress)
+3. Start planning for "Core Auth" -- spec concluded
+4. Start review for "Notifications" -- implementation completed
+5. Start new discussion topic
+6. Start new research
+7. Resume a concluded topic
+
+Select an option (enter number):
+- - - - - - - - - - - -
+```
+
+### Menu Routing
+
+| Menu option | Routes to |
+|-------------|-----------|
+| Continue discussion | `/start-discussion epic {work_unit} {topic}` |
+| Continue specification | `/start-specification epic {work_unit} {topic}` |
+| Continue planning | `/start-planning epic {work_unit} {topic}` |
+| Continue implementation | `/start-implementation epic {work_unit} {topic}` |
+| Start planning for {topic} | `/start-planning epic {work_unit} {topic}` |
+| Start implementation of {topic} | `/start-implementation epic {work_unit} {topic}` |
+| Start review for {topic} | `/start-review epic {work_unit} {topic}` |
+| Start specification | `/start-specification epic {work_unit}` (no topic — triggers grouping analysis) |
+| Start new discussion topic | `/start-discussion epic {work_unit}` (no topic — discovery mode) |
+| Start new research | `/start-research epic {work_unit}` |
+| Resume a concluded topic | Show the concluded topic sub-view (internal, not a skill invocation) |
 
 **Phase-forward gating:**
 - You cannot skip phases. No "Start planning" unless at least one spec is concluded. No "Start implementation" unless at least one plan is concluded. No "Start review" unless at least one implementation is completed.
@@ -529,6 +654,44 @@ When a concluded topic is resumed, its status needs to change from `concluded` t
 
 ---
 
+## Discovery Data Requirements
+
+The continue skills need data to build their displays and menus. This section documents what each skill needs and where it comes from.
+
+### Workflow-Start
+
+Needs: all active work units grouped by type, with phase labels.
+
+**Source:** The existing `workflow-start/scripts/discovery.js` already provides this via `epics.work_units`, `features.work_units`, `bugfixes.work_units` with `name`, `next_phase`, and `phase_label` per unit. For epics, the display also needs which phases have artifacts — this may need extending in the discovery script to include a list of active phase names.
+
+### Continue-Feature / Continue-Bugfix
+
+Needs: list of active work units of that type, with `next_phase` and `phase_label`.
+
+**Source:** Can reuse or adapt `workflow-start/scripts/discovery.js` filtered to one work type. Alternatively, a simpler script that lists manifests with `work_type: feature` (or `bugfix`) and runs `computeNextPhase` on each.
+
+### Continue-Epic
+
+Needs the richest data set:
+
+- Per-phase items with statuses (from manifest `phases[phase].items`)
+- Spec source extraction statuses (from manifest `phases.specification.items[topic].sources`)
+- Which concluded discussions are not sourced in any spec (derived by cross-referencing discussion items against all spec source entries)
+- Reopened discussion detection (derived: discussion is `in-progress` but appears as `incorporated` source in a spec)
+
+**Source:** The existing `workflow-bridge/scripts/discovery.js` provides `epic_detail` with per-phase items and statuses. This needs extending to include spec source data and the unaccounted-discussion check. The reopened detection and recommendation logic can be computed from the raw data by the skill instructions rather than the discovery script.
+
+### Implementation Note
+
+During implementation, decide whether to:
+- Extend existing discovery scripts to provide the additional data
+- Create new discovery scripts for the continue skills
+- Compute derived data (unaccounted discussions, reopened detection) in the skill instructions from raw manifest reads
+
+The simpler approach is to extend existing scripts since they already load manifests and compute phase state.
+
+---
+
 ## What This Resolves
 
 - **Resume-in-start awkwardness** — start skills only create, continue skills only resume. Single responsibility.
@@ -541,6 +704,14 @@ When a concluded topic is resumed, its status needs to change from `concluded` t
 
 - Depends on: PR 1 (manifest CLI, work-unit-first directories, research status tracking)
 - Enables: PR 5 (phase skills can go internal once start/continue own all entry logic)
+
+## Future Considerations
+
+These are out of scope for this PR but the design accommodates them:
+
+- **Work unit lifecycle (PR 7)**: Active, cancelled, done states. Continue skills filter to active. Workflow-start shows completed/cancelled summaries with sub-views. See [PR7-WORK-UNIT-LIFECYCLE.md](../PR7-WORK-UNIT-LIFECYCLE.md).
+- **Skip review (PR 8)**: Option to mark a work unit as done after implementation without going through review. See [PR8-SKIP-REVIEW.md](../PR8-SKIP-REVIEW.md).
+- **Archived work viewing**: Browse completed and cancelled work units from workflow-start. Part of PR 7.
 
 ## Open Questions
 
