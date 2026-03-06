@@ -116,4 +116,65 @@ describe('workflow-start discovery', () => {
     assert.strictEqual(r.features.work_units[0].phase_label, 'discussion (in-progress)');
     assert.strictEqual(r.bugfixes.work_units[0].phase_label, 'ready for specification');
   });
+
+  it('mixed active and done in same type only shows active', () => {
+    createManifest(dir, 'active-feat', {
+      work_type: 'feature',
+      phases: { discussion: { status: 'in-progress' } },
+    });
+    createManifest(dir, 'done-feat', {
+      work_type: 'feature',
+      phases: {
+        discussion: { status: 'concluded' },
+        specification: { status: 'concluded' },
+        planning: { status: 'concluded' },
+        implementation: { status: 'completed' },
+        review: { status: 'completed' },
+      },
+    });
+    const r = discover(dir);
+    assert.strictEqual(r.features.count, 1);
+    assert.strictEqual(r.features.work_units[0].name, 'active-feat');
+  });
+
+  it('has_any_work is false when only archived and done exist', () => {
+    createManifest(dir, 'archived', { work_type: 'feature', status: 'archived' });
+    createManifest(dir, 'done', {
+      work_type: 'bugfix',
+      phases: {
+        investigation: { status: 'concluded' },
+        specification: { status: 'concluded' },
+        planning: { status: 'concluded' },
+        implementation: { status: 'completed' },
+        review: { status: 'completed' },
+      },
+    });
+    const r = discover(dir);
+    assert.strictEqual(r.state.has_any_work, false);
+  });
+
+  it('epic active_phases detects phase with flat status but no items', () => {
+    createManifest(dir, 'v1', {
+      work_type: 'epic',
+      phases: { research: { status: 'in-progress' } },
+    });
+    const r = discover(dir);
+    assert.deepStrictEqual(r.epics.work_units[0].active_phases, ['research']);
+  });
+
+  it('feature in review (in-progress) is not filtered out', () => {
+    createManifest(dir, 'auth', {
+      work_type: 'feature',
+      phases: {
+        discussion: { status: 'concluded' },
+        specification: { status: 'concluded' },
+        planning: { status: 'concluded' },
+        implementation: { status: 'completed' },
+        review: { status: 'in-progress' },
+      },
+    });
+    const r = discover(dir);
+    assert.strictEqual(r.features.count, 1);
+    assert.strictEqual(r.features.work_units[0].next_phase, 'review');
+  });
 });

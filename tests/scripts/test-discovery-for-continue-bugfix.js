@@ -102,4 +102,50 @@ describe('continue-bugfix discovery', () => {
       assert.deepStrictEqual(r.bugfix.concluded_phases, ['investigation']);
     });
   });
+
+  describe('edge cases', () => {
+    it('recognizes completed as concluded in concluded_phases', () => {
+      createManifest(dir, 'crash', {
+        work_type: 'bugfix',
+        phases: {
+          investigation: { status: 'concluded' },
+          specification: { status: 'concluded' },
+          planning: { status: 'concluded' },
+          implementation: { status: 'completed' },
+          review: { status: 'in-progress' },
+        },
+      });
+      const r = discover(dir);
+      assert.ok(r.bugfixes[0].concluded_phases.includes('implementation'));
+    });
+
+    it('bugfix in review in-progress is listed (not filtered as done)', () => {
+      createManifest(dir, 'crash', {
+        work_type: 'bugfix',
+        phases: {
+          investigation: { status: 'concluded' },
+          specification: { status: 'concluded' },
+          planning: { status: 'concluded' },
+          implementation: { status: 'completed' },
+          review: { status: 'in-progress' },
+        },
+      });
+      const r = discover(dir);
+      assert.strictEqual(r.count, 1);
+      assert.strictEqual(r.bugfixes[0].next_phase, 'review');
+    });
+
+    it('research is not in bugfix concluded_phases even if present', () => {
+      createManifest(dir, 'crash', {
+        work_type: 'bugfix',
+        phases: {
+          research: { status: 'concluded' },
+          investigation: { status: 'in-progress' },
+        },
+      });
+      const r = discover(dir);
+      // research is not in BUGFIX_PIPELINE, so never in concluded_phases
+      assert.ok(!r.bugfixes[0].concluded_phases.includes('research'));
+    });
+  });
 });

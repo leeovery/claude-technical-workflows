@@ -121,4 +121,46 @@ describe('continue-feature discovery', () => {
       assert.deepStrictEqual(r.feature.concluded_phases, ['discussion']);
     });
   });
+
+  describe('edge cases', () => {
+    it('recognizes completed as concluded in concluded_phases', () => {
+      createManifest(dir, 'auth', {
+        work_type: 'feature',
+        phases: {
+          discussion: { status: 'concluded' },
+          specification: { status: 'concluded' },
+          planning: { status: 'concluded' },
+          implementation: { status: 'completed' },
+          review: { status: 'in-progress' },
+        },
+      });
+      const r = discover(dir);
+      assert.ok(r.features[0].concluded_phases.includes('implementation'));
+    });
+
+    it('feature in review in-progress is listed (not filtered as done)', () => {
+      createManifest(dir, 'auth', {
+        work_type: 'feature',
+        phases: {
+          discussion: { status: 'concluded' },
+          specification: { status: 'concluded' },
+          planning: { status: 'concluded' },
+          implementation: { status: 'completed' },
+          review: { status: 'in-progress' },
+        },
+      });
+      const r = discover(dir);
+      assert.strictEqual(r.count, 1);
+      assert.strictEqual(r.features[0].next_phase, 'review');
+    });
+
+    it('feature with only research concluded has it in concluded_phases', () => {
+      createManifest(dir, 'auth', {
+        work_type: 'feature',
+        phases: { research: { status: 'concluded' } },
+      });
+      const r = discover(dir);
+      assert.deepStrictEqual(r.features[0].concluded_phases, ['research']);
+    });
+  });
 });

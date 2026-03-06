@@ -363,36 +363,36 @@ echo ""
 
 # ----------------------------------------------------------------------------
 
-echo -e "${YELLOW}Test: set --phase without --topic (topicless phase)${NC}"
+echo -e "${YELLOW}Test: set --phase research with --topic works${NC}"
 setup_fixture
-run_cli init topicless --work-type feature --description "Topicless" >/dev/null 2>&1
-run_cli set topicless --phase research status in-progress >/dev/null 2>&1
-output=$(run_cli_stdout get topicless --phase research status)
+run_cli init topicful --work-type feature --description "Topic research" >/dev/null 2>&1
+run_cli set topicful --phase research --topic exploration status in-progress >/dev/null 2>&1
+output=$(run_cli_stdout get topicful --phase research --topic exploration status)
 
-assert_equals "$output" "in-progress" "Set phase without topic routes to phases.<phase>"
+assert_equals "$output" "in-progress" "Set research with topic routes correctly"
 
 echo ""
 
 # ----------------------------------------------------------------------------
 
-echo -e "${YELLOW}Test: set --phase without --topic concludes research${NC}"
+echo -e "${YELLOW}Test: set --phase research with --topic for epic uses items${NC}"
 setup_fixture
-run_cli init topicless2 --work-type epic --description "Topicless epic" >/dev/null 2>&1
-run_cli set topicless2 --phase research status in-progress >/dev/null 2>&1
-run_cli set topicless2 --phase research status concluded >/dev/null 2>&1
-output=$(run_cli_stdout get topicless2 --phase research status)
+run_cli init topicful2 --work-type epic --description "Topic research epic" >/dev/null 2>&1
+run_cli init-phase topicful2 --phase research --topic exploration >/dev/null 2>&1
+run_cli set topicful2 --phase research --topic exploration status concluded >/dev/null 2>&1
+output=$(run_cli_stdout get topicful2 --phase research --topic exploration status)
 
-assert_equals "$output" "concluded" "Topicless set works for epic too"
+assert_equals "$output" "concluded" "Epic research with topic uses items path"
 
 echo ""
 
 # ----------------------------------------------------------------------------
 
-echo -e "${YELLOW}Test: get --phase without --topic returns whole phase${NC}"
+echo -e "${YELLOW}Test: get --phase without --topic returns whole phase object${NC}"
 setup_fixture
-run_cli init topicless3 --work-type feature --description "Topicless get" >/dev/null 2>&1
-run_cli set topicless3 --phase research status concluded >/dev/null 2>&1
-output=$(run_cli_stdout get topicless3 --phase research)
+run_cli init topicful3 --work-type feature --description "Topic get" >/dev/null 2>&1
+run_cli set topicful3 --phase research --topic exploration status concluded >/dev/null 2>&1
+output=$(run_cli_stdout get topicful3 --phase research)
 
 assert_contains "$output" '"status": "concluded"' "Get phase without topic returns phase object"
 
@@ -409,6 +409,7 @@ assert_exit_nonzero "Planning requires --topic" set topic-req --phase planning s
 assert_exit_nonzero "Implementation requires --topic" set topic-req --phase implementation status in-progress
 assert_exit_nonzero "Review requires --topic" set topic-req --phase review status in-progress
 assert_exit_nonzero "Investigation requires --topic" set topic-req --phase investigation status in-progress
+assert_exit_nonzero "Research requires --topic" set topic-req --phase research status in-progress
 
 echo ""
 

@@ -260,5 +260,140 @@ describe('continue-epic discovery', () => {
       assert.strictEqual(r.in_progress.length, 0);
       assert.strictEqual(r.concluded.length, 0);
     });
+
+    it('sources using name field instead of topic', () => {
+      createManifest(dir, 'v1', {
+        work_type: 'epic',
+        phases: {
+          discussion: { items: { auth: { status: 'concluded' } } },
+          specification: {
+            items: {
+              'auth-spec': {
+                status: 'in-progress',
+                sources: [{ name: 'auth', status: 'incorporated' }],
+              },
+            },
+          },
+        },
+      });
+      const r = discover(dir, 'v1');
+      // auth is sourced via name field, so should not be unaccounted
+      assert.deepStrictEqual(r.unaccounted_discussions, []);
+    });
+
+    it('spec with empty sources array', () => {
+      createManifest(dir, 'v1', {
+        work_type: 'epic',
+        phases: {
+          discussion: { items: { auth: { status: 'concluded' } } },
+          specification: {
+            items: {
+              'auth-spec': { status: 'in-progress', sources: [] },
+            },
+          },
+        },
+      });
+      const r = discover(dir, 'v1');
+      // auth is concluded and not sourced, so it's unaccounted
+      assert.deepStrictEqual(r.unaccounted_discussions, ['auth']);
+    });
+
+    it('spec with no sources field', () => {
+      createManifest(dir, 'v1', {
+        work_type: 'epic',
+        phases: {
+          discussion: { items: { auth: { status: 'concluded' } } },
+          specification: {
+            items: {
+              'auth-spec': { status: 'in-progress' },
+            },
+          },
+        },
+      });
+      const r = discover(dir, 'v1');
+      assert.deepStrictEqual(r.unaccounted_discussions, ['auth']);
+    });
+
+    it('multiple items ready simultaneously', () => {
+      createManifest(dir, 'v1', {
+        work_type: 'epic',
+        phases: {
+          specification: {
+            items: {
+              auth: { status: 'concluded' },
+              billing: { status: 'concluded' },
+            },
+          },
+          planning: {
+            items: {
+              payments: { status: 'concluded' },
+            },
+          },
+          implementation: {
+            items: {
+              core: { status: 'completed' },
+            },
+          },
+        },
+      });
+      const r = discover(dir, 'v1');
+      // auth and billing ready for planning, payments ready for impl, core ready for review
+      assert.strictEqual(r.next_phase_ready.length, 4);
+      const actions = r.next_phase_ready.map(n => n.action).sort();
+      assert.deepStrictEqual(actions, ['start_implementation', 'start_planning', 'start_planning', 'start_review']);
+    });
+
+    it('unaccounted discussions when spec has no sources field at all', () => {
+      createManifest(dir, 'v1', {
+        work_type: 'epic',
+        phases: {
+          discussion: {
+            items: {
+              auth: { status: 'concluded' },
+              billing: { status: 'concluded' },
+            },
+          },
+          specification: {
+            items: {
+              'combined-spec': { status: 'in-progress' },
+            },
+          },
+        },
+      });
+      const r = discover(dir, 'v1');
+      // Both discussions unaccounted since spec has no sources
+      assert.strictEqual(r.unaccounted_discussions.length, 2);
+    });
+
+    it('gating flags all false for empty epic', () => {
+      createManifest(dir, 'v1', { work_type: 'epic' });
+      const r = discover(dir, 'v1');
+      assert.strictEqual(r.gating.can_start_specification, false);
+      assert.strictEqual(r.gating.can_start_planning, false);
+      assert.strictEqual(r.gating.can_start_implementation, false);
+      assert.strictEqual(r.gating.can_start_review, false);
+    });
+
+    it('concluded discussion that is in-progress is not both reopened and unaccounted', () => {
+      // Discussion is in-progress AND sourced — it's reopened, not unaccounted
+      createManifest(dir, 'v1', {
+        work_type: 'epic',
+        phases: {
+          discussion: { items: { auth: { status: 'in-progress' } } },
+          specification: {
+            items: {
+              'auth-spec': {
+                status: 'in-progress',
+                sources: [{ topic: 'auth', status: 'incorporated' }],
+              },
+            },
+          },
+        },
+      });
+      const r = discover(dir, 'v1');
+      assert.deepStrictEqual(r.reopened_discussions, ['auth']);
+      // Not unaccounted because it's in-progress (unaccounted only checks concluded)
+      assert.deepStrictEqual(r.unaccounted_discussions, []);
+    });
   });
 });
