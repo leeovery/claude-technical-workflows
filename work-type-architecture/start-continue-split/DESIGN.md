@@ -511,7 +511,7 @@ Above the menu, show a short contextual recommendation when applicable. These in
 | Condition | Recommendation |
 |-----------|---------------|
 | In-progress items exist across multiple phases | No recommendation (user knows what they're working on) |
-| Concluded discussions exist, not all sourced in specs | "Consider concluding remaining discussions before starting specification. The grouping analysis works best with all discussions available." |
+| Some discussions in-progress, some concluded | "Consider concluding remaining discussions before starting specification. The grouping analysis works best with all discussions available." |
 | All discussions concluded, specs not started | "All discussions are concluded. Specification will analyze and group them." |
 | Some specs concluded, some in-progress | "Concluding all specifications before planning helps identify cross-cutting dependencies." |
 | Some plans concluded, some in-progress | "Completing all plans before implementation helps surface task dependencies across plans." |
@@ -586,10 +586,12 @@ Select an option (enter number):
 - Concluded discussions not sourced in any spec: `Start specification -- {N} discussion(s) not yet in a spec`. Determined by collecting all `sources` entries across all specification items in the manifest and checking which concluded discussion topics are absent.
 - No "(recommended)" labels — ordering implies priority
 
-**Section 3 — Standing options** (always present):
-- `Start new discussion topic`
-- `Start new research`
-- `Resume a concluded topic`
+**Section 3 — Standing options:**
+- `Start new discussion topic` (always present)
+- `Start new research` (always present)
+- `Resume a concluded topic` (only shown when concluded topics exist)
+
+**Convention:** All sub-menus include a "Back" option as the last numbered item, returning to the parent menu.
 
 **Menu example with next-phase-ready items** (1 spec in-progress, 1 concluded, 1 plan in-progress, 1 implementation completed):
 
@@ -807,62 +809,32 @@ User wants all sub-menus to include a "Back" option as the last numbered item, r
 - Continue-feature/bugfix: revisit phase sub-menu -> back to proceed/revisit prompt
 - Workflow-bridge: revisit phase sub-menu -> back to proceed/revisit prompt
 
-### Gap 2: "Resume a concluded topic" — conditional visibility
+### Gap 2: "Resume a concluded topic" — conditional visibility (RESOLVED)
 
-Listed as "always present" under standing options. But if there are NO concluded topics, it leads to an empty sub-view. Should it only appear when concluded topics actually exist? Or always show and handle the empty state gracefully?
+Listed as "always present" under standing options. But if there are NO concluded topics, it leads to an empty sub-view.
 
-**Status:** Awaiting discussion.
+**Resolution:** Only show when concluded topics exist. Consistent with how Section 2 (next-phase-ready items) only appears when conditions are met. Absence communicates "nothing concluded yet."
 
-### Gap 3: Recommendation table condition mismatch
+### Gap 3: Recommendation table condition mismatch (RESOLVED)
 
-The condition "Concluded discussions exist, not all sourced in specs" has recommendation "Consider concluding remaining discussions before starting specification." But this condition means concluded discussions aren't in specs yet — NOT that discussions are still in-progress. These are different situations.
+The condition "Concluded discussions exist, not all sourced in specs" had a mismatched recommendation about concluding discussions.
 
-Proposed fix — split into two conditions:
+**Resolution:** Split into two conditions:
+- Some discussions in-progress, some concluded → "Consider concluding remaining discussions before starting specification. The grouping analysis works best with all discussions available."
+- All discussions concluded, some not sourced in any spec → No recommendation. The "Start specification" menu item communicates this.
 
-| Condition | Recommendation |
-|-----------|---------------|
-| Some discussions in-progress, some concluded | "Consider concluding remaining discussions before starting specification. The grouping analysis works best with all discussions available." |
-| All discussions concluded, some not sourced in any spec | No recommendation needed — just show "Start specification" in the menu. The menu item itself communicates this. |
+### Gap 4: Research topic tracking in the manifest (RESOLVED)
 
-**Status:** Awaiting discussion.
+Research needs per-topic status tracking (items structure) for epic, consistent with discussion, specification, etc. Currently uses flat phase-level status.
 
-### Gap 4: Research topic tracking in the manifest
+**Resolution:** Extend manifest to support research items for epic. Same `items` structure as other phases. Part of this PR — no migration needed since current main hasn't been used in production. Update all consuming code that uses the flat research structure (technical-research skill, discovery scripts, computeNextPhase). Feature/bugfix flat structure unchanged — the CLI abstraction makes this transparent.
 
-User confirmed research has per-topic status (in-progress/concluded). But the current manifest code uses flat phase-level status for research (no `items` structure like discussion/specification have). `phaseItems()` returns empty array for research.
+### Gap 5: Continue-epic with a brand-new epic (no artifacts) (RESOLVED)
 
-This affects the continue-epic display directly — we can't show individual research topics with statuses if the manifest doesn't track them as items.
+If an epic was just created, the state display would be empty.
 
-Options:
-- **A.** Extend the manifest to support research items (same `items` structure as other phases)
-- **B.** Derive research topics from files on disk and use the flat phase status for all of them
-- **C.** Accept this as a known gap and handle it during implementation (may need a small manifest migration)
+**Resolution:** Show "No work started yet." under the epic name, then only standing options in the menu (Start new discussion topic, Start new research). No "Resume a concluded topic" since nothing is concluded.
 
-**Status:** Awaiting discussion. This may be a pre-requisite for the continue-epic display.
+### Gap 6: Research in the continue-epic menu — "Continue" vs "Start new" (RESOLVED)
 
-### Gap 5: Continue-epic with a brand-new epic (no artifacts)
-
-If an epic was just created (manifest exists but no phase work started), the state display would be empty — no phases have artifacts. Need to handle this edge case.
-
-Proposed: Show a message like:
-
-```
-Payments Overhaul
-
-  No work started yet.
-```
-
-Then show only the standing options menu (Start new discussion topic, Start new research). No in-progress items, no next-phase-ready items.
-
-**Status:** Awaiting discussion.
-
-### Gap 6: Research in the continue-epic menu — "Continue" vs "Start new"
-
-Two distinct actions exist for research:
-- **Continue**: Resume an in-progress research topic (Section 1 of menu — in-progress items)
-- **Start new**: Begin a new research topic (Section 3 — standing options)
-
-Problem: If research doesn't have items in the manifest (Gap 4), in-progress research won't appear in Section 1. The "Start new research" standing option is always there, but "Continue research" would be missing.
-
-This is directly dependent on Gap 4's resolution. If research gets items in the manifest, this resolves naturally — in-progress research items appear in Section 1 like any other phase.
-
-**Status:** Blocked by Gap 4.
+**Resolution:** Resolved by Gap 4. With research using items in the manifest, in-progress research topics appear naturally in Section 1 ("Continue Exploration — research (in-progress)"). "Start new research" remains as a standing option in Section 3 for creating fresh topics.
