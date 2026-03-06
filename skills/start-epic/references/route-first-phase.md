@@ -50,7 +50,9 @@ Would you like to explore these in research first?
 
 #### If no significant unknowns
 
-Skip this step silently and proceed to discussion. Do not ask about research if the epic vision is clear and well-defined.
+Set phase="discussion".
+
+→ Return to **[the skill](../SKILL.md)**.
 
 ## Route Based on Response
 
@@ -60,7 +62,7 @@ Set phase="research".
 
 → Return to **[the skill](../SKILL.md)**.
 
-#### If user declines research (or no unknowns)
+#### If user declines research
 
 Set phase="discussion".
 
