@@ -21,7 +21,7 @@ Use `next_phase` from discovery output to determine the target skill:
 | review | start-review |
 | done | (terminal) |
 
-## Generate Plan Mode Content
+## A. Check Terminal
 
 #### If `next_phase` is `done`
 
@@ -37,32 +37,19 @@ Bugfix Complete
 
 #### Otherwise
 
+Set `target_phase` = `next_phase`.
+
+→ Proceed to **B. Offer Revisit**.
+
+## B. Offer Revisit
+
 Check if there are concluded phases earlier in the pipeline that the user could revisit. Look at the discovery output's `phases` data — any phase with status `concluded` or `completed` that comes before `next_phase` in the pipeline order.
 
-**If no earlier concluded phases exist** (e.g., next phase is investigation — nothing to revisit):
+#### If no earlier concluded phases exist
 
-Call the `EnterPlanMode` tool to enter plan mode. Then write the following content to the plan file:
+→ Proceed to **C. Enter Plan Mode**.
 
-```
-# Continue Bugfix: {work_unit}
-
-The previous phase has concluded. Continue the pipeline.
-
-## Next Step
-
-Invoke `/start-{next_phase} bugfix {work_unit}`
-
-Arguments: work_type = bugfix, work_unit = {work_unit} (topic inferred from work_unit)
-The skill will skip discovery and proceed directly to validation.
-
-## How to proceed
-
-Clear context and continue.
-```
-
-Call the `ExitPlanMode` tool to present the plan to the user for approval.
-
-**If earlier concluded phases exist:**
+#### If earlier concluded phases exist
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -80,7 +67,7 @@ Call the `ExitPlanMode` tool to present the plan to the user for approval.
 
 **If user chose `y`/`yes`:**
 
-Enter plan mode with the standard continuation content shown above.
+→ Proceed to **C. Enter Plan Mode**.
 
 **If user chose `r`/`revisit`:**
 
@@ -104,16 +91,22 @@ List only concluded phases that come before `next_phase`. "Back" returns to the 
 
 **If user chose Back:** Re-display the proceed/revisit prompt.
 
-**If user chose a phase:** Enter plan mode with the selected phase as the target:
+**If user chose a phase:** Set `target_phase` = selected phase.
+
+→ Proceed to **C. Enter Plan Mode**.
+
+## C. Enter Plan Mode
+
+Call the `EnterPlanMode` tool to enter plan mode. Then write the following content to the plan file:
 
 ```
 # Continue Bugfix: {work_unit}
 
-Revisiting an earlier phase.
+@if(target_phase == next_phase) The previous phase has concluded. Continue the pipeline. @else Revisiting an earlier phase. @endif
 
 ## Next Step
 
-Invoke `/start-{selected_phase} bugfix {work_unit}`
+Invoke `/start-{target_phase} bugfix {work_unit}`
 
 Arguments: work_type = bugfix, work_unit = {work_unit} (topic inferred from work_unit)
 The skill will skip discovery and proceed directly to validation.
