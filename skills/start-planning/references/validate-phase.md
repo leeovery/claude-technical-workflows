@@ -28,15 +28,15 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phas
 Reopening plan: {topic:(titlecase)}
 ```
 
-The plan already has its context from when it was created. Skip context gathering.
+Set source="existing".
 
-→ Return to **[the skill](../SKILL.md)** for **Step 8**.
+→ Return to **[the skill](../SKILL.md)**.
 
 **If status is `in-progress`:**
 
-The plan already has its context from when it was created. Skip context gathering.
+Set source="existing".
 
-→ Return to **[the skill](../SKILL.md)** for **Step 8**.
+→ Return to **[the skill](../SKILL.md)**.
 
 #### If no existing plan (fresh start)
 
@@ -53,4 +53,6 @@ Any additional context since the specification was concluded?
 
 **STOP.** Wait for user response.
 
-→ Return to **[the skill](../SKILL.md)** for **Step 7**.
+Set source="fresh".
+
+→ Return to **[the skill](../SKILL.md)**.

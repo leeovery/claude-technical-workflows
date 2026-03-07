@@ -140,6 +140,14 @@ Load **[display-state.md](references/display-state.md)** and follow its instruct
 
 Load **[validate-phase.md](references/validate-phase.md)** and follow its instructions as written.
 
+#### If source is `existing`
+
+→ Proceed to **Step 8** (skipping Step 7).
+
+#### If source is `fresh`
+
+→ Proceed to **Step 7**.
+
 ---
 
 ## Step 7: Cross-Cutting Context

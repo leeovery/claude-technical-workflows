@@ -24,7 +24,7 @@ Resuming investigation: {work_unit:(titlecase)}
 
 Set source="continue".
 
-→ Return to **[the skill](../SKILL.md)** for **Step 6**.
+→ Return to **[the skill](../SKILL.md)**.
 
 **If status is `concluded`:**
 
@@ -42,7 +42,7 @@ Reopening investigation: {work_unit:(titlecase)}
 
 Set source="continue".
 
-→ Return to **[the skill](../SKILL.md)** for **Step 6**.
+→ Return to **[the skill](../SKILL.md)**.
 
 #### If no collision
 
