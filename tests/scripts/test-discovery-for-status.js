@@ -233,6 +233,45 @@ describe('status discovery', () => {
     assert.strictEqual(r.work_units[0].description, 'Auth flow feature');
   });
 
+  it('epic research with items but no flat status', () => {
+    createManifest(dir, 'v1', {
+      work_type: 'epic',
+      phases: {
+        research: {
+          items: { 'exploration': { status: 'concluded' } },
+        },
+      },
+    });
+    createFile(dir, '.workflows/v1/research/exploration.md', '# Exploration');
+    const r = discover(dir);
+    const wu = r.work_units[0];
+    // Research status comes from flat phase status, which is null here
+    assert.strictEqual(wu.research.status, null);
+    // No file_count because researchStatus is null
+    assert.strictEqual(wu.research.file_count, undefined);
+    // Research count only increments when flat status exists
+    assert.strictEqual(r.counts.research, 0);
+  });
+
+  it('epic research with both flat status and items', () => {
+    createManifest(dir, 'v1', {
+      work_type: 'epic',
+      phases: {
+        research: {
+          status: 'in-progress',
+          items: { 'exploration': { status: 'in-progress' } },
+        },
+      },
+    });
+    createFile(dir, '.workflows/v1/research/exploration.md', '# Exploration');
+    const r = discover(dir);
+    const wu = r.work_units[0];
+    // Flat status is used for the research output
+    assert.strictEqual(wu.research.status, 'in-progress');
+    assert.strictEqual(wu.research.file_count, 1);
+    assert.strictEqual(r.counts.research, 1);
+  });
+
   it('aggregates epic item statuses across phases', () => {
     createManifest(dir, 'v1', {
       work_type: 'epic',

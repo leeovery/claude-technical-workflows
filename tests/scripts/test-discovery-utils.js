@@ -161,6 +161,18 @@ describe('discovery-utils', () => {
     it('returns empty for missing phase', () => {
       assert.deepStrictEqual(phaseItems({ phases: {} }, 'discussion'), []);
     });
+
+    it('returns empty when items is null', () => {
+      assert.deepStrictEqual(phaseItems({ phases: { discussion: { items: null } } }, 'discussion'), []);
+    });
+
+    it('returns empty when items is a string', () => {
+      assert.deepStrictEqual(phaseItems({ phases: { discussion: { items: 'bad' } } }, 'discussion'), []);
+    });
+
+    it('returns empty when no phases key', () => {
+      assert.deepStrictEqual(phaseItems({}, 'discussion'), []);
+    });
   });
 
   describe('phaseData', () => {
@@ -346,13 +358,91 @@ describe('discovery-utils', () => {
       assert.strictEqual(r.phase_label, 'specification (in-progress)');
     });
 
-    it('epic: uses flat status for research (topicless)', () => {
+    it('epic: falls back to flat status for research when no items', () => {
       const r = computeNextPhase({
         work_type: 'epic',
         phases: { research: { status: 'in-progress' } },
       });
       assert.strictEqual(r.next_phase, 'research');
       assert.strictEqual(r.phase_label, 'research (in-progress)');
+    });
+
+    it('epic: aggregates research items like other phases', () => {
+      const r = computeNextPhase({
+        work_type: 'epic',
+        phases: {
+          research: {
+            items: {
+              'exploration': { status: 'concluded' },
+              'architecture': { status: 'in-progress' },
+            },
+          },
+        },
+      });
+      assert.strictEqual(r.next_phase, 'research');
+      assert.strictEqual(r.phase_label, 'research (in-progress)');
+    });
+
+    it('epic: research concluded with items advances to discussion', () => {
+      const r = computeNextPhase({
+        work_type: 'epic',
+        phases: {
+          research: {
+            items: {
+              'exploration': { status: 'concluded' },
+            },
+          },
+        },
+      });
+      assert.strictEqual(r.next_phase, 'discussion');
+      assert.strictEqual(r.phase_label, 'ready for discussion');
+    });
+
+    it('epic: items with missing status fields are ignored in aggregation', () => {
+      const r = computeNextPhase({
+        work_type: 'epic',
+        phases: {
+          discussion: {
+            items: {
+              'auth': { status: 'concluded' },
+              'billing': {},
+            },
+          },
+        },
+      });
+      // Only 'concluded' is present (billing has no status), so aggregation sees only concluded
+      assert.strictEqual(r.next_phase, 'specification');
+    });
+
+    it('epic: mixed concluded and completed items returns first status', () => {
+      const r = computeNextPhase({
+        work_type: 'epic',
+        phases: {
+          implementation: {
+            items: {
+              'auth': { status: 'completed' },
+              'billing': { status: 'completed' },
+            },
+          },
+        },
+      });
+      assert.strictEqual(r.next_phase, 'review');
+    });
+
+    it('epic: all items have no status falls back to null', () => {
+      const r = computeNextPhase({
+        work_type: 'epic',
+        phases: {
+          discussion: {
+            items: {
+              'auth': {},
+              'billing': {},
+            },
+          },
+        },
+      });
+      // No statuses found, aggregation returns null, falls through to default
+      assert.strictEqual(r.next_phase, 'discussion');
     });
   });
 });

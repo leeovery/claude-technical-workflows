@@ -160,4 +160,57 @@ describe('workflow-bridge discovery', () => {
     const r = discover(dir, 'v1');
     assert.strictEqual(r.phases.research.exists, false);
   });
+
+  it('epic detail includes research items', () => {
+    createManifest(dir, 'v1', {
+      work_type: 'epic',
+      phases: {
+        research: {
+          items: {
+            'exploration': { status: 'concluded' },
+            'architecture': { status: 'in-progress' },
+          },
+        },
+      },
+    });
+    createFile(dir, '.workflows/v1/research/exploration.md', '# Exploration');
+    const r = discover(dir, 'v1');
+    assert.ok(r.epic_detail.research);
+    assert.strictEqual(r.epic_detail.research.items.length, 2);
+    const names = r.epic_detail.research.items.map(i => i.name).sort();
+    assert.deepStrictEqual(names, ['architecture', 'exploration']);
+    assert.strictEqual(r.phases.research.exists, true);
+  });
+
+  it('epic research with items but no flat status still shows in epic_detail', () => {
+    createManifest(dir, 'v1', {
+      work_type: 'epic',
+      phases: {
+        research: {
+          items: { 'exploration': { status: 'in-progress' } },
+        },
+      },
+    });
+    const r = discover(dir, 'v1');
+    assert.ok(r.epic_detail.research);
+    assert.strictEqual(r.epic_detail.research.items.length, 1);
+    // phaseStatus returns null when no flat status, but items are still in epic_detail
+    assert.strictEqual(r.phases.research.status, 'none');
+  });
+
+  it('epic with only research items has items in research detail', () => {
+    createManifest(dir, 'v1', {
+      work_type: 'epic',
+      phases: {
+        research: {
+          items: { 'exploration': { status: 'concluded' } },
+        },
+      },
+    });
+    const r = discover(dir, 'v1');
+    assert.ok(r.epic_detail.research);
+    assert.strictEqual(r.epic_detail.research.items.length, 1);
+    // Other phases exist in epic_detail but with empty items
+    assert.strictEqual(r.epic_detail.discussion.items.length, 0);
+  });
 });

@@ -10,7 +10,7 @@ hooks:
           once: true
 ---
 
-Unified workflow entry point. Discovers state, determines work type, and routes appropriately.
+Unified workflow entry point. Discovers state, shows all active work, and routes to start or continue skills.
 
 > **⚠️ ZERO OUTPUT RULE**: Do not narrate your processing. Produce no output until a step or reference file explicitly specifies display content. No "proceeding with...", no discovery summaries, no routing decisions, no transition text. Your first output must be content explicitly called for by the instructions.
 
@@ -47,13 +47,13 @@ node .claude/skills/workflow-start/scripts/discovery.js
 Parse the output to understand the current workflow state:
 
 **From `epics` section:**
-- `work_units` — work units with `work_type: epic` — name, next_phase, phase_label, per-phase statuses
+- `work_units` — name, active_phases (list of phase names with artifacts)
 
 **From `features` section:**
-- `work_units` — work units with `work_type: feature` — name, next_phase, phase_label, per-phase statuses
+- `work_units` — name, next_phase, phase_label
 
 **From `bugfixes` section:**
-- `work_units` — work units with `work_type: bugfix` — name, next_phase, phase_label, per-phase statuses (includes investigation)
+- `work_units` — name, next_phase, phase_label
 
 **From `state` section:**
 - Counts for each work type, `has_any_work` flag
@@ -62,28 +62,18 @@ Parse the output to understand the current workflow state:
 
 ---
 
-## Step 2: Work Type Selection
+## Step 2: Check State
 
-Load **[work-type-selection.md](references/work-type-selection.md)** and follow its instructions.
+#### If `state.has_any_work` is false
 
-The reference will present the current state and ask the user which work type they want to work on.
+Load **[empty-state.md](references/empty-state.md)** and follow its instructions as written.
 
-→ Proceed to **Step 3** with the selected work type.
+#### Otherwise
+
+→ Proceed to **Step 3**.
 
 ---
 
-## Step 3: Route to Work Type
+## Step 3: Display and Route
 
-Based on the selected work type, load the appropriate routing reference:
-
-#### If work type is `epic`
-
-Load **[epic-routing.md](references/epic-routing.md)** and follow its instructions.
-
-#### If work type is `feature`
-
-Load **[feature-routing.md](references/feature-routing.md)** and follow its instructions.
-
-#### If work type is `bugfix`
-
-Load **[bugfix-routing.md](references/bugfix-routing.md)** and follow its instructions.
+Load **[active-work.md](references/active-work.md)** and follow its instructions as written.

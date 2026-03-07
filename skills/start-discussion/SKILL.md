@@ -99,7 +99,7 @@ Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, top
 
 #### If `topic` resolved (bridge mode)
 
-→ Proceed to **Step 3** (Validate Topic).
+→ Proceed to **Step 3** (Validate Phase).
 
 #### If `work_type` and `work_unit` provided but no `topic` (scoped discovery)
 
@@ -113,15 +113,9 @@ Store work_type for the handoff.
 
 ---
 
-## Step 3: Validate Topic
+## Step 3: Validate Phase
 
-Load **[validate-topic.md](references/validate-topic.md)** and follow its instructions as written.
-
-#### If `resume`
-
-→ Proceed to **Step 8**.
-
-#### If no collision
+Load **[validate-phase.md](references/validate-phase.md)** and follow its instructions as written.
 
 → Proceed to **Step 8**.
 

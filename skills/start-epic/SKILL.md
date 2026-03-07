@@ -1,6 +1,6 @@
 ---
 name: start-epic
-allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(ls .workflows/), Bash(.claude/hooks/workflows/write-session-state.sh)
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(ls .workflows/)
 hooks:
   PreToolUse:
     - hooks:
@@ -9,9 +9,7 @@ hooks:
           once: true
 ---
 
-Start a new epic and route it through the pipeline: (Research) → Discussion → Specification → Planning → Implementation → Review.
-
-Research is optional — offered when significant unknowns exist. Epics are phase-centric, multi-session, and long-running.
+Start a new epic. Gather a brief description, create the work unit, and route to the first phase.
 
 > **⚠️ ZERO OUTPUT RULE**: Do not narrate your processing. Produce no output until a step or reference file explicitly specifies display content. No "proceeding with...", no discovery summaries, no routing decisions, no transition text. Your first output must be content explicitly called for by the instructions.
 
@@ -23,27 +21,7 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 - After each user interaction, STOP and wait for their response before proceeding
 - Never assume or anticipate user choices
-- Even if the user's initial prompt seems to answer a question, still confirm with them at the appropriate step
 - Complete each step fully before moving to the next
-
----
-
-## Resuming After Context Refresh
-
-Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
-
-1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
-2. **Identify the work unit.** Check conversation history for the work unit name. If unknown, check `.workflows/` for recently modified work unit directories.
-3. **Determine current step from artifacts:**
-   - No manifest exists → resume at **Step 1**
-   - Manifest exists, no research or discussion file → resume at **Step 4** (re-evaluate routing)
-   - Research file exists, no discussion → resume at **Step 5** (re-invoke technical-research)
-   - Check discussion status via CLI: `node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase discussion --topic {topic} status`
-   - Status is `in-progress` → resume at **Step 5** (re-invoke technical-discussion)
-   - Status is `concluded` → already handled by processing skill's bridge invocation
-4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
-
-Do not guess at progress or continue from memory. The files on disk and git history are authoritative — your recollection is not.
 
 ---
 
@@ -71,28 +49,21 @@ Load **[name-check.md](references/name-check.md)** and follow its instructions.
 
 ---
 
-## Step 3: Create Manifest
+## Step 3: Route to First Phase
 
-Create the work unit manifest for this epic:
-
-```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js init {work_unit} --work-type epic --description "{description}"
-```
-
-Where `{description}` is a concise one-line summary compiled from the epic context gathered in Step 1.
+Load **[route-first-phase.md](references/route-first-phase.md)** and follow its instructions.
 
 → Proceed to **Step 4**.
 
 ---
 
-## Step 4: Route to First Phase
+## Step 4: Invoke Entry-Point Skill
 
-Load **[route-first-phase.md](references/route-first-phase.md)** and follow its instructions.
+Invoke the appropriate entry-point skill based on the selected phase:
 
-→ Proceed to **Step 5**.
+| Phase | Invoke |
+|-------|--------|
+| research | `/start-research epic {work_unit}` |
+| discussion | `/start-discussion epic {work_unit}` |
 
----
-
-## Step 5: Invoke Processing Skill
-
-Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions.
+This skill ends. The invoked skill will load into context and provide additional instructions. Terminal.

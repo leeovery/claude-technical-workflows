@@ -4,55 +4,22 @@
 
 ---
 
-Assess whether the epic should start with research or go directly to discussion.
-
-## Assess Unknowns
-
-Based on the gathered context, evaluate if there are significant unknowns:
-
-- **Technical unknowns**: Unfamiliar technologies, platforms, or architectural patterns
-- **Market unknowns**: User needs, competitive landscape, viability questions
-- **Design unknowns**: Multiple viable architectures, unclear tradeoffs at scale
-- **Scope unknowns**: Requirements that need exploration before committing
-
-Epics are large initiatives — research is more commonly needed than with features.
-
-## Present Assessment
-
-#### If significant unknowns exist
-
-> *Output the next fenced block as a code block:*
-
-```
-Research Assessment
-
-Based on your description, there are areas that would benefit from research:
-
-• {uncertainty_1}
-• {uncertainty_2}
-• ...
-
-Research helps explore options and validate assumptions before committing to architectural decisions.
-```
+Let the user choose whether to start with research or go directly to discussion.
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
-Would you like to explore these in research first?
+How would you like to start?
 
-- **`y`/`yes`** — Start with research, then continue to discussion
-- **`n`/`no`** — Proceed directly to discussion
+- **`r`/`research`** — Explore ideas and options first, no decisions yet
+- **`d`/`discussion`** — Ready to discuss and make decisions
+
+Select an option:
 · · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
-
-#### If no significant unknowns
-
-Skip this step silently and proceed to discussion. Do not ask about research if the epic vision is clear and well-defined.
-
-## Route Based on Response
 
 #### If user chooses research
 
@@ -60,7 +27,7 @@ Set phase="research".
 
 → Return to **[the skill](../SKILL.md)**.
 
-#### If user declines research (or no unknowns)
+#### If user chooses discussion
 
 Set phase="discussion".
 

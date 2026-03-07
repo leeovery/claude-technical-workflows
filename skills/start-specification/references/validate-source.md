@@ -77,3 +77,41 @@ Run /start-investigation bugfix {work_unit} to continue.
 **If investigation exists and status is "concluded":**
 
 → Return to **[the skill](../SKILL.md)**.
+
+#### If `work_type` is `epic`
+
+Check if at least one concluded discussion exists for this work unit. Read discussion phase items via manifest CLI: `get {work_unit} --phase discussion`.
+
+**If no discussions exist:**
+
+> *Output the next fenced block as a code block:*
+
+```
+Source Material Missing
+
+No discussions found for "{work_unit:(titlecase)}".
+
+At least one concluded discussion is required before specification.
+Run /start-discussion epic {work_unit} to start one.
+```
+
+**STOP.** Do not proceed — terminal condition.
+
+**If no concluded discussions exist:**
+
+> *Output the next fenced block as a code block:*
+
+```
+No Concluded Discussions
+
+No concluded discussions found for "{work_unit:(titlecase)}".
+
+At least one concluded discussion is required before specification.
+Run /continue-epic to continue an in-progress discussion.
+```
+
+**STOP.** Do not proceed — terminal condition.
+
+**If at least one concluded discussion exists:**
+
+→ Return to **[the skill](../SKILL.md)**.

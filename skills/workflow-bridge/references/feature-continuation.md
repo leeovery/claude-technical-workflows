@@ -4,7 +4,7 @@
 
 ---
 
-Route a feature to its next pipeline phase and enter plan mode with continuation instructions.
+Route a feature to its next pipeline phase, with an option to revisit earlier phases.
 
 Feature pipeline: (Research) → Discussion → Specification → Planning → Implementation → Review
 
@@ -12,17 +12,17 @@ Feature pipeline: (Research) → Discussion → Specification → Planning → I
 
 Use `next_phase` from discovery output to determine the target skill:
 
-| next_phase | Target Skill | Plan Mode Instructions |
-|------------|--------------|------------------------|
-| research | start-research | Resume research for work unit |
-| discussion | start-discussion | Start/resume discussion for work unit |
-| specification | start-specification | Start/resume specification for work unit |
-| planning | start-planning | Start/resume planning for work unit |
-| implementation | start-implementation | Start/resume implementation for work unit |
-| review | start-review | Start review for work unit |
-| done | (terminal) | Pipeline complete |
+| next_phase | Target Skill |
+|------------|--------------|
+| research | start-research |
+| discussion | start-discussion |
+| specification | start-specification |
+| planning | start-planning |
+| implementation | start-implementation |
+| review | start-review |
+| done | (terminal) |
 
-## Generate Plan Mode Content
+## A. Check Terminal
 
 #### If `next_phase` is `done`
 
@@ -38,16 +38,80 @@ Feature Complete
 
 #### Otherwise
 
+Set `target_phase` = `next_phase`.
+
+→ Proceed to **B. Offer Revisit**.
+
+## B. Offer Revisit
+
+Check if there are concluded phases earlier in the pipeline that the user could revisit. Look at the discovery output's `phases` data — any phase with status `concluded` or `completed` that comes before `next_phase` in the pipeline order.
+
+#### If no earlier concluded phases exist
+
+→ Proceed to **C. Enter Plan Mode**.
+
+#### If earlier concluded phases exist
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+{previous_phase:(titlecase)} concluded for "{work_unit:(titlecase)}".
+
+- **`y`/`yes`** — Proceed to {next_phase}
+- **`r`/`revisit`** — Revisit an earlier phase
+
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+**If user chose `y`/`yes`:**
+
+→ Proceed to **C. Enter Plan Mode**.
+
+**If user chose `r`/`revisit`:**
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+Which phase would you like to revisit?
+
+1. {phase:(titlecase)} — concluded
+2. ...
+{N}. Back
+
+Select an option (enter number):
+· · · · · · · · · · · ·
+```
+
+List only concluded phases that come before `next_phase`.
+
+**STOP.** Wait for user response.
+
+**If user chose Back:**
+
+→ Return to **B. Offer Revisit**.
+
+**If user chose a phase:**
+
+Set `target_phase` = selected phase.
+
+→ Proceed to **C. Enter Plan Mode**.
+
+## C. Enter Plan Mode
+
 Call the `EnterPlanMode` tool to enter plan mode. Then write the following content to the plan file:
 
 ```
 # Continue Feature: {work_unit}
 
-The previous phase has concluded. Continue the pipeline.
+@if(target_phase == next_phase) The previous phase has concluded. Continue the pipeline. @else Revisiting an earlier phase. @endif
 
 ## Next Step
 
-Invoke `/start-{next_phase} feature {work_unit}`
+Invoke `/start-{target_phase} feature {work_unit}`
 
 Arguments: work_type = feature, work_unit = {work_unit} (topic inferred from work_unit)
 The skill will skip discovery and proceed directly to validation.
@@ -57,4 +121,4 @@ The skill will skip discovery and proceed directly to validation.
 Clear context and continue.
 ```
 
-Call the `ExitPlanMode` tool to present the plan to the user for approval. The user will then clear context and continue.
+Call the `ExitPlanMode` tool to present the plan to the user for approval.

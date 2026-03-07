@@ -1,53 +1,42 @@
 'use strict';
 
-const path = require('path');
-const { loadActiveManifests, phaseStatus, phaseItems, computeNextPhase, listFiles } = require('../../workflow-shared/scripts/discovery-utils');
+const { loadActiveManifests, phaseStatus, phaseItems, phaseData, computeNextPhase } = require('../../workflow-shared/scripts/discovery-utils');
+
+const EPIC_PHASES = ['research', 'discussion', 'specification', 'planning', 'implementation', 'review'];
 
 function discover(cwd) {
   const manifests = loadActiveManifests(cwd);
-  const workflowsDir = path.join(cwd, '.workflows');
   const epics = [];
   const features = [];
   const bugfixes = [];
 
   for (const m of manifests) {
     const state = computeNextPhase(m);
-    const phases = {};
-    const featureKeys = phaseStatus(m, 'research')
-      ? ['research', 'discussion', 'specification', 'planning', 'implementation', 'review']
-      : ['discussion', 'specification', 'planning', 'implementation', 'review'];
-    const keys = m.work_type === 'epic'
-      ? ['research', 'discussion', 'specification', 'planning', 'implementation', 'review']
-      : m.work_type === 'bugfix'
-        ? ['investigation', 'specification', 'planning', 'implementation', 'review']
-        : featureKeys;
+    if (state.next_phase === 'done') continue;
 
-    for (const k of keys) {
-      if (m.work_type === 'epic' && k === 'research') {
-        // Epic research: include file listing from filesystem
-        const resDir = path.join(workflowsDir, m.name, 'research');
-        const files = listFiles(resDir, '.md');
-        phases[k] = {
-          status: phaseStatus(m, k) || 'none',
-          files: files.map(f => f.replace(/\.md$/, '')),
-        };
-      } else if (m.work_type === 'epic') {
-        // Epic non-research phases: per-item statuses
-        const items = phaseItems(m, k);
-        phases[k] = {
-          total: items.length,
-          items: items.map(item => ({ name: item.name, status: item.status || 'unknown' })),
-        };
-      } else {
-        phases[k] = phaseStatus(m, k) || 'none';
+    const unit = {
+      name: m.name,
+      next_phase: state.next_phase,
+      phase_label: state.phase_label,
+    };
+
+    if (m.work_type === 'epic') {
+      // For epics, include list of phases that have items or status
+      const activePhases = [];
+      for (const phase of EPIC_PHASES) {
+        const items = phaseItems(m, phase);
+        const pd = phaseData(m, phase);
+        if (items.length > 0 || pd.status) {
+          activePhases.push(phase);
+        }
       }
+      unit.active_phases = activePhases;
+      epics.push(unit);
+    } else if (m.work_type === 'bugfix') {
+      bugfixes.push(unit);
+    } else {
+      features.push(unit);
     }
-
-    const unit = { name: m.name, next_phase: state.next_phase, phase_label: state.phase_label, phases };
-
-    if (m.work_type === 'epic') epics.push(unit);
-    else if (m.work_type === 'bugfix') bugfixes.push(unit);
-    else features.push(unit);
   }
 
   return {
@@ -55,7 +44,7 @@ function discover(cwd) {
     features: { work_units: features, count: features.length },
     bugfixes: { work_units: bugfixes, count: bugfixes.length },
     state: {
-      has_any_work: manifests.length > 0,
+      has_any_work: (epics.length + features.length + bugfixes.length) > 0,
       epic_count: epics.length,
       feature_count: features.length,
       bugfix_count: bugfixes.length,
@@ -72,27 +61,10 @@ function format(result) {
       lines.push('  (none)');
     }
     for (const u of items) {
-      lines.push(`  ${u.name} (${u.next_phase}: ${u.phase_label})`);
-      for (const [k, v] of Object.entries(u.phases)) {
-        if (typeof v === 'object' && 'files' in v) {
-          // Epic research with file listing
-          lines.push(`    ${k}: ${v.status} (${v.files.length} files)`);
-          for (const f of v.files) {
-            lines.push(`      - ${f}`);
-          }
-        } else if (typeof v === 'object') {
-          // Epic per-item phase
-          if (v.total === 0) {
-            lines.push(`    ${k}: (none)`);
-          } else {
-            lines.push(`    ${k}: ${v.total} items`);
-            for (const item of v.items) {
-              lines.push(`      - ${item.name} (${item.status})`);
-            }
-          }
-        } else {
-          lines.push(`    ${k}: ${v}`);
-        }
+      if (u.active_phases) {
+        lines.push(`  ${u.name} (${u.active_phases.join(', ')})`);
+      } else {
+        lines.push(`  ${u.name} (${u.phase_label})`);
       }
     }
     lines.push('');

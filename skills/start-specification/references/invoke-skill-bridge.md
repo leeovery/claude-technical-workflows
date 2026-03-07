@@ -58,3 +58,23 @@ Action: {verb} specification
 
 Invoke the technical-specification skill.
 ```
+
+#### If `work_type` is `epic`
+
+Read the spec's source discussions from the manifest: `get {work_unit} --phase specification --topic {topic} sources`. List each source discussion file.
+
+```
+Specification session for: {topic}
+Work type: {work_type}
+
+Source material:
+- .workflows/{work_unit}/discussion/{source-discussion-1}.md
+- .workflows/{work_unit}/discussion/{source-discussion-2}.md
+- ...
+
+Work unit: {work_unit}
+Topic: {topic}
+Action: {verb} specification
+
+Invoke the technical-specification skill.
+```
