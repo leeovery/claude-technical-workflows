@@ -42,7 +42,7 @@ Select an option (enter number):
 · · · · · · · · · · · ·
 ```
 
-List all concluded items across all phases. "Back to main menu" returns to the continue-epic main display and menu (re-run from **Step 5**).
+List all concluded items across all phases.
 
 **STOP.** Wait for user response.
 
