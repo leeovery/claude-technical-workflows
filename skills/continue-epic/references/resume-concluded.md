@@ -42,13 +42,13 @@ Select an option (enter number):
 · · · · · · · · · · · ·
 ```
 
-List all concluded items across all phases. "Back to main menu" returns to the continue-epic main display and menu (re-run from **Step 4**).
+List all concluded items across all phases. "Back to main menu" returns to the continue-epic main display and menu (re-run from **Step 5**).
 
 **STOP.** Wait for user response.
 
 #### If user chose Back to main menu
 
-→ Return to **[the skill](../SKILL.md)** for **Step 4**.
+→ Return to **[the skill](../SKILL.md)** for **Step 5**.
 
 #### If user chose a topic
 
@@ -63,4 +63,4 @@ Route to the appropriate phase skill with the topic. The phase entry skill handl
 | implementation | `/start-implementation epic {work_unit} {topic}` |
 | review | `/start-review epic {work_unit} {topic}` |
 
-Invoke the selected skill. This is terminal — do not return to the backbone.
+This skill ends. The invoked skill will load into context and provide additional instructions. Terminal.
