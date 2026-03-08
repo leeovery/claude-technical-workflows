@@ -33,21 +33,23 @@ No work started yet.
 ```
 {work_unit:(titlecase)}
 
-@foreach(phase in phases where phase has items)
+@foreach(phase in phases)
+@if(phase.items)
   {phase:(titlecase)}
 @foreach(item in phase.items)
-    └─ {item.name:(titlecase)} ({item.status})@if(phase is planning and item.format) [{item.format}]@endif
-@if(phase is specification and item.sources)
+    └─ {item.name:(titlecase)} ({item.status})@if(phase == planning and item.format) [{item.format}]@endif
+@if(phase == specification and item.sources)
        └─ {source.topic:(titlecase)} ({source.status})
 @endif
-@if(phase is implementation and item.current_phase)
+@if(phase == implementation and item.current_phase)
        └─ Phase {item.current_phase}, {item.completed_tasks.length} task(s) completed
 @else
-@if(phase is implementation and item.completed_tasks)
+@if(phase == implementation and item.completed_tasks)
        └─ {item.completed_tasks.length} task(s) completed
 @endif
 @endif
 @endforeach
+@endif
 
 @endforeach
 @if(recommendation)
