@@ -84,7 +84,7 @@ Build a numbered menu of actionable items. The verb depends on the state:
 | Completed implementation, no review | Start review for |
 | Research exists | Continue research |
 
-**Specification phase is different in epic**: Don't offer "Start specification from {item}". Instead, when concluded discussions exist, offer "Start specification" which invokes `/start-specification epic`. Don't pass an item name. Always route through discovery mode so analysis can detect changed discussions.
+**Specification phase is different in epic**: Don't offer "Start specification from {item}". Instead, when concluded discussions exist, offer "Start specification" which invokes `/workflow-specification-entry epic`. Don't pass an item name. Always route through discovery mode so analysis can detect changed discussions.
 
 **Specification readiness:**
 - All discussions concluded → "Start specification" (recommended)
@@ -149,23 +149,23 @@ Map the selection to a skill invocation:
 
 | Selection | Skill | Work Type | Work Unit | Topic |
 |-----------|-------|-----------|-----------|-------|
-| Continue discussion | `/start-discussion` | epic | {work_unit} | {topic} |
-| Continue specification | `/start-specification` | epic | {work_unit} | — |
-| Continue plan | `/start-planning` | epic | {work_unit} | {topic} |
-| Continue implementation | `/start-implementation` | epic | {work_unit} | {topic} |
-| Continue research | `/start-research` | epic | {work_unit} | — |
-| Start specification | `/start-specification` | epic | {work_unit} | — |
-| Start planning for {topic} | `/start-planning` | epic | {work_unit} | {topic} |
-| Start implementation of {topic} | `/start-implementation` | epic | {work_unit} | {topic} |
-| Start review for {topic} | `/start-review` | epic | {work_unit} | {topic} |
-| Start new research | `/start-research` | epic | {work_unit} | — |
-| Start new discussion | `/start-discussion` | epic | {work_unit} | — |
+| Continue discussion | `/workflow-discussion-entry` | epic | {work_unit} | {topic} |
+| Continue specification | `/workflow-specification-entry` | epic | {work_unit} | — |
+| Continue plan | `/workflow-planning-entry` | epic | {work_unit} | {topic} |
+| Continue implementation | `/workflow-implementation-entry` | epic | {work_unit} | {topic} |
+| Continue research | `/workflow-research-entry` | epic | {work_unit} | — |
+| Start specification | `/workflow-specification-entry` | epic | {work_unit} | — |
+| Start planning for {topic} | `/workflow-planning-entry` | epic | {work_unit} | {topic} |
+| Start implementation of {topic} | `/workflow-implementation-entry` | epic | {work_unit} | {topic} |
+| Start review for {topic} | `/workflow-review-entry` | epic | {work_unit} | {topic} |
+| Start new research | `/workflow-research-entry` | epic | {work_unit} | — |
+| Start new discussion | `/workflow-discussion-entry` | epic | {work_unit} | — |
 
 Skills receive positional arguments: `$0` = work_type, `$1` = work_unit, `$2` = topic (optional).
 
-**With topic** (bridge mode): `/start-discussion epic {work_unit} {topic}` — skill skips discovery, validates topic, proceeds to processing.
+**With topic** (bridge mode): `/workflow-discussion-entry epic {work_unit} {topic}` — skill skips discovery, validates topic, proceeds to processing.
 
-**Without topic** (discovery mode): `/start-specification epic {work_unit}` — skill runs discovery with work_type context.
+**Without topic** (discovery mode): `/workflow-specification-entry epic {work_unit}` — skill runs discovery with work_type context.
 
 → Proceed to **D. Enter Plan Mode**.
 
@@ -184,7 +184,7 @@ Continue {selected_phase} for "{topic}" in "{work_unit}".
 
 ## Next Step
 
-Invoke `/start-{selected_phase} epic {work_unit} {topic}`
+Invoke `/workflow-{selected_phase}-entry epic {work_unit} {topic}`
 
 Arguments: work_type = epic, work_unit = {work_unit}, topic = {topic}
 The skill will skip discovery and proceed directly to validation.
@@ -205,7 +205,7 @@ Start {selected_phase} phase for "{work_unit}".
 
 ## Next Step
 
-Invoke `/start-{selected_phase} epic {work_unit}`
+Invoke `/workflow-{selected_phase}-entry epic {work_unit}`
 
 Arguments: work_type = epic, work_unit = {work_unit}
 The skill will run discovery with epic context.

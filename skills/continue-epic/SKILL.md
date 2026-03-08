@@ -134,17 +134,17 @@ Invoke the appropriate skill based on the user's menu selection:
 
 | Menu option | Invoke |
 |-------------|--------|
-| Continue {topic} — discussion | `/start-discussion epic {work_unit} {topic}` |
-| Continue {topic} — research | `/start-research epic {work_unit} {topic}` |
-| Continue {topic} — specification | `/start-specification epic {work_unit} {topic}` |
-| Continue {topic} — planning | `/start-planning epic {work_unit} {topic}` |
-| Continue {topic} — implementation | `/start-implementation epic {work_unit} {topic}` |
-| Start planning for {topic} | `/start-planning epic {work_unit} {topic}` |
-| Start implementation of {topic} | `/start-implementation epic {work_unit} {topic}` |
-| Start review for {topic} | `/start-review epic {work_unit} {topic}` |
-| Start specification | `/start-specification epic {work_unit}` |
-| Start new discussion topic | `/start-discussion epic {work_unit}` |
-| Start new research | `/start-research epic {work_unit}` |
+| Continue {topic} — discussion | `/workflow-discussion-entry epic {work_unit} {topic}` |
+| Continue {topic} — research | `/workflow-research-entry epic {work_unit} {topic}` |
+| Continue {topic} — specification | `/workflow-specification-entry epic {work_unit} {topic}` |
+| Continue {topic} — planning | `/workflow-planning-entry epic {work_unit} {topic}` |
+| Continue {topic} — implementation | `/workflow-implementation-entry epic {work_unit} {topic}` |
+| Start planning for {topic} | `/workflow-planning-entry epic {work_unit} {topic}` |
+| Start implementation of {topic} | `/workflow-implementation-entry epic {work_unit} {topic}` |
+| Start review for {topic} | `/workflow-review-entry epic {work_unit} {topic}` |
+| Start specification | `/workflow-specification-entry epic {work_unit}` |
+| Start new discussion topic | `/workflow-discussion-entry epic {work_unit}` |
+| Start new research | `/workflow-research-entry epic {work_unit}` |
 
 Skills receive positional arguments: `$0` = work_type (`epic`), `$1` = work_unit, `$2` = topic (when provided).
 

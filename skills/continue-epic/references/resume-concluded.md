@@ -56,11 +56,11 @@ Route to the appropriate phase skill with the topic. The phase entry skill handl
 
 | Phase | Invoke |
 |-------|--------|
-| research | `/start-research epic {work_unit} {topic}` |
-| discussion | `/start-discussion epic {work_unit} {topic}` |
-| specification | `/start-specification epic {work_unit} {topic}` |
-| planning | `/start-planning epic {work_unit} {topic}` |
-| implementation | `/start-implementation epic {work_unit} {topic}` |
-| review | `/start-review epic {work_unit} {topic}` |
+| research | `/workflow-research-entry epic {work_unit} {topic}` |
+| discussion | `/workflow-discussion-entry epic {work_unit} {topic}` |
+| specification | `/workflow-specification-entry epic {work_unit} {topic}` |
+| planning | `/workflow-planning-entry epic {work_unit} {topic}` |
+| implementation | `/workflow-implementation-entry epic {work_unit} {topic}` |
+| review | `/workflow-review-entry epic {work_unit} {topic}` |
 
 This skill ends. The invoked skill will load into context and provide additional instructions. Terminal.
