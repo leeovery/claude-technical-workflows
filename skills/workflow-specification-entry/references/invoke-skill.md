@@ -59,7 +59,7 @@ Invoke the technical-specification skill.
 
 #### If `work_type` is `epic`
 
-Read the spec's source discussions from the manifest: `get {work_unit} --phase specification --topic {topic} sources`. List each source discussion file.
+Read the spec's source discussions from the manifest: `node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification --topic {topic} sources`. List each source discussion file.
 
 ```
 Specification session for: {topic}
