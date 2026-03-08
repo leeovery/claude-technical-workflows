@@ -49,10 +49,10 @@ Map the selection to a skill invocation using this routing table:
 | Selection | Skill | Work Type | Work Unit | Topic |
 |-----------|-------|-----------|-----------|-------|
 | Continue discussion | `/workflow-discussion-entry` | epic | {work_unit} | {topic} |
-| Continue specification | `/workflow-specification-entry` | epic | {work_unit} | — |
+| Continue specification | `/workflow-specification-entry` | epic | {work_unit} | {topic} |
 | Continue plan | `/workflow-planning-entry` | epic | {work_unit} | {topic} |
 | Continue implementation | `/workflow-implementation-entry` | epic | {work_unit} | {topic} |
-| Continue research | `/workflow-research-entry` | epic | {work_unit} | — |
+| Continue research | `/workflow-research-entry` | epic | {work_unit} | {topic} |
 | Start specification | `/workflow-specification-entry` | epic | {work_unit} | — |
 | Start planning for {topic} | `/workflow-planning-entry` | epic | {work_unit} | {topic} |
 | Start implementation of {topic} | `/workflow-implementation-entry` | epic | {work_unit} | {topic} |
