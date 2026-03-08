@@ -6,7 +6,7 @@
 
 Load **[epic-display-and-menu.md](epic-display-and-menu.md)** and follow its instructions as written.
 
-The shared reference will display the epic state and present the menu, then return with the user's selection (action, phase, topic).
+This will display the epic state and present the menu, then return with the user's selection (action, phase, topic).
 
 #### If action is `resume_concluded`
 

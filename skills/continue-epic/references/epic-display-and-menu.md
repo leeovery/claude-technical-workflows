@@ -1,6 +1,6 @@
 # Epic State Display and Menu
 
-*Shared reference — consumed by continue-epic and workflow-bridge.*
+*Reference for **[continue-epic](../SKILL.md)***
 
 ---
 
