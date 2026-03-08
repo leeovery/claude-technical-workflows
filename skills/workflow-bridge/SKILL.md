@@ -21,13 +21,19 @@ This skill receives context from the calling processing skill:
 
 ## Step 1: Run Discovery
 
+#### If work type is `epic`
+
+→ Proceed to **Step 2** (epic continuation runs its own enriched discovery).
+
+#### Otherwise
+
 Run the discovery script with the work unit from the calling context:
 
 ```bash
 node .claude/skills/workflow-bridge/scripts/discovery.js {work_unit}
 ```
 
-The output contains: `work_type`, `phases` (per-phase status), and `next_phase`. Extract `next_phase` from the discovery output. For epic work type, the epic continuation reference runs its own enriched discovery.
+The output contains: `work_type`, `phases` (per-phase status), and `next_phase`.
 
 → Proceed to **Step 2**.
 
