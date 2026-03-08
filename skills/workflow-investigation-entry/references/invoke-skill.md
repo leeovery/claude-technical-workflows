@@ -1,6 +1,6 @@
 # Invoke the Skill
 
-*Reference for **[start-investigation](../SKILL.md)***
+*Reference for **[workflow-investigation-entry](../SKILL.md)***
 
 ---
 
@@ -27,12 +27,13 @@ Invoke the [technical-investigation](../../technical-investigation/SKILL.md) ski
 
 ## Handoff
 
-Construct the handoff based on how this investigation was initiated.
+Construct the handoff based on source.
 
-#### If source is `fresh` or `bridge`
+#### If source is `bridge`
 
 ```
 Investigation session for: {work_unit}
+Work type: bugfix
 Output: .workflows/{work_unit}/investigation/{topic}.md
 
 Bug context:
@@ -47,6 +48,7 @@ Invoke the technical-investigation skill.
 
 ```
 Investigation session for: {work_unit}
+Work type: bugfix
 Source: existing investigation
 Output: .workflows/{work_unit}/investigation/{topic}.md
 

@@ -1,6 +1,6 @@
 # Gather Context
 
-*Reference for **[start-research](../SKILL.md)***
+*Reference for **[workflow-research-entry](../SKILL.md)***
 
 ---
 
@@ -64,5 +64,3 @@ Any constraints or context I should know about upfront?
 ```
 
 **STOP.** Wait for user response before proceeding.
-
----

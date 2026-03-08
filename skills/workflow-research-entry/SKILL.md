@@ -1,12 +1,7 @@
 ---
-name: start-research
+name: workflow-research-entry
+user-invocable: false
 allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(.claude/hooks/workflows/write-session-state.sh)
-hooks:
-  PreToolUse:
-    - hooks:
-        - type: command
-          command: "$CLAUDE_PROJECT_DIR/.claude/hooks/workflows/system-check.sh"
-          once: true
 ---
 
 Invoke the **technical-research** skill for this conversation.
@@ -44,26 +39,30 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 ---
 
-## Step 0: Run Migrations
+## Step 1: Parse Arguments
 
-**This step is mandatory. You must complete it before proceeding.**
+Arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional).
+Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, topic = `$1`.
 
-Invoke the `/migrate` skill and assess its output.
+Store work_type and work_unit for the handoff.
 
----
+#### If `topic` resolved
 
-## Step 1: Check Arguments
+Check research phase status via manifest CLI:
 
-Check for arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional).
-Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, topic = `$1`
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase research --topic {topic} status
+```
 
-If provided, store for the handoff.
-
-#### If `topic` resolved (bridge mode)
+**If phase exists (in-progress or concluded):**
 
 → Proceed to **Step 2** (Validate Phase).
 
-#### Otherwise
+**If phase not found (new entry):**
+
+→ Proceed to **Step 3** (Gather Context).
+
+#### If no `topic` (epic — scoped path)
 
 → Proceed to **Step 3** (Gather Context).
 

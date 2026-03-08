@@ -1,6 +1,6 @@
 # Validate Phase
 
-*Reference for **[start-research](../SKILL.md)***
+*Reference for **[workflow-research-entry](../SKILL.md)***
 
 ---
 
@@ -37,11 +37,5 @@ Resuming research: {topic:(titlecase)}
 ```
 
 Set source="continue".
-
-→ Return to **[the skill](../SKILL.md)**.
-
-#### If not found
-
-Proceed — new research topic.
 
 → Return to **[the skill](../SKILL.md)**.

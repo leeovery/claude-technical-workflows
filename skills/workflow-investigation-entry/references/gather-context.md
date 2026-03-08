@@ -1,14 +1,8 @@
 # Gather Bug Context
 
-*Reference for **[start-investigation](../SKILL.md)***
+*Reference for **[workflow-investigation-entry](../SKILL.md)***
 
 ---
-
-Route based on the `source` variable set in earlier steps.
-
-#### If source is `bridge`
-
-Bridge mode: work_unit and work_type were provided by the caller.
 
 > *Output the next fenced block as a code block:*
 
@@ -21,11 +15,5 @@ What bug are you investigating? Please provide:
 ```
 
 **STOP.** Wait for user response.
-
-→ Return to **[the skill](../SKILL.md)**.
-
-#### If source is `fresh`
-
-Load **[gather-context-fresh.md](gather-context-fresh.md)** and follow its instructions.
 
 → Return to **[the skill](../SKILL.md)**.

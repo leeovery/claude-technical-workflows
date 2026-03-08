@@ -1,12 +1,7 @@
 ---
-name: start-investigation
-allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(node .claude/skills/start-investigation/scripts/discovery.js), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(ls .workflows/)
-hooks:
-  PreToolUse:
-    - hooks:
-        - type: command
-          command: "$CLAUDE_PROJECT_DIR/.claude/hooks/workflows/system-check.sh"
-          once: true
+name: workflow-investigation-entry
+user-invocable: false
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(.claude/hooks/workflows/write-session-state.sh)
 ---
 
 Invoke the **technical-investigation** skill for this conversation.
@@ -41,97 +36,51 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 ---
 
-## Step 0: Run Migrations
+## Step 1: Parse Arguments
 
-**This step is mandatory. You must complete it before proceeding.**
+Arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional).
+Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, topic = `$1`.
 
-Invoke the `/migrate` skill and assess its output.
+Investigation is always bugfix work_type. Store work_type and work_unit for the handoff.
 
----
-
-## Step 1: Discovery State
-
-!`node .claude/skills/start-investigation/scripts/discovery.js`
-
-If the above shows a script invocation rather than discovery output, the dynamic content preprocessor did not run. Execute the script before continuing:
+Check investigation phase status via manifest CLI:
 
 ```bash
-node .claude/skills/start-investigation/scripts/discovery.js
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase investigation --topic {topic} status
 ```
 
-Parse the discovery output to understand:
+**If phase exists (in-progress or concluded):**
 
-**From `investigations` section:**
-- `exists` - whether investigation files exist
-- `files` - each investigation's work_unit, status, and work_type
-- `counts.in_progress` and `counts.concluded` - totals for routing
+→ Proceed to **Step 2** (Validate Phase).
 
-**From `state` section:**
-- `scenario` - one of: `"fresh"`, `"has_investigations"`
+**If phase not found (new entry):**
 
-**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state.
-
-→ Proceed to **Step 2**.
+→ Proceed to **Step 3** (Gather Bug Context).
 
 ---
 
-## Step 2: Determine Mode
-
-Check for arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional)
-Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, topic = `$1`
-
-Investigation is always bugfix work_type. If work_type is provided, it should be `bugfix`.
-
-#### If `topic` resolved (bridge mode)
-
-→ Proceed to **Step 3** (Validate Phase).
-
-#### If `work_type` and `work_unit` provided but no `topic` (scoped discovery)
-
-→ Proceed to **Step 4** (Route Based on Scenario).
-
-#### If neither is provided
-
-→ Proceed to **Step 4** (Route Based on Scenario).
-
----
-
-## Step 3: Validate Phase
+## Step 2: Validate Phase
 
 Load **[validate-phase.md](references/validate-phase.md)** and follow its instructions as written.
 
 #### If source is `continue`
 
-→ Proceed to **Step 6**.
+→ Proceed to **Step 4**.
 
 #### Otherwise
 
-→ Proceed to **Step 5**.
+→ Proceed to **Step 3**.
 
 ---
 
-## Step 4: Route Based on Scenario
-
-Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
-
-#### If `resuming`
-
-→ Proceed to **Step 6**.
-
-#### If new or fresh
-
-→ Proceed to **Step 5**.
-
----
-
-## Step 5: Gather Bug Context
+## Step 3: Gather Bug Context
 
 Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
 
-→ Proceed to **Step 6**.
+→ Proceed to **Step 4**.
 
 ---
 
-## Step 6: Invoke the Skill
+## Step 4: Invoke the Skill
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

@@ -1,6 +1,6 @@
 # Invoke the Skill
 
-*Reference for **[start-research](../SKILL.md)***
+*Reference for **[workflow-research-entry](../SKILL.md)***
 
 ---
 
@@ -8,11 +8,29 @@ This skill's purpose is now fulfilled.
 
 Invoke the [technical-research](../../technical-research/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
 
-**If work_type is available** (from Step 1), add the Work type line in the handoff.
+---
 
-**Example handoff:**
+## Handoff
+
+Construct the handoff. Work type is always available (callers always provide it).
+
+#### If source is `continue`
+
 ```
 Research session for: {topic}
+Work unit: {work_unit}
+Work type: {work_type}
+Source: existing research
+Output: .workflows/{work_unit}/research/exploration.md
+
+Invoke the technical-research skill.
+```
+
+#### Otherwise
+
+```
+Research session for: {topic}
+Work unit: {work_unit}
 Work type: {work_type}
 Output: .workflows/{work_unit}/research/exploration.md
 

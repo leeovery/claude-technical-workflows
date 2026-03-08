@@ -1,20 +1,16 @@
 # Validate Phase
 
-*Reference for **[start-investigation](../SKILL.md)***
+*Reference for **[workflow-investigation-entry](../SKILL.md)***
 
 ---
 
-Check if a work unit already exists for this name by querying the manifest:
+Check investigation status via manifest CLI:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase investigation --topic {topic}
 ```
 
-#### If work unit exists with investigation phase
-
-Read the investigation status from the manifest output.
-
-**If status is `in-progress`:**
+#### If status is `in-progress`
 
 > *Output the next fenced block as a code block:*
 
@@ -26,7 +22,7 @@ Set source="continue".
 
 → Return to **[the skill](../SKILL.md)**.
 
-**If status is `concluded`:**
+#### If status is `concluded`
 
 Reset to in-progress:
 
