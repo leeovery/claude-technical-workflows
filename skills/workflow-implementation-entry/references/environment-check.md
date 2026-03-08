@@ -1,14 +1,18 @@
 # Check Environment
 
-*Reference for **[start-implementation](../SKILL.md)***
+*Reference for **[workflow-implementation-entry](../SKILL.md)***
 
 ---
 
 > **IMPORTANT**: This step is for **information gathering only**. Do NOT execute any setup commands at this stage. The processing skill contains instructions for handling environment setup.
 
-Use the `environment` section from the discovery output:
+Check if the environment setup file exists at `.workflows/.state/environment-setup.md`:
 
-#### If `setup_file_exists` is true and `requires_setup` is false
+```bash
+cat .workflows/.state/environment-setup.md
+```
+
+#### If file exists and contains "No special setup required"
 
 > *Output the next fenced block as a code block:*
 
@@ -18,7 +22,7 @@ Environment: No special setup required.
 
 → Return to **[the skill](../SKILL.md)**.
 
-#### If `setup_file_exists` is true and `requires_setup` is true
+#### If file exists and contains setup instructions
 
 > *Output the next fenced block as a code block:*
 
@@ -28,7 +32,7 @@ Environment setup file found: .workflows/.state/environment-setup.md
 
 → Return to **[the skill](../SKILL.md)**.
 
-#### If `setup_file_exists` is false or `requires_setup` is null
+#### If file does not exist
 
 > *Output the next fenced block as a code block:*
 

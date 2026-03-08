@@ -1,6 +1,6 @@
 # Validate Specification
 
-*Reference for **[start-planning](../SKILL.md)***
+*Reference for **[workflow-planning-entry](../SKILL.md)***
 
 ---
 
@@ -17,10 +17,9 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phas
 ```
 Specification Missing
 
-No specification found for "{work_unit:(titlecase)}".
+No specification found for "{topic:(titlecase)}".
 
-A concluded specification is required for planning.
-Run /start-specification {work_type} {work_unit} to create one.
+The specification must be concluded before planning can begin.
 ```
 
 **STOP.** Do not proceed — terminal condition.
@@ -32,14 +31,23 @@ Run /start-specification {work_type} {work_unit} to create one.
 ```
 Specification In Progress
 
-The specification for "{work_unit:(titlecase)}" is not yet concluded.
-Run /start-specification {work_type} {work_unit} to continue.
+The specification for "{topic:(titlecase)}" is not yet concluded.
+
+The specification must be concluded before planning can begin.
 ```
 
 **STOP.** Do not proceed — terminal condition.
 
 #### If specification exists and status is `concluded`
 
-Parse cross-cutting specs from `specifications.crosscutting` in the discovery output.
+**If work_type is `epic`:**
+
+Query all specification entries to identify cross-cutting specs:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase specification
+```
+
+Parse the output to identify any items with `type: cross-cutting`. Store these for the cross-cutting context step.
 
 → Return to **[the skill](../SKILL.md)**.

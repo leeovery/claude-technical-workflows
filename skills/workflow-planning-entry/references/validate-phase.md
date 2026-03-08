@@ -1,18 +1,16 @@
 # Validate Phase
 
-*Reference for **[start-planning](../SKILL.md)***
+*Reference for **[workflow-planning-entry](../SKILL.md)***
 
 ---
 
-Check whether the selected specification already has a plan (from `has_plan` in discovery output).
-
-#### If existing plan (continue or review)
-
-Check plan status via manifest CLI:
+Check whether a plan already exists for this topic.
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} status
 ```
+
+#### If existing plan (continue or review)
 
 **If status is `concluded`:**
 

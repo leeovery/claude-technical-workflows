@@ -1,6 +1,6 @@
 # Validate Phase
 
-*Reference for **[start-implementation](../SKILL.md)***
+*Reference for **[workflow-implementation-entry](../SKILL.md)***
 
 ---
 
@@ -22,7 +22,6 @@ Plan Missing
 No plan found for "{topic:(titlecase)}".
 
 A concluded plan is required for implementation.
-Run /start-planning {work_type} {work_unit} {topic} to create one.
 ```
 
 **STOP.** Do not proceed — terminal condition.
@@ -35,7 +34,6 @@ Run /start-planning {work_type} {work_unit} {topic} to create one.
 Plan Not Concluded
 
 The plan for "{topic:(titlecase)}" is not yet concluded.
-Run /start-planning {work_type} {work_unit} {topic} to continue.
 ```
 
 **STOP.** Do not proceed — terminal condition.

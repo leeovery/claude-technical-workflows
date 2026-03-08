@@ -1,16 +1,16 @@
 # Check Dependencies
 
-*Reference for **[start-implementation](../SKILL.md)***
+*Reference for **[workflow-implementation-entry](../SKILL.md)***
 
 ---
 
-**This step is a confirmation gate.** Dependencies have been pre-analyzed by the discovery script.
+Query the planning manifest entry for external dependencies:
 
-After the plan is selected:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} external_dependencies
+```
 
-1. **Check the plan's `deps_satisfied` and `deps_blocking`** from the discovery output
-
-#### If all deps satisfied (or no deps)
+#### If no external dependencies (empty or not found)
 
 > *Output the next fenced block as a code block:*
 
@@ -20,9 +20,25 @@ External dependencies satisfied.
 
 → Return to **[the skill](../SKILL.md)**.
 
-#### If any deps are blocking
+#### If external dependencies exist
 
-This should not normally happen for plans classified as "Implementable" in display-plans.md. However, as an escape hatch:
+For each dependency, check its state. If the dependency has a `task_id`, check whether that task is completed by querying the dependency's plan:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {dep_topic} status
+```
+
+**If all dependencies are satisfied** (state is `satisfied` or `satisfied_externally`, and any referenced tasks are completed):
+
+> *Output the next fenced block as a code block:*
+
+```
+External dependencies satisfied.
+```
+
+→ Return to **[the skill](../SKILL.md)**.
+
+**If any dependencies are blocking:**
 
 > *Output the next fenced block as a code block:*
 
@@ -31,8 +47,7 @@ Missing Dependencies
 
 Unresolved (not yet planned):
   • {topic}: {description}
-    No plan exists. Create with /start-planning or mark as
-    satisfied externally.
+    No plan exists. Mark as satisfied externally or plan it first.
 
 Incomplete (planned but not implemented):
   • {topic}: {plan}:{task-id} not yet completed

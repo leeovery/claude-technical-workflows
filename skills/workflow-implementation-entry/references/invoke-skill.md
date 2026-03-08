@@ -1,6 +1,6 @@
 # Invoke the Skill
 
-*Reference for **[start-implementation](../SKILL.md)***
+*Reference for **[workflow-implementation-entry](../SKILL.md)***
 
 ---
 
@@ -27,8 +27,22 @@ Invoke the [technical-implementation](../../technical-implementation/SKILL.md) s
 
 ## Handoff
 
+Query format and ext_id from manifest:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} format
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} ext_id
 ```
-Implementation session for: {work_unit}
+
+Check implementation status:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase implementation --topic {topic} status
+```
+
+```
+Implementation session for: {topic}
+Work unit: {work_unit}
 Work type: {work_type}
 Plan: .workflows/{work_unit}/planning/{topic}/planning.md
 Format: {format}

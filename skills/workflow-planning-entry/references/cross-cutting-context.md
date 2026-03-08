@@ -1,16 +1,24 @@
 # Cross-Cutting Context
 
-*Reference for **[start-planning](../SKILL.md)***
+*Reference for **[workflow-planning-entry](../SKILL.md)***
 
 ---
+
+#### If work_type is not `epic`
+
+No cross-cutting specifications exist for feature/bugfix work types.
+
+→ Return to **[the skill](../SKILL.md)**.
+
+#### If work_type is `epic`
+
+Use the cross-cutting specs identified in the validate-spec step. For each, the specification file is at `.workflows/{work_unit}/specification/{topic}/specification.md`.
 
 #### If no cross-cutting specifications exist
 
 → Return to **[the skill](../SKILL.md)**.
 
 #### If cross-cutting specifications exist
-
-Read each cross-cutting specification from `specifications.crosscutting` in the discovery output. For each, the specification file is at `.workflows/{work_unit}/specification/{topic}/specification.md`.
 
 ### Warn about in-progress cross-cutting specs
 
@@ -24,7 +32,7 @@ If any are relevant:
 Cross-cutting specifications still in progress:
 These may contain architectural decisions relevant to this plan.
 
-  • {work_unit}
+  • {topic}
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -32,7 +40,7 @@ These may contain architectural decisions relevant to this plan.
 ```
 · · · · · · · · · · · ·
 - **`c`/`continue`** — Plan without them
-- **`s`/`stop`** — Complete them first (/start-specification)
+- **`s`/`stop`** — Complete them first
 · · · · · · · · · · · ·
 ```
 

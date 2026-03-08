@@ -1,6 +1,6 @@
 # Validate Phase
 
-*Reference for **[start-review](../SKILL.md)***
+*Reference for **[workflow-review-entry](../SKILL.md)***
 
 ---
 
@@ -17,10 +17,9 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phas
 ```
 Plan Missing
 
-No plan found for "{work_unit:(titlecase)}".
+No plan found for "{topic:(titlecase)}".
 
-A concluded plan and implementation are required for review.
-Run /start-planning {work_type} {work_unit} to create one.
+A concluded plan and completed implementation are required for review.
 ```
 
 **STOP.** Do not proceed — terminal condition.
@@ -36,10 +35,9 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phas
 ```
 Implementation Missing
 
-No implementation found for "{work_unit:(titlecase)}".
+No implementation found for "{topic:(titlecase)}".
 
 A completed implementation is required for review.
-Run /start-implementation {work_type} {work_unit} to start one.
 ```
 
 **STOP.** Do not proceed — terminal condition.
@@ -51,8 +49,7 @@ Run /start-implementation {work_type} {work_unit} to start one.
 ```
 Implementation Not Complete
 
-The implementation for "{work_unit:(titlecase)}" is not yet completed.
-Run /start-implementation {work_type} {work_unit} to continue.
+The implementation for "{topic:(titlecase)}" is not yet completed.
 ```
 
 **STOP.** Do not proceed — terminal condition.

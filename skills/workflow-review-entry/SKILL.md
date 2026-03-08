@@ -1,12 +1,7 @@
 ---
-name: start-review
-allowed-tools: Bash(node .claude/skills/start-review/scripts/discovery.js), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
-hooks:
-  PreToolUse:
-    - hooks:
-        - type: command
-          command: "$CLAUDE_PROJECT_DIR/.claude/hooks/workflows/system-check.sh"
-          once: true
+name: workflow-review-entry
+user-invocable: false
+allowed-tools: Bash(.claude/hooks/workflows/write-session-state.sh), Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(ls .workflows/)
 ---
 
 Invoke the **technical-review** skill for this conversation.
@@ -44,107 +39,33 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 ---
 
-## Step 0: Run Migrations
+## Step 1: Parse Arguments
 
-**This step is mandatory. You must complete it before proceeding.**
+Arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional).
+Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, topic = `$1`.
 
-Invoke the `/migrate` skill and assess its output.
-
----
-
-## Step 1: Discovery State
-
-!`node .claude/skills/start-review/scripts/discovery.js`
-
-If the above shows a script invocation rather than discovery output, the dynamic content preprocessor did not run. Execute the script before continuing:
-
-```bash
-node .claude/skills/start-review/scripts/discovery.js
-```
-
-If discovery output is already displayed, it has been run on your behalf.
-
-Parse the discovery output to understand:
-
-**From `plans` section:**
-- `exists` - whether any plans exist
-- `files` - list of plans with: name, work_type, planning_status, format, specification_exists, implementation_status, review_count, latest_review_version, latest_review_verdict
-- `count` - total number of plans
-
-**From `reviews` section:**
-- `exists` - whether any reviews exist
-- `entries` - list of reviews with: name, versions, latest_version, latest_verdict, latest_path, has_synthesis
-
-**From `state` section:**
-- `scenario` - one of: `"no_plans"`, `"single_plan"`, `"multiple_plans"`
-- `implemented_count` - plans with implementation_status != "none"
-- `completed_count` - plans with implementation_status == "completed"
-- `reviewed_plan_count` - plans that have been reviewed
-- `all_reviewed` - whether all implemented plans have reviews
-
-**IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state.
+Store work_type and work_unit for the handoff.
 
 → Proceed to **Step 2**.
 
 ---
 
-## Step 2: Determine Mode
-
-Check for arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional)
-Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, topic = `$1`
-
-#### If `topic` resolved (bridge mode)
-
-→ Proceed to **Step 3**.
-
-#### If `work_type` and `work_unit` provided but no `topic` (scoped discovery)
-
-Store work_type for the handoff.
-
-→ Proceed to **Step 4**.
-
-#### If neither is provided
-
-→ Proceed to **Step 4**.
-
----
-
-## Step 3: Validate Phase
+## Step 2: Validate Phase
 
 Load **[validate-phase.md](references/validate-phase.md)** and follow its instructions as written.
 
-→ Proceed to **Step 5**.
+→ Proceed to **Step 3**.
 
 ---
 
-## Step 4: Route Based on Scenario
-
-Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
-
----
-
-## Step 5: Determine Review Version
+## Step 3: Determine Review Version
 
 Load **[determine-review-version.md](references/determine-review-version.md)** and follow its instructions as written.
 
-→ Proceed to **Step 8**.
+→ Proceed to **Step 4**.
 
 ---
 
-## Step 6: Display Plans
-
-Load **[display-plans.md](references/display-plans.md)** and follow its instructions as written.
-
----
-
-## Step 7: Select Plans
-
-Load **[select-plans.md](references/select-plans.md)** and follow its instructions as written.
-
-→ Proceed to **Step 8**.
-
----
-
-## Step 8: Invoke the Skill
+## Step 4: Invoke the Skill
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
