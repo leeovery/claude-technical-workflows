@@ -13,9 +13,9 @@ This skill is invoked by processing skills (technical-discussion, technical-spec
 ## Instructions
 
 This skill receives context from the calling processing skill:
-- **Work unit**: The work unit name (directory under `.workflows/`)
-- **Work type**: epic, feature, or bugfix
-- **Completed phase**: The phase that just concluded
+- **Work unit**: The work unit name (directory under `.workflows/`) = `{work_unit}`
+- **Work type**: epic, feature, or bugfix = `{work_type}`
+- **Completed phase**: The phase that just concluded = `{completed_phase}`
 
 ---
 
