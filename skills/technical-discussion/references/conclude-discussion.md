@@ -64,7 +64,7 @@ Remaining in-progress discussions:
   • {topic-1}
   • {topic-2}
 
-To continue, clear your context and run /start-discussion to pick up the next topic.
+To continue, clear your context and use /workflow-start to pick up the next topic.
 ```
 
 **If no in-progress discussions remain:**

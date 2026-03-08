@@ -352,5 +352,5 @@ Invoke the workflow-bridge skill to enter plan mode with continuation instructio
 ```
 Plan concluded: {work_unit}
 
-The plan is ready for implementation. Run /start-implementation to begin.
+The plan is ready for implementation.
 ```

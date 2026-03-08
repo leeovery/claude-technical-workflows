@@ -385,7 +385,7 @@ Invoke the workflow-bridge skill to enter plan mode with continuation instructio
 ```
 Implementation completed: {work_unit}
 
-The implementation is ready for review. Run /start-review to begin.
+The implementation is ready for review.
 ```
 
 

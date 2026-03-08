@@ -51,7 +51,7 @@ Invoke the workflow-bridge skill to enter plan mode with continuation instructio
 ```
 Research concluded for {work_unit}.
 
-Run /start-discussion to begin structured discussion.
+This topic is ready for structured discussion.
 ```
 
 **STOP.** Do not proceed — terminal condition.

@@ -69,4 +69,4 @@ Invoke the workflow-bridge skill to enter plan mode with continuation instructio
 
 **If work_type is not set:**
 
-The session ends here. The investigation document can be used as input to `/start-specification`.
+The session ends here. The investigation document can be used as input to the specification phase.

@@ -170,5 +170,5 @@ Invoke the workflow-bridge skill to enter plan mode with continuation instructio
 ```
 Specification concluded: {work_unit}
 
-The specification is ready for planning. Run /start-planning to begin.
+The specification is ready for planning.
 ```

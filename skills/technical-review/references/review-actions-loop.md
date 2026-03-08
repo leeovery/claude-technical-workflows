@@ -421,4 +421,4 @@ Clear context and continue. Claude will start implementation
 and pick up the new review remediation tasks automatically.
 ```
 
-Exit plan mode. The user will approve and clear context, and the fresh session will pick up with `/start-implementation` routing to the new tasks.
+Exit plan mode. The user will approve and clear context, and the fresh session will pick up with the implementation entry skill routing to the new tasks.
