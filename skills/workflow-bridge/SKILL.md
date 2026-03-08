@@ -21,9 +21,7 @@ This skill receives context from the calling processing skill:
 
 ## Step 1: Run Discovery
 
-!`node .claude/skills/workflow-bridge/scripts/discovery.js`
-
-If the above shows a script invocation rather than discovery output, the dynamic content preprocessor did not run. Execute the script before continuing:
+Run the discovery script with the work unit from the calling context:
 
 ```bash
 node .claude/skills/workflow-bridge/scripts/discovery.js {work_unit}
@@ -69,9 +67,9 @@ Load **[epic-continuation.md](references/epic-continuation.md)** and follow its 
 
 **Feature/bugfix** continuation references:
 1. Use discovery output to compute a single `next_phase`
-2. Call `EnterPlanMode` tool, write plan file with instructions to invoke `start-{next_phase}` with work_unit + work_type
+2. Call `EnterPlanMode` tool, write plan file with instructions to invoke `workflow-{next_phase}-entry` with work_unit + work_type
 3. Call `ExitPlanMode` tool for user approval
 
-The user will then clear context, and the fresh session will invoke the appropriate start-* skill with the work_unit and work_type provided, causing it to skip discovery and proceed directly to validation/processing.
+The user will then clear context, and the fresh session will invoke the appropriate phase entry skill with the work_unit and work_type provided, causing it to skip discovery and proceed directly to validation/processing.
 
 **Epic** continuation is interactive — epic is phase-centric with multiple actionable items, so there is no single next phase. The reference displays state, presents a menu of choices, waits for user selection, then enters plan mode with that specific choice. The plan mode content is deterministic (same as feature/bugfix) once the user has chosen.
