@@ -42,9 +42,11 @@ No work started yet.
 @endif
 @if(phase is implementation and item.current_phase)
        └─ Phase {item.current_phase}, {item.completed_tasks.length} task(s) completed
-@else @if(phase is implementation and item.completed_tasks)
+@else
+@if(phase is implementation and item.completed_tasks)
        └─ {item.completed_tasks.length} task(s) completed
-@endif @endif
+@endif
+@endif
 @endforeach
 
 @endforeach
