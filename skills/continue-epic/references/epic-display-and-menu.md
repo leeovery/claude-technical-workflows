@@ -42,9 +42,9 @@ No work started yet.
 @endif
 @if(phase is implementation and item.current_phase)
        └─ Phase {item.current_phase}, {item.completed_tasks.length} task(s) completed
-@elseif(phase is implementation and item.completed_tasks)
+@else @if(phase is implementation and item.completed_tasks)
        └─ {item.completed_tasks.length} task(s) completed
-@endif
+@endif @endif
 @endforeach
 
 @endforeach
@@ -64,9 +64,18 @@ No work started yet.
 - Phases with no items don't appear
 - Blank line between phase sections
 
-### Not Ready Block
+**Recommendations:** Check the following conditions in order. Show the first that applies as a line within the state display code block, separated by a blank line from the last phase section. If none apply, no recommendation.
 
-After the main state display, check for plans that are **not implementable** — plans with `deps_blocking` entries, or plans with non-concluded status. If any exist, show them in a separate code block:
+| Condition | Recommendation |
+|-----------|---------------|
+| In-progress items across multiple phases | No recommendation |
+| Some discussions in-progress, some concluded | "Consider concluding remaining discussions before starting specification. The grouping analysis works best with all discussions available." |
+| All discussions concluded, specs not started | "All discussions are concluded. Specification will analyze and group them." |
+| Some specs concluded, some in-progress | "Concluding all specifications before planning helps identify cross-cutting dependencies." |
+| Some plans concluded, some in-progress | "Completing all plans before implementation helps surface task dependencies across plans." |
+| Reopened discussion that's a source in a spec | "{Spec} specification sources the reopened {Discussion} discussion. Once that discussion concludes, the specification will need revisiting to extract new content." |
+
+**Not-ready block:** After the main state display, check for plans with `deps_blocking` entries. If any exist, show in a separate code block:
 
 > *Output the next fenced block as a code block:*
 
@@ -79,22 +88,7 @@ addressed first.
   • {topic} (blocked by {dep_topic})
 ```
 
-Use the `deps_blocking` array from the planning phase items. Show each blocking dependency with its cross-plan task reference using colon notation (`{plan}:{task-id}`) when a `task_id` is present.
-
-Only show this block when blocked plans exist. Omit entirely if no plans are blocked.
-
-### Recommendations
-
-Check the following conditions in order. Show the first that applies as a line within the state display code block, separated by a blank line from the last phase section. If none apply, no recommendation.
-
-| Condition | Recommendation |
-|-----------|---------------|
-| In-progress items across multiple phases | No recommendation |
-| Some discussions in-progress, some concluded | "Consider concluding remaining discussions before starting specification. The grouping analysis works best with all discussions available." |
-| All discussions concluded, specs not started | "All discussions are concluded. Specification will analyze and group them." |
-| Some specs concluded, some in-progress | "Concluding all specifications before planning helps identify cross-cutting dependencies." |
-| Some plans concluded, some in-progress | "Completing all plans before implementation helps surface task dependencies across plans." |
-| Reopened discussion that's a source in a spec | "{Spec} specification sources the reopened {Discussion} discussion. Once that discussion concludes, the specification will need revisiting to extract new content." |
+Use the `deps_blocking` array from the planning phase items. Show each blocking dependency with its cross-plan task reference using colon notation (`{plan}:{task-id}`) when a `task_id` is present. Omit this block entirely if no plans are blocked.
 
 → Proceed to **B. Key**.
 
