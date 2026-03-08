@@ -1,6 +1,6 @@
 # Validate Phase
 
-*Reference for **[start-discussion](../SKILL.md)***
+*Reference for **[workflow-discussion-entry](../SKILL.md)***
 
 ---
 

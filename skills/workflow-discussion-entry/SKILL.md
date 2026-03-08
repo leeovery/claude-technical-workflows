@@ -1,12 +1,7 @@
 ---
-name: start-discussion
-allowed-tools: Bash(node .claude/skills/start-discussion/scripts/discovery.js), Bash(mkdir -p .workflows/*/.state), Bash(rm .workflows/*/.state/research-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(ls .workflows/)
-hooks:
-  PreToolUse:
-    - hooks:
-        - type: command
-          command: "$CLAUDE_PROJECT_DIR/.claude/hooks/workflows/system-check.sh"
-          once: true
+name: workflow-discussion-entry
+user-invocable: false
+allowed-tools: Bash(node .claude/skills/workflow-discussion-entry/scripts/discovery.js), Bash(mkdir -p .workflows/*/.state), Bash(rm .workflows/*/.state/research-analysis.md), Bash(.claude/hooks/workflows/write-session-state.sh), Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(ls .workflows/)
 ---
 
 Invoke the **technical-discussion** skill for this conversation.
@@ -44,25 +39,36 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 ---
 
-## Step 0: Run Migrations
+## Step 1: Parse Arguments
 
-**This step is mandatory. You must complete it before proceeding.**
+Arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional).
+Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, topic = `$1`.
 
-Invoke the `/migrate` skill and assess its output.
+Store work_type and work_unit for the handoff.
 
----
+#### If `topic` resolved
 
-## Step 1: Discovery State
-
-!`node .claude/skills/start-discussion/scripts/discovery.js`
-
-If the above shows a script invocation rather than discovery output, the dynamic content preprocessor did not run. Execute the script before continuing:
+Check discussion phase status via manifest CLI:
 
 ```bash
-node .claude/skills/start-discussion/scripts/discovery.js
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase discussion --topic {topic} status
 ```
 
-If discovery output is already displayed, it has been run on your behalf.
+**If phase exists (in-progress or concluded):**
+
+→ Proceed to **Step 2** (Validate Phase).
+
+**If phase not found (new entry):**
+
+→ Proceed to **Step 7** (Gather Context) with source="bridge".
+
+#### If no `topic` (epic — scoped path)
+
+Run discovery scoped to this work unit:
+
+```bash
+node .claude/skills/workflow-discussion-entry/scripts/discovery.js {work_unit}
+```
 
 Parse the discovery output to understand:
 
@@ -88,89 +94,68 @@ Parse the discovery output to understand:
 
 **IMPORTANT**: Use ONLY this script for discovery. Do NOT run additional bash commands (ls, head, cat, etc.) to gather state.
 
-→ Proceed to **Step 2**.
+→ Proceed to **Step 3** (Route Based on Scenario).
 
 ---
 
-## Step 2: Determine Mode
-
-Check for arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional)
-Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, topic = `$1`
-
-#### If `topic` resolved (bridge mode)
-
-→ Proceed to **Step 3** (Validate Phase).
-
-#### If `work_type` and `work_unit` provided but no `topic` (scoped discovery)
-
-Store work_type for the handoff.
-
-→ Proceed to **Step 4** (Route Based on Scenario).
-
-#### If neither is provided
-
-→ Proceed to **Step 4** (Route Based on Scenario).
-
----
-
-## Step 3: Validate Phase
+## Step 2: Validate Phase
 
 Load **[validate-phase.md](references/validate-phase.md)** and follow its instructions as written.
-
-→ Proceed to **Step 8**.
-
----
-
-## Step 4: Route Based on Scenario
-
-Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
-
-#### If research exists
-
-→ Proceed to **Step 5**.
-
-#### If discussions only
-
-→ Proceed to **Step 6**.
-
-#### If fresh
-
-→ Proceed to **Step 8**.
-
----
-
-## Step 5: Research Analysis
-
-Load **[research-analysis.md](references/research-analysis.md)** and follow its instructions as written.
-
-→ Proceed to **Step 6**.
-
----
-
-## Step 6: Present Options
-
-Load **[display-options.md](references/display-options.md)** and follow its instructions as written.
 
 → Proceed to **Step 7**.
 
 ---
 
-## Step 7: Handle Selection
+## Step 3: Route Based on Scenario
+
+Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
+
+#### If research exists
+
+→ Proceed to **Step 4**.
+
+#### If discussions only
+
+→ Proceed to **Step 5**.
+
+#### If fresh
+
+→ Proceed to **Step 7**.
+
+---
+
+## Step 4: Research Analysis
+
+Load **[research-analysis.md](references/research-analysis.md)** and follow its instructions as written.
+
+→ Proceed to **Step 5**.
+
+---
+
+## Step 5: Present Options
+
+Load **[display-options.md](references/display-options.md)** and follow its instructions as written.
+
+→ Proceed to **Step 6**.
+
+---
+
+## Step 6: Handle Selection
 
 Load **[handle-selection.md](references/handle-selection.md)** and follow its instructions as written.
+
+→ Proceed to **Step 7**.
+
+---
+
+## Step 7: Gather Context
+
+Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
 
 → Proceed to **Step 8**.
 
 ---
 
-## Step 8: Gather Context
-
-Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
-
-→ Proceed to **Step 9**.
-
----
-
-## Step 9: Invoke the Skill
+## Step 8: Invoke the Skill
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
