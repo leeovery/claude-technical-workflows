@@ -27,19 +27,7 @@ Run the discovery script with the work unit from the calling context:
 node .claude/skills/workflow-bridge/scripts/discovery.js {work_unit}
 ```
 
-The output contains: `work_type`, `phases` (per-phase status), `next_phase`, and for epic work type, `epic_detail` with item-level state. Use the known work type and work unit from the calling context:
-
-#### If work type is `feature`
-
-Extract `next_phase` from the discovery output.
-
-#### If work type is `bugfix`
-
-Extract `next_phase` from the discovery output.
-
-#### If work type is `epic`
-
-Parse the `epic_detail` section for phase-centric state with item-level detail.
+The output contains: `work_type`, `phases` (per-phase status), and `next_phase`. Extract `next_phase` from the discovery output. For epic work type, the epic continuation reference runs its own enriched discovery.
 
 → Proceed to **Step 2**.
 
