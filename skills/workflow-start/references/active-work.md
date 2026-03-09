@@ -39,19 +39,13 @@ Epics:
 
 @endforeach
 @endif
+
+@if(concluded_count > 0 || cancelled_count > 0)
+{concluded_count} concluded, {cancelled_count} cancelled.
+@endif
 ```
 
 Build from discovery output. Only show sections that have work units. Numbering is continuous across sections. Feature/bugfix shows `phase_label` (titlecased). Epic shows comma-separated `active_phases` (titlecased). Blank line between each numbered item.
-
-After the tree display, if `concluded_count > 0` or `cancelled_count > 0`, add a summary line:
-
-> *Output the next fenced block as a code block:*
-
-```
-{concluded_count} concluded, {cancelled_count} cancelled.
-```
-
-Only show this block if either count is non-zero.
 
 ## Menu
 
@@ -71,7 +65,9 @@ What would you like to do?
 5. Start new epic
 6. Start new bugfix
 
+@if(concluded_count > 0 || cancelled_count > 0)
 7. View concluded & cancelled work units
+@endif
 - **`m`/`manage`** — Manage a work unit's lifecycle
 
 Select an option (enter number):
@@ -81,8 +77,6 @@ Select an option (enter number):
 **Continue items:** Feature/bugfix shows type + phase label. Epic just shows "epic" (detail is in continue-epic). No auto-select — always show the full menu. No "(recommended)" labels.
 
 **Start-new items:** Always show all three start options.
-
-**Lifecycle items:** Only show "View concluded & cancelled" if `concluded_count > 0` or `cancelled_count > 0`.
 
 Recreate with actual work units from discovery.
 

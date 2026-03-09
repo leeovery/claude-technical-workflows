@@ -18,19 +18,13 @@ Continue Feature
      └─ {feature.phase_label:(titlecase)}
 
 @endforeach
+
+@if(concluded_count > 0 || cancelled_count > 0)
+{concluded_count} concluded, {cancelled_count} cancelled.
+@endif
 ```
 
 Build from the discovery output's `features` array. Each feature shows `name` (titlecased) and `phase_label` (titlecased). Blank line between each numbered item.
-
-After the tree display, if `concluded_count > 0` or `cancelled_count > 0`, add a summary line:
-
-> *Output the next fenced block as a code block:*
-
-```
-{concluded_count} concluded, {cancelled_count} cancelled.
-```
-
-Only show this block if either count is non-zero.
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -41,14 +35,16 @@ Which feature would you like to continue?
 1. Continue "{feature.name:(titlecase)}" — {feature.phase_label}
 2. ...
 
+@if(concluded_count > 0 || cancelled_count > 0)
 {N+1}. View concluded & cancelled features
+@endif
 - **`m`/`manage`** — Manage a feature's lifecycle
 
 Select an option (enter number):
 · · · · · · · · · · · ·
 ```
 
-Recreate with actual features and `phase_label` values from discovery. Only show "View concluded & cancelled" if `concluded_count > 0` or `cancelled_count > 0`. No auto-select, even with one item.
+Recreate with actual features and `phase_label` values from discovery. No auto-select, even with one item.
 
 **STOP.** Wait for user response.
 
