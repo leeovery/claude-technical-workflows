@@ -80,8 +80,7 @@ Store the selected item. → Proceed to **C. Action Menu**.
 
 - **`r`/`reactivate`** — Set status back to in-progress
 - **`b`/`back`** — Return to the list
-
-Or ask a question about this work unit.
+- **Ask** — Ask a question about this work unit
 · · · · · · · · · · · ·
 ```
 

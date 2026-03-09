@@ -41,8 +41,7 @@ Check if the selected work unit's implementation phase is concluded or completed
 @endif
 - **`x`/`cancel`** — Mark as cancelled
 - **`b`/`back`** — Return
-
-Or ask a question about this work unit.
+- **Ask** — Ask a question about this work unit
 · · · · · · · · · · · ·
 ```
 
