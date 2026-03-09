@@ -26,7 +26,7 @@
 
 A complete development workflow for Claude Code: explore ideas, capture decisions, build actionable plans, implement via strict TDD, and validate the result.
 
-Use it as a **six-phase workflow** or pick individual capabilities as needed:
+A **six-phase workflow** where each phase feeds the next:
 
 ```
 Research → Discussion → Specification → Planning → Implementation → Review
@@ -34,9 +34,9 @@ Research → Discussion → Specification → Planning → Implementation → Re
 
 **Why this matters:** Complex features benefit from thorough discussion before implementation. This toolkit documents the *what* and *why* before diving into the *how*, preserving architectural decisions, edge cases, and the reasoning behind choices that would otherwise be lost.
 
-**Flexible entry points:** Need the full workflow? Start at Research or Discussion and progress through each phase. Already know what you're building? Jump straight to Specification with `/start-feature`. Entry-point skills gather context and feed it to processing skills.
+**Flexible entry points:** Start at Research for early exploration, or jump to Discussion when you know what you're building. `/start-feature` gathers context and pipelines through every phase automatically. Entry-point skills gather context and feed it to processing skills.
 
-**Engineered like software.** This isn't a collection of prompts — it's built with the same discipline you'd apply to code. Processing skills follow the single responsibility principle. Entry-point skills compose with them, keeping input gathering DRY. Output formats implement a [5-file adapter contract](#output-formats), so planning works identically regardless of where tasks end up. Agents handle isolated concerns. The result is a natural language workflow that's modular, extensible, and maintainable — software engineering principles applied to agentic workflows.
+**Engineered like software.** This isn't a collection of prompts — it's built with the same discipline you'd apply to code. Entry-point skills gather context, phase entry skills validate and route, processing skills do the work. Output formats implement a [5-file adapter contract](#output-formats), so planning works identically regardless of where tasks end up. Agents handle isolated concerns. The result is a natural language workflow that's modular, extensible, and maintainable — software engineering principles applied to agentic workflows.
 
 > [!NOTE]
 > **Work in progress.** The workflow is being refined through real-world usage. Expect updates as patterns evolve.
@@ -109,14 +109,13 @@ Each phase produces documents that feed the next. Here's the journey:
 
 **Review** — Validates the implementation against spec and plan. Catches drift, missing requirements, and quality issues. Findings can be synthesized into remediation tasks that feed back into implementation, closing the review-implementation loop.
 
-### Standalone Skills
-
-Not every task needs the full workflow. These skills gather inputs flexibly and invoke processing skills directly:
+### Starting Work
 
 | Skill | What it does |
 |-------|-------------|
 | `/start-feature` | Start a feature through the full pipeline: discussion → spec → plan → impl → review |
 | `/start-bugfix` | Start a bugfix through the pipeline: investigation → spec → plan → impl → review |
+| `/start-epic` | Start an epic: multi-topic, multi-session workflow across all phases |
 | `/link-dependencies` | Wire cross-topic dependencies across plans |
 
 ### Feature Pipeline
@@ -136,7 +135,7 @@ If a session is interrupted, run `/workflow-start` to pick up where you left off
 
 ### Under the Hood
 
-Skills are organised in two tiers. **Entry-point skills** (`/start-*`, `/continue-*`, `/status`, etc.) gather context from files, prompts, or inline input. **Processing skills** (`technical-*`) receive those inputs and do the work — they don't know or care where inputs came from. **Phase entry skills** (`workflow-*-entry`) are the internal glue — invoked by entry-point skills to handle phase-specific validation and processing skill invocation. You can create custom entry-point skills that feed processing skills in new ways.
+Skills are organised in three tiers. **Entry-point skills** (`/start-*`, `/continue-*`, `/status`, etc.) gather context from files, prompts, or inline input. **Phase entry skills** (`workflow-*-entry`) are the internal glue — invoked by entry-point skills to validate pipeline state and bootstrap each phase. **Processing skills** (`technical-*`) assume pipeline context and do the work — they receive validated inputs from phase entry skills and focus purely on their phase's concern.
 
 ### Compaction Recovery
 
@@ -253,7 +252,7 @@ skills/
 ├── start-epic/                      # Pipeline: multi-topic, multi-session workflow
 ├── start-feature/                   # Pipeline: discussion → spec → plan → impl → review
 ├── start-bugfix/                    # Pipeline: investigation → spec → plan → impl → review
-├── link-dependencies/               # Standalone: wire cross-topic deps
+├── link-dependencies/               # Wire cross-topic dependencies
 ├── status/                          # Show workflow status
 ├── view-plan/                       # View plan tasks
 │
@@ -286,7 +285,7 @@ tests/
 
 ### Processing Skills
 
-Processing skills are **input-agnostic**: they receive inputs and process them without knowing where the inputs came from. This makes them reusable across different entry points and workflows.
+Processing skills assume pipeline context — work_type is set, prior phases are complete, artifacts are in expected locations. Phase entry skills validate and provide all required inputs before invoking them.
 
 | Skill                                                            | Description                                                                                                                                                                                                  |
 |------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -326,9 +325,9 @@ Helpers for navigating and maintaining the workflow.
 | [**/status**](skills/status/)                                                | Show workflow status with relationship-aware display — specification sources, unlinked discussions, plan dependencies, and suggested next steps. |
 | [**/view-plan**](skills/view-plan/)                                          | View a plan's tasks and progress, regardless of output format.                                                                              |
 
-#### Standalone Skills
+#### Pipeline Entry Skills
 
-Independent skills that gather inputs flexibly (inline context, files, or prompts) and invoke processing skills directly. Use these when you want capabilities without the full workflow structure.
+These skills start a workflow pipeline. Each gathers initial context, then bridges through every subsequent phase automatically.
 
 | Skill                                                   | Description                                                                                                                                 |
 |---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
@@ -336,15 +335,6 @@ Independent skills that gather inputs flexibly (inline context, files, or prompt
 | [**/start-feature**](skills/start-feature/)              | Start a new feature through the full pipeline. Gathers context, creates a discussion, then bridges through specification → planning → implementation → review. |
 | [**/start-bugfix**](skills/start-bugfix/)                | Start a bugfix through the pipeline. Gathers bug context, creates an investigation, then bridges through specification → planning → implementation → review. |
 | [**/link-dependencies**](skills/link-dependencies/)      | Link external dependencies across topics. Scans plans and wires up unresolved cross-topic dependencies.                                    |
-
-### Creating Custom Skills
-
-Since processing skills are input-agnostic, you can create your own entry-point skills that feed them in new ways. An entry-point skill just needs to:
-
-1. Gather the inputs the processing skill expects
-2. Invoke the processing skill with those inputs
-
-See `/start-feature` as an example: it provides inline context to the specification skill instead of a discussion document.
 
 ## Agents
 

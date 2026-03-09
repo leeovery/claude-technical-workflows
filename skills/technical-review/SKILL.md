@@ -10,50 +10,13 @@ Act as a **senior software architect** with deep experience in code review. You 
 
 ## Purpose in the Workflow
 
-This skill can be used:
-- **Sequentially**: After implementation of a planned feature
-- **Standalone** (Contract entry): To review any implementation against a plan
-
-Either way: Verify plan tasks were implemented, tested adequately, and meet quality standards — then assess the product holistically.
+Follows implementation. Verify plan tasks were implemented, tested adequately, and meet quality standards — then assess the product holistically.
 
 ### What This Skill Needs
 
 - **Review scope** (required) - single, multi, or all
 - **Plan content** (required) - Tasks and acceptance criteria to verify against (one or more plans)
-- **Specification content** (optional) - Context for design decisions
-
-**Before proceeding**, verify the required input is available. If anything is missing, **STOP** — do not proceed until resolved.
-
-#### If no plan provided
-
-> *Output the next fenced block as a code block:*
-
-```
-I need the implementation plan to review against. Could you point me to the
-plan file (e.g., .workflows/{work_unit}/planning/{topic}/planning.md)?
-```
-
-**STOP.** Wait for user response.
-
-#### If plan references a specification that can't be found
-
-> *Output the next fenced block as a code block:*
-
-```
-The plan references a specification but I can't locate it at the expected path.
-Could you confirm where the specification is? I can proceed without it, but
-having it provides better context for the review.
-```
-
-**STOP.** Wait for user response.
-
-The specification is optional — the review can proceed with just the plan.
-
-#### If review mode is `analysis-only`
-
-Analysis of existing review findings was requested. The review has already been completed.
-
-→ Proceed to **Step 5**.
+- **Specification content** (required) - The specification from the prior phase, for design decision context
 
 ---
 
@@ -92,10 +55,8 @@ Read all plan(s) provided for the selected scope.
 
 For each plan:
 1. Read the plan — understand phases, tasks, and acceptance criteria
-2. Read the linked specification if available — load design context
+2. Read the linked specification — load design context
 3. Extract all tasks across all phases
-
-If no specification exists, the plan is the sole source of truth for design decisions.
 
 → Proceed to **Step 2**.
 

@@ -15,57 +15,14 @@ The orchestrator owns: plan reading, task extraction, agent invocation, git oper
 
 ## Purpose in the Workflow
 
-This skill can be used:
-- **Sequentially**: To execute a plan created by technical-planning
-- **Standalone** (Contract entry): To execute any plan that follows plan-format conventions
-
-Either way: dispatch agents per task — executor implements via TDD, reviewer verifies independently.
+Follows planning. Execute the plan by dispatching agents per task — executor implements via TDD, reviewer verifies independently.
 
 ### What This Skill Needs
 
 - **Plan content** (required) - Phases, tasks, and acceptance criteria to execute
 - **Plan format** (required) - How to parse tasks (from manifest)
-- **Specification content** (optional) - For context when task rationale is unclear
+- **Specification content** (required) - The specification from the prior phase, for context when task rationale is unclear
 - **Environment setup** (optional) - First-time setup instructions
-
-**Before proceeding**, verify all required inputs are available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.
-
-#### If no plan provided
-
-> *Output the next fenced block as a code block:*
-
-```
-I need an implementation plan to execute. Could you point me to the plan file
-(e.g., .workflows/{work_unit}/planning/{topic}/planning.md)?
-```
-
-**STOP.** Wait for user response.
-
-#### If plan has no `format` in the manifest
-
-> *Output the next fenced block as a code block:*
-
-```
-The plan at {path} doesn't specify an output format in the manifest.
-Which format does this plan use?
-```
-
-**STOP.** Wait for user response.
-
-#### If plan status is not `concluded`
-
-Check plan status via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} status`).
-
-> *Output the next fenced block as a code block:*
-
-```
-The plan at {path} has status '{status}' — it hasn't completed the review
-process. Should I proceed anyway, or should the plan be reviewed first?
-```
-
-**STOP.** Wait for user response.
-
-If no specification is available, the plan becomes the sole authority for design decisions.
 
 ---
 

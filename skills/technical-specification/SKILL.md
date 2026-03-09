@@ -12,45 +12,12 @@ Your role is to synthesize reference material, present it for validation, and bu
 
 ## Purpose in the Workflow
 
-This skill can be used:
-- **Sequentially**: After source material has been captured (discussions, research, etc.)
-- **Standalone**: With reference material from any source (research docs, conversation transcripts, design documents, inline feature description)
-
-Either way: Transform unvalidated reference material into a specification that's **standalone and approved**.
+Follows discussion (or investigation for bugfix). Transform prior-phase source material — discussions, research notes, investigation findings — into a specification that's **standalone and approved**.
 
 ### What This Skill Needs
 
-- **Source material** (required) - One or more sources to synthesize into a specification. Can be:
-  - Discussion documents or research notes (single or multiple)
-  - Inline feature descriptions
-  - Requirements docs, design documents, or transcripts
-  - Any other reference material
+- **Source material** (required) - Prior-phase artifacts to synthesize (discussions, research, investigation findings)
 - **Topic name** (required) - Used for the output filename
-
-**Before proceeding**, verify all required inputs are available and unambiguous. If anything is missing or unclear, **STOP** — do not proceed until resolved.
-
-#### If no source material provided
-
-> *Output the next fenced block as a code block:*
-
-```
-I need source material to build a specification from. Could you point me to the
-source files (e.g., .workflows/{work_unit}/discussion/{topic}.md), or provide
-the content directly?
-```
-
-**STOP.** Wait for user response.
-
-#### If no topic name provided
-
-> *Output the next fenced block as a code block:*
-
-```
-What should the specification be named? This determines the output file:
-.workflows/{work_unit}/specification/{topic}/specification.md
-```
-
-**STOP.** Wait for user response.
 
 #### If source material seems incomplete or unclear
 
@@ -63,7 +30,7 @@ additional material I should review?
 
 **STOP.** Wait for user response.
 
-**Multiple sources:** When multiple sources are provided, extract exhaustively from ALL of them. Content may be scattered across sources - a decision in one may have constraints or details in another. The specification consolidates everything into a single standalone document.
+**Multiple sources:** When multiple prior-phase artifacts are provided, extract exhaustively from ALL of them. Content may be scattered across sources — a decision in one discussion may have constraints or details in another. The specification consolidates everything into a single standalone document.
 
 ---
 

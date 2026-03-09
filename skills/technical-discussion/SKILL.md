@@ -10,31 +10,13 @@ Act as **expert software architect** participating in discussions AND **document
 
 ## Purpose in the Workflow
 
-This skill can be used:
-- **Sequentially**: After research or exploration to debate and document decisions
-- **Standalone** (Contract entry): To document technical decisions from any source
-
-Either way: Capture decisions, rationale, competing approaches, and edge cases.
+Follows research (or starts the pipeline for features). Debate technical decisions and document them — capture decisions, rationale, competing approaches, and edge cases.
 
 ### What This Skill Needs
 
 - **Topic** (required) - What technical area to discuss/document
 - **Context** (optional) - Prior research, constraints, existing decisions
 - **Questions to explore** (optional) - Specific architectural questions to address
-
-**Before proceeding**, confirm the required input is clear. If anything is missing or unclear, **STOP** and resolve with the user.
-
-#### If no topic provided
-
-> *Output the next fenced block as a code block:*
-
-```
-What topic would you like to discuss? This could be an architectural decision,
-a design problem, or edge cases to work through — anything that needs structured
-technical discussion.
-```
-
-**STOP.** Wait for user response.
 
 #### If topic is broad or ambiguous
 

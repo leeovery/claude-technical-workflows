@@ -10,29 +10,12 @@ Act as **research partner** with broad expertise spanning technical, product, bu
 
 ## Purpose in the Workflow
 
-This skill can be used:
-- **Sequentially**: First step - explore ideas before detailed discussion
-- **Standalone** (Contract entry): To research and validate any idea, feature, or concept
-
-Either way: Explore feasibility (technical, business, market), validate assumptions, document findings.
+First phase in the pipeline — explore feasibility (technical, business, market), validate assumptions, and document findings before discussion begins.
 
 ### What This Skill Needs
 
 - **Topic or idea** (required) - What to research/explore
 - **Existing context** (optional) - Any prior research or constraints
-
-**Before proceeding**, confirm the required input is clear. If anything is missing or unclear, **STOP** and resolve with the user.
-
-#### If no topic provided
-
-> *Output the next fenced block as a code block:*
-
-```
-What would you like to research or explore? This could be a new idea, a
-technical concept, a market opportunity — anything you want to investigate.
-```
-
-**STOP.** Wait for user response.
 
 #### If topic is vague or could go many directions
 
