@@ -938,6 +938,72 @@ assert_exit_nonzero "exists with no args fails" exists
 echo ""
 
 # ============================================================================
+# WILDCARD TOPIC
+# ============================================================================
+
+echo -e "${YELLOW}Test: get with wildcard topic on epic returns all items${NC}"
+setup_fixture
+run_cli init wc-epic --work-type epic --description "Wildcard" >/dev/null 2>&1
+run_cli init-phase wc-epic --phase implementation --topic auth-flow >/dev/null 2>&1
+run_cli init-phase wc-epic --phase implementation --topic billing >/dev/null 2>&1
+run_cli set wc-epic --phase implementation --topic auth-flow status completed >/dev/null 2>&1
+output=$(run_cli_stdout get wc-epic --phase implementation --topic "*" status)
+assert_contains "$output" '"topic": "auth-flow"' "Wildcard get includes auth-flow"
+assert_contains "$output" '"value": "completed"' "Wildcard get shows completed value"
+assert_contains "$output" '"topic": "billing"' "Wildcard get includes billing"
+assert_contains "$output" '"value": "in-progress"' "Wildcard get shows in-progress value"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: get with wildcard topic on feature returns single item${NC}"
+setup_fixture
+run_cli init wc-feat --work-type feature --description "Wildcard" >/dev/null 2>&1
+run_cli init-phase wc-feat --phase implementation --topic wc-feat >/dev/null 2>&1
+run_cli set wc-feat --phase implementation --topic wc-feat status completed >/dev/null 2>&1
+output=$(run_cli_stdout get wc-feat --phase implementation --topic "*" status)
+assert_contains "$output" '"topic": "wc-feat"' "Wildcard get on feature includes topic"
+assert_contains "$output" '"value": "completed"' "Wildcard get on feature shows value"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: get with wildcard topic on empty phase fails${NC}"
+setup_fixture
+run_cli init wc-empty --work-type epic --description "Empty" >/dev/null 2>&1
+run_cli set wc-empty phases.implementation '{}' >/dev/null 2>&1
+assert_exit_nonzero "Wildcard on empty phase returns error" get wc-empty --phase implementation --topic "*" status
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: exists with wildcard topic returns true when items exist${NC}"
+setup_fixture
+run_cli init wc-exists --work-type epic --description "Exists" >/dev/null 2>&1
+run_cli init-phase wc-exists --phase implementation --topic topic-a >/dev/null 2>&1
+output=$(run_cli_stdout exists wc-exists --phase implementation --topic "*" status)
+exit_code=$?
+assert_equals "$output" "true" "Wildcard exists returns true when items have field"
+assert_equals "$exit_code" "0" "Wildcard exists exits 0"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: exists with wildcard topic returns false when no items${NC}"
+setup_fixture
+run_cli init wc-noitems --work-type epic --description "No items" >/dev/null 2>&1
+output=$(run_cli_stdout exists wc-noitems --phase implementation --topic "*" status)
+exit_code=$?
+assert_equals "$output" "false" "Wildcard exists returns false when no items"
+assert_equals "$exit_code" "0" "Wildcard exists on empty exits 0"
+
+echo ""
+
+# ============================================================================
 # SUMMARY
 # ============================================================================
 

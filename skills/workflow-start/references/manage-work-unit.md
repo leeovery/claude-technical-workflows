@@ -42,39 +42,23 @@ node .claude/skills/workflow-manifest/scripts/manifest.js exists {selected.name}
 
 #### If the result is `true`
 
-Get the work type:
-
-```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name} work_type
-```
-
 → Proceed to **C. Completion Check**.
 
 ## C. Completion Check
 
-#### If work type is `feature` or `bugfix`
-
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name} --phase implementation status
+node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name} --phase implementation --topic "*" status
 ```
 
-**If the result is `completed`:**
+This returns all topic statuses in the implementation phase.
+
+#### If any result has `"value": "completed"`
 
 Set `implementation_completed` = true.
 
 → Proceed to **D. Action Menu**.
 
-#### If work type is `epic`
-
-```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name} --phase implementation
-```
-
-Parse the JSON output.
-
-**If any item in the `items` object has `"status": "completed"`:**
-
-Set `implementation_completed` = true.
+#### Otherwise
 
 → Proceed to **D. Action Menu**.
 

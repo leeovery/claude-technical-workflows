@@ -179,6 +179,35 @@ function resolvePhaseSegments(workType, phase, topic, fieldSegments) {
   return [...base, ...fieldSegments];
 }
 
+/**
+ * Resolve wildcard topic — collect field values from all topics in a phase.
+ * For epic: iterates all items. For feature/bugfix: returns the single flat value.
+ *
+ * @param {object} manifest - The full manifest object
+ * @param {string} phase - The phase name
+ * @param {string[]} fieldSegments - Field path within each topic
+ * @returns {Array<{topic: string, value: *}>} Collected values
+ */
+function resolveWildcardTopic(manifest, phase, fieldSegments) {
+  const phaseData = getByPath(manifest, ['phases', phase]);
+  if (!phaseData) return [];
+
+  if (manifest.work_type === 'epic') {
+    const items = phaseData.items;
+    if (!items || typeof items !== 'object') return [];
+
+    return Object.keys(items).map(topic => ({
+      topic,
+      value: fieldSegments.length ? getByPath(items[topic], fieldSegments) : items[topic],
+    })).filter(entry => entry.value !== undefined);
+  }
+
+  // Feature/bugfix: single implicit topic
+  const value = fieldSegments.length ? getByPath(phaseData, fieldSegments) : phaseData;
+  if (value === undefined) return [];
+  return [{ topic: manifest.name, value }];
+}
+
 // ---------------------------------------------------------------------------
 // Validation
 // ---------------------------------------------------------------------------
@@ -372,6 +401,17 @@ function cmdGet(args) {
   validatePhase(phase);
 
   const fieldSegments = positional.length > 1 ? positional[1].split('.') : [];
+
+  // Wildcard topic: collect values from all topics
+  if (topic === '*') {
+    const results = resolveWildcardTopic(manifest, phase, fieldSegments);
+    if (results.length === 0) {
+      die(`No items found in phase "${phase}" of "${name}"`);
+    }
+    process.stdout.write(JSON.stringify(results, null, 2) + '\n');
+    return;
+  }
+
   const segments = resolvePhaseSegments(manifest.work_type, phase, topic, fieldSegments);
 
   const value = getByPath(manifest, segments);
@@ -631,6 +671,14 @@ function cmdExists(args) {
   // Phase-level
   validatePhase(phase);
   const fieldSegments = positional.length > 1 ? positional[1].split('.') : [];
+
+  // Wildcard topic: check if any topic has the specified field
+  if (topic === '*') {
+    const results = resolveWildcardTopic(manifest, phase, fieldSegments);
+    process.stdout.write(results.length > 0 ? 'true\n' : 'false\n');
+    return;
+  }
+
   const segments = resolvePhaseSegments(manifest.work_type, phase, topic, fieldSegments);
   const value = getByPath(manifest, segments);
   process.stdout.write(value !== undefined ? 'true\n' : 'false\n');
