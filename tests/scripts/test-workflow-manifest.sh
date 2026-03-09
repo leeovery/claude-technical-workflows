@@ -870,6 +870,106 @@ assert_equals "$output" "concluded" "Valid item status accepted"
 echo ""
 
 # ============================================================================
+# EXISTS TESTS
+# ============================================================================
+
+echo -e "${YELLOW}Test: exists returns true for existing work unit${NC}"
+setup_fixture
+run_cli init exists-test --work-type feature --description "Exists" >/dev/null 2>&1
+output=$(run_cli_stdout exists exists-test)
+exit_code=$(run_cli_exit_code exists exists-test)
+
+assert_equals "$output" "true" "Existing work unit returns true"
+assert_equals "$exit_code" "0" "Existing work unit exits 0"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: exists returns false for non-existent work unit${NC}"
+setup_fixture
+output=$(run_cli_stdout exists nonexistent-unit)
+exit_code=$(run_cli_exit_code exists nonexistent-unit)
+
+assert_equals "$output" "false" "Non-existent work unit returns false"
+assert_equals "$exit_code" "0" "Non-existent work unit exits 0"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: exists with dot-path field that exists${NC}"
+setup_fixture
+run_cli init exists-field --work-type feature --description "Field" >/dev/null 2>&1
+output=$(run_cli_stdout exists exists-field work_type)
+exit_code=$(run_cli_exit_code exists exists-field work_type)
+
+assert_equals "$output" "true" "Existing field returns true"
+assert_equals "$exit_code" "0" "Existing field exits 0"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: exists with dot-path field that does not exist${NC}"
+setup_fixture
+run_cli init exists-nofield --work-type feature --description "No field" >/dev/null 2>&1
+output=$(run_cli_stdout exists exists-nofield nonexistent.deep.path)
+exit_code=$(run_cli_exit_code exists exists-nofield nonexistent.deep.path)
+
+assert_equals "$output" "false" "Non-existent field returns false"
+assert_equals "$exit_code" "0" "Non-existent field exits 0"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: exists with --phase and --topic that exists${NC}"
+setup_fixture
+run_cli init exists-phase --work-type epic --description "Phase" >/dev/null 2>&1
+run_cli init-phase exists-phase --phase discussion --topic my-topic >/dev/null 2>&1
+output=$(run_cli_stdout exists exists-phase --phase discussion --topic my-topic)
+exit_code=$(run_cli_exit_code exists exists-phase --phase discussion --topic my-topic)
+
+assert_equals "$output" "true" "Existing phase/topic returns true"
+assert_equals "$exit_code" "0" "Existing phase/topic exits 0"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: exists with --phase and --topic that does not exist${NC}"
+setup_fixture
+run_cli init exists-nophase --work-type epic --description "No phase" >/dev/null 2>&1
+output=$(run_cli_stdout exists exists-nophase --phase discussion --topic missing-topic)
+exit_code=$(run_cli_exit_code exists exists-nophase --phase discussion --topic missing-topic)
+
+assert_equals "$output" "false" "Non-existent phase/topic returns false"
+assert_equals "$exit_code" "0" "Non-existent phase/topic exits 0"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: exists with non-existent work unit and deep path returns false${NC}"
+setup_fixture
+output=$(run_cli_stdout exists ghost-unit work_type)
+exit_code=$(run_cli_exit_code exists ghost-unit work_type)
+
+assert_equals "$output" "false" "Non-existent work unit + deep path returns false"
+assert_equals "$exit_code" "0" "Non-existent work unit + deep path exits 0"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: exists with no args returns non-zero exit${NC}"
+setup_fixture
+assert_exit_nonzero "exists with no args fails" exists
+
+echo ""
+
+# ============================================================================
 # SUMMARY
 # ============================================================================
 

@@ -598,6 +598,44 @@ function cmdPush(args) {
   });
 }
 
+function cmdExists(args) {
+  const { phase, topic, positional } = parseFlags(args);
+
+  if (positional.length < 1) die('Usage: exists <name> [--phase <phase>] [--topic <topic>] [field.path]');
+
+  const name = positional[0];
+  const mp = manifestPath(name);
+
+  // Work-unit level, no field path — just check if manifest file exists
+  if (!phase && positional.length === 1) {
+    process.stdout.write(fs.existsSync(mp) ? 'true\n' : 'false\n');
+    return;
+  }
+
+  // If manifest doesn't exist, any deeper path is false
+  if (!fs.existsSync(mp)) {
+    process.stdout.write('false\n');
+    return;
+  }
+
+  const manifest = JSON.parse(fs.readFileSync(mp, 'utf8'));
+
+  if (!phase) {
+    // Work-unit level with field path
+    const segments = positional[1].split('.');
+    const value = getByPath(manifest, segments);
+    process.stdout.write(value !== undefined ? 'true\n' : 'false\n');
+    return;
+  }
+
+  // Phase-level
+  validatePhase(phase);
+  const fieldSegments = positional.length > 1 ? positional[1].split('.') : [];
+  const segments = resolvePhaseSegments(manifest.work_type, phase, topic, fieldSegments);
+  const value = getByPath(manifest, segments);
+  process.stdout.write(value !== undefined ? 'true\n' : 'false\n');
+}
+
 function cmdArchive(args) {
   if (args.length !== 1) die('Usage: archive <name>');
 
@@ -636,7 +674,7 @@ function cmdArchive(args) {
 const [command, ...args] = process.argv.slice(2);
 
 if (!command) {
-  die('Usage: manifest.js <command> [args]\nCommands: init, get, set, list, init-phase, push, archive');
+  die('Usage: manifest.js <command> [args]\nCommands: init, get, set, list, init-phase, push, exists, archive');
 }
 
 switch (command) {
@@ -646,6 +684,7 @@ switch (command) {
   case 'list':     cmdList(args); break;
   case 'init-phase': cmdInitPhase(args); break;
   case 'push':     cmdPush(args); break;
+  case 'exists':   cmdExists(args); break;
   case 'archive':  cmdArchive(args); break;
   default:         die(`Unknown command "${command}"`);
 }

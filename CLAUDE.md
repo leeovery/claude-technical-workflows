@@ -293,6 +293,7 @@ $MANIFEST get {work_unit} --phase discussion --topic {topic} status    # phase-l
 $MANIFEST set {work_unit} --phase discussion --topic {topic} status concluded  # phase-level write
 $MANIFEST init-phase {work_unit} --phase discussion --topic {topic}    # create phase entry
 $MANIFEST push {work_unit} --phase implementation --topic {topic} completed_tasks "task-1"  # append to array
+$MANIFEST exists {work_unit}                                           # existence check (exits 0, outputs true/false)
 $MANIFEST get {work_unit} work_type                                    # work-unit-level read
 $MANIFEST set {work_unit} phases.research.analysis_cache '{"checksum":"..."}' # work-unit-level write (dot-path)
 ```
