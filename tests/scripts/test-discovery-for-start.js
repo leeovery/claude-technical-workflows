@@ -162,6 +162,31 @@ describe('workflow-start discovery', () => {
     assert.deepStrictEqual(r.epics.work_units[0].active_phases, ['research']);
   });
 
+  it('includes concluded work units in separate array', () => {
+    createManifest(dir, 'done-feat', { work_type: 'feature', status: 'concluded', phases: { review: { status: 'completed' } } });
+    createManifest(dir, 'active-feat', { work_type: 'feature', phases: { discussion: { status: 'in-progress' } } });
+    const r = discover(dir);
+    assert.strictEqual(r.concluded_count, 1);
+    assert.strictEqual(r.concluded[0].name, 'done-feat');
+    assert.strictEqual(r.concluded[0].work_type, 'feature');
+    assert.strictEqual(r.concluded[0].last_phase, 'review');
+  });
+
+  it('includes cancelled work units in separate array', () => {
+    createManifest(dir, 'cancelled-bug', { work_type: 'bugfix', status: 'cancelled', phases: { investigation: { status: 'concluded' } } });
+    const r = discover(dir);
+    assert.strictEqual(r.cancelled_count, 1);
+    assert.strictEqual(r.cancelled[0].name, 'cancelled-bug');
+    assert.strictEqual(r.cancelled[0].last_phase, 'investigation');
+  });
+
+  it('concluded and cancelled counts are zero when none exist', () => {
+    createManifest(dir, 'active', { work_type: 'feature', phases: { discussion: { status: 'in-progress' } } });
+    const r = discover(dir);
+    assert.strictEqual(r.concluded_count, 0);
+    assert.strictEqual(r.cancelled_count, 0);
+  });
+
   it('feature in review (in-progress) is not filtered out', () => {
     createManifest(dir, 'auth', {
       work_type: 'feature',

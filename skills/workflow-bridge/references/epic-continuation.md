@@ -18,7 +18,7 @@ node .claude/skills/continue-epic/scripts/discovery.js {work_unit}
 
 Parse the output. Use the epic's `detail` object as the discovery data for the display.
 
-## A2. Check All-Done
+## B. Check All-Done
 
 Using the enriched discovery data from section A, check if ALL topics across ALL phases have review status `completed`. Specifically: check if any review items exist, and if so, whether every one has `status: completed`, and no topics in earlier phases are still `in-progress`.
 
@@ -58,13 +58,13 @@ Epic Concluded
 
 **If user chose `n`/`no`:**
 
-→ Proceed to **B. Display and Menu**.
+→ Proceed to **C. Display and Menu**.
 
 #### Otherwise
 
-→ Proceed to **B. Display and Menu**.
+→ Proceed to **C. Display and Menu**.
 
-## B. Display and Menu
+## C. Display and Menu
 
 > *Output the next fenced block as a code block:*
 
@@ -76,11 +76,11 @@ Load **[epic-display-and-menu.md](../../continue-epic/references/epic-display-an
 
 **STOP.** Do not proceed until the above has returned with the user's selection.
 
-→ Proceed to **C. Enter Plan Mode**.
+→ Proceed to **D. Enter Plan Mode**.
 
 ---
 
-## C. Enter Plan Mode
+## D. Enter Plan Mode
 
 Map the selection to a skill invocation using this routing table:
 

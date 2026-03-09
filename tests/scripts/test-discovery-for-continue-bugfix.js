@@ -66,6 +66,24 @@ describe('continue-bugfix discovery', () => {
     assert.strictEqual(r.summary, '2 active bugfix(es)');
   });
 
+  it('includes concluded bugfixes in separate array', () => {
+    createManifest(dir, 'done', { work_type: 'bugfix', status: 'concluded', phases: { review: { status: 'completed' } } });
+    createManifest(dir, 'active', { work_type: 'bugfix', phases: { investigation: { status: 'in-progress' } } });
+    const r = discover(dir);
+    assert.strictEqual(r.count, 1);
+    assert.strictEqual(r.concluded_count, 1);
+    assert.strictEqual(r.concluded[0].name, 'done');
+    assert.strictEqual(r.concluded[0].last_phase, 'review');
+  });
+
+  it('includes cancelled bugfixes in separate array', () => {
+    createManifest(dir, 'stopped', { work_type: 'bugfix', status: 'cancelled', phases: { investigation: { status: 'concluded' } } });
+    const r = discover(dir);
+    assert.strictEqual(r.cancelled_count, 1);
+    assert.strictEqual(r.cancelled[0].name, 'stopped');
+    assert.strictEqual(r.cancelled[0].last_phase, 'investigation');
+  });
+
   describe('edge cases', () => {
     it('recognizes completed as concluded in concluded_phases', () => {
       createManifest(dir, 'crash', {

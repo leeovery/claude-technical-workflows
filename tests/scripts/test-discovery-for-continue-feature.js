@@ -83,6 +83,30 @@ describe('continue-feature discovery', () => {
     assert.strictEqual(r.summary, '2 active feature(s)');
   });
 
+  it('includes concluded features in separate array', () => {
+    createManifest(dir, 'done', { work_type: 'feature', status: 'concluded', phases: { review: { status: 'completed' } } });
+    createManifest(dir, 'active', { work_type: 'feature', phases: { discussion: { status: 'in-progress' } } });
+    const r = discover(dir);
+    assert.strictEqual(r.count, 1);
+    assert.strictEqual(r.concluded_count, 1);
+    assert.strictEqual(r.concluded[0].name, 'done');
+    assert.strictEqual(r.concluded[0].last_phase, 'review');
+  });
+
+  it('includes cancelled features in separate array', () => {
+    createManifest(dir, 'stopped', { work_type: 'feature', status: 'cancelled', phases: { specification: { status: 'concluded' } } });
+    const r = discover(dir);
+    assert.strictEqual(r.cancelled_count, 1);
+    assert.strictEqual(r.cancelled[0].name, 'stopped');
+    assert.strictEqual(r.cancelled[0].last_phase, 'specification');
+  });
+
+  it('excludes non-feature concluded work units', () => {
+    createManifest(dir, 'done-bug', { work_type: 'bugfix', status: 'concluded', phases: { review: { status: 'completed' } } });
+    const r = discover(dir);
+    assert.strictEqual(r.concluded_count, 0);
+  });
+
   describe('edge cases', () => {
     it('recognizes completed as concluded in concluded_phases', () => {
       createManifest(dir, 'auth', {

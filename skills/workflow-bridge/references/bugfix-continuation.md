@@ -45,9 +45,9 @@ Bugfix Concluded
 
 Set `target_phase` = `next_phase`.
 
-→ Proceed to **A2. Offer Early Conclusion**.
+→ Proceed to **B. Offer Early Conclusion**.
 
-## A2. Offer Early Conclusion
+## B. Offer Early Conclusion
 
 #### If `next_phase` is `review`
 
@@ -87,19 +87,19 @@ Bugfix Concluded
 
 **If user chose `y`/`yes`:**
 
-→ Proceed to **B. Offer Revisit**.
+→ Proceed to **C. Offer Revisit**.
 
 #### Otherwise
 
-→ Proceed to **B. Offer Revisit**.
+→ Proceed to **C. Offer Revisit**.
 
-## B. Offer Revisit
+## C. Offer Revisit
 
 Check if there are concluded phases earlier in the pipeline that the user could revisit. Look at the discovery output's `phases` data — any phase with status `concluded` or `completed` that comes before `next_phase` in the pipeline order.
 
 #### If no earlier concluded phases exist
 
-→ Proceed to **C. Enter Plan Mode**.
+→ Proceed to **D. Enter Plan Mode**.
 
 #### If earlier concluded phases exist
 
@@ -119,7 +119,7 @@ Check if there are concluded phases earlier in the pipeline that the user could 
 
 **If user chose `y`/`yes`:**
 
-→ Proceed to **C. Enter Plan Mode**.
+→ Proceed to **D. Enter Plan Mode**.
 
 **If user chose `r`/`revisit`:**
 
@@ -143,15 +143,15 @@ List only concluded phases that come before `next_phase`.
 
 **If user chose Back:**
 
-→ Return to **B. Offer Revisit**.
+→ Return to **C. Offer Revisit**.
 
 **If user chose a phase:**
 
 Set `target_phase` = selected phase.
 
-→ Proceed to **C. Enter Plan Mode**.
+→ Proceed to **D. Enter Plan Mode**.
 
-## C. Enter Plan Mode
+## D. Enter Plan Mode
 
 Call the `EnterPlanMode` tool to enter plan mode. Then write the following content to the plan file:
 
