@@ -68,7 +68,9 @@ Select an option (enter number):
 
 #### If user chose a number
 
-Store the selected item. → Proceed to **C. Action Menu**.
+Store the selected item.
+
+→ Proceed to **C. Action Menu**.
 
 ## C. Action Menu
 

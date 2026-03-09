@@ -24,7 +24,9 @@ Which work unit would you like to manage? (enter number from list above, or **`b
 
 #### If user chose a number
 
-Store the selected work unit. → Proceed to **B. Implementation Check**.
+Store the selected work unit.
+
+→ Proceed to **B. Implementation Check**.
 
 ## B. Implementation Check
 
