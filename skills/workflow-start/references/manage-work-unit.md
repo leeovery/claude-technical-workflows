@@ -4,7 +4,7 @@
 
 ---
 
-Manage an in-progress work unit's lifecycle. Self-contained two-step flow. Uses the numbered in-progress items already displayed by the caller.
+Manage an in-progress work unit's lifecycle. Self-contained three-step flow. Uses the numbered in-progress items already displayed by the caller.
 
 ## A. Select
 
@@ -24,11 +24,13 @@ Which work unit would you like to manage? (enter number from list above, or **`b
 
 #### If user chose a number
 
-Store the selected work unit. → Proceed to **B. Action Menu**.
+Store the selected work unit. → Proceed to **B. Done Check**.
 
-## B. Action Menu
+## B. Done Check
 
-Determine whether to show the `d`/`done` option. Check if at least one topic has completed implementation.
+Determine whether to show the `d`/`done` option. Default `implementation_completed` = false.
+
+Check whether the implementation phase exists:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js exists {selected.name} phases.implementation
@@ -36,7 +38,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js exists {selected.name}
 
 #### If the result is `false`
 
-Set `implementation_completed` = false.
+→ Proceed to **C. Action Menu**.
 
 #### If the result is `true`
 
@@ -46,7 +48,7 @@ Get the work type:
 node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name} work_type
 ```
 
-**If work type is `feature` or `bugfix`:**
+#### If work type is `feature` or `bugfix`
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name} --phase implementation status
@@ -56,7 +58,9 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name} --
 
 Set `implementation_completed` = true.
 
-**If work type is `epic`:**
+→ Proceed to **C. Action Menu**.
+
+#### If work type is `epic`
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name} --phase implementation
@@ -67,6 +71,10 @@ Parse the JSON output.
 **If any item in the `items` object has `"status": "completed"`:**
 
 Set `implementation_completed` = true.
+
+→ Proceed to **C. Action Menu**.
+
+## C. Action Menu
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -119,4 +127,4 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {selected.name} st
 
 #### If user asked a question
 
-Answer the question, then redisplay the action menu (section B).
+Answer the question, then redisplay the action menu (section C).
