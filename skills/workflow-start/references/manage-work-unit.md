@@ -28,7 +28,29 @@ Store the selected work unit. → Proceed to **B. Action Menu**.
 
 ## B. Action Menu
 
-Check if at least one topic has completed implementation. For feature/bugfix, check `phases.implementation.status`. For epic, check if any item in `phases.implementation.items` has `status: completed`. Use the manifest CLI to read the phase data.
+Determine whether to show the `d`/`done` option. Get the work type, then check if at least one topic has completed implementation:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name} work_type
+```
+
+**If work type is `feature` or `bugfix`:**
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name} --phase implementation status
+```
+
+If the result is `completed`, set `implementation_completed` = true.
+
+**If work type is `epic`:**
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name} --phase implementation
+```
+
+Parse the JSON output. If any item in the `items` object has `"status": "completed"`, set `implementation_completed` = true.
+
+If the phase doesn't exist (command errors), `implementation_completed` = false.
 
 > *Output the next fenced block as markdown (not a code block):*
 
