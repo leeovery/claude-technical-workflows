@@ -4,7 +4,7 @@
 
 ---
 
-Manage an in-progress work unit's lifecycle. Self-contained three-step flow. Uses the numbered in-progress items already displayed by the caller.
+Manage an in-progress work unit's lifecycle. Self-contained four-step flow. Uses the numbered in-progress items already displayed by the caller.
 
 ## A. Select
 
@@ -24,11 +24,11 @@ Which work unit would you like to manage? (enter number from list above, or **`b
 
 #### If user chose a number
 
-Store the selected work unit. → Proceed to **B. Done Check**.
+Store the selected work unit. → Proceed to **B. Implementation Check**.
 
-## B. Done Check
+## B. Implementation Check
 
-Determine whether to show the `d`/`done` option. Default `implementation_completed` = false.
+Default `implementation_completed` = false.
 
 Check whether the implementation phase exists:
 
@@ -38,7 +38,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js exists {selected.name}
 
 #### If the result is `false`
 
-→ Proceed to **C. Action Menu**.
+→ Proceed to **D. Action Menu**.
 
 #### If the result is `true`
 
@@ -47,6 +47,10 @@ Get the work type:
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name} work_type
 ```
+
+→ Proceed to **C. Completion Check**.
+
+## C. Completion Check
 
 #### If work type is `feature` or `bugfix`
 
@@ -58,7 +62,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name} --
 
 Set `implementation_completed` = true.
 
-→ Proceed to **C. Action Menu**.
+→ Proceed to **D. Action Menu**.
 
 #### If work type is `epic`
 
@@ -72,9 +76,9 @@ Parse the JSON output.
 
 Set `implementation_completed` = true.
 
-→ Proceed to **C. Action Menu**.
+→ Proceed to **D. Action Menu**.
 
-## C. Action Menu
+## D. Action Menu
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -127,4 +131,4 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {selected.name} st
 
 #### If user asked a question
 
-Answer the question, then redisplay the action menu (section C).
+Answer the question, then redisplay the action menu (section D).
