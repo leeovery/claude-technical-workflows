@@ -32,6 +32,11 @@ $MANIFEST init-phase {work_unit} --phase discussion --topic {topic}
 $MANIFEST get {work_unit} [field]
 $MANIFEST set {work_unit} field value
 
+# Existence checks (always exit 0, outputs true/false):
+$MANIFEST exists {work_unit}
+$MANIFEST exists {work_unit} [field.path]
+$MANIFEST exists {work_unit} --phase <phase> [--topic <topic>] [field.path]
+
 # Management (unchanged):
 $MANIFEST init name --work-type type --description "..."
 $MANIFEST list [--status s] [--work-type t]
@@ -161,6 +166,24 @@ node .claude/skills/workflow-manifest/scripts/manifest.js push <name> tags "v1"
 node .claude/skills/workflow-manifest/scripts/manifest.js push <name> --phase implementation --topic <topic> completed_tasks "task-1"
 node .claude/skills/workflow-manifest/scripts/manifest.js push <name> --phase implementation --topic <topic> completed_phases 1
 ```
+
+### `exists`
+
+Check whether a work unit, field, or phase entry exists. Always exits 0 — both `true` and `false` are valid results. Outputs `true` or `false` to stdout, nothing to stderr.
+
+```bash
+# Does the work unit exist?
+node .claude/skills/workflow-manifest/scripts/manifest.js exists <name>
+
+# Does a field path exist?
+node .claude/skills/workflow-manifest/scripts/manifest.js exists <name> phases.discussion
+
+# Does a phase/topic entry exist?
+node .claude/skills/workflow-manifest/scripts/manifest.js exists <name> --phase discussion --topic auth-flow
+node .claude/skills/workflow-manifest/scripts/manifest.js exists <name> --phase discussion --topic auth-flow status
+```
+
+If the work unit doesn't exist and a deeper path is requested, outputs `false` (no error). Actual usage errors (missing args, invalid phase name) still use `die()`.
 
 ### `archive`
 

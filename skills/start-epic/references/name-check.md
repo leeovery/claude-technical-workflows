@@ -28,7 +28,7 @@ Is this name okay?
 Once the name is confirmed, check for naming conflicts:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type
+node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}
 ```
 
 #### If a work unit with the same name exists
