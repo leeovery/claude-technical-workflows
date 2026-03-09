@@ -28,6 +28,16 @@ Always valid. Could mean:
 
 The bridge shows concluded artifacts that could be reopened alongside the option to create new ones.
 
+## Status: Complete
+
+Most of PR 3's scope was implemented incrementally alongside the epic display/menu system and bridge integration:
+
+- **Navigation options** (proceed, stay, go back, done for now) — implemented in `epic-display-and-menu.md` Sections C–E
+- **Hard gates** — implemented via `gating` flags in discovery + menu filtering
+- **Backward navigation** — "Resume a concluded topic" menu option + Section E flow
+- **"Done for now"** — "Stop here" menu option + Session Paused terminal
+- **Soft guidance** — added as interactive gates in Section D (proceed anyway? prompts with system recovery reassurance)
+
 ## Dependencies
 
 - Depends on: PR 2 (bridge fires unconditionally)
