@@ -26,7 +26,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_t
 
 **Topic awareness**: When working in a specific topic file and content drifts to another topic's scope, flag it and offer to switch to that topic's file or note it for later. Don't silently let content accumulate in the wrong file.
 
-When you notice convergence signals (loaded in Step 3), flag it and route to the appropriate action:
+When you notice convergence signals (loaded in Step 4), flag it and route to the appropriate action:
 
 **If threads are emerging as distinct topics** (different scopes, stakeholders, or timelines):
 

@@ -1,6 +1,6 @@
 # Epic Research Posture
 
-*Reference for **[file-strategy.md](file-strategy.md)***
+*Reference for **[technical-research](../SKILL.md)***
 
 ---
 
@@ -14,4 +14,4 @@ Threads may crystallise into distinct topics with different scopes, stakeholders
 
 Individual research topics can reach a natural conclusion independently. When a topic's tradeoffs are clear and it's approaching decision territory, that topic may be ready for discussion — even while other topics remain in-progress. Flag it and offer to mark it complete.
 
-→ Return to **[file-strategy.md](file-strategy.md)**.
+→ Return to **[the skill](../SKILL.md)**.

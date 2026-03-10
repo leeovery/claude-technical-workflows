@@ -100,14 +100,26 @@ Load **[file-strategy.md](references/file-strategy.md)** and follow its instruct
 
 ---
 
-## Step 3: Load Research Guidelines
+## Step 3: Epic Research Posture
 
-Load **[research-guidelines.md](references/research-guidelines.md)** and follow its instructions as written.
+#### If work_type is `epic`
 
-→ Proceed to **Step 4**.
+Load **[convergence-posture.md](references/convergence-posture.md)** and follow its instructions as written.
+
+#### If work_type is `feature`
+
+Nothing to load. → Proceed to **Step 4**.
 
 ---
 
-## Step 4: Research Session
+## Step 4: Load Research Guidelines
+
+Load **[research-guidelines.md](references/research-guidelines.md)** and follow its instructions as written.
+
+→ Proceed to **Step 5**.
+
+---
+
+## Step 5: Research Session
 
 Load **[research-session.md](references/research-session.md)** and follow its instructions as written.
