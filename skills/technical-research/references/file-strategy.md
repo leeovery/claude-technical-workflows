@@ -16,6 +16,8 @@ Single file: `.workflows/{work_unit}/research/{topic}.md`
 
 Feature research stays focused on the feature's scope. No splitting, no multi-file management. When the topic feels well-explored, conclude and move forward.
 
+→ Return to **[the skill](../SKILL.md)**.
+
 #### If work_type is `epic`
 
 Multi-file: `.workflows/{work_unit}/research/`
