@@ -136,7 +136,7 @@ Build a numbered menu with three sections:
 **Section 2 — Next-phase-ready items:**
 - From `next_phase_ready` in discovery output
 - Completed spec with no plan: `Start planning for "{topic:(titlecase)}" — spec completed`
-- Concluded plan with no implementation:
+- Completed plan with no implementation:
   - If `blocked`: show but mark as not selectable: `Start implementation of "{topic:(titlecase)}" — blocked by {dep_topic}:{task_id}`
   - Otherwise: `Start implementation of "{topic:(titlecase)}" — plan completed`
 - Completed implementation with no review: `Start review for "{topic:(titlecase)}" — implementation completed`
