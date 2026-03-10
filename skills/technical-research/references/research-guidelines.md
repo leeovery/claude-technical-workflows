@@ -40,15 +40,23 @@ Ask one question at a time. Wait for the answer. Document. Then ask the next.
 
 ## File Strategy
 
-**Output**: `.workflows/{work_unit}/research/exploration.md`
-
 **Template**: Use **[template.md](template.md)** for document structure.
 
-Start with one file. Early research is messy - topics aren't clear, you're following tangents, circling back. Don't force structure too early.
+#### If work_type is `feature`
 
-**Let themes emerge**: Over multiple sessions, topics may become distinct. When they do, split into semantic files (`market-landscape.md`, `technical-feasibility.md`).
+Single file: `.workflows/{work_unit}/research/{work_unit}.md`
 
-**Periodic review**: Every few sessions, assess: are themes emerging? Split them out. Still fuzzy? Keep exploring. Ready for deeper discussion or specification? Research is complete.
+Feature research stays focused on the feature's scope. No splitting, no multi-file management. When the topic feels well-explored, conclude and move forward.
+
+#### If work_type is `epic`
+
+Multi-file: `.workflows/{work_unit}/research/`
+
+Start with one file — either `exploration.md` for open research or a named `{topic}.md` for focused research. Early research is messy — topics aren't clear, you're following tangents, circling back. Don't force structure too early.
+
+**Let themes emerge**: As research progresses, threads may become distinct enough to warrant their own files. When they do, offer to split them out (see convergence posture below). There's no limit on the number of research topics.
+
+**Periodic review**: Every few sessions, assess: are themes emerging? Offer to split them out. Still fuzzy? Keep exploring. A specific topic converging toward decisions? It may be ready for discussion.
 
 ## Documentation Loop
 
