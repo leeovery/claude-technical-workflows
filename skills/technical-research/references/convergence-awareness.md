@@ -53,7 +53,19 @@ For each split topic:
 
 Commit after splitting.
 
-Ask which topic to continue with (including staying in the current file).
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+Which topic would you like to continue with?
+
+@foreach(topic in available_topics)
+**{N}. {topic:(titlecase)}** — {status:(in-progress)}
+@endforeach
+
+Select an option (enter number):
+· · · · · · · · · · · ·
+```
 
 **STOP.** Wait for user response.
 
