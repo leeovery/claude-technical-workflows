@@ -47,9 +47,20 @@ Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, top
 Store work_unit for the handoff.
 
 Resolve filename:
-- Feature → `resolved_filename = {work_unit}.md`
-- Epic with topic → `resolved_filename = {topic}.md`
-- Epic without topic → deferred (gather-context will resolve it)
+
+#### If work_type is `feature`
+
+`resolved_filename = {topic}.md`
+
+#### If work_type is `epic` and `topic` resolved
+
+`resolved_filename = {topic}.md`
+
+#### If work_type is `epic` and no `topic`
+
+Deferred — gather-context will resolve it.
+
+---
 
 #### If `topic` resolved
 
