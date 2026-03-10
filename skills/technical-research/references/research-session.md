@@ -30,13 +30,13 @@ When you notice convergence signals (loaded in Step 2), flag it and route to the
 
 **If threads are emerging as distinct topics** (different scopes, stakeholders, or timelines):
 
-→ Load **[topic-splitting.md](topic-splitting.md)** and follow its instructions.
+→ Load **[topic-splitting.md](topic-splitting.md)** and follow its instructions as written.
 
 **If the current topic is converging** (tradeoffs clear, approaching decision territory):
 
-→ Load **[topic-completion.md](topic-completion.md)** and follow its instructions.
+→ Load **[topic-completion.md](topic-completion.md)** and follow its instructions as written.
 
-After handling (if the user chooses to keep digging), resume the session loop above.
+After handling, both reference files route back to the **Session Loop** when appropriate.
 
 #### If work_type is `feature`
 

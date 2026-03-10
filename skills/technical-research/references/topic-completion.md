@@ -59,14 +59,14 @@ Still in progress:
 @endforeach
 ```
 
-→ Return to **[research-session.md](research-session.md)**.
+→ Return to **[research-session.md](research-session.md)** and resume the **Session Loop**.
 
 #### If the user keeps digging
 
 Continue exploring. The convergence signal isn't a stop sign — it's an awareness check. The user might want to stress-test the emerging conclusion, explore edge cases, or understand the problem more deeply before moving on.
 
-→ Return to **[research-session.md](research-session.md)**.
+→ Return to **[research-session.md](research-session.md)** and resume the **Session Loop**.
 
 #### If the user splits
 
-→ Load **[topic-splitting.md](topic-splitting.md)** and follow its instructions.
+→ Load **[topic-splitting.md](topic-splitting.md)** and follow its instructions as written.

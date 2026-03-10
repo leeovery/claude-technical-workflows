@@ -65,8 +65,8 @@ Select an option (enter number):
 
 **STOP.** Wait for user response.
 
-→ Return to **[research-session.md](research-session.md)**.
+→ Return to **[research-session.md](research-session.md)** and resume the **Session Loop**.
 
 #### If no
 
-→ Return to **[research-session.md](research-session.md)**.
+→ Return to **[research-session.md](research-session.md)** and resume the **Session Loop**.

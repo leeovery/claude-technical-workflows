@@ -64,7 +64,7 @@ Start with one file — either `exploration.md` for open research or a named `{t
 
 **Periodic review**: Every few sessions, assess: are themes emerging? Offer to split them out. Still fuzzy? Keep exploring. A specific topic converging toward decisions? It may be ready for discussion.
 
-Load **[convergence-posture.md](convergence-posture.md)** — carry this awareness throughout the entire session.
+Load **[convergence-posture.md](convergence-posture.md)** and follow its instructions as written.
 
 ## Documentation Loop
 
