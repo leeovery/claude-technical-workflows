@@ -80,15 +80,13 @@ Found existing research for **{topic:(titlecase)}**.
 
 ## Step 1: Initialize Research
 
-1. Ensure the research directory exists: `.workflows/{work_unit}/research/`
-2. Load **[template.md](references/template.md)** — use it to create the research file at the Output path from the handoff (e.g., `.workflows/{work_unit}/research/{resolved_filename}`)
-3. Populate the Starting Point section with context from the handoff. If restarting (no Context in handoff), create with a minimal Starting Point — the session will gather context naturally
-4. Set research status via manifest CLI:
+1. Load **[template.md](references/template.md)** — use it to create the research file at the Output path from the handoff (e.g., `.workflows/{work_unit}/research/{resolved_filename}`)
+2. Populate the Starting Point section with context from the handoff. If restarting (no Context in handoff), create with a minimal Starting Point — the session will gather context naturally
+3. Register in manifest:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase research --topic {topic} status in-progress
+   node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit} --phase research --topic {topic}
    ```
-   Where `{topic}` is derived from the research file name (e.g., "exploration" for `exploration.md`, the work unit name for features).
-5. Commit the initial file
+4. Commit the initial file
 
 → Proceed to **Step 2**.
 
