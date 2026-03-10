@@ -108,7 +108,7 @@ Load **[convergence-posture.md](references/convergence-posture.md)** and follow 
 
 #### If work_type is `feature`
 
-Nothing to load. → Proceed to **Step 4**.
+→ Proceed to **Step 4**.
 
 ---
 
