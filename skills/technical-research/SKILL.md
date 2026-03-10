@@ -51,15 +51,15 @@ When announcing a new step, output `── ── ── ── ──` on its o
 
 ## Step 0: Resume Detection
 
-Check if research files exist in `.workflows/{work_unit}/research/`.
+Check if the research file from the handoff's Output path exists.
 
-#### If files exist
+#### If file exists
 
-Read them. Announce what's been explored so far and what themes have emerged. Ask the user whether to continue or start fresh.
+Read it. Announce what's been explored so far and what themes have emerged. Ask the user whether to continue or start fresh.
 
 **STOP.** Wait for user response.
 
-#### If no files exist
+#### If file does not exist
 
 → Proceed to **Step 1**.
 
