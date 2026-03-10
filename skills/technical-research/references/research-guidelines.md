@@ -60,23 +60,11 @@ Multi-file: `.workflows/{work_unit}/research/`
 
 Start with one file — either `exploration.md` for open research or a named `{topic}.md` for focused research. Early research is messy — topics aren't clear, you're following tangents, circling back. Don't force structure too early.
 
-**Let themes emerge**: As research progresses, threads may become distinct enough to warrant their own files. When they do, offer to split them out (see convergence posture below). There's no limit on the number of research topics.
+**Let themes emerge**: As research progresses, threads may become distinct enough to warrant their own files. There's no limit on the number of research topics.
 
 **Periodic review**: Every few sessions, assess: are themes emerging? Offer to split them out. Still fuzzy? Keep exploring. A specific topic converging toward decisions? It may be ready for discussion.
 
-## Convergence Posture (epic only)
-
-Carry this awareness throughout the entire research session — it's peripheral vision, not a checkpoint.
-
-**Topic splitting**: As you research, threads may crystallise into distinct topics with different scopes, stakeholders, or timelines. When you notice this, offer to split them into their own files. Don't force it — if nothing is emerging, say nothing and carry on. Don't ask "any topics emerging?" as a scheduled check. Early research is messy by design.
-
-**Per-topic completion**: Individual research topics can reach a natural conclusion independently. When a topic's tradeoffs are clear and it's approaching decision territory, that topic may be ready for discussion — even while other topics remain in-progress. Flag it and offer to mark it complete.
-
-**Synthesis vs Decision**: This distinction matters throughout:
-- **Synthesis** (research): "There are three viable approaches. A is simplest but limited. B scales better but costs more. C is future-proof but complex."
-- **Decision** (discussion): "We should go with B because scaling matters more than simplicity for this project."
-
-Synthesis is your job. Decisions are not. Present the landscape, don't pick the destination.
+Load **[convergence-posture.md](convergence-posture.md)** — carry this awareness throughout the entire session.
 
 ## Documentation Loop
 
