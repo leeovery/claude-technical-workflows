@@ -21,13 +21,25 @@ Do you have a specific topic to research, or explore openly?
 
 **STOP.** Wait for user response.
 
-**If `specific`**: Ask "What topic?" — STOP. User provides topic name → `resolved_filename = {topic:(kebabcase)}.md`
+**If `specific`:**
 
-**If `explore`**: `resolved_filename = exploration.md`
+> *Output the next fenced block as a code block:*
+
+```
+What topic would you like to research?
+```
+
+**STOP.** Wait for user response.
+
+User provides topic name → `resolved_filename = {topic:(kebabcase)}.md`
+
+**If `explore`:**
+
+`resolved_filename = exploration.md`
 
 #### If work_type is `feature`
 
-No question needed. `resolved_filename = {work_unit}.md`
+No question needed. `resolved_filename = {topic}.md`
 
 #### If topic already resolved
 
