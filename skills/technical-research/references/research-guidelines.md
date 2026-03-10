@@ -50,7 +50,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_t
 
 #### If work_type is `feature`
 
-Single file: `.workflows/{work_unit}/research/{work_unit}.md`
+Single file: `.workflows/{work_unit}/research/{topic}.md`
 
 Feature research stays focused on the feature's scope. No splitting, no multi-file management. When the topic feels well-explored, conclude and move forward.
 
