@@ -28,7 +28,9 @@ Watch for these signals that a thread is moving from exploration toward decision
 - Discussion shifting from "what are the options?" to "which option?"
 - You or the user starting to advocate for a particular approach
 
-Remember the convergence posture loaded in Step 2 — both topic splitting and per-topic completion are possibilities. Be aware of both.
+Remember the convergence posture loaded in Step 2 — both topic splitting and per-topic completion are possibilities. Be aware of both as you research.
+
+**Topic awareness**: When working in a specific topic file and content drifts to another topic's scope, flag it and offer to switch to that topic's file or note it for later. Don't silently let content accumulate in the wrong file.
 
 When you notice convergence, **flag it and give the user options**:
 
