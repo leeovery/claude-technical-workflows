@@ -57,7 +57,7 @@ Best practices for documenting discussions. For DOCUMENTATION only - no plans or
 
 ## Write to Disk as Discussing
 
-At natural pauses — not every exchange, but when something meaningful has been concluded, explored, or uncovered — update the file on disk:
+At natural pauses — not every exchange, but when something meaningful has been completed, explored, or uncovered — update the file on disk:
 
 - Check off answered questions
 - Add options as explored

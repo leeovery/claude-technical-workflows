@@ -252,6 +252,10 @@ awk '/^---$/ && c<2 {c++; next} c>=2 {print}' "$file"
 
 Also avoid BSD sed incompatibilities: `sed '/range/{cmd1;cmd2}'` syntax fails on macOS. Use awk or separate `sed -e` expressions instead.
 
+**Critical: Migration scripts must not use the manifest CLI**
+
+Migration scripts are point-in-time snapshots. The manifest CLI validates values against the current schema, which changes over time (e.g., valid statuses). A migration that uses the CLI today may break silently when validation rules change in a later release. Always read and write `manifest.json` directly using `node` (or `jq`) — never via the manifest CLI. This ensures migrations remain stable regardless of future schema changes.
+
 ## Compaction Recovery
 
 Processing skills run long and may hit context compaction. The hook system provides deterministic recovery.
