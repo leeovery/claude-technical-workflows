@@ -27,6 +27,26 @@ Don't constrain yourself. Research goes wherever it needs to go.
 
 **Explore, don't decide**: Your job is to surface options, tradeoffs, and understanding — not to pick winners. Synthesis is welcome ("the tradeoffs are X, Y, Z"), conclusions are not ("therefore we should do Y"). Decisions belong elsewhere — your job is to explore.
 
+## Convergence Awareness
+
+This is peripheral vision, not a checkpoint. Carry this awareness throughout the entire research session.
+
+Watch for these signals that a thread is moving from exploration toward decision-making:
+
+- "We should..." or "The best approach is..." language (from you or the user)
+- Options narrowing to a clear frontrunner with well-understood tradeoffs
+- The same conclusion being reached from multiple angles
+- Discussion shifting from "what are the options?" to "which option?"
+- You or the user starting to advocate for a particular approach
+
+When you notice these signals, flag it. Research surfaces options — decisions happen in the discussion phase.
+
+**Synthesis** (research): "There are three viable approaches. A is simplest but limited. B scales better but costs more. C is future-proof but complex."
+
+**Decision** (discussion): "We should go with B because scaling matters more than simplicity for this project."
+
+Synthesis is your job. Decisions are not. Present the landscape, don't pick the destination.
+
 ## Questioning
 
 Before interviewing, read docs in `.workflows/{work_unit}/research/` to understand what's already been explored.
