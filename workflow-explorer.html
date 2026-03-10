@@ -945,14 +945,14 @@
     display: flex; flex-direction: column; align-items: center; padding: 4px 0;
   }
   .ov-flow-down-line {
-    width: 1.5px; height: 18px;
-    background: repeating-linear-gradient(to bottom, rgba(139,144,160,0.35) 0 4px, transparent 4px 7px);
+    width: 2px; height: 27px;
+    background: repeating-linear-gradient(to bottom, rgba(139,144,160,0.4) 0 5px, transparent 5px 9px);
   }
   .ov-flow-down-head {
     width: 0; height: 0;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 5px solid rgba(139,144,160,0.35);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid rgba(139,144,160,0.4);
   }
 
   /* Centered row */
@@ -1832,52 +1832,93 @@ const FLOWCHARTS = {
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for workflow-discussion-entry. Receives work_type, work_unit, and optional topic.' },
       { id: 'parse', label: 'Parse arguments', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 1: Parse work_type=$0, work_unit=$1, topic=$2. Resolve topic: $2 or (if not epic) $1.' },
       { id: 'topic-resolved', label: 'Topic resolved?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route based on whether a topic was resolved. Epic without $2 enters scoped discovery path.' },
+      // ── Direct topic path ──
       { id: 'manifest-check', label: 'Check manifest', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Check discussion phase status via manifest CLI for this topic.' },
       { id: 'phase-exists', label: 'Phase exists?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Does a discussion phase entry exist for this topic?' },
-      { id: 'validate', label: 'Validate phase', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 2: Load validate-phase.md — handle in-progress/completed/reopened states.' },
-      // Epic scoped path (no topic)
+      { id: 'disc-status', label: 'Discussion status?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2: validate-phase.md — route by in-progress vs completed.' },
+      { id: 'resume-disc', label: 'Resume discussion', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'In-progress: set source="continue". Display "Resuming discussion".' },
+      { id: 'reopen-disc', label: 'Reopen discussion', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Completed: reset to in-progress, set source="continue". Display "Reopening discussion".' },
+      // ── Epic scoped path (no topic) ──
       { id: 'discovery', label: 'Run discovery.js', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Run scoped discovery for this work_unit. Returns research files, discussions, cache entries, and scenario.' },
-      { id: 'scenario', label: 'Scenario?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 3: Route based on scenario: fresh, research_only, discussions_only, or research_and_discussions.' },
-      { id: 'cache-check', label: 'Cache valid?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 4: Check research analysis cache status (valid/stale/none).' },
-      { id: 'analyze', label: 'Analyze research', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Cache stale/none: Read each research file, extract themes, save to cache with checksums.' },
-      { id: 'load-cache', label: 'Load cached analysis', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Cache valid: Load cached research-analysis.md.' },
-      { id: 'present', label: 'Present options menu', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 5: Show workflow state and present options. Menu varies by scenario.' },
-      { id: 'choice', label: 'User choice?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 6: Route based on user selection from options menu.' },
-      { id: 'from-res', label: 'From research', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'User chose to start from a research topic.' },
-      { id: 'continue-disc', label: 'Continue discussion', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'User chose to continue an existing discussion.' },
-      { id: 'refresh', label: 'Refresh cache', w: 180, h: 44, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'User chose refresh: Delete cache, re-analyze research.' },
-      // Common path
-      { id: 'gather', label: 'ASK: Gather context', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 7: Load gather-context.md — core problem/decision, constraints, codebase files.' },
+      { id: 'scenario', label: 'Scenario?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 3: route-scenario.md — route by scenario: fresh, research_only, discussions_only, research_and_discussions.' },
+      { id: 'ask-topic', label: 'ASK: What topic?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Fresh scenario: no research or discussions. Ask user what topic to discuss.' },
+      // Research analysis
+      { id: 'cache-check', label: 'Cache valid?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 4: research-analysis.md — check research analysis cache status (valid/stale/none).' },
+      { id: 'load-cache', label: 'Load cached analysis', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Cache valid: load cached research-analysis.md topics.' },
+      { id: 'analyze', label: 'Analyze research', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Cache stale/none: read each research file, extract themes, save to cache with checksums.' },
+      // Present and choose
+      { id: 'present', label: 'ASK: Options menu', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 5: display-options.md — show research topics + discussions, present menu (from research / continue / fresh / refresh).' },
+      { id: 'choice', label: 'User choice?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 6: handle-selection.md — route by user selection.' },
+      { id: 'inline-res', label: 'Topic specified?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'From research: did user specify a topic inline (e.g. "research 2")?' },
+      { id: 'ask-which-res', label: 'ASK: Which topic?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'User said "from research" without specifying. Ask which topic number.' },
+      { id: 'inline-cont', label: 'Discussion specified?', shape: 'diamond', w: 140, h: 140, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Continue: did user specify a discussion inline (e.g. "continue auth-flow")?' },
+      { id: 'ask-which-disc', label: 'ASK: Which discussion?', w: 210, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'User said "continue discussion" without specifying. Ask which discussion.' },
+      { id: 'refresh', label: 'Delete cache + refresh', w: 200, h: 44, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'User chose refresh: delete cache file, re-analyze research.' },
+      // Gather context routes
+      { id: 'gather-src', label: 'Gather source?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 7: gather-context.md — route by source variable (new, research, fresh, continue).' },
+      { id: 'check-research', label: 'Research completed?', shape: 'diamond', w: 140, h: 140, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Source=new: check if research phase is completed to load research files as context.' },
+      { id: 'gather-with-res', label: 'ASK: Context + research', w: 210, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Source=new + research completed: show research context, ask "anything to add?".' },
+      { id: 'name-topic', label: 'ASK: Name topic', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'name-topic.md — suggest kebab-case topic name based on user description. Ask y/n.' },
+      { id: 'gather-fresh', label: 'ASK: Gather fresh context', w: 210, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'gather-context-fresh.md — problem/decision, constraints, codebase files.' },
+      { id: 'gather-research', label: 'ASK: Gather research ctx', w: 210, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'gather-context-research.md — context for starting from a research topic.' },
+      { id: 'gather-continue', label: 'ASK: Gather continue ctx', w: 210, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'gather-context-continue.md — context for continuing an existing discussion.' },
+      // Common exit
+      { id: 'session', label: 'Write session state', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Save session bookmark for compaction recovery.' },
       { id: 'skill', label: 'Invoke discussion skill', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 8: Load invoke-skill.md — invoke technical-discussion with gathered context.', skillLink: 'skill-discussion' },
     ],
     connections: [
       { from: 'start', to: 'parse' },
       { from: 'parse', to: 'topic-resolved' },
-      // Direct topic path
+      // ── Direct topic path ──
       { from: 'topic-resolved', to: 'manifest-check', type: 'yes', label: 'yes', weight: 2 },
       { from: 'manifest-check', to: 'phase-exists' },
-      { from: 'phase-exists', to: 'validate', type: 'yes', label: 'exists' },
-      { from: 'phase-exists', to: 'gather', type: 'no', label: 'new', weight: 2 },
-      { from: 'validate', to: 'gather' },
-      // Epic scoped path (no topic)
+      { from: 'phase-exists', to: 'disc-status', type: 'yes', label: 'exists' },
+      { from: 'phase-exists', to: 'gather-src', type: 'no', label: 'new\n(source=new)', weight: 2 },
+      { from: 'disc-status', to: 'resume-disc', label: 'in-progress' },
+      { from: 'disc-status', to: 'reopen-disc', label: 'completed' },
+      { from: 'resume-disc', to: 'gather-src' },
+      { from: 'reopen-disc', to: 'gather-src' },
+      // ── Epic scoped path (no topic) ──
       { from: 'topic-resolved', to: 'discovery', type: 'no', label: 'no (epic)' },
       { from: 'discovery', to: 'scenario' },
-      { from: 'scenario', to: 'gather', label: 'fresh' },
-      { from: 'scenario', to: 'cache-check', label: 'research', weight: 2 },
+      { from: 'scenario', to: 'ask-topic', label: 'fresh' },
+      { from: 'scenario', to: 'cache-check', label: 'research*', weight: 2 },
       { from: 'scenario', to: 'present', label: 'disc only' },
+      { from: 'ask-topic', to: 'name-topic' },
+      // Research analysis
       { from: 'cache-check', to: 'load-cache', type: 'yes', label: 'valid' },
-      { from: 'cache-check', to: 'analyze', type: 'no', label: 'stale' },
+      { from: 'cache-check', to: 'analyze', type: 'no', label: 'stale/none', weight: 2 },
       { from: 'load-cache', to: 'present' },
       { from: 'analyze', to: 'present' },
+      // Present and choose
       { from: 'present', to: 'choice' },
-      { from: 'choice', to: 'from-res', label: 'research' },
-      { from: 'choice', to: 'continue-disc', label: 'continue' },
-      { from: 'choice', to: 'gather', label: 'fresh' },
+      { from: 'choice', to: 'inline-res', label: 'research' },
+      { from: 'choice', to: 'inline-cont', label: 'continue' },
+      { from: 'choice', to: 'gather-src', label: 'fresh\n(source=fresh)' },
       { from: 'choice', to: 'refresh', label: 'refresh' },
-      { from: 'from-res', to: 'gather' },
-      { from: 'continue-disc', to: 'gather' },
-      { from: 'refresh', to: 'analyze', type: 'backloop' },
-      { from: 'gather', to: 'skill', type: 'transition' },
+      { from: 'refresh', to: 'present', type: 'backloop', label: 'redisplay' },
+      // Research inline check
+      { from: 'inline-res', to: 'gather-src', type: 'yes', label: 'specified\n(source=research)' },
+      { from: 'inline-res', to: 'ask-which-res', type: 'no', label: 'not specified' },
+      { from: 'ask-which-res', to: 'gather-src' },
+      // Continue inline check
+      { from: 'inline-cont', to: 'gather-src', type: 'yes', label: 'specified\n(source=continue)' },
+      { from: 'inline-cont', to: 'ask-which-disc', type: 'no', label: 'not specified' },
+      { from: 'ask-which-disc', to: 'gather-src' },
+      // ── Gather context routing ──
+      { from: 'gather-src', to: 'check-research', label: 'new' },
+      { from: 'gather-src', to: 'gather-research', label: 'research' },
+      { from: 'gather-src', to: 'name-topic', label: 'fresh' },
+      { from: 'gather-src', to: 'gather-continue', label: 'continue' },
+      { from: 'check-research', to: 'gather-with-res', type: 'yes', label: 'completed' },
+      { from: 'check-research', to: 'gather-fresh', type: 'no', label: 'no research' },
+      { from: 'gather-with-res', to: 'session' },
+      { from: 'name-topic', to: 'gather-fresh' },
+      { from: 'gather-fresh', to: 'session' },
+      { from: 'gather-research', to: 'session' },
+      { from: 'gather-continue', to: 'session' },
+      // Common exit
+      { from: 'session', to: 'skill', type: 'transition' },
     ]
   },
   specification: {
@@ -1885,55 +1926,165 @@ const FLOWCHARTS = {
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for workflow-specification-entry. Receives work_type, work_unit, and optional topic.' },
       { id: 'parse', label: 'Parse arguments', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 1: Parse work_type=$0, work_unit=$1, topic=$2. Resolve topic: $2 or (if not epic) $1.' },
       { id: 'topic-resolved', label: 'Topic resolved?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route based on whether a topic was resolved. Epic without $2 enters scoped discovery path.' },
-      // Direct topic path
-      { id: 'validate-src', label: 'Validate source', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 2: Load validate-source.md — verify source material (discussion/investigation) exists and is completed.' },
-      { id: 'validate-phase', label: 'Validate phase', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 3: Load validate-phase.md — handle in-progress/completed/reopened states.' },
-      { id: 'skill', label: 'Invoke specification skill', w: 210, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 4: Load invoke-skill.md — invoke technical-specification with sources.', skillLink: 'skill-specification' },
-      // Epic scoped path (no topic)
-      { id: 'discovery', label: 'Run discovery.js', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Run scoped discovery for this work_unit. Returns discussions, specifications, cache, and current state counts.' },
-      { id: 'prereqs', label: 'Check prerequisites', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 5: Load check-prerequisites.md — verify discussions exist and at least one is completed.' },
-      { id: 'prereqs-ok', label: 'Prerequisites met?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Gate: Do completed discussions exist? If not, STOP.' },
-      { id: 'stop-prereqs', label: 'STOP: Prerequisites', shape: 'stop', w: 170, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: No completed discussions found. Complete discussion phase first.' },
-      { id: 'route', label: 'Route based on state', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 6: Load route-scenario.md — route based on discussion count, cache, specs, and groupings.' },
+      // ── Direct topic path ──
+      { id: 'src-type', label: 'Work type?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2: validate-source.md — route by work_type to check the correct source material.' },
+      { id: 'src-disc', label: 'Check discussion', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Feature path: check discussion status via manifest CLI.' },
+      { id: 'src-inv', label: 'Check investigation', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Bugfix path: check investigation status via manifest CLI.' },
+      { id: 'src-epic', label: 'Check epic discussions', w: 200, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Epic path: check if at least one completed discussion exists for this work unit.' },
+      { id: 'src-ok', label: 'Source ready?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Is the source material (discussion/investigation) completed?' },
+      { id: 'stop-no-src', label: 'STOP: Source missing', shape: 'stop', w: 180, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: Source material missing or not completed. Complete discussion/investigation first.' },
+      { id: 'stop-src-ip', label: 'STOP: Source in-progress', shape: 'stop', w: 200, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: Source material exists but is still in-progress. Complete it first.' },
+      { id: 'spec-exists', label: 'Spec exists?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 3: validate-phase.md — check if specification already exists for this topic.' },
+      { id: 'spec-status', label: 'Spec status?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route by spec status: in-progress or completed.' },
+      { id: 'ask-resume', label: 'ASK: Resume/fresh?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Spec is in-progress: ask whether to resume or start fresh.' },
+      { id: 'reopen-spec', label: 'Reopen specification', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Spec is completed: reset status to in-progress. Verb = "Continuing".' },
+      { id: 'session', label: 'Write session state', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Save session bookmark for compaction recovery before invoking the processing skill.' },
+      { id: 'skill', label: 'Invoke specification skill', w: 210, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 4: Load invoke-skill.md — invoke technical-specification with sources and verb.', skillLink: 'skill-specification' },
+      // ── Epic scoped path (no topic) ──
+      { id: 'discovery', label: 'Run discovery.js', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Run scoped discovery for this work_unit. Returns discussions, specifications, cache, and current_state counts.' },
+      { id: 'has-disc', label: 'Discussions exist?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 5: check-prerequisites.md — do any discussions exist for this work unit?' },
+      { id: 'stop-no-disc', label: 'STOP: No discussions', shape: 'stop', w: 190, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: No discussions found. Complete discussion phase first.' },
+      { id: 'has-completed', label: 'Any completed?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Gate: has_completed flag — are any discussions in completed status?' },
+      { id: 'stop-none-done', label: 'STOP: None completed', shape: 'stop', w: 190, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: Discussions exist but none completed. Conclude at least one discussion.' },
+      { id: 'route-scenario', label: 'Route scenario', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 6: route-scenario.md — route by completed_count, cache status, and spec_count.' },
+      // Single discussion path
+      { id: 'display-single', label: 'Display single', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'display-single.md — auto-select path. One completed discussion found.' },
+      { id: 'single-spec', label: 'Spec coverage?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Sub-route: does a spec cover this discussion? Single-source, multi-source, or none.' },
+      // Analysis path
+      { id: 'display-analyze', label: 'ASK: Analyze?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'display-analyze.md — no specs, stale/no cache. Ask user to confirm analysis. Shows cache-aware message.' },
+      { id: 'stop-decline', label: 'STOP: Declined', shape: 'stop', w: 160, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: User declined analysis. Continue working on discussions.' },
+      { id: 'ask-context', label: 'ASK: Analysis context', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'analysis-flow.md A: Gather context about how discussions relate before analyzing.' },
+      { id: 'analyze', label: 'Analyze discussions', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'analysis-flow.md B: Read every completed discussion, identify coupling, form groupings. Preserve anchored names.' },
+      { id: 'save-cache', label: 'Save to cache', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'analysis-flow.md C: Write analysis to .state/discussion-consolidation-analysis.md and update manifest cache metadata.' },
+      // Groupings display
+      { id: 'display-groupings', label: 'Display groupings', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'display-groupings.md — load groupings from cache, determine discussion statuses, render tree with spec coverage.' },
+      { id: 'groupings-menu', label: 'ASK: Groupings menu', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Menu: Start/Continue/Refine per grouping + Unify all + Re-analyze options.' },
+      { id: 'groupings-choice', label: 'Choice?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route on user selection from groupings menu.' },
+      { id: 'unify', label: 'Rewrite cache (unified)', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Unify all: rewrite cache with single "Unified" grouping containing all completed discussions.' },
+      // Specs menu path
+      { id: 'display-specs', label: 'Display specs menu', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'display-specs-menu.md — specs exist, cache stale/none. Show specs tree + unassigned discussions.' },
+      { id: 'specs-menu', label: 'ASK: Specs menu', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Menu: Analyze (recommended) + Continue/Refine per existing spec.' },
+      { id: 'specs-choice', label: 'Choice?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route on user selection from specs menu.' },
+      // Confirm and handoff
+      { id: 'confirm', label: 'ASK: Confirm?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'confirm-and-handoff.md — show sources, output path, and any supersession. Ask y/n.' },
+      { id: 'confirm-ok', label: 'Confirmed?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Did user confirm (y) or decline (n)?' },
+      { id: 'handoff', label: 'Init phase + handoff', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Initialize manifest phase entry, set sources, write session state.' },
     ],
     connections: [
       { from: 'start', to: 'parse' },
       { from: 'parse', to: 'topic-resolved' },
-      // Direct topic path
-      { from: 'topic-resolved', to: 'validate-src', type: 'yes', label: 'yes', weight: 2 },
-      { from: 'validate-src', to: 'validate-phase' },
-      { from: 'validate-phase', to: 'skill', type: 'transition' },
-      // Epic scoped path (no topic)
+      // ── Direct topic path ──
+      { from: 'topic-resolved', to: 'src-type', type: 'yes', label: 'yes', weight: 2 },
+      { from: 'src-type', to: 'src-disc', label: 'feature' },
+      { from: 'src-type', to: 'src-inv', label: 'bugfix' },
+      { from: 'src-type', to: 'src-epic', label: 'epic' },
+      { from: 'src-disc', to: 'src-ok' },
+      { from: 'src-inv', to: 'src-ok' },
+      { from: 'src-epic', to: 'src-ok' },
+      { from: 'src-ok', to: 'stop-no-src', type: 'no', label: 'missing' },
+      { from: 'src-ok', to: 'stop-src-ip', label: 'in-progress' },
+      { from: 'src-ok', to: 'spec-exists', type: 'yes', label: 'completed', weight: 2 },
+      { from: 'spec-exists', to: 'session', type: 'no', label: 'new', weight: 2 },
+      { from: 'spec-exists', to: 'spec-status', type: 'yes', label: 'exists' },
+      { from: 'spec-status', to: 'ask-resume', label: 'in-progress' },
+      { from: 'spec-status', to: 'reopen-spec', label: 'completed' },
+      { from: 'ask-resume', to: 'session', label: 'resume', weight: 2 },
+      { from: 'ask-resume', to: 'session', label: 'start-fresh' },
+      { from: 'reopen-spec', to: 'session' },
+      { from: 'session', to: 'skill', type: 'transition' },
+      // ── Epic scoped path (no topic) ──
       { from: 'topic-resolved', to: 'discovery', type: 'no', label: 'no (epic)' },
-      { from: 'discovery', to: 'prereqs' },
-      { from: 'prereqs', to: 'prereqs-ok' },
-      { from: 'prereqs-ok', to: 'route', type: 'yes', label: 'met', weight: 2 },
-      { from: 'prereqs-ok', to: 'stop-prereqs', type: 'no', label: 'not met' },
-      { from: 'route', to: 'skill', type: 'transition' },
+      { from: 'discovery', to: 'has-disc' },
+      { from: 'has-disc', to: 'stop-no-disc', type: 'no', label: 'none' },
+      { from: 'has-disc', to: 'has-completed', type: 'yes', label: 'exist', weight: 2 },
+      { from: 'has-completed', to: 'stop-none-done', type: 'no', label: 'none done' },
+      { from: 'has-completed', to: 'route-scenario', type: 'yes', label: 'has completed', weight: 2 },
+      // Route scenario branches
+      { from: 'route-scenario', to: 'display-single', label: 'count=1' },
+      { from: 'route-scenario', to: 'display-groupings', label: 'cache valid' },
+      { from: 'route-scenario', to: 'display-analyze', label: 'no specs,\nstale/none' },
+      { from: 'route-scenario', to: 'display-specs', label: 'has specs', weight: 2 },
+      // Single discussion sub-routing
+      { from: 'display-single', to: 'single-spec' },
+      { from: 'single-spec', to: 'confirm', label: 'no spec', weight: 2 },
+      { from: 'single-spec', to: 'confirm', label: 'has spec' },
+      // Analysis path
+      { from: 'display-analyze', to: 'stop-decline', type: 'no', label: 'decline' },
+      { from: 'display-analyze', to: 'ask-context', type: 'yes', label: 'proceed', weight: 2 },
+      { from: 'ask-context', to: 'analyze' },
+      { from: 'analyze', to: 'save-cache' },
+      { from: 'save-cache', to: 'display-groupings' },
+      // Groupings display and menu
+      { from: 'display-groupings', to: 'groupings-menu' },
+      { from: 'groupings-menu', to: 'groupings-choice' },
+      { from: 'groupings-choice', to: 'confirm', label: 'grouping', weight: 2 },
+      { from: 'groupings-choice', to: 'unify', label: 'unify' },
+      { from: 'groupings-choice', to: 'ask-context', type: 'backloop', label: 're-analyze' },
+      { from: 'unify', to: 'confirm' },
+      // Specs menu path
+      { from: 'display-specs', to: 'specs-menu' },
+      { from: 'specs-menu', to: 'specs-choice' },
+      { from: 'specs-choice', to: 'ask-context', label: 'analyze', weight: 2 },
+      { from: 'specs-choice', to: 'confirm', label: 'continue/\nrefine' },
+      // Confirm and handoff
+      { from: 'confirm', to: 'confirm-ok' },
+      { from: 'confirm-ok', to: 'handoff', type: 'yes', label: 'yes', weight: 2 },
+      { from: 'confirm-ok', to: 'groupings-menu', type: 'backloop', label: 'decline\n(has menu)' },
+      { from: 'confirm-ok', to: 'stop-decline', type: 'no', label: 'decline\n(single)' },
+      { from: 'handoff', to: 'skill', type: 'transition' },
     ]
   },
   planning: {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for workflow-planning-entry. Receives work_type, work_unit, and optional topic.' },
       { id: 'parse', label: 'Parse arguments', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 1: Parse work_type=$0, work_unit=$1, topic=$2. Resolve topic.' },
-      { id: 'validate-spec', label: 'Validate specification', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 2: Load validate-spec.md — verify specification exists and is completed.' },
-      { id: 'spec-ok', label: 'Spec valid?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Does a completed specification exist for this topic?' },
-      { id: 'stop-no-spec', label: 'STOP: No spec', shape: 'stop', w: 150, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: No completed specification found. Complete specification phase first.' },
-      { id: 'validate-phase', label: 'Validate phase', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 3: Load validate-phase.md — check planning phase status (new/in-progress/completed).' },
-      { id: 'source', label: 'Source?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route based on phase validation result: fresh (new plan) or existing (resume).' },
-      { id: 'cross-cut', label: 'Cross-cutting context', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 4: Load cross-cutting-context.md — surface relevant cross-cutting specs as reference. Only for fresh plans.' },
-      { id: 'skill', label: 'Invoke planning skill', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 5: Load invoke-skill.md — invoke technical-planning with spec and context.', skillLink: 'skill-planning' },
+      // ── Validate specification ──
+      { id: 'spec-check', label: 'Spec exists?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2: validate-spec.md — check if specification phase entry exists via manifest CLI.' },
+      { id: 'stop-no-spec', label: 'STOP: No spec', shape: 'stop', w: 150, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: No specification found. Complete specification phase first.' },
+      { id: 'spec-status', label: 'Spec status?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Is specification completed or still in-progress?' },
+      { id: 'stop-spec-ip', label: 'STOP: Spec in-progress', shape: 'stop', w: 190, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: Specification exists but is in-progress. Must be completed before planning.' },
+      { id: 'extract-xcut', label: 'Extract cross-cutting', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Epic only: query all specification entries to identify cross-cutting specs. Store for later.' },
+      // ── Validate phase ──
+      { id: 'plan-exists', label: 'Plan exists?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 3: validate-phase.md — check if a plan already exists for this topic.' },
+      { id: 'plan-status', label: 'Plan status?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route by plan status: in-progress or completed.' },
+      { id: 'reopen-plan', label: 'Reopen plan', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Plan is completed: reset status to in-progress. Set source="existing".' },
+      { id: 'ask-context', label: 'ASK: Additional context?', w: 210, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'No existing plan: ask if anything changed since spec was completed. User can provide context or continue as-is.' },
+      // ── Cross-cutting context ──
+      { id: 'is-epic', label: 'Work type epic?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 4: cross-cutting-context.md — only applies to epic work type.' },
+      { id: 'has-ip-xcut', label: 'In-progress cross-cut?', shape: 'diamond', w: 140, h: 140, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Are any relevant in-progress cross-cutting specifications found?' },
+      { id: 'ask-xcut', label: 'ASK: Continue/stop?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Warn about in-progress cross-cutting specs. User: continue without them or stop to complete them first.' },
+      { id: 'stop-xcut', label: 'STOP: Complete cross-cut', shape: 'stop', w: 200, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: User chose to stop and complete cross-cutting specs first.' },
+      { id: 'summarize-xcut', label: 'Summarize cross-cutting', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Summarize completed cross-cutting specs for the handoff.' },
+      // ── Invoke skill ──
+      { id: 'session', label: 'Write session state', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Save session bookmark for compaction recovery.' },
+      { id: 'skill', label: 'Invoke planning skill', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 5: Load invoke-skill.md — invoke technical-planning with spec, context, and cross-cutting refs.', skillLink: 'skill-planning' },
     ],
     connections: [
       { from: 'start', to: 'parse' },
-      { from: 'parse', to: 'validate-spec' },
-      { from: 'validate-spec', to: 'spec-ok' },
-      { from: 'spec-ok', to: 'validate-phase', type: 'yes', label: 'valid', weight: 2 },
-      { from: 'spec-ok', to: 'stop-no-spec', type: 'no', label: 'missing' },
-      { from: 'validate-phase', to: 'source' },
-      { from: 'source', to: 'cross-cut', type: 'no', label: 'fresh' },
-      { from: 'source', to: 'skill', type: 'yes', label: 'existing' },
-      { from: 'cross-cut', to: 'skill', type: 'transition' },
+      { from: 'parse', to: 'spec-check' },
+      // Validate specification
+      { from: 'spec-check', to: 'stop-no-spec', type: 'no', label: 'missing' },
+      { from: 'spec-check', to: 'spec-status', type: 'yes', label: 'exists', weight: 2 },
+      { from: 'spec-status', to: 'stop-spec-ip', label: 'in-progress' },
+      { from: 'spec-status', to: 'extract-xcut', type: 'yes', label: 'completed', weight: 2 },
+      { from: 'extract-xcut', to: 'plan-exists' },
+      // Validate phase
+      { from: 'plan-exists', to: 'ask-context', type: 'no', label: 'new', weight: 2 },
+      { from: 'plan-exists', to: 'plan-status', type: 'yes', label: 'exists' },
+      { from: 'plan-status', to: 'session', label: 'in-progress\n(source=existing)' },
+      { from: 'plan-status', to: 'reopen-plan', label: 'completed' },
+      { from: 'reopen-plan', to: 'session' },
+      { from: 'ask-context', to: 'is-epic' },
+      // Cross-cutting context
+      { from: 'is-epic', to: 'session', type: 'no', label: 'feature/bugfix', weight: 2 },
+      { from: 'is-epic', to: 'has-ip-xcut', type: 'yes', label: 'epic' },
+      { from: 'has-ip-xcut', to: 'ask-xcut', type: 'yes', label: 'relevant' },
+      { from: 'has-ip-xcut', to: 'summarize-xcut', type: 'no', label: 'none', weight: 2 },
+      { from: 'ask-xcut', to: 'stop-xcut', type: 'no', label: 'stop' },
+      { from: 'ask-xcut', to: 'summarize-xcut', type: 'yes', label: 'continue', weight: 2 },
+      { from: 'summarize-xcut', to: 'session' },
+      // Invoke skill
+      { from: 'session', to: 'skill', type: 'transition' },
     ]
   },
   implementation: {
@@ -1968,15 +2119,41 @@ const FLOWCHARTS = {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for workflow-review-entry. Receives work_type, work_unit, and optional topic.' },
       { id: 'parse', label: 'Parse arguments', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 1: Parse work_type=$0, work_unit=$1, topic=$2. Resolve topic.' },
-      { id: 'validate-phase', label: 'Validate phase', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 2: Load validate-phase.md — check review phase status.' },
-      { id: 'review-version', label: 'Determine review version', w: 210, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 3: Load determine-review-version.md — calculate rN version for the review output directory.' },
-      { id: 'skill', label: 'Invoke review skill', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 4: Load invoke-skill.md — invoke technical-review with plan(s), spec, and review version.', skillLink: 'skill-review' },
+      // ── Validate phase (3 prerequisite gates + review status) ──
+      { id: 'plan-exists', label: 'Plan exists?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2: validate-phase.md — check if planning phase exists via manifest CLI.' },
+      { id: 'stop-no-plan', label: 'STOP: No plan', shape: 'stop', w: 160, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: No plan found. A completed plan and implementation are required for review.' },
+      { id: 'impl-exists', label: 'Implementation exists?', shape: 'diamond', w: 140, h: 140, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if implementation phase exists via manifest CLI.' },
+      { id: 'stop-no-impl', label: 'STOP: No implementation', shape: 'stop', w: 200, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: No implementation found. A completed implementation is required for review.' },
+      { id: 'impl-done', label: 'Impl completed?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Is the implementation status "completed"?' },
+      { id: 'stop-impl-ip', label: 'STOP: Impl not complete', shape: 'stop', w: 200, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: Implementation exists but is not yet completed.' },
+      { id: 'review-status', label: 'Review status?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check review phase status: completed, in-progress, or new.' },
+      { id: 'reopen-review', label: 'Reopen review', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Review is completed: reset status to in-progress. Display "Reopening review".' },
+      // ── Determine review version ──
+      { id: 'scan-dirs', label: 'Scan review dirs', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 3: determine-review-version.md — scan .workflows/{work_unit}/review/{topic}/ for existing r* directories.' },
+      { id: 'set-version', label: 'Set review version', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Set review_version = latest rN + 1, or 1 if none exist.' },
+      // ── Invoke skill ──
+      { id: 'init-phase', label: 'Init phase + session', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Initialize review phase in manifest. Write session state for compaction recovery.' },
+      { id: 'skill', label: 'Invoke review skill', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 4: Load invoke-skill.md — invoke technical-review with plan, spec, format, and review version.', skillLink: 'skill-review' },
     ],
     connections: [
       { from: 'start', to: 'parse' },
-      { from: 'parse', to: 'validate-phase' },
-      { from: 'validate-phase', to: 'review-version' },
-      { from: 'review-version', to: 'skill', type: 'transition' },
+      { from: 'parse', to: 'plan-exists' },
+      // 3 prerequisite gates
+      { from: 'plan-exists', to: 'stop-no-plan', type: 'no', label: 'missing' },
+      { from: 'plan-exists', to: 'impl-exists', type: 'yes', label: 'exists', weight: 2 },
+      { from: 'impl-exists', to: 'stop-no-impl', type: 'no', label: 'missing' },
+      { from: 'impl-exists', to: 'impl-done', type: 'yes', label: 'exists', weight: 2 },
+      { from: 'impl-done', to: 'stop-impl-ip', type: 'no', label: 'not completed' },
+      { from: 'impl-done', to: 'review-status', type: 'yes', label: 'completed', weight: 2 },
+      // Review status routing
+      { from: 'review-status', to: 'reopen-review', label: 'completed' },
+      { from: 'review-status', to: 'scan-dirs', label: 'in-progress\nor new', weight: 2 },
+      { from: 'reopen-review', to: 'scan-dirs' },
+      // Determine review version
+      { from: 'scan-dirs', to: 'set-version' },
+      { from: 'set-version', to: 'init-phase' },
+      // Invoke skill
+      { from: 'init-phase', to: 'skill', type: 'transition' },
     ]
   },
   investigation: {
@@ -2807,23 +2984,78 @@ const FLOWCHARTS = {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for /workflow-start — unified entry point.' },
       { id: 'migrate', label: 'Run /migrate', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Step 0: Run migrations.' },
-      { id: 'discovery', label: 'Run discovery.js', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery script. Returns epics, features, bugfixes with phase state, plus completed/cancelled work.' },
+      { id: 'discovery', label: 'Run discovery.js', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery script. Returns epics, features, bugfixes with phase state, plus completed/cancelled counts.' },
       { id: 'has-work', label: 'Has work?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2: Check state.has_any_work flag.' },
-      { id: 'empty', label: 'STOP: No work', shape: 'stop', w: 160, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: No active work units. Display empty state with options to start new work.' },
-      { id: 'display', label: 'Display active work', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 3: Show all active work units grouped by type (epics, features, bugfixes) with phase state.' },
-      { id: 'choice', label: 'User choice?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route based on user selection — start new work or continue existing.' },
-      { id: 'route-start', label: 'Route to /start-*', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Invoke /start-feature, /start-bugfix, or /start-epic.' },
-      { id: 'route-continue', label: 'Route to /continue-*', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Invoke /continue-feature, /continue-bugfix, or /continue-epic with work_unit.' },
+      // ── Empty state path ──
+      { id: 'empty-menu', label: 'ASK: Start what?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'empty-state.md — No active work. Menu: Feature / Epic / Bugfix.' },
+      { id: 'empty-route', label: 'Invoke /start-*', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Invoke /start-feature, /start-epic, or /start-bugfix based on selection.' },
+      // ── Active work path ──
+      { id: 'display', label: 'Display active work', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 3: active-work.md — show all active work units grouped by type with phase state.' },
+      { id: 'main-menu', label: 'ASK: Main menu', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Menu: continue items + start new (feature/epic/bugfix) + view completed + manage.' },
+      { id: 'main-choice', label: 'Choice?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route based on user selection from main menu.' },
+      { id: 'route-continue', label: 'Invoke /continue-*', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Invoke /continue-feature, /continue-bugfix, or /continue-epic with work_unit. Terminal.' },
+      { id: 'route-start', label: 'Invoke /start-*', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Invoke /start-feature, /start-epic, or /start-bugfix. Terminal.' },
+      // ── View completed sub-flow ──
+      { id: 'view-list', label: 'Display completed list', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'view-completed.md A: Show completed/cancelled work units with last phase.' },
+      { id: 'view-select', label: 'ASK: Select or back', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'view-completed.md B: Select a work unit for details, or back to return.' },
+      { id: 'view-choice', label: 'Choice?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route: selected a work unit, or chose back.' },
+      { id: 'view-action', label: 'ASK: Reactivate/back', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'view-completed.md C: Action menu for selected item — reactivate or back to list.' },
+      { id: 'view-act-choice', label: 'Action?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route: reactivate, back to list, or ask question.' },
+      { id: 'reactivate', label: 'Reactivate work unit', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Set work unit status to in-progress via manifest CLI. Display confirmation.' },
+      // ── Manage sub-flow ──
+      { id: 'manage-select', label: 'ASK: Which to manage?', w: 210, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'manage-work-unit.md A: Select a work unit from the active list, or back.' },
+      { id: 'manage-choice', label: 'Choice?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route: selected a work unit, or chose back.' },
+      { id: 'impl-check', label: 'Impl exists?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'manage-work-unit.md B: Check if implementation phase exists.' },
+      { id: 'impl-completed', label: 'Impl completed?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'manage-work-unit.md C: Check if any implementation topic has status "completed".' },
+      { id: 'manage-action', label: 'ASK: Done/cancel/back', w: 210, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'manage-work-unit.md D: Action menu. "Done" only shown if implementation is completed. Cancel always available.' },
+      { id: 'manage-act-choice', label: 'Action?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route: done, cancel, back, or ask question.' },
+      { id: 'mark-done', label: 'Mark completed', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Set work unit status to completed via manifest CLI.' },
+      { id: 'mark-cancel', label: 'Mark cancelled', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Set work unit status to cancelled via manifest CLI.' },
+      // ── Re-discover node (shared backloop target) ──
+      { id: 're-discover', label: 'Re-run discovery', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Re-run discovery.js to refresh state after lifecycle changes.' },
     ],
     connections: [
       { from: 'start', to: 'migrate' },
       { from: 'migrate', to: 'discovery' },
       { from: 'discovery', to: 'has-work' },
-      { from: 'has-work', to: 'empty', type: 'no', label: 'none' },
+      // Empty state
+      { from: 'has-work', to: 'empty-menu', type: 'no', label: 'none' },
+      { from: 'empty-menu', to: 'empty-route' },
+      // Active work
       { from: 'has-work', to: 'display', type: 'yes', label: 'yes', weight: 2 },
-      { from: 'display', to: 'choice' },
-      { from: 'choice', to: 'route-start', label: 'new' },
-      { from: 'choice', to: 'route-continue', label: 'continue', weight: 2 },
+      { from: 'display', to: 'main-menu' },
+      { from: 'main-menu', to: 'main-choice' },
+      { from: 'main-choice', to: 'route-continue', label: 'continue', weight: 2 },
+      { from: 'main-choice', to: 'route-start', label: 'start new' },
+      { from: 'main-choice', to: 'view-list', label: 'view completed' },
+      { from: 'main-choice', to: 'manage-select', label: 'manage' },
+      // View completed sub-flow
+      { from: 'view-list', to: 'view-select' },
+      { from: 'view-select', to: 'view-choice' },
+      { from: 'view-choice', to: 're-discover', type: 'backloop', label: 'back' },
+      { from: 'view-choice', to: 'view-action', label: 'selected', weight: 2 },
+      { from: 'view-action', to: 'view-act-choice' },
+      { from: 'view-act-choice', to: 'reactivate', label: 'reactivate' },
+      { from: 'view-act-choice', to: 'view-list', type: 'backloop', label: 'back' },
+      { from: 'view-act-choice', to: 'view-action', type: 'backloop', label: 'ask question' },
+      { from: 'reactivate', to: 're-discover' },
+      // Manage sub-flow
+      { from: 'manage-select', to: 'manage-choice' },
+      { from: 'manage-choice', to: 're-discover', type: 'backloop', label: 'back' },
+      { from: 'manage-choice', to: 'impl-check', label: 'selected', weight: 2 },
+      { from: 'impl-check', to: 'manage-action', type: 'no', label: 'no impl' },
+      { from: 'impl-check', to: 'impl-completed', type: 'yes', label: 'exists', weight: 2 },
+      { from: 'impl-completed', to: 'manage-action', type: 'no', label: 'not done' },
+      { from: 'impl-completed', to: 'manage-action', type: 'yes', label: 'done\n(show "done")', weight: 2 },
+      { from: 'manage-action', to: 'manage-act-choice' },
+      { from: 'manage-act-choice', to: 'mark-done', label: 'done' },
+      { from: 'manage-act-choice', to: 'mark-cancel', label: 'cancel' },
+      { from: 'manage-act-choice', to: 're-discover', type: 'backloop', label: 'back' },
+      { from: 'manage-act-choice', to: 'manage-action', type: 'backloop', label: 'ask question' },
+      { from: 'mark-done', to: 're-discover' },
+      { from: 'mark-cancel', to: 're-discover' },
+      // Re-discover loops back to display
+      { from: 're-discover', to: 'display', type: 'backloop', label: 'redisplay' },
     ]
   },
   'start-bugfix': {
