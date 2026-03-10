@@ -6,12 +6,70 @@
 
 **Never decide for the user.** Even if the answer seems obvious, flag it and ask.
 
+Two types of convergence can occur during epic research:
+
+## Topic Splitting
+
+Threads in the current file could be their own research topics — they have different scopes, stakeholders, or timelines.
+
+Offer to extract them:
+
+> *Output the next fenced block as a code block:*
+
+```
+I've noticed distinct threads emerging that could be their own research topics:
+
+  • {thread_1} — {brief description}
+  • {thread_2} — {brief description}
+
+Want to split these into separate research files?
+```
+
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
-- **`c`/`conclude`** — Conclude research and move forward
+- **`y`/`yes`** — Split them out
+- **`n`/`no`** — Keep everything together for now
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If yes
+
+For each split topic:
+1. Create `.workflows/{work_unit}/research/{topic}.md` using **[template.md](template.md)**
+2. Move content verbatim from the source file — reword only for flow and readability, no summarisation
+3. Remove the extracted content from the source file
+4. Init manifest item for the new topic:
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit} --phase research --topic {topic}
+   ```
+5. Set status to in-progress:
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase research --topic {topic} status in-progress
+   ```
+
+Commit after splitting.
+
+Ask which topic to continue with (including staying in the current file).
+
+**STOP.** Wait for user response.
+
+→ Return to **[research-session.md](research-session.md)**.
+
+## Topic Completion
+
+The current topic is converging — tradeoffs are clear, it's approaching decision territory.
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+- **`c`/`conclude`** — Mark this topic as complete, ready for discussion
 - **`k`/`keep`** — Keep digging, there's more to understand
+- **`s`/`split`** — Split emerging threads into their own topics first
 - Comment — your call
 · · · · · · · · · · · ·
 ```
@@ -20,13 +78,19 @@
 
 #### If the user concludes
 
-Set research status to completed via manifest CLI:
+Set this topic's research status to completed:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase research status completed
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase research --topic {topic} status completed
 ```
 
-Invoke the `/workflow-bridge` skill:
+Check if ALL research topics are now completed:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase research --topic "*" status
+```
+
+**If all topics completed**: Invoke the `/workflow-bridge` skill:
 
 ```
 Pipeline bridge for: {work_unit}
@@ -37,17 +101,27 @@ Invoke the workflow-bridge skill to enter plan mode with continuation instructio
 
 **STOP.** Do not proceed — terminal condition.
 
+**If some topics still in-progress**:
+
+> *Output the next fenced block as a code block:*
+
+```
+Completed: {topic:(titlecase)}
+
+Still in progress:
+@foreach(item in remaining_topics)
+  • {item.topic:(titlecase)}
+@endforeach
+```
+
+→ Return to **[research-session.md](research-session.md)**.
+
 #### If the user keeps digging
 
 Continue exploring. The convergence signal isn't a stop sign — it's an awareness check. The user might want to stress-test the emerging conclusion, explore edge cases, or understand the problem more deeply before moving on. That's valid research work.
 
 → Return to **[research-session.md](research-session.md)**.
 
-## Synthesis vs Decision
+#### If the user splits
 
-This distinction matters:
-
-- **Synthesis** (research): "There are three viable approaches. A is simplest but limited. B scales better but costs more. C is future-proof but complex."
-- **Decision** (discussion): "We should go with B because scaling matters more than simplicity for this project."
-
-Synthesis is your job. Decisions are not. Present the landscape, don't pick the destination.
+→ Proceed to **Topic Splitting** above.
