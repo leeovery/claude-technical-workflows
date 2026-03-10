@@ -92,14 +92,22 @@ Found existing research for **{topic:(titlecase)}**.
 
 ---
 
-## Step 2: Load Research Guidelines
+## Step 2: File Strategy
 
-Load **[research-guidelines.md](references/research-guidelines.md)** and follow its instructions as written.
+Load **[file-strategy.md](references/file-strategy.md)** and follow its instructions as written.
 
 → Proceed to **Step 3**.
 
 ---
 
-## Step 3: Research Session
+## Step 3: Load Research Guidelines
+
+Load **[research-guidelines.md](references/research-guidelines.md)** and follow its instructions as written.
+
+→ Proceed to **Step 4**.
+
+---
+
+## Step 4: Research Session
 
 Load **[research-session.md](references/research-session.md)** and follow its instructions as written.
