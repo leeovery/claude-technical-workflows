@@ -46,6 +46,11 @@ Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, top
 
 Store work_unit for the handoff.
 
+Resolve filename:
+- Feature → `resolved_filename = {work_unit}.md`
+- Epic with topic → `resolved_filename = {topic}.md`
+- Epic without topic → deferred (gather-context will resolve it)
+
 #### If `topic` resolved
 
 Check research phase status via manifest CLI:
@@ -98,7 +103,7 @@ Saving session state so Claude can pick up where it left off if the conversation
 .claude/hooks/workflows/write-session-state.sh \
   "{topic}" \
   "skills/technical-research/SKILL.md" \
-  ".workflows/{work_unit}/research/exploration.md"
+  ".workflows/{work_unit}/research/{resolved_filename}"
 ```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
