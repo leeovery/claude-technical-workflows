@@ -18,6 +18,7 @@ fi
 
 for dir in "$WORKFLOWS_DIR"/*/; do
   [ -d "$dir" ] || continue
+  dir="${dir%/}"
   name=$(basename "$dir")
 
   # Skip dot-prefixed directories
