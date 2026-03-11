@@ -1,6 +1,5 @@
 ---
 name: continue-bugfix
-disable-model-invocation: true
 allowed-tools: Bash(node .claude/skills/continue-bugfix/scripts/discovery.js), Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
 ---
 

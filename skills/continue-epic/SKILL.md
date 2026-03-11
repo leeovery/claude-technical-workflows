@@ -1,6 +1,5 @@
 ---
 name: continue-epic
-disable-model-invocation: true
 allowed-tools: Bash(node .claude/skills/continue-epic/scripts/discovery.js), Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
 ---
 

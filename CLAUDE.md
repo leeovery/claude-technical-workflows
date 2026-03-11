@@ -137,7 +137,7 @@ tests/
 
 Skills are organised in two tiers:
 
-**Entry-point skills** (`/start-*`, `/continue-*`, `/status`, `/migrate`, etc.) are user-invocable. They gather context from files, prompts, or inline input, then invoke a processing skill. Utility entry-points (`/status`, `/view-plan`, `/link-dependencies`, `/workflow-start`, `/continue-feature`, `/continue-bugfix`, `/continue-epic`) have `disable-model-invocation: true`. `/migrate` has `user-invocable: false` — it is model-invoked only (Step 0 of every user-invocable entry-point skill).
+**Entry-point skills** (`/start-*`, `/continue-*`, `/status`, `/migrate`, etc.) are user-invocable. They gather context from files, prompts, or inline input, then invoke a processing skill. Utility entry-points (`/status`, `/view-plan`, `/link-dependencies`, `/workflow-start`) have `disable-model-invocation: true`. `/migrate` has `user-invocable: false` — it is model-invoked only (Step 0 of every user-invocable entry-point skill).
 
 **Phase entry skills** (`workflow-*-entry`) are internal (`user-invocable: false`). They are invoked by start/continue/bridge skills with work_type and work_unit always provided. They handle phase-specific validation, bootstrap questions for new entries, and processing skill invocation.
 
