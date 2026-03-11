@@ -23,7 +23,7 @@ fi
 # Remove our SessionStart and SessionEnd hook entries that reference the deleted scripts.
 # Preserve any other user hooks and settings.
 
-if [ -f "$SETTINGS_FILE" ] && grep -q "workflows/session-env.sh\|workflows/compact-recovery.sh\|workflows/session-cleanup.sh" "$SETTINGS_FILE" 2>/dev/null; then
+if [ -f "$SETTINGS_FILE" ] && grep -qE "workflows/session-env\.sh|workflows/compact-recovery\.sh|workflows/session-cleanup\.sh" "$SETTINGS_FILE" 2>/dev/null; then
   if command -v node >/dev/null 2>&1; then
     result=$(node -e "
       const fs = require('fs');
@@ -69,7 +69,7 @@ if [ -f "$SETTINGS_FILE" ] && grep -q "workflows/session-env.sh\|workflows/compa
           console.log('cleaned');
         }
       }
-    " "$SETTINGS_FILE" 2>/dev/null)
+    " "$SETTINGS_FILE" 2>/dev/null) || true
 
     if [ "$result" = "removed" ]; then
       report_update "$SETTINGS_FILE" "removed (only contained session hooks)"
