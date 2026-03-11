@@ -14,19 +14,10 @@ First phase in the pipeline — explore feasibility (technical, business, market
 
 ### What This Skill Needs
 
-- **Topic or idea** (required) - What to research/explore
-- **Existing context** (optional) - Any prior research or constraints
-
-#### If topic is vague or could go many directions
-
-> *Output the next fenced block as a code block:*
-
-```
-You mentioned {work_unit}. That could cover a lot of ground — is there a specific
-angle you'd like to start with, or should I explore broadly?
-```
-
-**STOP.** Wait for user response.
+- **Topic** (required) - What to research/explore
+- **Output path** (required) - Research file path from the handoff
+- **Work type** (required) - `epic` or `feature`. Determines file strategy and convergence behaviour
+- **Context** (optional) - Prior research, constraints, starting direction
 
 ---
 
@@ -51,15 +42,37 @@ When announcing a new step, output `── ── ── ── ──` on its o
 
 ## Step 0: Resume Detection
 
-Check if research files exist in `.workflows/{work_unit}/research/`.
+Check if the research file exists at the handoff's Output path.
 
-#### If files exist
+#### If no file exists
 
-Read them. Announce what's been explored so far and what themes have emerged. Ask the user whether to continue or start fresh.
+→ Proceed to **Step 1**.
+
+#### If file exists
+
+Read the file.
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+Found existing research for **{topic:(titlecase)}**.
+
+· · · · · · · · · · · ·
+- **`c`/`continue`** — Pick up where you left off
+- **`r`/`restart`** — Delete the research file and start fresh
+· · · · · · · · · · · ·
+```
 
 **STOP.** Wait for user response.
 
-#### If no files exist
+#### If `continue`
+
+→ Proceed to **Step 2**.
+
+#### If `restart`
+
+1. Delete the research file
+2. Commit: `research({work_unit}): restart research`
 
 → Proceed to **Step 1**.
 
@@ -67,28 +80,46 @@ Read them. Announce what's been explored so far and what themes have emerged. As
 
 ## Step 1: Initialize Research
 
-1. Ensure the research directory exists: `.workflows/{work_unit}/research/`
-2. Load **[template.md](references/template.md)** — use it to create `.workflows/{work_unit}/research/exploration.md`
-3. Populate the Starting Point section with context from the user
-4. Set research status via manifest CLI:
+1. Load **[template.md](references/template.md)** — use it to create the research file at the Output path from the handoff (e.g., `.workflows/{work_unit}/research/{resolved_filename}`)
+2. Populate the Starting Point section with context from the handoff. If restarting (no Context in handoff), create with a minimal Starting Point — the session will gather context naturally
+3. Register in manifest:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase research --topic {topic} status in-progress
+   node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit} --phase research --topic {topic}
    ```
-   Where `{topic}` is derived from the research file name (e.g., "exploration" for `exploration.md`).
-5. Commit the initial file
+4. Commit the initial file
 
 → Proceed to **Step 2**.
 
 ---
 
-## Step 2: Load Research Guidelines
+## Step 2: File Strategy
 
-Load **[research-guidelines.md](references/research-guidelines.md)** and follow its instructions as written.
+Load **[file-strategy.md](references/file-strategy.md)** and follow its instructions as written.
 
 → Proceed to **Step 3**.
 
 ---
 
-## Step 3: Research Session
+## Step 3: Research Guidelines
 
-Load **[research-session.md](references/research-session.md)** and follow its instructions as written.
+Load **[research-guidelines.md](references/research-guidelines.md)** and follow its instructions as written.
+
+→ Proceed to **Step 4**.
+
+---
+
+## Step 4: Research Session
+
+Read `work_type` from the manifest:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type
+```
+
+#### If work_type is `feature`
+
+Load **[feature-session.md](references/feature-session.md)** and follow its instructions as written.
+
+#### If work_type is `epic`
+
+Load **[epic-session.md](references/epic-session.md)** and follow its instructions as written.

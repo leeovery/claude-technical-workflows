@@ -4,6 +4,49 @@
 
 ---
 
+## Research Scope
+
+#### If work_type is `epic` and no topic resolved
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+Do you have a specific topic to research, or explore openly?
+
+- **`s`/`specific`** — Name a focused topic to research
+- **`e`/`explore`** — Open exploration, follow tangents, see where it goes
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+**If `specific`:**
+
+> *Output the next fenced block as a code block:*
+
+```
+What topic would you like to research?
+```
+
+**STOP.** Wait for user response.
+
+User provides topic name → `resolved_filename = {topic:(kebabcase)}.md`
+
+**If `explore`:**
+
+`resolved_filename = exploration.md`
+
+#### If work_type is `feature`
+
+No question needed. `resolved_filename = {topic}.md`
+
+#### If topic already resolved
+
+Epic with topic provided via `$2` argument. `resolved_filename = {topic}.md`
+
+---
+
 Ask each question below **one at a time**. After each, **STOP** and wait for the user's response before proceeding.
 
 ---
