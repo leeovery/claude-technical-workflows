@@ -42,10 +42,6 @@ For each split topic:
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit} --phase research --topic {topic}
    ```
-5. Set status to in-progress:
-   ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase research --topic {topic} status in-progress
-   ```
 
 Commit after splitting.
 
