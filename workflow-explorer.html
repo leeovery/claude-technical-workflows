@@ -2655,12 +2655,12 @@ const FLOWCHARTS = {
       { id: 'complete', label: 'COMPLETE', shape: 'stop', w: 150, h: 40, rx: 3, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Mark work unit as completed. Terminal condition.' },
       { id: 'plan-mode', label: 'Enter plan mode', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Write plan file with /workflow-{phase}-entry invocation. Call EnterPlanMode + ExitPlanMode for user approval.' },
       // Phase entry targets
-      { id: 'to-research', label: 'Research entry', w: 150, h: 40, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'research', desc: 'Route to workflow-research-entry (epic only).' },
-      { id: 'to-discussion', label: 'Discussion entry', w: 150, h: 40, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'discussion', desc: 'Route to workflow-discussion-entry.' },
-      { id: 'to-specification', label: 'Specification entry', w: 155, h: 40, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'specification', desc: 'Route to workflow-specification-entry.' },
-      { id: 'to-planning', label: 'Planning entry', w: 150, h: 40, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'planning', desc: 'Route to workflow-planning-entry.' },
-      { id: 'to-implementation', label: 'Implementation entry', w: 165, h: 40, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'implementation', desc: 'Route to workflow-implementation-entry.' },
-      { id: 'to-review', label: 'Review entry', w: 150, h: 40, color: 'var(--next)', bg: 'var(--next-bg)', skillLink: 'review', desc: 'Route to workflow-review-entry.' },
+      { id: 'to-research', label: 'Research entry', w: 150, h: 40, color: 'var(--skill)', bg: 'var(--skill-bg)', skillLink: 'research', desc: 'Route to workflow-research-entry (epic only).' },
+      { id: 'to-discussion', label: 'Discussion entry', w: 150, h: 40, color: 'var(--skill)', bg: 'var(--skill-bg)', skillLink: 'discussion', desc: 'Route to workflow-discussion-entry.' },
+      { id: 'to-specification', label: 'Specification entry', w: 155, h: 40, color: 'var(--skill)', bg: 'var(--skill-bg)', skillLink: 'specification', desc: 'Route to workflow-specification-entry.' },
+      { id: 'to-planning', label: 'Planning entry', w: 150, h: 40, color: 'var(--skill)', bg: 'var(--skill-bg)', skillLink: 'planning', desc: 'Route to workflow-planning-entry.' },
+      { id: 'to-implementation', label: 'Implementation entry', w: 165, h: 40, color: 'var(--skill)', bg: 'var(--skill-bg)', skillLink: 'implementation', desc: 'Route to workflow-implementation-entry.' },
+      { id: 'to-review', label: 'Review entry', w: 150, h: 40, color: 'var(--skill)', bg: 'var(--skill-bg)', skillLink: 'review', desc: 'Route to workflow-review-entry.' },
     ],
     connections: [
       { from: 'start', to: 'work-type' },
