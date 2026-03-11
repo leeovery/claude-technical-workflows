@@ -1,6 +1,5 @@
 ---
 name: continue-feature
-disable-model-invocation: true
 allowed-tools: Bash(node .claude/skills/continue-feature/scripts/discovery.js), Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
 ---
 
