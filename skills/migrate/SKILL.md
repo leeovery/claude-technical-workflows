@@ -27,10 +27,10 @@ The script will list which files were updated. Present this to the user:
 ```
 {list from script output}
 
-Review changes with `git diff`, then proceed when ready.
+Review changes with `git diff`, then restart Claude to pick up the changes.
 ```
 
-Wait for user acknowledgment before returning control to the calling skill.
+**STOP.** Wait for user response. Do not proceed — the user needs to restart Claude.
 
 #### If no updates needed
 
