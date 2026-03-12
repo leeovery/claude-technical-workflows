@@ -429,6 +429,13 @@ Key:
 
 Rendered as markdown (not code blocks). Framed with dot separators. Verb-based labels for selection menus. No single-character icons.
 
+**Option types** — menus contain two kinds of option:
+
+- **Command option**: A discrete input the user types verbatim. Formatted with backtick-wrapped shorthand: **`y`/`yes`**, **`s`/`single`**, **`a`/`auto`**. The conditional branch uses the command value (e.g., `#### If \`yes\``).
+- **Prompt option**: A natural-language response — the user keeps talking rather than issuing a command. Formatted with plain bold text (no backticks): **Keep going**, **Comment**, **Ask**. The conditional branch uses the label in lowercase (e.g., `#### If keep going`).
+
+The distinction matters for routing: command options match exact input, prompt options match intent.
+
 **Selection menu** — use concrete examples showing verb-to-state mapping:
 
 ```
