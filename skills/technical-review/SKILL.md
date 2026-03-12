@@ -18,7 +18,7 @@ Follows implementation. Verify plan tasks were implemented, tested adequately, a
 - **Plan content** (required) - Tasks and acceptance criteria to verify against (one or more plans)
 - **Specification content** (required) - The specification from the prior phase, for design decision context
 - **Review mode** (required) - `full` or `incremental`
-- **Unreviewed tasks** (for incremental) - list of internal task IDs to review, or "all" for full
+- **Unreviewed tasks** (for incremental) - list of internal IDs to review, or "all" for full
 
 ---
 

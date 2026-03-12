@@ -114,7 +114,7 @@ No prior review tracking. Store `review_mode = full`.
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase review --topic {topic} reviewed_tasks
 ```
 
-Compare `completed_tasks` against `reviewed_tasks`. Any task ID in `completed_tasks` but not in `reviewed_tasks` is unreviewed.
+Compare `completed_tasks` against `reviewed_tasks`. Any internal ID in `completed_tasks` but not in `reviewed_tasks` is unreviewed.
 
 **If no unreviewed tasks** (arrays match):
 
@@ -165,7 +165,7 @@ Review mode?
 
 #### If `incremental`
 
-Store `review_mode = incremental` and `unreviewed_tasks = [{list of unreviewed task IDs}]`.
+Store `review_mode = incremental` and `unreviewed_tasks = [{list of unreviewed internal IDs}]`.
 
 → Return to **[the skill](../SKILL.md)**.
 

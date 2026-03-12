@@ -68,7 +68,7 @@ SPECIFICATION                    PLANNING
 ───────────────────────────────────────────────────────────────────
 Dependencies section    →    Added to manifest as unresolved
 (natural language)                      ↓
-                             Resolved when linked to specific task ID
+                             Resolved when linked to specific internal ID
                              (via planning or /link-dependencies)
 ```
 

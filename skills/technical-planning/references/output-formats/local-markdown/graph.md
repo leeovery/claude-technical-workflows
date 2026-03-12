@@ -41,4 +41,4 @@ depends_on:
 
 ### Removing a Dependency
 
-Remove the task ID from the `depends_on` field. If the field becomes empty, remove it entirely.
+Remove the internal ID from the `depends_on` field. If the field becomes empty, remove it entirely.

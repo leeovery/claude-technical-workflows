@@ -49,7 +49,7 @@ total: {count}
 
 ## {internal_id} | pending
 
-### Task {seq}: {Task Name}
+### Task {task_id}: {Task Name}
 
 **Problem**: ...
 **Solution**: ...
@@ -63,7 +63,7 @@ total: {count}
 
 ## {internal_id} | pending
 
-### Task {seq}: {Task Name}
+### Task {task_id}: {Task Name}
 ...
 ```
 

@@ -132,7 +132,7 @@ Mark the task `rejected` in the scratch file and add the feedback as a blockquot
 
 > **Feedback**: {user's feedback here}
 
-### Task {seq}: {Task Name}
+### Task {task_id}: {Task Name}
 ...
 ```
 
@@ -180,7 +180,7 @@ For each approved task in the scratch file, in order:
 5. If the current phase's `external_id` is empty, set it to the external identifier for the phase as exposed by the output format
 6. Advance the manifest planning position to the next pending task (or next phase if this was the last task):
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} task {next-task-seq}
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} task {next_task_id}
    ```
 7. Commit: `planning({work_unit}): author task {internal_id} ({task name})`
 

@@ -89,7 +89,7 @@ Plans not ready for implementation:
 These plans have unresolved dependencies that must be
 addressed first.
 
-  • {topic} (blocked by {dep_topic}:{task_id})
+  • {topic} (blocked by {dep_topic}:{internal_id})
   • {topic} (blocked by {dep_topic})
 ```
 
@@ -137,7 +137,7 @@ Build a numbered menu with three sections:
 - From `next_phase_ready` in discovery output
 - Completed spec with no plan: `Start planning for "{topic:(titlecase)}" — spec completed`
 - Completed plan with no implementation:
-  - If `blocked`: show but mark as not selectable: `Start implementation of "{topic:(titlecase)}" — blocked by {dep_topic}:{task_id}`
+  - If `blocked`: show but mark as not selectable: `Start implementation of "{topic:(titlecase)}" — blocked by {dep_topic}:{internal_id}`
   - Otherwise: `Start implementation of "{topic:(titlecase)}" — plan completed`
 - Completed implementation with no review: `Start review for "{topic:(titlecase)}" — implementation completed`
 - Unaccounted discussions (from `unaccounted_discussions`): `Start specification — {N} discussion(s) not yet in a spec`
@@ -217,7 +217,7 @@ Explain which dependencies are blocking and how to resolve them:
 "{topic:(titlecase)}" cannot start implementation yet.
 
 Blocking dependencies:
-  • {dep_topic}:{task_id} — {reason}
+  • {dep_topic}:{internal_id} — {reason}
   • {dep_topic} — {reason}
 ```
 

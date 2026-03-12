@@ -28,7 +28,7 @@ You receive via the orchestrator's prompt:
 2. **Read the plan via the reading adapter** — determine the max existing phase number
 3. **Calculate next phase number** — max existing phase + 1
 4. **Read the authoring adapter** — understand how to create tasks in this format
-5. **Create tasks in the plan** — follow the authoring adapter's instructions for each approved task, using the topic name to scope tasks to this plan (e.g., directory paths, task ID prefixes, project association)
+5. **Create tasks in the plan** — follow the authoring adapter's instructions for each approved task, using the topic name to scope tasks to this plan (e.g., directory paths, internal ID prefixes, project association)
 6. **Update the Plan Index File** — append the new phase and task table to the Plan Index File body (see below)
 
 ## Update the Plan Index File
@@ -44,7 +44,7 @@ Append at the end of the Plan Index File body, following the **Phase Entry** and
 - Omit `approved_at` and acceptance criteria (analysis phases don't use them)
 - Task `Status`: `authored` (task files are fully written)
 - Task `External ID`: external identifier for the task from the output format
-- Task IDs must match the IDs used in the created task files
+- Internal IDs must match the IDs used in the created task files
 - Check the planning `external_id` via the manifest CLI:
   ```bash
   node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} external_id
