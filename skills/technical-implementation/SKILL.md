@@ -281,7 +281,7 @@ Approve these linters?
 · · · · · · · · · · · ·
 ```
 
-**STOP.** Wait for user choice.
+**STOP.** Wait for user response.
 
 #### If `yes`
 
