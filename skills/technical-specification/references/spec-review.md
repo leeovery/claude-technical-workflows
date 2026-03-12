@@ -68,7 +68,9 @@ Continue with review?
 · · · · · · · · · · · ·
 ```
 
-**STOP.** Wait for user choice. You MUST NOT choose on the user's behalf.
+You MUST NOT choose on the user's behalf.
+
+**STOP.** Wait for user response.
 
 #### If `proceed`
 
