@@ -55,7 +55,7 @@ Phase {N}: {Phase Name}
 
 **Phase structure (for the Plan Index File):**
 
-Begin with a `## Phases` heading, then follow the **Phase Entry** template from plan-index-schema for each phase. Set `status: draft`. Leave `ext_id` empty. Omit `approved_at`.
+Begin with a `## Phases` heading, then follow the **Phase Entry** template from plan-index-schema for each phase. Set `status: draft`. Leave `external_id` empty. Omit `approved_at`.
 
 Continue for all phases.
 

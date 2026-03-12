@@ -58,7 +58,7 @@ This makes it explicit for downstream stages that dependencies were considered a
 | State | Format | Meaning |
 |-------|--------|---------|
 | `unresolved` | `state: unresolved` | Dependency exists but not yet linked to a task |
-| `resolved` | `state: resolved` + `task_id: {id}` | Linked to specific task in another plan |
+| `resolved` | `state: resolved` + `task_id: {internal_id}` | Linked to specific task in another plan |
 | `satisfied_externally` | `state: satisfied_externally` | Implemented outside workflow |
 
 ## Lifecycle
@@ -68,7 +68,7 @@ SPECIFICATION                    PLANNING
 ───────────────────────────────────────────────────────────────────
 Dependencies section    →    Added to manifest as unresolved
 (natural language)                      ↓
-                             Resolved when linked to specific task ID
+                             Resolved when linked to specific internal ID
                              (via planning or /link-dependencies)
 ```
 

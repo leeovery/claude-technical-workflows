@@ -43,7 +43,7 @@ E. Update progress + phase check + commit
 > *Output the next fenced block as a code block:*
 
 ```
-Task {id}: {Task Name} — {blocked/failed}
+Task {internal_id}: {Task Name} — {blocked/failed}
 
 {executor's ISSUES content}
 ```
@@ -94,7 +94,7 @@ Increment `fix_attempts` via manifest CLI (`node .claude/skills/workflow-manifes
 @if(fix_attempts >= 3)
   The executor and reviewer have not converged after {N} attempts. Escalating for human review.
 @endif
-Review for Task {id}: {Task Name} — needs changes (attempt {N})
+Review for Task {internal_id}: {Task Name} — needs changes (attempt {N})
 
 {ISSUES from reviewer, including FIX, ALTERNATIVE, and CONFIDENCE for each}
 
@@ -141,7 +141,7 @@ After the reviewer approves a task, present the result:
 > *Output the next fenced block as a code block:*
 
 ```
-Task {id}: {Task Name} — approved
+Task {internal_id}: {Task Name} — approved
 
 Phase: {phase number} — {phase name}
 {executor's SUMMARY — brief commentary, decisions, implementation notes}
@@ -184,11 +184,13 @@ Approve this task?
 **Check for phase completion** — use the format's **reading.md** to list remaining tasks in the current phase. If no tasks remain open or in-progress:
 - If the format's updating.md includes a **Phase / Parent Status** section, follow its phase completion instructions
 
+**Internal ID convention**: The internal ID used in `completed_tasks`, `current_task`, and commit messages MUST come from the plan index table's `Internal ID` column (format: `{topic}-{phase_id}-{task_id}`). If the format adapter returns an external ID, resolve the internal ID from the plan table — it maps internal IDs to external IDs via the `External ID` column.
+
 **Update implementation state via manifest CLI**:
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase implementation --topic {topic} current_phase {N}
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase implementation --topic {topic} current_task {next-task-id or ~}
-node .claude/skills/workflow-manifest/scripts/manifest.js push {work_unit} --phase implementation --topic {topic} completed_tasks "{task-id}"
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase implementation --topic {topic} current_task {next_task_id or ~}
+node .claude/skills/workflow-manifest/scripts/manifest.js push {work_unit} --phase implementation --topic {topic} completed_tasks "{internal_id}"
 ```
 - If the current phase has no remaining open/in-progress tasks: `node .claude/skills/workflow-manifest/scripts/manifest.js push {work_unit} --phase implementation --topic {topic} completed_phases {N}`
 - If user chose `auto` at the task gate this turn: `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase implementation --topic {topic} task_gate_mode auto`
@@ -197,7 +199,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js push {work_unit} --pha
 **Commit all changes** in a single commit:
 
 ```
-impl({work_unit}): T{task-id} — {brief description}
+impl({work_unit}): T{internal_id} — {brief description}
 ```
 
 Code, tests, plan progress, and implementation file — one commit per approved task.

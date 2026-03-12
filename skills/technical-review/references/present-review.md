@@ -4,14 +4,14 @@
 
 ---
 
-Read the review file at `.workflows/{work_unit}/review/{topic}/r{N}/review.md`.
+Read the review file at `.workflows/{work_unit}/review/{topic}/review.md`.
 
 Present a structured summary to the user:
 
 > *Output the next fenced block as a code block:*
 
 ```
-Review: {topic} (r{N})
+Review: {topic}
 
 Verdict: {Approve | Request Changes | Comments Only}
 

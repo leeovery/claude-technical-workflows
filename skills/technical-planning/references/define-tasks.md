@@ -112,7 +112,7 @@ Note that `task_list_gate_mode` should be updated to `auto` in the manifest duri
 
 1. Advance the planning position in the manifest to the first task in this phase:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} task {first-task-seq}
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} task {first_task_id}
    ```
 2. If user chose `auto` at this gate: update the manifest:
    ```bash

@@ -12,11 +12,11 @@ Invoke the [technical-implementation](../../technical-implementation/SKILL.md) s
 
 ## Handoff
 
-Query format and ext_id from manifest:
+Query format and external_id from manifest:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} format
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} ext_id
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} external_id
 ```
 
 Check implementation status:
@@ -31,7 +31,7 @@ Work unit: {work_unit}
 
 Plan: .workflows/{work_unit}/planning/{topic}/planning.md
 Format: {format}
-Ext ID: {ext_id} (if applicable)
+External ID: {external_id} (if applicable)
 Specification: .workflows/{work_unit}/specification/{topic}/specification.md (exists: {true|false})
 Implementation: {exists | new} (status: {in-progress | not-started | completed})
 

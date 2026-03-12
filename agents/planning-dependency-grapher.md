@@ -39,7 +39,7 @@ If this is a **re-invocation after feedback**: read your previous output and the
 
 ## Detecting Dependencies
 
-Dependencies and priorities are **optional**. In the absence of both, tasks execute in natural order — top to bottom by task ID. Only add dependencies or priorities when they change the execution order in a way that matters.
+Dependencies and priorities are **optional**. In the absence of both, tasks execute in natural order — top to bottom by internal ID. Only add dependencies or priorities when they change the execution order in a way that matters.
 
 Your job is to look at the complete plan from above and ask two questions about each task: **"What must exist before this task can start?"** and **"What does this task produce that other tasks need?"**
 
@@ -75,7 +75,7 @@ Then match produces→requires across all tasks. If Task A produces something th
 
 ## Assigning Priorities
 
-Priority determines execution order among tasks that are equally ready (not blocked by dependencies). Like dependencies, priority is optional — if natural task ID ordering produces the right sequence, skip it.
+Priority determines execution order among tasks that are equally ready (not blocked by dependencies). Like dependencies, priority is optional — if natural internal ID ordering produces the right sequence, skip it.
 
 ### When to assign priority
 
@@ -108,12 +108,12 @@ Return a structured summary:
 ```
 STATUS: complete | blocked | no-changes
 DEPENDENCIES:
-- {task-id} depends on {task-id} — {one-line reason}
-- {task-id} depends on {task-id}, {task-id} — {one-line reason}
+- {internal_id} depends on {internal_id} — {one-line reason}
+- {internal_id} depends on {internal_id}, {internal_id} — {one-line reason}
 
 PRIORITIES:
-- {task-id}: {priority-value} — {one-line reason}
-- {task-id}: {priority-value} — {one-line reason}
+- {internal_id}: {priority-value} — {one-line reason}
+- {internal_id}: {priority-value} — {one-line reason}
 
 CYCLES: none | {description of cycle chain}
 

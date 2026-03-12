@@ -171,7 +171,7 @@ Work-unit-first directory structure with uniform `{topic}` in all paths. For fea
 - Specification: `.workflows/{work_unit}/specification/{topic}/specification.md`
 - Planning: `.workflows/{work_unit}/planning/{topic}/planning.md` + `tasks/`
 - Implementation: `.workflows/{work_unit}/implementation/{topic}/implementation.md`
-- Review: `.workflows/{work_unit}/review/{topic}/r{N}/review.md`
+- Review: `.workflows/{work_unit}/review/{topic}/review.md`
 - State: `.workflows/{work_unit}/.state/` (per-work-unit analysis files)
 - Global state: `.workflows/.state/` (migrations, environment-setup.md)
 - Cache: `.workflows/.cache/` (planning scratch)
@@ -279,7 +279,7 @@ MANIFEST="node .claude/skills/workflow-manifest/scripts/manifest.js"
 $MANIFEST get {work_unit} --phase discussion --topic {topic} status    # phase-level read
 $MANIFEST set {work_unit} --phase discussion --topic {topic} status completed  # phase-level write
 $MANIFEST init-phase {work_unit} --phase discussion --topic {topic}    # create phase entry
-$MANIFEST push {work_unit} --phase implementation --topic {topic} completed_tasks "task-1"  # append to array
+$MANIFEST push {work_unit} --phase implementation --topic {topic} completed_tasks "{topic}-1-1"  # append to array (internal ID)
 $MANIFEST exists {work_unit}                                           # existence check (exits 0, outputs true/false)
 $MANIFEST list                                                         # enumerate all work units
 $MANIFEST get {work_unit} work_type                                    # work-unit-level read
@@ -388,7 +388,7 @@ Core vocabulary: `in-progress`, `completed`, `ready`, `extracted`, `pending`, `r
 
 ### Cross-Plan References
 
-Use colon notation to reference a task within a plan: `{plan}:{task-id}`.
+Use colon notation to reference a task within a plan: `{plan}:{internal_id}`.
 
 ```
   · advanced-features (blocked by core-features:core-2-3)

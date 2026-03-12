@@ -128,11 +128,11 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phas
 Mark the task `rejected` in the scratch file and add the feedback as a blockquote:
 
 ```markdown
-## {task-id} | rejected
+## {internal_id} | rejected
 
 > **Feedback**: {user's feedback here}
 
-### Task {seq}: {Task Name}
+### Task {task_id}: {Task Name}
 ...
 ```
 
@@ -172,17 +172,17 @@ For each approved task in the scratch file, in order:
 
 1. Read the task content from the scratch file
 2. Write to the output format (format-specific — see the format's **[authoring.md](output-formats/{format}/authoring.md)**)
-3. Update the task table in the Plan Index File: set `status: authored` and set `Ext ID` to the external identifier for the task as exposed by the output format
-4. If the manifest's `ext_id` is empty, set it to the external identifier for the plan as exposed by the output format:
+3. Update the task table in the Plan Index File: set `status: authored` and set `External ID` to the external identifier for the task as exposed by the output format
+4. If the manifest's `external_id` is empty, set it to the external identifier for the plan as exposed by the output format:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} ext_id {ext-id}
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} external_id {external_id}
    ```
-5. If the current phase's `ext_id` is empty, set it to the external identifier for the phase as exposed by the output format
+5. If the current phase's `external_id` is empty, set it to the external identifier for the phase as exposed by the output format
 6. Advance the manifest planning position to the next pending task (or next phase if this was the last task):
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} task {next-task-seq}
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} task {next_task_id}
    ```
-7. Commit: `planning({work_unit}): author task {task-id} ({task name})`
+7. Commit: `planning({work_unit}): author task {internal_id} ({task name})`
 
 > *Output the next fenced block as a code block:*
 

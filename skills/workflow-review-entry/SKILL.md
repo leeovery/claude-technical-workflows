@@ -58,14 +58,6 @@ Load **[validate-phase.md](references/validate-phase.md)** and follow its instru
 
 ---
 
-## Step 3: Determine Review Version
-
-Load **[determine-review-version.md](references/determine-review-version.md)** and follow its instructions as written.
-
-→ Proceed to **Step 4**.
-
----
-
-## Step 4: Invoke the Skill
+## Step 3: Invoke the Skill
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

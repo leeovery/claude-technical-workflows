@@ -17,6 +17,8 @@ Follows implementation. Verify plan tasks were implemented, tested adequately, a
 - **Review scope** (required) - single, multi, or all
 - **Plan content** (required) - Tasks and acceptance criteria to verify against (one or more plans)
 - **Specification content** (required) - The specification from the prior phase, for design decision context
+- **Review mode** (required) - `full` or `incremental`
+- **Unreviewed tasks** (for incremental) - list of internal IDs to review, or "all" for full
 
 ---
 
@@ -25,7 +27,7 @@ Follows implementation. Verify plan tasks were implemented, tested adequately, a
 Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
-2. **Read review and synthesis files** for the current topic. Review documents are at `.workflows/{work_unit}/review/{topic}/r{N}/review.md` with per-task QA files alongside. Synthesis staging files are at `.workflows/{work_unit}/implementation/{topic}/review-tasks-c{N}.md`. These are your source of truth for progress.
+2. **Read review and synthesis files** for the current topic. Review documents are at `.workflows/{work_unit}/review/{topic}/review.md` with per-task QA files alongside (`qa-task-{internal_id}.md`). Synthesis staging files are at `.workflows/{work_unit}/implementation/{topic}/review-tasks-c{N}.md`. These are your source of truth for progress.
 3. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 
@@ -35,7 +37,7 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 ## Hard Rules
 
-1. **Review ALL tasks** — Don't sample; verify every planned task
+1. **Review ALL tasks** — In full mode, verify every planned task. In incremental mode, verify only unreviewed tasks
 2. **Don't fix code** — Identify problems, don't solve them
 3. **Don't re-implement** — You're reviewing, not building
 4. **Be specific** — "Test doesn't cover X" not "tests need work"

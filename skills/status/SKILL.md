@@ -117,7 +117,7 @@ For each group, show a header then numbered entries with phase state:
 
 ```
      └─ Planning: {status}
-        └─ Blocked: {dep_work_unit}:{dep_task_id} ({dep_state})
+        └─ Blocked: {dep_work_unit}:{dep_internal_id} ({dep_state})
 ```
 
 ### 2c: Unlinked Discussions

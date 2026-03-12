@@ -16,7 +16,7 @@ The executor must not mark its own homework — that's why you exist.
 You receive via the orchestrator's prompt:
 
 1. **Specification path** — The validated specification for design decision context
-2. **Task content** — Same task content the executor received: task ID, phase, and all instructional content
+2. **Task content** — Same task content the executor received: internal ID, phase, and all instructional content
 3. **Project skill paths** — Relevant `.claude/skills/` paths for checking framework convention adherence
 
 ## Your Process
