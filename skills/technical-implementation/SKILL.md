@@ -202,7 +202,7 @@ Keep these project skills?
 · · · · · · · · · · · ·
 ```
 
-**STOP.** Wait for user choice.
+**STOP.** Wait for user response.
 
 #### If `yes`
 
@@ -243,7 +243,7 @@ Which project skills should be used?
 · · · · · · · · · · · ·
 ```
 
-**STOP.** Wait for user to confirm which skills are relevant.
+**STOP.** Wait for user response.
 
 Store the selected skill paths via manifest CLI, pushing each path individually:
 ```bash
@@ -350,7 +350,7 @@ Ready to mark implementation as completed?
 
 #### If comment
 
-Discuss the user's context. If additional work is needed, route back to **Step 6** or **Step 7** as appropriate. Otherwise, re-present the sign-off prompt above.
+Discuss the user's context. If additional work is needed, → Return to **Step 6** or **Step 7** as appropriate. Otherwise, re-present the sign-off prompt above.
 
 #### If `yes`
 

@@ -112,7 +112,7 @@ Load **[verify-source-material.md](references/verify-source-material.md)** and f
 
 ## Step 2: Initialize Specification
 
-Load **[specification-format.md](references/specification-format.md)** for the template.
+Load **[specification-format.md](references/specification-format.md)** and follow its instructions as written.
 
 Create the specification file at `.workflows/{work_unit}/specification/{topic}/specification.md`:
 
@@ -149,7 +149,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phas
 
 ## Step 4: Load Specification Principles
 
-Load **[specification-principles.md](references/specification-principles.md)** and internalize the rules. These principles govern every subsequent step.
+Load **[specification-principles.md](references/specification-principles.md)** and follow its instructions as written. These principles govern every subsequent step.
 
 → Proceed to **Step 5**.
 

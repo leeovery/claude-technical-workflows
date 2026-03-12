@@ -278,5 +278,5 @@ Load **[present-review.md](references/present-review.md)** and follow its instru
 
 ## Step 7: Review Actions
 
-Load **[review-actions-loop.md](references/review-actions-loop.md)** and follow its instructions.
+Load **[review-actions-loop.md](references/review-actions-loop.md)** and follow its instructions as written.
 
