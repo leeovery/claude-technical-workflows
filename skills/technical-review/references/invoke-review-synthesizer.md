@@ -27,7 +27,7 @@ Dispatch **one agent** via the Task tool.
 The synthesizer receives:
 
 1. **Plan topic** — the plan being synthesized
-2. **Review path** — path to `r{N}/` directory (review summary + QA files)
+2. **Review path** — path to `review/{topic}/` directory (review summary + QA files)
 3. **Specification path** — from the manifest
 4. **Cycle number** — the review remediation cycle number
 

@@ -23,3 +23,9 @@ INSTRUCTIONS:
 - **Include** everything instructional: goal, implementation steps, acceptance criteria, tests, edge cases, context, notes
 - **Strip** meta fields: status, priority, dependencies, dates, progress markers
 - **Preserve** the internal structure of the instructional content as-is from the plan — do not summarise, reorder, or rewrite
+
+## ID Resolution
+
+The `{id}` in the template is always the **internal task ID** (format: `{work_unit}-{phase}-{seq}`). This comes from the plan index table's `ID` column.
+
+If the format adapter returns an external ID (e.g., tick ID), cross-reference the plan index table to find the internal ID. The plan table has both `ID` and `Ext ID` columns for this mapping.

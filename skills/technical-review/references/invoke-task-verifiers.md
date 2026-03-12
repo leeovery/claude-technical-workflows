@@ -4,7 +4,7 @@
 
 ---
 
-This step dispatches `review-task-verifier` agents in batches to verify ALL tasks across the selected plan(s). Each verifier independently checks one task for implementation, tests, and code quality, writing its full findings to a file and returning a brief status.
+This step dispatches `review-task-verifier` agents in batches to verify tasks across the selected plan(s). Each verifier independently checks one task for implementation, tests, and code quality, writing its full findings to a file and returning a brief status.
 
 ---
 
@@ -26,7 +26,19 @@ Using the format reading adapter loaded in Step 1, extract every task across all
 - Note each task's description
 - Note each task's acceptance criteria
 - Note expected micro acceptance (test name)
-- Assign each task a sequential **index** (1, 2, 3...) for file naming
+- Note each task's **internal ID** (format: `{work_unit}-{phase}-{seq}`) for file naming
+
+---
+
+## Filter Tasks (Incremental Mode)
+
+#### If `review_mode` is `incremental`
+
+Filter the extracted task list to only include tasks whose internal IDs appear in the `unreviewed_tasks` list passed from the entry point. Skip all other tasks — they have already been reviewed.
+
+#### If `review_mode` is `full`
+
+Review all extracted tasks. No filtering needed.
 
 ---
 
@@ -35,7 +47,7 @@ Using the format reading adapter loaded in Step 1, extract every task across all
 Ensure the review output directory exists:
 
 ```bash
-mkdir -p .workflows/{work_unit}/review/{topic}/r{N}
+mkdir -p .workflows/{work_unit}/review/{topic}
 ```
 
 ---
@@ -60,9 +72,9 @@ Each verifier receives:
 3. **Plan path** — the full plan for phase context
 4. **Project skill paths** — from Step 2 discovery
 5. **Review checklist path** — `skills/technical-review/references/review-checklist.md`
-6. **Topic** — the plan topic name (used for output directory)
-7. **Review number** — version number (e.g., 1 for `r1/`)
-8. **Task index** — sequential number for file naming (1, 2, 3...)
+6. **Work unit** — the work unit name (for path construction)
+7. **Topic** — the plan topic name (used for output directory)
+8. **Task ID** — the internal task ID (for output file naming, e.g., `cli-enhancements-1-1`)
 
 If any verifier fails (error, timeout), record the failure and continue — aggregate what's available.
 
@@ -78,7 +90,19 @@ FINDINGS_COUNT: {N blocking issues}
 SUMMARY: {1 sentence}
 ```
 
-Full findings are written to `.workflows/{work_unit}/review/{topic}/r{N}/qa-task-{index}.md`.
+Full findings are written to `.workflows/{work_unit}/review/{topic}/qa-task-{task-id}.md`.
+
+---
+
+## Update Reviewed Tasks
+
+After all verifiers complete, push each verified task's internal ID to the review manifest:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js push {work_unit} --phase review --topic {topic} reviewed_tasks "{task-id}"
+```
+
+This enables incremental review detection on subsequent review sessions.
 
 ---
 
@@ -86,7 +110,7 @@ Full findings are written to `.workflows/{work_unit}/review/{topic}/r{N}/qa-task
 
 Once all batches have completed:
 
-1. Read all `.workflows/{work_unit}/review/{topic}/r{N}/qa-task-*.md` files
+1. Read all `.workflows/{work_unit}/review/{topic}/qa-task-*.md` files
 2. Synthesize findings from file contents:
    - Collect all tasks with `STATUS: Incomplete` or `STATUS: Issues Found` as blocking issues
    - Collect all test issues (under/over-tested)
