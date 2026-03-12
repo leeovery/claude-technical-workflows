@@ -47,14 +47,14 @@ approved_at: {YYYY-MM-DD}
 
 ```markdown
 #### Tasks
-| ID | Name | Edge Cases | Status | External ID |
-|----|------|------------|--------|-------------|
+| Internal ID | Name | Edge Cases | Status | External ID |
+|-------------|------|------------|--------|-------------|
 | {topic}-{phase_id}-{task_id} | {Task Name} | {comma-separated list, or "none"} | {status} | |
 ```
 
 | Field | Set when |
 |-------|----------|
-| `ID` | Task design -- internal ID, format: `{topic}-{phase_id}-{task_id}` |
+| `Internal ID` | Task design -- format: `{topic}-{phase_id}-{task_id}` |
 | `Name` | Task design -- descriptive task name |
 | `Edge Cases` | Task design -- curated list scoping which edge cases this task handles |
 | `Status` | Task design -> `pending`; authoring -> `authored` |

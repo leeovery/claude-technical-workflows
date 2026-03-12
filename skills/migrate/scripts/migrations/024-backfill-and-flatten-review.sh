@@ -9,6 +9,7 @@
 #   3. Flatten review/{topic}/r{N}/ directories — move contents of the
 #      highest r{N}/ up to review/{topic}/, remove all r{N}/ subdirs.
 #   4. Rename ext_id → external_id in manifests and plan index files.
+#   5. Rename ID → Internal ID in plan index task table headers.
 #
 # Idempotent. Direct node for JSON — never uses manifest CLI.
 #
@@ -115,8 +116,8 @@ for manifest in "$WORKFLOWS_DIR"/*/manifest.json; do
           gsub(/^[ \t]+|[ \t]+$/, "", id)
           gsub(/^[ \t]+|[ \t]+$/, "", ext)
           # Skip header rows and empty/placeholder values
-          if (id != "" && id != "ID" && id !~ /^-+$/ && \
-              ext != "" && ext != "Ext ID" && ext != "-" && ext !~ /^-+$/) {
+          if (id != "" && id != "ID" && id != "Internal ID" && id !~ /^-+$/ && \
+              ext != "" && ext != "Ext ID" && ext != "External ID" && ext != "-" && ext !~ /^-+$/) {
             print ext "=" id
           }
         }
@@ -277,6 +278,32 @@ for manifest in "$WORKFLOWS_DIR"/*/manifest.json; do
       # Also rename ext_id: field in phase entries
       sed -i '' 's/^ext_id:/external_id:/g' "$plan_file"
       report_update "$plan_file" "renamed Ext ID to External ID"
+    fi
+  done
+done
+
+# ---------------------------------------------------------------------------
+# Step 5: Rename ID → Internal ID in plan index task table headers
+# ---------------------------------------------------------------------------
+
+for manifest in "$WORKFLOWS_DIR"/*/manifest.json; do
+  [ -f "$manifest" ] || continue
+
+  dir=$(dirname "$manifest")
+  wu_name=$(basename "$dir")
+  case "$wu_name" in .*) continue ;; esac
+
+  plan_base="$dir/planning"
+  [ -d "$plan_base" ] || continue
+
+  for plan_file in "$plan_base"/*/planning.md; do
+    [ -f "$plan_file" ] || continue
+
+    # Match task table header: | ID | (but not | Internal ID | or | External ID |)
+    if grep -q '^| ID |' "$plan_file" 2>/dev/null; then
+      sed -i '' 's/^| ID |/| Internal ID |/g' "$plan_file"
+      sed -i '' 's/^|----|/|-------------|/g' "$plan_file"
+      report_update "$plan_file" "renamed ID to Internal ID in task table"
     fi
   done
 done

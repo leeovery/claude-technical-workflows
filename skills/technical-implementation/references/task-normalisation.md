@@ -11,7 +11,7 @@ Normalise task content into this shape before passing to executor and reviewer a
 ## Template
 
 ```
-TASK: {id} — {name}
+TASK: {internal_id} — {name}
 PHASE: {N} — {phase name}
 
 INSTRUCTIONS:
@@ -26,6 +26,6 @@ INSTRUCTIONS:
 
 ## ID Resolution
 
-The `{id}` in the template is always the **internal ID** (format: `{topic}-{phase_id}-{task_id}`). This comes from the plan index table's `ID` column.
+The `{internal_id}` in the template is always the **internal ID** (format: `{topic}-{phase_id}-{task_id}`). This comes from the plan index table's `Internal ID` column.
 
-If the format adapter returns an external ID, cross-reference the plan index table to find the internal ID. The plan table has both `ID` and `External ID` columns for this mapping.
+If the format adapter returns an external ID, cross-reference the plan index table to find the internal ID. The plan table has both `Internal ID` and `External ID` columns for this mapping.

@@ -43,7 +43,7 @@ E. Update progress + phase check + commit
 > *Output the next fenced block as a code block:*
 
 ```
-Task {id}: {Task Name} — {blocked/failed}
+Task {internal_id}: {Task Name} — {blocked/failed}
 
 {executor's ISSUES content}
 ```
@@ -94,7 +94,7 @@ Increment `fix_attempts` via manifest CLI (`node .claude/skills/workflow-manifes
 @if(fix_attempts >= 3)
   The executor and reviewer have not converged after {N} attempts. Escalating for human review.
 @endif
-Review for Task {id}: {Task Name} — needs changes (attempt {N})
+Review for Task {internal_id}: {Task Name} — needs changes (attempt {N})
 
 {ISSUES from reviewer, including FIX, ALTERNATIVE, and CONFIDENCE for each}
 
@@ -141,7 +141,7 @@ After the reviewer approves a task, present the result:
 > *Output the next fenced block as a code block:*
 
 ```
-Task {id}: {Task Name} — approved
+Task {internal_id}: {Task Name} — approved
 
 Phase: {phase number} — {phase name}
 {executor's SUMMARY — brief commentary, decisions, implementation notes}
@@ -184,7 +184,7 @@ Approve this task?
 **Check for phase completion** — use the format's **reading.md** to list remaining tasks in the current phase. If no tasks remain open or in-progress:
 - If the format's updating.md includes a **Phase / Parent Status** section, follow its phase completion instructions
 
-**Internal ID convention**: The internal ID used in `completed_tasks`, `current_task`, and commit messages MUST come from the plan index table's `ID` column (format: `{topic}-{phase_id}-{task_id}`). If the format adapter returns an external ID, resolve the internal ID from the plan table — it maps internal IDs to external IDs via the `External ID` column.
+**Internal ID convention**: The internal ID used in `completed_tasks`, `current_task`, and commit messages MUST come from the plan index table's `Internal ID` column (format: `{topic}-{phase_id}-{task_id}`). If the format adapter returns an external ID, resolve the internal ID from the plan table — it maps internal IDs to external IDs via the `External ID` column.
 
 **Update implementation state via manifest CLI**:
 ```bash
