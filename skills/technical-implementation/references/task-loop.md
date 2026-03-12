@@ -184,13 +184,13 @@ Approve this task?
 **Check for phase completion** — use the format's **reading.md** to list remaining tasks in the current phase. If no tasks remain open or in-progress:
 - If the format's updating.md includes a **Phase / Parent Status** section, follow its phase completion instructions
 
-**Task ID convention**: `{task-id}` in `completed_tasks`, `current_task`, and commit messages MUST be the **internal task ID** (format: `{work_unit}-{phase}-{seq}`, e.g., `cli-enhancements-1-1`). If the format adapter returns an external ID (e.g., tick ID `tick-928bf7` or Linear ID `PROJ-42`), resolve the internal ID from the plan index table's `ID` column. The plan table maps internal IDs to external IDs via the `Ext ID` column.
+**Internal ID convention**: The internal ID used in `completed_tasks`, `current_task`, and commit messages MUST come from the plan index table's `ID` column (format: `{topic}-{phase_id}-{task_id}`). If the format adapter returns an external ID, resolve the internal ID from the plan table — it maps internal IDs to external IDs via the `External ID` column.
 
 **Update implementation state via manifest CLI**:
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase implementation --topic {topic} current_phase {N}
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase implementation --topic {topic} current_task {next-task-id or ~}
-node .claude/skills/workflow-manifest/scripts/manifest.js push {work_unit} --phase implementation --topic {topic} completed_tasks "{task-id}"
+node .claude/skills/workflow-manifest/scripts/manifest.js push {work_unit} --phase implementation --topic {topic} completed_tasks "{internal_id}"
 ```
 - If the current phase has no remaining open/in-progress tasks: `node .claude/skills/workflow-manifest/scripts/manifest.js push {work_unit} --phase implementation --topic {topic} completed_phases {N}`
 - If user chose `auto` at the task gate this turn: `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase implementation --topic {topic} task_gate_mode auto`
@@ -199,7 +199,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js push {work_unit} --pha
 **Commit all changes** in a single commit:
 
 ```
-impl({work_unit}): T{task-id} — {brief description}
+impl({work_unit}): T{internal_id} — {brief description}
 ```
 
 Code, tests, plan progress, and implementation file — one commit per approved task.

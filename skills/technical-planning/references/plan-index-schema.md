@@ -23,7 +23,7 @@ All metadata (topic, format, status, gate modes, progress tracking, etc.) is sto
 ```markdown
 ### Phase {N}: {Phase Name}
 status: {status}
-ext_id:
+external_id:
 approved_at: {YYYY-MM-DD}
 
 **Goal**: {What this phase accomplishes}
@@ -38,7 +38,7 @@ approved_at: {YYYY-MM-DD}
 | Field | Set when |
 |-------|----------|
 | `status` | Phase design -> `draft`; approval -> `approved` |
-| `ext_id` | First task in phase authored -- external identifier for the phase |
+| `external_id` | First task in phase authored -- external identifier for the phase |
 | `approved_at` | Phase approval -- today's date. Omit while `draft`. |
 
 ---
@@ -47,18 +47,18 @@ approved_at: {YYYY-MM-DD}
 
 ```markdown
 #### Tasks
-| ID | Name | Edge Cases | Status | Ext ID |
-|----|------|------------|--------|--------|
-| {work_unit}-{phase}-{seq} | {Task Name} | {comma-separated list, or "none"} | {status} | |
+| ID | Name | Edge Cases | Status | External ID |
+|----|------|------------|--------|-------------|
+| {topic}-{phase_id}-{task_id} | {Task Name} | {comma-separated list, or "none"} | {status} | |
 ```
 
 | Field | Set when |
 |-------|----------|
-| `ID` | Task design -- format: `{work_unit}-{phase}-{seq}` |
+| `ID` | Task design -- internal ID, format: `{topic}-{phase_id}-{task_id}` |
 | `Name` | Task design -- descriptive task name |
 | `Edge Cases` | Task design -- curated list scoping which edge cases this task handles |
 | `Status` | Task design -> `pending`; authoring -> `authored` |
-| `Ext ID` | Task authored -- external identifier for the task |
+| `External ID` | Task authored -- external identifier for the task |
 
 ---
 
@@ -71,7 +71,7 @@ All metadata is managed via the manifest CLI (`node .claude/skills/workflow-mani
 | `status` | Plan creation -> `in-progress`; completion -> `completed` |
 | `format` | Plan creation -- user-chosen output format |
 | `spec_commit` | Plan creation -- `git rev-parse HEAD`; updated on continue if spec changed |
-| `ext_id` | First task authored -- external identifier for the plan |
+| `external_id` | First task authored -- external identifier for the plan |
 | `external_dependencies` | Dependency resolution (Step 6) |
 | `task_list_gate_mode` | Plan creation -> `gated`; user opts in -> `auto` |
 | `author_gate_mode` | Plan creation -> `gated`; user opts in -> `auto` |

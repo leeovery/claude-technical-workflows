@@ -50,7 +50,7 @@ Unresolved (not yet planned):
     No plan exists. Mark as satisfied externally or plan it first.
 
 Incomplete (planned but not implemented):
-  • {topic}: {plan}:{task-id} not yet completed
+  • {topic}: {plan}:{internal_id} not yet completed
     This task must be completed first.
 ```
 

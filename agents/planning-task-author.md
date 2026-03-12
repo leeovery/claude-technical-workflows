@@ -47,7 +47,7 @@ phase_name: {Phase Name}
 total: {count}
 ---
 
-## {task-id} | pending
+## {internal_id} | pending
 
 ### Task {seq}: {Task Name}
 
@@ -61,7 +61,7 @@ total: {count}
 **Context**: ...
 **Spec Reference**: ...
 
-## {task-id} | pending
+## {internal_id} | pending
 
 ### Task {seq}: {Task Name}
 ...

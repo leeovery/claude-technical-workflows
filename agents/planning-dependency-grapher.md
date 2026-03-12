@@ -108,12 +108,12 @@ Return a structured summary:
 ```
 STATUS: complete | blocked | no-changes
 DEPENDENCIES:
-- {task-id} depends on {task-id} — {one-line reason}
-- {task-id} depends on {task-id}, {task-id} — {one-line reason}
+- {internal_id} depends on {internal_id} — {one-line reason}
+- {internal_id} depends on {internal_id}, {internal_id} — {one-line reason}
 
 PRIORITIES:
-- {task-id}: {priority-value} — {one-line reason}
-- {task-id}: {priority-value} — {one-line reason}
+- {internal_id}: {priority-value} — {one-line reason}
+- {internal_id}: {priority-value} — {one-line reason}
 
 CYCLES: none | {description of cycle chain}
 

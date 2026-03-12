@@ -39,19 +39,19 @@ Append at the end of the Plan Index File body, following the **Phase Entry** and
 
 - Phase heading: `### Phase {N}: {phase_label}`
 - Phase `status`: `approved` (pre-approved by user in approval gate)
-- Phase `ext_id`: external identifier for the phase from the output format
+- Phase `external_id`: external identifier for the phase from the output format
 - Phase goal: `Address findings from {phase_label}.`
 - Omit `approved_at` and acceptance criteria (analysis phases don't use them)
 - Task `Status`: `authored` (task files are fully written)
-- Task `Ext ID`: external identifier for the task from the output format
+- Task `External ID`: external identifier for the task from the output format
 - Task IDs must match the IDs used in the created task files
-- Check the planning `ext_id` via the manifest CLI:
+- Check the planning `external_id` via the manifest CLI:
   ```bash
-  node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} ext_id
+  node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} --phase planning --topic {topic} external_id
   ```
   If the command errors (field doesn't exist) or returns empty, set it to the external identifier for the plan from the output format:
   ```bash
-  node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} ext_id "{ext_id_value}"
+  node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} external_id "{external_id_value}"
   ```
 
 ## Hard Rules

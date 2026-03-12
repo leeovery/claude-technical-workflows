@@ -2,12 +2,12 @@
 
 ## Task Storage
 
-Each task is written to `.workflows/{work_unit}/planning/{topic}/tasks/{task-id}.md` — a markdown file with frontmatter and a description body.
+Each task is written to `.workflows/{work_unit}/planning/{topic}/tasks/{internal_id}.md` — a markdown file with frontmatter and a description body.
 
 ```markdown
 ---
-id: {work_unit}-{phase}-{seq}
-phase: {phase-number}
+id: {topic}-{phase_id}-{task_id}
+phase: {phase_id}
 status: pending
 created: YYYY-MM-DD
 ---
@@ -35,7 +35,7 @@ Stored in frontmatter. Defaults to `pending` if omitted.
 
 ### Phase Grouping
 
-Phases are encoded in the task ID: `{work_unit}-{phase}-{seq}`. The `phase` frontmatter field also stores the phase number for querying.
+Phases are encoded in the internal ID: `{topic}-{phase_id}-{task_id}`. The `phase` frontmatter field also stores the phase number for querying.
 
 ### Labels / Tags (optional)
 

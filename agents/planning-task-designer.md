@@ -57,7 +57,7 @@ Phase {N}: {Phase Name}
 
 **Task table format (for the Plan Index File):**
 
-Follow the **Task Table** template from plan-index-schema. Use placeholder IDs `{topic}-{phase}-{seq}`. Set `Status` to `pending`. Leave `Ext ID` empty.
+Follow the **Task Table** template from plan-index-schema. Use placeholder IDs `{topic}-{phase_id}-{task_id}`. Set `Status` to `pending`. Leave `External ID` empty.
 
 The orchestrator will use the topic name from the Plan Index File.
 

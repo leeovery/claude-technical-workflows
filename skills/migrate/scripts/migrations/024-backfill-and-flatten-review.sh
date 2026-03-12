@@ -8,6 +8,7 @@
 #      plan index table's ID ↔ Ext ID mapping.
 #   3. Flatten review/{topic}/r{N}/ directories — move contents of the
 #      highest r{N}/ up to review/{topic}/, remove all r{N}/ subdirs.
+#   4. Rename ext_id → external_id in manifests and plan index files.
 #
 # Idempotent. Direct node for JSON — never uses manifest CLI.
 #
@@ -236,5 +237,46 @@ for manifest in "$WORKFLOWS_DIR"/*/manifest.json; do
     done
 
     report_update "$topic_dir" "flattened review (kept r$highest_num)"
+  done
+done
+
+# ---------------------------------------------------------------------------
+# Step 4: Rename ext_id → external_id in manifests and plan index files
+# ---------------------------------------------------------------------------
+
+for manifest in "$WORKFLOWS_DIR"/*/manifest.json; do
+  [ -f "$manifest" ] || continue
+
+  dir=$(dirname "$manifest")
+  wu_name=$(basename "$dir")
+  case "$wu_name" in .*) continue ;; esac
+
+  # Rename ext_id in manifest JSON (all occurrences at any depth)
+  result=$(node -e "
+    var fs = require('fs');
+    var src = fs.readFileSync(process.argv[1], 'utf8');
+    var replaced = src.replace(/\"ext_id\"/g, '\"external_id\"');
+    if (replaced === src) process.exit(0);
+    fs.writeFileSync(process.argv[1], replaced);
+    console.log('updated');
+  " "$manifest" 2>/dev/null) || true
+
+  if [ "$result" = "updated" ]; then
+    report_update "$manifest" "renamed ext_id to external_id"
+  fi
+
+  # Rename Ext ID → External ID in plan index files (planning.md)
+  plan_base="$dir/planning"
+  [ -d "$plan_base" ] || continue
+
+  for plan_file in "$plan_base"/*/planning.md; do
+    [ -f "$plan_file" ] || continue
+
+    if grep -q 'Ext ID' "$plan_file" 2>/dev/null; then
+      sed -i '' 's/Ext ID/External ID/g' "$plan_file"
+      # Also rename ext_id: field in phase entries
+      sed -i '' 's/^ext_id:/external_id:/g' "$plan_file"
+      report_update "$plan_file" "renamed Ext ID to External ID"
+    fi
   done
 done

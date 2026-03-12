@@ -26,7 +26,7 @@ Using the format reading adapter loaded in Step 1, extract every task across all
 - Note each task's description
 - Note each task's acceptance criteria
 - Note expected micro acceptance (test name)
-- Note each task's **internal ID** (format: `{work_unit}-{phase}-{seq}`) for file naming
+- Note each task's **internal ID** (format: `{topic}-{phase_id}-{task_id}`) for file naming
 
 ---
 
@@ -74,7 +74,7 @@ Each verifier receives:
 5. **Review checklist path** — `skills/technical-review/references/review-checklist.md`
 6. **Work unit** — the work unit name (for path construction)
 7. **Topic** — the plan topic name (used for output directory)
-8. **Task ID** — the internal task ID (for output file naming, e.g., `cli-enhancements-1-1`)
+8. **Internal ID** — the internal ID (for output file naming, e.g., `{topic}-1-1`)
 
 If any verifier fails (error, timeout), record the failure and continue — aggregate what's available.
 
@@ -90,7 +90,7 @@ FINDINGS_COUNT: {N blocking issues}
 SUMMARY: {1 sentence}
 ```
 
-Full findings are written to `.workflows/{work_unit}/review/{topic}/qa-task-{task-id}.md`.
+Full findings are written to `.workflows/{work_unit}/review/{topic}/qa-task-{internal_id}.md`.
 
 ---
 
@@ -99,7 +99,7 @@ Full findings are written to `.workflows/{work_unit}/review/{topic}/qa-task-{tas
 After all verifiers complete, push each verified task's internal ID to the review manifest:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js push {work_unit} --phase review --topic {topic} reviewed_tasks "{task-id}"
+node .claude/skills/workflow-manifest/scripts/manifest.js push {work_unit} --phase review --topic {topic} reviewed_tasks "{internal_id}"
 ```
 
 This enables incremental review detection on subsequent review sessions.

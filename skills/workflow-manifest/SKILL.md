@@ -179,9 +179,9 @@ node .claude/skills/workflow-manifest/scripts/manifest.js push <name> tags "v1"
 
 **Phase level** (with flags):
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js push <name> --phase implementation --topic <topic> completed_tasks "my-feature-1-1"
+node .claude/skills/workflow-manifest/scripts/manifest.js push <name> --phase implementation --topic <topic> completed_tasks "{topic}-1-1"
 node .claude/skills/workflow-manifest/scripts/manifest.js push <name> --phase implementation --topic <topic> completed_phases 1
-node .claude/skills/workflow-manifest/scripts/manifest.js push <name> --phase review --topic <topic> reviewed_tasks "my-feature-1-1"
+node .claude/skills/workflow-manifest/scripts/manifest.js push <name> --phase review --topic <topic> reviewed_tasks "{topic}-1-1"
 ```
 
 ### `exists`

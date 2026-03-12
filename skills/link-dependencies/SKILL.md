@@ -193,7 +193,7 @@ For each resolved match:
 
 1. **Update the dependency in the manifest** via dot-path set:
    - Set `state` to `resolved`: `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} external_dependencies.{dep-topic}.state resolved`
-   - Set `task_id`: `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} external_dependencies.{dep-topic}.task_id {task-id}`
+   - Set `task_id`: `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} --phase planning --topic {topic} external_dependencies.{dep-topic}.task_id {internal_id}`
 
 2. **Create dependency in output format**:
    - Load `../technical-planning/references/output-formats/{format}/graph.md`
@@ -216,10 +216,10 @@ Present a summary:
 Dependency Linking Complete
 
 Resolved (newly linked):
-  • {source} → {target}: {task-id} ({description})
+  • {source} → {target}: {internal_id} ({description})
 
 Already resolved (no action needed):
-  • {source} → {target}: {task-id}
+  • {source} → {target}: {internal_id}
 
 Satisfied externally (no action needed):
   • {source} → {target}
