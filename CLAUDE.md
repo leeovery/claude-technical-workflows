@@ -160,12 +160,12 @@ Phase entry skills (`workflow-*-entry`) receive positional arguments: `$0` = wor
 
 **Work types and work units**: A *work type* is one of three pipeline shapes: epic, feature, or bugfix. A *work unit* is a named instance of a work type (e.g., "auth-flow" is a feature work unit, "payments-overhaul" is an epic work unit). Each work unit gets its own directory under `.workflows/` and its own `manifest.json`.
 
-**Topics**: A *topic* is the item within a phase. For feature/bugfix, the topic name equals the work unit name (single topic moving through the pipeline). For epic, topics are distinct from the work unit name (multiple topics per phase). All phases use per-topic items in the manifest for epic (including research). For feature/bugfix, research uses flat phase-level status. The discussion phase analyses all research files collectively to derive discussion topics.
+**Topics**: A *topic* is the item within a phase. For feature/bugfix, the topic name equals the work unit name (single topic moving through the pipeline). For epic, topics are distinct from the work unit name (multiple topics per phase). All work types use per-topic items in the manifest (unified structure). The discussion phase analyses all research files collectively to derive discussion topics.
 
 Work-unit-first directory structure with uniform `{topic}` in all paths. For feature/bugfix, `{topic}` equals `{work_unit}`. For epic, `{topic}` is the item within a phase.
 
 - Manifest: `.workflows/{work_unit}/manifest.json`
-- Research: `.workflows/{work_unit}/research/` (items for epic, flat for feature/bugfix)
+- Research: `.workflows/{work_unit}/research/`
 - Discussion: `.workflows/{work_unit}/discussion/{topic}.md` (flat file)
 - Investigation: `.workflows/{work_unit}/investigation/{topic}.md` (flat file)
 - Specification: `.workflows/{work_unit}/specification/{topic}/specification.md`
@@ -268,7 +268,7 @@ The manifest CLI at `skills/workflow-manifest/scripts/manifest.js` is the single
 Key properties:
 - JSON format, zero dependencies (Node handles JSON natively)
 - Domain-aware flag syntax: `--phase` and `--topic` flags route to correct internal path based on work_type
-- Skills never know manifest internal structure (flat for feature/bugfix, items for epic)
+- Skills never know manifest internal structure — all work types use items
 - File locking for concurrent session safety
 - Validation of structural values (work_type, phase names, statuses, gate modes)
 - Manifest location: `.workflows/{work_unit}/manifest.json`
@@ -289,7 +289,7 @@ $MANIFEST delete {work_unit} phases.research.analysis_cache             # delete
 $MANIFEST get {work_unit} --phase discussion --topic "*" status        # wildcard: collect from all topics
 ```
 
-**Wildcard topic**: `--topic "*"` collects values from all topics in a phase, abstracting away the epic items structure. Works with `get` and `exists` commands. For epic: iterates all items. For feature/bugfix: returns the single flat value.
+**Wildcard topic**: `--topic "*"` collects values from all topics in a phase. Works with `get` and `exists` commands. Iterates all items for any work type. For feature/bugfix: returns the single item (topic matches work unit name).
 
 See `skills/workflow-manifest/SKILL.md` for the full API.
 
