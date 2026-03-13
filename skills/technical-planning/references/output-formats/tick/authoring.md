@@ -43,7 +43,7 @@ tick create "Phase 2: {phase:(titlecase)}" --parent tick-a1b2 --refs "{topic}-2"
 
 ```bash
 tick create "{task:(titlecase)}" --parent tick-c3d4 \
-  --refs "{topic}-{phase_id}-{task_id}" \
+  --refs "{internal_id}" \
   --description "{description}
 
 Acceptance criteria, edge cases, and implementation
