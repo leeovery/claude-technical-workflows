@@ -15,11 +15,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Run discovery tests
         run: |
-          for test in tests/scripts/test-discovery-*.sh; do
+          for test in tests/scripts/test-discovery-*.js; do
             echo "=== Running $test ==="
-            /bin/bash "$test"
+            node --test "$test"
           done
 
       - name: Run migration tests
