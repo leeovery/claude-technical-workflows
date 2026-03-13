@@ -112,7 +112,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {selected.name} wo
 · · · · · · · · · · · ·
 **{selected.name:(titlecase)}** converted from feature to epic.
 
-- **`c`/`continue`** — Continue working on this epic now
+- **`c`/`continue`** — Continue working on {selected.name:(titlecase)} as an epic
 - **`b`/`back`** — Return to previous view
 · · · · · · · · · · · ·
 ```
