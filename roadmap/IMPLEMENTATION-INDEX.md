@@ -19,6 +19,7 @@ Overview of remaining PRs for the work-type architecture. PR 1 (Big Bang) is the
 | ✅ | PR 11 | Session State Removal | [Design Brief](session-state-removal/DESIGN-BRIEF.md) |
 | ✅ | PR 12 | Research-to-Discussion Handoff | [PR12-FEATURE-RESEARCH-ANALYSIS.md](PR12-FEATURE-RESEARCH-ANALYSIS.md) |
 | ✅ | PR 13 | Manifest CLI — Wildcard Topic | [PR13-MANIFEST-WILDCARD-TOPIC.md](PR13-MANIFEST-WILDCARD-TOPIC.md) |
+| | PR 14 | Manifest CLI — Dot-Path Syntax | [PR14-MANIFEST-DOT-PATH-SYNTAX.md](PR14-MANIFEST-DOT-PATH-SYNTAX.md) |
 
 ## Why This Order
 
@@ -26,5 +27,5 @@ PR 4/5 moved ahead of PR 2/3 during the PR 1 review. The review kept hitting top
 
 ## Deferred Items
 
-- **Natural language migrations** — viability for structural changes. Revisit when relevant.
+- ~~**Natural language migrations** — viability for structural changes.~~ Cancelled — not pursuing.
 - **Work type pivot** — manifest makes it technically trivial, but UX/workflow implications not discussed.
