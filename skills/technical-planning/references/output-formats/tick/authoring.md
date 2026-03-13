@@ -33,21 +33,18 @@ This returns the topic task ID (e.g., `tick-a1b2`).
 **2. Create phase tasks as children of the topic:**
 
 ```bash
-tick create "Phase 1: {phase:(titlecase)}" --parent tick-a1b2
-tick create "Phase 2: {phase:(titlecase)}" --parent tick-a1b2
+tick create "Phase 1: {phase:(titlecase)}" --parent tick-a1b2  # returns tick-c3d4
+tick create "Phase 2: {phase:(titlecase)}" --parent tick-a1b2  # returns tick-e5f6
 ```
 
 **3. Create tasks as children of their phase:**
 
 ```bash
 tick create "{task:(titlecase)}" --parent tick-c3d4 \
-  --description "{Task description content.
-
-Acceptance criteria, edge cases, and implementation
-details go here. Supports multi-line text.}"
+  --description "{description}"
 ```
 
-Complete example — creating a task with all properties:
+Complete example — creating a task under Phase 1:
 
 ```bash
 tick create "Implement authentication middleware" \
