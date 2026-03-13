@@ -155,8 +155,7 @@ if [ "$FILES_UPDATED" -gt 0 ]; then
     echo "$MIGRATIONS_RUN migration(s) applied, $FILES_UPDATED file(s) updated."
     echo ""
     echo "---STOP_GATE: FILES_UPDATED---"
-    echo "You MUST now follow the migration skill instructions to STOP and let the user review."
-    echo "Do NOT proceed to the next step. Do NOT return to the calling skill."
+    echo "Follow the explicit instructions in the migration skill before proceeding."
 else
     echo "[SKIP] No changes needed"
 fi
