@@ -115,7 +115,7 @@ tick ready --parent <parent-id> --tag security
 
 ### References
 
-Set via `--refs` to store the internal ID on each tick task, linking it back to the planning system. Set at all levels: `{topic}` on the topic task, `{topic}-{phase_id}` on phase tasks, `{topic}-{phase_id}-{task_id}` on tasks. References are comma-separated if multiple are needed.
+Set via `--refs` to store the internal ID on each tick task, linking it back to the planning system. Set at all levels — topic, phase, and task — as shown in the Task Storage examples above. References are comma-separated if multiple are needed.
 
 ## Flagging
 
