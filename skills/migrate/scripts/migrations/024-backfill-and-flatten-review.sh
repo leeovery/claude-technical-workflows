@@ -274,9 +274,9 @@ for manifest in "$WORKFLOWS_DIR"/*/manifest.json; do
     [ -f "$plan_file" ] || continue
 
     if grep -q 'Ext ID' "$plan_file" 2>/dev/null; then
-      sed -i '' 's/Ext ID/External ID/g' "$plan_file"
+      awk '{gsub(/Ext ID/, "External ID"); print}' "$plan_file" > "$plan_file.tmp" && mv "$plan_file.tmp" "$plan_file"
       # Also rename ext_id: field in phase entries
-      sed -i '' 's/^ext_id:/external_id:/g' "$plan_file"
+      awk '{sub(/^ext_id:/, "external_id:"); print}' "$plan_file" > "$plan_file.tmp" && mv "$plan_file.tmp" "$plan_file"
       report_update "$plan_file" "renamed Ext ID to External ID"
     fi
   done
@@ -301,8 +301,7 @@ for manifest in "$WORKFLOWS_DIR"/*/manifest.json; do
 
     # Match task table header: | ID | (but not | Internal ID | or | External ID |)
     if grep -q '^| ID |' "$plan_file" 2>/dev/null; then
-      sed -i '' 's/^| ID |/| Internal ID |/g' "$plan_file"
-      sed -i '' 's/^|----|/|-------------|/g' "$plan_file"
+      awk 'BEGIN{FS=OFS=""} /^[|] ID [|]/{sub(/^[|] ID [|]/, "| Internal ID |")} /^[|]----[|]/{sub(/^[|]----[|]/, "|-------------|")} {print}' "$plan_file" > "$plan_file.tmp" && mv "$plan_file.tmp" "$plan_file"
       report_update "$plan_file" "renamed ID to Internal ID in task table"
     fi
   done
