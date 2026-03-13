@@ -20,7 +20,7 @@ Run the migration script with sandbox disabled (migrations may need to modify `.
 
 #### If the output contains `---STOP_GATE: FILES_UPDATED---`
 
-**You MUST stop here.** Do not proceed to the next step. Do not return to the calling skill. Your response ends after displaying the prompt below.
+Files were updated. You MUST complete the steps below before returning to the calling skill.
 
 1. Run `git diff` to see what changed.
 2. Write a brief natural language summary of what the migrations did (e.g., "Restructured workflow directories, created manifest files, renamed tracking artifacts"). Focus on the nature of the changes, not individual file paths — these are internal workflow state files.
