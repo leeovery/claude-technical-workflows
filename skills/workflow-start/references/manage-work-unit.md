@@ -75,6 +75,9 @@ Set `implementation_completed` = true.
 @if(implementation_completed)
 - **`d`/`done`** — Mark as completed
 @endif
+@if(selected.work_type == 'feature')
+- **`p`/`pivot`** — Convert to epic (enables multiple topics)
+@endif
 - **`c`/`cancel`** — Mark as cancelled
 - **`b`/`back`** — Return
 - **Ask** — Ask a question about this work unit
@@ -93,6 +96,21 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {selected.name} st
 
 ```
 "{selected.name:(titlecase)}" marked as completed.
+```
+
+→ Return to caller to redisplay main view (re-run discovery, re-render from top).
+
+#### If user chose `p`/`pivot`
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set {selected.name} work_type epic
+```
+
+> *Output the next fenced block as a code block:*
+
+```
+"{selected.name:(titlecase)}" converted from feature to epic.
+Continue it with /continue-epic.
 ```
 
 → Return to caller to redisplay main view (re-run discovery, re-render from top).
