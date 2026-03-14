@@ -8,7 +8,7 @@
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} format
    ```
-2. Read **[output-formats.md](output-formats.md)**, find the entry matching the format, and load the format's **[about.md](output-formats/{format}/about.md)** and **[authoring.md](output-formats/{format}/authoring.md)**
+2. Load the format's **[about.md](output-formats/{format}/about.md)** and **[authoring.md](output-formats/{format}/authoring.md)**
 3. Reset gate modes to `gated` in the manifest:
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} task_list_gate_mode gated

@@ -115,7 +115,7 @@ Continue or restart?
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} format
    ```
-2. Read **[output-formats.md](references/output-formats.md)**, find the entry matching the format, and load the format's **[authoring.md](references/output-formats/{format}/authoring.md)**
+2. Load the format's **[authoring.md](references/output-formats/{format}/authoring.md)**
 3. Follow the authoring file's cleanup instructions to remove Authored Tasks for this topic
 4. Delete the scratch directory if it exists: `rm -rf .workflows/.cache/planning/{work_unit}/{topic}/`
 5. Delete the Plan Index File
