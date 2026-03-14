@@ -6,25 +6,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Claude Code skills package for structured technical discussion and planning workflows. Installed via `npx agntc add leeovery/claude-technical-workflows`.
 
-## Work Types
-
-The workflow system supports three work types, each with its own pipeline:
-
-**Epic**: Multi-topic work spanning multiple sessions (new products, large initiatives)
-- Phase-centric, multi-session, long-running (days/weeks/months)
-- Topics move independently within phases
-- Research → Discussion → Specification → Planning → Implementation → Review
-
-**Feature**: Adding functionality to an existing product
-- Topic-centric, single-session, linear pipeline
-- Optional research step if uncertainties exist
-- Discussion → Specification → Planning → Implementation → Review
-
-**Bugfix**: Fixing broken behavior
-- Investigation-centric, single-session
-- Investigation replaces discussion (combines symptom gathering + code analysis)
-- Investigation → Specification → Planning → Implementation → Review
-
 ## Workflow Phases
 
 1. **Research** (`workflow-research-process` skill): EXPLORE - feasibility, market, viability, early ideas
@@ -62,6 +43,10 @@ Phase entry skills (`workflow-*-entry`) receive positional arguments: `$0` = wor
 
 **Work types and work units**: A *work type* is one of three pipeline shapes: epic, feature, or bugfix. A *work unit* is a named instance of a work type (e.g., "auth-flow" is a feature work unit, "payments-overhaul" is an epic work unit). Each work unit gets its own directory under `.workflows/` and its own `manifest.json`.
 
+- **Epic**: Multi-topic, multi-session, phase-centric (Research → Discussion → Specification → Planning → Implementation → Review)
+- **Feature**: Single-topic, single-session, linear (Discussion → Specification → Planning → Implementation → Review)
+- **Bugfix**: Single-topic, investigation-centric (Investigation → Specification → Planning → Implementation → Review)
+
 **Topics**: A *topic* is the item within a phase. For feature/bugfix, the topic name equals the work unit name (single topic moving through the pipeline). For epic, topics are distinct from the work unit name (multiple topics per phase). All work types use per-topic items in the manifest (unified structure). The discussion phase analyses all research files collectively to derive discussion topics.
 
 Work-unit-first directory structure with uniform `{topic}` in all paths. For feature/bugfix, `{topic}` equals `{work_unit}`. For epic, `{topic}` is the item within a phase.
@@ -78,11 +63,6 @@ Work-unit-first directory structure with uniform `{topic}` in all paths. For fea
 - Global state: `.workflows/.state/` (migrations, environment-setup.md)
 - Cache: `.workflows/.cache/` (planning scratch)
 
-**work_type field**: Each work unit's `work_type` (epic, feature, or bugfix) is stored in its `manifest.json` — the single source of truth for all workflow state. This enables:
-- Unified discovery across all phases
-- Correct pipeline routing via workflow-bridge
-- Work-type-specific behavior in processing skills
-
 **Work unit lifecycle**: Each work unit has a `status` field in its manifest tracking its lifecycle state:
 - `in-progress` — actively being worked on (default on creation)
 - `completed` — pipeline finished (set automatically when the pipeline completes, or manually via the manage menu)
@@ -92,7 +72,7 @@ Discovery scripts filter by status — `workflow-start` and `continue-*` show ac
 
 **Feature-to-epic pivot**: Features can be converted to epics via the manage menu (`p`/`pivot`). After pivot, the user can continue immediately as an epic or return to the previous view.
 
-**Epic soft gates**: When navigating forward between phases in an epic (via `continue-epic`), advisory gates warn if prerequisite phase items are still in-progress. These are informational, not blocking — the user can proceed anyway. Covers research→discussion, discussion→specification, specification→planning, and planning→implementation transitions. The system recovers gracefully via re-analysis if the user proceeds early.
+**Epic soft gates**: When navigating forward between phases in an epic (via `continue-epic`), advisory gates warn if prerequisite phase items are still in-progress. These are informational, not blocking — the user can proceed anyway. The system recovers gracefully via re-analysis if the user proceeds early.
 
 Commit docs frequently (natural breaks, before context refresh). Skills capture context, don't implement.
 
@@ -118,13 +98,9 @@ The contract and scaffolding templates live in `.claude/skills/create-output-for
 - `skills/workflow-planning-process/references/output-formats/{format}/` - individual format directories
 - `README.md` - user-facing documentation where format options are presented
 
-**Why this matters:** Listing formats elsewhere creates maintenance dependencies. If a format is added or removed, we should only need to update the planning references - not hunt through other skills or documentation.
-
 **How other phases reference formats:**
 - Plans include a `format` field in their manifest
 - Consumers load only the per-concern file they need (e.g., `{format}/reading.md` for implementation)
-
-This keeps format knowledge centralized in the planning phase where it belongs.
 
 ## Migrations
 
@@ -137,7 +113,7 @@ The `/workflow-migrate` skill keeps workflow files in sync with the current syst
 - Delete the log file to force re-running all migrations
 
 **Adding new migrations:**
-1. Create `skills/workflow-migrate/scripts/migrations/NNN-description.sh` (e.g., `002-spec-frontmatter.sh`)
+1. Create `skills/workflow-migrate/scripts/migrations/NNN-description.sh`
 2. The script will be run automatically in numeric order
 3. The orchestrator handles tracking — once a migration ID appears in the log, the script never runs again
 4. Use helper functions: `report_update`, `report_skip` (for display only)
@@ -148,35 +124,7 @@ Migration scripts are point-in-time snapshots. The manifest CLI validates values
 
 ## Manifest CLI
 
-The manifest CLI at `skills/workflow-manifest/scripts/manifest.js` is the single source of truth for all workflow state.
-
-Key properties:
-- JSON format, zero dependencies (Node handles JSON natively)
-- Domain-aware flag syntax: `--phase` and `--topic` flags route to correct internal path based on work_type
-- Skills never know manifest internal structure — all work types use items
-- File locking for concurrent session safety
-- Validation of structural values (work_type, phase names, statuses, gate modes)
-- Manifest location: `.workflows/{work_unit}/manifest.json`
-
-Domain-aware CLI grammar:
-```bash
-MANIFEST="node .claude/skills/workflow-manifest/scripts/manifest.js"
-$MANIFEST get {work_unit} --phase discussion --topic {topic} status    # phase-level read
-$MANIFEST set {work_unit} --phase discussion --topic {topic} status completed  # phase-level write
-$MANIFEST init-phase {work_unit} --phase discussion --topic {topic}    # create phase entry
-$MANIFEST push {work_unit} --phase implementation --topic {topic} completed_tasks "{topic}-1-1"  # append to array (internal ID)
-$MANIFEST exists {work_unit}                                           # existence check (exits 0, outputs true/false)
-$MANIFEST list                                                         # enumerate all work units
-$MANIFEST get {work_unit} work_type                                    # work-unit-level read
-$MANIFEST set {work_unit} status completed                             # work-unit-level status
-$MANIFEST set {work_unit} phases.research.analysis_cache '{"checksum":"..."}' # work-unit-level write (dot-path)
-$MANIFEST delete {work_unit} phases.research.analysis_cache             # delete a key (work-unit-level)
-$MANIFEST get {work_unit} --phase discussion --topic "*" status        # wildcard: collect from all topics
-```
-
-**Wildcard topic**: `--topic "*"` collects values from all topics in a phase. Works with `get` and `exists` commands. Iterates all items for any work type. For feature/bugfix: returns the single item (topic matches work unit name).
-
-See `skills/workflow-manifest/SKILL.md` for the full API.
+The manifest CLI at `skills/workflow-manifest/scripts/manifest.js` is the single source of truth for all workflow state. See `skills/workflow-manifest/SKILL.md` for the full API.
 
 ## Display & Output Conventions (MANDATORY)
 
@@ -196,17 +144,11 @@ or:
 > *Output the next fenced block as markdown (not a code block):*
 ```
 
-Code blocks are used for informational displays (overviews, status, keys) — they preserve indentation for tree structures and aligned lists. Markdown is used for interactive elements (menus, prompts) where bold formatting is needed. When content benefits from rendered formatting (headings, checkboxes, bold) and indentation control isn't needed, prefer markdown rendering even for informational displays.
+Code blocks are used for informational displays (overviews, status, keys) — they preserve indentation for tree structures and aligned lists. Markdown is used for interactive elements (menus, prompts) where bold formatting is needed.
 
 ### Title Pattern
 
 Always `{Phase} Overview` as the first line of the opening code block, followed by a blank line and a summary sentence.
-
-```
-Planning Overview
-
-4 specifications found. 2 plans exist.
-```
 
 ### Template Placeholders
 
@@ -221,15 +163,11 @@ Skill files use placeholders in fenced block templates. The syntax is:
 
 Casing hints: `titlecase`, `lowercase`, `kebabcase`. No hint means output the raw value.
 
-Each part is optional — use only what's needed for clarity.
-
 **Conditional directives** for branches that render differently based on state:
 
 ```
 @if(condition) truthy content @else falsy content @endif
 ```
-
-Example: `@if(has_discussion) {topic}.md ({status:[in-progress|completed]}) @else (no discussion) @endif`
 
 **Loop directives** for iterating over collections:
 
@@ -239,13 +177,11 @@ Example: `@if(has_discussion) {topic}.md ({status:[in-progress|completed]}) @els
 @endforeach
 ```
 
-Example with filter: `@foreach(inv in investigations.files where status is in-progress)`
-
-**When to use placeholders vs concrete examples:** Placeholders work well for structural templates (tree displays, status blocks) where each field has a clear source. Selection menus should use concrete examples instead — they encode conditional logic (which verb maps to which state) that placeholders obscure.
+Placeholders work well for structural templates (tree displays, status blocks). Selection menus should use concrete examples instead — they encode conditional logic (which verb maps to which state) that placeholders obscure.
 
 ### Tree Structure
 
-Every actionable item gets a numbered entry with `└─` branches showing its state. Depth varies by phase but structure is consistent. **Blank line between each numbered item.** Show one full entry, then `2. ...` to indicate repetition.
+Every actionable item gets a numbered entry with `└─` branches showing its state. **Blank line between each numbered item.** Show one full entry, then `2. ...` to indicate repetition.
 
 ```
 1. {topic:(titlecase)}
@@ -255,124 +191,34 @@ Every actionable item gets a numbered entry with `└─` branches showing its s
 2. ...
 ```
 
-For richer hierarchies (specification phase):
-
-```
-1. {topic:(titlecase)}
-   └─ Spec: {spec_status:[in-progress|completed]} ({extraction_summary})
-   └─ Discussions:
-      ├─ {discussion} ({status:[extracted|pending]})
-      └─ ...
-```
-
 ### Status Terms
 
-Always parenthetical `(term)`. Never brackets or dash-separated.
-
-Core vocabulary: `in-progress`, `completed`, `ready`, `extracted`, `pending`, `reopened`. Phase-specific terms are fine but format is always `(term)`.
+Always parenthetical `(term)`. Never brackets or dash-separated. Core vocabulary: `in-progress`, `completed`, `ready`, `extracted`, `pending`, `reopened`.
 
 ### Cross-Plan References
 
 Use colon notation to reference a task within a plan: `{plan}:{internal_id}`.
 
-```
-  · advanced-features (blocked by core-features:core-2-3)
-```
-
-Reads as: "advanced-features is blocked by task core-2-3 in the core-features plan."
-
 ### "Not Ready" Blocks
 
 Separate code block. Descriptive heading as `{Artifacts} not ready for {phase}:`, explanatory line, then `•` bullets with parenthetical status. **Blank line after the explanation, before the list.**
-
-```
-Specifications not ready for planning:
-These specifications are either still in progress or cross-cutting
-and cannot be planned directly.
-
-  • caching-strategy (cross-cutting, completed)
-  • rate-limiting (cross-cutting, in-progress)
-```
 
 ### Key / Legend
 
 Separate code block. Categorized. Em dash (`—`) separators. **No `---` separator before the Key block.** Only show statuses that appear in the current display. **Blank line between categories.**
 
-```
-Key:
-
-  Plan status:
-    in-progress — planning work is ongoing
-    completed   — plan is done
-
-  Spec type:
-    cross-cutting — architectural policy, not directly plannable
-    feature       — plannable feature specification
-```
-
 ### Menus / Interactive Prompts
 
-Rendered as markdown (not code blocks). Framed with `· · · · · · · · · · · ·` dot separators at top and bottom — no blank lines between the dots and the content they frame. A question or contextual label appears first inside the dots, followed by a blank line, then the options. Verb-based labels for selection menus. No single-character icons.
+Rendered as markdown (not code blocks). Framed with `· · · · · · · · · · · ·` dot separators at top and bottom — no blank lines between the dots and the content they frame. A question or contextual label appears first inside the dots, followed by a blank line, then the options.
 
 **Option types** — menus contain two kinds of option:
 
-- **Command option** (explicit): A discrete input the user types verbatim. Formatted with backtick-wrapped shorthand: **`y`/`yes`**, **`s`/`single`**, **`a`/`auto`**. The shorthand is the first letter of the word; if two options in the same menu share a first letter, use the second letter for the conflicting option (e.g., **`a`/`approve`** and **`b`/`abort`**). The conditional branch uses the command value (e.g., `#### If \`yes\``).
-- **Prompt option** (implicit): The user responds naturally rather than issuing a command. Formatted with plain bold text (no backticks): **Keep going**, **Comment**, **Ask**. The conditional branch uses the label in lowercase (e.g., `#### If keep going`). Limit to one prompt option per menu to avoid ambiguity — since routing is intent-based, multiple prompt options would be hard to distinguish.
+- **Command option** (explicit): A discrete input the user types verbatim. Formatted with backtick-wrapped shorthand: **`y`/`yes`**, **`s`/`single`**, **`a`/`auto`**. The shorthand is the first letter of the word; if two options share a first letter, use the second letter for the conflicting option. The conditional branch uses the command value (e.g., `#### If \`yes\``).
+- **Prompt option** (implicit): The user responds naturally. Formatted with plain bold text (no backticks): **Keep going**, **Comment**, **Ask**. Limit to one per menu.
 
 Both types use `— description` to explain what the option does (unless self-evident, as with yes/no).
 
-**Mixed prompt** — command and prompt options together:
-
-```
-· · · · · · · · · · · ·
-Investigation complete. Ready to conclude?
-
-- **`y`/`yes`** — Conclude investigation
-- **Keep going** — Continue discussing to explore further
-· · · · · · · · · · · ·
-```
-
-**Selection menu** — use concrete examples showing verb-to-state mapping:
-
-```
-· · · · · · · · · · · ·
-1. Create "Auth Flow" — completed spec, no plan
-2. Continue "Data Model" — plan in-progress
-3. Review "Billing" — plan completed
-
-Select an option (enter number):
-· · · · · · · · · · · ·
-```
-
-**Yes/no prompt:**
-
-```
-· · · · · · · · · · · ·
-Proceed?
-- **`y`/`yes`**
-- **`n`/`no`**
-· · · · · · · · · · · ·
-```
-
-**Multi-choice prompt:**
-
-```
-· · · · · · · · · · · ·
-What scope would you like to review?
-
-- **`s`/`single`** — Review one plan's implementation
-- **`m`/`multi`** — Review selected plans
-- **`a`/`all`** — Review all implemented plans
-· · · · · · · · · · · ·
-```
-
-**Meta options** in selection menus get backtick-wrapped descriptions:
-
-```
-3. Unify all into single specification
-   `All discussions combined into one specification.`
-   `Existing specifications are incorporated and superseded.`
-```
+**Meta options** in selection menus get backtick-wrapped descriptions (multi-line, indented under the option).
 
 ### Auto-Select
 
@@ -384,15 +230,7 @@ Automatically proceeding with "{topic:(titlecase)}".
 
 ### Block / Terminal Messages
 
-When a phase can't proceed — use the phase title pattern, then explain:
-
-```
-Planning Overview
-
-No specification found in .workflows/{work_unit}/specification/{topic}/
-
-The planning phase requires a completed specification.
-```
+When a phase can't proceed — use the phase title pattern, then explain.
 
 ### Bullet Characters
 
@@ -400,11 +238,7 @@ Use `•` for all bulleted lists (sources, files, not-ready items, etc.).
 
 ### Spacing Rules
 
-Inside code blocks, maintain **one blank line** between:
-- Title/summary and first content
-- Each numbered tree item
-- Section headings and their content
-- Key categories
+Inside code blocks, maintain **one blank line** between title/summary and first content, each numbered tree item, section headings and their content, and key categories.
 
 Between code blocks (overview → not-ready → key → menu), no `---` separators — just the natural block separation.
 
@@ -414,98 +248,32 @@ These are hard rules, not suggestions. All skill files (entry-point and processi
 
 ### Stop Gates
 
-Use `**STOP.**` (bold, period). This is the only pattern for user interaction boundaries.
-
-Two categories:
-
-**Interaction stop** — waiting for real user input to continue:
-```
-**STOP.** Wait for user response.
-**STOP.** Wait for user response before proceeding.
-```
-
-**Terminal stop** — skill is done, nothing to process:
-```
-**STOP.** Do not proceed — terminal condition.
-```
-
-Never use `Stop here.`, `Command ends.`, `Wait for user to acknowledge before ending.`, or other variations.
+Use `**STOP.**` (bold, period). Two forms: `**STOP.** Wait for user response.` (interaction) and `**STOP.** Do not proceed — terminal condition.` (terminal). No other variations.
 
 ### Heading Hierarchy
 
 - **H1** (`#`): File title only — one per file, at the top
 - **H2** (`##`): Steps and major sections (`## Step N: {Name}`, `## Notes`, `## Instructions`)
-- **H3** (`###`): Subsections within steps (`### 6a: Warn about in-progress specs`)
+- **H3** (`###`): Subsections within steps
 - **H4** (`####`): Conditional routing only (`#### If {condition}`, `#### Otherwise`)
 
 ### Step Numbering
 
-Sequential: `## Step 0`, `## Step 1`, `## Step 2`, etc.
-
-- **Step 0** runs migrations via the `/workflow-migrate` skill (mandatory in all entry-point skills)
-- Steps are separated by `---` horizontal rules
-- Each step completes fully before the next begins
+Sequential: `## Step 0`, `## Step 1`, `## Step 2`, etc. **Step 0** runs migrations via `/workflow-migrate` (mandatory in all entry-point skills). Steps separated by `---` horizontal rules. Each step completes fully before the next begins.
 
 ### Conditional Routing
 
-Use H4 headings for if/else branches within a step:
-
-```
-#### If scenario is "no_specs"
-{content}
-
-#### If scenario is "has_options"
-{content}
-```
-
-**Nested conditionals** — use bold text for conditionals inside an H4 block:
-
-```
-#### If yes
-
-1. Shared setup steps...
-
-**If work_type is set** (feature, bugfix, or epic):
-
-{branch content}
-
-**If work_type is not set:**
-
-{branch content}
-```
-
-**Avoid double-nesting** — if a bold conditional would contain further bold conditionals, flatten by combining conditions:
-
-```
-**If work_type is not set and other discussions exist:**
-...
-**If work_type is not set and no discussions remain:**
-...
-```
-
 Rules:
+- H4 for top-level conditionals, bold text for nested inside an H4 — never use H5/H6
 - Never use else-if chains — each condition gets its own `#### If` heading
 - Lowercase after "If" (e.g., `#### If completed_count == 1`)
 - Use `#### Otherwise` for else branches
-- Use backticks around specific values, variables, and statuses in H4 headings (e.g., `` #### If `STATUS` is `clean` ``, `` #### If work type is `feature` ``). Natural language conditions stay plain text (e.g., `#### If no plan provided`)
+- Use backticks around specific values, variables, and statuses in H4 headings (e.g., `` #### If `STATUS` is `clean` ``). Natural language conditions stay plain text (e.g., `#### If no plan provided`)
 - Use "and" between conditions, not commas
-- Drop implied conditions (e.g., if Step 2 already gates on `completed_count >= 1`, Step 3 doesn't need to repeat it on every branch)
-- H4 for top-level conditionals, bold text for nested — never use H5/H6 for conditional nesting
-- If double-nesting would occur, flatten by combining the parent and child conditions into a single bold conditional
-
-### Navigation Arrows
-
-Use `→` for flow control between steps or to external files:
-
-```
-→ Proceed to **Step 4**.
-→ Proceed to **Step 7** to invoke the skill.
-→ Load **[file.md](file.md)** and follow its instructions.
-```
+- Drop implied conditions
+- If double-nesting would occur, flatten by combining conditions into a single bold conditional
 
 ### Reference File Headers
-
-Reference files loaded by skills use this header pattern:
 
 ```
 # Title
@@ -515,15 +283,11 @@ Reference files loaded by skills use this header pattern:
 ---
 ```
 
+Header matches the step concept, not the filename. Italic attribution line links back to the parent SKILL.md. Horizontal rule separates header from content.
+
 ### Critical / Important Markers
 
-Use bold labels with colons for emphasis levels:
-
-```
-**CRITICAL**: This guidance is mandatory.
-**IMPORTANT**: Use ONLY this script for discovery.
-**CHECKPOINT**: Summarize progress before continuing.
-```
+Use bold labels with colons: `**CRITICAL**:`, `**IMPORTANT**:`, `**CHECKPOINT**:`.
 
 ### Zero Output Rule
 
@@ -535,49 +299,15 @@ Entry-point skills that invoke processing skills use this exact blockquote to pr
 
 ### Auto-Mode Gates
 
-Per-item approval gates can offer `a`/`auto` to let the user bypass repeated STOP gates. This pattern is used in implementation (task + fix gates), planning (task list approval + task authoring + review findings), and specification (review findings).
+Per-item approval gates can offer `a`/`auto` to let the user bypass repeated STOP gates. Gate modes are stored in the manifest via CLI (`gated` or `auto`). Content is always rendered above the gate check (so both modes see identical output). Auto mode proceeds without a STOP gate.
 
-**Manifest tracking**: Gate modes are stored in the manifest via CLI (`gated` or `auto`). This ensures they survive context refresh.
+Menu option format: `- **\`a\`/\`auto\`** — Approve this and all remaining {items} automatically` — add between the primary action and secondary options.
 
-**Behavior when `auto`**: Content is always rendered above the gate check (so both modes see identical output). Auto mode proceeds without a STOP gate. Use a rendering instruction + code block for the one-line announcement:
+Entry-point skills reset gates to `gated` on fresh invocation (not on `continue`). Cap auto-mode re-analysis loops at 5 cycles before escalating to the user.
 
-```
-> *Output the next fenced block as a code block:*
+### Ask Blocks
 
-\```
-Task {M} of {total}: {Task Name} — authored. Logging to plan.
-\```
-```
-
-**Lifecycle**:
-- Default: `gated` (set in manifest on creation)
-- Opt-in: user chooses `a`/`auto` at any per-item gate → manifest updated via CLI before next commit
-- Reset: entry-point skills reset gates to `gated` on fresh invocation (not on `continue`)
-- Context refresh: read gate modes from manifest and preserve
-
-**Menu option format**: Add between the primary action and secondary options:
-```
-- **`a`/`auto`** — Approve this and all remaining {items} automatically
-```
-
-**Re-loop safety cap**: When auto-mode enables automatic re-analysis loops, cap at 5 cycles before escalating to the user. This prevents infinite cascading.
-
-### Rendering Instructions for Ask Blocks
-
-When a step asks the user a question, wrap it in a rendering instruction and code block — don't use bare `Ask:` labels:
-
-```
-> *Output the next fenced block as a code block:*
-
-\```
-What's on your mind?
-
-- What idea or topic do you want to explore?
-- What prompted this - a problem, opportunity, curiosity?
-\```
-
-**STOP.** Wait for user response before proceeding.
-```
+When a step asks the user a question, wrap it in a rendering instruction and code block — don't use bare `Ask:` labels.
 
 ## Skill File Structure (MANDATORY)
 
@@ -624,39 +354,7 @@ Rules:
 - The final step has no `→ Proceed to` (it's terminal)
 - Within reference files routing to other reference files, use `→` before Load (it IS a routing instruction in that context)
 
-### Reference File Structure
-
-```markdown
-# {Step Name}
-
-*Reference for **[skill-name](../SKILL.md)***
-
----
-
-{content}
-```
-
-- Header matches the step concept, not the filename
-- Italic attribution line links back to the parent SKILL.md
-- Horizontal rule separates header from content
-
 ### Navigation & Return Patterns
-
-The same navigation conventions apply across all skill tiers (entry-point and processing).
-
-**Forward navigation** — moving to the next step or phase:
-```
-→ Proceed to **Step N**.
-→ Proceed to **B. Phase Name**.
-```
-
-**Return navigation** — returning to the parent skill or a previous phase:
-```
-→ Return to **[the skill](../SKILL.md)** for **Step N**.
-→ Return to **[the skill](../SKILL.md)**.
-→ Return to **[plan-review.md](plan-review.md)** for the next phase.
-→ Return to **A. Phase Name**.
-```
 
 Rules:
 - Only two routing verbs: `→ Proceed to` (forward) and `→ Return to` (backward/upward)
@@ -671,32 +369,4 @@ Rules:
 
 ### Internal Reference File Phases
 
-Complex reference files with multiple sequential phases use lettered headings to avoid collision with backbone step numbers:
-
-```markdown
-## A. First Phase
-
-...
-→ Proceed to **B. Second Phase**.
-
-## B. Second Phase
-
-...
-→ Proceed to **C. Third Phase**.
-```
-
-Simple reference files use named sections (`## Seed Idea`, `## Current Knowledge`) without letters.
-
-### Reference File Naming
-
-| Name | Purpose |
-|------|---------|
-| `gather-context.md` | User interview / context gathering questions |
-| `invoke-skill.md` | Handoff to processing skill |
-| `route-scenario.md` | Scenario routing (for skills with branching) |
-| `validate-{thing}.md` | Pre-flight validation (plan exists, spec completed, etc.) |
-| `display-{variant}.md` | Display outputs (for skills with multiple displays) |
-| `analysis-flow.md` | Multi-step analysis logic |
-| `confirm-and-handoff.md` | Confirmation prompt + skill invocation combined |
-
-Not every skill needs all of these.
+Complex reference files with multiple sequential phases use lettered headings (`## A. First Phase`, `## B. Second Phase`) to avoid collision with backbone step numbers. Simple reference files use named sections without letters.
