@@ -58,7 +58,7 @@ Set source="new-with-research".
 
 → Load **[name-topic.md](name-topic.md)** and follow its instructions.
 
-Then → Load **[gather-context-fresh.md](gather-context-fresh.md)** and follow its instructions.
+→ Load **[gather-context-fresh.md](gather-context-fresh.md)** and follow its instructions.
 
 **STOP.** Wait for user response.
 
