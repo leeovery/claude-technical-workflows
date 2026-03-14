@@ -18,7 +18,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implem
 
 #### Otherwise
 
-Query the phase-level recommendation:
+Read phase-level `project_skills` via manifest CLI:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation project_skills
