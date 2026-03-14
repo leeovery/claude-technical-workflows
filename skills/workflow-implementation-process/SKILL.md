@@ -81,35 +81,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implem
 
 ## Step 1: Environment Setup
 
-Run setup commands EXACTLY as written, one step at a time.
-Do NOT modify commands based on other project documentation (CLAUDE.md, etc.).
-Do NOT parallelize steps — execute each command sequentially.
-Complete ALL setup steps before proceeding.
-
 Load **[environment-setup.md](references/environment-setup.md)** and follow its instructions as written.
-
-#### If `.workflows/.state/environment-setup.md` states `No special setup required`
-
-→ Proceed to **Step 2**.
-
-#### If setup instructions exist
-
-Follow them. Complete ALL steps before proceeding.
-
-→ Proceed to **Step 2**.
-
-#### If no setup file exists
-
-> *Output the next fenced block as a code block:*
-
-```
-No environment setup document found. Are there any setup instructions
-I should follow before implementing?
-```
-
-**STOP.** Wait for user response.
-
-Save their instructions to `.workflows/.state/environment-setup.md` (or "No special setup required." if none needed). Commit.
 
 → Proceed to **Step 2**.
 
@@ -117,21 +89,7 @@ Save their instructions to `.workflows/.state/environment-setup.md` (or "No spec
 
 ## Step 2: Read Plan + Load Plan Adapter
 
-1. Read the plan from the provided location (typically `.workflows/{work_unit}/planning/{topic}/planning.md`)
-2. Plans can be stored in various formats. Read the `format` via manifest CLI:
-   ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{topic} format
-   ```
-   If not set in the implementation phase, check the planning phase:
-   ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} format
-   ```
-3. Load the format's per-concern adapter files from `../workflow-planning-process/references/output-formats/{format}/`:
-   - **reading.md** — how to read tasks from the plan
-   - **updating.md** — how to write progress to the plan
-4. If no `format` field exists, ask the user which format the plan uses.
-5. These adapter files apply during Step 6 (task loop) and Step 7 (analysis).
-6. Also load the format's **authoring.md** adapter — needed in Step 7 if analysis tasks are created.
+Load **[load-plan-adapter.md](references/load-plan-adapter.md)** and follow its instructions as written.
 
 → Proceed to **Step 3**.
 
@@ -139,36 +97,7 @@ Save their instructions to `.workflows/.state/environment-setup.md` (or "No spec
 
 ## Step 3: Initialize Implementation Tracking
 
-#### If `.workflows/{work_unit}/implementation/{topic}/implementation.md` already exists
-
-→ Proceed to **Step 4**.
-
-#### If no implementation file exists
-
-1. Set implementation state via manifest CLI:
-   ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit}.implementation.{topic}
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} format {format from plan}
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} task_gate_mode gated
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} fix_gate_mode gated
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} analysis_gate_mode gated
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} fix_attempts 0
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} analysis_cycle 0
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} linters []
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} project_skills []
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} current_phase 1
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} current_task ~
-   ```
-
-2. Create `.workflows/{work_unit}/implementation/{topic}/implementation.md`:
-
-   ```markdown
-   # Implementation: {Topic Name}
-
-   Implementation started.
-   ```
-
-3. Commit: `impl({work_unit}): start implementation`
+Load **[initialize-tracking.md](references/initialize-tracking.md)** and follow its instructions as written.
 
 → Proceed to **Step 4**.
 
@@ -222,51 +151,6 @@ Load **[analysis-loop.md](references/analysis-loop.md)** and follow its instruct
 
 ## Step 8: Mark Implementation Complete
 
-Before marking complete, present the sign-off:
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-Ready to mark implementation as completed?
-
-- **`y`/`yes`** — Mark as completed
-- **Comment** — Add context before completing
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-#### If comment
-
-Discuss the user's context.
-
-**If additional work is needed:**
-
-→ Return to **Step 6** or **Step 7** as appropriate.
-
-**Otherwise:**
-
-Re-present the sign-off prompt above.
-
-#### If `yes`
-
-Update implementation status via manifest CLI:
-```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} status completed
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} analysis_cycle 0
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} fix_attempts 0
-```
-
-Commit: `impl({work_unit}): complete implementation`
-
-**Pipeline continuation** — Invoke the bridge:
-
-```
-Pipeline bridge for: {work_unit}
-Completed phase: implementation
-
-Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
-```
+Load **[conclude-implementation.md](references/conclude-implementation.md)** and follow its instructions as written.
 
 

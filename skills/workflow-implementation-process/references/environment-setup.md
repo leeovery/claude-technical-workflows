@@ -34,6 +34,8 @@ Read and follow the instructions. Common setup tasks include:
 
 Execute each instruction and verify it succeeds before proceeding.
 
+→ Return to **[the skill](../SKILL.md)**.
+
 #### If setup document is missing
 
 Ask the user:
@@ -46,9 +48,13 @@ If they provide instructions, offer to save them:
 
 If they say no setup is needed, create `.workflows/.state/environment-setup.md` with "No special setup required." and commit. This prevents asking the same question in future sessions.
 
+→ Return to **[the skill](../SKILL.md)**.
+
 #### If no setup is required
 
-If the environment setup document contains only "No special setup required" (or similar), skip environment setup and proceed directly to reading the plan.
+If the environment setup document contains only "No special setup required" (or similar), skip environment setup.
+
+→ Return to **[the skill](../SKILL.md)**.
 
 ## Plan Format Setup
 
