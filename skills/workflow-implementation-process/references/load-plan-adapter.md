@@ -4,18 +4,16 @@
 
 ---
 
-1. Read the plan from the provided location (typically `.workflows/{work_unit}/planning/{topic}/planning.md`)
-2. Plans can be stored in various formats. Read the `format` via manifest CLI:
+1. Read the plan from `.workflows/{work_unit}/planning/{topic}/planning.md`.
+2. Read the plan's `format` via manifest CLI:
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} format
    ```
-3. Load the format's per-concern adapter files from `../workflow-planning-process/references/output-formats/{format}/`:
-   - **about.md** — prerequisites and installation instructions for the format
+3. Load the format's adapter files from `../workflow-planning-process/references/output-formats/{format}/`:
+   - **about.md** — prerequisites and setup instructions
    - **reading.md** — how to read tasks from the plan
-   - **updating.md** — how to write progress to the plan
-4. If no `format` field exists, ask the user which format the plan uses.
-5. Follow the format's **about.md** for any setup prerequisites (e.g., required tools).
-6. These adapter files apply during Step 6 (task loop) and Step 7 (analysis).
-7. Also load the format's **authoring.md** adapter — needed in Step 7 if analysis tasks are created.
+   - **updating.md** — how to mark task progress
+   - **authoring.md** — how to create new tasks (needed if analysis adds tasks)
+4. Follow **about.md** for any setup prerequisites (e.g., required tools).
 
 → Return to **[the skill](../SKILL.md)**.
