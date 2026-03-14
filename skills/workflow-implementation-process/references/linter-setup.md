@@ -8,7 +8,9 @@ Discover and configure project linters for use during the TDD cycle's LINT step.
 
 ---
 
-Check `linters` via manifest CLI:
+## A. Resolve Configuration
+
+Read topic-level `linters` via manifest CLI:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{topic} linters
@@ -16,79 +18,37 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implem
 
 #### If `linters` is populated
 
-Present the existing configuration for confirmation:
+Set `source` = `topic`.
 
-> *Output the next fenced block as a code block:*
+→ Proceed to **B. Confirm Linters**.
 
-```
-Previous session used these linters:
+#### Otherwise
 
-  • {name} — {command}
-  • ...
-```
+Check if phase-level `linters` exists via manifest CLI:
 
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-Keep these linters?
-
-- **`y`/`yes`** — Keep and proceed
-- **`c`/`change`** — Re-discover linters
-· · · · · · · · · · · ·
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.implementation linters
 ```
 
-**STOP.** Wait for user response.
+**If `false`:**
 
-#### If `yes`
+→ Proceed to **C. Discovery**.
 
-→ Return to **[the skill](../SKILL.md)**.
+**If `true`:**
 
-#### If `change`
-
-Clear `linters` and fall through to discovery below.
-
-#### If `linters` is empty
-
-Query the phase-level recommendation:
+Read phase-level `linters` via manifest CLI:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation linters
 ```
 
-#### If phase-level is a non-empty array
+**If phase-level is populated:**
 
-> *Output the next fenced block as a code block:*
+Set `source` = `phase`.
 
-```
-Previous implementations used these linters:
+→ Proceed to **B. Confirm Linters**.
 
-  • {name} — {command}
-  • ...
-```
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-Use the same linters?
-
-- **`y`/`yes`** — Use the same and proceed
-- **`n`/`no`** — Run full linter discovery
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-**If `yes`:** Copy phase-level array to topic level:
-```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} linters [{phase-level values}]
-```
-→ Return to **[the skill](../SKILL.md)**.
-
-**If `no`:** Fall through to discovery below.
-
-#### If phase-level is an empty array
+**If phase-level is empty:**
 
 > *Output the next fenced block as a code block:*
 
@@ -109,17 +69,65 @@ Skip linters again?
 
 **STOP.** Wait for user response.
 
-**If `yes`:** → Return to **[the skill](../SKILL.md)**.
+**If `yes`:**
 
-**If `no`:** Fall through to discovery below.
+→ Return to **[the skill](../SKILL.md)**.
 
-#### If no phase-level field exists
+**If `no`:**
 
-Fall through to discovery below.
+→ Proceed to **C. Discovery**.
 
 ---
 
-## Discovery Process
+## B. Confirm Linters
+
+List the linters returned by the `source` level manifest query.
+
+> *Output the next fenced block as a code block:*
+
+```
+Linters found:
+
+  • {name} — {command}
+  • ...
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+Use these linters?
+
+- **`y`/`yes`** — Use and proceed
+- **`n`/`no`** — Re-discover linters
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If `yes`
+
+**If `source` is `phase`:**
+
+Copy to topic level:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} linters [{phase-level values}]
+```
+
+→ Return to **[the skill](../SKILL.md)**.
+
+#### If `no`
+
+Clear topic-level `linters` before re-discovery:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} linters []
+```
+
+→ Proceed to **C. Discovery**.
+
+---
+
+## C. Discovery
 
 1. **Identify project languages** — check file extensions, package files (`composer.json`, `package.json`, `go.mod`, `Cargo.toml`, `pyproject.toml`, etc.), and project skills in `.claude/skills/`
 2. **Check for existing linter configs** — look for config files in the project root:
@@ -160,7 +168,7 @@ Approve these linters?
 
 #### If `yes`
 
-Store the approved linter commands and write to phase level so future topics receive a recommendation:
+Store at both levels:
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} linters [...]
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation linters [...]
@@ -174,13 +182,15 @@ Adjust based on user input, re-present for confirmation.
 
 #### If `skip`
 
-Store empty linters array and write to phase level:
+Store empty array at both levels:
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} linters []
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation linters []
 ```
 
 → Return to **[the skill](../SKILL.md)**.
+
+---
 
 ## Storage
 
