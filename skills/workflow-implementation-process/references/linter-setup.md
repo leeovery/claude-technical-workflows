@@ -185,13 +185,3 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implem
 ```
 
 → Return to **[the skill](../SKILL.md)**.
-
----
-
-## Storage
-
-Linter commands are stored in the manifest as a `linters` array. Write to both topic level and phase level so future topics receive a recommendation.
-
-Each entry has:
-- **name** — identifier for display
-- **command** — the exact shell command to run (including flags)
