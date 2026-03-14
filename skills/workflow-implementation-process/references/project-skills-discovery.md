@@ -28,7 +28,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implem
 
 → Proceed to **B. Confirm Skills**.
 
-**If phase-level is an empty array:**
+**If phase-level is empty:**
 
 > *Output the next fenced block as a code block:*
 
