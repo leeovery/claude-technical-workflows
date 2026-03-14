@@ -69,6 +69,8 @@ Skip project skills again?
 
 ## B. Confirm Skills
 
+List the skills returned by the `source` level manifest query.
+
 > *Output the next fenced block as a code block:*
 
 ```
