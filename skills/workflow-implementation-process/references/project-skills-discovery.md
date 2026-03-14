@@ -14,6 +14,8 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implem
 
 #### If `project_skills` is populated
 
+Set `source` = `topic`.
+
 → Proceed to **B. Confirm Skills**.
 
 #### Otherwise
@@ -25,6 +27,8 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implem
 ```
 
 **If phase-level is populated:**
+
+Set `source` = `phase`.
 
 → Proceed to **B. Confirm Skills**.
 
@@ -89,7 +93,7 @@ Use these project skills?
 
 #### If `yes`
 
-**If source was phase-level:**
+**If `source` is `phase`:**
 
 Copy to topic level:
 ```bash
