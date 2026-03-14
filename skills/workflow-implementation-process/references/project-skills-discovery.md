@@ -33,7 +33,7 @@ Keep these project skills?
 
 #### If `yes`
 
-→ Return to **[the skill](../SKILL.md)** for **Step 5**.
+→ Return to **[the skill](../SKILL.md)**.
 
 #### If `change`
 
@@ -47,7 +47,7 @@ Query the phase-level recommendation:
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation project_skills
 ```
 
-#### If phase-level is a non-empty array and user accepts
+#### If phase-level is a non-empty array
 
 Present the shortened recommendation menu:
 
@@ -72,7 +72,7 @@ Use the same project skills?
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} project_skills [{phase-level values}]
 ```
-→ Return to **[the skill](../SKILL.md)** for **Step 5**.
+→ Return to **[the skill](../SKILL.md)**.
 
 **If `no`:** Fall through to discovery below.
 
@@ -93,7 +93,7 @@ Skip project skills again?
 
 **STOP.** Wait for user response.
 
-**If `yes`:** → Return to **[the skill](../SKILL.md)** for **Step 5**.
+**If `yes`:** → Return to **[the skill](../SKILL.md)**.
 
 **If `no`:** Fall through to discovery below.
 
@@ -114,7 +114,7 @@ Write to phase level so future topics receive a recommendation:
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation project_skills []
 ```
 
-→ Return to **[the skill](../SKILL.md)** for **Step 5**.
+→ Return to **[the skill](../SKILL.md)**.
 
 #### If project skills exist
 
@@ -146,7 +146,7 @@ Write to phase level so future topics receive a recommendation:
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation project_skills []
 ```
 
-→ Return to **[the skill](../SKILL.md)** for **Step 5**.
+→ Return to **[the skill](../SKILL.md)**.
 
 **Otherwise:**
 
@@ -161,4 +161,4 @@ Write to phase level so future topics receive a recommendation:
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation project_skills ["{path1}","{path2}"]
 ```
 
-→ Return to **[the skill](../SKILL.md)** for **Step 5**.
+→ Return to **[the skill](../SKILL.md)**.

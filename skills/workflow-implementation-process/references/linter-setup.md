@@ -37,7 +37,7 @@ Keep these linters?
 
 #### If `yes`
 
-→ Return to **[the skill](../SKILL.md)** for **Step 6**.
+→ Return to **[the skill](../SKILL.md)**.
 
 #### If `change`
 
@@ -51,7 +51,7 @@ Query the phase-level recommendation:
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation linters
 ```
 
-#### If phase-level is a non-empty array and user accepts
+#### If phase-level is a non-empty array
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -74,7 +74,7 @@ Use the same linters?
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} linters [{phase-level values}]
 ```
-→ Return to **[the skill](../SKILL.md)** for **Step 6**.
+→ Return to **[the skill](../SKILL.md)**.
 
 **If `no`:** Fall through to discovery below.
 
@@ -95,7 +95,7 @@ Skip linters again?
 
 **STOP.** Wait for user response.
 
-**If `yes`:** → Return to **[the skill](../SKILL.md)** for **Step 6**.
+**If `yes`:** → Return to **[the skill](../SKILL.md)**.
 
 **If `no`:** Fall through to discovery below.
 
@@ -147,7 +147,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implem
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation linters [...]
 ```
 
-→ Return to **[the skill](../SKILL.md)** for **Step 6**.
+→ Return to **[the skill](../SKILL.md)**.
 
 #### If `change`
 
@@ -161,7 +161,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implem
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation linters []
 ```
 
-→ Return to **[the skill](../SKILL.md)** for **Step 6**.
+→ Return to **[the skill](../SKILL.md)**.
 
 ## Storage
 
