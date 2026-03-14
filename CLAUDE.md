@@ -295,9 +295,9 @@ $MANIFEST get {work_unit} --phase discussion --topic "*" status        # wildcar
 
 See `skills/workflow-manifest/SKILL.md` for the full API.
 
-## Display & Output Conventions (IMPORTANT)
+## Display & Output Conventions (MANDATORY)
 
-All entry-point skills that present discovery state, menus, or interactive choices MUST follow these conventions. This ensures a consistent, scannable experience across all phases.
+These are hard rules, not suggestions. All entry-point skills that present discovery state, menus, or interactive choices MUST follow these conventions exactly. When writing or editing skill files, read existing skills and references as working examples — they are the authoritative demonstration of these rules in practice.
 
 ### Rendering Instructions
 
@@ -525,9 +525,9 @@ Inside code blocks, maintain **one blank line** between:
 
 Between code blocks (overview → not-ready → key → menu), no `---` separators — just the natural block separation.
 
-## Structural Conventions (IMPORTANT)
+## Structural Conventions (MANDATORY)
 
-All skill files (entry-point and processing) MUST follow these structural conventions for consistency.
+These are hard rules, not suggestions. All skill files (entry-point and processing) MUST follow these conventions exactly. When writing or editing skill files, read existing skills and references as working examples — they are the authoritative demonstration of these rules in practice.
 
 ### Stop Gates
 
@@ -559,7 +559,7 @@ Never use `Stop here.`, `Command ends.`, `Wait for user to acknowledge before en
 
 Sequential: `## Step 0`, `## Step 1`, `## Step 2`, etc.
 
-- **Step 0** runs migrations via the `/migrate` skill (mandatory in all entry-point skills)
+- **Step 0** runs migrations via the `/workflow-migrate` skill (mandatory in all entry-point skills)
 - Steps are separated by `---` horizontal rules
 - Each step completes fully before the next begins
 
@@ -696,9 +696,9 @@ What's on your mind?
 **STOP.** Wait for user response before proceeding.
 ```
 
-## Skill File Structure (Progressive Disclosure)
+## Skill File Structure (MANDATORY)
 
-All skills (entry-point and processing) use a backbone + reference file pattern. The backbone (SKILL.md) is always loaded and reads like a table of contents. Reference files contain step detail, loaded on demand via Load directives.
+These are hard rules, not suggestions. All skills (entry-point and processing) use a backbone + reference file pattern. The backbone (SKILL.md) is always loaded and reads like a table of contents. Reference files contain step detail, loaded on demand via Load directives. When writing or editing skill files, read existing skills and references as working examples — they are the authoritative demonstration of these rules in practice.
 
 ### Backbone Structure
 
