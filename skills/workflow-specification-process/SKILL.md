@@ -132,7 +132,7 @@ Load **[session-setup.md](references/session-setup.md)** and follow its instruct
 
 ## Step 4: Load Specification Principles
 
-Load **[specification-principles.md](references/specification-principles.md)** and follow its instructions as written. These principles govern every subsequent step.
+Load **[specification-principles.md](references/specification-principles.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
 

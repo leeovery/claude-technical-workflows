@@ -127,8 +127,6 @@ Load **[load-project-skills.md](references/load-project-skills.md)** and follow 
 
 Load **[invoke-task-verifiers.md](references/invoke-task-verifiers.md)** and follow its instructions as written.
 
-> **CHECKPOINT**: Do not proceed until ALL task verifiers have returned and findings are aggregated.
-
 → Proceed to **Step 5**.
 
 ---
