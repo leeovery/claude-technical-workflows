@@ -16,7 +16,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implem
 
 → Proceed to **B. Confirm Skills**.
 
-#### If `project_skills` is empty
+#### Otherwise
 
 Query the phase-level recommendation:
 
