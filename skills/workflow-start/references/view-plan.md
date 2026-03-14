@@ -22,9 +22,19 @@ Query manifest for all planning topics:
 node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name} --phase planning --topic "*" status
 ```
 
-**If only one topic exists**, set `topic` to that topic.
+#### If only one topic exists
 
-**If multiple topics exist:**
+> *Output the next fenced block as a code block:*
+
+```
+Automatically proceeding with "{topic:(titlecase)}".
+```
+
+Set `topic` to that topic.
+
+→ Proceed to **B. Read Plan**.
+
+#### If multiple topics exist
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -44,6 +54,8 @@ Set `topic` to the selected topic.
 
 → Proceed to **B. Read Plan**.
 
+---
+
 ## B. Read Plan
 
 Get the format:
@@ -52,15 +64,11 @@ Get the format:
 node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name} --phase planning --topic {topic} format
 ```
 
-Load the format's reading reference:
-
-```
-../../workflow-planning-process/references/output-formats/{format}/reading.md
-```
-
-Follow those instructions to read all tasks for the plan.
+Load **[output-formats/{format}/reading.md](../../workflow-planning-process/references/output-formats/{format}/reading.md)** and follow its instructions to read all tasks for the plan.
 
 → Proceed to **C. Display Summary**.
+
+---
 
 ## C. Display Summary
 
