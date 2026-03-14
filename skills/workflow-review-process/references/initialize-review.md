@@ -58,7 +58,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.review
 
 Compare `completed_tasks` against `reviewed_tasks`. Any internal ID in `completed_tasks` but not in `reviewed_tasks` is unreviewed.
 
-**If all tasks reviewed and report exists** at `.workflows/{work_unit}/review/{topic}/report.md`:
+**If all tasks reviewed and report exists at `.workflows/{work_unit}/review/{topic}/report.md`:**
 
 → Return to **[the skill](../SKILL.md)** for **Step 6**.
 

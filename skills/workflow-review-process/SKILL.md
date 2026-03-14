@@ -87,7 +87,11 @@ Continue or restart?
 #### If `restart`
 
 1. Delete the review file and all report files (`report-*.md`) in the review directory (`.workflows/{work_unit}/review/{topic}/`)
-2. Clear review tracking:
+2. Clear review tracking (if it exists):
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.review.{topic} reviewed_tasks
+   ```
+   If `true`:
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js delete {work_unit}.review.{topic} reviewed_tasks
    ```
