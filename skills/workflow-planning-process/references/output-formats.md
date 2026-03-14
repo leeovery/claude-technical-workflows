@@ -11,20 +11,20 @@
 ```
 Available output formats:
 
-  1. Local Markdown
+  1. Tick
+     CLI task management with native dependency graph and priority.
+     Requires Tick CLI installation.
+     Best for: AI-driven workflows needing structured task tracking
+
+  2. Local Markdown
      Task files stored as markdown in the planning directory.
      No external tools required.
      Best for: simple features, small plans, quick iterations
 
-  2. Linear
+  3. Linear
      Tasks managed as Linear issues within a Linear project.
      Requires Linear account and MCP server.
      Best for: teams already using Linear, collaborative projects
-
-  3. Tick
-     CLI task management with native dependency graph and priority.
-     Requires Tick CLI installation.
-     Best for: AI-driven workflows needing structured task tracking
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -33,9 +33,9 @@ Available output formats:
 · · · · · · · · · · · ·
 Select a format:
 
-- **`1`** — Local Markdown
-- **`2`** — Linear
-- **`3`** — Tick
+- **`1`** — Tick
+- **`2`** — Local Markdown
+- **`3`** — Linear
 · · · · · · · · · · · ·
 ```
 
@@ -43,12 +43,12 @@ Select a format:
 
 #### If `1`
 
-Set `chosen-format` = `local-markdown`.
+Set `chosen-format` = `tick`.
 
 #### If `2`
 
-Set `chosen-format` = `linear`.
+Set `chosen-format` = `local-markdown`.
 
 #### If `3`
 
-Set `chosen-format` = `tick`.
+Set `chosen-format` = `linear`.
