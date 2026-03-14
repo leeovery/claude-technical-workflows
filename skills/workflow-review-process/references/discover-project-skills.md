@@ -12,7 +12,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implem
 
 #### If populated
 
-Load each skill path. These are the same skills the implementation phase used — the review should apply the same conventions.
+These are the same skills the implementation phase used. Pass the skill paths to the QA agent so it applies the same conventions.
 
 → Return to **[the skill](../SKILL.md)**.
 
