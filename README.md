@@ -32,7 +32,7 @@ A structured development workflow for Claude Code that turns conversations into 
 - **Specifications that catch mistakes early.** The system analyses your discussions, filters hallucinations, fills gaps, and produces a validated spec before any code is written.
 - **Plans with real structure.** Specifications become phased implementation plans with tasks, acceptance criteria, and dependency ordering. Choose where tasks live — [local markdown files, Linear issues, or Tick CLI](#output-formats).
 - **Implementation via strict TDD.** Tests first, then code, commit after each task. Per-task approval gates keep you in control, or switch to auto-mode when you trust the flow.
-- **Built-in quality checks.** Post-implementation analysis checks architecture conformance, duplication, and coding standards. Review validates against spec and plan. Findings become remediation tasks automatically.
+- **Validation at every stage.** Specifications are reviewed against source material and analysed for gaps. Plans are checked for spec traceability and structural integrity. Implementation is analysed for architecture conformance, duplication, and coding standards. Review verifies against spec and plan. Findings become remediation tasks automatically.
 - **Context that survives.** Each phase clears the context window and starts fresh, so you're never fighting token limits on large work. State lives in a manifest, not in conversation history.
 ## Getting Started
 
@@ -93,8 +93,8 @@ Bugfix:            Investigation → Specification → Planning → Implementati
 | **Research** | Explore ideas, market fit, technical feasibility. Output is analysed to derive discussion topics automatically. | Epic, Feature (opt.) |
 | **Discussion** | Deep dives into architecture, edge cases, and rationale. Captures not just decisions, but *why* you made them. | Epic, Feature |
 | **Investigation** | Symptom gathering + code analysis to identify root cause. The bugfix alternative to discussion. | Bugfix |
-| **Specification** | Analyses all discussions/investigation, filters hallucinations, enriches gaps, validates decisions. The spec becomes the golden document — planning references only this. | All |
-| **Planning** | Converts specs into phased plans with tasks, acceptance criteria, and dependencies. Per-item approval gates with auto-mode. | All |
+| **Specification** | Analyses all discussions/investigation, filters hallucinations, enriches gaps, validates decisions. Reviewed against source material and analysed for gaps before finalising. The spec becomes the golden document — planning references only this. | All |
+| **Planning** | Converts specs into phased plans with tasks, acceptance criteria, and dependencies. Validated for spec traceability and structural integrity. Per-item approval gates with auto-mode. | All |
 | **Implementation** | Strict TDD — tests first, then code, commit per task. Post-implementation analysis agents check architecture, duplication, and standards. | All |
 | **Review** | Parallel subagents verify each task against spec and plan. Findings become remediation tasks that feed back into implementation. | All |
 
