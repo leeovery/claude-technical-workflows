@@ -7,10 +7,6 @@
 1. Read the plan from the provided location (typically `.workflows/{work_unit}/planning/{topic}/planning.md`)
 2. Plans can be stored in various formats. Read the `format` via manifest CLI:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{topic} format
-   ```
-   If not set in the implementation phase, check the planning phase:
-   ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} format
    ```
 3. Load the format's per-concern adapter files from `../workflow-planning-process/references/output-formats/{format}/`:

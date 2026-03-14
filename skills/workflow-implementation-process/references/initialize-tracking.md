@@ -13,7 +13,6 @@
 1. Set implementation state via manifest CLI:
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit}.implementation.{topic}
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} format {format from plan}
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} task_gate_mode gated
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} fix_gate_mode gated
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} analysis_gate_mode gated
