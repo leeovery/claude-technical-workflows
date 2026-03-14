@@ -77,7 +77,7 @@ Three work types, each with its own pipeline:
 ```
 Epic:      Research → Discussion → Specification → Planning → Implementation → Review
 Feature: (Research) → Discussion → Specification → Planning → Implementation → Review
-Bugfix:              Investigation → Specification → Planning → Implementation → Review
+Bugfix:            Investigation → Specification → Planning → Implementation → Review
 ```
 
 **Epics** are for large initiatives spanning multiple sessions. Topics move independently — 10 discussions might yield 5 specifications, each planned and implemented separately. Advisory soft gates warn when moving between phases if prerequisite items are still in progress.
