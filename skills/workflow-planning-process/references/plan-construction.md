@@ -159,10 +159,14 @@ All phases are complete. The plan has **{N} phases** with **{M} tasks** total.
 
 ## A. Define Tasks
 
-→ Load **[define-tasks.md](define-tasks.md)** and follow its instructions as written. This step designs and approves a task list for **one phase**.
+This step designs and approves a task list for **one phase**.
+
+→ Load **[define-tasks.md](define-tasks.md)** and follow its instructions as written.
 
 ---
 
 ## B. Author Tasks
 
-→ Load **[author-tasks.md](author-tasks.md)** and follow its instructions as written. This step authors **all tasks for the phase** via a batch agent and returns.
+This step authors **all tasks for the phase** via a batch agent and returns.
+
+→ Load **[author-tasks.md](author-tasks.md)** and follow its instructions as written.
