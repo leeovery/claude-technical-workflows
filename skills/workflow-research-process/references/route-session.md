@@ -12,8 +12,8 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_t
 
 #### If work_type is `feature`
 
-Load **[feature-session.md](feature-session.md)** and follow its instructions as written.
+→ Load **[feature-session.md](feature-session.md)** and follow its instructions as written.
 
 #### If work_type is `epic`
 
-Load **[epic-session.md](epic-session.md)** and follow its instructions as written.
+→ Load **[epic-session.md](epic-session.md)** and follow its instructions as written.

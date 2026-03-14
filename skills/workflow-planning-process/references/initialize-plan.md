@@ -49,7 +49,7 @@ Existing plans use **{format}**. Use the same format?
 
 ## B. Select Format
 
-Load **[output-formats.md](output-formats.md)** and follow its instructions as written.
+→ Load **[output-formats.md](output-formats.md)** and follow its instructions as written.
 
 → Proceed to **C. Register Plan**.
 
