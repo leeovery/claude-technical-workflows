@@ -49,22 +49,7 @@ Existing plans use **{format}**. Use the same format?
 
 ## B. Select Format
 
-Read **[output-formats.md](output-formats.md)** and present each format to the user.
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-@foreach(format in output_formats)
-{N}. **{format.name}** — {format.description}
-   Best for: {format.best_for}
-@endforeach
-
-Select a format (enter number):
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
+Load **[output-formats.md](output-formats.md)** and follow its instructions as written.
 
 → Proceed to **C. Register Plan**.
 
