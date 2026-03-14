@@ -76,8 +76,8 @@ Three work types, each with its own pipeline:
 
 ```
 Epic:    Research → Discussion → Specification → Planning → Implementation → Review
-Feature:            Discussion → Specification → Planning → Implementation → Review
-Bugfix:          Investigation → Specification → Planning → Implementation → Review
+Feature: (Research) → Discussion → Specification → Planning → Implementation → Review
+Bugfix:            Investigation → Specification → Planning → Implementation → Review
 ```
 
 **Epics** are for large initiatives spanning multiple sessions. Topics move independently — 10 discussions might yield 5 specifications, each planned and implemented separately. Advisory soft gates warn when moving between phases if prerequisite items are still in progress.
@@ -90,7 +90,7 @@ Bugfix:          Investigation → Specification → Planning → Implementation
 
 | Phase | Purpose | Applies to |
 |-------|---------|------------|
-| **Research** | Explore ideas, market fit, technical feasibility. Output is analysed to derive discussion topics automatically. | Epic, Feature (optional) |
+| **Research** | Explore ideas, market fit, technical feasibility. Output is analysed to derive discussion topics automatically. | Epic, Feature (opt.) |
 | **Discussion** | Deep dives into architecture, edge cases, and rationale. Captures not just decisions, but *why* you made them. | Epic, Feature |
 | **Investigation** | Symptom gathering + code analysis to identify root cause. The bugfix alternative to discussion. | Bugfix |
 | **Specification** | Analyses all discussions/investigation, filters hallucinations, enriches gaps, validates decisions. The spec becomes the golden document — planning references only this. | All |
