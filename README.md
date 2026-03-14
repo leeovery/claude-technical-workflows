@@ -24,18 +24,18 @@
 
 ## What is this?
 
-A development workflow for Claude Code that turns conversations into working software. Each phase is guided by an expert collaborator — not a passive template. It asks hard questions, pushes back on assumptions, digs into edge cases, and applies modern development practices. You have a conversation; the system does the heavy lifting.
+A development workflow for Claude Code that turns conversations into working software. You have a conversation; the system does the heavy lifting — asking hard questions, pushing back on assumptions, and applying modern development practices at every phase.
 
 **What you get:**
 
-- **An expert in the room.** Discussions aren't passive — the system acts as an expert architect, challenging your thinking, pushing back on assumptions, and probing edge cases before they become bugs. Specifications filter hallucinations and fill gaps you didn't notice. Every phase adds real analytical value — not just formatting.
-- **Tailored intelligence per work type.** The three pipelines aren't just different shapes — every phase adapts its behaviour to the work type. Epic planning uses walking skeletons and steel threads to prove architecture first. Feature planning analyses your codebase and follows existing patterns. Bugfix planning applies minimal-change surgical fixes with regression prevention as a first-class deliverable. This runs deep — from how research is analysed to how review findings are prioritised.
+- **An expert in the room.** The system acts as an expert architect — challenging your thinking, probing edge cases before they become bugs, and capturing not just decisions but *why* you made them. Every phase adds real analytical value, not just formatting.
 - **Decisions that stick.** Architecture choices, edge cases, and trade-offs are captured in discussion documents — not lost to chat history. When you come back in a week, the context is there.
 - **Specifications that catch mistakes early.** The system analyses your discussions, filters hallucinations, fills gaps, and produces a validated spec before any code is written.
 - **Plans with real structure.** Specifications become phased implementation plans with tasks, acceptance criteria, and dependency ordering. Choose where tasks live — [local markdown files, Linear issues, or Tick CLI](#output-formats).
 - **Implementation via strict TDD.** Tests first, then code, commit after each task. Per-task approval gates keep you in control, or switch to auto-mode when you trust the flow.
 - **Validation at every stage.** Specifications get bidirectional review — one agent checks against source material for accuracy, another analyses the spec as a standalone document for gaps. Plans are checked for spec traceability and structural integrity. Implementation is analysed for architecture conformance, duplication, and coding standards. Review verifies against spec and plan. Findings become remediation tasks automatically.
 - **Context that survives.** Each phase clears the context window and starts fresh, so you're never fighting token limits on large work. All progress lives on disk — pick up exactly where you left off, even after context compaction or a new session.
+
 ## Getting Started
 
 ### Install
@@ -82,11 +82,13 @@ Feature: (Research) → Discussion → Specification → Planning → Implementa
 Bugfix:            Investigation → Specification → Planning → Implementation → Review
 ```
 
-**Epics** are for large initiatives spanning multiple sessions. Topics move independently — 10 discussions might yield 5 specifications, each planned and implemented separately. Advisory soft gates warn when moving between phases if prerequisite items are still in progress.
+These aren't just different shapes — every phase adapts its behaviour to the work type. This runs deep, from how research is analysed to how plans are structured to how review findings are prioritised.
 
-**Features** are for adding functionality. Single topic, linear pipeline. Research is optional — skip it if you know what you're building. If a feature grows beyond scope, pivot it to an epic without losing progress.
+**Epics** are for large initiatives spanning multiple sessions. Topics move independently — 10 discussions might yield 5 specifications, each planned and implemented separately. Planning uses walking skeletons and steel threads to prove architecture end-to-end before building features on top. Advisory soft gates warn when moving between phases if prerequisite items are still in progress.
 
-**Bugfixes** replace discussion with investigation — structured symptom gathering combined with code analysis to find the root cause before specifying the fix.
+**Features** are for adding functionality. Single topic, linear pipeline. Planning analyses your codebase and follows existing patterns — it won't introduce new architectural conventions unless the spec calls for it. Research is optional — skip it if you know what you're building. If a feature grows beyond scope, pivot it to an epic without losing progress.
+
+**Bugfixes** replace discussion with investigation — structured symptom gathering combined with code analysis to find the root cause before specifying the fix. Planning applies minimal-change surgical fixes with regression prevention as a first-class deliverable.
 
 ### The Phases
 
