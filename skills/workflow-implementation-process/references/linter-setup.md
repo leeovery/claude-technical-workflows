@@ -18,13 +18,18 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implem
 
 Present the existing configuration for confirmation:
 
-> *Output the next fenced block as markdown (not a code block):*
+> *Output the next fenced block as a code block:*
 
 ```
 Previous session used these linters:
-- **{name}** — `{command}`
-- ...
 
+  • {name} — {command}
+  • ...
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 · · · · · · · · · · · ·
 Keep these linters?
 
@@ -53,13 +58,18 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implem
 
 #### If phase-level is a non-empty array
 
-> *Output the next fenced block as markdown (not a code block):*
+> *Output the next fenced block as a code block:*
 
 ```
 Previous implementations used these linters:
-- **{name}** — `{command}`
-- ...
 
+  • {name} — {command}
+  • ...
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 · · · · · · · · · · · ·
 Use the same linters?
 
@@ -80,11 +90,15 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implem
 
 #### If phase-level is an empty array
 
-> *Output the next fenced block as markdown (not a code block):*
+> *Output the next fenced block as a code block:*
 
 ```
 Previous implementations skipped linters.
+```
 
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 · · · · · · · · · · · ·
 Skip linters again?
 
@@ -119,15 +133,20 @@ Fall through to discovery below.
 
 Present discovery findings to the user:
 
+> *Output the next fenced block as a code block:*
+
+```
+Linter discovery:
+
+  • {tool} — {command} (installed / not installed)
+  • ...
+
+Recommendations: {any suggested tools with install commands}
+```
+
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-**Linter discovery:**
-- {tool} — `{command}` (installed / not installed)
-- ...
-
-Recommendations: {any suggested tools with install commands}
-
 · · · · · · · · · · · ·
 Approve these linters?
 
