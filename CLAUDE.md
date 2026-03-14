@@ -35,101 +35,6 @@ The workflow system supports three work types, each with its own pipeline:
 6. **Implementation** (`workflow-implementation-process` skill): Execute plan via strict TDD
 7. **Review** (`workflow-review-process` skill): Validate work against discussion, specification, and plan
 
-## Structure
-
-```
-skills/
-  # Processing skills (model-invocable — do the work)
-  workflow-research-process/        # Explore and validate ideas
-  workflow-discussion-process/      # Document discussions (feature/epic)
-  workflow-investigation-process/   # Investigate bugs (bugfix pipeline)
-  workflow-specification-process/   # Build validated specifications
-  workflow-planning-process/        # Create implementation plans
-  workflow-implementation-process/  # Execute via TDD
-  workflow-review-process/          # Validate against artifacts
-
-  # Unified entry points
-  workflow-start/              # Unified router — single view, routes to start/continue skills
-    scripts/discovery.js       #   All active work units grouped by type
-    references/                #   Display, routing, lifecycle management
-      active-work.md           #     Active work units display + selection
-      manage-work-unit.md      #     Complete/cancel/pivot/view-plan work units
-      view-plan.md             #     View plan summary from manage menu
-      view-completed.md        #     Browse completed/cancelled work units
-  workflow-bridge/             # Pipeline continuation - discovers next phase, enters plan mode
-    scripts/discovery.js       #   Topic-specific or phase-centric discovery
-    references/                #   Work-type-specific continuation logic (with backwards nav)
-  workflow-shared/             # Shared utilities used by other workflow skills
-    scripts/discovery-utils.js #   Discovery helpers (manifest loading, phase state, checksums)
-  workflow-manifest/           # Manifest CLI — single source of truth for workflow state
-    scripts/manifest.js        #   Node.js CLI (get/set/delete/list/init/init-phase/push/exists)
-
-  # Entry-point skills (user-invocable — gather context, invoke processing skills)
-  workflow-migrate/          # Keep workflow files in sync with system design
-    scripts/migrate.sh       #   Migration orchestrator
-    scripts/migrations/      #   Individual migration scripts (numbered)
-  start-epic/                # Create new epic (create only, no resume)
-    references/              #   Interview questions, handoffs, phase bridge
-  start-feature/             # Create new feature (create only, no resume)
-    references/              #   Interview questions, handoffs, phase bridge
-  start-bugfix/              # Create new bugfix (create only, no resume)
-    references/              #   Bug context gathering, phase bridge
-  continue-feature/          # Resume in-progress feature — phase routing + backwards nav
-    scripts/discovery.js     #   Active features with phase state
-    references/              #   Selection, validation, revisit phase
-  continue-bugfix/           # Resume in-progress bugfix — phase routing + backwards nav
-    scripts/discovery.js     #   Active bugfixes with phase state
-    references/              #   Selection, validation, revisit phase
-  continue-epic/             # Resume in-progress epic — full state display + interactive menu
-    scripts/discovery.js     #   List mode (all epics) and detail mode (per-phase items)
-    references/              #   Selection, state display, menu, soft gates
-  link-dependencies/         # Link dependencies across topics
-
-  # Phase entry skills (internal — invoked by start/continue/bridge skills)
-  workflow-research-entry/       # Research phase bootstrap + invoke
-    references/                  #   Context gathering, handoffs
-  workflow-discussion-entry/     # Discussion phase — scoped epic path or bridge
-    scripts/discovery.js         #   Scoped discovery (accepts work_unit arg)
-    references/                  #   Epic flow, context gathering
-  workflow-investigation-entry/  # Investigation phase bootstrap + invoke
-    references/                  #   Bug context gathering, handoffs
-  workflow-specification-entry/  # Specification phase — scoped epic path or bridge
-    scripts/discovery.js         #   Scoped discovery (accepts work_unit arg)
-    references/                  #   Epic analysis flow, grouping, handoffs
-  workflow-planning-entry/       # Planning phase — validate spec + invoke
-    references/                  #   Spec validation, cross-cutting context
-  workflow-implementation-entry/ # Implementation phase — validate plan + invoke
-    references/                  #   Dependency checking, environment check
-  workflow-review-entry/         # Review phase — validate impl + invoke
-    references/                  #   Review version, handoffs
-.claude/skills/
-  create-output-format/      # Dev-time skill: scaffold new output format adapters
-  update-workflow-explorer/  # Dev-time skill: sync workflow-explorer.html with source
-
-agents/
-  workflow-review-task-verifier.md                # Verifies single task implementation for review
-  workflow-review-findings-synthesizer.md         # Synthesizes QA findings into remediation tasks
-  workflow-implementation-task-executor.md        # TDD executor for single plan tasks
-  workflow-implementation-task-reviewer.md        # Post-task review for spec conformance
-  workflow-implementation-analysis-architecture.md # Architecture conformance analysis
-  workflow-implementation-analysis-duplication.md  # Duplication and DRY analysis
-  workflow-implementation-analysis-standards.md    # Coding standards analysis
-  workflow-implementation-analysis-synthesizer.md  # Synthesize analysis findings
-  workflow-implementation-analysis-task-writer.md  # Write tasks from analysis findings
-  workflow-planning-phase-designer.md             # Design phases from specification
-  workflow-planning-task-designer.md              # Break phases into task lists
-  workflow-planning-task-author.md                # Write full task detail
-  workflow-planning-dependency-grapher.md         # Analyze task dependencies and priorities
-  workflow-planning-review-traceability.md        # Spec-to-plan traceability analysis
-  workflow-planning-review-integrity.md           # Plan structural quality review
-  workflow-specification-review-gap-analysis.md   # Specification gap analysis
-  workflow-specification-review-input.md          # Specification input review
-
-tests/
-  scripts/                   # Tests for discovery scripts and migrations
-
-```
-
 ## Skill Architecture
 
 Skills are organised in two tiers:
@@ -237,35 +142,13 @@ The `/workflow-migrate` skill keeps workflow files in sync with the current syst
 3. The orchestrator handles tracking — once a migration ID appears in the log, the script never runs again
 4. Use helper functions: `report_update`, `report_skip` (for display only)
 
-**Migration 016 — Work-unit restructure:**
-Migration 016 converts phase-first directories to work-unit-first, creates `manifest.json` files from artifact frontmatter, renames `plan.md` to `planning.md` and `tracking.md` to `implementation.md`, and updates `work_type: greenfield` to `epic`. Frontmatter is preserved in migrated artifacts as a safety net — a follow-up migration will strip it once the manifest system is proven.
-
-**Migration 025 — Unified manifest items:**
-Migration 025 ensures all work types use the `phases.<phase>.items.<topic>` layout. For feature/bugfix manifests with legacy flat phase data, it wraps fields into `items[manifest.name]`. Phase-level keys (`analysis_cache`) stay at phase level. Epics are unaffected.
-
-**Critical: Frontmatter extraction in bash scripts**
-
-Workflow documents may contain `---` horizontal rules in body content. NEVER use `sed -n '/^---$/,/^---$/p'` to extract frontmatter — it matches ALL `---` pairs, not just the first frontmatter block, causing body content to leak into extraction results and potential content loss during file rewrites.
-
-Always use this awk pattern for safe frontmatter extraction:
-```bash
-awk 'BEGIN{c=0} /^---$/{c++; if(c==2) exit; next} c==1{print}' "$file"
-```
-
-For content after frontmatter (preserving all body `---`):
-```bash
-awk '/^---$/ && c<2 {c++; next} c>=2 {print}' "$file"
-```
-
-Also avoid BSD sed incompatibilities: `sed '/range/{cmd1;cmd2}'` syntax fails on macOS. Use awk or separate `sed -e` expressions instead.
-
 **Critical: Migration scripts must not use the manifest CLI**
 
 Migration scripts are point-in-time snapshots. The manifest CLI validates values against the current schema, which changes over time (e.g., valid statuses). A migration that uses the CLI today may break silently when validation rules change in a later release. Always read and write `manifest.json` directly using `node` (or `jq`) — never via the manifest CLI. This ensures migrations remain stable regardless of future schema changes.
 
 ## Manifest CLI
 
-The manifest CLI at `skills/workflow-manifest/scripts/manifest.js` is the single source of truth for all workflow state. It replaces YAML frontmatter for state management — artifacts are pure markdown with no frontmatter.
+The manifest CLI at `skills/workflow-manifest/scripts/manifest.js` is the single source of truth for all workflow state.
 
 Key properties:
 - JSON format, zero dependencies (Node handles JSON natively)
