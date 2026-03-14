@@ -28,7 +28,7 @@ A development workflow for Claude Code that turns conversations into working sof
 
 **What you get:**
 
-- **An expert in the room.** Discussions probe edge cases and competing approaches. Specifications filter hallucinations and fill gaps you didn't notice. Planning applies practices like steel threads and walking skeletons to structure implementation for success. Every phase adds real analytical value — not just formatting.
+- **An expert in the room.** Discussions aren't passive — the system acts as an expert architect, challenging your thinking, pushing back on assumptions, and probing edge cases before they become bugs. Specifications filter hallucinations and fill gaps you didn't notice. Planning applies practices like walking skeletons and steel threads (epics), codebase-aware phase design (features), and minimal-change surgical fixes (bugfixes). Every phase adds real analytical value — not just formatting.
 - **Decisions that stick.** Architecture choices, edge cases, and trade-offs are captured in discussion documents — not lost to chat history. When you come back in a week, the context is there.
 - **Specifications that catch mistakes early.** The system analyses your discussions, filters hallucinations, fills gaps, and produces a validated spec before any code is written.
 - **Plans with real structure.** Specifications become phased implementation plans with tasks, acceptance criteria, and dependency ordering. Choose where tasks live — [local markdown files, Linear issues, or Tick CLI](#output-formats).
