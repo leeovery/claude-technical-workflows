@@ -24,10 +24,11 @@
 
 ## What is this?
 
-A structured development workflow for Claude Code that turns conversations into working software. Instead of jumping straight to code, you discuss the *what* and *why* first — then the system builds specifications, plans implementation, writes code via strict TDD, and validates the result.
+A development workflow for Claude Code that turns conversations into working software. Each phase is guided by an expert collaborator — not a passive template. It asks hard questions, pushes back on assumptions, digs into edge cases, and applies modern development practices. You have a conversation; the system does the heavy lifting.
 
 **What you get:**
 
+- **An expert in the room.** Discussions probe edge cases and competing approaches. Specifications filter hallucinations and fill gaps you didn't notice. Planning applies practices like steel threads and walking skeletons to structure implementation for success. Every phase adds real analytical value — not just formatting.
 - **Decisions that stick.** Architecture choices, edge cases, and trade-offs are captured in discussion documents — not lost to chat history. When you come back in a week, the context is there.
 - **Specifications that catch mistakes early.** The system analyses your discussions, filters hallucinations, fills gaps, and produces a validated spec before any code is written.
 - **Plans with real structure.** Specifications become phased implementation plans with tasks, acceptance criteria, and dependency ordering. Choose where tasks live — [local markdown files, Linear issues, or Tick CLI](#output-formats).
