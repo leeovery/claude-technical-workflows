@@ -4,7 +4,7 @@
 
 ---
 
-Load **[specification-format.md](specification-format.md)** and follow its instructions as written.
+→ Load **[specification-format.md](specification-format.md)** and follow its instructions as written.
 
 Create the specification file at `.workflows/{work_unit}/specification/{topic}/specification.md`:
 
