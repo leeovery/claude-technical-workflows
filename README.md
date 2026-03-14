@@ -34,10 +34,6 @@ A structured development workflow for Claude Code that turns conversations into 
 - **Implementation via strict TDD.** Tests first, then code, commit after each task. Per-task approval gates keep you in control, or switch to auto-mode when you trust the flow.
 - **Built-in quality checks.** Post-implementation analysis checks architecture conformance, duplication, and coding standards. Review validates against spec and plan. Findings become remediation tasks automatically.
 - **Context that survives.** Each phase clears the context window and starts fresh, so you're never fighting token limits on large work. State lives in a manifest, not in conversation history.
-
-> [!NOTE]
-> **Work in progress.** The workflow is being refined through real-world usage. Expect updates as patterns evolve.
-
 ## Getting Started
 
 ### Install
