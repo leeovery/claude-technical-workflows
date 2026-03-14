@@ -88,18 +88,22 @@ The second segment after a phase name could be either a phase-level field (`anal
 
 ### Migration
 
-- Flag syntax (`--phase`, `--topic`) continues to work during transition (deprecated, not removed)
+- Clean break — `--phase` and `--topic` flags removed entirely (no deprecation period)
 - All skill files updated to dot-path syntax
 - Raw `phases.x.y` paths in skill files updated to normalised `x.y` paths
 - CLAUDE.md grammar examples updated
 - Migration scripts left as-is (point-in-time snapshots per existing convention)
 
+## Pre-Flight: Investigate Before Implementation
+
+- `workflow-planning-entry/references/invoke-skill.md` line 22: `get {work_unit} --phase planning format` uses `--phase` without `--topic`, but `format` appears to be stored at topic level in the manifest. Verify whether this is a bug or whether `format` is genuinely phase-level. Resolution affects how `planning.format` vs `planning.{topic}.format` routes.
+
 ## Touch Points
 
-- `skills/workflow-manifest/scripts/manifest.js` — dot-path parsing, phase detection, manifest lookup disambiguation, flag deprecation
+- `skills/workflow-manifest/scripts/manifest.js` — dot-path parsing, phase detection, manifest lookup disambiguation, remove flag parsing
 - `skills/workflow-manifest/SKILL.md` — full API docs update
 - All skill files using `--phase`/`--topic` (~221 invocations) — syntax migration
 - All skill files using raw `phases.x.y` paths (~30 invocations) — normalise to `x.y`
 - All agent files using manifest CLI — syntax migration
-- `tests/scripts/test-workflow-manifest.sh` — dot-path tests, disambiguation tests, flag backwards-compat tests
+- `tests/scripts/test-workflow-manifest.sh` — dot-path tests, disambiguation tests
 - `CLAUDE.md` — update CLI grammar section
