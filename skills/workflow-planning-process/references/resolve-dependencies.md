@@ -15,13 +15,17 @@ Handle external dependencies — things this plan needs from other topics or sys
 
 Dependencies are stored in the **manifest** as `external_dependencies` (under `planning.{topic}`). See [dependencies.md](dependencies.md) for the format and states.
 
+#### If the specification has a Dependencies section
+
+→ Proceed to **A. Build Dependencies from Spec**.
+
 #### If the specification has no Dependencies section
 
-No external dependencies to track — skip to the approval gate.
+This topic has no external dependencies. Other topics may still have unresolved dependencies pointing at this plan's tasks.
 
-→ Proceed to **D. Summary and Approval**.
+→ Proceed to **C. Reverse Check and Stale Reference Validation**.
 
-#### If the specification has a Dependencies section
+---
 
 ## A. Build Dependencies from Spec
 
@@ -31,13 +35,17 @@ No external dependencies to track — skip to the approval gate.
 node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.planning.{topic} external_dependencies
 ```
 
-If `true`, read the current values:
+**If `true`:**
+
+Read the current values:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} external_dependencies
 ```
 
-If `false`, there are no existing entries to preserve.
+**If `false`:**
+
+No existing entries to preserve.
 
 2. Read the specification's Dependencies section.
 
@@ -55,6 +63,8 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planni
 ```
 
 → Proceed to **B. Resolve Current Plan's Dependencies**.
+
+---
 
 ## B. Resolve Current Plan's Dependencies
 
@@ -74,6 +84,8 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planni
 
 → Proceed to **C. Reverse Check and Stale Reference Validation**.
 
+---
+
 ## C. Reverse Check and Stale Reference Validation
 
 For each other topic with a planning phase in the same work unit:
@@ -84,7 +96,13 @@ For each other topic with a planning phase in the same work unit:
 node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.planning.{other_topic} external_dependencies
 ```
 
-If `false`, skip this topic. If `true`, read them:
+**If `false`:**
+
+Skip this topic.
+
+**If `true`:**
+
+Read them:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{other_topic} external_dependencies
@@ -101,11 +119,25 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planni
 
 4. **`satisfied_externally` deps** → skip.
 
-→ Proceed to **D. Summary and Approval**.
+→ Proceed to **D. Summary and Commit**.
 
-## D. Summary and Approval
+---
+
+## D. Summary and Commit
 
 Present a summary of the dependency state: what was documented, what was resolved, what remains unresolved, and any reverse resolutions made.
+
+#### If no changes were made (no deps to write, no reverse resolutions)
+
+> *Output the next fenced block as a code block:*
+
+```
+No external dependencies for this topic. No reverse resolutions needed.
+```
+
+→ Return to **[the skill](../SKILL.md)**.
+
+#### If changes were made
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -120,10 +152,10 @@ Approve the dependency resolution?
 
 **STOP.** Wait for user response.
 
-#### If the user provides feedback
+**If the user provides feedback:**
 
 Incorporate feedback, re-present the updated dependency state, and ask again. Repeat until approved.
 
-#### If `approved`
+**If approved:**
 
 Commit: `planning({work_unit}): resolve external dependencies`
