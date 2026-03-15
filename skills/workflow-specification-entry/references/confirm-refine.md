@@ -33,7 +33,7 @@ Proceed?
 
 #### If user declines (n)
 
-#### If single discussion (no menu to return to)
+**If single discussion (no menu to return to):**
 
 > *Output the next fenced block as a code block:*
 
@@ -44,6 +44,6 @@ command when ready.
 
 **STOP.** Do not proceed — terminal condition.
 
-#### If groupings or specs menu
+**If groupings or specs menu:**
 
-Re-display the previous menu (the display that led to this confirmation). The user can make a different choice.
+→ Return to the display menu that initiated this confirmation.
