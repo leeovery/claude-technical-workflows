@@ -165,8 +165,6 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planni
 
 ## F. Summary and Commit
 
-Present a summary of the dependency state: what was documented, what was resolved, what remains unresolved, and any reverse resolutions made.
-
 #### If no changes were made (no deps to write, no reverse resolutions)
 
 > *Output the next fenced block as a code block:*
@@ -178,6 +176,33 @@ No external dependencies for this topic. No reverse resolutions needed.
 → Return to **[the skill](../SKILL.md)**.
 
 #### If changes were made
+
+→ Proceed to **G. Present Summary**.
+
+---
+
+## G. Present Summary
+
+> *Output the next fenced block as a code block:*
+
+```
+External Dependencies
+
+@foreach(dep in external_dependencies)
+  {dep_topic:(titlecase)} ({state})
+@if(state is resolved)
+  └─ {internal_id}
+@endif
+
+@endforeach
+@if(reverse_resolutions)
+
+Reverse resolutions:
+@foreach(resolution in reverse_resolutions)
+  {other_topic:(titlecase)} → {topic:(titlecase)}:{internal_id}
+@endforeach
+@endif
+```
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -192,12 +217,14 @@ Approve the dependency resolution?
 
 **STOP.** Wait for user response.
 
-**If the user provides feedback:**
-
-Incorporate feedback, re-present the updated dependency state, and ask again. Repeat until approved.
-
-**If approved:**
+#### If `yes`
 
 Commit: `planning({work_unit}): resolve external dependencies`
 
 → Return to **[the skill](../SKILL.md)**.
+
+#### If the user provides feedback
+
+Incorporate feedback, update the manifest entries accordingly, and commit.
+
+→ Return to **G. Present Summary**.
