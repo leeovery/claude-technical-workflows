@@ -91,6 +91,8 @@ No `---` separator before these messages.
 No grouping analysis exists.
 ```
 
+→ Proceed to **B. Menu**.
+
 #### If cache status is `stale`
 
 > *Output the next fenced block as a code block:*
