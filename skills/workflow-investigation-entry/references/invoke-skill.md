@@ -4,15 +4,11 @@
 
 ---
 
-This skill's purpose is now fulfilled.
-
-Invoke the [workflow-investigation-process](../../workflow-investigation-process/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
+This skill's purpose is now fulfilled. Construct the handoff and invoke the processing skill.
 
 ---
 
 ## Handoff
-
-Construct the handoff based on source.
 
 #### If source is `new`
 
@@ -29,6 +25,8 @@ Bug context:
 Invoke the workflow-investigation-process skill.
 ```
 
+Invoke the [workflow-investigation-process](../../workflow-investigation-process/SKILL.md) skill. Do not act on the gathered information until the skill is loaded — it contains the instructions for how to proceed. Terminal.
+
 #### If source is `continue`
 
 ```
@@ -39,3 +37,5 @@ Output: .workflows/{work_unit}/investigation/{topic}.md
 
 Invoke the workflow-investigation-process skill.
 ```
+
+Invoke the [workflow-investigation-process](../../workflow-investigation-process/SKILL.md) skill. Do not act on the gathered information until the skill is loaded — it contains the instructions for how to proceed. Terminal.
