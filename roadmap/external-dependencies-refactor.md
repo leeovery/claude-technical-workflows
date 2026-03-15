@@ -22,7 +22,10 @@ Line 28-29 queries the dep topic's plan-level `status` field. A plan could be `i
 External dependencies store the target task reference as `task_id` but it holds an internal ID (e.g. `auth-1-3`). Should be renamed to `internal_id` to match the naming convention used everywhere else. The `dependencies.md` states table already acknowledges this: `task_id: {internal_id}`.
 
 **5. External deps run unnecessarily for feature/bugfix**
-Both `resolve-dependencies.md` (planning) and `check-dependencies.md` (implementation) process external dependencies for all work types. External deps are only meaningful for epics — feature and bugfix have a single topic with no cross-topic dependencies. Both should early-return for non-epic work types.
+All three stages process external dependencies for all work types. External deps are only meaningful for epics — feature and bugfix have a single topic with no cross-topic dependencies:
+- Specification (`Step 6: Document Dependencies`) — authors a Dependencies section that's never consumed
+- Planning (`resolve-dependencies.md`) — processes deps that can't exist
+- Implementation (`check-dependencies.md`) — checks deps that can't exist
 
 ### Design Issues
 
@@ -50,6 +53,14 @@ Three states, no changes needed to the set — just fix how they're checked:
 | `satisfied_externally` | `state: satisfied_externally` | Handled outside the workflow | No |
 
 No `satisfied` state. Whether a resolved dep's task is done is derived at implementation entry by querying `completed_tasks`. The dep stays `resolved` permanently.
+
+### Skip External Deps for Feature/Bugfix
+
+All three stages add a work-type guard at the top:
+
+- **Specification** (`Step 6`) — skip the Dependencies section entirely. Add a conditional: if work type is not `epic`, proceed to Step 7.
+- **Planning** (`resolve-dependencies.md`) — early return. Set `external_dependencies: {}` in manifest and proceed.
+- **Implementation** (`check-dependencies.md`) — early return with "External dependencies satisfied."
 
 ### Enhanced Resolve Dependencies Flow
 
@@ -100,6 +111,5 @@ Rename `task_id` → `internal_id` in existing manifest `external_dependencies` 
 
 ## Out of Scope
 
-- Spec-level dependency section for feature/bugfix — may not be needed at all since external deps only apply to epics. To be reviewed separately.
 - Stale `internal_id` detection — if a target task is renumbered/split/removed after resolution, the dep silently points at nothing. Worth addressing but separate concern.
 - Read-only dependency graph overview — could be useful as a diagnostic tool but not required for this refactor.
