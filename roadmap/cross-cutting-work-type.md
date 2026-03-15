@@ -26,9 +26,9 @@ Elevate cross-cutting concerns to a first-class work type.
 **Project-level manifest**
 
 - `.workflows/manifest.json` (or `project.json`) at the top level
-- Tracks all work units: name, work type, status
-- Serves as an index — no directory scanning needed for discovery
-- Planning entry for any work type reads this manifest to find cross-cutting work units, loads their completed specs, filters for relevance
+- Tracks work unit name and work type only — stable, rarely-changing data
+- Mutable state (status, phase progress, topics) stays in work unit manifests where it belongs — no dual-update sync risk
+- Discovery reads project manifest to know what exists and what type each is, then selectively opens only the work unit manifests it needs (e.g., only cross-cutting work units when looking for cc specs during planning)
 - Future use: project-level metadata, conventions, team info, default plan format
 
 **Epic promotion (provenance tracking)**
@@ -53,7 +53,7 @@ If promoted:
 
 Planning entry for ALL work types (epic, feature, bugfix):
 
-1. Read project manifest → find cross-cutting work units with completed specs
+1. Read project manifest → find cross-cutting work units → read their manifests for status → filter to completed specs
 2. Assess relevance to the feature being planned
 3. Present relevant specs to user for confirmation
 4. Pass confirmed specs to planning process as cross-cutting context
@@ -96,10 +96,10 @@ Cross-cutting is a work type, not a spec attribute. The `type: feature | cross-c
 ### 3. Project manifest → yes, all work units register
 
 - ALL work unit creation registers in the project manifest, not just cross-cutting
-- Becomes the authoritative index for "what work exists" — replaces directory scanning
-- Status changes, work type pivots, completion all update one place
-- Simplifies discovery scripts across the board
-- Per-work-unit manifests remain for phase/topic detail; project manifest is the index layer above
+- Stores name and work type only — stable index, not a state mirror
+- Mutable state (status, phases, topics) stays in work unit manifests — avoids dual-update sync bugs
+- Discovery reads one file to know what exists and what type, then selectively opens only the work unit manifests needed
+- Simplifies discovery scripts across the board — no more scanning every directory
 
 ### 4. Research phase → optional, same as epic/feature
 
