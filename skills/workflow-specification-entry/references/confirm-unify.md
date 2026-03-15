@@ -4,6 +4,8 @@
 
 ---
 
+## A. Display Confirmation
+
 #### If existing specifications will be superseded
 
 > *Output the next fenced block as a code block:*
@@ -33,6 +35,10 @@ Proceed?
 · · · · · · · · · · · ·
 ```
 
+**STOP.** Wait for user response.
+
+→ Proceed to **B. Handle Response**.
+
 #### If no existing specifications
 
 > *Output the next fenced block as a code block:*
@@ -60,16 +66,22 @@ Proceed?
 
 **STOP.** Wait for user response.
 
+→ Proceed to **B. Handle Response**.
+
+---
+
+## B. Handle Response
+
 #### If user confirms (y)
 
-#### If existing specifications will be superseded
+**If existing specifications will be superseded:**
 
 → Load **[unify-with-incorporation.md](handoffs/unify-with-incorporation.md)** and follow its instructions as written.
 
-#### Otherwise
+**Otherwise:**
 
 → Load **[unify.md](handoffs/unify.md)** and follow its instructions as written.
 
 #### If user declines (n)
 
-Re-display the previous menu (the display that led to this confirmation). The user can make a different choice.
+→ Return to the display menu that initiated this confirmation.
