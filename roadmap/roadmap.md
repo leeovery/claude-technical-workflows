@@ -8,6 +8,7 @@ Ideas and planned work for the workflow system.
 |----|------|--------|------|
 | 1 | Cross-Cutting Work Type | brainstorming | [cross-cutting-work-type.md](cross-cutting-work-type.md) |
 | 2 | External Dependencies Refactor | planned | [external-dependencies-refactor.md](external-dependencies-refactor.md) |
+| 3 | Topic-Level Management | brainstorming | [topic-level-management.md](topic-level-management.md) |
 
 ## Completed
 

@@ -29,7 +29,7 @@ External dependencies are stored in the **manifest** as `external_dependencies` 
   "user-authentication": {
     "description": "User context for permissions",
     "state": "resolved",
-    "task_id": "auth-1-3"
+    "internal_id": "auth-1-3"
   },
   "payment-gateway": {
     "description": "Payment processing",
@@ -38,27 +38,12 @@ External dependencies are stored in the **manifest** as `external_dependencies` 
 }
 ```
 
-Set individual dependencies via dot-path:
-
-```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} external_dependencies.billing-system.description "Invoice generation"
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} external_dependencies.billing-system.state unresolved
-```
-
-If there are no external dependencies, use an empty object:
-
-```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} external_dependencies '{}'
-```
-
-This makes it explicit for downstream stages that dependencies were considered and none exist.
-
 ## States
 
 | State | Format | Meaning |
 |-------|--------|---------|
 | `unresolved` | `state: unresolved` | Dependency exists but not yet linked to a task |
-| `resolved` | `state: resolved` + `task_id: {internal_id}` | Linked to specific task in another plan |
+| `resolved` | `state: resolved` + `internal_id: {id}` | Linked to specific task in another plan |
 | `satisfied_externally` | `state: satisfied_externally` | Implemented outside workflow |
 
 ## Lifecycle
@@ -69,14 +54,14 @@ SPECIFICATION                    PLANNING
 Dependencies section    →    Added to manifest as unresolved
 (natural language)                      ↓
                              Resolved when linked to specific internal ID
-                             (via planning or /link-dependencies)
+                             (via planning resolve-dependencies step)
 ```
 
 ## Resolution
 
 Dependencies move from `unresolved` → `resolved` when:
-- The dependency topic is planned and you identify the specific task
-- The `/link-dependencies` command finds and wires the match
+- The dependency topic is planned and the resolve-dependencies step identifies the specific task
+- A reverse check during another topic's planning resolves it
 
 Dependencies become `satisfied_externally` when:
 - The user confirms it was implemented outside the workflow

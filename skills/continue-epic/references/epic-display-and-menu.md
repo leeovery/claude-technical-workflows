@@ -89,11 +89,16 @@ Plans not ready for implementation:
 These plans have unresolved dependencies that must be
 addressed first.
 
-  • {topic} (blocked by {dep_topic}:{internal_id})
-  • {topic} (blocked by {dep_topic})
+@foreach(plan in plans_with_deps_blocking)
+  {topic:(titlecase)}
+@foreach(dep in plan.deps_blocking)
+  └─ Blocked by @if(dep.internal_id) {dep_topic}:{internal_id} @else {dep_topic} @endif
+@endforeach
+
+@endforeach
 ```
 
-Use the `deps_blocking` array from the planning phase items. Show each blocking dependency with its cross-plan task reference using colon notation (`{plan}:{internal_id}`) when a `task_id` is present. Omit this block entirely if no plans are blocked.
+Use the `deps_blocking` array from the planning phase items. Show each blocking dependency with its cross-plan task reference using colon notation (`{plan}:{internal_id}`) when an `internal_id` is present. Omit this block entirely if no plans are blocked.
 
 → Proceed to **B. Key**.
 

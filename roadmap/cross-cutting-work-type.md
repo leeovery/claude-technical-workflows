@@ -11,7 +11,7 @@ This means validated architectural decisions get siloed inside the epic that aut
 
 ## Proposal
 
-Elevate cross-cutting concerns to a first-class work type.
+Elevate cross-cutting concerns to a first-class work type. All cross-cutting specs live at the project level — no epic-scoped cross-cutting.
 
 ### Core Design
 
@@ -31,11 +31,11 @@ Elevate cross-cutting concerns to a first-class work type.
 - Discovery reads project manifest to know what exists and what type each is, then selectively opens only the work unit manifests it needs (e.g., only cross-cutting work units when looking for cc specs during planning)
 - Future use: project-level metadata, conventions, team info, default plan format
 
-**Epic promotion (provenance tracking)**
+**Epic promotion**
 
-When an epic spec completes, replace the current feature/cross-cutting tagging with a promotion prompt: "Should this be promoted to a project-level cross-cutting work unit?"
+At epic spec completion, the existing assessment determines whether the spec is a feature or cross-cutting concern. Claude assesses, user confirms or disagrees (same flow as today). If confirmed as cross-cutting, it gets auto-promoted — no second question, no scope choice.
 
-If promoted:
+Promotion mechanics:
 
 1. Creates new cross-cutting work unit (`.workflows/{topic}/`)
 2. **Moves** (not copies) the specification and all discussion files that fed it (tracked via the spec's `sources` field)
@@ -48,6 +48,23 @@ If promoted:
 **Direct creation**
 
 `/start-cross-cutting` or selecting `cross-cutting` at `/workflow-start`. Pipeline: Research (optional) → Discussion → Specification. Same as epic/feature — reuses existing research, discussion, and specification skills. Only difference is the bridge stops after specification completes.
+
+### Why No Epic-Scoped Cross-Cutting
+
+We considered allowing cross-cutting specs to stay inside an epic (epic-scoped vs project-scoped). Decided against it:
+
+- Once an epic ships, its code is part of the system. Patterns that applied within the epic almost always apply to future work touching the same code — meaning the concern was project-scoped all along
+- Having two homes (epic-scoped and project-scoped) introduces management complexity: promote, recall, scope assessment, type field on specs, not-ready display logic in planning
+- Planning already filters cross-cutting specs by relevance — a project-level spec that's irrelevant to a given plan just gets filtered out. No harm in it existing
+- Keeps the model simple: if it's cross-cutting, it lives at the project level. One home, one concept
+- Could add epic-scoped cross-cutting later if a real need emerges, but the benefits of simplicity outweigh any hypothetical scenarios
+
+### Simplifications from This Decision
+
+- `type` field on specs removed entirely — all specs inside an epic are feature specs, all plannable
+- Not-ready display logic for cross-cutting specs in epics eliminated
+- Assessment at spec completion is a single step: "feature or cross-cutting?" → if cross-cutting, auto-promote
+- Topic-level management (see [topic-level-management.md](topic-level-management.md)) becomes simpler: reclassify + recall for mistakes, no scope management
 
 ### Planning Integration
 
@@ -77,13 +94,13 @@ Edge case of "edit only intended for future plans" self-resolves: completed plan
 
 ## Resolved Questions
 
-### 1. Spec-type tagging → replaced by promotion prompt
+### 1. Spec-type tagging → removed, replaced by auto-promotion
 
 Cross-cutting is a work type, not a spec attribute. The `type: feature | cross-cutting` field on specs is removed entirely:
 
-- **Feature/bugfix**: Always a feature-type spec by definition — no tagging needed
-- **Epic**: Replace "is this feature or cross-cutting?" with "promote to cross-cutting work unit?" at spec completion. If not promoted, it's just a regular spec planned normally within the epic
-- Eliminates the "not ready for planning" display logic for cross-cutting specs within epics
+- **Feature/bugfix**: Always a feature-type spec by definition — no assessment needed
+- **Epic**: Assessment at spec completion asks "feature or cross-cutting?" (Claude assesses, user confirms or disagrees — same flow as today). If cross-cutting, auto-promoted to its own work unit. All remaining specs in the epic are feature specs, all plannable
+- Not-ready display logic for cross-cutting specs in epics eliminated — they don't exist in epics after promotion
 
 ### 2. Versioning → reopen and revise
 
@@ -109,6 +126,11 @@ Cross-cutting is a work type, not a spec attribute. The `type: feature | cross-c
 - Bridge just needs to know to stop at end of specification
 - Keeps pipeline shapes more consistent across work types
 
+### 5. No epic-scoped cross-cutting
+
+- All cross-cutting specs live at project level — see "Why No Epic-Scoped Cross-Cutting" above
+- Could revisit if a real need emerges, but simplicity wins for now
+
 ## Open Questions
 
 ### 1. Project manifest structure
@@ -120,10 +142,13 @@ What fields beyond work unit registry? Candidates:
 
 ### 2. Promotion UX details
 
-- Prompt wording and placement (immediately after spec completion vs. separate step?)
-- What if user declines promotion but later changes their mind? Manual promote command?
-- Should the prompt assess cross-cutting likelihood or always ask?
+- Prompt wording at spec completion (how the assessment is presented)
+- What if user declines (says it's a feature) but later realises it should be cross-cutting? See [topic-level-management.md](topic-level-management.md) for after-the-fact reclassification
 
 ### 3. Discovery script impact
 
 Project manifest replaces directory scanning. How much of the existing discovery infrastructure changes? Likely simplifies significantly but needs audit.
+
+## Related
+
+- [Topic-Level Management](topic-level-management.md) — reclassify and recall for after-the-fact changes (not required for initial build)

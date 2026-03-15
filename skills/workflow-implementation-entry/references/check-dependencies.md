@@ -1,34 +1,38 @@
 # Check Dependencies
 
-*Reference for **[workflow-implementation-entry](../SKILL.md)***
+*Reference for **[validate-dependencies](validate-dependencies.md)***
 
 ---
 
-Query the planning manifest entry for external dependencies:
+## A. Evaluate Dependencies
+
+Query the external dependencies:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} external_dependencies
 ```
 
-#### If no external dependencies (empty or not found)
+Evaluate each dependency and collect any that are blocking into a list:
 
-> *Output the next fenced block as a code block:*
-
-```
-External dependencies satisfied.
-```
-
-→ Return to **[the skill](../SKILL.md)**.
-
-#### If external dependencies exist
-
-For each dependency, check its state. If the dependency has a `task_id`, check whether that task is completed by querying the dependency's plan:
+- **`state: satisfied_externally`** — skip, not blocking
+- **`state: unresolved`** — add to the blocking list
+- **`state: resolved`** — check whether the referenced task has been completed:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{dep_topic} status
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{dep_topic} completed_tasks
 ```
 
-**If all dependencies are satisfied** (state is `satisfied` or `satisfied_externally`, and any referenced tasks are completed):
+**If `internal_id` is in the completed tasks list:**
+
+Skip, not blocking.
+
+**If `internal_id` is not in the list, or the implementation entry does not exist:**
+
+Add to the blocking list.
+
+---
+
+#### If the blocking list is empty
 
 > *Output the next fenced block as a code block:*
 
@@ -38,43 +42,111 @@ External dependencies satisfied.
 
 → Return to **[the skill](../SKILL.md)**.
 
-**If any dependencies are blocking:**
+#### If the blocking list has entries
+
+→ Proceed to **B. Present Blocking Dependencies**.
+
+---
+
+## B. Present Blocking Dependencies
 
 > *Output the next fenced block as a code block:*
 
 ```
 Missing Dependencies
 
-Unresolved (not yet planned):
-  • {topic}: {description}
-    No plan exists. Mark as satisfied externally or plan it first.
+@foreach(dep in blocking_list where state is unresolved)
+  {dep_topic:(titlecase)}
+  └─ {description}
+  └─ No plan exists
 
-Incomplete (planned but not implemented):
-  • {topic}: {plan}:{internal_id} not yet completed
-    This task must be completed first.
+@endforeach
+@foreach(dep in blocking_list where state is resolved)
+  {dep_topic:(titlecase)}
+  └─ {description}
+  └─ Waiting on {topic}:{internal_id}
+
+@endforeach
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 · · · · · · · · · · · ·
-- **`i`/`implement`** — Implement the blocking dependencies first
-- **`l`/`link`** — Run /link-dependencies to wire up recently completed plans
+How would you like to proceed?
+
 - **`s`/`satisfied`** — Mark a dependency as satisfied externally
+- **`i`/`implement`** — Exit to implement blocking dependencies first
 · · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
 
+**If `satisfied`:**
+
+→ Proceed to **C. Select Dependency**.
+
+**If `implement`:**
+
+> *Output the next fenced block as a code block:*
+
+```
+Implementation Paused
+
+"{topic:(titlecase)}" is blocked until these dependencies are resolved.
+Use /workflow-start to navigate to the blocking work.
+```
+
+**STOP.** Do not proceed — terminal condition.
+
 ---
 
-## Escape Hatch
+## C. Select Dependency
 
-If the user says a dependency has been implemented outside the workflow:
+**If only one dependency in the blocking list:**
 
-1. Ask which dependency to mark as satisfied
-2. Update the dependency's `state` to `satisfied_externally` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} external_dependencies.{dep-topic}.state satisfied_externally`)
-3. Commit the change
-4. Re-check dependencies
+> *Output the next fenced block as a code block:*
 
-→ Return to **[the skill](../SKILL.md)**.
+```
+Automatically proceeding with "{dep_topic:(titlecase)}".
+```
+
+Set `selected_topic` = `{dep_topic}`.
+
+→ Proceed to **D. Mark as Satisfied**.
+
+**If multiple dependencies in the blocking list:**
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+Which dependency has been satisfied?
+
+1. {dep_topic:(titlecase)} — {description}
+2. ...
+
+Select an option (enter number):
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+Set `selected_topic` = the chosen dependency's topic.
+
+→ Proceed to **D. Mark as Satisfied**.
+
+---
+
+## D. Mark as Satisfied
+
+Update the selected dependency's state via manifest CLI:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} external_dependencies.{selected_topic}.state satisfied_externally
+```
+
+Commit: `impl({work_unit}): mark {selected_topic} dependency as satisfied externally`
+
+→ Return to **A. Evaluate Dependencies**.
+
