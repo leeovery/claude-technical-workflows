@@ -114,6 +114,3 @@ Remove the standalone skill and all references:
 
 Rename `task_id` → `internal_id` in existing manifest `external_dependencies` entries. Requires a numbered migration script in `skills/workflow-migrate/scripts/migrations/` with a corresponding test.
 
-## Out of Scope
-
-- Read-only dependency graph overview — could be useful as a diagnostic tool but not required for this refactor.
