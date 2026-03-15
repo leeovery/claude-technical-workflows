@@ -12,12 +12,6 @@ node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.pla
 
 #### If `false`
 
-> *Output the next fenced block as a code block:*
-
-```
-External dependencies satisfied.
-```
-
 → Return to **[the skill](../SKILL.md)**.
 
 #### If `true`
