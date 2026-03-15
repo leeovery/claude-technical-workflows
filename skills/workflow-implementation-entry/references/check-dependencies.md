@@ -31,9 +31,15 @@ For each dependency, check its state:
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{dep_topic} completed_tasks
 ```
 
-If `internal_id` appears in the completed tasks list, the dependency passes. If not (or the implementation entry doesn't exist), it is blocking.
+**If `internal_id` appears in the completed tasks list:**
 
-- **`satisfied_externally`** — passes
+Pass.
+
+**If not (or the implementation entry doesn't exist):**
+
+Blocking.
+
+- **`satisfied_externally`** — pass
 
 **If all satisfied:**
 
