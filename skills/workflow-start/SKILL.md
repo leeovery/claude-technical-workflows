@@ -23,6 +23,7 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 > *Output the next fenced block as a code block:*
 
 ```
+
     ___   _____________   __________________
    /   | / ____/ ____/ | / /_  __/  _/ ____/
   / /| |/ / __/ __/ /  |/ / / /  / // /
