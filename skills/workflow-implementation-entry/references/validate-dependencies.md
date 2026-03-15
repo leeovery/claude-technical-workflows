@@ -4,6 +4,12 @@
 
 ---
 
+#### If work_type is not `epic`
+
+→ Return to **[the skill](../SKILL.md)**.
+
+#### Otherwise
+
 Check whether external dependencies exist in the manifest:
 
 ```bash
