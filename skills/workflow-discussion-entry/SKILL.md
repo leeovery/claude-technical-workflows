@@ -60,7 +60,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.dis
 
 **If not exists (`false` — new entry):**
 
-→ Proceed to **Step 7** (Gather Context) with source="new".
+→ Proceed to **Step 6** (Gather Context) with source="new".
 
 #### If no `topic` (epic — scoped path)
 
@@ -102,7 +102,7 @@ Parse the discovery output to understand:
 
 Load **[validate-phase.md](references/validate-phase.md)** and follow its instructions as written.
 
-→ Proceed to **Step 7**.
+→ Proceed to **Step 6**.
 
 ---
 
@@ -120,7 +120,7 @@ Load **[route-scenario.md](references/route-scenario.md)** and follow its instru
 
 #### If fresh
 
-→ Proceed to **Step 7**.
+→ Proceed to **Step 6**.
 
 ---
 
@@ -132,7 +132,7 @@ Load **[research-analysis.md](references/research-analysis.md)** and follow its 
 
 ---
 
-## Step 5: Present Options
+## Step 5: Display Options
 
 Load **[display-options.md](references/display-options.md)** and follow its instructions as written.
 
@@ -140,22 +140,14 @@ Load **[display-options.md](references/display-options.md)** and follow its inst
 
 ---
 
-## Step 6: Handle Selection
+## Step 6: Gather Context
 
-Load **[handle-selection.md](references/handle-selection.md)** and follow its instructions as written.
+Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
 
 → Proceed to **Step 7**.
 
 ---
 
-## Step 7: Gather Context
-
-Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
-
-→ Proceed to **Step 8**.
-
----
-
-## Step 8: Invoke the Skill
+## Step 7: Invoke the Skill
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
