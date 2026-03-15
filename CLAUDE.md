@@ -231,15 +231,18 @@ Reads as: "advanced-features is blocked by task core-2-3 in the core-features pl
 
 ### "Not Ready" Blocks
 
-Separate code block. Descriptive heading as `{Artifacts} not ready for {phase}:`, explanatory line, then `•` bullets with parenthetical status. **Blank line after the explanation, before the list.**
+Separate code block. Descriptive heading as `{Artifacts} not ready for {phase}:`, explanatory line, then tree structure with `└─` branches. **Blank line after the explanation, before the list. Blank line between each item.**
 
 ```
 Specifications not ready for planning:
 These specifications are either still in progress or cross-cutting
 and cannot be planned directly.
 
-  • caching-strategy (cross-cutting, completed)
-  • rate-limiting (cross-cutting, in-progress)
+  Caching Strategy
+  └─ Cross-cutting (completed)
+
+  Rate Limiting
+  └─ Cross-cutting (in-progress)
 ```
 
 ### Key / Legend
