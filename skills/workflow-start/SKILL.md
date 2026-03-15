@@ -42,9 +42,11 @@ Agentic engineering workflows — from idea to implementation.
 
 ---
 
-## Step 0: Run Migrations
+## Step 0: Initialisation
 
-**This step is mandatory. You must complete it before proceeding.**
+Load **[casing-conventions.md](../workflow-shared/references/casing-conventions.md)** and follow its instructions as written.
+
+**Run migrations — this is mandatory. You must complete it before proceeding.**
 
 Invoke the `/workflow-migrate` skill and follow its instructions exactly — if it issues a STOP gate, you must stop.
 
