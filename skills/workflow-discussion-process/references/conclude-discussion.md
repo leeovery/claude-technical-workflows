@@ -10,16 +10,14 @@ When the user indicates they want to conclude:
 
 ```
 · · · · · · · · · · · ·
-- **`y`/`yes`** — Conclude discussion and mark as completed
-- **Comment** — Add context before concluding
+Conclude this discussion and mark as completed?
+
+- **`y`/`yes`** — Conclude discussion
+- **`n`/`no`** — Continue discussing
 · · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
-
-#### If `comment`
-
-Incorporate the user's context into the discussion, commit, then re-present the sign-off prompt above.
 
 #### If `yes`
 
@@ -36,3 +34,9 @@ Completed phase: discussion
 
 Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
 ```
+
+**STOP.** Do not proceed — terminal condition.
+
+#### If `no`
+
+→ Return to **[the skill](../SKILL.md)** for **Step 3**.

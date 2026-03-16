@@ -8,7 +8,7 @@ This step uses the `workflow-planning-dependency-grapher` agent (`../../../agent
 
 ---
 
-## Analyze Dependencies and Priorities
+## A. Analyze
 
 > *Output the next fenced block as a code block:*
 
@@ -24,8 +24,6 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planni
 
 Load the format's **[reading.md](output-formats/{format}/reading.md)** and **[graph.md](output-formats/{format}/graph.md)**.
 
-### Invoke the Agent
-
 Invoke `workflow-planning-dependency-grapher` with these file paths:
 
 1. **Plan Index File path**: `.workflows/{work_unit}/planning/{topic}/planning.md`
@@ -34,11 +32,13 @@ Invoke `workflow-planning-dependency-grapher` with these file paths:
 
 The agent clears any existing dependencies/priorities, analyzes all tasks, and — if no cycles — applies the new graph data directly. It returns a structured summary of what was done.
 
+→ Proceed to **B. Review and Approve**.
+
 ---
 
-## Review and Approve
+## B. Review and Approve
 
-#### If the agent reports no changes needed (`STATUS: no-changes`)
+#### If `STATUS` is `no-changes`
 
 The natural task order is already correct.
 
@@ -63,7 +63,23 @@ Approve the dependency graph?
 
 **STOP.** Wait for user response.
 
-#### If the agent reports a cycle (`STATUS: blocked`)
+**If the user provides feedback:**
+
+Re-invoke `workflow-planning-dependency-grapher` with all original inputs PLUS:
+- **Previous output**: the current analysis
+- **User feedback**: what to change
+
+The agent will clear all existing graph data and re-analyze from scratch.
+
+→ Return to **B. Review and Approve**.
+
+**If `approved`:**
+
+Commit: `planning({work_unit}): analyze task dependencies and priorities`
+
+→ Return to **[the skill](../SKILL.md)**.
+
+#### If `STATUS` is `blocked`
 
 No changes were applied.
 
@@ -79,9 +95,11 @@ This must be resolved before continuing. The cycle usually means two tasks each 
 
 **STOP.** Wait for user response.
 
-Options include adjusting task scope, merging tasks, or removing a dependency. Re-invoke the agent after changes.
+Adjust based on user direction — options include adjusting task scope, merging tasks, or removing a dependency.
 
-#### If the agent applied changes successfully (`STATUS: complete`)
+→ Return to **A. Analyze**.
+
+#### If `STATUS` is `complete`
 
 Dependencies and priorities have already been written to the task files.
 
@@ -112,14 +130,18 @@ Approve the updated graph?
 
 **STOP.** Wait for user response.
 
-#### If the user provides feedback
+**If the user provides feedback:**
 
 Re-invoke `workflow-planning-dependency-grapher` with all original inputs PLUS:
 - **Previous output**: the current analysis
 - **User feedback**: what to change
 
-The agent will clear all existing graph data and re-analyze from scratch. Present the revised analysis in full. Ask the same choice again. Repeat until approved.
+The agent will clear all existing graph data and re-analyze from scratch.
 
-#### If `approved`
+→ Return to **B. Review and Approve**.
+
+**If `approved`:**
 
 Commit: `planning({work_unit}): analyze task dependencies and priorities`
+
+→ Return to **[the skill](../SKILL.md)**.

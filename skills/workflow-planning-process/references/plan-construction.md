@@ -20,17 +20,9 @@ Navigation stays within plan construction. It cannot skip past the end of this s
 
 ---
 
-## Phase Structure
+## A. Phase Structure
 
 → Load **[define-phases.md](define-phases.md)** and follow its instructions as written.
-
-After the phase structure is approved, continue to **Process Phases** below.
-
----
-
-## Process Phases
-
-Work through each phase in order.
 
 > *Output the next fenced block as a code block:*
 
@@ -40,17 +32,28 @@ and designing or authoring anything still pending. You'll approve at
 every stage.
 ```
 
-### For each phase, check its state:
+→ Proceed to **B. Process Current Phase**.
+
+---
+
+## B. Process Current Phase
+
+Work through each phase in order. Check the current phase's state.
+
+Check `task_list_gate_mode` via manifest CLI:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} task_list_gate_mode
+```
 
 #### If the phase has no task table
 
 This phase needs task design.
 
-→ Proceed to **A. Define Tasks** with this phase.
+→ Load **[define-tasks.md](define-tasks.md)** and follow its instructions as written.
 
-After **A. Define Tasks** returns with an approved task table, proceed to **Author Tasks for the Phase** below.
+→ Proceed to **C. Author Phase Tasks**.
 
-#### If the phase has a task table
+#### If the phase has a task table and `task_list_gate_mode` is `auto`
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -60,22 +63,23 @@ After **A. Define Tasks** returns with an approved task table, proceed to **Auth
 {task list from the phase's task table}
 ```
 
-Check `task_list_gate_mode` via manifest CLI:
-```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} task_list_gate_mode
-```
-
-**If `task_list_gate_mode` is `auto`:**
-
 > *Output the next fenced block as a code block:*
 
 ```
 Phase {N}: {Phase Name} — task list confirmed. Proceeding to authoring.
 ```
 
-→ Proceed to **Author Tasks for the Phase** below.
+→ Proceed to **C. Author Phase Tasks**.
 
-**If `task_list_gate_mode` is `gated`:**
+#### If the phase has a task table and `task_list_gate_mode` is `gated`
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+**Phase {N}: {Phase Name}** — {M} tasks.
+
+{task list from the phase's task table}
+```
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -93,15 +97,17 @@ Approve this task list?
 
 **If the user wants changes:**
 
-→ Proceed to **A. Define Tasks** with this phase for revision.
+→ Load **[define-tasks.md](define-tasks.md)** and follow its instructions as written.
+
+→ Proceed to **C. Author Phase Tasks**.
 
 **If confirmed:**
 
-→ Proceed to **Author Tasks for the Phase** below.
+→ Proceed to **C. Author Phase Tasks**.
 
 ---
 
-## Author Tasks for the Phase
+## C. Author Phase Tasks
 
 Tasks are authored in a single batch per phase. One sub-agent authors all tasks for the phase, writing to a scratch file. The orchestrator then handles approval and writing to the plan format. Never invoke multiple authoring agents concurrently. Never batch beyond a single phase.
 
@@ -115,17 +121,17 @@ All tasks already written.
 Phase {N}: {Phase Name} — all tasks already authored.
 ```
 
-→ Proceed to the next phase.
+→ Proceed to **D. Advance Phase**.
 
 #### If any tasks in the phase have status `pending`
 
-→ Proceed to **B. Author Tasks** for the entire phase.
+→ Load **[author-tasks.md](author-tasks.md)** and follow its instructions as written.
 
-After **B. Author Tasks** returns, all tasks in the phase are authored.
+→ Proceed to **D. Advance Phase**.
 
-If the user navigates mid-approval, the scratch file preserves approval state. On return, resume from the first non-approved task.
+---
 
-#### When all tasks in the phase are authored
+## D. Advance Phase
 
 Advance the manifest planning position to the next phase:
 ```bash
@@ -141,13 +147,17 @@ Commit: `planning({work_unit}): complete Phase {N} tasks`
 Phase {N}: {Phase Name} — complete ({M} tasks authored).
 ```
 
-Continue to the next phase.
+#### If more phases remain
+
+→ Return to **B. Process Current Phase**.
+
+#### If all phases are complete
+
+→ Proceed to **E. Loop Complete**.
 
 ---
 
-## Loop Complete
-
-When all phases have all tasks authored:
+## E. Loop Complete
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -155,14 +165,4 @@ When all phases have all tasks authored:
 All phases are complete. The plan has **{N} phases** with **{M} tasks** total.
 ```
 
----
-
-## A. Define Tasks
-
-→ Load **[define-tasks.md](define-tasks.md)** and follow its instructions as written.
-
----
-
-## B. Author Tasks
-
-→ Load **[author-tasks.md](author-tasks.md)** and follow its instructions as written.
+→ Return to **[the skill](../SKILL.md)**.

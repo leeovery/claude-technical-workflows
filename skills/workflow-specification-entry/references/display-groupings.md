@@ -38,6 +38,8 @@ discussions) are silently skipped — there is nothing actionable.
 
 **Extraction count:** Y = count of unique discussions in (spec sources ∪ grouping members). X = count of those with `incorporated` status in spec sources. This ensures regressed sources that dropped out of the grouping still count toward Y.
 
+→ Proceed to **C. Display**.
+
 #### Otherwise
 
 For each discussion: status is `ready`. Spec status: `none`.

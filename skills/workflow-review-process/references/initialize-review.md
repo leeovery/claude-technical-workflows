@@ -68,6 +68,12 @@ Compare `completed_tasks` against `reviewed_tasks`. Any internal ID in `complete
 
 **If unreviewed tasks remain:**
 
+→ Proceed to **C. Select Review Mode**.
+
+---
+
+## C. Select Review Mode
+
 > *Output the next fenced block as a code block:*
 
 ```

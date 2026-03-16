@@ -14,9 +14,11 @@ Scratch file path: `.workflows/.cache/planning/{work_unit}/{topic}/phase-{N}.md`
 
 Create the `.workflows/.cache/planning/{work_unit}/{topic}/` directory if it does not exist.
 
+→ Proceed to **B. Invoke the Agent**.
+
 ---
 
-## B. Invoke the Agent (Batch)
+## B. Invoke the Agent
 
 > *Output the next fenced block as a code block:*
 
@@ -36,6 +38,8 @@ Invoke `workflow-planning-task-author` with these file paths:
 
 The agent writes all tasks to the scratch file and returns.
 
+→ Proceed to **C. Validate Scratch File**.
+
 ---
 
 ## C. Validate Scratch File
@@ -44,7 +48,7 @@ Read the scratch file and count tasks. Verify task count matches the task table 
 
 #### If `mismatch`
 
-Re-invoke the agent with the same inputs.
+→ Return to **B. Invoke the Agent**.
 
 #### If `valid`
 
@@ -59,7 +63,7 @@ Check `author_gate_mode` via manifest CLI:
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} author_gate_mode
 ```
 
-#### If `author_gate_mode: auto`
+#### If `author_gate_mode` is `auto`
 
 > *Output the next fenced block as a code block:*
 
@@ -67,9 +71,9 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planni
 Phase {N}: {count} tasks authored. Auto-approved. Writing to plan.
 ```
 
-→ Proceed to **F. Write to Plan**.
+→ Proceed to **G. Write to Plan**.
 
-#### If `author_gate_mode: gated`
+#### If `author_gate_mode` is `gated`
 
 → Proceed to **E. Approval Loop**.
 
@@ -82,6 +86,8 @@ For each task in the scratch file, in order:
 #### If task status is `approved`
 
 Skip — already approved from a previous pass.
+
+→ Return to **E. Approval Loop**.
 
 #### If task status is `pending`
 
@@ -110,20 +116,22 @@ Approve this task?
 
 **STOP.** Wait for user response.
 
-#### If approved (`y`/`yes`)
+**If `approved` (`y`/`yes`):**
 
-Mark the task `approved` in the scratch file. Continue to the next task.
+Mark the task `approved` in the scratch file.
 
-#### If `auto`
+→ Return to **E. Approval Loop**.
+
+**If `auto`:**
 
 Mark the task `approved` in the scratch file. Set all remaining `pending` tasks to `approved`. Update `author_gate_mode` in the manifest:
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} author_gate_mode auto
 ```
 
-→ Proceed to **F. Write to Plan**.
+→ Proceed to **G. Write to Plan**.
 
-#### If the user provides feedback
+**If the user provides feedback:**
 
 Mark the task `rejected` in the scratch file and add the feedback as a blockquote:
 
@@ -136,21 +144,25 @@ Mark the task `rejected` in the scratch file and add the feedback as a blockquot
 ...
 ```
 
-Continue to the next task.
+→ Return to **E. Approval Loop**.
 
-#### If the user navigates
+**If the user navigates:**
 
-→ Return to **[plan-construction.md](plan-construction.md)**. The scratch file preserves approval state.
+→ Return to **[plan-construction.md](plan-construction.md)**.
+
+When all tasks are processed:
+
+→ Proceed to **F. Revision Check**.
 
 ---
 
-### Revision
+## F. Revision Check
 
-After completing the approval loop, check for rejected tasks.
+Check for rejected tasks in the scratch file.
 
 #### If no rejected tasks
 
-→ Proceed to **F. Write to Plan**.
+→ Proceed to **G. Write to Plan**.
 
 #### If rejected tasks exist
 
@@ -160,11 +172,11 @@ After completing the approval loop, check for rejected tasks.
 {N} tasks need revision. Re-invoking author agent...
 ```
 
-→ Return to **B. Invoke the Agent (Batch)**. The agent receives the scratch file with rejected tasks and feedback, rewrites only those, and the flow continues through validation, gate check, and approval as normal.
+→ Return to **B. Invoke the Agent**.
 
 ---
 
-## F. Write to Plan
+## G. Write to Plan
 
 > **CHECKPOINT**: If `author_gate_mode: gated`, verify all tasks in the scratch file are marked `approved` before writing.
 
@@ -192,9 +204,11 @@ Task {M} of {total}: {Task Name} — authored.
 
 Repeat for each task.
 
+→ Proceed to **H. Cleanup**.
+
 ---
 
-## G. Cleanup
+## H. Cleanup
 
 Delete the scratch file: `rm .workflows/.cache/planning/{work_unit}/{topic}/phase-{N}.md`
 

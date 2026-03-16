@@ -123,7 +123,9 @@ Finding {N} of {total}: {Brief Title} — approved. Applied to plan.
 
 #### If the user provides feedback
 
-Incorporate feedback and re-present the proposed fix **in full**. Update the tracking file with the revised content. Then ask the same choice again. Repeat until approved or skipped.
+Incorporate feedback and re-present the proposed fix **in full**. Update the tracking file with the revised content.
+
+→ Return to **B. Process One Item at a Time**.
 
 #### If `approved`
 
