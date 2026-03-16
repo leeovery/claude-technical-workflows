@@ -14,13 +14,19 @@ Load **[review-tracking-format.md](review-tracking-format.md)** — internalize 
 
 ---
 
-## A. Cycle Management
+## A. Cycle Initialization
 
 Check the `review_cycle` field via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.specification.{topic} review_cycle`).
 
 #### If `review_cycle` is 0 or not set
 
 Set `review_cycle` to 1 via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.specification.{topic} review_cycle 1`).
+
+Record the current cycle number — used for tracking file naming (`c{N}`).
+
+Commit the updated manifest.
+
+→ Proceed to **C. Phase 1 — Input Review**.
 
 #### If `review_cycle` is already set
 
@@ -30,21 +36,25 @@ Record the current cycle number — used for tracking file naming (`c{N}`).
 
 Commit the updated manifest.
 
-**If `review_cycle` <= 3:**
+→ Proceed to **B. Cycle Gate**.
 
-→ Proceed to **B. Phase 1 — Input Review**.
+---
 
-#### If `review_cycle` > 3
+## B. Cycle Gate
 
 Check `finding_gate_mode` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.specification.{topic} finding_gate_mode`).
 
-**If `finding_gate_mode: auto`:**
+#### If `review_cycle` <= 3
 
-Auto mode is active — pass through to review. Section D's safety cap (cycle 5) handles escalation.
+→ Proceed to **C. Phase 1 — Input Review**.
 
-→ Proceed to **B. Phase 1 — Input Review**.
+#### If `review_cycle` > 3 and `finding_gate_mode` is `auto`
 
-**If `finding_gate_mode: gated` (or not set):**
+Auto mode is active — pass through to review. Section E's safety cap (cycle 5) handles escalation.
+
+→ Proceed to **C. Phase 1 — Input Review**.
+
+#### If `review_cycle` > 3 and `finding_gate_mode` is `gated` (or not set)
 
 **Do NOT skip review autonomously.** This gate is an escape hatch for the user — not a signal to stop. The expected default is to continue running review until no issues are found. Present the choice and let the user decide.
 
@@ -72,17 +82,17 @@ You MUST NOT choose on the user's behalf.
 
 **STOP.** Wait for user response.
 
-#### If `proceed`
+**If `proceed`:**
 
-→ Proceed to **B. Phase 1 — Input Review**.
+→ Proceed to **C. Phase 1 — Input Review**.
 
-#### If `skip`
+**If `skip`:**
 
-→ Proceed to **E. Completion**.
+→ Proceed to **F. Completion**.
 
 ---
 
-## B. Phase 1 — Input Review
+## C. Phase 1 — Input Review
 
 Dispatch the `workflow-specification-review-input` agent via the Task tool:
 
@@ -94,14 +104,8 @@ Dispatch the `workflow-specification-review-input` agent via the Task tool:
   node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type
   ```
   Sources returns an object keyed by source name (e.g., `{"auth-design": {"status": "incorporated"}}`). For each source name, construct the source file path based on work type:
-
-  #### If work type is `bugfix`
-
-  `.workflows/{work_unit}/investigation/{source-name}.md`
-
-  #### Otherwise
-
-  `.workflows/{work_unit}/discussion/{source-name}.md`
+  - Bugfix: `.workflows/{work_unit}/investigation/{source-name}.md`
+  - Otherwise: `.workflows/{work_unit}/discussion/{source-name}.md`
 
   Pass all resolved paths to the agent.
 - **Topic name**: the current topic
@@ -114,11 +118,11 @@ Wait for the agent to return. Record its STATUS as `phase_1_status`.
 
 → Load **[process-review-findings.md](process-review-findings.md)** and follow its instructions as written.
 
-→ Proceed to **C. Phase 2 — Gap Analysis**.
+→ Proceed to **D. Phase 2 — Gap Analysis**.
 
 ---
 
-## C. Phase 2 — Gap Analysis
+## D. Phase 2 — Gap Analysis
 
 Dispatch the `workflow-specification-review-gap-analysis` agent via the Task tool:
 
@@ -134,17 +138,11 @@ Wait for the agent to return. Record its STATUS as `phase_2_status`.
 
 → Load **[process-review-findings.md](process-review-findings.md)** and follow its instructions as written.
 
-→ Proceed to **D. Re-Loop Prompt**.
+→ Proceed to **E. Re-Loop Prompt**.
 
 ---
 
-## D. Re-Loop Prompt
-
-#### If `phase_1_status` is `clean` and `phase_2_status` is `clean`
-
-→ Proceed to **E. Completion** (nothing to re-analyse).
-
-#### If either status is `findings`
+## E. Re-Loop Prompt
 
 Check `finding_gate_mode` and `review_cycle` via manifest CLI:
 ```bash
@@ -152,7 +150,11 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.specif
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.specification.{topic} review_cycle
 ```
 
-#### If `finding_gate_mode: auto` and `review_cycle < 5`
+#### If `phase_1_status` is `clean` and `phase_2_status` is `clean`
+
+→ Proceed to **F. Completion**.
+
+#### If `finding_gate_mode` is `auto` and `review_cycle` < 5
 
 > *Output the next fenced block as a code block:*
 
@@ -160,9 +162,9 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.specif
 Review cycle {N} complete — findings applied. Running follow-up cycle.
 ```
 
-→ Return to **A. Cycle Management**.
+→ Return to **A. Cycle Initialization**.
 
-#### If `finding_gate_mode: auto` and `review_cycle >= 5`
+#### If `finding_gate_mode` is `auto` and `review_cycle` >= 5
 
 > *Output the next fenced block as a code block:*
 
@@ -171,10 +173,6 @@ Review cycle {N}
 
 Auto-review has not converged after 5 cycles — escalating for human review.
 ```
-
-Present the gated re-loop prompt below.
-
-#### If `finding_gate_mode: gated`
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -189,17 +187,40 @@ Run another review cycle?
 
 **STOP.** Wait for user response.
 
-#### If `reanalyse`
+**If `reanalyse`:**
 
-→ Return to **A. Cycle Management** to begin a fresh cycle.
+→ Return to **A. Cycle Initialization**.
 
-#### If `proceed`
+**If `proceed`:**
 
-→ Proceed to **E. Completion**.
+→ Proceed to **F. Completion**.
+
+#### If `finding_gate_mode` is `gated`
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+Run another review cycle?
+
+- **`r`/`reanalyse`** — Run another review cycle (Phase 1 + Phase 2)
+- **`p`/`proceed`** — Proceed to completion
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+**If `reanalyse`:**
+
+→ Return to **A. Cycle Initialization**.
+
+**If `proceed`:**
+
+→ Proceed to **F. Completion**.
 
 ---
 
-## E. Completion
+## F. Completion
 
 1. **Verify tracking files are marked complete** — All input review and gap analysis tracking files across all cycles must have `status: complete`.
 
