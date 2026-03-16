@@ -112,7 +112,9 @@ Dispatch the `workflow-specification-review-input` agent via the Task tool:
 - **Cycle number**: the current cycle number
 - **Review tracking format path**: `review-tracking-format.md` (in this references directory)
 
-Wait for the agent to return. Record its STATUS as `phase_1_status`.
+> **CHECKPOINT**: Do not proceed until the agent has returned its result.
+
+Record its STATUS as `phase_1_status`.
 
 **If the agent created a tracking file**, commit it: `spec({work_unit}): input review cycle {N}`
 
@@ -132,7 +134,9 @@ Dispatch the `workflow-specification-review-gap-analysis` agent via the Task too
 - **Cycle number**: the current cycle number
 - **Review tracking format path**: `review-tracking-format.md` (in this references directory)
 
-Wait for the agent to return. Record its STATUS as `phase_2_status`.
+> **CHECKPOINT**: Do not proceed until the agent has returned its result.
+
+Record its STATUS as `phase_2_status`.
 
 **If the agent created a tracking file**, commit it: `spec({work_unit}): gap analysis cycle {N}`
 
