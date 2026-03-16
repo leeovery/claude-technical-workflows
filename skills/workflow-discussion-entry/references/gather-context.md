@@ -6,17 +6,25 @@
 
 Route based on the `source` variable set in earlier steps.
 
-#### If source is `new`
+#### If source is `topic-provided`
 
 New discussion entry: topic was provided by the caller.
 
-Check research status via manifest:
+Check if any completed research items exist:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.research status
+node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.research.*
 ```
 
-**If research status is `completed`:**
+**If exists (`true`):**
+
+Check their statuses:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.research.* status
+```
+
+**If any research item has status `completed`:**
 
 List the research files via `ls .workflows/{work_unit}/research/*.md`.
 
@@ -36,7 +44,7 @@ Anything to add or adjust before we begin, or "go" to proceed:
 
 **STOP.** Wait for user response.
 
-Set source="new-with-research".
+Set source="topic-provided-with-research".
 
 → Return to **[the skill](../SKILL.md)**.
 

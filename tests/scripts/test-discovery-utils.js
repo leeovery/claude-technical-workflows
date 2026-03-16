@@ -178,8 +178,8 @@ describe('discovery-utils', () => {
       assert.strictEqual(phaseStatus({ phases: { discussion: { items: {} } } }, 'discussion'), null);
     });
 
-    it('falls back to flat status for uninitialised phases', () => {
-      assert.strictEqual(phaseStatus({ phases: { discussion: { status: 'completed' } } }, 'discussion'), 'completed');
+    it('returns null for phase with flat status but no items', () => {
+      assert.strictEqual(phaseStatus({ phases: { discussion: { status: 'completed' } } }, 'discussion'), null);
     });
 
     it('returns null for missing phase', () => {
@@ -404,13 +404,13 @@ describe('discovery-utils', () => {
       assert.strictEqual(r.phase_label, 'specification (in-progress)');
     });
 
-    it('epic: falls back to flat status for uninitialised research', () => {
+    it('epic: ignores flat status for uninitialised research', () => {
       const r = computeNextPhase({
         work_type: 'epic',
         phases: { research: { status: 'in-progress' } },
       });
-      assert.strictEqual(r.next_phase, 'research');
-      assert.strictEqual(r.phase_label, 'research (in-progress)');
+      // Flat status is ignored — falls through to default
+      assert.strictEqual(r.next_phase, 'discussion');
     });
 
     it('epic: aggregates research items like other phases', () => {

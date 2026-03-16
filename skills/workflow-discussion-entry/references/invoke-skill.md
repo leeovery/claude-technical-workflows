@@ -29,7 +29,7 @@ Invoke the workflow-discussion-process skill.
 
 Invoke the [workflow-discussion-process](../../workflow-discussion-process/SKILL.md) skill. Do not act on the gathered information until the skill is loaded — it contains the instructions for how to proceed. Terminal.
 
-#### If source is `new-with-research`
+#### If source is `topic-provided-with-research`
 
 ```
 Discussion session for: {topic}
@@ -59,7 +59,7 @@ Invoke the workflow-discussion-process skill.
 
 Invoke the [workflow-discussion-process](../../workflow-discussion-process/SKILL.md) skill. Do not act on the gathered information until the skill is loaded — it contains the instructions for how to proceed. Terminal.
 
-#### If source is `fresh` or `new`
+#### If source is `fresh` or `topic-provided`
 
 ```
 Discussion session for: {topic}

@@ -264,12 +264,6 @@ function validateSet(segments, value) {
     const phase = segments[1];
     validatePhase(phase);
 
-    // phases.<phase>.status
-    if (segments.length === 3 && segments[2] === 'status') {
-      validatePhaseStatus(phase, value);
-      return;
-    }
-
     // phases.<phase>.items.<item>.status
     if (segments.length === 5 && segments[2] === 'items' && segments[4] === 'status') {
       validatePhaseStatus(phase, value);

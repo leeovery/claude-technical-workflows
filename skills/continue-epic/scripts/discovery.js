@@ -185,8 +185,7 @@ function discover(cwd, workUnit) {
     const activePhases = [];
     for (const phase of EPIC_PHASES) {
       const items = phaseItems(m, phase);
-      const pd = phaseData(m, phase);
-      if (items.length > 0 || pd.status) {
+      if (items.length > 0) {
         activePhases.push(phase);
       }
     }

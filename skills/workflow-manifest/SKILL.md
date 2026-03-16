@@ -278,16 +278,16 @@ The CLI validates structural values to prevent invalid state:
 |--------------------------------|------------------------------------------|
 | `work_type`                    | `epic`, `feature`, `bugfix`              |
 | `status` (work unit)           | `in-progress`, `completed`, `cancelled`  |
-| `phases.research.status`       | `in-progress`, `completed`               |
-| `phases.discussion.status`     | `in-progress`, `completed`               |
-| `phases.investigation.status`  | `in-progress`, `completed`               |
-| `phases.specification.status`  | `in-progress`, `completed`, `superseded` |
-| `phases.planning.status`       | `in-progress`, `completed`               |
-| `phases.implementation.status` | `in-progress`, `completed`               |
-| `phases.review.status`         | `in-progress`, `completed`               |
+| Item `status` (research)       | `in-progress`, `completed`               |
+| Item `status` (discussion)     | `in-progress`, `completed`               |
+| Item `status` (investigation)  | `in-progress`, `completed`               |
+| Item `status` (specification)  | `in-progress`, `completed`, `superseded` |
+| Item `status` (planning)       | `in-progress`, `completed`               |
+| Item `status` (implementation) | `in-progress`, `completed`               |
+| Item `status` (review)         | `in-progress`, `completed`               |
 | Gate modes (`*_gate_mode`)     | `gated`, `auto`                          |
 
-Item-level statuses within epic phases follow the same phase-level rules.
+Status is always tracked at the item level (`phases.{phase}.items.{topic}.status`), never at the phase level.
 
 ## Output Conventions
 
