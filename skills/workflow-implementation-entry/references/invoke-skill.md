@@ -4,9 +4,7 @@
 
 ---
 
-This skill's purpose is now fulfilled.
-
-Invoke the [workflow-implementation-process](../../workflow-implementation-process/SKILL.md) skill for your next instructions. Do not act on the gathered information until the skill is loaded - it contains the instructions for how to proceed.
+This skill's purpose is now fulfilled. Construct the handoff and invoke the processing skill.
 
 ---
 
@@ -40,3 +38,5 @@ Environment: {Setup required | No special setup required}
 
 Invoke the workflow-implementation-process skill.
 ```
+
+Invoke the [workflow-implementation-process](../../workflow-implementation-process/SKILL.md) skill. Do not act on the gathered information until the skill is loaded — it contains the instructions for how to proceed. Terminal.
