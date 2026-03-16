@@ -45,6 +45,8 @@ Completed phase: review
 Invoke the workflow-bridge skill to enter plan mode with completion confirmation.
 ```
 
+**STOP.** Do not proceed — terminal condition.
+
 #### If any verdict is `Request Changes`
 
 Blocking issues exist. Synthesis is strongly recommended.
@@ -89,6 +91,8 @@ Completed phase: review
 
 Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
 ```
+
+**STOP.** Do not proceed — terminal condition.
 
 #### If verdict is `Comments Only`
 
@@ -135,6 +139,8 @@ Completed phase: review
 Invoke the workflow-bridge skill to enter plan mode with completion confirmation.
 ```
 
+**STOP.** Do not proceed — terminal condition.
+
 ---
 
 ## B. Dispatch Review Synthesizer
@@ -165,6 +171,8 @@ Completed phase: review
 
 Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
 ```
+
+**STOP.** Do not proceed — terminal condition.
 
 #### If `STATUS` is `tasks_proposed`
 
@@ -294,6 +302,8 @@ Completed phase: review
 
 Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
 ```
+
+**STOP.** Do not proceed — terminal condition.
 
 ---
 

@@ -4,6 +4,8 @@
 
 ---
 
+## A. Present Verdict
+
 Read the review file at `.workflows/{work_unit}/review/{topic}/report.md`.
 
 Present a structured summary to the user:
@@ -28,6 +30,8 @@ All acceptance criteria met. No blocking issues found.
 {Any recommendations, if present}
 ```
 
+→ Proceed to **B. Q&A Loop**.
+
 #### If verdict is `Request Changes`
 
 > *Output the next fenced block as a code block:*
@@ -43,6 +47,8 @@ Required Changes:
 {Recommendations section, if present}
 ```
 
+→ Proceed to **B. Q&A Loop**.
+
 #### If verdict is `Comments Only`
 
 > *Output the next fenced block as a code block:*
@@ -53,9 +59,11 @@ Comments:
   {Recommendations from the review}
 ```
 
+→ Proceed to **B. Q&A Loop**.
+
 ---
 
-## Q&A Loop
+## B. Q&A Loop
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -72,9 +80,9 @@ Any questions before proceeding?
 
 #### If user asks a question
 
-Answer the question using the review file, QA task files, specification, and plan as context. After answering:
+Answer the question using the review file, QA task files, specification, and plan as context.
 
-→ Return to **Q&A Loop**.
+→ Return to **B. Q&A Loop**.
 
 #### If `continue`
 

@@ -23,3 +23,5 @@ Your review feedback can be:
 - Overridden by user ("ship it anyway")
 
 You produce feedback. User decides what to do with it.
+
+→ Return to **[the skill](../SKILL.md)**.
