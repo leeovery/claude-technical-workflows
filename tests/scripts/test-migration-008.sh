@@ -32,14 +32,11 @@ echo ""
 #
 
 report_update() {
-    local file="$1"
-    local description="$2"
-    echo "[UPDATE] $file: $description"
+    echo "updated"
 }
 
 report_skip() {
-    local file="$1"
-    echo "[SKIP] $file"
+    echo "skipped"
 }
 
 # Export functions for sourced script
@@ -297,7 +294,7 @@ output=$(run_migration 2>&1)
 
 new_r1=$(cat "$REVIEW_DIR/done/r1/review.md")
 assert_equals "$new_r1" "$original_r1" "Existing r1/ content unchanged"
-assert_contains "$output" "SKIP" "Skipped when r1/ exists"
+assert_contains "$output" "skipped" "Skipped when r1/ exists"
 
 echo ""
 

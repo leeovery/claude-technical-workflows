@@ -32,14 +32,11 @@ echo ""
 #
 
 report_update() {
-    local file="$1"
-    local description="$2"
-    echo "[UPDATE] $file: $description"
+    echo "updated"
 }
 
 report_skip() {
-    local file="$1"
-    echo "[SKIP] $file"
+    echo "skipped"
 }
 
 # Export functions for sourced script
@@ -230,7 +227,7 @@ echo "existing" > "$TEST_DIR/.workflows/discussion/auth.md"
 
 output=$(run_migration 2>&1)
 
-assert_contains "$output" "SKIP" "Reports skip when nothing to migrate"
+assert_contains "$output" "skipped" "Reports skip when nothing to migrate"
 assert_file_exists "$TEST_DIR/.workflows/discussion/auth.md" "Existing files untouched"
 assert_equals "$(cat "$TEST_DIR/.workflows/discussion/auth.md")" "existing" "Content unchanged"
 
@@ -243,7 +240,7 @@ setup_fixture
 
 output=$(run_migration 2>&1)
 
-assert_contains "$output" "SKIP" "Reports skip for fresh install"
+assert_contains "$output" "skipped" "Reports skip for fresh install"
 assert_dir_not_exists "$TEST_DIR/.workflows" ".workflows/ not created unnecessarily"
 
 echo ""
@@ -287,7 +284,7 @@ output=$(run_migration 2>&1)
 new_content=$(cat "$TEST_DIR/.gitignore")
 
 assert_equals "$new_content" "$original" "Gitignore unchanged"
-assert_contains "$output" "SKIP" "Reports skip for gitignore"
+assert_contains "$output" "skipped" "Reports skip for gitignore"
 
 echo ""
 
@@ -344,7 +341,7 @@ echo "other" > "$TEST_DIR/docs/workflow/discussion/billing.md"
 
 output=$(run_migration 2>&1)
 
-assert_contains "$output" "SKIP" "Reports skip for existing item"
+assert_contains "$output" "skipped" "Reports skip for existing item"
 assert_equals "$(cat "$TEST_DIR/.workflows/discussion/auth.md")" "new" "Existing destination not overwritten"
 
 echo ""

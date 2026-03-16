@@ -35,14 +35,11 @@ FILES_UPDATED=0
 FILES_SKIPPED=0
 
 report_update() {
-    local file="$1"
-    local description="$2"
-    FILES_UPDATED=$((FILES_UPDATED + 1))
+    echo "updated"
 }
 
 report_skip() {
-    local file="$1"
-    FILES_SKIPPED=$((FILES_SKIPPED + 1))
+    echo "skipped"
 }
 
 # No export needed — migration is sourced in the same shell

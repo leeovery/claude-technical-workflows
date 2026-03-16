@@ -32,14 +32,11 @@ echo ""
 #
 
 report_update() {
-    local file="$1"
-    local description="$2"
-    echo "[UPDATE] $file: $description"
+    echo "updated"
 }
 
 report_skip() {
-    local file="$1"
-    echo "[SKIP] $file"
+    echo "skipped"
 }
 
 # Export functions for sourced script

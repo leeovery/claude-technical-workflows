@@ -32,14 +32,11 @@ echo ""
 #
 
 report_update() {
-    local file="$1"
-    local description="$2"
-    echo "[UPDATE] $file: $description"
+    echo "updated"
 }
 
 report_skip() {
-    local file="$1"
-    echo "[SKIP] $file"
+    echo "skipped"
 }
 
 # Export functions for sourced script
@@ -273,7 +270,7 @@ EOF
 
 output=$(run_migration 2>&1)
 
-assert_contains "$output" "SKIP" "Skipped when no task files"
+assert_contains "$output" "skipped" "Skipped when no task files"
 assert_file_exists "$PLAN_DIR/beads-plan/plan.md" "plan.md untouched"
 
 echo ""
@@ -315,7 +312,7 @@ EOF
 
 output=$(run_migration 2>&1)
 
-assert_contains "$output" "SKIP" "Skipped when tasks already moved"
+assert_contains "$output" "skipped" "Skipped when tasks already moved"
 assert_file_exists "$PLAN_DIR/done/tasks/done-1-1.md" "Existing task file untouched"
 
 echo ""

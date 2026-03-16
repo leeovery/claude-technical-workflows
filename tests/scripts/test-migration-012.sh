@@ -32,14 +32,11 @@ echo ""
 #
 
 report_update() {
-    local file="$1"
-    local description="$2"
-    echo "[UPDATE] $file: $description"
+    echo "updated"
 }
 
 report_skip() {
-    local file="$1"
-    echo "[SKIP] $file"
+    echo "skipped"
 }
 
 # Export functions for sourced script
@@ -164,7 +161,7 @@ output=$(run_migration 2>&1)
 
 assert_file_exists "$TEST_DIR/.workflows/.state/environment-setup.md" "File still in .state/"
 assert_equals "$(cat "$TEST_DIR/.workflows/.state/environment-setup.md")" "already there" "Content unchanged"
-assert_contains "$output" "SKIP" "Reports skip"
+assert_contains "$output" "skipped" "Reports skip"
 
 echo ""
 
