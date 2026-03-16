@@ -8,7 +8,7 @@ This step uses the `workflow-planning-task-designer` agent (`../../../agents/wor
 
 ---
 
-## Design the Task List
+## A. Design Task List
 
 > *Output the next fenced block as a code block:*
 
@@ -56,16 +56,18 @@ Present the task overview to the user:
 {task overview from workflow-planning-task-designer agent}
 ```
 
-Then check the gate mode.
+→ Proceed to **B. Check Gate Mode**.
 
-### Check Gate Mode
+---
+
+## B. Check Gate Mode
 
 Check `task_list_gate_mode` via manifest CLI:
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} task_list_gate_mode
 ```
 
-#### If `task_list_gate_mode: auto`
+#### If `task_list_gate_mode` is `auto`
 
 > *Output the next fenced block as a code block:*
 
@@ -73,9 +75,9 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planni
 Phase {N}: {Phase Name} — task list approved. Proceeding to authoring.
 ```
 
-→ Proceed to **If approved** below.
+→ Proceed to **C. Finalize Approval**.
 
-#### If `task_list_gate_mode: gated`
+#### If `task_list_gate_mode` is `gated`
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -98,15 +100,23 @@ Re-invoke `workflow-planning-task-designer` with all original inputs PLUS:
 - **Previous output**: the current task list
 - **User feedback**: what the user wants changed
 
-Update the Plan Index File with the revised task table, re-present, and ask again. Repeat until approved.
+Update the Plan Index File with the revised task table.
+
+→ Return to **B. Check Gate Mode**.
 
 #### If `auto`
 
 Note that `task_list_gate_mode` should be updated to `auto` in the manifest during the commit step below.
 
-→ Proceed to **If approved** below.
+→ Proceed to **C. Finalize Approval**.
 
-#### If approved (`y`/`yes` or `auto`)
+#### If approved (`y`/`yes`)
+
+→ Proceed to **C. Finalize Approval**.
+
+---
+
+## C. Finalize Approval
 
 **If the task list is new or was amended:**
 
