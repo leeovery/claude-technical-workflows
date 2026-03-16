@@ -1,6 +1,6 @@
 # Cross-Cutting Work Type
 
-Status: brainstorming
+Status: ready for planning
 Date: 2026-03-15
 
 ## Problem
@@ -148,6 +148,34 @@ What fields beyond work unit registry? Candidates:
 ### 3. Discovery script impact
 
 Project manifest replaces directory scanning. How much of the existing discovery infrastructure changes? Likely simplifies significantly but needs audit.
+
+## Implementation Readiness
+
+### Infrastructure Touch Points
+
+| Area | File(s) | Change |
+|------|---------|--------|
+| Manifest CLI | `manifest.js` | Add `cross-cutting` to `VALID_WORK_TYPES`; add `promoted` to valid spec statuses |
+| Pipeline state machine | `discovery-utils.js` `computeNextPhase()` | Add cc terminal condition (spec completed → done) |
+| Bridge | `workflow-bridge/SKILL.md` | Add cc branch (terminal after spec) |
+| Work unit creation | `workflow-start/` | Add cc as 4th option |
+| Continue skill | New `continue-cross-cutting/` | New skill, pipeline: research → discussion → spec |
+| Start skill | New `start-cross-cutting/` | New entry-point skill |
+| Spec completion | `spec-completion.md` | Skip assessment for non-epic; if epic + cc → auto-promote |
+| Spec format | `specification-format.md` | Remove `type` field from schema |
+| Planning entry | `cross-cutting-context.md` | Rewrite: read project manifest, find cc work units, load completed specs |
+| Planning entry | `validate-spec.md` | Remove cc identification from epic specs |
+| Project manifest | `.workflows/manifest.json` | New file, created on first work unit creation |
+| All creation flows | Various | Register in project manifest on creation |
+| Discovery scripts | `workflow-start/discovery.js`, `continue-*/discovery.js` | Add cc to type filtering |
+
+### Edge Cases
+
+1. **Work unit name collision on promotion** — topic name may already exist as a work unit. Need collision handling
+2. **Existing projects migration** — build project manifest from existing work units; leave existing cc-tagged specs as-is (conservative)
+3. **Promoted topic in epic displays** — `continue-epic` must show promoted topics as `(promoted)` and not offer them for continuation
+4. **Assessment scope** — skip for non-epic work types (feature/bugfix always feature, cc already known)
+5. **Bridge as pipeline authority** — spec-completion should always invoke bridge; bridge handles terminal conditions per work type (single state machine, not split across skills)
 
 ## Related
 
