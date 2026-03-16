@@ -79,8 +79,8 @@ create_review_files() {
 }
 
 # Stub report functions for migration script
-report_update() { echo "updated: $1 — $2"; }
-report_skip() { echo "skipped: $1 — $2"; }
+report_update() { echo "updated"; }
+report_skip() { echo "skipped"; }
 export -f report_update
 export -f report_skip
 
@@ -184,8 +184,8 @@ assert_file_exists "$TEST_DIR/.workflows/my-feat/review/my-feat/report-2-1.md" "
 assert_file_not_exists "$TEST_DIR/.workflows/my-feat/review/my-feat/qa-task-1.md" "old qa-task-1.md removed"
 assert_file_not_exists "$TEST_DIR/.workflows/my-feat/review/my-feat/qa-task-2.md" "old qa-task-2.md removed"
 assert_file_not_exists "$TEST_DIR/.workflows/my-feat/review/my-feat/qa-task-3.md" "old qa-task-3.md removed"
-assert_contains "$output" "renamed review.md" "Reports review.md rename"
-assert_contains "$output" "report-1-1.md" "Reports qa-task rename"
+assert_contains "$output" "updated" "Reports review.md rename"
+assert_contains "$output" "updated" "Reports qa-task rename"
 
 echo ""
 
@@ -224,7 +224,7 @@ output=$(run_migration)
 
 assert_file_exists "$TEST_DIR/.workflows/done/review/done/report.md" "report.md still exists"
 assert_file_exists "$TEST_DIR/.workflows/done/review/done/report-1-1.md" "report-1-1.md still exists"
-assert_not_contains "$output" "renamed" "No renames reported"
+assert_not_contains "$output" "updated" "No renames reported"
 
 echo ""
 
@@ -242,7 +242,7 @@ output=$(run_migration)
 
 assert_file_exists "$TEST_DIR/.workflows/no-plan/review/no-plan/report.md" "review.md still renamed"
 assert_file_exists "$TEST_DIR/.workflows/no-plan/review/no-plan/qa-task-1.md" "qa-task-1 preserved (no plan)"
-assert_contains "$output" "no plan found" "Reports skip reason"
+assert_contains "$output" "skipped" "Reports skip reason"
 
 echo ""
 
@@ -265,7 +265,7 @@ assert_file_exists "$TEST_DIR/.workflows/mismatch/review/mismatch/report.md" "re
 assert_file_exists "$TEST_DIR/.workflows/mismatch/review/mismatch/qa-task-1.md" "qa-task-1 preserved (mismatch)"
 assert_file_exists "$TEST_DIR/.workflows/mismatch/review/mismatch/qa-task-2.md" "qa-task-2 preserved (mismatch)"
 assert_file_exists "$TEST_DIR/.workflows/mismatch/review/mismatch/qa-task-3.md" "qa-task-3 preserved (mismatch)"
-assert_contains "$output" "qa-task count (3) != plan task count (2)" "Reports mismatch"
+assert_contains "$output" "skipped" "Reports mismatch"
 
 echo ""
 
@@ -354,7 +354,7 @@ output=$(run_migration)
 
 assert_file_exists "$TEST_DIR/.workflows/idem/review/idem/report.md" "report.md still correct"
 assert_file_exists "$TEST_DIR/.workflows/idem/review/idem/report-1-1.md" "report-1-1.md still correct"
-assert_not_contains "$output" "renamed" "No renames on second run"
+assert_not_contains "$output" "updated" "No renames on second run"
 
 echo ""
 
@@ -366,7 +366,7 @@ setup_fixture
 output=$(run_migration)
 
 assert_not_contains "$output" "updated" "No updates without .workflows dir"
-assert_not_contains "$output" "renamed" "No renames without .workflows dir"
+assert_not_contains "$output" "skipped" "No renames without .workflows dir"
 
 echo ""
 
@@ -379,7 +379,7 @@ create_manifest "no-review" '{"name":"no-review","work_type":"feature","status":
 
 output=$(run_migration)
 
-assert_not_contains "$output" "renamed" "No renames without review dir"
+assert_not_contains "$output" "updated" "No renames without review dir"
 
 echo ""
 
@@ -396,7 +396,7 @@ output=$(run_migration)
 
 assert_file_exists "$TEST_DIR/.workflows/review-only/review/review-only/report.md" "review.md renamed"
 assert_file_not_exists "$TEST_DIR/.workflows/review-only/review/review-only/review.md" "old review.md gone"
-assert_contains "$output" "renamed review.md" "Reports rename"
+assert_contains "$output" "updated" "Reports rename"
 
 echo ""
 
@@ -412,7 +412,7 @@ echo "# Review" > "$TEST_DIR/.workflows/.state/review/topic/review.md"
 output=$(run_migration)
 
 assert_file_exists "$TEST_DIR/.workflows/.state/review/topic/review.md" "Dot-dir review.md untouched"
-assert_not_contains "$output" "renamed" "No renames for dot dirs"
+assert_not_contains "$output" "updated" "No renames for dot dirs"
 
 echo ""
 

@@ -36,7 +36,7 @@ for manifest in "$WORKFLOWS_DIR"/*/manifest.json; do
     # Step 1: Rename review.md → report.md
     if [ -f "$topic_dir/review.md" ] && [ ! -f "$topic_dir/report.md" ]; then
       mv "$topic_dir/review.md" "$topic_dir/report.md"
-      report_update "$topic_dir/report.md" "renamed review.md → report.md"
+      report_update
     fi
 
     # Step 2: Rename qa-task-{N}.md → report-{phase_id}-{task_id}.md
@@ -50,7 +50,7 @@ for manifest in "$WORKFLOWS_DIR"/*/manifest.json; do
     # Find the plan to build positional mapping
     plan_file="$dir/planning/$topic/planning.md"
     if [ ! -f "$plan_file" ]; then
-      report_skip "$topic_dir" "no plan found for positional mapping"
+      report_skip
       continue
     fi
 
@@ -65,7 +65,7 @@ for manifest in "$WORKFLOWS_DIR"/*/manifest.json; do
     done < <(grep -E '^\| *[a-zA-Z][^ |]*-[0-9]+-[0-9]+ *\|' "$plan_file")
 
     if [ ${#internal_ids[@]} -eq 0 ]; then
-      report_skip "$topic_dir" "no task IDs found in plan"
+      report_skip
       continue
     fi
 
@@ -77,7 +77,7 @@ for manifest in "$WORKFLOWS_DIR"/*/manifest.json; do
 
     # Validate counts match
     if [ ${#sorted_qa[@]} -ne ${#internal_ids[@]} ]; then
-      report_skip "$topic_dir" "qa-task count (${#sorted_qa[@]}) != plan task count (${#internal_ids[@]})"
+      report_skip
       continue
     fi
 
@@ -93,7 +93,7 @@ for manifest in "$WORKFLOWS_DIR"/*/manifest.json; do
 
       if [ ! -f "$new_file" ]; then
         mv "$qa_file" "$new_file"
-        report_update "$new_file" "renamed $(basename "$qa_file") → report-${suffix}.md"
+        report_update
       fi
     done
   done

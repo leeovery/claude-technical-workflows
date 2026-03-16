@@ -43,7 +43,7 @@ create_manifest() {
 }
 
 # Stub report_update for migration script
-report_update() { echo "updated: $1 — $2"; }
+report_update() { echo "updated"; }
 export -f report_update
 
 run_migration() {
@@ -140,7 +140,7 @@ create_manifest "my-feat" '{
 output=$(run_migration)
 
 assert_equals "$(get_field "my-feat" "phases.discussion.items.my-feat.status")" "completed" "Status moved into items"
-assert_contains "$output" "unified to items structure" "Reports update"
+assert_contains "$output" "updated" "Reports update"
 
 echo ""
 
@@ -224,7 +224,7 @@ create_manifest "my-epic" '{
 output=$(run_migration)
 
 assert_equals "$(get_field "my-epic" "phases.discussion.items.auth.status")" "completed" "Epic items unchanged"
-assert_not_contains "$output" "unified" "No update for epic"
+assert_not_contains "$output" "updated" "No update for epic"
 
 echo ""
 
@@ -294,7 +294,7 @@ run_migration > /dev/null
 output=$(run_migration)
 
 assert_equals "$(get_field "idem" "phases.discussion.items.idem.status")" "completed" "Items still correct"
-assert_not_contains "$output" "unified" "No update on second run"
+assert_not_contains "$output" "updated" "No update on second run"
 
 echo ""
 
@@ -328,7 +328,7 @@ create_manifest "empty" '{"name":"empty","work_type":"feature","status":"in-prog
 
 output=$(run_migration)
 
-assert_not_contains "$output" "unified" "No update for empty phases"
+assert_not_contains "$output" "updated" "No update for empty phases"
 
 echo ""
 

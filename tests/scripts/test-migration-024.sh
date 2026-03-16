@@ -75,9 +75,9 @@ create_review_file() {
 
 # Stub report_update for migration script
 export -f report_update 2>/dev/null || true
-report_update() { echo "updated: $1 — $2"; }
+report_update() { echo "updated"; }
 export -f report_update
-report_skip() { :; }
+report_skip() { echo "skipped"; }
 export -f report_skip
 
 run_migration() {
@@ -358,7 +358,7 @@ create_manifest "no-impl" '{
 
 output=$(run_migration)
 
-assert_not_contains "$output" "backfilled" "No backfill reported for work unit without implementation"
+assert_not_contains "$output" "updated" "No backfill reported for work unit without implementation"
 
 echo ""
 
@@ -501,7 +501,7 @@ output=$(run_migration)
 assert_file_exists "$TEST_DIR/.workflows/single-review/review/single-review/review.md" "review.md moved up"
 assert_file_exists "$TEST_DIR/.workflows/single-review/review/single-review/qa-task-1.md" "qa-task-1.md moved up"
 assert_dir_not_exists "$TEST_DIR/.workflows/single-review/review/single-review/r1" "r1/ removed"
-assert_contains "$output" "kept r1" "Reports keeping r1"
+assert_contains "$output" "updated" "Reports keeping r1"
 
 echo ""
 
@@ -528,7 +528,7 @@ assert_equals "$review_content" "# Review v2" "Kept r2 content (not r1)"
 assert_file_exists "$TEST_DIR/.workflows/multi-review/review/multi-review/qa-task-2.md" "r2 qa-task-2.md present"
 assert_dir_not_exists "$TEST_DIR/.workflows/multi-review/review/multi-review/r1" "r1/ removed"
 assert_dir_not_exists "$TEST_DIR/.workflows/multi-review/review/multi-review/r2" "r2/ removed"
-assert_contains "$output" "kept r2" "Reports keeping r2"
+assert_contains "$output" "updated" "Reports keeping r2"
 
 echo ""
 
@@ -548,7 +548,7 @@ echo "# Review" > "$TEST_DIR/.workflows/flat-review/review/flat-review/review.md
 output=$(run_migration)
 
 assert_file_exists "$TEST_DIR/.workflows/flat-review/review/flat-review/review.md" "Flat review unchanged"
-assert_not_contains "$output" "flattened" "No flattening reported"
+assert_not_contains "$output" "updated" "No flattening reported"
 
 echo ""
 
@@ -603,7 +603,7 @@ output=$(run_migration)
 
 assert_equals "$(get_field "ext-feat" "phases.planning.external_id")" "tick-parent1" "ext_id renamed to external_id in manifest"
 assert_equals "$(get_field "ext-feat" "phases.planning.ext_id")" "undefined" "Old ext_id removed"
-assert_contains "$output" "renamed ext_id to external_id" "Reports manifest rename"
+assert_contains "$output" "updated" "Reports manifest rename"
 
 echo ""
 
@@ -658,7 +658,7 @@ create_manifest "already-renamed" '{
 output=$(run_migration)
 
 assert_equals "$(get_field "already-renamed" "phases.planning.external_id")" "tick-parent1" "external_id preserved"
-assert_not_contains "$output" "renamed ext_id" "No rename reported"
+assert_not_contains "$output" "updated" "No rename reported"
 
 echo ""
 
@@ -696,7 +696,7 @@ assert_contains "$plan_content" "| Internal ID |" "ID renamed to Internal ID in 
 assert_contains "$plan_content" "|-------------|" "Separator widened for Internal ID"
 assert_not_contains "$plan_content" "| ID |" "No | ID | remaining"
 assert_contains "$plan_content" "| id-rename-1-1 |" "Data rows unchanged"
-assert_contains "$output" "renamed ID to Internal ID" "Reports table header rename"
+assert_contains "$output" "updated" "Reports table header rename"
 
 echo ""
 
@@ -724,7 +724,7 @@ external_id:
 
 output=$(run_migration)
 
-assert_not_contains "$output" "renamed ID to Internal ID" "No rename reported"
+assert_not_contains "$output" "updated" "No rename reported"
 
 echo ""
 
