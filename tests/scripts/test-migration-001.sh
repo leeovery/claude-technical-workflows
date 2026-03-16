@@ -98,6 +98,25 @@ assert_equals() {
     fi
 }
 
+assert_not_contains() {
+    local content="$1"
+    local expected="$2"
+    local description="$3"
+
+    TESTS_RUN=$((TESTS_RUN + 1))
+
+    if echo "$content" | grep -q -- "$expected"; then
+        echo -e "  ${RED}✗${NC} $description"
+        echo -e "    Should not find: $expected"
+        TESTS_FAILED=$((TESTS_FAILED + 1))
+        return 1
+    else
+        echo -e "  ${GREEN}✓${NC} $description"
+        TESTS_PASSED=$((TESTS_PASSED + 1))
+        return 0
+    fi
+}
+
 assert_file_starts_with() {
     local file="$1"
     local expected="$2"
@@ -136,7 +155,7 @@ cat > "$DISCUSSION_DIR/api-design.md" << 'EOF'
 We need to design the API.
 EOF
 
-run_migration
+output=$(run_migration 2>&1)
 content=$(cat "$DISCUSSION_DIR/api-design.md")
 
 assert_file_starts_with "$DISCUSSION_DIR/api-design.md" "---" "File starts with frontmatter delimiter"
@@ -145,6 +164,7 @@ assert_contains "$content" "^status: in-progress$" "Exploring status mapped to i
 assert_contains "$content" "^date: 2024-01-15$" "Date extracted"
 assert_contains "$content" "^# Discussion: API Design$" "H1 heading preserved"
 assert_contains "$content" "^## Context$" "Content sections preserved"
+assert_contains "$output" "updated" "Reports update"
 
 echo ""
 
@@ -321,10 +341,11 @@ Already migrated content.
 EOF
 
 original_content=$(cat "$DISCUSSION_DIR/existing.md")
-run_migration
+output=$(run_migration 2>&1)
 new_content=$(cat "$DISCUSSION_DIR/existing.md")
 
 assert_equals "$new_content" "$original_content" "File with frontmatter unchanged"
+assert_contains "$output" "skipped" "Reports skip"
 
 echo ""
 
@@ -343,10 +364,11 @@ Content here.
 EOF
 
 original_content=$(cat "$DISCUSSION_DIR/weird.md")
-run_migration
+output=$(run_migration 2>&1)
 new_content=$(cat "$DISCUSSION_DIR/weird.md")
 
 assert_equals "$new_content" "$original_content" "File without legacy format unchanged"
+assert_contains "$output" "skipped" "Reports skip"
 
 echo ""
 
@@ -369,10 +391,11 @@ run_migration
 first_run=$(cat "$DISCUSSION_DIR/idempotent.md")
 
 # Run again
-run_migration
+output=$(run_migration 2>&1)
 second_run=$(cat "$DISCUSSION_DIR/idempotent.md")
 
 assert_equals "$second_run" "$first_run" "Second migration run produces same result"
+assert_not_contains "$output" "updated" "No update on second run"
 
 echo ""
 

@@ -146,7 +146,7 @@ Plan content here.
 Setup tasks.
 EOF
 
-run_migration
+output=$(run_migration 2>&1)
 content=$(cat "$PLAN_DIR/billing.md")
 
 assert_contains "$content" "external_dependencies:" "external_dependencies added to frontmatter"
@@ -155,6 +155,7 @@ assert_contains "$content" "description: Payment processing for checkout" "Dep d
 assert_contains "$content" "state: unresolved" "State set to unresolved"
 assert_not_contains "$content" "## External Dependencies" "Body section removed"
 assert_contains "$content" "## Phase 1: Setup" "Other body sections preserved"
+assert_contains "$output" "updated" "Reports update"
 
 echo ""
 
@@ -371,10 +372,11 @@ Already done.
 EOF
 
 original_content=$(cat "$PLAN_DIR/already-done.md")
-run_migration
+output=$(run_migration 2>&1)
 new_content=$(cat "$PLAN_DIR/already-done.md")
 
 assert_equals "$new_content" "$original_content" "File with existing external_dependencies unchanged"
+assert_contains "$output" "skipped" "Reports skip"
 
 echo ""
 
@@ -395,10 +397,11 @@ Tasks.
 EOF
 
 original_content=$(cat "$PLAN_DIR/no-frontmatter.md")
-run_migration
+output=$(run_migration 2>&1)
 new_content=$(cat "$PLAN_DIR/no-frontmatter.md")
 
 assert_equals "$new_content" "$original_content" "File without frontmatter unchanged"
+assert_contains "$output" "skipped" "Reports skip"
 
 echo ""
 
@@ -434,10 +437,11 @@ run_migration
 first_run=$(cat "$PLAN_DIR/idempotent.md")
 
 # Run again
-run_migration
+output=$(run_migration 2>&1)
 second_run=$(cat "$PLAN_DIR/idempotent.md")
 
 assert_equals "$second_run" "$first_run" "Second migration run produces same result"
+assert_not_contains "$output" "updated" "No update on second run"
 
 echo ""
 
@@ -506,10 +510,11 @@ Content.
 EOF
 
 original_content=$(cat "$PLAN_DIR/topic-review-traceability.md")
-run_migration
+output=$(run_migration 2>&1)
 new_content=$(cat "$PLAN_DIR/topic-review-traceability.md")
 
 assert_equals "$new_content" "$original_content" "Review file unchanged"
+assert_not_contains "$output" "updated" "No update for review file"
 
 echo ""
 

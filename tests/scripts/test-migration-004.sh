@@ -143,11 +143,12 @@ sources:
 Content here.
 EOF
 
-run_migration
+output=$(run_migration 2>&1)
 content=$(cat "$SPEC_DIR/single-source.md")
 
 assert_contains "$content" "- name: auth-flow" "Source name converted to object"
 assert_contains "$content" "status: incorporated" "Status set to incorporated"
+assert_contains "$output" "updated" "Reports update"
 
 echo ""
 
@@ -240,10 +241,11 @@ Content here.
 EOF
 
 original_content=$(cat "$SPEC_DIR/already-migrated.md")
-run_migration
+output=$(run_migration 2>&1)
 new_content=$(cat "$SPEC_DIR/already-migrated.md")
 
 assert_equals "$new_content" "$original_content" "File with object format unchanged"
+assert_contains "$output" "skipped" "Reports skip"
 
 echo ""
 
@@ -331,10 +333,11 @@ This file has no YAML frontmatter.
 EOF
 
 original_content=$(cat "$SPEC_DIR/no-frontmatter.md")
-run_migration
+output=$(run_migration 2>&1)
 new_content=$(cat "$SPEC_DIR/no-frontmatter.md")
 
 assert_equals "$new_content" "$original_content" "File without frontmatter unchanged"
+assert_contains "$output" "skipped" "Reports skip"
 
 echo ""
 
@@ -364,10 +367,11 @@ run_migration
 first_run=$(cat "$SPEC_DIR/idempotent.md")
 
 # Run again
-run_migration
+output=$(run_migration 2>&1)
 second_run=$(cat "$SPEC_DIR/idempotent.md")
 
 assert_equals "$second_run" "$first_run" "Second migration run produces same result"
+assert_not_contains "$output" "updated" "No update on second run"
 
 echo ""
 

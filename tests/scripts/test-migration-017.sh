@@ -132,7 +132,7 @@ cat > "$TEST_DIR/.workflows/auth/manifest.json" << 'EOF'
   }
 }
 EOF
-run_migration
+output=$(run_migration 2>&1)
 content=$(cat "$TEST_DIR/.workflows/auth/manifest.json")
 
 assert_contains "$content" '"billing"' "billing key exists"
@@ -141,6 +141,7 @@ assert_contains "$content" '"description": "Invoice API"' "billing description p
 assert_contains "$content" '"payments"' "payments key exists"
 assert_contains "$content" '"task_id": "pay-1"' "payments task_id preserved"
 assert_not_contains "$content" '"topic"' "topic field removed from values"
+assert_contains "$output" "skipped" "Reports skip after conversion"
 
 echo ""
 
@@ -230,10 +231,11 @@ cat > "$TEST_DIR/.workflows/already-done/manifest.json" << 'EOF'
 EOF
 # Save content before migration
 before=$(cat "$TEST_DIR/.workflows/already-done/manifest.json")
-run_migration
+output=$(run_migration 2>&1)
 after=$(cat "$TEST_DIR/.workflows/already-done/manifest.json")
 
 assert_equals "$after" "$before" "Already-object format unchanged"
+assert_contains "$output" "skipped" "Reports skip for already-object format"
 
 echo ""
 
@@ -257,10 +259,11 @@ cat > "$TEST_DIR/.workflows/.archive/old/manifest.json" << 'EOF'
 }
 EOF
 before=$(cat "$TEST_DIR/.workflows/.archive/old/manifest.json")
-run_migration
+output=$(run_migration 2>&1)
 after=$(cat "$TEST_DIR/.workflows/.archive/old/manifest.json")
 
 assert_equals "$after" "$before" "Dot-prefixed directory skipped"
+assert_not_contains "$output" "updated" "No update for dot-prefixed directory"
 
 echo ""
 
@@ -282,10 +285,11 @@ cat > "$TEST_DIR/.workflows/no-deps/manifest.json" << 'EOF'
 }
 EOF
 before=$(cat "$TEST_DIR/.workflows/no-deps/manifest.json")
-run_migration
+output=$(run_migration 2>&1)
 after=$(cat "$TEST_DIR/.workflows/no-deps/manifest.json")
 
 assert_equals "$after" "$before" "No external_dependencies field left unchanged"
+assert_contains "$output" "skipped" "Reports skip for no deps"
 
 echo ""
 
