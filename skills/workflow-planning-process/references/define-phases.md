@@ -98,4 +98,4 @@ Update the Plan Index File with the revised output.
 
 If the phase structure was already approved and unchanged, no updates are needed.
 
-→ Return to **[plan-construction.md](plan-construction.md)**.
+→ Return to caller.

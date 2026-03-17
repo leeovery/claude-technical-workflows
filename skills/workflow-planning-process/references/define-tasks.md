@@ -130,4 +130,4 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planni
 
 If the task list was already approved and unchanged, no updates are needed.
 
-→ Return to **[plan-construction.md](plan-construction.md)**.
+→ Return to caller.

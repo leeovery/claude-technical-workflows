@@ -17,3 +17,5 @@ Verify that all source material exists and is accessible before entering agent-d
 ```bash
 ls .workflows/{work_unit}/specification/{topic}/specification.md
 ```
+
+→ Return to caller.

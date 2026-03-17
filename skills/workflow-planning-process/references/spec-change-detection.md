@@ -24,7 +24,7 @@ Also check for new cross-cutting specification files that didn't exist at that c
 
 > "Specification unchanged since planning started."
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If changes detected
 
@@ -34,4 +34,4 @@ Summarise the extent of changes:
 - **Whether any cross-cutting specs are new** (didn't exist at the stored commit)
 - **Nature of changes** — formatting/cosmetic, minor additions/removals, or substantial restructuring
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

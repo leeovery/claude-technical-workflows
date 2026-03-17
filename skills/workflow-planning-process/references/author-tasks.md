@@ -148,7 +148,7 @@ Mark the task `rejected` in the scratch file and add the feedback as a blockquot
 
 **If the user navigates:**
 
-→ Return to **[plan-construction.md](plan-construction.md)**.
+→ Return to caller.
 
 When all tasks are processed:
 
@@ -214,4 +214,4 @@ Delete the scratch file: `rm .workflows/.cache/planning/{work_unit}/{topic}/phas
 
 Remove the `.workflows/.cache/planning/{work_unit}/{topic}/` directory if empty.
 
-→ Return to **[plan-construction.md](plan-construction.md)**.
+→ Return to caller.

@@ -165,4 +165,4 @@ Phase {N}: {Phase Name} — complete ({M} tasks authored).
 All phases are complete. The plan has **{N} phases** with **{M} tasks** total.
 ```
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
