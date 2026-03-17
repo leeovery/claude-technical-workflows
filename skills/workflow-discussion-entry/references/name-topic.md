@@ -51,6 +51,8 @@ node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.dis
 
 Name confirmed. No conflict.
 
+→ Return to caller.
+
 #### If exists (`true`)
 
 > *Output the next fenced block as a code block:*

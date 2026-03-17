@@ -55,3 +55,5 @@ Are there specific files in the codebase I should review first?
 **STOP.** Wait for user response.
 
 Remember the response — these files will be read for context when the discussion begins.
+
+→ Return to caller.
