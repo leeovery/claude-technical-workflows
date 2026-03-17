@@ -89,7 +89,6 @@ describe('workflow-bridge discovery', () => {
     });
     createFile(dir, '.workflows/full/discussion/full.md', '');
     createFile(dir, '.workflows/full/specification/full/specification.md', '');
-    // planning and implementation existence detected via manifest state, not files
     createFile(dir, '.workflows/full/review/full/r1/review.md', '');
     const r = discover(dir, 'full');
     assert.strictEqual(r.phases.discussion.exists, true);
@@ -108,7 +107,6 @@ describe('workflow-bridge discovery', () => {
         planning: { items: { auth: { status: 'in-progress' } } },
       },
     });
-    // No planning.md file created — existence comes from manifest
     const r = discover(dir, 'auth');
     assert.strictEqual(r.phases.planning.exists, true);
   });
@@ -123,7 +121,6 @@ describe('workflow-bridge discovery', () => {
         implementation: { items: { auth: { status: 'in-progress' } } },
       },
     });
-    // No implementation.md file created — existence comes from manifest
     const r = discover(dir, 'auth');
     assert.strictEqual(r.phases.implementation.exists, true);
   });
