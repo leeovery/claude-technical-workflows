@@ -20,7 +20,7 @@ Resuming investigation: {work_unit:(titlecase)}
 
 Set source="continue".
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If status is `completed`
 
@@ -38,4 +38,4 @@ Reopening investigation: {work_unit:(titlecase)}
 
 Set source="continue".
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
