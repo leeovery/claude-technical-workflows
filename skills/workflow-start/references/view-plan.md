@@ -58,14 +58,11 @@ Set `topic` to the selected topic.
 
 ## B. Read Plan
 
-Read the `format` and `external_id` from the manifest:
+Read the `format` from the manifest:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name}.planning.{topic} format
-node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name}.planning.{topic} external_id
 ```
-
-Use `external_id` as the `<topic-tick-id>` (tick format) or `{project_id}` (linear format) when following the format adapter's instructions.
 
 → Load **[reading.md](../../workflow-planning-process/references/output-formats/{format}/reading.md)** and follow its instructions as written.
 
