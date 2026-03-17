@@ -6,7 +6,7 @@
 
 #### If `.workflows/{work_unit}/implementation/{topic}/implementation.md` already exists
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If no implementation file exists
 
@@ -34,4 +34,4 @@
 
 3. Commit: `impl({work_unit}): start implementation`
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

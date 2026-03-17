@@ -67,7 +67,7 @@ Skip project skills again?
 
 **If `yes`:**
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 **If `no`:**
 
@@ -110,11 +110,11 @@ Copy to topic level:
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} project_skills [{phase-level values}]
 ```
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 **If `source` is `topic`:**
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If `no`
 
@@ -143,7 +143,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implem
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation project_skills []
 ```
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If project skills exist
 
@@ -181,7 +181,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implem
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation project_skills []
 ```
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### Otherwise
 
@@ -192,4 +192,4 @@ node .claude/skills/workflow-manifest/scripts/manifest.js push {work_unit}.imple
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation project_skills ["{path1}","{path2}"]
 ```
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

@@ -35,3 +35,5 @@ SUMMARY: {1-2 sentences}
 
 - `tasks_proposed`: tasks written to staging file — orchestrator should present for approval
 - `clean`: no actionable findings — orchestrator should proceed to completion
+
+→ Return to caller.
