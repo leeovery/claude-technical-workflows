@@ -14,7 +14,7 @@ Using the selected feature's `completed_phases` list, determine if there are any
 
 Skip this step — route directly to the next phase.
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If earlier completed phases exist
 
@@ -38,7 +38,7 @@ Continuing "{feature.name:(titlecase)}" — {feature.phase_label}.
 
 #### If user chose `y`/`yes`
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If user chose `r`/`revisit`
 
@@ -72,4 +72,4 @@ List only phases from `completed_phases`.
 
 Store the selected phase as the target phase (overriding `next_phase`).
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
