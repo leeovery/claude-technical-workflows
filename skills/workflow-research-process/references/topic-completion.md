@@ -27,4 +27,4 @@ The current topic is converging — tradeoffs are clear, it's approaching decisi
 
 Continue exploring. The convergence signal isn't a stop sign — it's an awareness check. The user might want to stress-test the emerging conclusion, explore edge cases, or understand the problem more deeply before moving on.
 
-→ Return to the calling session file.
+→ Return to caller.
