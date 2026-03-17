@@ -16,4 +16,4 @@ Describe briefly what the problem is.
 
 **STOP.** Wait for user response.
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
