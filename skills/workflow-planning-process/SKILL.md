@@ -29,7 +29,7 @@ Follows specification. Transform the validated specification into actionable pha
 Context refresh (compaction) summarizes the conversation, losing procedural detail. When you detect a context refresh has occurred — the conversation feels abruptly shorter, you lack memory of recent steps, or a summary precedes this message — follow this recovery protocol:
 
 1. **Re-read this skill file completely.** Do not rely on your summary of it. The full process, steps, and rules must be reloaded.
-2. **Read all tracking and state files** for the current topic — the Plan Index File (`.workflows/{work_unit}/planning/{topic}/planning.md`), task files in the `tasks/` subdirectory, and plan review tracking files (`review-*-tracking-c*.md`). These are your source of truth for progress. Check for scratch files at `.workflows/.cache/planning/{work_unit}/{topic}/`. If a scratch file exists, you are mid-authoring for that phase — resume the approval loop in author-tasks.md.
+2. **Read all tracking and state files** for the current topic — task files via the format's reading.md, plan review tracking files (`review-*-tracking-c*.md`), and manifest state. Check for scratch files at `.workflows/.cache/{work_unit}/planning/{topic}/`. If a scratch file exists, you are mid-authoring for that phase — resume the approval loop in author-tasks.md.
 3. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 5. **Check gate modes** via manifest CLI — if `auto`, the user previously opted in during this session. Preserve these values.
@@ -45,7 +45,8 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 This process constructs a plan from a specification. A plan consists of:
 
-- **Plan Index File** — `.workflows/{work_unit}/planning/{topic}/planning.md`. Contains phases with acceptance criteria, and task tables tracking status. Metadata (topic, format, status, progress, gate modes) is stored in the manifest. This is the single source of truth for planning progress.
+- **Manifest state** — All metadata (format, status, progress, gate modes, `task_map`) is stored in the manifest via the CLI. The manifest is the single source of truth for planning state.
+- **Scratch files** — Temporary files at `.workflows/.cache/{work_unit}/planning/{topic}/` used during phase and task design. Discarded after content is written to the output format.
 - **Authored Tasks** — Detailed task files written to the chosen **Output Format** (selected during planning). The output format determines where and how task detail is stored.
 
 Follow every step in sequence. No steps are optional.
@@ -58,13 +59,16 @@ When announcing a new step, output `── ── ── ── ──` on its o
 
 ## Step 0: Resume Detection
 
-Check if a Plan Index File already exists at `.workflows/{work_unit}/planning/{topic}/planning.md`.
+Check if a planning entry exists in the manifest:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.planning.{topic}
+```
 
-#### If no plan index file exists
+#### If planning entry does not exist
 
 → Proceed to **Step 1**.
 
-#### If plan index file exists
+#### If planning entry exists
 
 Check the planning status via manifest CLI:
 ```bash
@@ -99,7 +103,7 @@ Found existing plan for {work_unit} (previously reached phase {N}, task {M}).
 Continue or restart?
 
 - **`c`/`continue`** — Walk through the plan from the start. You can review, amend, or navigate at any point — including straight to the leading edge.
-- **`r`/`restart`** — Erase all planning work for this topic and start fresh. This deletes the Plan Index File and any Authored Tasks. Other topics are unaffected.
+- **`r`/`restart`** — Erase all planning work for this topic and start fresh. This deletes Authored Tasks and clears manifest state. Other topics are unaffected.
 · · · · · · · · · · · ·
 ```
 
@@ -117,8 +121,11 @@ Continue or restart?
    ```
 2. Load the format's **[authoring.md](references/output-formats/{format}/authoring.md)**
 3. Follow the authoring file's cleanup instructions to remove Authored Tasks for this topic
-4. Delete the scratch directory if it exists: `rm -rf .workflows/.cache/planning/{work_unit}/{topic}/`
-5. Delete the Plan Index File
+4. Delete the scratch directory if it exists: `rm -rf .workflows/.cache/{work_unit}/planning/{topic}/`
+5. Delete the planning manifest entry:
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js delete {work_unit}.planning items.{topic}
+   ```
 6. Commit: `planning({work_unit}): restart planning`
 
 → Proceed to **Step 1**.

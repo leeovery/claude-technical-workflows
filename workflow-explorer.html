@@ -1478,7 +1478,7 @@ const phases = {
     color: '#fbbf24', bg: 'rgba(251,191,36,0.12)',
     label: 'Planning Entry',
     complexity: 'Moderate', steps: 5,
-    output: '.workflows/{work_unit}/planning/{topic}/planning.md',
+    output: 'Manifest state + output format tasks',
     skill: 'workflow-planning-process',
     discovery: null,
     cache: null,
@@ -2344,7 +2344,7 @@ const FLOWCHARTS = {
   'skill-planning': {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry: workflow-planning-process skill receives specification and context.' },
-      { id: 'resume', label: 'Existing plan?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 0: Check if plan index file exists at .workflows/{work_unit}/planning/{topic}/planning.md.' },
+      { id: 'resume', label: 'Existing plan?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 0: Check if planning entry exists in the manifest.' },
       { id: 'spec-change', label: 'Spec changed?', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Load spec-change-detection.md — compare spec_commit in manifest against current HEAD to detect specification changes since planning started.' },
       { id: 'resume-choice', label: 'Continue / Restart?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'User chooses: continue from previous position (with spec change summary) or restart (deletes existing plan).' },
       { id: 'format-select', label: 'Select output format', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Choose output format. If recommended format provided, confirm. Otherwise present all options from output-formats.md.' },
@@ -2376,7 +2376,7 @@ const FLOWCHARTS = {
       // Sign-off + Conclusion
       { id: 'signoff', label: 'ASK: Sign off plan?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 8: Final sign-off gate. User: approve (y) to conclude, or comment to route back to review.' },
       { id: 'complete', label: 'Complete plan', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Set status: completed. Checkpoint: all tasks must be authored. Final commit.' },
-      { id: 'end', label: '{work_unit}/planning/{topic}/planning.md', shape: 'pill', w: 190, h: 40, color: 'var(--planning)', bg: 'var(--planning-bg)', desc: 'Output: Plan index + authored tasks in chosen output format.' },
+      { id: 'end', label: 'Manifest + output format tasks', shape: 'pill', w: 190, h: 40, color: 'var(--planning)', bg: 'var(--planning-bg)', desc: 'Output: Manifest state (task_map) + authored tasks in chosen output format.' },
       { id: 'next', label: 'Invoke workflow-bridge', desc: 'Invoke the workflow-bridge skill to determine next phase and enter plan mode.', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', skillLink: 'workflow-bridge' },
     ],
     connections: [
@@ -2433,7 +2433,7 @@ const FLOWCHARTS = {
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry: workflow-implementation-process skill receives plan, env info, and tracking state.' },
       { id: 'env-setup', label: '1. Environment setup', w: 195, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 1: Run setup commands from environment-setup.md. Sequential, exactly as written.' },
       { id: 'read-plan', label: '2. Read plan + adapter', w: 195, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 2: Load plan, read format field, load output format adapters (reading, updating, authoring).' },
-      { id: 'init-track', label: '3. Init tracking file', w: 195, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 3: Create/resume .workflows/{work_unit}/implementation/{topic}/implementation.md. Reset gate modes and cycles on fresh session.' },
+      { id: 'init-track', label: '3. Init tracking', w: 195, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 3: Initialize implementation tracking in manifest. Reset gate modes and cycles on fresh session.' },
       { id: 'skills-disc', label: '4. Project skills', w: 195, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 4: Scan .claude/skills/ for project-specific conventions. ASK user which to pass to agents.' },
       { id: 'linter-disc', label: '5. Linter discovery', w: 195, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 5: Identify project linters via linter-setup.md. ASK user to approve/modify/skip. Store commands in tracking file.' },
       // Task loop (Step 6) — Stages A-E
@@ -3379,7 +3379,7 @@ const FLOWCHART_DESCS = {
   planning: {
     summary: 'Phase entry for planning — validate spec, check plan state, surface cross-cutting context.',
     body: `<p>Validates specification is completed, then checks plan state (new vs existing). <strong>Fresh plans</strong>: loads cross-cutting spec context (epic only) before invoking. <strong>Existing plans</strong>: skips directly to skill invocation.</p>`,
-    meta: { output: '.workflows/{work_unit}/planning/{topic}/planning.md', skill: 'workflow-planning-process' }
+    meta: { output: 'Manifest state + output format tasks', skill: 'workflow-planning-process' }
   },
   implementation: {
     summary: 'Phase entry for implementation — validate plan, check dependencies, check environment.',
@@ -3455,7 +3455,7 @@ const FLOWCHART_DESCS = {
 <p><strong>Plan construction</strong> is a three-level nested loop. Outer: invoke <strong>planning-phase-designer</strong> agent → approval gate. Middle: per-phase <strong>planning-task-designer</strong> → approval. Inner: per-task <strong>planning-task-author</strong> → approval → log + commit.</p>
 <p>Post-construction: <strong>planning-dependency-grapher</strong> agent analyzes the task graph. <strong>External dependencies</strong> matched or left unresolved.</p>
 <p><strong>Plan review</strong>: <strong>planning-review-traceability</strong> agent (spec↔plan completeness) → per-finding approval (with re-loop). <strong>planning-review-integrity</strong> agent (structural quality) → per-finding approval (with re-loop). <strong>Sign-off gate</strong> before completion.</p>`,
-    meta: { output: '.workflows/{work_unit}/planning/{topic}/planning.md', complexity: 'Multi-loop skill', agents: 'phase-designer, task-designer, task-author, dependency-grapher, review-traceability, review-integrity' }
+    meta: { output: 'Manifest state (task_map) + output format tasks', complexity: 'Multi-loop skill', agents: 'phase-designer, task-designer, task-author, dependency-grapher, review-traceability, review-integrity' }
   },
   'skill-implementation': {
     summary: 'The implementation skill — agent-based TDD with per-task executor/reviewer, linting, and analysis cycle.',

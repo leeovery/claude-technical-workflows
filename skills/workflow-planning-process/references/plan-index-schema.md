@@ -1,26 +1,22 @@
-# Plan Index Schema
+# Planning Scratch File Schema
 
 *Reference for **[workflow-planning-process](../SKILL.md)***
 
 ---
 
-This file defines the canonical structure for Plan Index Files (`.workflows/{work_unit}/planning/{topic}/planning.md`). All agents and references that create or update plan index content **must** follow these templates.
+This file defines the structure for planning scratch files used during phase and task design. Scratch files are temporary — they live at `.workflows/.cache/{work_unit}/planning/{topic}/` and are discarded after content is written to the output format.
 
-All metadata (topic, format, status, gate modes, progress tracking, etc.) is stored in the manifest via the manifest CLI -- not in file frontmatter. The Plan Index File contains only the plan body content (title, phases, task tables).
-
----
-
-## Title
-
-```markdown
-# Plan: {Topic Name}
-```
+All metadata (format, status, gate modes, progress tracking, `task_map`) is stored in the manifest via the manifest CLI.
 
 ---
 
-## Phase Entry
+## Phase Scratch File
+
+Path: `.workflows/.cache/{work_unit}/planning/{topic}/phases.md`
 
 ```markdown
+## Phases
+
 ### Phase {N}: {Phase Name}
 
 **Goal**: {What this phase accomplishes}
@@ -32,13 +28,13 @@ All metadata (topic, format, status, gate modes, progress tracking, etc.) is sto
 - [ ] {Second verifiable criterion}
 ```
 
-Phase entries are used in scratch files during design. After approval, phases are created in the output format immediately.
+After approval, phases are created in the output format immediately, their external IDs are recorded in `task_map`, and the scratch file is deleted.
 
 ---
 
-## Task Table
+## Task List Scratch File
 
-Used in scratch files during task design.
+Path: `.workflows/.cache/{work_unit}/planning/{topic}/phase-{N}-tasks.md`
 
 ```markdown
 #### Tasks

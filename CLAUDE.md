@@ -56,12 +56,12 @@ Work-unit-first directory structure with uniform `{topic}` in all paths. For fea
 - Discussion: `.workflows/{work_unit}/discussion/{topic}.md` (flat file)
 - Investigation: `.workflows/{work_unit}/investigation/{topic}.md` (flat file)
 - Specification: `.workflows/{work_unit}/specification/{topic}/specification.md`
-- Planning: `.workflows/{work_unit}/planning/{topic}/planning.md` + `tasks/`
-- Implementation: `.workflows/{work_unit}/implementation/{topic}/implementation.md`
+- Planning: `.workflows/{work_unit}/planning/{topic}/` (task files in output format)
+- Implementation: `.workflows/{work_unit}/implementation/{topic}/`
 - Review: `.workflows/{work_unit}/review/{topic}/report.md`
 - State: `.workflows/{work_unit}/.state/` (per-work-unit analysis files)
 - Global state: `.workflows/.state/` (migrations, environment-setup.md)
-- Cache: `.workflows/.cache/` (planning scratch)
+- Cache: `.workflows/.cache/{work_unit}/{phase}/{topic}/` (scratch files for any phase)
 
 **Work unit lifecycle**: Each work unit has a `status` field in its manifest tracking its lifecycle state:
 - `in-progress` — actively being worked on (default on creation)

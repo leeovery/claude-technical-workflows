@@ -58,8 +58,7 @@ Existing plans use **{format}**. Use the same format?
 ## C. Register Plan
 
 1. Capture the current git commit hash: `git rev-parse HEAD`
-2. Create the Plan Index File at `.workflows/{work_unit}/planning/{topic}/planning.md` using the **Title** template from **[plan-index-schema.md](plan-index-schema.md)**.
-3. Register planning and set metadata in the manifest:
+2. Register planning and set metadata in the manifest:
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit}.planning.{topic}
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} format {chosen-format}
