@@ -18,7 +18,7 @@ Using cached research analysis (unchanged since {entry.generated})
 
 Load the topics from `.workflows/{work_unit}/.state/research-analysis.md`.
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If no cache entry exists or entry `status` is `stale`
 
@@ -81,4 +81,4 @@ Create/update `.workflows/{work_unit}/.state/research-analysis.md` (pure markdow
 - **Sources**: {filename1}.md, {filename2}.md
 ```
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
