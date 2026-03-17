@@ -5,15 +5,15 @@ const { loadManifest, phaseStatus, fileExists, listFiles, listDirs, computeNextP
 
 const ALL_PHASES = ['research', 'discussion', 'investigation', 'specification', 'planning', 'implementation', 'review'];
 
-function phaseFileExists(cwd, workUnit, phase) {
+function phaseFileExists(cwd, workUnit, phase, manifest) {
   const dir = path.join(cwd, '.workflows', workUnit, phase);
   switch (phase) {
     case 'research':       return listFiles(dir, '.md').length > 0;
     case 'discussion':     return listFiles(dir, '.md').length > 0;
     case 'investigation':  return listFiles(dir, '.md').length > 0;
     case 'specification':  return listDirs(dir).some(d => fileExists(path.join(dir, d, 'specification.md')));
-    case 'planning':       return listDirs(dir).some(d => fileExists(path.join(dir, d, 'planning.md')));
-    case 'implementation': return listDirs(dir).some(d => fileExists(path.join(dir, d, 'implementation.md')));
+    case 'planning':       return phaseStatus(manifest, phase) !== null;
+    case 'implementation': return phaseStatus(manifest, phase) !== null;
     case 'review':         return listDirs(dir).some(d =>
       listDirs(path.join(dir, d)).some(r => r.startsWith('r') && fileExists(path.join(dir, d, r, 'review.md'))));
     default: return false;
@@ -27,7 +27,7 @@ function discover(cwd, workUnit) {
   const phases = {};
   for (const phase of ALL_PHASES) {
     phases[phase] = {
-      exists: phaseFileExists(cwd, workUnit, phase),
+      exists: phaseFileExists(cwd, workUnit, phase, manifest),
       status: phaseStatus(manifest, phase) || 'none',
     };
   }

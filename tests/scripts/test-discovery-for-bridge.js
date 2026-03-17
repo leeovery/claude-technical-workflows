@@ -89,8 +89,7 @@ describe('workflow-bridge discovery', () => {
     });
     createFile(dir, '.workflows/full/discussion/full.md', '');
     createFile(dir, '.workflows/full/specification/full/specification.md', '');
-    createFile(dir, '.workflows/full/planning/full/planning.md', '');
-    createFile(dir, '.workflows/full/implementation/full/implementation.md', '');
+    // planning and implementation existence detected via manifest state, not files
     createFile(dir, '.workflows/full/review/full/r1/review.md', '');
     const r = discover(dir, 'full');
     assert.strictEqual(r.phases.discussion.exists, true);
@@ -98,6 +97,46 @@ describe('workflow-bridge discovery', () => {
     assert.strictEqual(r.phases.planning.exists, true);
     assert.strictEqual(r.phases.implementation.exists, true);
     assert.strictEqual(r.phases.review.exists, true);
+  });
+
+  it('detects planning existence from manifest not files', () => {
+    createManifest(dir, 'auth', {
+      work_type: 'feature',
+      phases: {
+        discussion: { items: { auth: { status: 'completed' } } },
+        specification: { items: { auth: { status: 'completed' } } },
+        planning: { items: { auth: { status: 'in-progress' } } },
+      },
+    });
+    // No planning.md file created — existence comes from manifest
+    const r = discover(dir, 'auth');
+    assert.strictEqual(r.phases.planning.exists, true);
+  });
+
+  it('detects implementation existence from manifest not files', () => {
+    createManifest(dir, 'auth', {
+      work_type: 'feature',
+      phases: {
+        discussion: { items: { auth: { status: 'completed' } } },
+        specification: { items: { auth: { status: 'completed' } } },
+        planning: { items: { auth: { status: 'completed' } } },
+        implementation: { items: { auth: { status: 'in-progress' } } },
+      },
+    });
+    // No implementation.md file created — existence comes from manifest
+    const r = discover(dir, 'auth');
+    assert.strictEqual(r.phases.implementation.exists, true);
+  });
+
+  it('reports planning as not existing when no manifest entry', () => {
+    createManifest(dir, 'auth', {
+      work_type: 'feature',
+      phases: {
+        discussion: { items: { auth: { status: 'completed' } } },
+      },
+    });
+    const r = discover(dir, 'auth');
+    assert.strictEqual(r.phases.planning.exists, false);
   });
 
   it('returns status from manifest', () => {
