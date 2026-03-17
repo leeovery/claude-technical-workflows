@@ -18,7 +18,7 @@ Check if the tracking file exists at the expected path.
 {review_type} complete — no findings.
 ```
 
-→ Return to **[spec-review.md](spec-review.md)** for the next phase.
+→ Return to caller.
 
 #### If tracking file exists
 
@@ -170,4 +170,4 @@ Finding {N} of {total}: {brief_title:(titlecase)} — skipped.
 {review_type} complete — {N} findings processed.
 ```
 
-→ Return to **[spec-review.md](spec-review.md)** for the next phase.
+→ Return to caller.

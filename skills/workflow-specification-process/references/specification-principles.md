@@ -99,4 +99,4 @@ Before ANY write operation to the specification, ask yourself:
 
 > **If you have written to the specification file and cannot answer "yes" to all three questions above for that content, you have violated the workflow.** Every piece of content requires explicit user approval before logging. There are no exceptions.
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
