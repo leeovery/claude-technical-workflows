@@ -126,7 +126,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get <name>.specificati
 **Wildcard topic** (3 segments, `*` as topic):
 ```bash
 # Collect status from all topics in a phase
-node .claude/skills/workflow-manifest/scripts/manifest.js get <name>.discussion.* status
+node .claude/skills/workflow-manifest/scripts/manifest.js get '<name>.discussion.*' status
 ```
 
 Output is a JSON array of `{topic, value}` objects:
@@ -262,8 +262,8 @@ node .claude/skills/workflow-manifest/scripts/manifest.js exists <name>.discussi
 node .claude/skills/workflow-manifest/scripts/manifest.js exists <name>.discussion.auth-flow status
 
 # Wildcard: does any topic in the phase have this field?
-node .claude/skills/workflow-manifest/scripts/manifest.js exists <name>.discussion.*
-node .claude/skills/workflow-manifest/scripts/manifest.js exists <name>.discussion.* status
+node .claude/skills/workflow-manifest/scripts/manifest.js exists '<name>.discussion.*'
+node .claude/skills/workflow-manifest/scripts/manifest.js exists '<name>.discussion.*' status
 ```
 
 If the work unit doesn't exist and a deeper path is requested, outputs `false` (no error). Actual usage errors (missing args, invalid phase name) still use `die()`.
