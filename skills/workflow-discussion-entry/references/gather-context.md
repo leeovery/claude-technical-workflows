@@ -76,11 +76,7 @@ Research available:
   • .workflows/{work_unit}/research/{filename2}.md
 
 These will be read when the discussion begins.
-
-Anything to add or adjust before we begin, or "go" to proceed:
 ```
-
-**STOP.** Wait for user response.
 
 Set source="topic-provided-with-research".
 
