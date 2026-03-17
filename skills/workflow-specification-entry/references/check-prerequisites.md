@@ -12,4 +12,4 @@ Discovery mode — use the discovery output from Step 1 to check prerequisites.
 
 #### Otherwise
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
