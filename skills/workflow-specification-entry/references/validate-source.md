@@ -40,7 +40,7 @@ The discussion must be completed before specification can begin.
 
 **If discussion exists and status is "completed":**
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If `work_type` is `bugfix`
 
@@ -76,7 +76,7 @@ The investigation must be completed before specification can begin.
 
 **If investigation exists and status is "completed":**
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If `work_type` is `epic`
 
@@ -113,4 +113,4 @@ Run /continue-epic to continue an in-progress discussion.
 
 **If at least one completed discussion exists:**
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
