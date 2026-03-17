@@ -48,6 +48,10 @@ create_manifest() {
     echo "$content" > "$TEST_DIR/.workflows/$name/manifest.json"
 }
 
+# Stub report_update for migration script
+report_update() { echo "updated"; }
+export -f report_update
+
 run_migration() {
     cd "$TEST_DIR"
     PROJECT_DIR="$TEST_DIR" bash "$MIGRATION_SCRIPT" 2>&1
@@ -134,7 +138,6 @@ output=$(run_migration)
 
 assert_equals "$(get_status "my-feature")" "in-progress" "Status changed to in-progress"
 assert_contains "$output" "updated" "Reports update"
-assert_contains "$output" "in-progress" "Reports new status"
 
 echo ""
 
@@ -149,7 +152,6 @@ output=$(run_migration)
 
 assert_equals "$(get_status "old-feature")" "cancelled" "Status changed to cancelled"
 assert_contains "$output" "updated" "Reports update"
-assert_contains "$output" "cancelled" "Reports new status"
 
 echo ""
 
@@ -216,7 +218,7 @@ create_manifest "done-but-active" '{
 output=$(run_migration)
 
 assert_equals "$(get_status "done-but-active")" "concluded" "Completed pipeline detected and set to concluded"
-assert_contains "$output" "concluded" "Reports concluded status"
+assert_contains "$output" "updated" "Reports concluded update"
 
 echo ""
 

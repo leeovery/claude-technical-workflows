@@ -32,14 +32,11 @@ echo ""
 #
 
 report_update() {
-    local file="$1"
-    local description="$2"
-    echo "[UPDATE] $file: $description"
+    echo "updated"
 }
 
 report_skip() {
-    local file="$1"
-    echo "[SKIP] $file"
+    echo "skipped"
 }
 
 # Export functions for sourced script
@@ -137,6 +134,25 @@ assert_contains() {
     fi
 }
 
+assert_not_contains() {
+    local content="$1"
+    local expected="$2"
+    local description="$3"
+
+    TESTS_RUN=$((TESTS_RUN + 1))
+
+    if echo "$content" | grep -q -- "$expected"; then
+        echo -e "  ${RED}✗${NC} $description"
+        echo -e "    Should not find: $expected"
+        TESTS_FAILED=$((TESTS_FAILED + 1))
+        return 1
+    else
+        echo -e "  ${GREEN}✓${NC} $description"
+        TESTS_PASSED=$((TESTS_PASSED + 1))
+        return 0
+    fi
+}
+
 assert_equals() {
     local actual="$1"
     local expected="$2"
@@ -178,7 +194,7 @@ date: 2024-01-15
 Content.
 EOF
 
-run_migration
+output=$(run_migration 2>&1)
 
 assert_dir_exists "$SPEC_DIR/user-auth" "Topic directory created"
 assert_file_exists "$SPEC_DIR/user-auth/specification.md" "Spec moved to specification.md"
@@ -186,6 +202,7 @@ assert_file_not_exists "$SPEC_DIR/user-auth.md" "Original flat file removed"
 
 content=$(cat "$SPEC_DIR/user-auth/specification.md")
 assert_contains "$content" "topic: user-auth" "Content preserved after move"
+assert_contains "$output" "updated" "Reports update"
 
 echo ""
 
@@ -311,10 +328,11 @@ Already restructured.
 EOF
 
 original_content=$(cat "$SPEC_DIR/existing/specification.md")
-run_migration
+output=$(run_migration 2>&1)
 new_content=$(cat "$SPEC_DIR/existing/specification.md")
 
 assert_equals "$new_content" "$original_content" "Already restructured spec unchanged"
+assert_not_contains "$output" "updated" "No update for already restructured spec"
 
 echo ""
 
@@ -340,10 +358,11 @@ Already restructured.
 EOF
 
 original_content=$(cat "$PLAN_DIR/existing/plan.md")
-run_migration
+output=$(run_migration 2>&1)
 new_content=$(cat "$PLAN_DIR/existing/plan.md")
 
 assert_equals "$new_content" "$original_content" "Already restructured plan unchanged"
+assert_not_contains "$output" "updated" "No update for already restructured plan"
 
 echo ""
 
@@ -477,10 +496,11 @@ run_migration
 first_content=$(cat "$SPEC_DIR/idempotent/specification.md")
 
 # Run again — should skip since directory already exists
-run_migration
+output=$(run_migration 2>&1)
 second_content=$(cat "$SPEC_DIR/idempotent/specification.md")
 
 assert_equals "$second_content" "$first_content" "Second run produces same result"
+assert_not_contains "$output" "updated" "No update on second run"
 
 echo ""
 

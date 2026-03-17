@@ -35,14 +35,11 @@ FILES_UPDATED=0
 FILES_SKIPPED=0
 
 report_update() {
-    local file="$1"
-    local description="$2"
-    FILES_UPDATED=$((FILES_UPDATED + 1))
+    echo "updated"
 }
 
 report_skip() {
-    local file="$1"
-    FILES_SKIPPED=$((FILES_SKIPPED + 1))
+    echo "skipped"
 }
 
 # No export needed — migration is sourced in the same shell
@@ -199,10 +196,11 @@ assert_dir_not_exists() {
 echo -e "${YELLOW}Test 1: No .workflows directory — skip cleanly${NC}"
 setup_fixture
 # Don't create .workflows
-run_migration
+output=$(run_migration 2>&1)
 
 assert_equals "$FILES_UPDATED" "0" "No files updated"
 assert_equals "$FILES_SKIPPED" "0" "No files skipped"
+assert_not_contains "$output" "updated" "No updates without .workflows dir"
 
 echo ""
 
@@ -263,7 +261,7 @@ EOF
 mkdir -p "$TEST_DIR/.workflows/planning/dark-mode/tasks"
 echo "task 1" > "$TEST_DIR/.workflows/planning/dark-mode/tasks/task-1.md"
 
-run_migration
+output=$(run_migration 2>&1)
 
 assert_file_exists "$TEST_DIR/.workflows/dark-mode/manifest.json" "manifest.json created"
 assert_file_exists "$TEST_DIR/.workflows/dark-mode/discussion/dark-mode.md" "discussion moved as {name}.md"
@@ -281,6 +279,7 @@ assert_contains "$manifest" '"status": "active"' "manifest has active status"
 assert_dir_not_exists "$TEST_DIR/.workflows/discussion" "discussion phase dir cleaned up"
 assert_dir_not_exists "$TEST_DIR/.workflows/specification" "specification phase dir cleaned up"
 assert_dir_not_exists "$TEST_DIR/.workflows/planning" "planning phase dir cleaned up"
+assert_contains "$output" "updated" "Reports update"
 
 echo ""
 
@@ -469,7 +468,7 @@ first_discussion=$(cat "$TEST_DIR/.workflows/idempotent-test/discussion/idempote
 # Reset counters and run again
 FILES_UPDATED=0
 FILES_SKIPPED=0
-run_migration
+output=$(run_migration 2>&1)
 
 second_manifest=$(cat "$TEST_DIR/.workflows/idempotent-test/manifest.json")
 second_discussion=$(cat "$TEST_DIR/.workflows/idempotent-test/discussion/idempotent-test.md")
@@ -479,6 +478,7 @@ assert_equals "$second_discussion" "$first_discussion" "Discussion unchanged on 
 # Second run exits early — no phase dirs remain, manifest exists
 # Either skips at the early exit or report_skip runs in the loop
 assert_equals "$FILES_UPDATED" "0" "No files updated on second run"
+assert_not_contains "$output" "updated" "No update on second run"
 
 echo ""
 

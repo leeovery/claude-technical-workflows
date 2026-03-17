@@ -32,14 +32,11 @@ echo ""
 #
 
 report_update() {
-    local file="$1"
-    local description="$2"
-    echo "[UPDATE] $file: $description"
+    echo "updated"
 }
 
 report_skip() {
-    local file="$1"
-    echo "[SKIP] $file"
+    echo "skipped"
 }
 
 # Export functions for sourced script
@@ -135,6 +132,44 @@ assert_equals() {
     fi
 }
 
+assert_contains() {
+    local content="$1"
+    local expected="$2"
+    local description="$3"
+
+    TESTS_RUN=$((TESTS_RUN + 1))
+
+    if echo "$content" | grep -q -- "$expected"; then
+        echo -e "  ${GREEN}✓${NC} $description"
+        TESTS_PASSED=$((TESTS_PASSED + 1))
+        return 0
+    else
+        echo -e "  ${RED}✗${NC} $description"
+        echo -e "    Expected to find: $expected"
+        TESTS_FAILED=$((TESTS_FAILED + 1))
+        return 1
+    fi
+}
+
+assert_not_contains() {
+    local content="$1"
+    local expected="$2"
+    local description="$3"
+
+    TESTS_RUN=$((TESTS_RUN + 1))
+
+    if echo "$content" | grep -q -- "$expected"; then
+        echo -e "  ${RED}✗${NC} $description"
+        echo -e "    Should not find: $expected"
+        TESTS_FAILED=$((TESTS_FAILED + 1))
+        return 1
+    else
+        echo -e "  ${GREEN}✓${NC} $description"
+        TESTS_PASSED=$((TESTS_PASSED + 1))
+        return 0
+    fi
+}
+
 # ============================================================================
 # TEST CASES
 # ============================================================================
@@ -151,10 +186,11 @@ PLANS_REVIEWED: tick-core
 ROBUSTNESS: Good
 EOF
 
-run_migration
+output=$(run_migration 2>&1)
 
 assert_file_not_exists "$REVIEW_DIR/tick-core/r1/product-assessment.md" "Product assessment deleted"
 assert_file_exists "$REVIEW_DIR/tick-core/r1/review.md" "review.md preserved"
+assert_contains "$output" "updated" "Reports update"
 
 echo ""
 
@@ -273,11 +309,12 @@ mkdir -p "$TEST_DIR/docs/workflow"
 
 REVIEW_DIR="$TEST_DIR/docs/workflow/review"
 cd "$TEST_DIR"
-source "$MIGRATION_SCRIPT"
+output=$(source "$MIGRATION_SCRIPT" 2>&1)
 
 TESTS_RUN=$((TESTS_RUN + 1))
 echo -e "  ${GREEN}✓${NC} No error when review directory missing"
 TESTS_PASSED=$((TESTS_PASSED + 1))
+assert_not_contains "$output" "updated" "No updates without review dir"
 
 echo ""
 
@@ -295,10 +332,11 @@ run_migration
 first_content=$(cat "$REVIEW_DIR/idem/r1/qa-task-1.md")
 
 # Run again — r1/ exists now, should skip
-run_migration
+output=$(run_migration 2>&1)
 second_content=$(cat "$REVIEW_DIR/idem/r1/qa-task-1.md")
 
 assert_equals "$second_content" "$first_content" "Second run produces same result"
+assert_not_contains "$output" "updated" "No update on second run"
 
 echo ""
 

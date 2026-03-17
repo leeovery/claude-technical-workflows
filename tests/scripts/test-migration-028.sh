@@ -1,13 +1,13 @@
 #!/bin/bash
 #
-# Tests migration 025-unify-manifest-items.sh
-# Validates wrapping flat feature/bugfix phase data into items[name].
+# Tests migration 028-remove-phase-level-status.sh
+# Validates removal of flat phase-level status and backfilling of research items from disk.
 #
 
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MIGRATION_SCRIPT="$SCRIPT_DIR/../../skills/workflow-migrate/scripts/migrations/025-unify-manifest-items.sh"
+MIGRATION_SCRIPT="$SCRIPT_DIR/../../skills/workflow-migrate/scripts/migrations/028-remove-phase-level-status.sh"
 
 # Colors for output
 RED='\033[0;31m'
@@ -40,6 +40,13 @@ create_manifest() {
     local content="$2"
     mkdir -p "$TEST_DIR/.workflows/$name"
     echo "$content" > "$TEST_DIR/.workflows/$name/manifest.json"
+}
+
+create_research_file() {
+    local wu_name="$1"
+    local filename="$2"
+    mkdir -p "$TEST_DIR/.workflows/$wu_name/research"
+    echo "# Research: $filename" > "$TEST_DIR/.workflows/$wu_name/research/$filename"
 }
 
 # Stub report_update for migration script
@@ -125,154 +132,144 @@ assert_not_contains() {
 # TEST CASES
 # ============================================================================
 
-echo -e "${YELLOW}Test: feature flat discussion wrapped into items${NC}"
+echo -e "${YELLOW}Test: research with flat status backfilled from disk files${NC}"
 setup_fixture
 
-create_manifest "my-feat" '{
-  "name": "my-feat",
-  "work_type": "feature",
+create_manifest "v1" '{
+  "name": "v1",
+  "work_type": "epic",
   "status": "in-progress",
   "phases": {
-    "discussion": { "status": "completed" }
+    "research": { "status": "completed" },
+    "discussion": { "items": { "auth": { "status": "completed" } } }
   }
 }'
+create_research_file "v1" "exploration.md"
+create_research_file "v1" "architecture.md"
 
 output=$(run_migration)
 
-assert_equals "$(get_field "my-feat" "phases.discussion.items.my-feat.status")" "completed" "Status moved into items"
+assert_equals "$(get_field "v1" "phases.research.items.exploration.status")" "completed" "exploration backfilled as item"
+assert_equals "$(get_field "v1" "phases.research.items.architecture.status")" "completed" "architecture backfilled as item"
+assert_equals "$(get_field "v1" "phases.research.status")" "undefined" "Flat status removed"
+assert_equals "$(get_field "v1" "phases.discussion.items.auth.status")" "completed" "Existing items untouched"
 assert_contains "$output" "updated" "Reports update"
 
 echo ""
 
 # ----------------------------------------------------------------------------
 
-echo -e "${YELLOW}Test: feature planning with extra fields wrapped correctly${NC}"
+echo -e "${YELLOW}Test: research flat status with no files on disk${NC}"
 setup_fixture
 
-create_manifest "plan-feat" '{
-  "name": "plan-feat",
-  "work_type": "feature",
-  "status": "in-progress",
-  "phases": {
-    "planning": { "status": "completed", "format": "local-markdown", "task_list_gate_mode": "gated" }
-  }
-}'
-
-run_migration > /dev/null
-
-assert_equals "$(get_field "plan-feat" "phases.planning.items.plan-feat.status")" "completed" "Status in items"
-assert_equals "$(get_field "plan-feat" "phases.planning.items.plan-feat.format")" "local-markdown" "Format in items"
-assert_equals "$(get_field "plan-feat" "phases.planning.items.plan-feat.task_list_gate_mode")" "gated" "Gate mode in items"
-
-echo ""
-
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: analysis_cache preserved at phase level${NC}"
-setup_fixture
-
-create_manifest "cached" '{
-  "name": "cached",
-  "work_type": "feature",
-  "status": "in-progress",
-  "phases": {
-    "research": { "status": "completed", "analysis_cache": { "checksum": "abc123" } }
-  }
-}'
-
-run_migration > /dev/null
-
-assert_equals "$(get_field "cached" "phases.research.analysis_cache.checksum")" "abc123" "analysis_cache stays at phase level"
-assert_equals "$(get_field "cached" "phases.research.items.cached.status")" "completed" "Status moved to items"
-
-echo ""
-
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: bugfix investigation wrapped into items${NC}"
-setup_fixture
-
-create_manifest "my-bug" '{
-  "name": "my-bug",
-  "work_type": "bugfix",
-  "status": "in-progress",
-  "phases": {
-    "investigation": { "status": "in-progress" }
-  }
-}'
-
-run_migration > /dev/null
-
-assert_equals "$(get_field "my-bug" "phases.investigation.items.my-bug.status")" "in-progress" "Bugfix investigation wrapped"
-
-echo ""
-
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: epic manifests are skipped${NC}"
-setup_fixture
-
-create_manifest "my-epic" '{
-  "name": "my-epic",
+create_manifest "orphan" '{
+  "name": "orphan",
   "work_type": "epic",
   "status": "in-progress",
   "phases": {
-    "discussion": { "items": { "auth": { "status": "completed" } } }
+    "research": { "status": "completed" }
   }
 }'
 
 output=$(run_migration)
 
-assert_equals "$(get_field "my-epic" "phases.discussion.items.auth.status")" "completed" "Epic items unchanged"
-assert_not_contains "$output" "updated" "No update for epic"
+assert_equals "$(get_field "orphan" "phases.research")" "undefined" "Empty phase object removed"
+assert_contains "$output" "updated" "Reports update"
 
 echo ""
 
 # ----------------------------------------------------------------------------
 
-echo -e "${YELLOW}Test: phases already with items are skipped${NC}"
+echo -e "${YELLOW}Test: flat status alongside existing items — just removes status${NC}"
 setup_fixture
 
-create_manifest "already-items" '{
-  "name": "already-items",
+create_manifest "mixed" '{
+  "name": "mixed",
+  "work_type": "epic",
+  "status": "in-progress",
+  "phases": {
+    "discussion": {
+      "status": "completed",
+      "items": { "auth": { "status": "completed" }, "billing": { "status": "in-progress" } }
+    }
+  }
+}'
+
+output=$(run_migration)
+
+assert_equals "$(get_field "mixed" "phases.discussion.status")" "undefined" "Flat status removed"
+assert_equals "$(get_field "mixed" "phases.discussion.items.auth.status")" "completed" "Items preserved"
+assert_equals "$(get_field "mixed" "phases.discussion.items.billing.status")" "in-progress" "Items preserved"
+assert_contains "$output" "updated" "Reports update"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: non-research phase with flat status and no items${NC}"
+setup_fixture
+
+create_manifest "flat-disc" '{
+  "name": "flat-disc",
   "work_type": "feature",
   "status": "in-progress",
   "phases": {
-    "discussion": { "items": { "already-items": { "status": "completed" } } },
+    "discussion": { "status": "completed" },
     "specification": { "status": "in-progress" }
   }
 }'
 
 run_migration > /dev/null
 
-assert_equals "$(get_field "already-items" "phases.discussion.items.already-items.status")" "completed" "Existing items untouched"
-assert_equals "$(get_field "already-items" "phases.specification.items.already-items.status")" "in-progress" "Flat phase wrapped"
+assert_equals "$(get_field "flat-disc" "phases.discussion")" "undefined" "Empty discussion phase removed"
+assert_equals "$(get_field "flat-disc" "phases.specification")" "undefined" "Empty specification phase removed"
 
 echo ""
 
 # ----------------------------------------------------------------------------
 
-echo -e "${YELLOW}Test: multiple phases wrapped in one manifest${NC}"
+echo -e "${YELLOW}Test: manifest with no flat statuses — unchanged${NC}"
+setup_fixture
+
+create_manifest "clean" '{
+  "name": "clean",
+  "work_type": "feature",
+  "status": "in-progress",
+  "phases": {
+    "discussion": { "items": { "clean": { "status": "completed" } } }
+  }
+}'
+
+output=$(run_migration)
+
+assert_equals "$(get_field "clean" "phases.discussion.items.clean.status")" "completed" "Items untouched"
+assert_not_contains "$output" "updated" "No update for clean manifest"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: multiple phases with flat status in one manifest${NC}"
 setup_fixture
 
 create_manifest "multi" '{
   "name": "multi",
-  "work_type": "feature",
+  "work_type": "epic",
   "status": "in-progress",
   "phases": {
+    "research": { "status": "completed" },
     "discussion": { "status": "completed" },
-    "specification": { "status": "completed" },
-    "planning": { "status": "in-progress", "format": "local-markdown" },
-    "implementation": { "status": "in-progress", "completed_tasks": ["multi-1-1"] }
+    "planning": { "status": "in-progress" }
   }
 }'
+create_research_file "multi" "exploration.md"
 
-run_migration > /dev/null
+output=$(run_migration)
 
-assert_equals "$(get_field "multi" "phases.discussion.items.multi.status")" "completed" "Discussion wrapped"
-assert_equals "$(get_field "multi" "phases.specification.items.multi.status")" "completed" "Specification wrapped"
-assert_equals "$(get_field "multi" "phases.planning.items.multi.format")" "local-markdown" "Planning format in items"
-assert_equals "$(get_field "multi" "phases.implementation.items.multi.completed_tasks")" '["multi-1-1"]' "Implementation tasks in items"
+assert_equals "$(get_field "multi" "phases.research.items.exploration.status")" "completed" "Research backfilled"
+assert_equals "$(get_field "multi" "phases.research.status")" "undefined" "Research flat status removed"
+assert_equals "$(get_field "multi" "phases.discussion")" "undefined" "Discussion orphan removed"
+assert_equals "$(get_field "multi" "phases.planning")" "undefined" "Planning orphan removed"
 
 echo ""
 
@@ -283,17 +280,18 @@ setup_fixture
 
 create_manifest "idem" '{
   "name": "idem",
-  "work_type": "feature",
+  "work_type": "epic",
   "status": "in-progress",
   "phases": {
-    "discussion": { "status": "completed" }
+    "research": { "status": "completed" }
   }
 }'
+create_research_file "idem" "exploration.md"
 
 run_migration > /dev/null
 output=$(run_migration)
 
-assert_equals "$(get_field "idem" "phases.discussion.items.idem.status")" "completed" "Items still correct"
+assert_equals "$(get_field "idem" "phases.research.items.exploration.status")" "completed" "Items still correct"
 assert_not_contains "$output" "updated" "No update on second run"
 
 echo ""
@@ -309,26 +307,12 @@ create_manifest "real" '{"name":"real","work_type":"feature","status":"in-progre
 
 run_migration > /dev/null
 
-assert_equals "$(get_field "real" "phases.discussion.items.real.status")" "completed" "Real manifest migrated"
 # Dot-dir manifest should still have flat status
 dot_status=$(node -e "
   const m = JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));
   console.log(m.phases.discussion.status || 'missing');
 " "$TEST_DIR/.workflows/.state/manifest.json")
 assert_equals "$dot_status" "completed" "Dot-dir manifest untouched"
-
-echo ""
-
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: empty phases object unchanged${NC}"
-setup_fixture
-
-create_manifest "empty" '{"name":"empty","work_type":"feature","status":"in-progress","phases":{}}'
-
-output=$(run_migration)
-
-assert_not_contains "$output" "updated" "No update for empty phases"
 
 echo ""
 
@@ -350,19 +334,20 @@ setup_fixture
 
 create_manifest "preserve" '{
   "name": "preserve",
-  "work_type": "feature",
+  "work_type": "epic",
   "status": "in-progress",
   "created": "2026-03-01",
   "description": "Test preservation",
   "phases": {
-    "discussion": { "status": "completed" }
+    "research": { "status": "completed" }
   }
 }'
+create_research_file "preserve" "exploration.md"
 
 run_migration > /dev/null
 
 assert_equals "$(get_field "preserve" "name")" "preserve" "Name preserved"
-assert_equals "$(get_field "preserve" "work_type")" "feature" "Work type preserved"
+assert_equals "$(get_field "preserve" "work_type")" "epic" "Work type preserved"
 assert_equals "$(get_field "preserve" "created")" "2026-03-01" "Created date preserved"
 assert_equals "$(get_field "preserve" "description")" "Test preservation" "Description preserved"
 

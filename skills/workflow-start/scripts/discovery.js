@@ -1,6 +1,6 @@
 'use strict';
 
-const { loadActiveManifests, loadAllManifests, phaseStatus, phaseItems, phaseData, computeNextPhase } = require('../../workflow-shared/scripts/discovery-utils');
+const { loadActiveManifests, loadAllManifests, phaseStatus, phaseItems, computeNextPhase } = require('../../workflow-shared/scripts/discovery-utils');
 
 const EPIC_PHASES = ['research', 'discussion', 'specification', 'planning', 'implementation', 'review'];
 
@@ -45,8 +45,7 @@ function discover(cwd) {
       const activePhases = [];
       for (const phase of EPIC_PHASES) {
         const items = phaseItems(m, phase);
-        const pd = phaseData(m, phase);
-        if (items.length > 0 || pd.status) {
+        if (items.length > 0) {
           activePhases.push(phase);
         }
       }

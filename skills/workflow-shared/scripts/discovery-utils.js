@@ -91,7 +91,7 @@ function phaseStatus(manifest, phase) {
     if (statuses.some(s => s === 'in-progress')) return 'in-progress';
     return statuses[0];
   }
-  return p.status || null;
+  return null;
 }
 
 function phaseItems(manifest, phase) {

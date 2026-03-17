@@ -60,7 +60,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.dis
 
 **If not exists (`false` — new entry):**
 
-→ Proceed to **Step 6** (Gather Context) with source="new".
+→ Proceed to **Step 6** (Gather Context) with source="topic-provided".
 
 #### If no `topic` (epic — scoped path)
 

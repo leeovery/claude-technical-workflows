@@ -32,14 +32,11 @@ echo ""
 #
 
 report_update() {
-    local file="$1"
-    local description="$2"
-    echo "[UPDATE] $file: $description"
+    echo "updated"
 }
 
 report_skip() {
-    local file="$1"
-    echo "[SKIP] $file"
+    echo "skipped"
 }
 
 # Export functions for sourced script
@@ -280,7 +277,7 @@ output=$(run_migration 2>&1)
 new_content=$(cat "$TEST_DIR/.gitignore")
 
 assert_equals "$new_content" "$original" "File unchanged when already correct"
-assert_contains "$output" "SKIP" "Reported skip for .gitignore"
+assert_contains "$output" "skipped" "Reported skip for .gitignore"
 
 echo ""
 

@@ -32,14 +32,11 @@ echo ""
 #
 
 report_update() {
-    local file="$1"
-    local description="$2"
-    echo "[UPDATE] $file: $description"
+    echo "updated"
 }
 
 report_skip() {
-    local file="$1"
-    echo "[SKIP] $file"
+    echo "skipped"
 }
 
 # Export functions for sourced script
@@ -149,7 +146,7 @@ output=$(run_migration 2>&1)
 assert_file_not_exists "$TEST_DIR/.workflows/environment-setup.md" "Stale root file removed"
 assert_file_exists "$TEST_DIR/.workflows/.state/environment-setup.md" ".state/ copy preserved"
 assert_equals "$(cat "$TEST_DIR/.workflows/.state/environment-setup.md")" "real content" ".state/ content unchanged"
-assert_contains "$output" "removed stale copy" "Reports removal"
+assert_contains "$output" "updated" "Reports update"
 
 echo ""
 
@@ -166,7 +163,7 @@ output=$(run_migration 2>&1)
 assert_file_not_exists "$TEST_DIR/.workflows/environment-setup.md" "Root file removed"
 assert_file_exists "$TEST_DIR/.workflows/.state/environment-setup.md" "File moved to .state/"
 assert_equals "$(cat "$TEST_DIR/.workflows/.state/environment-setup.md")" "needs moving" "Content preserved"
-assert_contains "$output" "moved from workflows root" "Reports move"
+assert_contains "$output" "updated" "Reports update"
 
 echo ""
 
@@ -183,7 +180,7 @@ output=$(run_migration 2>&1)
 assert_file_exists "$TEST_DIR/.workflows/.state/environment-setup.md" ".state/ copy still exists"
 assert_file_not_exists "$TEST_DIR/.workflows/environment-setup.md" "No root file created"
 assert_equals "$(cat "$TEST_DIR/.workflows/.state/environment-setup.md")" "already correct" "Content unchanged"
-assert_contains "$output" "SKIP" "Reports skip"
+assert_contains "$output" "skipped" "Reports skip"
 
 echo ""
 
@@ -198,7 +195,7 @@ output=$(run_migration 2>&1)
 
 assert_file_not_exists "$TEST_DIR/.workflows/environment-setup.md" "No root file created"
 assert_file_not_exists "$TEST_DIR/.workflows/.state/environment-setup.md" "No .state/ file created"
-assert_contains "$output" "SKIP" "Reports skip"
+assert_contains "$output" "skipped" "Reports skip"
 
 echo ""
 

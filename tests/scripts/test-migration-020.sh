@@ -42,6 +42,10 @@ create_manifest() {
     echo "$content" > "$TEST_DIR/.workflows/$name/manifest.json"
 }
 
+# Stub report_update for migration script
+report_update() { echo "updated"; }
+export -f report_update
+
 run_migration() {
     cd "$TEST_DIR"
     PROJECT_DIR="$TEST_DIR" bash "$MIGRATION_SCRIPT" 2>&1

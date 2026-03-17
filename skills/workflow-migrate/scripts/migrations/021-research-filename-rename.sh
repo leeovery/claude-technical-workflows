@@ -43,10 +43,10 @@ for dir in "$WORKFLOWS_DIR"/*/; do
 
   # Don't rename if target already exists
   if [ -f "$target" ]; then
-    echo "  skipped: $exploration → target already exists" >&2
+    report_skip
     continue
   fi
 
   mv "$exploration" "$target"
-  echo "  updated: $exploration → $target" >&2
+  report_update
 done

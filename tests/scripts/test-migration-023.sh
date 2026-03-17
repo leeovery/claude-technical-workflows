@@ -51,7 +51,7 @@ create_state_file() {
 
 # Stub report_update for migration script
 export -f report_update 2>/dev/null || true
-report_update() { echo "updated: $1 — $2"; }
+report_update() { echo "updated"; }
 export -f report_update
 
 run_migration() {
@@ -178,7 +178,7 @@ create_state_file "my-feat" "# Research Analysis Cache\n\n## Topics\n\n### Theme
 output=$(run_migration)
 
 assert_file_not_exists "$TEST_DIR/.workflows/my-feat/.state/research-analysis.md" "State file deleted"
-assert_contains "$output" "removed old-format research analysis cache" "Reports file removal"
+assert_contains "$output" "updated" "Reports file removal"
 
 echo ""
 
@@ -206,7 +206,7 @@ output=$(run_migration)
 
 assert_equals "$(get_field "cached-feat" "phases.research.analysis_cache")" "undefined" "analysis_cache removed from manifest"
 assert_equals "$(get_field "cached-feat" "phases.research.status")" "completed" "Research status preserved"
-assert_contains "$output" "removed analysis_cache from manifest" "Reports manifest cleanup"
+assert_contains "$output" "updated" "Reports manifest cleanup"
 
 echo ""
 
@@ -253,7 +253,7 @@ output=$(run_migration)
 
 assert_equals "$(get_field "no-cache" "phases.research.status")" "completed" "Research status unchanged"
 assert_equals "$(get_field "no-cache" "phases.discussion.status")" "in-progress" "Discussion status unchanged"
-assert_not_contains "$output" "removed analysis_cache" "No manifest update reported"
+assert_not_contains "$output" "updated" "No manifest update reported"
 
 echo ""
 
@@ -313,7 +313,7 @@ output=$(run_migration)
 
 assert_file_not_exists "$TEST_DIR/.workflows/idem/.state/research-analysis.md" "State file still gone"
 assert_equals "$(get_field "idem" "phases.research.analysis_cache")" "undefined" "analysis_cache still gone"
-assert_not_contains "$output" "removed" "No updates on second run"
+assert_not_contains "$output" "updated" "No updates on second run"
 
 echo ""
 
@@ -387,7 +387,7 @@ setup_fixture
 
 output=$(run_migration)
 
-assert_not_contains "$output" "removed" "No updates without .workflows dir"
+assert_not_contains "$output" "updated" "No updates without .workflows dir"
 
 echo ""
 
