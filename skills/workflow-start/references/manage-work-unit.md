@@ -57,7 +57,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js exists {selected.name}
 ## C. Completion Check
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {selected.name}.implementation.* status
+node .claude/skills/workflow-manifest/scripts/manifest.js get '{selected.name}.implementation.*' status
 ```
 
 This returns all topic statuses in the implementation phase.
