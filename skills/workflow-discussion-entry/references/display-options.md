@@ -122,7 +122,7 @@ Set source="research".
 **If user specified a topic inline** (e.g., "research 2", "2", or topic name):
 - Identify the selected topic from the numbered list
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 **If user just said "from research" without specifying:**
 
@@ -134,7 +134,7 @@ Which research topic would you like to discuss? (Enter a number or topic name)
 
 **STOP.** Wait for user response.
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If user chose `Continue discussion`
 
@@ -145,7 +145,7 @@ Set source="continue".
 **If user specified a discussion inline** (e.g., "continue auth-flow"):
 - Identify the selected discussion from the list
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 **If user just said "continue discussion" without specifying:**
 
@@ -157,7 +157,7 @@ Which discussion would you like to continue?
 
 **STOP.** Wait for user response.
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If user chose `Fresh topic`
 
@@ -165,7 +165,7 @@ User wants to start a fresh discussion.
 
 Set source="fresh".
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If user chose `refresh`
 
