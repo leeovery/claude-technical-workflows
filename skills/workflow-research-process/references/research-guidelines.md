@@ -106,4 +106,4 @@ These are natural pauses, not every exchange. Capture the substance — not a ve
 
 **Don't expand**: Capture what was said, don't embellish.
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

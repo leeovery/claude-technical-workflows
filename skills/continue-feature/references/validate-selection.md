@@ -24,4 +24,4 @@ Run /continue-feature to see available features, or /start-feature to begin a ne
 
 Store the matched feature's data (name, next_phase, phase_label, completed_phases).
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

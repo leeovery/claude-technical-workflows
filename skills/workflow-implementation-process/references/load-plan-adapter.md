@@ -16,4 +16,4 @@
    - **authoring.md** — how to create new tasks (needed if analysis adds tasks)
 4. Follow **about.md** for any setup prerequisites (e.g., required tools).
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

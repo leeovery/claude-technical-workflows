@@ -16,7 +16,7 @@ Process findings from a review agent interactively with the user. The agent writ
 {Review type} review complete — no findings.
 ```
 
-→ Return to **[plan-review.md](plan-review.md)** for the next phase.
+→ Return to caller.
 
 #### If `STATUS` is `findings`
 
@@ -177,4 +177,4 @@ Incorporate feedback and re-present the proposed fix **in full**. Update the tra
    {Review type} review complete — {N} findings processed.
    ```
 
-→ Return to **[plan-review.md](plan-review.md)** for the next phase.
+→ Return to caller.

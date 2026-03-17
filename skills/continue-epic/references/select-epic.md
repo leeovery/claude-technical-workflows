@@ -4,6 +4,8 @@
 
 ---
 
+## A. Display and Select
+
 Display active epics and let the user select one.
 
 > *Output the next fenced block as a code block:*
@@ -52,12 +54,22 @@ Recreate with actual epics from discovery. No auto-select, even with one item.
 
 Store the selected epic's name as `work_unit`.
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If user chose "View completed & cancelled"
 
-→ Load **[../../workflow-start/references/view-completed.md](../../workflow-start/references/view-completed.md)** with work_type filter = `epic`. On return, re-run discovery and redisplay from the top of this reference.
+Set work_type filter = `epic`.
+
+→ Load **[../../workflow-start/references/view-completed.md](../../workflow-start/references/view-completed.md)** and follow its instructions as written.
+
+Re-run discovery to refresh state after potential changes.
+
+→ Return to **A. Display and Select**.
 
 #### If user chose `m`/`manage`
 
-→ Load **[../../workflow-start/references/manage-work-unit.md](../../workflow-start/references/manage-work-unit.md)**. On return, re-run discovery and redisplay from the top of this reference.
+→ Load **[../../workflow-start/references/manage-work-unit.md](../../workflow-start/references/manage-work-unit.md)** and follow its instructions as written.
+
+Re-run discovery to refresh state after potential changes.
+
+→ Return to **A. Display and Select**.

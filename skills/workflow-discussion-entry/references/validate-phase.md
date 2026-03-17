@@ -22,7 +22,7 @@ Resuming discussion: {topic:(titlecase)}
 
 Set source="continue".
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If discussion exists and status is `completed`
 
@@ -40,4 +40,4 @@ Reopening discussion: {topic:(titlecase)}
 
 Set source="continue".
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

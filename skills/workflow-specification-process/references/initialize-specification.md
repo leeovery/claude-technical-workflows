@@ -24,4 +24,4 @@ Create the specification file at `.workflows/{work_unit}/specification/{topic}/s
 
 Commit: `spec({work_unit}): initialize specification`
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

@@ -43,3 +43,5 @@ ISSUES: {blockers or deviations — omit if none}
 - `blocked` or `failed`: ISSUES explains why and what decision is needed
 
 Keep the report minimal. "All passing" is sufficient for TEST_RESULTS when nothing failed. ISSUES can be omitted entirely on a clean run.
+
+→ Return to caller.

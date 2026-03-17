@@ -238,4 +238,4 @@ Run another review cycle?
 Specification review complete — {N} cycle(s), all tracking files finalised.
 ```
 
-→ Return to **[the skill](../SKILL.md)** for **Step 8**.
+→ Return to caller.

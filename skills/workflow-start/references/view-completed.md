@@ -100,11 +100,11 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {selected.name} st
 "{selected.name:(titlecase)}" reactivated.
 ```
 
-→ Return to caller to redisplay main view (re-run discovery, re-render from top).
+→ Return to caller.
 
 #### If user chose `b`/`back`
 
-→ Return to **A. Display List** (re-render with current data).
+→ Return to **A. Display List**.
 
 #### If user asked a question
 

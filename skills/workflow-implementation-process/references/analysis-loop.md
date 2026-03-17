@@ -312,4 +312,4 @@ Commit all analysis and plan changes:
 impl({work_unit}): add analysis phase {N} ({K} tasks)
 ```
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

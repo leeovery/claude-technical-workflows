@@ -32,13 +32,13 @@ Reopening plan: {topic:(titlecase)}
 
 Set source="existing".
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 **If status is `in-progress`:**
 
 Set source="existing".
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If not exists (`false` — fresh start)
 
@@ -57,4 +57,4 @@ Any additional context since the specification was completed?
 
 Set source="fresh".
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

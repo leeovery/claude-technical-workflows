@@ -61,8 +61,8 @@ Select an option (enter number):
 
 **STOP.** Wait for user response.
 
-→ Return to **[epic-session.md](epic-session.md)**.
+→ Return to caller.
 
 #### If no
 
-→ Return to **[epic-session.md](epic-session.md)**.
+→ Return to caller.

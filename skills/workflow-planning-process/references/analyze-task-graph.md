@@ -77,7 +77,7 @@ The agent will clear all existing graph data and re-analyze from scratch.
 
 Commit: `planning({work_unit}): analyze task dependencies and priorities`
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If `STATUS` is `blocked`
 
@@ -144,4 +144,4 @@ The agent will clear all existing graph data and re-analyze from scratch.
 
 Commit: `planning({work_unit}): analyze task dependencies and priorities`
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

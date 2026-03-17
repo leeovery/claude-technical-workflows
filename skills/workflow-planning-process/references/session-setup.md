@@ -20,4 +20,4 @@
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} spec_commit $(git rev-parse HEAD)
    ```
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

@@ -16,7 +16,7 @@ Single file: `.workflows/{work_unit}/research/{topic}.md`
 
 Feature research stays focused on the feature's scope. No splitting, no multi-file management. When the topic feels well-explored, conclude and move forward.
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If work_type is `epic`
 
@@ -28,4 +28,4 @@ Start with one file — either `exploration.md` for open research or a named `{t
 
 **Periodic review**: Every few sessions, assess: are themes emerging? Offer to split them out. Still fuzzy? Keep exploring. A specific topic converging toward decisions? It may be ready for discussion.
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

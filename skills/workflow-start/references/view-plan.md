@@ -97,4 +97,4 @@ Show:
 
 Keep it scannable — this is for quick reference, not full detail.
 
-→ Return to **[manage-work-unit.md](manage-work-unit.md)**.
+→ Return to caller.

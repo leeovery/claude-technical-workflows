@@ -27,11 +27,11 @@ Read and follow the instructions. Common setup tasks include:
 
 Execute each instruction and verify it succeeds before proceeding.
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If setup document exists and states `No special setup required`
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If setup document is missing
 
@@ -48,4 +48,4 @@ If they provide instructions, save them to `.workflows/.state/environment-setup.
 
 If they say no setup is needed, create `.workflows/.state/environment-setup.md` with "No special setup required." and commit. This prevents asking the same question in future sessions.
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

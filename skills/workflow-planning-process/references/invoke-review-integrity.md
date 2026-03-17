@@ -34,3 +34,5 @@ FINDING_COUNT: {N}
 
 - `clean`: plan meets structural quality standards. No findings to process.
 - `findings`: tracking file contains findings with full fix content for the orchestrator to present to the user.
+
+→ Return to caller.

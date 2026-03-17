@@ -76,4 +76,4 @@ This section enables dependency tracking when plans are built from this specific
 
 **Key distinction**: This is about sequencing what must come first, not mapping out what works together. A feature may integrate with many systems — only list the ones that block you from starting.
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

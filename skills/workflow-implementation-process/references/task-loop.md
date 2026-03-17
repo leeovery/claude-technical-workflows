@@ -284,4 +284,4 @@ Code, tests, plan progress, and implementation file — one commit per approved 
 All tasks complete. {M} tasks implemented.
 ```
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

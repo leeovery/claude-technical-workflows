@@ -50,8 +50,8 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.specif
 
 Parse the output to identify any items with `type: cross-cutting`. Store these for the cross-cutting context step.
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 **Otherwise:**
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

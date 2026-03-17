@@ -10,7 +10,7 @@
 
 No cross-cutting specifications exist for feature/bugfix work types.
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If work_type is `epic`
 
@@ -24,7 +24,7 @@ Use the cross-cutting specs identified in the validate-spec step. For each, the 
 
 #### If no cross-cutting specifications exist
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.
 
 #### If cross-cutting specifications exist
 
@@ -85,4 +85,4 @@ Cross-cutting specifications to reference:
 
 These specifications contain validated architectural decisions that should inform the plan. The planning skill will incorporate these as a "Cross-Cutting References" section in the plan.
 
-→ Return to **[the skill](../SKILL.md)**.
+→ Return to caller.

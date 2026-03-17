@@ -32,6 +32,10 @@ research you'd like to include — drop them in now.
 
 No additional context. Proceed with research sources only.
 
+→ Return to caller.
+
 #### If user provides additional context
 
 Remember the additional context — it will be included alongside the research sources in the handoff to the processing skill.
+
+→ Return to caller.

@@ -74,3 +74,5 @@ The plan IS the source of truth. Every phase, every task must contain all inform
 - **Self-contained**: Each task executable without external context
 - **No assumptions**: Spell out the context, don't assume implementer knows it
 
+→ Return to caller.
+

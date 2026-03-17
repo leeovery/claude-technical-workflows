@@ -222,4 +222,4 @@ Run another review round?
 Plan review complete — {N} cycle(s), all tracking files finalised.
 ```
 
-→ Return to **[the skill](../SKILL.md)** for **Step 9**.
+→ Return to caller.
