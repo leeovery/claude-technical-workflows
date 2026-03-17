@@ -10,7 +10,9 @@ Read `.workflows/{work_unit}/specification/{topic}/specification.md` if it exist
 
 #### If specification doesn't exist
 
-→ Return to **[the skill](../SKILL.md)** with verb="Creating".
+Set verb = "Creating".
+
+→ Return to caller.
 
 #### If specification exists with status `in-progress`
 
@@ -35,13 +37,17 @@ A specification for "{work_unit:(titlecase)}" already exists and is in progress.
 
 #### If `resume`
 
-→ Return to **[the skill](../SKILL.md)** with verb="Continuing".
+Set verb = "Continuing".
+
+→ Return to caller.
 
 #### If `start-fresh`
 
 Archive the existing spec.
 
-→ Return to **[the skill](../SKILL.md)** with verb="Creating".
+Set verb = "Creating".
+
+→ Return to caller.
 
 #### If specification exists with status `completed`
 
@@ -57,4 +63,6 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.specif
 Reopening specification: {work_unit:(titlecase)}
 ```
 
-→ Return to **[the skill](../SKILL.md)** with verb="Continuing".
+Set verb = "Continuing".
+
+→ Return to caller.
