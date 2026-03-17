@@ -608,29 +608,30 @@ Rules:
 
 The same navigation conventions apply across all skill tiers (entry-point and processing).
 
-**Forward navigation** — moving to the next step or phase:
+**Forward navigation** — moving to the next step, phase, or section:
 ```
 → Proceed to **Step N**.
-→ Proceed to **B. Phase Name**.
+→ Proceed to **B. Section Name**.
 ```
 
-**Return navigation** — returning to the parent skill or a previous phase:
+**Return navigation** — returning up the call stack or backward within a file:
 ```
 → Return to caller.
-→ Return to **[the skill](../SKILL.md)** for **Step N**.
+→ Return to caller for **B. Section Name**.
 → Return to **[the skill](../SKILL.md)**.
-→ Return to **A. Phase Name**.
+→ Return to **[the skill](../SKILL.md)** for **Step N**.
+→ Return to **A. Section Name**.
 ```
 
 Rules:
 - Only two routing verbs: `→ Proceed to` (forward) and `→ Return to` (backward/upward)
 - No adverbs — `→ Proceed to`, never `→ Proceed directly to`
 - No alternative verbs — never `→ Go to`, `→ Jump to`, `→ Skip to`, `→ Continue to`, `→ Enter`
-- Use links when routing to another file (parent SKILL.md or calling reference file)
-- No links for internal routing within the same file (lettered phases, named sections)
+- No links for internal routing within the same file (lettered sections)
 - When skipping steps, use a parenthetical: `→ Proceed to **Step 5** (skipping Steps 1–3).`
-- `→ Return to caller.` — returns to the line that loaded this file; the caller's next routing instruction takes over. No link needed since the destination is always the loading context. This is the standard exit for reference files that are not hard-escaping to the backbone.
-- `→ Return to **[the skill](../SKILL.md)**` — hard escape to the backbone. Use when the reference file needs to route to a specific backbone step rather than returning to its immediate caller.
+- **Caller returns** — `→ Return to caller.` returns to the line that loaded this file; the caller's next routing instruction takes over. No link needed since the destination is always the loading context. This is the standard exit for reference files. `→ Return to caller for **B. Section Name**.` returns to the caller at a specific lettered section rather than the loading line.
+- **Backbone escapes** — `→ Return to **[the skill](../SKILL.md)**` is a hard escape to the backbone, bypassing intermediate callers. Use when the reference file needs to route to the backbone rather than returning to its immediate caller. `→ Return to **[the skill](../SKILL.md)** for **Step N**.` targets a specific backbone step.
+- **Internal routing** — within the same file, `→ Proceed to **C. Section**.` moves forward and `→ Return to **A. Section**.` moves backward. Both use bold text, no links.
 - Single-exit reference files end with `→ Return to caller.`
 - Multi-exit reference files end each path with `→ Return to caller.` — unless different paths need to route to different backbone steps, in which case use `→ Return to **[the skill](../SKILL.md)** for **Step N**.`
 - Terminal reference files (invoke-skill.md, phase-bridge.md) invoke a processing skill as their final action — no return needed
