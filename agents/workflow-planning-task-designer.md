@@ -18,7 +18,7 @@ You receive file paths via the orchestrator's prompt:
 3. **Cross-cutting spec paths** (if any) — Architectural decisions that influence planning
 4. **task-design.md** — Task design principles
 5. **Context-specific task design** — Work-type guidance (epic, feature, or bugfix)
-6. **All approved phases** — The complete phase structure (from the output format or scratch file)
+6. **All approved phases** — The complete phase structure (from the output format via reading.md)
 7. **Target phase number** — Which phase to break into tasks
 
 On **amendment**, you also receive:

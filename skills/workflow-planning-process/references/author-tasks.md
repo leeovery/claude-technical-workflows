@@ -32,7 +32,7 @@ Invoke `workflow-planning-task-author` with these file paths:
 2. **Specification**: specification path from the manifest or `.workflows/{work_unit}/specification/{topic}/specification.md`
 3. **Cross-cutting specs**: cross-cutting spec paths if any
 4. **task-design.md**: `task-design.md`
-5. **All approved phases**: the complete phase structure from the output format (read via reading.md) or scratch file if phases haven't been authored yet
+5. **All approved phases**: the complete phase structure from the output format (read via reading.md)
 6. **Task list for current phase**: the approved task list (ALL tasks in the phase) from the task list scratch file
 7. **Scratch file path**: `.workflows/.cache/{work_unit}/planning/{topic}/phase-{N}.md`
 

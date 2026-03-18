@@ -32,7 +32,7 @@ Invoke `workflow-planning-task-designer` with these file paths:
 3. **Cross-cutting specs**: cross-cutting spec paths if any
 4. **task-design.md**: `task-design.md`
 5. **Context guidance**: `task-design/{work_type}.md` (default to `epic` if `work_type` is empty)
-6. **All approved phases**: the complete phase structure from the output format (read via reading.md) or scratch file
+6. **All approved phases**: the complete phase structure from the output format (read via reading.md)
 7. **Target phase number**: the phase being broken into tasks
 
 ### Present the Output
