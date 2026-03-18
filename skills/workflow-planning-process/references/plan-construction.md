@@ -45,22 +45,20 @@ Check `task_list_gate_mode` via manifest CLI:
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} task_list_gate_mode
 ```
 
-#### If the phase has no task list
-
-Check the task list scratch file at `.workflows/.cache/{work_unit}/planning/{topic}/phase-{N}-tasks.md`. If no scratch file exists, this phase needs task design.
+#### If the phase has no task table in the Plan File
 
 → Load **[define-tasks.md](define-tasks.md)** and follow its instructions as written.
 
 → Proceed to **C. Author Phase Tasks**.
 
-#### If the phase has a task list and `task_list_gate_mode` is `auto`
+#### If the phase has a task table and `task_list_gate_mode` is `auto`
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 **Phase {N}: {Phase Name}** — {M} tasks.
 
-{task list from the task list scratch file}
+{task list from the Plan File}
 ```
 
 > *Output the next fenced block as a code block:*
@@ -71,14 +69,14 @@ Phase {N}: {Phase Name} — task list confirmed. Proceeding to authoring.
 
 → Proceed to **C. Author Phase Tasks**.
 
-#### If the phase has a task list and `task_list_gate_mode` is `gated`
+#### If the phase has a task table and `task_list_gate_mode` is `gated`
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 **Phase {N}: {Phase Name}** — {M} tasks.
 
-{task list from the task list scratch file}
+{task list from the Plan File}
 ```
 
 > *Output the next fenced block as markdown (not a code block):*

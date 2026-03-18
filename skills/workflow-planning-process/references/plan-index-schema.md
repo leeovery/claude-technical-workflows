@@ -1,22 +1,24 @@
-# Planning Scratch File Schema
+# Plan File Schema
 
 *Reference for **[workflow-planning-process](../SKILL.md)***
 
 ---
 
-This file defines the structure for planning scratch files used during phase and task design. Scratch files are temporary — they live at `.workflows/.cache/{work_unit}/planning/{topic}/` and are discarded after content is written to the output format.
-
-All metadata (format, status, gate modes, progress tracking, `task_map`) is stored in the manifest via the manifest CLI.
+This file defines the canonical structure for Plan Files (`.workflows/{work_unit}/planning/{topic}/planning.md`). The Plan File is a content document — it holds the human-readable plan structure (phases, task tables). All state (status, gate modes, progress, `task_map`) is in the manifest.
 
 ---
 
-## Phase Scratch File
-
-Path: `.workflows/.cache/{work_unit}/planning/{topic}/phases.md`
+## Title
 
 ```markdown
-## Phases
+# Plan: {Topic Name}
+```
 
+---
+
+## Phase Entry
+
+```markdown
 ### Phase {N}: {Phase Name}
 
 **Goal**: {What this phase accomplishes}
@@ -28,13 +30,9 @@ Path: `.workflows/.cache/{work_unit}/planning/{topic}/phases.md`
 - [ ] {Second verifiable criterion}
 ```
 
-After approval, phases are created in the output format immediately, their external IDs are recorded in `task_map`, and the scratch file is deleted.
-
 ---
 
-## Task List Scratch File
-
-Path: `.workflows/.cache/{work_unit}/planning/{topic}/phase-{N}-tasks.md`
+## Task Table
 
 ```markdown
 #### Tasks

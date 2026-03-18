@@ -10,7 +10,7 @@ This step uses the `workflow-planning-phase-designer` agent (`../../../agents/wo
 
 ## A. Determine Phase State
 
-Check if phases exist in the output format (read via the format's reading.md) or in the scratch file at `.workflows/.cache/{work_unit}/planning/{topic}/phases.md`.
+Read the Plan File at `.workflows/{work_unit}/planning/{topic}/planning.md`. Check if phases already exist in the body.
 
 #### If phases exist
 
@@ -46,7 +46,7 @@ Invoke `workflow-planning-phase-designer` with these file paths:
 5. **Context guidance**: `phase-design/{work_type}.md` (default to `epic` if `work_type` is empty)
 6. **task-design.md**: `task-design.md`
 
-The agent returns a complete phase structure. Write it to the scratch file at `.workflows/.cache/{work_unit}/planning/{topic}/phases.md`. Create the directory if it does not exist.
+The agent returns a complete phase structure. Write it directly to the Plan File body.
 
 Update the manifest planning position:
 ```bash
@@ -84,7 +84,7 @@ Re-invoke `workflow-planning-phase-designer` with all original inputs PLUS:
 - **Previous output**: the current phase structure
 - **User feedback**: what the user wants changed
 
-Update the scratch file with the revised output.
+Update the Plan File with the revised output.
 
 → Return to **B. Review and Approve**.
 
@@ -97,8 +97,7 @@ Update the scratch file with the revised output.
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} task_map.{phase_internal_id} {phase_external_id}
    ```
-3. Delete the scratch file at `.workflows/.cache/{work_unit}/planning/{topic}/phases.md`
-4. Commit: `planning({work_unit}): approve phase structure`
+3. Commit: `planning({work_unit}): approve phase structure`
 
 If the phase structure was already approved and unchanged, no updates are needed.
 

@@ -26,8 +26,9 @@ Load the format's **[reading.md](output-formats/{format}/reading.md)** and **[gr
 
 Invoke `workflow-planning-dependency-grapher` with these file paths:
 
-1. **reading.md**: the format's reading reference loaded above
-2. **graph.md**: the format's graph reference loaded above
+1. **Plan File path**: `.workflows/{work_unit}/planning/{topic}/planning.md`
+2. **reading.md**: the format's reading reference loaded above
+3. **graph.md**: the format's graph reference loaded above
 
 The agent clears any existing dependencies/priorities, analyzes all tasks, and — if no cycles — applies the new graph data directly. It returns a structured summary of what was done.
 

@@ -17,9 +17,8 @@ You receive file paths via the orchestrator's prompt:
 2. **Specification path** — The validated specification to plan from
 3. **Cross-cutting spec paths** (if any) — Architectural decisions that influence planning
 4. **task-design.md** — Task design principles and template
-5. **All approved phases** — The complete phase structure (from the output format via reading.md)
-6. **Task list for current phase** — The approved task list (ALL tasks in the phase) from the task list scratch file
-7. **Scratch file path** — Where to write authored tasks
+5. **Plan File path** — The Plan File with all approved phases and the task list for the current phase
+6. **Scratch file path** — Where to write authored tasks
 
 On **amendment**, you also receive:
 - **Scratch file path** — Contains previously authored tasks with status markers
@@ -31,7 +30,7 @@ On **amendment**, you also receive:
 2. Read the specification in full, following the ingestion protocol
 3. Read any cross-cutting specifications
 4. Read `task-design.md` — absorb the task template and quality standards
-5. Read the approved phases and task list — understand context and scope
+5. Read the Plan File — understand approved phases, task list, and scope
 6. Author all tasks in the phase, writing each to the scratch file incrementally — each task written to disk before starting the next
 
 If this is an **amendment**: read the scratch file, find tasks marked `rejected` (they have a feedback blockquote below the status line). Rewrite the entire scratch file — copy `approved` tasks verbatim, rewrite `rejected` tasks addressing the feedback. Reset rewritten tasks to `pending` status.
