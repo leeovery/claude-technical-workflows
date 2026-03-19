@@ -4,7 +4,7 @@ description: Capture a bug report as a markdown file in the workflow inbox. Use 
 allowed-tools: Bash(mkdir -p), Bash(ls .workflows/inbox/)
 ---
 
-This skill captures a bug and writes it to the inbox. No manifest, no migrations, no pipeline — just capture and file.
+This skill captures a bug report and writes it to the inbox.
 
 If there's already conversation context about something broken, synthesise it straight into the file without asking questions. If this is a cold start, ask what's broken and have a natural back-and-forth to draw out the symptoms. Recognise when it has enough detail (typically 2-4 exchanges) and wrap up.
 

@@ -4,7 +4,7 @@ description: Capture an idea as a markdown file in the workflow inbox. Use when 
 allowed-tools: Bash(mkdir -p), Bash(ls .workflows/inbox/)
 ---
 
-This skill captures an idea and writes it to the inbox. No manifest, no migrations, no pipeline — just capture and file.
+This skill captures an idea and writes it to the inbox.
 
 If there's already conversation context about an idea, synthesise it straight into the file without asking questions. If this is a cold start, ask what's on their mind and have a natural back-and-forth to draw the idea out. Recognise when it has enough shape (typically 2-4 exchanges) and wrap up.
 
