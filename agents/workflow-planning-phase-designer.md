@@ -79,3 +79,4 @@ Continue for all phases.
 5. **3-6 tasks per phase** — if you can't imagine 3+ tasks, merge; 8+ tasks, split
 6. **Specification is source of truth** — plan what the spec defines, nothing more
 7. **Cross-cutting specs inform, don't add scope** — they shape how you build, not what you build
+8. **Phases only — no task content** — your output is phase structure: goals, ordering, and acceptance criteria. Task tables and task lists are designed by a separate agent in a later step. Never include them.
