@@ -58,7 +58,7 @@ Work-unit-first directory structure with uniform `{topic}` in all paths. For fea
 - Discussion: `.workflows/{work_unit}/discussion/{topic}.md` (flat file)
 - Investigation: `.workflows/{work_unit}/investigation/{topic}.md` (flat file)
 - Specification: `.workflows/{work_unit}/specification/{topic}/specification.md`
-- Planning: `.workflows/{work_unit}/planning/{topic}/planning.md` (+ task files in output format)
+- Planning: `.workflows/{work_unit}/planning/{topic}/planning.md` (+ `phase-{N}-tasks.md` + task files in output format)
 - Implementation: `.workflows/{work_unit}/implementation/{topic}/`
 - Review: `.workflows/{work_unit}/review/{topic}/report.md`
 - State: `.workflows/{work_unit}/.state/` (per-work-unit analysis files)

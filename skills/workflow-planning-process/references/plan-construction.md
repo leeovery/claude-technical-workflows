@@ -107,7 +107,7 @@ Approve this task list?
 
 ## C. Author Phase Tasks
 
-Tasks are authored in a single batch per phase. One sub-agent authors all tasks for the phase, writing to a scratch file. The orchestrator then handles approval and writing to the plan format. Never invoke multiple authoring agents concurrently. Never batch beyond a single phase.
+Tasks are authored in a single batch per phase. One sub-agent authors all tasks for the phase, writing to a per-phase task detail file. The orchestrator then handles approval and writing to the output format. Never invoke multiple authoring agents concurrently. Never batch beyond a single phase.
 
 #### If all task internal IDs for this phase exist in `task_map`
 
