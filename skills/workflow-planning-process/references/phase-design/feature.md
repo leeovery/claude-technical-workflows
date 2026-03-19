@@ -19,7 +19,22 @@ Phase 1 should:
 
 ## Feature Vertical Phases
 
-Each phase adds a complete slice of the new feature, building on the existing system.
+Each phase adds a complete slice of the new feature, building on the existing system. The number of phases depends entirely on the specification's scope — a focused feature may be a single phase, a larger feature may need several.
+
+**Example** (Adding a configuration toggle with validation):
+
+```
+Phase 1: Configuration toggle — setting storage, validation rules, API endpoint, UI control
+```
+
+One phase is sufficient when the feature is cohesive and doesn't have distinct stages that benefit from separate checkpoints.
+
+**Example** (Adding webhook support to existing API):
+
+```
+Phase 1: Core webhook delivery — event registration, payload construction, HTTP dispatch, retry on failure
+Phase 2: Management and observability — webhook CRUD endpoints, delivery logs, manual retry UI
+```
 
 **Example** (Adding OAuth to existing Express API):
 
@@ -28,14 +43,6 @@ Phase 1: Basic OAuth flow — provider registration, callback, token exchange, s
 Phase 2: Permission scoping — granular permissions, role mapping, scope enforcement
 Phase 3: Token lifecycle — refresh tokens, expiry handling, revocation
 Phase 4: Edge cases — concurrent sessions, provider downtime, account linking
-```
-
-**Example** (Adding search to existing e-commerce app):
-
-```
-Phase 1: Basic keyword search — index products, query endpoint, display results
-Phase 2: Filtering and facets — category filters, price ranges, attribute facets
-Phase 3: Relevance tuning — boosting, synonyms, typo tolerance
 ```
 
 Each phase delivers functionality that users or tests can validate against the existing system.
@@ -48,6 +55,8 @@ Each phase delivers functionality that users or tests can validate against the e
 - **Extended capability**: Richer variations, additional options, deeper integration
 - **Edge cases**: Boundary conditions, failure modes, interaction with existing features
 - **Refinement**: Performance, UX polish, hardening
+
+Not every feature passes through all stages. A focused feature might cover core functionality and edge cases together in a single phase. Only create separate phases for stages that represent genuinely distinct work with meaningful checkpoints between them.
 
 ---
 
