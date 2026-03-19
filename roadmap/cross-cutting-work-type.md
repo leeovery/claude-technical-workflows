@@ -236,6 +236,16 @@ These are identified from codebase analysis — the files that need changes:
 | Epic displays | `continue-epic` | Show promoted topics as `(promoted)`, don't offer for continuation |
 | Migrations | New scripts | (A) build project manifest, (B) promote existing cc specs + strip type field |
 
+### Implementation Notes (from codebase review 2026-03-19)
+
+Recent changes that affect implementation approach (but not design):
+
+- **`→ Return to caller.` routing convention** — all skills now use this pattern. Files we plan to modify (`cross-cutting-context.md`, `validate-spec.md`) already updated. All new skills must follow this convention
+- **Bridge discovery uses manifest state** — `workflow-bridge/scripts/discovery.js` now reads manifest phase status instead of checking file existence. Aligns well with our approach — adding cc terminal logic fits naturally
+- **Planning internals refactored** — plan index file replaced by `task_map` in manifest. No impact on our work (we interact at planning entry level, not task storage)
+- **Discovery scripts have format tests** — all 7 discovery scripts now have tests. New `continue-cross-cutting` discovery script needs tests too
+- **Migration scripts use `report_update`/`report_skip`** — standardised, no-arg versions. Our new migration scripts should follow this pattern
+
 ### Edge Cases
 
 1. **Work unit name collision on promotion** — topic name may already exist as a work unit. Need collision handling (open question)
