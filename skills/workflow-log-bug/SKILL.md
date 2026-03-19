@@ -22,7 +22,7 @@ When ready, generate a short kebab-case slug from the core symptom (e.g., `stale
 mkdir -p .workflows/inbox/bugs
 ```
 
-**File:** `.workflows/inbox/bugs/{YYYY-MM-DD}--{slug}.md`
+**File:** `.workflows/inbox/bugs/{YYYY-MM-DD}--{slug}.md` (use today's actual date)
 - H1 title, prose body, 200-500 words
 - No forced headings — let the content flow naturally
 - Naturally cover symptoms, conditions, and impact as discussed

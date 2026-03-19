@@ -22,7 +22,7 @@ When ready, generate a short kebab-case slug from the core concept (e.g., `smart
 mkdir -p .workflows/inbox/ideas
 ```
 
-**File:** `.workflows/inbox/ideas/{YYYY-MM-DD}--{slug}.md`
+**File:** `.workflows/inbox/ideas/{YYYY-MM-DD}--{slug}.md` (use today's actual date)
 - H1 title, prose body, 200-500 words
 - No forced headings — let the content flow naturally
 - Mention relevant codebase files, constraints, or goals if they came up
