@@ -17,13 +17,13 @@ You receive file paths via the orchestrator's prompt:
 2. **Specification path** — The validated specification to plan from
 3. **Cross-cutting spec paths** (if any) — Architectural decisions that influence planning
 4. **task-design.md** — Task design principles and template
-5. **All approved phases** — The complete phase structure (from the Plan Index File)
-6. **Task list for current phase** — The approved task table (ALL tasks in the phase)
-7. **Scratch file path** — Where to write authored tasks
+5. **All approved phases** — The complete phase structure
+6. **Task list for current phase** — The task table (ALL tasks in the phase)
+7. **Task detail file path** — Where to write authored tasks
 
 On **amendment**, you also receive:
-- **Scratch file path** — Contains previously authored tasks with status markers
-- The scratch file contains `rejected` tasks with feedback blockquotes — rewrite only those
+- **Task detail file path** — Contains previously authored tasks with status markers
+- The task detail file contains `rejected` tasks with feedback blockquotes — rewrite only those
 
 ## Your Process
 
@@ -32,13 +32,13 @@ On **amendment**, you also receive:
 3. Read any cross-cutting specifications
 4. Read `task-design.md` — absorb the task template and quality standards
 5. Read the approved phases and task list — understand context and scope
-6. Author all tasks in the phase, writing each to the scratch file incrementally — each task written to disk before starting the next
+6. Author all tasks in the phase, writing each to the task detail file incrementally — each task written to disk before starting the next
 
-If this is an **amendment**: read the scratch file, find tasks marked `rejected` (they have a feedback blockquote below the status line). Rewrite the entire scratch file — copy `approved` tasks verbatim, rewrite `rejected` tasks addressing the feedback. Reset rewritten tasks to `pending` status.
+If this is an **amendment**: read the task detail file, find tasks marked `rejected` (they have a feedback blockquote below the status line). Rewrite the entire task detail file — copy `approved` tasks verbatim, rewrite `rejected` tasks addressing the feedback. Reset rewritten tasks to `pending` status.
 
-## Scratch File Format
+## Task Detail File Format
 
-Write the scratch file with this structure:
+Write the task detail file with this structure:
 
 ```markdown
 ---
@@ -83,7 +83,7 @@ Every task must include these fields (from task-design.md):
 
 ## Your Output
 
-Write all tasks to the scratch file path provided. Use the canonical task template format above. Each task is written to disk before starting the next — incremental writes, not a single batch at the end.
+Write all tasks to the task detail file path provided. Use the canonical task template format above. Each task is written to disk before starting the next — incremental writes, not a single batch at the end.
 
 ## Rules
 
@@ -92,6 +92,6 @@ Write all tasks to the scratch file path provided. Use the canonical task templa
 3. **Cross-cutting specs inform** — apply their architectural decisions where relevant (e.g., caching, rate limiting)
 4. **Every field required** — Problem, Solution, Outcome, Do, Acceptance Criteria, Tests are all mandatory
 5. **Tests include edge cases** — not just happy path; reference the edge cases from the task table
-6. **Write tasks to the scratch file incrementally** — each task written to disk before starting the next
+6. **Write tasks to the task detail file incrementally** — each task written to disk before starting the next
 7. **Spec interpretation errors propagate across tasks in a batch** — ground every decision in the specification. When the spec is ambiguous, note the ambiguity in the task's Context section rather than inventing a plausible default.
 8. **No modifications after approval** — what the user sees is what gets logged

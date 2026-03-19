@@ -4,15 +4,13 @@
 
 ---
 
-This step uses the `workflow-planning-task-author` agent (`../../../agents/workflow-planning-task-author.md`) to write full detail for all tasks in a phase. One sub-agent authors all tasks, writing to a scratch file. The orchestrator then handles per-task approval and format-specific writing to the plan.
+This step uses the `workflow-planning-task-author` agent (`../../../agents/workflow-planning-task-author.md`) to write full detail for all tasks in a phase. One sub-agent authors all tasks, writing to a per-phase task detail file. The orchestrator then handles per-task approval and format-specific writing to the output format.
 
 ---
 
-## A. Prepare the Scratch File
+## A. Prepare the Task Detail File
 
-Scratch file path: `.workflows/.cache/planning/{work_unit}/{topic}/phase-{N}.md`
-
-Create the `.workflows/.cache/planning/{work_unit}/{topic}/` directory if it does not exist.
+Task detail file path: `.workflows/{work_unit}/planning/{topic}/phase-{N}-tasks.md`
 
 → Proceed to **B. Invoke the Agent**.
 
@@ -32,19 +30,19 @@ Invoke `workflow-planning-task-author` with these file paths:
 2. **Specification**: specification path from the manifest or `.workflows/{work_unit}/specification/{topic}/specification.md`
 3. **Cross-cutting specs**: cross-cutting spec paths if any
 4. **task-design.md**: `task-design.md`
-5. **All approved phases**: the complete phase structure from the Plan Index File body
-6. **Task list for current phase**: the approved task table (ALL tasks in the phase)
-7. **Scratch file path**: `.workflows/.cache/planning/{work_unit}/{topic}/phase-{N}.md`
+5. **All approved phases**: the complete phase structure from the planning file body
+6. **Task list for current phase**: the task table for this specific phase from the planning file
+7. **Task detail file path**: `.workflows/{work_unit}/planning/{topic}/phase-{N}-tasks.md`
 
-The agent writes all tasks to the scratch file and returns.
+The agent writes all tasks to the task detail file and returns.
 
-→ Proceed to **C. Validate Scratch File**.
+→ Proceed to **C. Validate Task Detail File**.
 
 ---
 
-## C. Validate Scratch File
+## C. Validate Task Detail File
 
-Read the scratch file and count tasks. Verify task count matches the task table in the Plan Index File for this phase.
+Read the task detail file and count tasks. Verify task count matches the task table in the planning file for this phase.
 
 #### If `mismatch`
 
@@ -81,7 +79,7 @@ Phase {N}: {count} tasks authored. Auto-approved. Writing to plan.
 
 ## E. Approval Loop
 
-For each task in the scratch file, in order:
+For each task in the task detail file, in order:
 
 #### If task status is `approved`
 
@@ -96,7 +94,7 @@ Present the full task content:
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-{task detail from scratch file}
+{task detail from task detail file}
 ```
 
 **Task {M} of {total}: {Task Name}**
@@ -118,13 +116,13 @@ Approve this task?
 
 **If `approved` (`y`/`yes`):**
 
-Mark the task `approved` in the scratch file.
+Mark the task `approved` in the task detail file.
 
 → Return to **E. Approval Loop**.
 
 **If `auto`:**
 
-Mark the task `approved` in the scratch file. Set all remaining `pending` tasks to `approved`. Update `author_gate_mode` in the manifest:
+Mark the task `approved` in the task detail file. Set all remaining `pending` tasks to `approved`. Update `author_gate_mode` in the manifest:
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} author_gate_mode auto
 ```
@@ -133,7 +131,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planni
 
 **If the user provides feedback:**
 
-Mark the task `rejected` in the scratch file and add the feedback as a blockquote:
+Mark the task `rejected` in the task detail file and add the feedback as a blockquote:
 
 ```markdown
 ## {internal_id} | rejected
@@ -158,7 +156,7 @@ When all tasks are processed:
 
 ## F. Revision Check
 
-Check for rejected tasks in the scratch file.
+Check for rejected tasks in the task detail file.
 
 #### If no rejected tasks
 
@@ -178,18 +176,24 @@ Check for rejected tasks in the scratch file.
 
 ## G. Write to Plan
 
-> **CHECKPOINT**: If `author_gate_mode: gated`, verify all tasks in the scratch file are marked `approved` before writing.
+> **CHECKPOINT**: If `author_gate_mode: gated`, verify all tasks in the task detail file are marked `approved` before writing.
 
-For each approved task in the scratch file, in order:
+For each approved task in the task detail file, in order:
 
-1. Read the task content from the scratch file
+1. Read the task content from the task detail file
 2. Write to the output format (format-specific — see the format's **[authoring.md](output-formats/{format}/authoring.md)**)
-3. Update the task table in the Plan Index File: set `status: authored` and set `External ID` to the external identifier for the task as exposed by the output format
+3. Record the internal ID → external ID mapping in the manifest:
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} task_map.{internal_id} {external_id}
+   ```
 4. If the manifest's `external_id` is empty, set it to the external identifier for the plan as exposed by the output format:
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} external_id {external_id}
    ```
-5. If the current phase's `external_id` is empty, set it to the external identifier for the phase as exposed by the output format
+5. Record the phase's internal ID → external ID mapping in the manifest (the external identifier is declared in the format's **[authoring.md](output-formats/{format}/authoring.md)** Phase Structure section):
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} task_map.{phase_internal_id} {phase_external_id}
+   ```
 6. Advance the manifest planning position to the next pending task (or next phase if this was the last task):
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} task {next_task_id}
@@ -203,15 +207,5 @@ Task {M} of {total}: {Task Name} — authored.
 ```
 
 Repeat for each task.
-
-→ Proceed to **H. Cleanup**.
-
----
-
-## H. Cleanup
-
-Delete the scratch file: `rm .workflows/.cache/planning/{work_unit}/{topic}/phase-{N}.md`
-
-Remove the `.workflows/.cache/planning/{work_unit}/{topic}/` directory if empty.
 
 → Return to caller.

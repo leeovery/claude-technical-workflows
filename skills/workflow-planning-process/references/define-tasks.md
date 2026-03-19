@@ -32,13 +32,12 @@ Invoke `workflow-planning-task-designer` with these file paths:
 3. **Cross-cutting specs**: cross-cutting spec paths if any
 4. **task-design.md**: `task-design.md`
 5. **Context guidance**: `task-design/{work_type}.md` (default to `epic` if `work_type` is empty)
-6. **All approved phases**: the complete phase structure from the Plan Index File body
+6. **All approved phases**: the complete phase structure from the planning file
 7. **Target phase number**: the phase being broken into tasks
-8. **plan-index-schema.md**: `plan-index-schema.md`
 
 ### Present the Output
 
-The agent returns a task overview and task table. Write the task table directly to the Plan Index File under the phase.
+The agent returns a task overview and task table. Write the task table to the planning file under the phase.
 
 Update the manifest planning position:
 ```bash
@@ -100,7 +99,7 @@ Re-invoke `workflow-planning-task-designer` with all original inputs PLUS:
 - **Previous output**: the current task list
 - **User feedback**: what the user wants changed
 
-Update the Plan Index File with the revised task table.
+Update the planning file with the revised task table.
 
 → Return to **B. Check Gate Mode**.
 
@@ -122,11 +121,12 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planni
 
 **If the task list is new or was amended:**
 
-1. Advance the planning position in the manifest to the first task in this phase:
+1. Update the task table in the planning file: set `status: approved` and `approved_at: YYYY-MM-DD` (use today's actual date)
+2. Advance the planning position in the manifest to the first task in this phase:
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} task {first_task_id}
    ```
-2. Commit: `planning({work_unit}): approve Phase {N} task list`
+3. Commit: `planning({work_unit}): approve Phase {N} task list`
 
 If the task list was already approved and unchanged, no updates are needed.
 

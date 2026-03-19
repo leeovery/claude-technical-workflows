@@ -254,7 +254,10 @@ Include the user's feedback when re-invoking.
 
 **Check for phase completion** — use the format's **reading.md** to list remaining tasks in the current phase. If no tasks remain open or in-progress, follow the format's **updating.md** instructions for phase completion.
 
-**Internal ID convention**: The internal ID used in `completed_tasks`, `current_task`, and commit messages MUST come from the plan index table's `Internal ID` column (format: `{topic}-{phase_id}-{task_id}`). If the format adapter returns an external ID, resolve the internal ID from the plan table — it maps internal IDs to external IDs via the `External ID` column.
+**Internal ID convention**: The internal ID used in `completed_tasks`, `current_task`, and commit messages MUST use the format `{topic}-{phase_id}-{task_id}`. If the format adapter returns an external ID, resolve the internal ID via the manifest CLI:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js key-of {work_unit}.planning.{topic} task_map {external_id}
+```
 
 **Update implementation state via manifest CLI**:
 ```bash
@@ -270,7 +273,7 @@ If the current phase has no remaining open/in-progress tasks: `node .claude/skil
 impl({work_unit}): T{internal_id} — {brief description}
 ```
 
-Code, tests, plan progress, and implementation file — one commit per approved task.
+Code, tests, and plan progress — one commit per approved task.
 
 → Return to **A. Retrieve Next Task**.
 

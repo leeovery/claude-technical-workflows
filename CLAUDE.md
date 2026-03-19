@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Claude Code skills package for structured technical discussion and planning workflows. Installed via `npx agntc add leeovery/claude-technical-workflows`.
 
+**This CLAUDE.md is development documentation for authoring the workflows — it does not ship with the product.** When installed, only the skills and agents are copied into the target project (which has its own CLAUDE.md). Skills and agents must be fully self-contained — never rely on this file for runtime behaviour, conventions, or formats that agents need to follow.
+
 ## Workflow Phases
 
 1. **Research** (`workflow-research-process` skill): EXPLORE - feasibility, market, viability, early ideas
@@ -56,12 +58,12 @@ Work-unit-first directory structure with uniform `{topic}` in all paths. For fea
 - Discussion: `.workflows/{work_unit}/discussion/{topic}.md` (flat file)
 - Investigation: `.workflows/{work_unit}/investigation/{topic}.md` (flat file)
 - Specification: `.workflows/{work_unit}/specification/{topic}/specification.md`
-- Planning: `.workflows/{work_unit}/planning/{topic}/planning.md` + `tasks/`
-- Implementation: `.workflows/{work_unit}/implementation/{topic}/implementation.md`
+- Planning: `.workflows/{work_unit}/planning/{topic}/planning.md` (+ `phase-{N}-tasks.md` + task files in output format)
+- Implementation: `.workflows/{work_unit}/implementation/{topic}/`
 - Review: `.workflows/{work_unit}/review/{topic}/report.md`
 - State: `.workflows/{work_unit}/.state/` (per-work-unit analysis files)
 - Global state: `.workflows/.state/` (migrations, environment-setup.md)
-- Cache: `.workflows/.cache/` (planning scratch)
+- Cache: `.workflows/.cache/{work_unit}/{phase}/{topic}/` (scratch files for any phase)
 
 **Work unit lifecycle**: Each work unit has a `status` field in its manifest tracking its lifecycle state:
 - `in-progress` — actively being worked on (default on creation)

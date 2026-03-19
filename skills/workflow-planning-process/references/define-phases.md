@@ -10,7 +10,7 @@ This step uses the `workflow-planning-phase-designer` agent (`../../../agents/wo
 
 ## A. Determine Phase State
 
-Read the Plan Index File. Check if phases already exist in the body.
+Read the planning file at `.workflows/{work_unit}/planning/{topic}/planning.md`. Check if phases already exist in the body.
 
 #### If phases exist
 
@@ -45,9 +45,8 @@ Invoke `workflow-planning-phase-designer` with these file paths:
 4. **phase-design.md**: `phase-design.md`
 5. **Context guidance**: `phase-design/{work_type}.md` (default to `epic` if `work_type` is empty)
 6. **task-design.md**: `task-design.md`
-7. **plan-index-schema.md**: `plan-index-schema.md`
 
-The agent returns a complete phase structure. Write it directly to the Plan Index File body.
+The agent returns a complete phase structure. Write it directly to the planning file body.
 
 Update the manifest planning position:
 ```bash
@@ -85,7 +84,7 @@ Re-invoke `workflow-planning-phase-designer` with all original inputs PLUS:
 - **Previous output**: the current phase structure
 - **User feedback**: what the user wants changed
 
-Update the Plan Index File with the revised output.
+Update the planning file with the revised output.
 
 → Return to **B. Review and Approve**.
 
@@ -93,7 +92,7 @@ Update the Plan Index File with the revised output.
 
 **If the phase structure is new or was amended:**
 
-1. Update each phase in the Plan Index File: set `status: approved` and `approved_at: YYYY-MM-DD` (use today's actual date). See **Phase Entry** in plan-index-schema for field definitions.
+1. Update each phase in the planning file: set `status: approved` and `approved_at: YYYY-MM-DD` (use today's actual date)
 2. Commit: `planning({work_unit}): approve phase structure`
 
 If the phase structure was already approved and unchanged, no updates are needed.
