@@ -19,12 +19,14 @@ Features:
   {N}. {unit.name:(titlecase)}
 @endforeach
 @endif
+
 @if(bugfix_count > 0)
 Bugfixes:
 @foreach(unit in bugfixes.work_units)
   {N}. {unit.name:(titlecase)}
 @endforeach
 @endif
+
 @if(epic_count > 0)
 Epics:
 @foreach(unit in epics.work_units)
