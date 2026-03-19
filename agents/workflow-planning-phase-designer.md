@@ -57,6 +57,7 @@ Begin with a `## Phases` heading, then for each phase:
 
 ```markdown
 ### Phase {N}: {Phase Name}
+status: draft
 
 **Goal**: {What this phase accomplishes}
 

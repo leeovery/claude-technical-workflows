@@ -57,6 +57,8 @@ Phase {N}: {Phase Name}
 
 ```markdown
 #### Tasks
+status: draft
+
 | Internal ID | Name | Edge Cases |
 |-------------|------|------------|
 | {topic}-{phase_id}-{task_id} | {Task Name} | {comma-separated list, or "none"} |

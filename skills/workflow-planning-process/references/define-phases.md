@@ -92,12 +92,8 @@ Update the planning file with the revised output.
 
 **If the phase structure is new or was amended:**
 
-1. Create phases in the output format immediately (via the format's **[authoring.md](output-formats/{format}/authoring.md)** — phase parent tasks for tick, phase labels for linear, phase directories for local-markdown)
-2. Record each phase's internal ID → external ID mapping in `task_map`:
-   ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} task_map.{phase_internal_id} {phase_external_id}
-   ```
-3. Commit: `planning({work_unit}): approve phase structure`
+1. Update each phase in the planning file: set `status: approved` and `approved_at: YYYY-MM-DD` (use today's actual date)
+2. Commit: `planning({work_unit}): approve phase structure`
 
 If the phase structure was already approved and unchanged, no updates are needed.
 

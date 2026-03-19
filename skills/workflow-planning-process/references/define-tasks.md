@@ -121,11 +121,12 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planni
 
 **If the task list is new or was amended:**
 
-1. Advance the planning position in the manifest to the first task in this phase:
+1. Update the task table in the planning file: set `status: approved` and `approved_at: YYYY-MM-DD` (use today's actual date)
+2. Advance the planning position in the manifest to the first task in this phase:
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} task {first_task_id}
    ```
-2. Commit: `planning({work_unit}): approve Phase {N} task list`
+3. Commit: `planning({work_unit}): approve Phase {N} task list`
 
 If the task list was already approved and unchanged, no updates are needed.
 
