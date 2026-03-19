@@ -8,6 +8,14 @@ This reference defines generic principles for breaking specifications into imple
 
 A work-type context file (epic, feature, or bugfix) is always loaded alongside this file. The context file provides the Phase 1 strategy, progression model, examples, and work-type-specific guidance. These generic principles apply across all work types.
 
+## Right-Size the Plan
+
+**A single phase is a valid plan.** Not every feature needs multiple phases, and not every epic specification needs a multi-phase breakdown. Phase overhead has a cost — don't pay it unless the work genuinely has distinct stages that benefit from separate checkpoints.
+
+The right number of phases is whatever the specification demands — no more, no less. A focused feature might be one phase with 4 tasks. A large system might be 12 phases. Both are correct if they match the scope. Judge by the specification's complexity, not by an expectation of what a plan "should" look like.
+
+Before adding a phase, ask: **does this phase exist because the work genuinely needs a checkpoint here, or because multi-phase plans feel more thorough?** If the latter, merge it.
+
 ## What Makes a Good Phase
 
 Each phase should:

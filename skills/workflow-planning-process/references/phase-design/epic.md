@@ -57,6 +57,8 @@ Each phase delivers something a user or test suite can validate independently.
 
 This ordering means each phase builds on a working system. The skeleton establishes the pattern; core features flesh it out; edge cases harden it; refinement polishes it.
 
+These are conceptual stages, not a phase count requirement. A tightly scoped plan might combine core features and edge cases into a single phase after the skeleton. Only create separate phases for work that genuinely benefits from a checkpoint between them.
+
 ---
 
 ## Cross-Phase Coupling (Epic)
