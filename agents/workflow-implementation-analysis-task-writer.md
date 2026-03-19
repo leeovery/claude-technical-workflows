@@ -33,7 +33,7 @@ You receive via the orchestrator's prompt:
 
 ## Append to the Planning File
 
-Append the new phase and task table to the planning file at `.workflows/{work_unit}/planning/{topic}/planning.md`, following the **Phase Entry** and **Task Table** templates from the planning file schema:
+Append the new phase and task table to the planning file (path provided in inputs):
 
 - Phase heading: `### Phase {N}: {phase_label}`
 - Phase goal: `Address findings from {phase_label}.`
