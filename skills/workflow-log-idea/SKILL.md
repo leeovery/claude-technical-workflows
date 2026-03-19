@@ -8,7 +8,15 @@ This skill captures an idea and writes it to the inbox. No manifest, no migratio
 
 If there's already conversation context about an idea, synthesise it straight into the file without asking questions. If this is a cold start, ask what's on their mind and have a natural back-and-forth to draw the idea out. Recognise when it has enough shape (typically 2-4 exchanges) and wrap up.
 
-**Capture, don't explore.** Don't read code, search the web, validate feasibility, suggest architecture, play devil's advocate, or propose solutions. The goal is to record what the user is thinking, not to evaluate it.
+**Capture only — these are rules, not guidelines:**
+- Do not read code or explore the codebase
+- Do not search the web or fetch external resources
+- Do not validate feasibility or question viability
+- Do not suggest architecture or implementation approaches
+- Do not play devil's advocate or challenge the idea
+- Do not propose solutions or next steps
+
+This skill exists to record what the user is thinking, not to evaluate or refine it. Research, discussion, and validation belong to later phases in the pipeline — do not encroach on them here.
 
 When ready, generate a short kebab-case slug from the core concept (e.g., `smart-retry-logic`, `unified-search`) and write the file:
 

@@ -8,7 +8,15 @@ This skill captures a bug and writes it to the inbox. No manifest, no migrations
 
 If there's already conversation context about something broken, synthesise it straight into the file without asking questions. If this is a cold start, ask what's broken and have a natural back-and-forth to draw out the symptoms. Recognise when it has enough detail (typically 2-4 exchanges) and wrap up.
 
-**Capture, don't explore.** Don't read code, search the web, validate or reproduce the bug, suggest fixes, diagnose root causes, or propose solutions. The goal is to record what's broken, not to investigate it.
+**Capture only — these are rules, not guidelines:**
+- Do not read code or explore the codebase
+- Do not search the web or fetch external resources
+- Do not attempt to reproduce or validate the bug
+- Do not suggest fixes or workarounds
+- Do not diagnose root causes or theorise about what's wrong
+- Do not propose solutions or next steps
+
+This skill exists to record what's broken, not to investigate it. Investigation, diagnosis, and resolution belong to later phases in the pipeline — do not encroach on them here.
 
 When ready, generate a short kebab-case slug from the core symptom (e.g., `stale-cache-on-deploy`, `login-timeout`) and write the file:
 
