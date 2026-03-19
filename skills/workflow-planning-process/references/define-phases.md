@@ -44,9 +44,9 @@ Invoke `workflow-planning-phase-designer` with these file paths:
 3. **Cross-cutting specs**: cross-cutting spec paths if any
 4. **phase-design.md**: `phase-design.md`
 5. **Context guidance**: `phase-design/{work_type}.md` (default to `epic` if `work_type` is empty)
-6. **task-design.md**: `task-design.md`
+6. **task-design.md**: `task-design.md` *(for granularity awareness only — helps the agent judge whether a phase is too thin or too thick. The agent must NOT produce task tables or task lists.)*
 
-The agent returns a complete phase structure. Write it directly to the planning file body.
+The agent returns phases only — goals, ordering rationale, and acceptance criteria. **Task lists are designed separately in a later step; do not request or include them.** Write the phase structure directly to the planning file body.
 
 Update the manifest planning position:
 ```bash
