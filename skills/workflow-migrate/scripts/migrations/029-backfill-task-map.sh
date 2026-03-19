@@ -3,8 +3,8 @@
 # Migration 029: Backfill task_map from existing plan index files
 #
 # Parses planning.md files for Internal ID ↔ External ID mappings from:
-#   1. Task tables: | Internal ID | ... | External ID |
-#   2. Phase headers: external_id: {value}
+#   1. Task tables with 5 columns: | Internal ID | Name | Edge Cases | Status | External ID |
+#   2. Phase headers with external_id: fields
 #
 # Writes all mappings to task_map in the manifest.
 # Skips entries where External ID is empty (not yet authored).
@@ -57,17 +57,15 @@ for manifest in "$WORKFLOWS_DIR"/*/manifest.json; do
       }
 
       const taskMap = {};
+      const lines = planContent.split('\n');
 
       // Parse task table rows line-by-line
-      // Only match rows with exactly 5 data columns (6 pipes): | Internal ID | Name | Edge Cases | Status | External ID |
-      const lines = planContent.split('\\n');
+      // Only match rows with exactly 5 data columns (6+ pipes)
       for (const line of lines) {
         const cells = line.split('|').map(c => c.trim());
-        // A 5-column table row has 7 parts when split by | (empty before first pipe, 5 cells, empty after last pipe)
         if (cells.length < 7) continue;
         const internalId = cells[1];
         const externalId = cells[5];
-        // Skip header and separator rows
         if (!internalId || internalId === 'Internal ID' || internalId === 'ID' || internalId.startsWith('-')) continue;
         if (!externalId || externalId.startsWith('-')) continue;
         taskMap[internalId] = externalId;
@@ -76,13 +74,11 @@ for manifest in "$WORKFLOWS_DIR"/*/manifest.json; do
       // Parse phase-level external_id fields
       let currentPhaseId = null;
       for (const line of lines) {
-        // Match phase headers: ### Phase {N}: {Name}
-        const phaseMatch = line.match(/^###\\s+Phase\\s+(\\d+):/);
+        const phaseMatch = line.match(/^###\s+Phase\s+(\d+):/);
         if (phaseMatch) {
           currentPhaseId = topic + '-' + phaseMatch[1];
         }
-        // Match external_id field
-        const extMatch = line.match(/^external_id:\\s*(.+)/);
+        const extMatch = line.match(/^external_id:\s*(.+)/);
         if (extMatch && currentPhaseId) {
           const extId = extMatch[1].trim();
           if (extId) {
@@ -94,7 +90,7 @@ for manifest in "$WORKFLOWS_DIR"/*/manifest.json; do
       if (Object.keys(taskMap).length === 0) process.exit(0);
 
       topicData.task_map = taskMap;
-      fs.writeFileSync(process.argv[1], JSON.stringify(m, null, 2) + '\\n');
+      fs.writeFileSync(process.argv[1], JSON.stringify(m, null, 2) + '\n');
       console.log(Object.keys(taskMap).length);
     " "$manifest" "$plan_file" "$topic" 2>/dev/null) || true
 
