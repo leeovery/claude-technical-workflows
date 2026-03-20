@@ -163,7 +163,7 @@ Build a numbered menu with three sections:
 
 **Recommendation marking:** Mark one item as `(recommended)` based on phase completion state:
 - All discussions completed, no specifications exist → "Start specification (recommended)"
-- All feature-type specifications completed, some without plans → first plannable spec "(recommended)"
+- All plannable specifications completed, some without plans → first plannable spec "(recommended)"
 - All plans completed (and deps satisfied), some without implementations → first implementable plan "(recommended)"
 - All implementations completed, some without reviews → first reviewable implementation "(recommended)"
 - Otherwise → no recommendation (complete in-progress work first)

@@ -257,7 +257,7 @@ addressed first.
 
 Always parenthetical `(term)`. Never brackets or dash-separated.
 
-Core vocabulary: `in-progress`, `completed`, `ready`, `extracted`, `pending`, `reopened`. Phase-specific terms are fine but format is always `(term)`.
+Core vocabulary: `in-progress`, `completed`, `ready`, `extracted`, `pending`, `reopened`, `promoted`. Phase-specific terms are fine but format is always `(term)`.
 
 ### Cross-Plan References
 
@@ -280,9 +280,10 @@ Key:
     in-progress — planning work is ongoing
     completed   — plan is done
 
-  Spec type:
-    cross-cutting — architectural policy, not directly plannable
-    feature       — plannable feature specification
+  Spec status:
+    in-progress — specification work is ongoing
+    completed   — specification is done
+    promoted    — promoted to cross-cutting work unit
 ```
 
 ### Menus / Interactive Prompts
