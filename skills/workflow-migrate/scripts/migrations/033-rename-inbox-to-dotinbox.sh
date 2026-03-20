@@ -17,8 +17,8 @@ NEW_INBOX="$WORKFLOWS_DIR/.inbox"
 
 if [ -d "$NEW_INBOX" ]; then
   # Both exist — merge old into new
-  cp -rn "$OLD_INBOX/"* "$NEW_INBOX/" 2>/dev/null
-  cp -rn "$OLD_INBOX/".* "$NEW_INBOX/" 2>/dev/null
+  cp -rn "$OLD_INBOX/"* "$NEW_INBOX/" 2>/dev/null || true
+  cp -rn "$OLD_INBOX/".* "$NEW_INBOX/" 2>/dev/null || true
   rm -rf "$OLD_INBOX"
   report_update "merged inbox/ into .inbox/"
 else
