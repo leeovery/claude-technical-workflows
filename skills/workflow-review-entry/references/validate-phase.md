@@ -28,6 +28,8 @@ A completed plan and completed implementation are required for review.
 
 #### If plan exists (`true`)
 
+→ Proceed to check implementation.
+
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.implementation.{topic}
 ```
@@ -78,15 +80,17 @@ The implementation for "{topic:(titlecase)}" is not yet completed.
 node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.review.{topic}
 ```
 
-**If not exists (`false`):**
+#### If review does not exist
 
 → Return to caller.
 
-**If exists (`true`) and status is `completed`:**
+#### If review exists
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.review.{topic} status
 ```
+
+**If status is `completed`:**
 
 Reset to in-progress:
 
@@ -96,6 +100,6 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.review
 
 → Return to caller.
 
-**If exists (`true`) and status is `in-progress`:**
+**If status is `in-progress`:**
 
 → Return to caller.
