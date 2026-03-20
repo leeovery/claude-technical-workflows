@@ -168,7 +168,7 @@ Load **[spec-review.md](references/spec-review.md)** and follow its instructions
 
 ---
 
-## Step 8: Assess Type & Conclude
+## Step 8: Assess Cross-Cutting & Conclude
 
 Load **[spec-completion.md](references/spec-completion.md)** and follow its instructions as written.
 
