@@ -27,8 +27,10 @@ Present your assessment to the user:
 ```
 Cross-Cutting Assessment
 
-@if(cross_cutting) This specification appears to be cross-cutting.
-@else This specification is directly plannable — no cross-cutting promotion needed.
+@if(cross_cutting)
+This specification appears to be cross-cutting.
+@else
+This specification is directly plannable — no cross-cutting promotion needed.
 @endif
 
 {Brief rationale — e.g., "It defines a caching strategy that will inform how
