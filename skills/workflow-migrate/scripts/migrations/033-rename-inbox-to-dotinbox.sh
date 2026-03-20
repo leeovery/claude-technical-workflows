@@ -20,8 +20,8 @@ if [ -d "$NEW_INBOX" ]; then
   cp -rn "$OLD_INBOX/"* "$NEW_INBOX/" 2>/dev/null || true
   cp -rn "$OLD_INBOX/".* "$NEW_INBOX/" 2>/dev/null || true
   rm -rf "$OLD_INBOX"
-  report_update "merged inbox/ into .inbox/"
+  report_update
 else
   mv "$OLD_INBOX" "$NEW_INBOX"
-  report_update "renamed inbox/ to .inbox/"
+  report_update
 fi
