@@ -117,6 +117,7 @@ Key:
     in-progress — work is ongoing
     completed   — phase done
     completed   — all tasks implemented
+    promoted    — moved to its own cross-cutting work unit
 
   Blocking reason:
     blocked by {plan}:{task} — depends on another plan's task
@@ -166,6 +167,8 @@ Build a numbered menu with three sections:
 - All plans completed (and deps satisfied), some without implementations → first implementable plan "(recommended)"
 - All implementations completed, some without reviews → first reviewable implementation "(recommended)"
 - Otherwise → no recommendation (complete in-progress work first)
+
+**Promoted items:** Items with `(promoted)` status are shown in the state display but are **not listed in the menu** — they've been moved to their own cross-cutting work unit and are no longer actionable in this epic.
 
 **Blocked items:** Items marked `blocked` in `next_phase_ready` are shown in the menu but are **not selectable**. If the user picks a blocked item, explain why it's blocked and re-present the menu.
 
