@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Tests for migration 030: project-manifest
+# Tests for migration 030: backfill-spec-sources
 #
 # Run: bash tests/scripts/test-migration-030.sh
 #
@@ -9,7 +9,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
-MIGRATION="$REPO_DIR/skills/workflow-migrate/scripts/migrations/030-project-manifest.sh"
+MIGRATION="$REPO_DIR/skills/workflow-migrate/scripts/migrations/030-backfill-spec-sources.sh"
 
 PASS=0
 FAIL=0
@@ -39,91 +39,309 @@ teardown() {
   rm -rf "$TEST_DIR"
 }
 
-# --- Test 1: Builds project manifest from work units ---
-test_builds_manifest() {
+# --- Test 1: Single source backfilled from frontmatter ---
+test_single_source() {
   setup
 
-  mkdir -p "$TEST_DIR/.workflows/auth"
-  cat > "$TEST_DIR/.workflows/auth/manifest.json" << 'JSON'
-{"name":"auth","work_type":"feature","status":"in-progress","phases":{}}
+  local wu_dir="$TEST_DIR/.workflows/auth"
+  mkdir -p "$wu_dir/specification/auth"
+
+  cat > "$wu_dir/manifest.json" << 'JSON'
+{
+  "name": "auth",
+  "work_type": "feature",
+  "status": "completed",
+  "phases": {
+    "specification": {
+      "items": {
+        "auth": {
+          "status": "completed"
+        }
+      }
+    }
+  }
+}
 JSON
 
-  mkdir -p "$TEST_DIR/.workflows/v1"
-  cat > "$TEST_DIR/.workflows/v1/manifest.json" << 'JSON'
-{"name":"v1","work_type":"epic","status":"in-progress","phases":{}}
-JSON
+  cat > "$wu_dir/specification/auth/specification.md" << 'SPEC'
+---
+topic: auth
+status: concluded
+type: feature
+date: 2026-03-01
+sources:
+  - name: auth-discussion
+    status: incorporated
+---
+
+# Specification: Auth
+SPEC
 
   source "$MIGRATION"
 
-  local wt_auth=$(node -e "
-    const m = JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/manifest.json', 'utf8'));
-    console.log(m.work_units.auth.work_type);
+  local src_status=$(node -e "
+    const m = JSON.parse(require('fs').readFileSync('$wu_dir/manifest.json', 'utf8'));
+    console.log(m.phases.specification.items.auth.sources['auth-discussion'].status);
   ")
-  assert_eq "auth registered" "feature" "$wt_auth"
-
-  local wt_v1=$(node -e "
-    const m = JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/manifest.json', 'utf8'));
-    console.log(m.work_units.v1.work_type);
-  ")
-  assert_eq "v1 registered" "epic" "$wt_v1"
+  assert_eq "single source: backfilled" "incorporated" "$src_status"
 
   teardown
 }
 
-# --- Test 2: Idempotent — already registered ---
+# --- Test 2: Multiple sources backfilled ---
+test_multiple_sources() {
+  setup
+
+  local wu_dir="$TEST_DIR/.workflows/v1"
+  mkdir -p "$wu_dir/specification/core"
+
+  cat > "$wu_dir/manifest.json" << 'JSON'
+{
+  "name": "v1",
+  "work_type": "epic",
+  "status": "completed",
+  "phases": {
+    "specification": {
+      "items": {
+        "core": {
+          "status": "completed"
+        }
+      }
+    }
+  }
+}
+JSON
+
+  cat > "$wu_dir/specification/core/specification.md" << 'SPEC'
+---
+topic: core
+status: concluded
+sources:
+  - name: architecture
+    status: incorporated
+  - name: data-model
+    status: incorporated
+  - name: api-design
+    status: pending
+---
+
+# Specification: Core
+SPEC
+
+  source "$MIGRATION"
+
+  local src_count=$(node -e "
+    const m = JSON.parse(require('fs').readFileSync('$wu_dir/manifest.json', 'utf8'));
+    console.log(Object.keys(m.phases.specification.items.core.sources).length);
+  ")
+  assert_eq "multi source: count=3" "3" "$src_count"
+
+  local arch=$(node -e "
+    const m = JSON.parse(require('fs').readFileSync('$wu_dir/manifest.json', 'utf8'));
+    console.log(m.phases.specification.items.core.sources.architecture.status);
+  ")
+  assert_eq "multi source: architecture=incorporated" "incorporated" "$arch"
+
+  local api=$(node -e "
+    const m = JSON.parse(require('fs').readFileSync('$wu_dir/manifest.json', 'utf8'));
+    console.log(m.phases.specification.items.core.sources['api-design'].status);
+  ")
+  assert_eq "multi source: api-design=pending" "pending" "$api"
+
+  teardown
+}
+
+# --- Test 3: Skips if manifest already has sources ---
 test_idempotent() {
   setup
 
-  mkdir -p "$TEST_DIR/.workflows/auth"
-  cat > "$TEST_DIR/.workflows/auth/manifest.json" << 'JSON'
-{"name":"auth","work_type":"feature","status":"in-progress","phases":{}}
+  local wu_dir="$TEST_DIR/.workflows/auth"
+  mkdir -p "$wu_dir/specification/auth"
+
+  cat > "$wu_dir/manifest.json" << 'JSON'
+{
+  "name": "auth",
+  "work_type": "feature",
+  "status": "completed",
+  "phases": {
+    "specification": {
+      "items": {
+        "auth": {
+          "status": "completed",
+          "sources": {
+            "existing-source": { "status": "incorporated" }
+          }
+        }
+      }
+    }
+  }
+}
 JSON
 
-  cat > "$TEST_DIR/.workflows/manifest.json" << 'JSON'
-{"work_units":{"auth":{"work_type":"feature"}}}
-JSON
+  cat > "$wu_dir/specification/auth/specification.md" << 'SPEC'
+---
+topic: auth
+sources:
+  - name: different-source
+    status: incorporated
+---
+
+# Spec
+SPEC
 
   source "$MIGRATION"
 
-  local count=$(node -e "
-    const m = JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/manifest.json', 'utf8'));
-    console.log(Object.keys(m.work_units).length);
+  # Should keep existing, not overwrite with frontmatter
+  local src=$(node -e "
+    const m = JSON.parse(require('fs').readFileSync('$wu_dir/manifest.json', 'utf8'));
+    console.log(JSON.stringify(Object.keys(m.phases.specification.items.auth.sources)));
   ")
-  assert_eq "idempotent: no new entries" "1" "$count"
+  assert_eq "idempotent: kept existing" '["existing-source"]' "$src"
 
   teardown
 }
 
-# --- Test 3: Skips dot-prefixed directories ---
-test_skips_dot_dirs() {
+# --- Test 4: Skips spec with no frontmatter sources ---
+test_no_frontmatter_sources() {
   setup
 
-  mkdir -p "$TEST_DIR/.workflows/.state"
-  mkdir -p "$TEST_DIR/.workflows/.cache"
-  mkdir -p "$TEST_DIR/.workflows/auth"
-  cat > "$TEST_DIR/.workflows/auth/manifest.json" << 'JSON'
-{"name":"auth","work_type":"feature","status":"in-progress","phases":{}}
+  local wu_dir="$TEST_DIR/.workflows/auth"
+  mkdir -p "$wu_dir/specification/auth"
+
+  cat > "$wu_dir/manifest.json" << 'JSON'
+{
+  "name": "auth",
+  "work_type": "feature",
+  "status": "completed",
+  "phases": {
+    "specification": {
+      "items": {
+        "auth": {
+          "status": "completed"
+        }
+      }
+    }
+  }
+}
 JSON
+
+  cat > "$wu_dir/specification/auth/specification.md" << 'SPEC'
+---
+topic: auth
+status: concluded
+---
+
+# Spec
+SPEC
 
   source "$MIGRATION"
 
-  local count=$(node -e "
-    const m = JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/manifest.json', 'utf8'));
-    console.log(Object.keys(m.work_units).length);
+  local has_sources=$(node -e "
+    const m = JSON.parse(require('fs').readFileSync('$wu_dir/manifest.json', 'utf8'));
+    console.log('sources' in m.phases.specification.items.auth);
   ")
-  assert_eq "dot dirs skipped" "1" "$count"
+  assert_eq "no fm sources: no sources added" "false" "$has_sources"
 
   teardown
 }
 
-# --- Test 4: No workflows dir ---
-test_no_workflows() {
-  TEST_DIR=$(mktemp -d /tmp/migration-030-test.XXXXXX)
-  export PROJECT_DIR="$TEST_DIR"
+# --- Test 5: Handles missing spec file gracefully ---
+test_missing_spec_file() {
+  setup
+
+  local wu_dir="$TEST_DIR/.workflows/auth"
+  mkdir -p "$wu_dir"
+
+  cat > "$wu_dir/manifest.json" << 'JSON'
+{
+  "name": "auth",
+  "work_type": "feature",
+  "status": "completed",
+  "phases": {
+    "specification": {
+      "items": {
+        "auth": {
+          "status": "completed"
+        }
+      }
+    }
+  }
+}
+JSON
+
+  # No spec file exists
+  source "$MIGRATION"
+
+  local has_sources=$(node -e "
+    const m = JSON.parse(require('fs').readFileSync('$wu_dir/manifest.json', 'utf8'));
+    console.log('sources' in m.phases.specification.items.auth);
+  ")
+  assert_eq "missing file: no crash, no sources" "false" "$has_sources"
+
+  teardown
+}
+
+# --- Test 6: Epic with multiple spec items ---
+test_epic_multi_specs() {
+  setup
+
+  local wu_dir="$TEST_DIR/.workflows/v1"
+  mkdir -p "$wu_dir/specification/feat-a"
+  mkdir -p "$wu_dir/specification/feat-b"
+
+  cat > "$wu_dir/manifest.json" << 'JSON'
+{
+  "name": "v1",
+  "work_type": "epic",
+  "status": "completed",
+  "phases": {
+    "specification": {
+      "items": {
+        "feat-a": { "status": "completed" },
+        "feat-b": { "status": "completed" }
+      }
+    }
+  }
+}
+JSON
+
+  cat > "$wu_dir/specification/feat-a/specification.md" << 'SPEC'
+---
+topic: feat-a
+sources:
+  - name: disc-a
+    status: incorporated
+---
+
+# Spec A
+SPEC
+
+  cat > "$wu_dir/specification/feat-b/specification.md" << 'SPEC'
+---
+topic: feat-b
+sources:
+  - name: disc-b1
+    status: incorporated
+  - name: disc-b2
+    status: incorporated
+---
+
+# Spec B
+SPEC
 
   source "$MIGRATION"
 
-  assert_eq "no crash" "true" "true"
+  local a_src=$(node -e "
+    const m = JSON.parse(require('fs').readFileSync('$wu_dir/manifest.json', 'utf8'));
+    console.log(Object.keys(m.phases.specification.items['feat-a'].sources).length);
+  ")
+  assert_eq "epic multi: feat-a has 1 source" "1" "$a_src"
+
+  local b_src=$(node -e "
+    const m = JSON.parse(require('fs').readFileSync('$wu_dir/manifest.json', 'utf8'));
+    console.log(Object.keys(m.phases.specification.items['feat-b'].sources).length);
+  ")
+  assert_eq "epic multi: feat-b has 2 sources" "2" "$b_src"
 
   teardown
 }
@@ -132,10 +350,12 @@ test_no_workflows() {
 echo "Running migration 030 tests..."
 echo ""
 
-test_builds_manifest
+test_single_source
+test_multiple_sources
 test_idempotent
-test_skips_dot_dirs
-test_no_workflows
+test_no_frontmatter_sources
+test_missing_spec_file
+test_epic_multi_specs
 
 echo ""
 echo "Results: $PASS passed, $FAIL failed"
