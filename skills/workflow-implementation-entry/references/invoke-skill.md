@@ -23,7 +23,13 @@ Check implementation state:
 node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.implementation.{topic}
 ```
 
-If implementation exists (`true`), check status:
+#### If implementation does not exist (`false`)
+
+Implementation is new — status is `not-started`.
+
+#### If implementation exists (`true`)
+
+Check status:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{topic} status
