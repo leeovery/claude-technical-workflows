@@ -6,7 +6,9 @@
 
 ## A. Determine Specification Type
 
-Before asking for sign-off, assess whether this is a **feature** or **cross-cutting** specification. See **[specification-format.md](specification-format.md)** for type definitions.
+#### If work_type is `epic`
+
+Before asking for sign-off, assess whether this is a **feature** or **cross-cutting** specification.
 
 **Feature specification** — Something to build:
 - Has concrete deliverables (code, APIs, UI)
@@ -48,13 +50,21 @@ Confirm this type assessment?
 
 **STOP.** Wait for user response.
 
-#### If comment
+**If comment:**
 
 Discuss the user's suggested classification and re-assess.
 
 → Return to **A. Determine Specification Type**.
 
-#### If `yes`
+**If `yes`:**
+
+Store the confirmed type assessment for use in Section F.
+
+→ Proceed to **B. Verify Tracking Files Complete**.
+
+#### Otherwise
+
+No assessment needed — feature, bugfix, and cross-cutting work types always produce feature-type specifications.
 
 → Proceed to **B. Verify Tracking Files Complete**.
 
@@ -108,7 +118,6 @@ Update the specification metadata via manifest CLI:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.specification.{topic} status completed
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.specification.{topic} type {type}  # feature or cross-cutting, as confirmed in Section A
 node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.specification.{topic} date $(date +%Y-%m-%d)
 ```
 
@@ -117,7 +126,6 @@ Specification is complete when:
 - All sources are marked as `incorporated`
 - At least one review cycle completed with no findings, OR user explicitly chose to proceed past the re-loop prompt
 - All review tracking files marked `status: complete`
-- Type has been determined and confirmed
 - User confirms the specification is complete
 - No blocking gaps remain
 
@@ -145,25 +153,11 @@ If any of your sources were **existing specifications** (as opposed to discussio
 
 ## F. Pipeline Continuation
 
-Read the specification type from the manifest:
-```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.specification.{topic} type
-```
+#### If work_type is `epic` and type assessment was `cross-cutting`
 
-#### If `type` is `cross-cutting`
+→ Load **[promote-to-cross-cutting.md](promote-to-cross-cutting.md)** and follow its instructions as written.
 
-> *Output the next fenced block as a code block:*
-
-```
-Cross-cutting specification completed: {topic}
-
-This specification defines patterns/policies referenced by feature plans.
-It does not proceed to planning independently.
-```
-
-**STOP.** Do not proceed — terminal condition.
-
-#### If `type` is `feature` (or not set)
+#### Otherwise
 
 Invoke the bridge:
 
