@@ -49,16 +49,18 @@ Phase entry skills (`workflow-*-entry`) receive positional arguments: `$0` = wor
 
 ## Key Conventions
 
-**Work types and work units**: A *work type* is one of three pipeline shapes: epic, feature, or bugfix. A *work unit* is a named instance of a work type (e.g., "auth-flow" is a feature work unit, "payments-overhaul" is an epic work unit). Each work unit gets its own directory under `.workflows/` and its own `manifest.json`.
+**Work types and work units**: A *work type* is one of four pipeline shapes: epic, feature, bugfix, or cross-cutting. A *work unit* is a named instance of a work type (e.g., "auth-flow" is a feature work unit, "payments-overhaul" is an epic work unit). Each work unit gets its own directory under `.workflows/` and its own `manifest.json`.
 
 - **Epic**: Multi-topic, multi-session, phase-centric (Research → Discussion → Specification → Planning → Implementation → Review)
 - **Feature**: Single-topic, single-session, linear (Discussion → Specification → Planning → Implementation → Review)
 - **Bugfix**: Single-topic, investigation-centric (Investigation → Specification → Planning → Implementation → Review)
+- **Cross-cutting**: Single-topic, project-level (Research (opt.) → Discussion → Specification — terminal)
 
 **Topics**: A *topic* is the item within a phase. For feature/bugfix, the topic name equals the work unit name (single topic moving through the pipeline). For epic, topics are distinct from the work unit name (multiple topics per phase). All work types use per-topic items in the manifest (unified structure). The discussion phase analyses all research files collectively to derive discussion topics.
 
 Work-unit-first directory structure with uniform `{topic}` in all paths. For feature/bugfix, `{topic}` equals `{work_unit}`. For epic, `{topic}` is the item within a phase.
 
+- Project manifest: `.workflows/manifest.json` (work unit registry — name + type)
 - Manifest: `.workflows/{work_unit}/manifest.json`
 - Research: `.workflows/{work_unit}/research/`
 - Discussion: `.workflows/{work_unit}/discussion/{topic}.md` (flat file)
