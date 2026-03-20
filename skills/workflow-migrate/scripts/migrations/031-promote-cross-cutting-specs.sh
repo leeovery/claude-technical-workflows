@@ -80,11 +80,25 @@ for (const entry of entries) {
         phases: {},
       };
 
-      // Move discussion files
-      const sources = item.sources || {};
-      const sourceKeys = typeof sources === 'object' && !Array.isArray(sources)
+      // Move discussion files — try manifest sources first, fall back to spec frontmatter
+      let sources = item.sources || {};
+      let sourceKeys = typeof sources === 'object' && !Array.isArray(sources)
         ? Object.keys(sources)
         : [];
+
+      // Fallback: parse sources from spec file frontmatter (migration 016 didn't preserve YAML lists)
+      if (sourceKeys.length === 0) {
+        const specFile = path.join(wfDir, m.name, 'specification', topic, 'specification.md');
+        if (fs.existsSync(specFile)) {
+          const content = fs.readFileSync(specFile, 'utf8');
+          const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
+          if (fmMatch) {
+            const fm = fmMatch[1];
+            const srcMatches = [...fm.matchAll(/- name:\s*(.+)/g)];
+            sourceKeys = srcMatches.map(m => m[1].trim());
+          }
+        }
+      }
 
       if (sourceKeys.length > 0) {
         const ccDiscDir = path.join(ccDir, 'discussion');
