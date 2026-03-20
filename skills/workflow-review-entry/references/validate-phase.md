@@ -7,10 +7,10 @@
 Check if plan and implementation exist and are ready via manifest CLI.
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} status
+node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.planning.{topic}
 ```
 
-#### If plan doesn't exist
+#### If plan doesn't exist (`false`)
 
 > *Output the next fenced block as a code block:*
 
@@ -24,11 +24,21 @@ A completed plan and completed implementation are required for review.
 
 **STOP.** Do not proceed — terminal condition.
 
+#### If plan exists (`true`)
+
+Check plan status:
+
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{topic} status
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} status
 ```
 
-#### If implementation doesn't exist
+Check if implementation exists:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.implementation.{topic}
+```
+
+#### If implementation doesn't exist (`false`)
 
 > *Output the next fenced block as a code block:*
 
@@ -41,6 +51,14 @@ A completed implementation is required for review.
 ```
 
 **STOP.** Do not proceed — terminal condition.
+
+#### If implementation exists (`true`)
+
+Check implementation status:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{topic} status
+```
 
 #### If implementation status is not `completed`
 
@@ -66,11 +84,15 @@ node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.rev
 
 → Return to caller.
 
-**If exists and status is `completed`:**
+**If exists (`true`):**
+
+Check status:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.review.{topic} status
 ```
+
+**If status is `completed`:**
 
 Reset to in-progress:
 
@@ -80,6 +102,6 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.review
 
 → Return to caller.
 
-**If exists and status is `in-progress`:**
+**If status is `in-progress`:**
 
 → Return to caller.

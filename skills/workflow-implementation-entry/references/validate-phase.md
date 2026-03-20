@@ -42,12 +42,27 @@ The plan for "{topic:(titlecase)}" is not yet completed.
 
 **STOP.** Do not proceed — terminal condition.
 
-#### If plan exists (`true`) and status is `completed` and implementation exists and status is `completed`
+Check if implementation exists:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.implementation.{topic}
+```
+
+#### If implementation does not exist
+
+Proceed normally (new entry).
+
+→ Return to caller.
+
+#### If implementation exists
+
+Check status:
+
+```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{topic} status
 ```
+
+**If status is `completed`:**
 
 Reset to in-progress:
 
@@ -63,14 +78,8 @@ Reopening implementation: {topic:(titlecase)}
 
 → Return to caller.
 
-#### If plan exists (`true`) and status is `completed` and implementation exists and status is `in-progress`
+**If status is `in-progress`:**
 
 Proceed normally.
-
-→ Return to caller.
-
-#### If plan exists (`true`) and status is `completed` and implementation does not exist
-
-Proceed normally (new entry).
 
 → Return to caller.

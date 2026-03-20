@@ -17,7 +17,13 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planni
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} external_id
 ```
 
-Check implementation status:
+Check implementation state:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.implementation.{topic}
+```
+
+If implementation exists (`true`), check status:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{topic} status
