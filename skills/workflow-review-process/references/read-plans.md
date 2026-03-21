@@ -13,7 +13,11 @@ For each plan:
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} format
    ```
-4. Load the format's reading adapter from `../workflow-planning-process/references/output-formats/{format}/reading.md` — this tells you how to locate and read individual task files
-5. Extract all tasks across all phases
+4. Read the plan's `external_id` via manifest CLI:
+   ```bash
+   node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} external_id
+   ```
+5. Load the format's reading adapter from `../workflow-planning-process/references/output-formats/{format}/reading.md` — this tells you how to locate and read individual task files
+6. Extract all tasks across all phases
 
 → Return to caller.
