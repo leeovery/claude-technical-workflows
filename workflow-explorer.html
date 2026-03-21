@@ -1172,13 +1172,14 @@
         <h1>Technical Workflow System</h1>
         <p class="ov-overview">
           A structured pipeline for turning ideas into verified production code.
-          Three work types &mdash; <strong>Feature</strong>, <strong>Bugfix</strong>, and <strong>Epic</strong> &mdash;
+          Four work types &mdash; <strong>Feature</strong>, <strong>Bugfix</strong>, <strong>Epic</strong>, and <strong>Cross-cutting</strong> &mdash;
           each follow their own pipeline through phases of exploration, decisions,
-          validated specifications, implementation planning, test-driven development,
-          and final review.
+          and validated specifications. Features, bugfixes, and epics continue through
+          implementation planning, test-driven development, and final review.
+          Cross-cutting concerns are terminal at specification.
         </p>
         <div class="ov-hint">
-          Run <code>/workflow-start</code> to see all active work, or <code>/start-feature</code>, <code>/start-bugfix</code>, <code>/start-epic</code> to begin.
+          Run <code>/workflow-start</code> to see all active work, or <code>/start-feature</code>, <code>/start-bugfix</code>, <code>/start-epic</code>, <code>/start-cross-cutting</code> to begin.
         </div>
       </section>
 
@@ -1209,6 +1210,10 @@
             <div class="ov-phase-name">/start-epic</div>
             <div class="ov-phase-desc">New epic</div>
           </div>
+          <div class="ov-card ov-card-entry" onclick="selectPhase('start-cross-cutting')" style="border-color: #818cf8">
+            <div class="ov-phase-name">/start-cross-cutting</div>
+            <div class="ov-phase-desc">New cross-cutting concern</div>
+          </div>
         </div>
 
         <div class="ov-row ov-row-center" style="margin-top: -6px">
@@ -1220,6 +1225,9 @@
           </div>
           <div class="ov-card ov-card-entry ov-card-sm" onclick="selectPhase('continue-epic')" style="border-color: #818cf8">
             <div class="ov-phase-name">/continue-epic</div>
+          </div>
+          <div class="ov-card ov-card-entry ov-card-sm" onclick="selectPhase('continue-cross-cutting')" style="border-color: #818cf8">
+            <div class="ov-phase-name">/continue-cross-cutting</div>
           </div>
         </div>
 
@@ -1259,12 +1267,30 @@
               <div class="ov-phase-desc">multi-topic</div>
             </div>
           </div>
+
+          <!-- Cross-cutting column -->
+          <div class="ov-pipeline-col">
+            <div class="ov-pipeline-heading" style="color: #818cf8">Cross-cutting</div>
+            <div class="ov-card ov-card-phase" data-phase="research" onclick="selectPhase('research')" style="opacity:0.6">
+              <div class="ov-phase-name">Research</div>
+              <div class="ov-phase-desc">optional</div>
+            </div>
+            <div class="ov-pipeline-arrow"></div>
+            <div class="ov-card ov-card-phase" data-phase="discussion" onclick="selectPhase('discussion')">
+              <div class="ov-phase-name">Discussion</div>
+            </div>
+            <div class="ov-pipeline-arrow"></div>
+            <div class="ov-card ov-card-phase" data-phase="specification" onclick="selectPhase('specification')">
+              <div class="ov-phase-name">Specification</div>
+              <div class="ov-phase-desc">terminal</div>
+            </div>
+          </div>
         </div>
 
         <div class="ov-flow-down"><div class="ov-flow-down-line"></div><div class="ov-flow-down-head"></div></div>
 
-        <!-- Convergence: shared phases (vertical flow) -->
-        <div class="ov-layer-label">Convergence &mdash; Shared Phases</div>
+        <!-- Convergence: shared phases (feature/bugfix/epic only) -->
+        <div class="ov-layer-label">Convergence &mdash; Feature / Bugfix / Epic</div>
 
         <div class="ov-row ov-row-center">
           <div class="ov-card" data-phase="specification" onclick="selectPhase('specification')" style="max-width: 400px">
