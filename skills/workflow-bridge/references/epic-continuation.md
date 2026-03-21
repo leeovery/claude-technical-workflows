@@ -13,7 +13,7 @@ Epic is phase-centric — all artifacts in a phase complete before moving to the
 The bridge's own discovery provides minimal epic data. Run the continue-epic discovery scoped to this work unit for enriched state (dependencies, implementation progress, format):
 
 ```bash
-node .claude/skills/continue-epic/scripts/discovery.js {work_unit}
+node .claude/skills/continue-epic/scripts/discovery.cjs {work_unit}
 ```
 
 Parse the output. Use the epic's `detail` object as the discovery data for the display.
@@ -45,7 +45,7 @@ All topics have completed review for "{work_unit:(titlecase)}".
 Set the work unit status to completed:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} status completed
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit} status completed
 ```
 
 Commit: `workflow({work_unit}): complete epic pipeline`

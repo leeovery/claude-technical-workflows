@@ -9,13 +9,13 @@
 Check if review phase is registered in manifest:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.review.{topic}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}.review.{topic}
 ```
 
 #### If `false`
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {work_unit}.review.{topic}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs init-phase {work_unit}.review.{topic}
 ```
 
 → Proceed to **B. Determine Review Mode**.
@@ -33,13 +33,13 @@ Phase already registered (e.g. reopened review).
 Read `completed_tasks` via manifest CLI:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{topic} completed_tasks
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.implementation.{topic} completed_tasks
 ```
 
 Check if `reviewed_tasks` exists:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.review.{topic} reviewed_tasks
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}.review.{topic} reviewed_tasks
 ```
 
 #### If `reviewed_tasks` does not exist
@@ -53,7 +53,7 @@ Set `review_mode` = `full`.
 Read `reviewed_tasks`:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.review.{topic} reviewed_tasks
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.review.{topic} reviewed_tasks
 ```
 
 Compare `completed_tasks` against `reviewed_tasks`. Any internal ID in `completed_tasks` but not in `reviewed_tasks` is unreviewed.

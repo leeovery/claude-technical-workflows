@@ -71,7 +71,7 @@ Default `implementation_completed` = false, `has_plan` = false.
 Check whether the planning phase exists:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js exists {selected.name}.planning
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {selected.name}.planning
 ```
 
 If the result is `true`, set `has_plan` = true.
@@ -79,7 +79,7 @@ If the result is `true`, set `has_plan` = true.
 Check whether the implementation phase exists:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js exists {selected.name}.implementation
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {selected.name}.implementation
 ```
 
 #### If the result is `false`
@@ -93,7 +93,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js exists {selected.name}
 ## C. Completion Check
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get '{selected.name}.implementation.*' status
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get '{selected.name}.implementation.*' status
 ```
 
 This returns all topic statuses in the implementation phase.
@@ -136,7 +136,7 @@ Set `implementation_completed` = true.
 #### If user chose `d`/`done`
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {selected.name} status completed
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {selected.name} status completed
 ```
 
 Commit: `workflow({selected.name}): mark as completed`
@@ -152,7 +152,7 @@ Commit: `workflow({selected.name}): mark as completed`
 #### If user chose `p`/`pivot`
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {selected.name} work_type epic
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {selected.name} work_type epic
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -185,7 +185,7 @@ Invoke the `/continue-epic` skill. This is terminal — do not return to the cal
 #### If user chose `c`/`cancel`
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {selected.name} status cancelled
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {selected.name} status cancelled
 ```
 
 Commit: `workflow({selected.name}): mark as cancelled`

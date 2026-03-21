@@ -1,7 +1,7 @@
 ---
 name: workflow-start
 disable-model-invocation: true
-allowed-tools: Bash(node .claude/skills/workflow-start/scripts/discovery.js), Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
+allowed-tools: Bash(node .claude/skills/workflow-start/scripts/discovery.cjs), Bash(node .claude/skills/workflow-manifest/scripts/manifest.cjs)
 ---
 
 Unified workflow entry point. Discovers state, shows all active work, and routes to start or continue skills.
@@ -54,12 +54,12 @@ Invoke the `/workflow-migrate` skill and follow its instructions exactly — if 
 
 ## Step 1: Run Discovery
 
-!`node .claude/skills/workflow-start/scripts/discovery.js`
+!`node .claude/skills/workflow-start/scripts/discovery.cjs`
 
 If the above shows a script invocation rather than discovery output, the dynamic content preprocessor did not run. Execute the script before continuing:
 
 ```bash
-node .claude/skills/workflow-start/scripts/discovery.js
+node .claude/skills/workflow-start/scripts/discovery.cjs
 ```
 
 Parse the output to understand the current workflow state:

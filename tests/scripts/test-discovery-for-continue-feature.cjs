@@ -2,8 +2,8 @@
 
 const { describe, it, beforeEach, afterEach } = require('node:test');
 const assert = require('node:assert');
-const { setupFixture, cleanupFixture, createManifest } = require('./discovery-test-utils');
-const { discover, format } = require('../../skills/continue-feature/scripts/discovery');
+const { setupFixture, cleanupFixture, createManifest } = require('./discovery-test-utils.cjs');
+const { discover, format } = require('../../skills/continue-feature/scripts/discovery.cjs');
 
 describe('continue-feature discovery', () => {
   let dir;

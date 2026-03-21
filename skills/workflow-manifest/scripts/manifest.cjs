@@ -684,7 +684,7 @@ function cmdKeyOf(args) {
 const [command, ...args] = process.argv.slice(2);
 
 if (!command) {
-  die('Usage: manifest.js <command> [args]\nCommands: init, get, set, delete, list, init-phase, push, exists, key-of, project');
+  die('Usage: manifest.cjs <command> [args]\nCommands: init, get, set, delete, list, init-phase, push, exists, key-of, project');
 }
 
 switch (command) {

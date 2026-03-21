@@ -24,7 +24,7 @@ H. Update progress + phase check + commit
 
 Read the plan's `external_id` via manifest CLI:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} external_id
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.planning.{topic} external_id
 ```
 
 Follow the format's **reading.md** instructions to determine the next available task.
@@ -36,7 +36,7 @@ Follow the format's **reading.md** instructions to determine the next available 
 #### If a task is available
 
 1. Normalise the task content following **[task-normalisation.md](task-normalisation.md)**.
-2. Reset `fix_attempts` to `0` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} fix_attempts 0`).
+2. Reset `fix_attempts` to `0` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} fix_attempts 0`).
 3. Mark the task as in-progress — follow the format's **updating.md** status transition.
 
 → Proceed to **B. Execute Task**.
@@ -115,7 +115,7 @@ Task failed. How would you like to proceed?
 
 ## E. Evaluate Review Changes
 
-Increment `fix_attempts` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} fix_attempts {N}`).
+Increment `fix_attempts` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} fix_attempts {N}`).
 
 > *Output the next fenced block as a code block:*
 
@@ -131,7 +131,7 @@ Notes (non-blocking):
 {NOTES from reviewer}
 ```
 
-Check `fix_gate_mode` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{topic} fix_gate_mode`).
+Check `fix_gate_mode` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.implementation.{topic} fix_gate_mode`).
 
 #### If `fix_gate_mode` is `auto` and `fix_attempts` < 3
 
@@ -168,7 +168,7 @@ Accept the reviewer's fix analysis?
 #### If `auto`
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} fix_gate_mode auto
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} fix_gate_mode auto
 ```
 
 → Return to **B. Execute Task**.
@@ -204,7 +204,7 @@ Phase: {phase number} — {phase name}
 {executor's SUMMARY — brief commentary, decisions, implementation notes}
 ```
 
-Check the `task_gate_mode` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{topic} task_gate_mode`).
+Check the `task_gate_mode` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.implementation.{topic} task_gate_mode`).
 
 #### If `task_gate_mode` is `auto`
 
@@ -234,7 +234,7 @@ Approve this task?
 **If `auto`:**
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} task_gate_mode auto
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} task_gate_mode auto
 ```
 
 → Proceed to **H. Update Progress and Commit**.
@@ -261,16 +261,16 @@ Include the user's feedback when re-invoking.
 
 **Internal ID convention**: The internal ID used in `completed_tasks`, `current_task`, and commit messages MUST use the format `{topic}-{phase_id}-{task_id}`. If the format adapter returns an external ID, resolve the internal ID via the manifest CLI:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js key-of {work_unit}.planning.{topic} task_map {external_id}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs key-of {work_unit}.planning.{topic} task_map {external_id}
 ```
 
 **Update implementation state via manifest CLI**:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} current_phase {N}
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} current_task '{next_task_id or ~}'
-node .claude/skills/workflow-manifest/scripts/manifest.js push {work_unit}.implementation.{topic} completed_tasks "{internal_id}"
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} current_phase {N}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} current_task '{next_task_id or ~}'
+node .claude/skills/workflow-manifest/scripts/manifest.cjs push {work_unit}.implementation.{topic} completed_tasks "{internal_id}"
 ```
-If the current phase has no remaining open/in-progress tasks: `node .claude/skills/workflow-manifest/scripts/manifest.js push {work_unit}.implementation.{topic} completed_phases {N}`
+If the current phase has no remaining open/in-progress tasks: `node .claude/skills/workflow-manifest/scripts/manifest.cjs push {work_unit}.implementation.{topic} completed_phases {N}`
 
 **Commit all changes** in a single commit:
 

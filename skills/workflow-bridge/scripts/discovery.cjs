@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path');
-const { loadManifest, phaseStatus, fileExists, listFiles, listDirs, computeNextPhase } = require('../../workflow-shared/scripts/discovery-utils');
+const { loadManifest, phaseStatus, fileExists, listFiles, listDirs, computeNextPhase } = require('../../workflow-shared/scripts/discovery-utils.cjs');
 
 const ALL_PHASES = ['research', 'discussion', 'investigation', 'specification', 'planning', 'implementation', 'review'];
 
@@ -62,7 +62,7 @@ function format(result) {
 if (require.main === module) {
   const workUnit = process.argv[2];
   if (!workUnit) {
-    process.stderr.write('Error: work unit name required\nUsage: discovery.js <work_unit>\n');
+    process.stderr.write('Error: work unit name required\nUsage: discovery.cjs <work_unit>\n');
     process.exit(1);
   }
   process.stdout.write(format(discover(process.cwd(), workUnit)));

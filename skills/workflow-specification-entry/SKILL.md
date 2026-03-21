@@ -1,7 +1,7 @@
 ---
 name: workflow-specification-entry
 user-invocable: false
-allowed-tools: Bash(node .claude/skills/workflow-specification-entry/scripts/discovery.js), Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(mkdir -p .workflows/*/.state), Bash(rm .workflows/*/.state/discussion-consolidation-analysis.md)
+allowed-tools: Bash(node .claude/skills/workflow-specification-entry/scripts/discovery.cjs), Bash(node .claude/skills/workflow-manifest/scripts/manifest.cjs), Bash(mkdir -p .workflows/*/.state), Bash(rm .workflows/*/.state/discussion-consolidation-analysis.md)
 ---
 
 Act as **precise intake coordinator**. Follow each step literally without interpretation. Do not engage with the subject matter — your role is preparation, not processing.
@@ -55,7 +55,7 @@ Store work_unit for the handoff.
 Run discovery scoped to this work unit:
 
 ```bash
-node .claude/skills/workflow-specification-entry/scripts/discovery.js {work_unit}
+node .claude/skills/workflow-specification-entry/scripts/discovery.cjs {work_unit}
 ```
 
 Parse the discovery output to understand:

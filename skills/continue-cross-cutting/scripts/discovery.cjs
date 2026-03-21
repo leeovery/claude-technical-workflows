@@ -1,12 +1,12 @@
 'use strict';
 
-const { loadActiveManifests, loadAllManifests, phaseStatus, computeNextPhase } = require('../../workflow-shared/scripts/discovery-utils');
+const { loadActiveManifests, loadAllManifests, phaseStatus, computeNextPhase } = require('../../workflow-shared/scripts/discovery-utils.cjs');
 
-const FEATURE_PIPELINE = ['research', 'discussion', 'specification', 'planning', 'implementation', 'review'];
+const CC_PIPELINE = ['research', 'discussion', 'specification'];
 
 function lastCompletedPhase(manifest) {
   let last = null;
-  for (const phase of FEATURE_PIPELINE) {
+  for (const phase of CC_PIPELINE) {
     const s = phaseStatus(manifest, phase);
     if (s === 'completed') last = phase;
   }
@@ -15,7 +15,7 @@ function lastCompletedPhase(manifest) {
 
 function completedPhases(manifest) {
   const completed = [];
-  for (const phase of FEATURE_PIPELINE) {
+  for (const phase of CC_PIPELINE) {
     const s = phaseStatus(manifest, phase);
     if (s === 'completed') {
       completed.push(phase);
@@ -26,13 +26,13 @@ function completedPhases(manifest) {
 
 function discover(cwd) {
   const manifests = loadActiveManifests(cwd);
-  const features = [];
+  const cross_cutting = [];
 
   for (const m of manifests) {
-    if (m.work_type !== 'feature') continue;
+    if (m.work_type !== 'cross-cutting') continue;
     const state = computeNextPhase(m);
     if (state.next_phase === 'done') continue;
-    features.push({
+    cross_cutting.push({
       name: m.name,
       next_phase: state.next_phase,
       phase_label: state.phase_label,
@@ -40,13 +40,13 @@ function discover(cwd) {
     });
   }
 
-  // Load completed/cancelled features
+  // Load completed/cancelled cross-cutting concerns
   const allManifests = loadAllManifests(cwd);
   const completed = [];
   const cancelled = [];
 
   for (const m of allManifests) {
-    if (m.work_type !== 'feature') continue;
+    if (m.work_type !== 'cross-cutting') continue;
     if (m.status === 'completed') {
       completed.push({ name: m.name, status: m.status, last_phase: lastCompletedPhase(m) });
     } else if (m.status === 'cancelled') {
@@ -55,24 +55,24 @@ function discover(cwd) {
   }
 
   return {
-    features,
-    count: features.length,
+    cross_cutting,
+    count: cross_cutting.length,
     completed,
     cancelled,
     completed_count: completed.length,
     cancelled_count: cancelled.length,
-    summary: features.length === 0
-      ? 'no active features'
-      : `${features.length} active feature(s)`,
+    summary: cross_cutting.length === 0
+      ? 'no active cross-cutting concerns'
+      : `${cross_cutting.length} active cross-cutting concern(s)`,
   };
 }
 
 function format(result) {
   const lines = [];
-  lines.push(`=== FEATURES (${result.count}) ===`);
+  lines.push(`=== CROSS-CUTTING (${result.count}) ===`);
   lines.push(`summary: ${result.summary}`);
-  for (const f of result.features) {
-    lines.push(`  ${f.name}: ${f.phase_label} [completed: ${f.completed_phases.join(', ') || 'none'}]`);
+  for (const cc of result.cross_cutting) {
+    lines.push(`  ${cc.name}: ${cc.phase_label} [completed: ${cc.completed_phases.join(', ') || 'none'}]`);
   }
   return lines.join('\n') + '\n';
 }

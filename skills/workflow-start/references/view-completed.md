@@ -91,7 +91,7 @@ Store the selected item.
 #### If user chose `r`/`reactivate`
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {selected.name} status in-progress
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {selected.name} status in-progress
 ```
 
 > *Output the next fenced block as a code block:*

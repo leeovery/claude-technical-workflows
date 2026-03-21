@@ -35,7 +35,7 @@ No actionable findings. All reviews passed with no required changes.
 Set the review phase status to completed:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.review.{topic} status completed
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.review.{topic} status completed
 ```
 
 **Pipeline continuation** — Invoke the bridge:
@@ -82,7 +82,7 @@ Proceed with synthesis?
 Set review status to completed:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.review.{topic} status completed
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.review.{topic} status completed
 ```
 
 **Pipeline continuation** — Invoke the bridge:
@@ -129,7 +129,7 @@ Synthesize non-blocking findings?
 Set review status to completed:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.review.{topic} status completed
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.review.{topic} status completed
 ```
 
 **Pipeline continuation** — Invoke the bridge:
@@ -156,7 +156,7 @@ Invoke the workflow-bridge skill to enter plan mode with completion confirmation
 No actionable tasks from synthesis. Set review status to completed:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.review.{topic} status completed
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.review.{topic} status completed
 ```
 
 > *Output the next fenced block as a code block:*
@@ -295,7 +295,7 @@ Revise the task content in the staging file based on the user's feedback.
 Set review status to completed:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.review.{topic} status completed
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.review.{topic} status completed
 ```
 
 Commit the staging file updates:
@@ -340,9 +340,9 @@ review({work_unit}): add review remediation ({K} tasks)
 For each plan that received new tasks:
 
 1. Update the manifest via CLI:
-   - `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} status in-progress`
-   - `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} updated {today's date}`
-   - `node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} analysis_cycle 0`
+   - `node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} status in-progress`
+   - `node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} updated {today's date}`
+   - `node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} analysis_cycle 0`
 2. Commit tracking changes:
 
 ```

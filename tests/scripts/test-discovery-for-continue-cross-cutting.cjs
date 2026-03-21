@@ -2,8 +2,8 @@
 
 const { describe, it, beforeEach, afterEach } = require('node:test');
 const assert = require('node:assert');
-const { setupFixture, cleanupFixture, createManifest } = require('./discovery-test-utils');
-const { discover, format } = require('../../skills/continue-cross-cutting/scripts/discovery');
+const { setupFixture, cleanupFixture, createManifest } = require('./discovery-test-utils.cjs');
+const { discover, format } = require('../../skills/continue-cross-cutting/scripts/discovery.cjs');
 
 describe('continue-cross-cutting discovery', () => {
   let dir;

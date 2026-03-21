@@ -29,7 +29,7 @@ Use `next_phase` from discovery output to determine the target skill:
 Set the work unit status to completed:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} status completed
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit} status completed
 ```
 
 Commit: `workflow({work_unit}): complete feature pipeline`
@@ -75,7 +75,7 @@ Implementation completed for "{work_unit:(titlecase)}".
 Set the work unit status to completed:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit} status completed
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit} status completed
 ```
 
 Commit: `workflow({work_unit}): complete feature pipeline (review skipped)`

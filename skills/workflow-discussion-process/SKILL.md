@@ -1,7 +1,7 @@
 ---
 name: workflow-discussion-process
 user-invocable: false
-allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.cjs)
 ---
 
 # Discussion Process

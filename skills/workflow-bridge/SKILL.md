@@ -1,7 +1,7 @@
 ---
 name: workflow-bridge
 user-invocable: false
-allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(node .claude/skills/workflow-bridge/scripts/discovery.js), Bash(node .claude/skills/continue-epic/scripts/discovery.js)
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.cjs), Bash(node .claude/skills/workflow-bridge/scripts/discovery.cjs), Bash(node .claude/skills/continue-epic/scripts/discovery.cjs)
 ---
 
 Enter plan mode with deterministic continuation instructions.
@@ -23,7 +23,7 @@ This skill receives context from the calling processing skill:
 Read work type from the manifest:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit} work_type
 ```
 
 #### If work type is `epic`
@@ -35,7 +35,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_t
 Run the discovery script with the work unit:
 
 ```bash
-node .claude/skills/workflow-bridge/scripts/discovery.js {work_unit}
+node .claude/skills/workflow-bridge/scripts/discovery.cjs {work_unit}
 ```
 
 The output contains: `work_type`, `phases` (per-phase status), and `next_phase`.

@@ -54,7 +54,7 @@ Set verb = "Creating".
 Reset to in-progress:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.specification.{topic} status in-progress
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.specification.{topic} status in-progress
 ```
 
 > *Output the next fenced block as a code block:*

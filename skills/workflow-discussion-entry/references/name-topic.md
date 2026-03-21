@@ -44,7 +44,7 @@ Use the suggested name as `{topic}`.
 Check if a discussion with this topic already exists:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.discussion.{topic}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}.discussion.{topic}
 ```
 
 #### If not exists (`false`)

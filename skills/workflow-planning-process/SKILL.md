@@ -1,7 +1,7 @@
 ---
 name: workflow-planning-process
 user-invocable: false
-allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.cjs)
 ---
 
 # Planning Process
@@ -33,9 +33,9 @@ Context refresh (compaction) summarizes the conversation, losing procedural deta
 3. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
 4. **Announce your position** to the user before continuing: what step you believe you're at, what's been completed, and what comes next. Wait for confirmation.
 5. **Check gate modes** via manifest CLI — if `auto`, the user previously opted in during this session. Preserve these values.
-   - `node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} task_list_gate_mode`
-   - `node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} author_gate_mode`
-   - `node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} finding_gate_mode`
+   - `node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.planning.{topic} task_list_gate_mode`
+   - `node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.planning.{topic} author_gate_mode`
+   - `node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.planning.{topic} finding_gate_mode`
 
 Do not guess at progress or continue from memory. The files on disk and git history are authoritative — your recollection is not.
 
@@ -62,7 +62,7 @@ When announcing a new step, output `── ── ── ── ──` on its o
 
 Check if a planning entry exists in the manifest:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.planning.{topic}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}.planning.{topic}
 ```
 
 #### If planning entry does not exist
@@ -73,18 +73,18 @@ node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.pla
 
 Check the planning status via manifest CLI:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} status
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.planning.{topic} status
 ```
 
 Note the current phase and task position from the manifest:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} phase
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} task
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.planning.{topic} phase
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.planning.{topic} task
 ```
 
 Check `spec_commit` from the manifest:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} spec_commit
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.planning.{topic} spec_commit
 ```
 
 Load **[spec-change-detection.md](references/spec-change-detection.md)** and follow its instructions as written. Then present the user with an informed choice:
@@ -118,14 +118,14 @@ Continue or restart?
 
 1. Read the `format` from the manifest:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} format
+   node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.planning.{topic} format
    ```
 2. Load the format's **[authoring.md](references/output-formats/{format}/authoring.md)**
 3. Follow the authoring file's cleanup instructions to remove authored tasks for this topic
 4. Delete all planning files: `rm -rf .workflows/{work_unit}/planning/{topic}/`
 5. Delete the planning manifest entry:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js delete {work_unit}.planning items.{topic}
+   node .claude/skills/workflow-manifest/scripts/manifest.cjs delete {work_unit}.planning items.{topic}
    ```
 6. Commit: `planning({work_unit}): restart planning`
 

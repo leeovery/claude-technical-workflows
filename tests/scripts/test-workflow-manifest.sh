@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Tests for the workflow manifest CLI (manifest.js)
+# Tests for the workflow manifest CLI (manifest.cjs)
 # Validates init, get, set, list, init-phase, push, exists commands.
 # Uses dot-path syntax: <work-unit>[.<phase>[.<topic>]]
 #
@@ -8,7 +8,7 @@
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MANIFEST_JS="$SCRIPT_DIR/../../skills/workflow-manifest/scripts/manifest.js"
+MANIFEST_JS="$SCRIPT_DIR/../../skills/workflow-manifest/scripts/manifest.cjs"
 
 # Colors for output
 RED='\033[0;31m'

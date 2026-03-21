@@ -9,7 +9,7 @@ Check if plan and implementation exist and are ready via manifest CLI.
 ## A. Existence Checks
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.planning.{topic}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}.planning.{topic}
 ```
 
 #### If plan doesn't exist (`false`)
@@ -29,7 +29,7 @@ A completed plan and completed implementation are required for review.
 #### If plan exists (`true`)
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.implementation.{topic}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}.implementation.{topic}
 ```
 
 **If implementation doesn't exist (`false`):**
@@ -53,7 +53,7 @@ A completed implementation is required for review.
 ## B. Implementation Status
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{topic} status
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.implementation.{topic} status
 ```
 
 #### If implementation status is not `completed`
@@ -75,7 +75,7 @@ The implementation for "{topic:(titlecase)}" is not yet completed.
 ## C. Review State
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.review.{topic}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}.review.{topic}
 ```
 
 #### If review does not exist
@@ -85,7 +85,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.rev
 #### If review exists
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.review.{topic} status
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.review.{topic} status
 ```
 
 **If status is `completed`:**
@@ -93,7 +93,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.review
 Reset to in-progress:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.review.{topic} status in-progress
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.review.{topic} status in-progress
 ```
 
 → Return to caller.

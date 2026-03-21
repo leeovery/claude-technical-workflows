@@ -9,7 +9,7 @@ Surface completed cross-cutting specifications as context for planning. Applies 
 ## A. Discover Cross-Cutting Work Units
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js project list --type cross-cutting
+node .claude/skills/workflow-manifest/scripts/manifest.cjs project list --type cross-cutting
 ```
 
 #### If no output (no cross-cutting work units exist)
@@ -21,7 +21,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js project list --type cr
 Store the list of names. For each, check specification status:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {cc_work_unit}.specification.{cc_work_unit} status
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {cc_work_unit}.specification.{cc_work_unit} status
 ```
 
 Collect only those with `status: completed`. Also note any with `status: in-progress`.

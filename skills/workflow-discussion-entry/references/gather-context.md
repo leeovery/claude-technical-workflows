@@ -41,7 +41,7 @@ New discussion entry: topic was provided by the caller.
 Check if any research items exist for this work unit:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js exists '{work_unit}.research.*'
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists '{work_unit}.research.*'
 ```
 
 **If exists (`true`):**
@@ -59,7 +59,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js exists '{work_unit}.re
 ## C. Check Research Status
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get '{work_unit}.research.*' status
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get '{work_unit}.research.*' status
 ```
 
 **If any research item has status `completed`:**

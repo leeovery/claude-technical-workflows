@@ -1,7 +1,7 @@
 ---
 name: workflow-implementation-process
 user-invocable: false
-allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.cjs)
 ---
 
 # Implementation Process
@@ -29,7 +29,7 @@ Context refresh (compaction) summarizes the conversation, losing procedural deta
 2. **Check task progress in the plan** — use the plan adapter's instructions to read the plan's current state. Check manifest state for additional context.
 3. **Check gate modes and progress** via manifest CLI:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{topic}
+   node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.implementation.{topic}
    ```
    Check `task_gate_mode`, `fix_gate_mode`, `analysis_gate_mode`, `fix_attempts`, and `analysis_cycle` — if gates are `auto`, the user previously opted out. If `fix_attempts` > 0, you're mid-fix-loop for the current task. If `analysis_cycle` > 0, you've completed analysis cycles — check for findings files on disk (`analysis-*-c{cycle-number}.md` in the implementation directory) to determine mid-analysis state.
 4. **Check git state.** Run `git status` and `git log --oneline -10` to see recent commits. Commit messages follow a conventional pattern that reveals what was completed.
@@ -54,7 +54,7 @@ When announcing a new step, output `── ── ── ── ──` on its o
 
 Check if an implementation entry exists in the manifest:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.implementation.{topic}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}.implementation.{topic}
 ```
 
 #### If implementation entry does not exist
@@ -71,11 +71,11 @@ Found existing implementation for "{topic:(titlecase)}". Resuming from previous 
 
 Reset gate modes and counters via manifest CLI (fresh session = fresh gates/cycles):
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} task_gate_mode gated
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} fix_gate_mode gated
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} analysis_gate_mode gated
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} fix_attempts 0
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} analysis_cycle 0
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} task_gate_mode gated
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} fix_gate_mode gated
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} analysis_gate_mode gated
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} fix_attempts 0
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} analysis_cycle 0
 ```
 
 → Proceed to **Step 1**.

@@ -13,7 +13,7 @@ Discover and configure project linters for use during the TDD cycle's LINT step.
 Read topic-level `linters` via manifest CLI:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{topic} linters
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.implementation.{topic} linters
 ```
 
 #### If `linters` is populated
@@ -27,7 +27,7 @@ Set `source` = `topic`.
 Check if phase-level `linters` exists via manifest CLI:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.implementation linters
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}.implementation linters
 ```
 
 **If `false`:**
@@ -39,7 +39,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.imp
 Read phase-level `linters` via manifest CLI:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation linters
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.implementation linters
 ```
 
 **If phase-level is populated:**
@@ -111,7 +111,7 @@ Use these linters?
 
 Copy to topic level:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} linters '[{phase-level values}]'
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} linters '[{phase-level values}]'
 ```
 
 → Return to caller.
@@ -124,7 +124,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implem
 
 Clear topic-level `linters` before re-discovery:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} linters '[]'
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} linters '[]'
 ```
 
 → Proceed to **C. Discovery**.
@@ -170,8 +170,8 @@ Approve these linters?
 
 Store at both levels:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} linters '[...]'
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation linters '[...]'
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} linters '[...]'
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation linters '[...]'
 ```
 
 → Return to caller.
@@ -186,8 +186,8 @@ Adjust based on user input.
 
 Store empty array at both levels:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} linters '[]'
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation linters '[]'
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} linters '[]'
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation linters '[]'
 ```
 
 → Return to caller.

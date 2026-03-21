@@ -13,7 +13,7 @@ Derive the new work unit name: `cc_work_unit = {topic}`. All work-unit-level ope
 Check if a work unit with this name already exists:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js exists {cc_work_unit}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {cc_work_unit}
 ```
 
 #### If `true`
@@ -31,15 +31,15 @@ Choose a descriptive alternative name that captures the cross-cutting concern (e
 Create the new cross-cutting work unit and mark it as completed (the pipeline is terminal after spec, and spec is already complete):
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js init {cc_work_unit} --work-type cross-cutting --description "{one-line summary from spec}"
-node .claude/skills/workflow-manifest/scripts/manifest.js set {cc_work_unit} status completed
+node .claude/skills/workflow-manifest/scripts/manifest.cjs init {cc_work_unit} --work-type cross-cutting --description "{one-line summary from spec}"
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {cc_work_unit} status completed
 ```
 
 Set provenance to track the origin:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {cc_work_unit} source_work_unit {work_unit}
-node .claude/skills/workflow-manifest/scripts/manifest.js set {cc_work_unit} source_topic {topic}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {cc_work_unit} source_work_unit {work_unit}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {cc_work_unit} source_topic {topic}
 ```
 
 → Proceed to **C. Move Discussion Files**.
@@ -49,7 +49,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {cc_work_unit} sou
 Read sources from the epic spec manifest:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.specification.{topic} sources
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.specification.{topic} sources
 ```
 
 For each source that is a discussion file (check if `.workflows/{work_unit}/discussion/{source}.md` exists), move it to the new work unit:
@@ -62,8 +62,8 @@ mv .workflows/{work_unit}/discussion/{source}.md .workflows/{cc_work_unit}/discu
 Initialize discussion phase in the new manifest for each moved source:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {cc_work_unit}.discussion.{source}
-node .claude/skills/workflow-manifest/scripts/manifest.js set {cc_work_unit}.discussion.{source} status completed
+node .claude/skills/workflow-manifest/scripts/manifest.cjs init-phase {cc_work_unit}.discussion.{source}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {cc_work_unit}.discussion.{source} status completed
 ```
 
 → Proceed to **D. Move Specification**.
@@ -80,9 +80,9 @@ mv .workflows/{work_unit}/specification/{topic}/ .workflows/{cc_work_unit}/speci
 Initialize specification phase in the new manifest:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js init-phase {cc_work_unit}.specification.{cc_work_unit}
-node .claude/skills/workflow-manifest/scripts/manifest.js set {cc_work_unit}.specification.{cc_work_unit} status completed
-node .claude/skills/workflow-manifest/scripts/manifest.js set {cc_work_unit}.specification.{cc_work_unit} date $(date +%Y-%m-%d)
+node .claude/skills/workflow-manifest/scripts/manifest.cjs init-phase {cc_work_unit}.specification.{cc_work_unit}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {cc_work_unit}.specification.{cc_work_unit} status completed
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {cc_work_unit}.specification.{cc_work_unit} date $(date +%Y-%m-%d)
 ```
 
 → Proceed to **E. Update Epic Manifest**.
@@ -92,8 +92,8 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {cc_work_unit}.spe
 Mark the topic as promoted in the epic manifest:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.specification.{topic} status promoted
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.specification.{topic} promoted_to {cc_work_unit}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.specification.{topic} status promoted
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.specification.{topic} promoted_to {cc_work_unit}
 ```
 
 → Proceed to **F. Commit and Display**.
