@@ -1515,7 +1515,7 @@ const phases = {
     color: '#6c8aff', bg: 'rgba(108,138,255,0.12)',
     label: 'Workflow Start', cmd: '/workflow-start',
     complexity: 'Router',
-    desc: 'Unified entry point. Discovers all active work units, displays grouped by type, routes to start-* or continue-* skills.',
+    desc: 'Unified entry point. Discovers all active work units (epics, features, bugfixes, cross-cutting), displays grouped by type, routes to start-* or continue-* skills.',
   },
   // ── Work-type entry (Layer 2) ──
   'start-feature': {
@@ -1536,6 +1536,12 @@ const phases = {
     complexity: 'Pipeline',
     desc: 'Gather epic context, name check, route first phase (research or discussion), invoke workflow-*-entry.',
   },
+  'start-cross-cutting': {
+    color: '#818cf8', bg: 'rgba(129,140,248,0.12)',
+    label: 'Start Cross-Cutting', cmd: '/start-cross-cutting',
+    complexity: 'Pipeline',
+    desc: 'Gather cross-cutting concern context, name check, research gating, invoke workflow-*-entry.',
+  },
   // ── Continue skills (Layer 2) ──
   'continue-feature': {
     color: '#818cf8', bg: 'rgba(129,140,248,0.12)',
@@ -1554,6 +1560,12 @@ const phases = {
     label: 'Continue Epic', cmd: '/continue-epic',
     complexity: 'Router',
     desc: 'Discovery → select epic → full state display with per-phase items → interactive menu → route to workflow-*-entry.',
+  },
+  'continue-cross-cutting': {
+    color: '#818cf8', bg: 'rgba(129,140,248,0.12)',
+    label: 'Continue Cross-Cutting', cmd: '/continue-cross-cutting',
+    complexity: 'Router',
+    desc: 'Discovery → display active cross-cutting concerns → select → backwards nav → route to workflow-*-entry (terminal at specification).',
   },
   // ── Utility ──
   'status': {
@@ -1579,7 +1591,7 @@ const phases = {
     color: '#f97316', bg: 'rgba(249,115,22,0.12)',
     label: 'Workflow Bridge',
     complexity: 'Router',
-    desc: 'Internal skill invoked by processing skills on phase completion. Determines next phase and enters plan mode.',
+    desc: 'Internal skill invoked by processing skills on phase completion. Determines next phase (feature/bugfix/cross-cutting/epic) and enters plan mode.',
   },
   // ── Processing skills (Layer 4) ──
   'skill-research': {
@@ -1701,33 +1713,39 @@ const phases = {
 // ── SVG Node Definitions ──
 const OVERVIEW_NODES = [
   // Layer 1: Unified entry
-  { id: 'workflow-start', label: '/workflow-start', subtitle: 'Unified entry', x: 280, y: 20, w: 220, h: 48, type: 'standalone', color: '#6c8aff', bg: 'rgba(108,138,255,0.12)', phase: 'workflow-start' },
+  { id: 'workflow-start', label: '/workflow-start', subtitle: 'Unified entry', x: 340, y: 20, w: 220, h: 48, type: 'standalone', color: '#6c8aff', bg: 'rgba(108,138,255,0.12)', phase: 'workflow-start' },
 
   // Layer 2: Work-type entry
-  { id: 'start-feature', label: '/start-feature', x: 60, y: 100, w: 180, h: 42, type: 'standalone', color: '#818cf8', bg: 'rgba(129,140,248,0.12)', phase: 'start-feature' },
-  { id: 'start-bugfix', label: '/start-bugfix', x: 290, y: 100, w: 180, h: 42, type: 'standalone', color: '#818cf8', bg: 'rgba(129,140,248,0.12)', phase: 'start-bugfix' },
-  { id: 'start-epic', label: '/start-epic', x: 520, y: 100, w: 180, h: 42, type: 'standalone', color: '#818cf8', bg: 'rgba(129,140,248,0.12)', phase: 'start-epic' },
+  { id: 'start-feature', label: '/start-feature', x: 30, y: 100, w: 170, h: 42, type: 'standalone', color: '#818cf8', bg: 'rgba(129,140,248,0.12)', phase: 'start-feature' },
+  { id: 'start-bugfix', label: '/start-bugfix', x: 230, y: 100, w: 170, h: 42, type: 'standalone', color: '#818cf8', bg: 'rgba(129,140,248,0.12)', phase: 'start-bugfix' },
+  { id: 'start-epic', label: '/start-epic', x: 430, y: 100, w: 170, h: 42, type: 'standalone', color: '#818cf8', bg: 'rgba(129,140,248,0.12)', phase: 'start-epic' },
+  { id: 'start-cross-cutting', label: '/start-cross-cutting', x: 630, y: 100, w: 190, h: 42, type: 'standalone', color: '#818cf8', bg: 'rgba(129,140,248,0.12)', phase: 'start-cross-cutting' },
 
-  // Layer 3: Phase pipelines (3 columns)
+  // Layer 3: Phase pipelines (4 columns)
   // Feature column
-  { id: 'f-research', label: 'Research', subtitle: 'optional', x: 60, y: 180, w: 160, h: 44, type: 'phase', color: 'var(--research)', bg: 'var(--research-bg)', phase: 'research' },
-  { id: 'f-discussion', label: 'Discussion', x: 60, y: 250, w: 160, h: 44, type: 'phase', color: 'var(--discussion)', bg: 'var(--discussion-bg)', phase: 'discussion' },
+  { id: 'f-research', label: 'Research', subtitle: 'optional', x: 30, y: 180, w: 150, h: 44, type: 'phase', color: 'var(--research)', bg: 'var(--research-bg)', phase: 'research' },
+  { id: 'f-discussion', label: 'Discussion', x: 30, y: 250, w: 150, h: 44, type: 'phase', color: 'var(--discussion)', bg: 'var(--discussion-bg)', phase: 'discussion' },
   // Bugfix column
-  { id: 'b-investigation', label: 'Investigation', x: 290, y: 215, w: 180, h: 44, type: 'phase', color: '#fb923c', bg: 'rgba(251,146,60,0.12)', phase: 'investigation' },
+  { id: 'b-investigation', label: 'Investigation', x: 230, y: 215, w: 170, h: 44, type: 'phase', color: '#fb923c', bg: 'rgba(251,146,60,0.12)', phase: 'investigation' },
   // Epic column
-  { id: 'e-research', label: 'Research', x: 520, y: 180, w: 160, h: 44, type: 'phase', color: 'var(--research)', bg: 'var(--research-bg)', phase: 'research' },
-  { id: 'e-discussion', label: 'Discussion', subtitle: 'multi-topic', x: 520, y: 250, w: 160, h: 44, type: 'phase', color: 'var(--discussion)', bg: 'var(--discussion-bg)', phase: 'discussion' },
+  { id: 'e-research', label: 'Research', x: 430, y: 180, w: 150, h: 44, type: 'phase', color: 'var(--research)', bg: 'var(--research-bg)', phase: 'research' },
+  { id: 'e-discussion', label: 'Discussion', subtitle: 'multi-topic', x: 430, y: 250, w: 150, h: 44, type: 'phase', color: 'var(--discussion)', bg: 'var(--discussion-bg)', phase: 'discussion' },
+  // Cross-cutting column
+  { id: 'cc-research', label: 'Research', subtitle: 'optional', x: 640, y: 180, w: 150, h: 44, type: 'phase', color: 'var(--research)', bg: 'var(--research-bg)', phase: 'research' },
+  { id: 'cc-discussion', label: 'Discussion', x: 640, y: 250, w: 150, h: 44, type: 'phase', color: 'var(--discussion)', bg: 'var(--discussion-bg)', phase: 'discussion' },
+  { id: 'cc-specification', label: 'Specification', subtitle: 'terminal', x: 640, y: 330, w: 150, h: 44, type: 'phase', color: 'var(--specification)', bg: 'var(--specification-bg)', phase: 'specification' },
 
-  // Convergence phases (centered)
-  { id: 'specification', label: 'Specification', x: 280, y: 330, w: 200, h: 50, type: 'phase', color: 'var(--specification)', bg: 'var(--specification-bg)', phase: 'specification' },
-  { id: 'planning', label: 'Planning', x: 280, y: 410, w: 200, h: 50, type: 'phase', color: 'var(--planning)', bg: 'var(--planning-bg)', phase: 'planning' },
-  { id: 'implementation', label: 'Implementation', x: 280, y: 490, w: 200, h: 50, type: 'phase', color: 'var(--implementation)', bg: 'var(--implementation-bg)', phase: 'implementation' },
-  { id: 'review', label: 'Review', x: 280, y: 570, w: 200, h: 50, type: 'phase', color: 'var(--review)', bg: 'var(--review-bg)', phase: 'review' },
+  // Convergence phases (centered on left 3 columns)
+  { id: 'specification', label: 'Specification', x: 230, y: 330, w: 200, h: 50, type: 'phase', color: 'var(--specification)', bg: 'var(--specification-bg)', phase: 'specification' },
+  { id: 'planning', label: 'Planning', x: 230, y: 410, w: 200, h: 50, type: 'phase', color: 'var(--planning)', bg: 'var(--planning-bg)', phase: 'planning' },
+  { id: 'implementation', label: 'Implementation', x: 230, y: 490, w: 200, h: 50, type: 'phase', color: 'var(--implementation)', bg: 'var(--implementation-bg)', phase: 'implementation' },
+  { id: 'review', label: 'Review', x: 230, y: 570, w: 200, h: 50, type: 'phase', color: 'var(--review)', bg: 'var(--review-bg)', phase: 'review' },
 
   // Continue skills (small, alongside work-type entries)
-  { id: 'cont-feature', label: '/continue-feature', x: 60, y: 148, w: 160, h: 28, type: 'standalone', color: '#818cf8', bg: 'rgba(129,140,248,0.06)', phase: 'continue-feature' },
-  { id: 'cont-bugfix', label: '/continue-bugfix', x: 300, y: 148, w: 160, h: 28, type: 'standalone', color: '#818cf8', bg: 'rgba(129,140,248,0.06)', phase: 'continue-bugfix' },
-  { id: 'cont-epic', label: '/continue-epic', x: 530, y: 148, w: 160, h: 28, type: 'standalone', color: '#818cf8', bg: 'rgba(129,140,248,0.06)', phase: 'continue-epic' },
+  { id: 'cont-feature', label: '/continue-feature', x: 30, y: 148, w: 155, h: 28, type: 'standalone', color: '#818cf8', bg: 'rgba(129,140,248,0.06)', phase: 'continue-feature' },
+  { id: 'cont-bugfix', label: '/continue-bugfix', x: 240, y: 148, w: 155, h: 28, type: 'standalone', color: '#818cf8', bg: 'rgba(129,140,248,0.06)', phase: 'continue-bugfix' },
+  { id: 'cont-epic', label: '/continue-epic', x: 445, y: 148, w: 155, h: 28, type: 'standalone', color: '#818cf8', bg: 'rgba(129,140,248,0.06)', phase: 'continue-epic' },
+  { id: 'cont-cross-cutting', label: '/continue-cross-cutting', x: 635, y: 148, w: 185, h: 28, type: 'standalone', color: '#818cf8', bg: 'rgba(129,140,248,0.06)', phase: 'continue-cross-cutting' },
 ];
 
 const OVERVIEW_CONNECTIONS = [
@@ -1735,6 +1753,7 @@ const OVERVIEW_CONNECTIONS = [
   { from: 'workflow-start', to: 'start-feature', type: 'flow' },
   { from: 'workflow-start', to: 'start-bugfix', type: 'flow' },
   { from: 'workflow-start', to: 'start-epic', type: 'flow' },
+  { from: 'workflow-start', to: 'start-cross-cutting', type: 'flow' },
 
   // Layer 2 → Layer 3 (feature)
   { from: 'start-feature', to: 'f-research', type: 'flow', label: 'research' },
@@ -1752,7 +1771,13 @@ const OVERVIEW_CONNECTIONS = [
   { from: 'e-research', to: 'e-discussion', type: 'flow' },
   { from: 'e-discussion', to: 'specification', type: 'flow' },
 
-  // Convergence phases
+  // Layer 2 → Layer 3 (cross-cutting — terminal at specification)
+  { from: 'start-cross-cutting', to: 'cc-research', type: 'flow', label: 'research' },
+  { from: 'start-cross-cutting', to: 'cc-discussion', type: 'shortcut', label: 'discuss' },
+  { from: 'cc-research', to: 'cc-discussion', type: 'flow' },
+  { from: 'cc-discussion', to: 'cc-specification', type: 'flow' },
+
+  // Convergence phases (feature/bugfix/epic only)
   { from: 'specification', to: 'planning', type: 'flow', label: 'specification' },
   { from: 'planning', to: 'implementation', type: 'flow', label: 'plan + tasks' },
   { from: 'implementation', to: 'review', type: 'flow', label: 'code changes' },
@@ -2526,18 +2551,28 @@ const FLOWCHARTS = {
   'skill-review': {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry: workflow-review-process skill receives plan(s), optional spec(s), and scope.' },
-      { id: 'read-plan', label: 'Read plan(s)', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 1: Read all plan(s) for the selected scope — phases, tasks, and acceptance criteria.' },
-      { id: 'read-spec', label: 'Read specification(s)', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 1: If available, read linked specification(s) for design context.' },
-      { id: 'skills-disc', label: 'Project skills discovery', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 2: Scan .claude/skills/ for project-specific conventions, framework guidelines, and architecture patterns.' },
-      { id: 'extract', label: 'Extract ALL tasks', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 3: List every task from every phase across all plans in scope.' },
-      { id: 'spawn', label: 'Spawn task verifiers', w: 180, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'workflow-review-task-verifier', desc: 'Step 3: Launch review-task-verifier agents in batches of 5. Each writes findings to file.' },
+      // Resume detection (Step 0)
+      { id: 'resume', label: 'Existing review?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 0: Check if report.md exists at .workflows/{work_unit}/review/{topic}/.' },
+      { id: 'resume-ask', label: 'ASK: Continue/restart?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Review exists: ask whether to continue from current state or restart (delete report + all report-*.md files).' },
+      // Initialize review (Step 1)
+      { id: 'init-review', label: 'Initialize review', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 1: Register phase in manifest. Determine review mode by comparing completed_tasks vs reviewed_tasks.' },
+      { id: 'review-mode', label: 'Review mode?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Determine mode: full (no prior reviewed_tasks), incremental (new tasks since last review), or skip to present (all reviewed + report exists).' },
+      { id: 'ask-mode', label: 'ASK: Incremental/full?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'New unreviewed tasks detected. User chooses: incremental (review only new) or full (re-review all).' },
+      { id: 'read-plan', label: 'Read plan(s)', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 2: Read all plan(s) for the selected scope — phases, tasks, and acceptance criteria.' },
+      { id: 'read-spec', label: 'Read specification(s)', w: 180, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 2: If available, read linked specification(s) for design context.' },
+      { id: 'skills-disc', label: 'Project skills discovery', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 3: Scan .claude/skills/ for project-specific conventions, framework guidelines, and architecture patterns.' },
+      { id: 'extract', label: 'Extract ALL tasks', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 4: List every task from every phase across all plans in scope.' },
+      { id: 'spawn', label: 'Spawn task verifiers', w: 180, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'workflow-review-task-verifier', desc: 'Step 4: Launch review-task-verifier agents in batches of 5. Each writes findings to file.' },
       { id: 'v1', label: 'Verify task 1', w: 140, h: 44, color: 'var(--action)', bg: 'rgba(56,189,248,0.08)', desc: 'Check: implementation, acceptance criteria, tests, code quality.' },
       { id: 'v2', label: 'Verify task 2', w: 140, h: 44, color: 'var(--action)', bg: 'rgba(56,189,248,0.08)', desc: 'Same checks, different task. Batches of 5 run in parallel.' },
       { id: 'vn', label: 'Verify task N', w: 140, h: 44, color: 'var(--action)', bg: 'rgba(56,189,248,0.08)', desc: 'One per task. All within a batch run simultaneously.' },
       { id: 'aggregate', label: 'Aggregate QA findings', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 3: Read all report-*.md files. Collect blocking issues, test issues, and code quality concerns.' },
-      { id: 'produce', label: 'Produce review', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 4: Aggregate QA findings into structured review document. Determine verdict (approve/changes/comments). Write to .workflows/{work_unit}/review/{topic}/.' },
-      // Review Actions Loop (Step 5)
-      { id: 'verdict', label: 'Verdict?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 5A: Route on QA verdict — approve (terminal), request-changes (synthesize recommended), comments-only (synthesize optional).' },
+      { id: 'produce', label: 'Produce review', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 5: Aggregate QA findings into structured review document. Determine verdict (approve/changes/comments). Write to .workflows/{work_unit}/review/{topic}/.' },
+      // Present review (Step 6)
+      { id: 'present', label: 'Present verdict', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 6: Show verdict (Approve/Request Changes/Comments Only), summary, required changes or comments.' },
+      { id: 'qa-loop', label: 'ASK: Continue or Q&A?', w: 210, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 6B: User can ask questions about findings (loop) or continue to review actions.' },
+      // Review Actions Loop (Step 7)
+      { id: 'verdict', label: 'Verdict?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 7A: Route on QA verdict — approve (terminal), request-changes (synthesize recommended), comments-only (synthesize optional).' },
       { id: 'ask-synth', label: 'ASK: Synthesize?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 5A: Ask user whether to synthesize findings into implementation tasks. Recommended for request-changes, optional for comments-only.' },
       { id: 'synthesizer', label: 'Invoke synthesizer', w: 200, h: 44, color: 'var(--agent)', bg: 'var(--agent-bg)', skillLink: 'workflow-review-findings-synthesizer', desc: 'Step 5B: Dispatch review-findings-synthesizer agent. Deduplicates, groups, normalizes findings into tasks.' },
       { id: 'synth-result', label: 'Tasks proposed?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route on synthesizer result — clean (terminal) or tasks_proposed (approval gate).' },
@@ -2548,7 +2583,19 @@ const FLOWCHARTS = {
       { id: 'end', label: 'Review complete', shape: 'pill', w: 150, h: 40, color: 'var(--review)', bg: 'var(--review-bg)', desc: 'Output: QA verdict with optional remediation task creation and implementation reopening.' },
     ],
     connections: [
-      { from: 'start', to: 'read-plan' },
+      // Resume detection
+      { from: 'start', to: 'resume' },
+      { from: 'resume', to: 'resume-ask', type: 'yes', label: 'exists' },
+      { from: 'resume', to: 'init-review', type: 'no', label: 'new', weight: 2 },
+      { from: 'resume-ask', to: 'init-review', label: 'restart' },
+      { from: 'resume-ask', to: 'init-review', label: 'continue', weight: 2 },
+      // Initialize review
+      { from: 'init-review', to: 'review-mode' },
+      { from: 'review-mode', to: 'present', label: 'all reviewed\n+ report' },
+      { from: 'review-mode', to: 'read-plan', label: 'full', weight: 2 },
+      { from: 'review-mode', to: 'ask-mode', label: 'new tasks' },
+      { from: 'ask-mode', to: 'read-plan' },
+      // Read plans/specs + skills
       { from: 'read-plan', to: 'read-spec' },
       { from: 'read-spec', to: 'skills-disc' },
       { from: 'skills-disc', to: 'extract' },
@@ -2560,7 +2607,11 @@ const FLOWCHARTS = {
       { from: 'v2', to: 'aggregate' },
       { from: 'vn', to: 'aggregate' },
       { from: 'aggregate', to: 'produce' },
-      { from: 'produce', to: 'verdict' },
+      // Present review + Q&A
+      { from: 'produce', to: 'present' },
+      { from: 'present', to: 'qa-loop' },
+      { from: 'qa-loop', to: 'qa-loop', type: 'backloop', label: 'ask question' },
+      { from: 'qa-loop', to: 'verdict', label: 'continue' },
       // Verdict routing
       { from: 'verdict', to: 'end', type: 'yes', label: 'approve' },
       { from: 'verdict', to: 'ask-synth', type: 'no', label: 'changes', weight: 2 },
@@ -2584,8 +2635,8 @@ const FLOWCHARTS = {
   'workflow-bridge': {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry: workflow-bridge receives work_unit and completed_phase from a processing skill.' },
-      { id: 'work-type', label: 'Work type?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 1: Read work_type from manifest. Routes to work-type-specific continuation.' },
-      // Feature/Bugfix path
+      { id: 'work-type', label: 'Work type?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 1: Read work_type from manifest. Routes to work-type-specific continuation (feature, bugfix, cross-cutting, or epic).' },
+      // Feature/Bugfix/Cross-cutting path
       { id: 'fb-discover', label: 'Run discovery', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Run discovery.js to compute next_phase from pipeline state.' },
       { id: 'fb-done', label: 'Pipeline done?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if next_phase is "done" — all pipeline phases completed.' },
       { id: 'fb-options', label: 'ASK: Options gate', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'If next is review: offer early completion (skip review). If earlier phases completed: offer to revisit.' },
@@ -2608,8 +2659,8 @@ const FLOWCHARTS = {
     ],
     connections: [
       { from: 'start', to: 'work-type' },
-      // Feature/Bugfix path
-      { from: 'work-type', to: 'fb-discover', label: 'feature / bugfix' },
+      // Feature/Bugfix/Cross-cutting path
+      { from: 'work-type', to: 'fb-discover', label: 'feature / bugfix\n/ cross-cutting' },
       { from: 'fb-discover', to: 'fb-done' },
       { from: 'fb-done', to: 'complete', type: 'yes', label: 'done' },
       { from: 'fb-done', to: 'fb-options', type: 'no', label: 'continue', weight: 2 },
@@ -3006,14 +3057,14 @@ const FLOWCHARTS = {
       { id: 'discovery', label: 'Run discovery.js', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery script. Returns epics, features, bugfixes with phase state, plus completed/cancelled counts.' },
       { id: 'has-work', label: 'Has work?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2: Check state.has_any_work flag.' },
       // ── Empty state path ──
-      { id: 'empty-menu', label: 'ASK: Start what?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'empty-state.md — No active work. Menu: Feature / Epic / Bugfix.' },
-      { id: 'empty-route', label: 'Invoke /start-*', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Invoke /start-feature, /start-epic, or /start-bugfix based on selection.' },
+      { id: 'empty-menu', label: 'ASK: Start what?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'empty-state.md — No active work. Menu: Feature / Epic / Bugfix / Cross-cutting.' },
+      { id: 'empty-route', label: 'Invoke /start-*', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Invoke /start-feature, /start-epic, /start-bugfix, or /start-cross-cutting based on selection.' },
       // ── Active work path ──
       { id: 'display', label: 'Display active work', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'Step 3: active-work.md — show all active work units grouped by type with phase state.' },
-      { id: 'main-menu', label: 'ASK: Main menu', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Menu: continue items + start new (feature/epic/bugfix) + view completed + manage.' },
+      { id: 'main-menu', label: 'ASK: Main menu', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Menu: continue items + start new (feature/epic/bugfix/cross-cutting) + view completed + manage.' },
       { id: 'main-choice', label: 'Choice?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Route based on user selection from main menu.' },
-      { id: 'route-continue', label: 'Invoke /continue-*', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Invoke /continue-feature, /continue-bugfix, or /continue-epic with work_unit. Terminal.' },
-      { id: 'route-start', label: 'Invoke /start-*', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Invoke /start-feature, /start-epic, or /start-bugfix. Terminal.' },
+      { id: 'route-continue', label: 'Invoke /continue-*', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Invoke /continue-feature, /continue-bugfix, /continue-epic, or /continue-cross-cutting with work_unit. Terminal.' },
+      { id: 'route-start', label: 'Invoke /start-*', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Invoke /start-feature, /start-epic, /start-bugfix, or /start-cross-cutting. Terminal.' },
       // ── View completed sub-flow ──
       { id: 'view-list', label: 'Display completed list', w: 200, h: 44, color: 'var(--text-dim)', bg: 'var(--surface2)', desc: 'view-completed.md A: Show completed/cancelled work units with last phase.' },
       { id: 'view-select', label: 'ASK: Select or back', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'view-completed.md B: Select a work unit for details, or back to return.' },
@@ -3225,6 +3276,57 @@ const FLOWCHARTS = {
       { from: 'gate-warn', to: 'menu', type: 'backloop', label: 'back' },
     ]
   },
+  // ── Cross-cutting entry skills ──
+  'start-cross-cutting': {
+    nodes: [
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for /start-cross-cutting.' },
+      { id: 'migrate', label: 'Run /workflow-migrate', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Step 0: Run migrations.' },
+      { id: 'gather', label: 'ASK: CC context', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 1: Load gather-cc-context.md — what concern, scope, constraints.' },
+      { id: 'name', label: 'ASK: Suggest name', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 2: Load name-check.md — suggest kebab-case name, check for conflicts.' },
+      { id: 'check', label: 'Work unit exists?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if work unit already exists via manifest CLI.' },
+      { id: 'conflict', label: 'ASK: New name', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Work unit exists: ask for a different name.' },
+      { id: 'research-gate', label: 'Research needed?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 3: Load research-gating.md — ask if uncertainties warrant a research phase first.' },
+      { id: 'invoke-research', label: 'Invoke research entry', w: 210, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 4: Invoke /workflow-research-entry cross-cutting {work_unit}.', skillLink: 'research' },
+      { id: 'invoke-discussion', label: 'Invoke discussion entry', w: 210, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 4: Invoke /workflow-discussion-entry cross-cutting {work_unit}.', skillLink: 'discussion' },
+    ],
+    connections: [
+      { from: 'start', to: 'migrate' },
+      { from: 'migrate', to: 'gather' },
+      { from: 'gather', to: 'name' },
+      { from: 'name', to: 'check' },
+      { from: 'check', to: 'conflict', type: 'yes', label: 'exists' },
+      { from: 'check', to: 'research-gate', type: 'no', label: 'new', weight: 2 },
+      { from: 'conflict', to: 'name', type: 'backloop', label: 'new name' },
+      { from: 'research-gate', to: 'invoke-research', type: 'yes', label: 'research' },
+      { from: 'research-gate', to: 'invoke-discussion', type: 'no', label: 'discussion', weight: 2 },
+    ]
+  },
+  'continue-cross-cutting': {
+    nodes: [
+      { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for /continue-cross-cutting.' },
+      { id: 'migrate', label: 'Run /workflow-migrate', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Step 0: Run migrations.' },
+      { id: 'discovery', label: 'Run discovery.js', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery script. Returns active cross-cutting concerns with next_phase, phase_label, and completed_phases.' },
+      { id: 'count', label: 'Count = 0?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2: Are there any active cross-cutting concerns?' },
+      { id: 'stop-none', label: 'STOP: None active', shape: 'stop', w: 170, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: No cross-cutting concerns in progress. Run /start-cross-cutting.' },
+      { id: 'arg-check', label: 'Arg provided?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if work_unit argument $0 was provided.' },
+      { id: 'select', label: 'ASK: Select concern', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 3: Load select-cross-cutting.md — present concern menu (auto-select if single).' },
+      { id: 'validate', label: 'Validate selection', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 4: Load validate-selection.md — confirm work unit exists and is active.' },
+      { id: 'backwards', label: 'Backwards nav?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 5: Load revisit-phase.md — offer to revisit completed phases.' },
+      { id: 'route', label: 'Route to phase entry', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 6: Invoke /workflow-{phase}-entry cross-cutting {work_unit}. Phases: research, discussion, specification (terminal).' },
+    ],
+    connections: [
+      { from: 'start', to: 'migrate' },
+      { from: 'migrate', to: 'discovery' },
+      { from: 'discovery', to: 'count' },
+      { from: 'count', to: 'stop-none', type: 'no', label: 'none' },
+      { from: 'count', to: 'arg-check', type: 'yes', label: 'has concerns', weight: 2 },
+      { from: 'arg-check', to: 'validate', type: 'yes', label: 'provided' },
+      { from: 'arg-check', to: 'select', type: 'no', label: 'none' },
+      { from: 'select', to: 'validate' },
+      { from: 'validate', to: 'backwards' },
+      { from: 'backwards', to: 'route' },
+    ]
+  },
   // ── Investigation Processing Skill ──
   'skill-investigation': {
     nodes: [
@@ -3235,9 +3337,11 @@ const FLOWCHARTS = {
       { id: 'symptoms', label: 'Symptom gathering', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 2: Load symptom-gathering.md — gather symptoms from user. Document and commit.' },
       { id: 'analysis', label: 'Code analysis', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 3: Load analysis-patterns.md — trace bug through code. Document findings and commit.' },
       { id: 'synthesis', label: 'Root cause synthesis', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 4: Synthesize root cause statement, contributing factors, why it was not caught, fix direction.' },
-      { id: 'findings', label: 'Findings review', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 5: Load findings-review.md — present analysis, discuss fix direction with user.' },
-      { id: 'conclude', label: 'Conclude investigation', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Step 6: Load conclude-investigation.md — set status completed, final commit.' },
-      { id: 'end', label: 'investigation/{topic}.md', shape: 'pill', w: 180, h: 40, color: 'var(--discussion)', bg: 'var(--discussion-bg)', desc: 'Output: Completed investigation document ready for specification phase.' },
+      { id: 'findings', label: 'ASK: Findings correct?', w: 210, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 5A: Present root cause, contributing factors, blast radius. User confirms or provides feedback.' },
+      { id: 'fix-discuss', label: 'ASK: Fix direction', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 5B: Present fix approach(es). Discuss trade-offs. User confirms or provides feedback.' },
+      { id: 'conclude-ask', label: 'ASK: Conclude/keep?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Step 6: Conclude investigation or keep going (return to code analysis).' },
+      { id: 'conclude', label: 'Conclude investigation', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Set status completed via manifest. Final commit.' },
+      { id: 'end', label: 'investigation/{topic}.md', shape: 'pill', w: 180, h: 40, color: 'var(--investigation)', bg: 'var(--investigation-bg)', desc: 'Output: Completed investigation document ready for specification phase.' },
       { id: 'next', label: 'Invoke workflow-bridge', desc: 'Invoke the workflow-bridge skill to determine next phase and enter plan mode.', w: 200, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', skillLink: 'workflow-bridge' },
     ],
     connections: [
@@ -3250,7 +3354,12 @@ const FLOWCHARTS = {
       { from: 'symptoms', to: 'analysis' },
       { from: 'analysis', to: 'synthesis' },
       { from: 'synthesis', to: 'findings' },
-      { from: 'findings', to: 'conclude' },
+      { from: 'findings', to: 'findings', type: 'backloop', label: 'feedback' },
+      { from: 'findings', to: 'fix-discuss', label: 'confirmed', weight: 2 },
+      { from: 'fix-discuss', to: 'fix-discuss', type: 'backloop', label: 'feedback' },
+      { from: 'fix-discuss', to: 'conclude-ask', label: 'confirmed', weight: 2 },
+      { from: 'conclude-ask', to: 'analysis', type: 'backloop', label: 'keep going' },
+      { from: 'conclude-ask', to: 'conclude', label: 'conclude', weight: 2 },
       { from: 'conclude', to: 'end' },
       { from: 'end', to: 'next', type: 'transition' },
     ]
@@ -3394,7 +3503,7 @@ const FLOWCHART_DESCS = {
   // ── Entry point skills ──
   'workflow-start': {
     summary: 'Unified entry point — discover all work, route to start or continue skills.',
-    body: `<p>Runs migrations, then <code>discovery.js</code> to scan all work units. Displays active work grouped by type (epics, features, bugfixes) with phase state. Routes user choice to <strong>/start-feature</strong>, <strong>/start-bugfix</strong>, <strong>/start-epic</strong>, or the appropriate <strong>/continue-*</strong> skill.</p>
+    body: `<p>Runs migrations, then <code>discovery.js</code> to scan all work units. Displays active work grouped by type (epics, features, bugfixes, cross-cutting) with phase state. Routes user choice to <strong>/start-feature</strong>, <strong>/start-bugfix</strong>, <strong>/start-epic</strong>, <strong>/start-cross-cutting</strong>, or the appropriate <strong>/continue-*</strong> skill.</p>
 <p>Empty state offers quick-start options. Also surfaces completed/cancelled work units with lifecycle management.</p>`,
     meta: { complexity: 'Unified router' }
   },
@@ -3427,6 +3536,18 @@ const FLOWCHART_DESCS = {
   'continue-epic': {
     summary: 'Resume an in-progress epic — full state display, interactive menu, phase routing.',
     body: `<p>Runs migrations, then <code>discovery.js</code>. More complex than feature/bugfix: shows full phase-by-phase state with per-phase items, soft gates for phase-forward navigation, and an interactive menu with options to continue existing topics, start new topics, or enter any phase.</p>`,
+    meta: { complexity: 'Router' }
+  },
+  'start-cross-cutting': {
+    summary: 'Pipeline entry — gather concern context, name check, research gating, invoke phase entry.',
+    body: `<p>Runs migrations, gathers cross-cutting concern context (what pattern or policy, scope, constraints), suggests a kebab-case name, and checks for conflicts. Routes to first phase — either research or discussion — and invokes the appropriate <strong>workflow-*-entry</strong> skill with work_type <code>cross-cutting</code>.</p>
+<p>Same structure as start-feature but for cross-cutting concerns. Pipeline is terminal at specification (no planning/implementation/review).</p>`,
+    meta: { complexity: 'Pipeline' }
+  },
+  'continue-cross-cutting': {
+    summary: 'Resume an in-progress cross-cutting concern — discovery, selection, backwards nav, phase routing.',
+    body: `<p>Runs migrations, then <code>discovery.js</code> scoped to cross-cutting work type. Displays active concerns with phase state. Auto-selects if single, otherwise presents selection menu. Offers backwards navigation to revisit completed phases.</p>
+<p>Routes to <strong>workflow-*-entry</strong> for the next phase. Cross-cutting pipeline: research (optional) → discussion → specification (terminal). Also supports viewing completed/cancelled concerns and lifecycle management.</p>`,
     meta: { complexity: 'Router' }
   },
   'skill-research': {
@@ -3465,11 +3586,14 @@ const FLOWCHART_DESCS = {
     meta: { complexity: 'Agent-based TDD' }
   },
   'skill-review': {
-    summary: 'The review skill — batched QA verification then review actions loop with synthesis and remediation.',
-    body: `<p>Five steps: read plan(s)/spec(s), discover project skills, run QA verification, produce review, then review actions loop.</p>
-<p><strong>QA Verification</strong> (Step 3): Extracts ALL tasks, then dispatches <strong>review-task-verifier subagents in batches of 5</strong> (Opus model). Each verifier checks implementation, acceptance criteria, tests, and code quality, writing findings to file. Results are aggregated from all files after all batches complete.</p>
-<p><strong>Produce Review</strong> (Step 4): Aggregates QA findings into a structured review document with verdict (approve/request-changes/comments-only).</p>
-<p><strong>Review Actions Loop</strong> (Step 5): Routes on verdict — approve is terminal, request-changes recommends synthesis, comments-only offers optional synthesis. If the user opts to synthesize, dispatches the <strong>review-findings-synthesizer</strong> agent to deduplicate, group, and normalize findings into tasks. User approves/skips tasks individually (auto mode available). Approved tasks are created in the plan via the <strong>task-writer</strong> agent, implementation tracking is reopened, and a plan mode handoff directs the next session to <code>/start-implementation</code>.</p>`,
+    summary: 'The review skill — resume detection, batched QA verification, present verdict + Q&A, then review actions loop.',
+    body: `<p>Eight steps (0–7): resume detection, initialize review (mode selection), read plans/specs, discover project skills, run QA verification, produce review, present verdict + Q&A, then review actions loop.</p>
+<p><strong>Resume Detection</strong> (Step 0): Checks for existing report.md — continue from current state or restart (deletes report + all report-*.md files).</p>
+<p><strong>Initialize Review</strong> (Step 1): Registers phase, compares completed_tasks vs reviewed_tasks. Three modes: <strong>full</strong> (no prior review), <strong>incremental</strong> (new tasks detected — user chooses incremental or full), or <strong>skip to present</strong> (all reviewed + report exists).</p>
+<p><strong>QA Verification</strong> (Step 4): Extracts ALL tasks, then dispatches <strong>review-task-verifier subagents in batches of 5</strong> (Opus model). Each verifier checks implementation, acceptance criteria, tests, and code quality, writing findings to file. Results are aggregated from all files after all batches complete.</p>
+<p><strong>Produce Review</strong> (Step 5): Aggregates QA findings into a structured review document with verdict (approve/request-changes/comments-only).</p>
+<p><strong>Present Review</strong> (Step 6): Shows verdict, summary, and required changes/comments. Q&A loop lets user ask about findings before proceeding to actions.</p>
+<p><strong>Review Actions Loop</strong> (Step 7): Routes on verdict — approve is terminal, request-changes recommends synthesis, comments-only offers optional synthesis. If the user opts to synthesize, dispatches the <strong>review-findings-synthesizer</strong> agent to deduplicate, group, and normalize findings into tasks. User approves/skips tasks individually (auto mode available). Approved tasks are created in the plan via the <strong>task-writer</strong> agent, implementation tracking is reopened, and a plan mode handoff directs the next session to <code>/start-implementation</code>.</p>`,
     meta: { complexity: 'QA + actions loop' }
   },
   'status': {
@@ -3494,6 +3618,7 @@ const FLOWCHART_DESCS = {
     summary: 'Pipeline bridge — determines next phase and enters plan mode for continuation.',
     body: `<p>Invoked by every processing skill on phase completion. Reads work_type from the manifest and routes to work-type-specific continuation logic.</p>
 <p><strong>Feature/Bugfix</strong>: Runs discovery to compute next_phase. If pipeline is done, marks work unit completed. Otherwise offers optional gates — <strong>early completion</strong> (skip review after implementation) and <strong>revisit</strong> (return to an earlier completed phase). Then enters plan mode with the target phase entry invocation.</p>
+<p><strong>Cross-cutting</strong>: Same discovery-based flow as feature/bugfix. Pipeline is terminal after specification — no planning/implementation/review. When <code>next_phase</code> is "done", marks work unit completed. Otherwise routes to research, discussion, or specification entry.</p>
 <p><strong>Epic</strong>: Runs enriched discovery across all topics. If all topics are done, offers to mark the epic completed. Otherwise displays epic state and presents an interactive menu for selecting the next phase/topic. Enters plan mode with the selected action.</p>`,
     meta: { complexity: 'Router' }
   },
@@ -3546,10 +3671,10 @@ const FLOWCHART_DESCS = {
     meta: { model: 'Opus', invokedBy: 'workflow-specification-process', complexity: 'Review agent' }
   },
   'skill-investigation': {
-    summary: 'The investigation skill — symptom gathering, code analysis, and root cause identification for bugfixes.',
-    body: `<p>Acts as expert debugger, documentation assistant, and collaborative advisor. <strong>Resume detection</strong> checks for existing investigation file — if found, announces progress and offers continue/restart.</p>
-<p><strong>Symptom gathering</strong>: structured questions about what's broken, reproduction steps, error messages. <strong>Code analysis</strong>: traces code paths, challenges assumptions, explores related areas. <strong>Root cause synthesis</strong>: clear cause statement, contributing factors, why it wasn't caught, fix direction.</p>
-<p><strong>Findings review</strong>: presents analysis to user for validation before concluding. Investigation file is the memory — what's not on disk is lost to context compaction.</p>`,
+    summary: 'The investigation skill — symptom gathering, code analysis, root cause synthesis, and collaborative fix direction discussion.',
+    body: `<p>Acts as expert debugger, documentation assistant, and collaborative advisor. <strong>Resume detection</strong> (Step 0) checks for existing investigation file — continue or restart.</p>
+<p><strong>Symptom gathering</strong> (Step 2): structured questions about what's broken, reproduction steps, error messages. <strong>Code analysis</strong> (Step 3): traces code paths, challenges assumptions, explores related areas. <strong>Root cause synthesis</strong> (Step 4): clear cause statement, contributing factors, why it wasn't caught.</p>
+<p><strong>Findings review</strong> (Step 5): two interactive loops — first presents root cause + blast radius for user confirmation (feedback loops back), then discusses fix direction with trade-offs (feedback loops back). <strong>Conclude</strong> (Step 6): offers conclude or keep going — "keep going" loops back to code analysis for further exploration.</p>`,
     meta: { output: '.workflows/{work_unit}/investigation/{topic}.md', complexity: 'Investigation skill' }
   },
   'workflow-implementation-task-executor': {
@@ -3643,10 +3768,12 @@ const SOURCE_MAP = {
   'start-feature':        'skills/start-feature/SKILL.md',
   'start-bugfix':         'skills/start-bugfix/SKILL.md',
   'start-epic':           'skills/start-epic/SKILL.md',
+  'start-cross-cutting':  'skills/start-cross-cutting/SKILL.md',
   // Continue skills (Layer 2)
   'continue-feature':     'skills/continue-feature/SKILL.md',
   'continue-bugfix':      'skills/continue-bugfix/SKILL.md',
   'continue-epic':        'skills/continue-epic/SKILL.md',
+  'continue-cross-cutting': 'skills/continue-cross-cutting/SKILL.md',
   // Utility skills
   'workflow-migrate':     'skills/workflow-migrate/SKILL.md',
   // Agents — Specification
