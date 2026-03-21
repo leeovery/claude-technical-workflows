@@ -22,6 +22,11 @@ H. Update progress + phase check + commit
 
 ## A. Retrieve Next Task
 
+Read the plan's `external_id` via manifest CLI:
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} external_id
+```
+
 Follow the format's **reading.md** instructions to determine the next available task.
 
 #### If no available tasks remain
