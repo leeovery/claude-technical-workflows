@@ -1047,15 +1047,17 @@
 
     <div class="section-label collapsible" onclick="toggleSidebarSection(this)"><span class="chevron">▼</span> Entry Points</div>
     <div class="collapsible-content">
-      <button class="nav-btn dropdown-btn" onclick="selectPhase('workflow-start',this)" id="btn-workflow-start"><span class="badge badge-cmd">cmd</span><span class="btn-label">/workflow-start</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('workflow-start',this)" id="btn-workflow-start"><span class="badge badge-cmd">cmd</span><span class="btn-label">workflow-start</span></button>
       <div style="border-top:1px solid var(--border); margin:6px 0"></div>
-      <button class="nav-btn dropdown-btn" onclick="selectPhase('start-feature',this)" id="btn-start-feature"><span class="badge badge-cmd">cmd</span><span class="btn-label">/start-feature</span></button>
-      <button class="nav-btn dropdown-btn" onclick="selectPhase('start-bugfix',this)" id="btn-start-bugfix"><span class="badge badge-cmd">cmd</span><span class="btn-label">/start-bugfix</span></button>
-      <button class="nav-btn dropdown-btn" onclick="selectPhase('start-epic',this)" id="btn-start-epic"><span class="badge badge-cmd">cmd</span><span class="btn-label">/start-epic</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('start-feature',this)" id="btn-start-feature"><span class="badge badge-cmd">cmd</span><span class="btn-label">start-feature</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('start-bugfix',this)" id="btn-start-bugfix"><span class="badge badge-cmd">cmd</span><span class="btn-label">start-bugfix</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('start-epic',this)" id="btn-start-epic"><span class="badge badge-cmd">cmd</span><span class="btn-label">start-epic</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('start-cross-cutting',this)" id="btn-start-cross-cutting"><span class="badge badge-cmd">cmd</span><span class="btn-label">start-cross-cutting</span></button>
       <div style="border-top:1px solid var(--border); margin:6px 0"></div>
-      <button class="nav-btn dropdown-btn" onclick="selectPhase('continue-feature',this)" id="btn-continue-feature"><span class="badge badge-cmd">cmd</span><span class="btn-label">/continue-feature</span></button>
-      <button class="nav-btn dropdown-btn" onclick="selectPhase('continue-bugfix',this)" id="btn-continue-bugfix"><span class="badge badge-cmd">cmd</span><span class="btn-label">/continue-bugfix</span></button>
-      <button class="nav-btn dropdown-btn" onclick="selectPhase('continue-epic',this)" id="btn-continue-epic"><span class="badge badge-cmd">cmd</span><span class="btn-label">/continue-epic</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('continue-feature',this)" id="btn-continue-feature"><span class="badge badge-cmd">cmd</span><span class="btn-label">continue-feature</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('continue-bugfix',this)" id="btn-continue-bugfix"><span class="badge badge-cmd">cmd</span><span class="btn-label">continue-bugfix</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('continue-epic',this)" id="btn-continue-epic"><span class="badge badge-cmd">cmd</span><span class="btn-label">continue-epic</span></button>
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('continue-cross-cutting',this)" id="btn-continue-cross-cutting"><span class="badge badge-cmd">cmd</span><span class="btn-label">continue-cross-cutting</span></button>
     </div>
 
     <div class="section-label collapsible" onclick="toggleSidebarSection(this)"><span class="chevron">▼</span> Phases</div>
@@ -1094,6 +1096,7 @@
 
     <div class="section-label collapsible" onclick="toggleSidebarSection(this)"><span class="chevron">▼</span> Utilities</div>
     <div class="collapsible-content">
+      <button class="nav-btn dropdown-btn" onclick="selectPhase('migrate',this)" id="btn-migrate"><span class="badge badge-skl">skl</span><span class="btn-label">workflow-migrate</span></button>
       <button class="nav-btn dropdown-btn" onclick="selectPhase('workflow-bridge',this)" id="btn-workflow-bridge"><span class="badge badge-skl">skl</span><span class="btn-label">workflow-bridge</span></button>
     </div>
 
