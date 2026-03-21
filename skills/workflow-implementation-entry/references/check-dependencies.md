@@ -9,7 +9,7 @@
 Query the external dependencies:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} external_dependencies
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.planning.{topic} external_dependencies
 ```
 
 Evaluate each dependency and collect any that are blocking into a list:
@@ -19,7 +19,7 @@ Evaluate each dependency and collect any that are blocking into a list:
 - **`state: resolved`** — check whether the referenced task has been completed:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{dep_topic} completed_tasks
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.implementation.{dep_topic} completed_tasks
 ```
 
 **If `internal_id` is in the completed tasks list:**
@@ -143,7 +143,7 @@ Set `selected_topic` = the chosen dependency's topic.
 Update the selected dependency's state via manifest CLI:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} external_dependencies.{selected_topic}.state satisfied_externally
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.planning.{topic} external_dependencies.{selected_topic}.state satisfied_externally
 ```
 
 Commit: `impl({work_unit}): mark {selected_topic} dependency as satisfied externally`

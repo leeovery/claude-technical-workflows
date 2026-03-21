@@ -34,7 +34,7 @@ Is this name okay?
 Check for naming conflicts:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}
 ```
 
 #### If a work unit with the same name exists
@@ -64,7 +64,7 @@ Run /continue-feature to resume, or choose a different name.
 Create the work unit manifest:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js init {work_unit} --work-type feature --description "{description}"
+node .claude/skills/workflow-manifest/scripts/manifest.cjs init {work_unit} --work-type feature --description "{description}"
 ```
 
 Where `{description}` is a concise one-line summary compiled from the feature context gathered in Step 1.

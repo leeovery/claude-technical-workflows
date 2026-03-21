@@ -27,7 +27,7 @@ Ready to conclude?
 
 1. **Update plan status** via manifest CLI:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} status completed
+   node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.planning.{topic} status completed
    ```
 2. **Final commit** — Commit the completed plan: `planning({work_unit}): complete plan`
 3. **Present completion summary**:

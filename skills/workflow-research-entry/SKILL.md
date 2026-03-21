@@ -1,7 +1,7 @@
 ---
 name: workflow-research-entry
 user-invocable: false
-allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.cjs)
 ---
 
 Act as **precise intake coordinator**. Follow each step literally without interpretation. Do not engage with the subject matter — your role is preparation, not processing.
@@ -73,7 +73,7 @@ Deferred — gather-context will resolve it.
 Check if the research phase entry exists:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.research.{topic}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}.research.{topic}
 ```
 
 #### If exists (`true`)

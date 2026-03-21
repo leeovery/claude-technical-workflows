@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path');
-const { loadActiveManifests, phaseStatus, phaseItems, phaseData, listFiles, filesChecksum } = require('../../workflow-shared/scripts/discovery-utils');
+const { loadActiveManifests, phaseStatus, phaseItems, phaseData, listFiles, filesChecksum } = require('../../workflow-shared/scripts/discovery-utils.cjs');
 
 function discover(cwd, workUnit) {
   const allManifests = loadActiveManifests(cwd);

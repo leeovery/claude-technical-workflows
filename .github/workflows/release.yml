@@ -22,7 +22,7 @@ jobs:
 
       - name: Run discovery tests
         run: |
-          for test in tests/scripts/test-discovery-*.js; do
+          for test in tests/scripts/test-discovery-*.cjs; do
             echo "=== Running $test ==="
             node --test "$test"
           done

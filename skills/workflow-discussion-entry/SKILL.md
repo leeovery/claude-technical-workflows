@@ -1,7 +1,7 @@
 ---
 name: workflow-discussion-entry
 user-invocable: false
-allowed-tools: Bash(node .claude/skills/workflow-discussion-entry/scripts/discovery.js), Bash(mkdir -p .workflows/*/.state), Bash(rm .workflows/*/.state/research-analysis.md), Bash(node .claude/skills/workflow-manifest/scripts/manifest.js), Bash(ls .workflows/)
+allowed-tools: Bash(node .claude/skills/workflow-discussion-entry/scripts/discovery.cjs), Bash(mkdir -p .workflows/*/.state), Bash(rm .workflows/*/.state/research-analysis.md), Bash(node .claude/skills/workflow-manifest/scripts/manifest.cjs), Bash(ls .workflows/)
 ---
 
 Act as **precise intake coordinator**. Follow each step literally without interpretation. Do not engage with the subject matter — your role is preparation, not processing.
@@ -51,7 +51,7 @@ Store work_unit for the handoff.
 Check if discussion phase entry exists:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.discussion.{topic}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}.discussion.{topic}
 ```
 
 **If exists (`true`):**
@@ -67,7 +67,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.dis
 Run discovery scoped to this work unit:
 
 ```bash
-node .claude/skills/workflow-discussion-entry/scripts/discovery.js {work_unit}
+node .claude/skills/workflow-discussion-entry/scripts/discovery.cjs {work_unit}
 ```
 
 Parse the discovery output to understand:

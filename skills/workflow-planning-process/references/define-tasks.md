@@ -22,7 +22,7 @@ propose a task list.
 
 Read `work_type` from the manifest:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit} work_type
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit} work_type
 ```
 
 Invoke `workflow-planning-task-designer` with these file paths:
@@ -41,8 +41,8 @@ The agent returns a task overview and task table. Write the task table to the pl
 
 Update the manifest planning position:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} phase {N}
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} task '~'
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.planning.{topic} phase {N}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.planning.{topic} task '~'
 ```
 
 Commit: `planning({work_unit}): draft Phase {N} task list`
@@ -63,7 +63,7 @@ Present the task overview to the user:
 
 Check `task_list_gate_mode` via manifest CLI:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.planning.{topic} task_list_gate_mode
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.planning.{topic} task_list_gate_mode
 ```
 
 #### If `task_list_gate_mode` is `auto`
@@ -106,7 +106,7 @@ Update the planning file with the revised task table.
 #### If `auto`
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} task_list_gate_mode auto
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.planning.{topic} task_list_gate_mode auto
 ```
 
 → Proceed to **C. Finalize Approval**.
@@ -124,7 +124,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planni
 1. Update the task table in the planning file: set `status: approved` and `approved_at: YYYY-MM-DD` (use today's actual date)
 2. Advance the planning position in the manifest to the first task in this phase:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} task {first_task_id}
+   node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.planning.{topic} task {first_task_id}
    ```
 3. Commit: `planning({work_unit}): approve Phase {N} task list`
 

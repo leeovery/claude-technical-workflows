@@ -118,8 +118,8 @@ Discuss the user's context and apply any changes.
 Update the specification metadata via manifest CLI:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.specification.{topic} status completed
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.specification.{topic} date $(date +%Y-%m-%d)
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.specification.{topic} status completed
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.specification.{topic} date $(date +%Y-%m-%d)
 ```
 
 Specification is complete when:
@@ -142,8 +142,8 @@ If any of your sources were **existing specifications** (as opposed to discussio
 
 1. Mark each source specification as superseded via manifest CLI:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.specification.{source-topic} status superseded
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.specification.{source-topic} superseded_by {topic}
+   node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.specification.{source-topic} status superseded
+   node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.specification.{source-topic} superseded_by {topic}
    ```
 2. Inform the user which topics were updated
 3. Commit: `spec({work_unit}): mark source specifications as superseded`

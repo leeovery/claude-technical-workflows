@@ -1472,7 +1472,7 @@ const phases = {
     complexity: 'Moderate', steps: 8,
     output: '.workflows/{work_unit}/discussion/{topic}.md',
     skill: 'workflow-discussion-process',
-    discovery: 'discovery.js',
+    discovery: 'discovery.cjs',
     cache: '{work_unit}/.state/research-analysis.md',
     prerequisites: 'None (but can consume research)',
     scenarios: ['fresh','research_only','discussions_only','research_and_discussions'],
@@ -1496,7 +1496,7 @@ const phases = {
     complexity: 'Complex', steps: 6,
     output: '.workflows/{work_unit}/specification/{topic}/specification.md',
     skill: 'workflow-specification-process',
-    discovery: 'discovery.js',
+    discovery: 'discovery.cjs',
     cache: '{work_unit}/.state/discussion-consolidation-analysis.md',
     prerequisites: 'Completed discussions required',
     scenarios: ['single','multi+cache valid','multi+stale+no specs','multi+stale+specs'],
@@ -1600,7 +1600,7 @@ const phases = {
     color: '#94a3b8', bg: 'rgba(148,163,184,0.12)',
     label: 'Status', cmd: '/status',
     complexity: 'Utility',
-    discovery: 'discovery.js',
+    discovery: 'discovery.cjs',
     desc: 'Discovery-based status. Runs discovery script, presents relationship-aware display with specs, plans, and implementations.',
   },
   'view-plan': {
@@ -1888,7 +1888,7 @@ const FLOWCHARTS = {
       { id: 'resume-disc', label: 'Resume discussion', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'In-progress: set source="continue". Display "Resuming discussion".' },
       { id: 'reopen-disc', label: 'Reopen discussion', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Completed: reset to in-progress, set source="continue". Display "Reopening discussion".' },
       // ── Epic scoped path (no topic) ──
-      { id: 'discovery', label: 'Run discovery.js', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Run scoped discovery for this work_unit. Returns research files, discussions, cache entries, and scenario.' },
+      { id: 'discovery', label: 'Run discovery.cjs', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Run scoped discovery for this work_unit. Returns research files, discussions, cache entries, and scenario.' },
       { id: 'scenario', label: 'Scenario?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 3: route-scenario.md — route by scenario: fresh, research_only, discussions_only, research_and_discussions.' },
       { id: 'ask-topic', label: 'ASK: What topic?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Fresh scenario: no research or discussions. Ask user what topic to discuss.' },
       // Research analysis
@@ -1985,7 +1985,7 @@ const FLOWCHARTS = {
       { id: 'reopen-spec', label: 'Reopen specification', w: 200, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Spec is completed: reset status to in-progress. Verb = "Continuing".' },
       { id: 'skill', label: 'Invoke specification skill', w: 210, h: 44, color: 'var(--skill)', bg: 'var(--skill-bg)', desc: 'Step 4: Load invoke-skill.md — invoke workflow-specification-process with sources and verb.', skillLink: 'skill-specification' },
       // ── Epic scoped path (no topic) ──
-      { id: 'discovery', label: 'Run discovery.js', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Run scoped discovery for this work_unit. Returns discussions, specifications, cache, and current_state counts.' },
+      { id: 'discovery', label: 'Run discovery.cjs', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Run scoped discovery for this work_unit. Returns discussions, specifications, cache, and current_state counts.' },
       { id: 'has-disc', label: 'Discussions exist?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 5: check-prerequisites.md — do any discussions exist for this work unit?' },
       { id: 'stop-no-disc', label: 'STOP: No discussions', shape: 'stop', w: 190, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: No discussions found. Complete discussion phase first.' },
       { id: 'has-completed', label: 'Any completed?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Gate: has_completed flag — are any discussions in completed status?' },
@@ -2665,11 +2665,11 @@ const FLOWCHARTS = {
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry: workflow-bridge receives work_unit and completed_phase from a processing skill.' },
       { id: 'work-type', label: 'Work type?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 1: Read work_type from manifest. Routes to work-type-specific continuation (feature, bugfix, cross-cutting, or epic).' },
       // Feature/Bugfix/Cross-cutting path
-      { id: 'fb-discover', label: 'Run discovery', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Run discovery.js to compute next_phase from pipeline state.' },
+      { id: 'fb-discover', label: 'Run discovery', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Run discovery.cjs to compute next_phase from pipeline state.' },
       { id: 'fb-done', label: 'Pipeline done?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if next_phase is "done" — all pipeline phases completed.' },
       { id: 'fb-options', label: 'ASK: Options gate', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'If next is review: offer early completion (skip review). If earlier phases completed: offer to revisit.' },
       // Epic path
-      { id: 'epic-discover', label: 'Run epic discovery', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Run continue-epic discovery.js for enriched state across all topics and phases.' },
+      { id: 'epic-discover', label: 'Run epic discovery', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Run continue-epic discovery.cjs for enriched state across all topics and phases.' },
       { id: 'epic-done', label: 'All topics done?', shape: 'diamond', w: 130, h: 130, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if all review items are completed with no in-progress items in earlier phases.' },
       { id: 'epic-ask-done', label: 'ASK: Mark complete?', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'All topics done. Ask user whether to mark the epic as completed.' },
       { id: 'epic-menu', label: 'ASK: Select action', w: 180, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'Display epic state summary. User selects which phase/topic to continue or start.' },
@@ -3082,7 +3082,7 @@ const FLOWCHARTS = {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for /workflow-start — unified entry point.' },
       { id: 'migrate', label: 'Run /workflow-migrate', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Step 0: Run migrations.' },
-      { id: 'discovery', label: 'Run discovery.js', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery script. Returns epics, features, bugfixes with phase state, plus completed/cancelled counts.' },
+      { id: 'discovery', label: 'Run discovery.cjs', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery script. Returns epics, features, bugfixes with phase state, plus completed/cancelled counts.' },
       { id: 'has-work', label: 'Has work?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2: Check state.has_any_work flag.' },
       // ── Empty state path ──
       { id: 'empty-menu', label: 'ASK: Start what?', w: 200, h: 44, color: 'var(--ask)', bg: 'var(--ask-bg)', desc: 'empty-state.md — No active work. Menu: Feature / Epic / Bugfix / Cross-cutting.' },
@@ -3110,7 +3110,7 @@ const FLOWCHARTS = {
       { id: 'mark-done', label: 'Mark completed', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Set work unit status to completed via manifest CLI.' },
       { id: 'mark-cancel', label: 'Mark cancelled', w: 180, h: 44, color: 'var(--action)', bg: 'var(--action-bg)', desc: 'Set work unit status to cancelled via manifest CLI.' },
       // ── Re-discover node (shared backloop target) ──
-      { id: 're-discover', label: 'Re-run discovery', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Re-run discovery.js to refresh state after lifecycle changes.' },
+      { id: 're-discover', label: 'Re-run discovery', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Re-run discovery.cjs to refresh state after lifecycle changes.' },
     ],
     connections: [
       { from: 'start', to: 'migrate' },
@@ -3206,7 +3206,7 @@ const FLOWCHARTS = {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for /continue-feature.' },
       { id: 'migrate', label: 'Run /workflow-migrate', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Step 0: Run migrations.' },
-      { id: 'discovery', label: 'Run discovery.js', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery script. Returns active features with next_phase and completed_phases.' },
+      { id: 'discovery', label: 'Run discovery.cjs', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery script. Returns active features with next_phase and completed_phases.' },
       { id: 'count', label: 'Count = 0?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2: Are there any active features?' },
       { id: 'stop-none', label: 'STOP: No features', shape: 'stop', w: 160, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: No features in progress. Run /start-feature.' },
       { id: 'arg-check', label: 'Arg provided?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if work_unit argument $0 was provided.' },
@@ -3232,7 +3232,7 @@ const FLOWCHARTS = {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for /continue-bugfix.' },
       { id: 'migrate', label: 'Run /workflow-migrate', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Step 0: Run migrations.' },
-      { id: 'discovery', label: 'Run discovery.js', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery script. Returns active bugfixes with next_phase and completed_phases.' },
+      { id: 'discovery', label: 'Run discovery.cjs', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery script. Returns active bugfixes with next_phase and completed_phases.' },
       { id: 'count', label: 'Count = 0?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2: Are there any active bugfixes?' },
       { id: 'stop-none', label: 'STOP: No bugfixes', shape: 'stop', w: 160, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: No bugfixes in progress. Run /start-bugfix.' },
       { id: 'arg-check', label: 'Arg provided?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if work_unit argument $0 was provided.' },
@@ -3258,7 +3258,7 @@ const FLOWCHARTS = {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for /continue-epic.' },
       { id: 'migrate', label: 'Run /workflow-migrate', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Step 0: Run migrations.' },
-      { id: 'discovery', label: 'Run discovery.js', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery script. Returns epics with full phase-by-phase detail including items, statuses, sources, deps, gating flags.' },
+      { id: 'discovery', label: 'Run discovery.cjs', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery script. Returns epics with full phase-by-phase detail including items, statuses, sources, deps, gating flags.' },
       { id: 'count', label: 'Count = 0?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2: Are there any active epics?' },
       { id: 'stop-none', label: 'STOP: No epics', shape: 'stop', w: 160, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: No epics in progress. Run /start-epic.' },
       { id: 'arg-check', label: 'Arg provided?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if work_unit argument $0 was provided.' },
@@ -3333,7 +3333,7 @@ const FLOWCHARTS = {
     nodes: [
       { id: 'start', label: 'START', shape: 'pill', w: 150, h: 40, color: 'var(--accent)', bg: 'rgba(108,138,255,0.15)', desc: 'Entry point for /continue-cross-cutting.' },
       { id: 'migrate', label: 'Run /workflow-migrate', w: 180, h: 44, color: 'var(--accent)', bg: 'rgba(108,138,255,0.12)', desc: 'Step 0: Run migrations.' },
-      { id: 'discovery', label: 'Run discovery.js', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery script. Returns active cross-cutting concerns with next_phase, phase_label, and completed_phases.' },
+      { id: 'discovery', label: 'Run discovery.cjs', w: 180, h: 44, color: 'var(--discovery)', bg: 'var(--discovery-bg)', desc: 'Step 1: Run discovery script. Returns active cross-cutting concerns with next_phase, phase_label, and completed_phases.' },
       { id: 'count', label: 'Count = 0?', shape: 'diamond', w: 110, h: 110, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Step 2: Are there any active cross-cutting concerns?' },
       { id: 'stop-none', label: 'STOP: None active', shape: 'stop', w: 170, h: 40, color: 'var(--gate)', bg: 'var(--gate-bg)', desc: 'Terminal: No cross-cutting concerns in progress. Run /start-cross-cutting.' },
       { id: 'arg-check', label: 'Arg provided?', shape: 'diamond', w: 120, h: 120, color: 'var(--routing)', bg: 'var(--routing-bg)', desc: 'Check if work_unit argument $0 was provided.' },
@@ -3497,9 +3497,9 @@ const FLOWCHART_DESCS = {
   },
   discussion: {
     summary: 'Phase entry for discussion — manifest routing or discovery-based scenario flow.',
-    body: `<p>Two paths based on argument resolution. <strong>Topic resolved</strong> (feature/bugfix, or epic with topic): checks manifest → validate-phase or gather-context → invoke skill. <strong>No topic</strong> (epic scoped): runs <code>discovery.js</code> scoped to the work unit.</p>
+    body: `<p>Two paths based on argument resolution. <strong>Topic resolved</strong> (feature/bugfix, or epic with topic): checks manifest → validate-phase or gather-context → invoke skill. <strong>No topic</strong> (epic scoped): runs <code>discovery.cjs</code> scoped to the work unit.</p>
 <p>Discovery classifies scenario: <strong>fresh</strong>, <strong>research_only</strong>, <strong>discussions_only</strong>, or <strong>research_and_discussions</strong>. Research analysis is <strong>cache-aware</strong> — checksums detect stale analysis. The options menu adapts based on what exists (2–4 options). After user selection, context is gathered and the <strong>workflow-discussion-process</strong> skill is invoked.</p>`,
-    meta: { output: '.workflows/{work_unit}/discussion/{topic}.md', skill: 'workflow-discussion-process', discovery: 'discovery.js', cache: '{work_unit}/.state/research-analysis.md' }
+    meta: { output: '.workflows/{work_unit}/discussion/{topic}.md', skill: 'workflow-discussion-process', discovery: 'discovery.cjs', cache: '{work_unit}/.state/research-analysis.md' }
   },
   investigation: {
     summary: 'Phase entry for investigation — bugfix-only, parse args, gather bug context, invoke processing skill.',
@@ -3509,9 +3509,9 @@ const FLOWCHART_DESCS = {
   },
   specification: {
     summary: 'Phase entry for specification — source validation or discovery-based state routing.',
-    body: `<p>Two paths. <strong>Topic resolved</strong>: validates source material (discussion/investigation completed?), validates phase state, then invokes skill. <strong>No topic</strong> (epic scoped): runs <code>discovery.js</code>, checks prerequisites, routes by state.</p>
+    body: `<p>Two paths. <strong>Topic resolved</strong>: validates source material (discussion/investigation completed?), validates phase state, then invokes skill. <strong>No topic</strong> (epic scoped): runs <code>discovery.cjs</code>, checks prerequisites, routes by state.</p>
 <p>State routing handles: single completed discussion (auto-select), valid cache (show groupings), stale cache with/without specs, and multi-discussion analysis flow with coupling analysis and grouping menus.</p>`,
-    meta: { output: '.workflows/{work_unit}/specification/{topic}/specification.md', skill: 'workflow-specification-process', discovery: 'discovery.js', cache: '{work_unit}/.state/discussion-consolidation-analysis.md' }
+    meta: { output: '.workflows/{work_unit}/specification/{topic}/specification.md', skill: 'workflow-specification-process', discovery: 'discovery.cjs', cache: '{work_unit}/.state/discussion-consolidation-analysis.md' }
   },
   planning: {
     summary: 'Phase entry for planning — validate spec, check plan state, surface cross-cutting context.',
@@ -3531,7 +3531,7 @@ const FLOWCHART_DESCS = {
   // ── Entry point skills ──
   'workflow-start': {
     summary: 'Unified entry point — discover all work, route to start or continue skills.',
-    body: `<p>Runs migrations, then <code>discovery.js</code> to scan all work units. Displays active work grouped by type (epics, features, bugfixes, cross-cutting) with phase state. Routes user choice to <strong>/start-feature</strong>, <strong>/start-bugfix</strong>, <strong>/start-epic</strong>, <strong>/start-cross-cutting</strong>, or the appropriate <strong>/continue-*</strong> skill.</p>
+    body: `<p>Runs migrations, then <code>discovery.cjs</code> to scan all work units. Displays active work grouped by type (epics, features, bugfixes, cross-cutting) with phase state. Routes user choice to <strong>/start-feature</strong>, <strong>/start-bugfix</strong>, <strong>/start-epic</strong>, <strong>/start-cross-cutting</strong>, or the appropriate <strong>/continue-*</strong> skill.</p>
 <p>Empty state offers quick-start options. Also surfaces completed/cancelled work units with lifecycle management.</p>`,
     meta: { complexity: 'Unified router' }
   },
@@ -3553,7 +3553,7 @@ const FLOWCHART_DESCS = {
   },
   'continue-feature': {
     summary: 'Resume an in-progress feature — discovery, selection, backwards nav, phase routing.',
-    body: `<p>Runs migrations, then <code>discovery.js</code> to find active features with phase state. Auto-selects if single, otherwise presents selection menu. Validates the selection, offers backwards navigation to revisit completed phases, then routes to the appropriate <strong>workflow-*-entry</strong> phase skill.</p>`,
+    body: `<p>Runs migrations, then <code>discovery.cjs</code> to find active features with phase state. Auto-selects if single, otherwise presents selection menu. Validates the selection, offers backwards navigation to revisit completed phases, then routes to the appropriate <strong>workflow-*-entry</strong> phase skill.</p>`,
     meta: { complexity: 'Router' }
   },
   'continue-bugfix': {
@@ -3563,7 +3563,7 @@ const FLOWCHART_DESCS = {
   },
   'continue-epic': {
     summary: 'Resume an in-progress epic — full state display, interactive menu, phase routing.',
-    body: `<p>Runs migrations, then <code>discovery.js</code>. More complex than feature/bugfix: shows full phase-by-phase state with per-phase items, soft gates for phase-forward navigation, and an interactive menu with options to continue existing topics, start new topics, or enter any phase.</p>`,
+    body: `<p>Runs migrations, then <code>discovery.cjs</code>. More complex than feature/bugfix: shows full phase-by-phase state with per-phase items, soft gates for phase-forward navigation, and an interactive menu with options to continue existing topics, start new topics, or enter any phase.</p>`,
     meta: { complexity: 'Router' }
   },
   'start-cross-cutting': {
@@ -3574,7 +3574,7 @@ const FLOWCHART_DESCS = {
   },
   'continue-cross-cutting': {
     summary: 'Resume an in-progress cross-cutting concern — discovery, selection, backwards nav, phase routing.',
-    body: `<p>Runs migrations, then <code>discovery.js</code> scoped to cross-cutting work type. Displays active concerns with phase state. Auto-selects if single, otherwise presents selection menu. Offers backwards navigation to revisit completed phases.</p>
+    body: `<p>Runs migrations, then <code>discovery.cjs</code> scoped to cross-cutting work type. Displays active concerns with phase state. Auto-selects if single, otherwise presents selection menu. Offers backwards navigation to revisit completed phases.</p>
 <p>Routes to <strong>workflow-*-entry</strong> for the next phase. Cross-cutting pipeline: research (optional) → discussion → specification (terminal). Also supports viewing completed/cancelled concerns and lifecycle management.</p>`,
     meta: { complexity: 'Router' }
   },

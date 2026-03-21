@@ -7,7 +7,7 @@
 Read `project_skills` via manifest CLI:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{topic} project_skills
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.implementation.{topic} project_skills
 ```
 
 → Return to caller.

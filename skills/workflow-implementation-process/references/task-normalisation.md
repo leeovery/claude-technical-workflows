@@ -30,5 +30,5 @@ The `{internal_id}` in the template is always the **internal ID** (format: `{top
 
 If the format adapter returns an external ID, resolve the internal ID via the manifest CLI:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js key-of {work_unit}.planning.{topic} task_map {external_id}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs key-of {work_unit}.planning.{topic} task_map {external_id}
 ```

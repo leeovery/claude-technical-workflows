@@ -22,7 +22,7 @@ H. Create tasks in plan → invoke-task-writer.md
 
 ## A. Cycle Gate
 
-Increment `analysis_cycle` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} analysis_cycle {N}`).
+Increment `analysis_cycle` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} analysis_cycle {N}`).
 
 #### If `analysis_cycle` <= 3
 
@@ -221,7 +221,7 @@ Sources: {sources}
 {tests}
 ```
 
-Check `analysis_gate_mode` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.js get {work_unit}.implementation.{topic} analysis_gate_mode`).
+Check `analysis_gate_mode` via manifest CLI (`node .claude/skills/workflow-manifest/scripts/manifest.cjs get {work_unit}.implementation.{topic} analysis_gate_mode`).
 
 #### If `analysis_gate_mode` is `auto`
 
@@ -263,7 +263,7 @@ Update `status: approved` in the staging file.
 Update `status: approved` in the staging file.
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.implementation.{topic} analysis_gate_mode auto
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.implementation.{topic} analysis_gate_mode auto
 ```
 
 → Return to **F. Process Task**.

@@ -23,7 +23,7 @@ Conclude this discussion and mark as completed?
 
 1. Set discussion status to completed via manifest CLI:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.discussion.{topic} status completed
+   node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.discussion.{topic} status completed
    ```
 2. Final commit
 3. Invoke the bridge:

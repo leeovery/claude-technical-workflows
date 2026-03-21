@@ -1,7 +1,7 @@
 ---
 name: workflow-review-process
 user-invocable: false
-allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.cjs)
 ---
 
 # Review Process
@@ -89,11 +89,11 @@ Continue or restart?
 1. Delete the review file and all report files (`report-*.md`) in the review directory (`.workflows/{work_unit}/review/{topic}/`)
 2. Clear review tracking (if it exists):
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}.review.{topic} reviewed_tasks
+   node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}.review.{topic} reviewed_tasks
    ```
    If `true`:
    ```bash
-   node .claude/skills/workflow-manifest/scripts/manifest.js delete {work_unit}.review.{topic} reviewed_tasks
+   node .claude/skills/workflow-manifest/scripts/manifest.cjs delete {work_unit}.review.{topic} reviewed_tasks
    ```
 3. Commit: `review({work_unit}): restart review`
 

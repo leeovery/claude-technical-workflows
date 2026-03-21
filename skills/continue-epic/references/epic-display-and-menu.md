@@ -5,7 +5,7 @@
 ---
 
 Display the full phase-by-phase breakdown for the selected epic, then present an interactive menu of actionable items. The caller is responsible for providing:
-- Discovery output from `continue-epic/scripts/discovery.js` (the `detail` object for the selected epic)
+- Discovery output from `continue-epic/scripts/discovery.cjs` (the `detail` object for the selected epic)
 - `work_unit` — the epic's work unit name
 
 This reference collects the user's selection and returns control to the caller. The caller decides what to do with the selection (invoke a skill directly, enter plan mode, etc.).
@@ -246,7 +246,7 @@ Blocking dependencies:
 Ask which dependency to mark as satisfied. Update via manifest CLI:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js set {work_unit}.planning.{topic} external_dependencies.{dep_topic}.state satisfied_externally
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.planning.{topic} external_dependencies.{dep_topic}.state satisfied_externally
 ```
 
 Commit the change.

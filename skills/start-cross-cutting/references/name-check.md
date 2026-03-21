@@ -34,7 +34,7 @@ Is this name okay?
 Check for naming conflicts:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js exists {work_unit}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}
 ```
 
 #### If a work unit with the same name exists
@@ -66,7 +66,7 @@ What would you like to do?
 Create the work unit manifest:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.js init {work_unit} --work-type cross-cutting --description "{description}"
+node .claude/skills/workflow-manifest/scripts/manifest.cjs init {work_unit} --work-type cross-cutting --description "{description}"
 ```
 
 Where `{description}` is a concise one-line summary compiled from the context gathered in Step 1.

@@ -4,13 +4,13 @@ const { describe, it, beforeEach, afterEach } = require('node:test');
 const assert = require('node:assert');
 const fs = require('fs');
 const path = require('path');
-const { setupFixture, cleanupFixture, createFile } = require('./discovery-test-utils');
+const { setupFixture, cleanupFixture, createFile } = require('./discovery-test-utils.cjs');
 
 const {
   fileExists, listFiles, listDirs, countFiles, filesChecksum,
   loadManifest, loadActiveManifests, loadAllManifests,
   phaseStatus, phaseItems, phaseData, computeNextPhase,
-} = require('../../skills/workflow-shared/scripts/discovery-utils');
+} = require('../../skills/workflow-shared/scripts/discovery-utils.cjs');
 
 describe('discovery-utils', () => {
   let dir;
@@ -115,7 +115,7 @@ describe('discovery-utils', () => {
 
   describe('loadActiveManifests', () => {
     it('returns only in-progress manifests', () => {
-      const { createManifest } = require('./discovery-test-utils');
+      const { createManifest } = require('./discovery-test-utils.cjs');
       createManifest(dir, 'active', { status: 'in-progress' });
       createManifest(dir, 'done', { status: 'completed' });
       const results = loadActiveManifests(dir);
@@ -124,7 +124,7 @@ describe('discovery-utils', () => {
     });
 
     it('skips dotfiles', () => {
-      const { createManifest } = require('./discovery-test-utils');
+      const { createManifest } = require('./discovery-test-utils.cjs');
       createManifest(dir, 'good', {});
       fs.mkdirSync(path.join(dir, '.workflows', '.state'), { recursive: true });
       const results = loadActiveManifests(dir);
@@ -134,7 +134,7 @@ describe('discovery-utils', () => {
 
   describe('loadAllManifests', () => {
     it('returns manifests of all statuses', () => {
-      const { createManifest } = require('./discovery-test-utils');
+      const { createManifest } = require('./discovery-test-utils.cjs');
       createManifest(dir, 'active', { status: 'in-progress' });
       createManifest(dir, 'done', { status: 'completed' });
       createManifest(dir, 'cancelled', { status: 'cancelled' });
@@ -143,7 +143,7 @@ describe('discovery-utils', () => {
     });
 
     it('skips dotfiles', () => {
-      const { createManifest } = require('./discovery-test-utils');
+      const { createManifest } = require('./discovery-test-utils.cjs');
       createManifest(dir, 'good', {});
       fs.mkdirSync(path.join(dir, '.workflows', '.state'), { recursive: true });
       const results = loadAllManifests(dir);

@@ -1,6 +1,6 @@
 'use strict';
 
-const { loadActiveManifests, loadAllManifests, loadManifest, phaseItems, phaseData } = require('../../workflow-shared/scripts/discovery-utils');
+const { loadActiveManifests, loadAllManifests, loadManifest, phaseItems, phaseData } = require('../../workflow-shared/scripts/discovery-utils.cjs');
 
 const EPIC_PHASES = ['research', 'discussion', 'specification', 'planning', 'implementation', 'review'];
 

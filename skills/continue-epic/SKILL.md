@@ -1,6 +1,6 @@
 ---
 name: continue-epic
-allowed-tools: Bash(node .claude/skills/continue-epic/scripts/discovery.js), Bash(node .claude/skills/workflow-manifest/scripts/manifest.js)
+allowed-tools: Bash(node .claude/skills/continue-epic/scripts/discovery.cjs), Bash(node .claude/skills/workflow-manifest/scripts/manifest.cjs)
 ---
 
 Continue an in-progress epic. Shows full phase-by-phase state and routes to the appropriate phase skill.
@@ -31,12 +31,12 @@ Invoke the `/workflow-migrate` skill and follow its instructions exactly — if 
 
 ## Step 1: Discovery State
 
-!`node .claude/skills/continue-epic/scripts/discovery.js`
+!`node .claude/skills/continue-epic/scripts/discovery.cjs`
 
 If the above shows a script invocation rather than discovery output, the dynamic content preprocessor did not run. Execute the script before continuing:
 
 ```bash
-node .claude/skills/continue-epic/scripts/discovery.js
+node .claude/skills/continue-epic/scripts/discovery.cjs
 ```
 
 If discovery output is already displayed, it has been run on your behalf.
