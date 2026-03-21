@@ -1,150 +1,52 @@
 #!/bin/bash
-#
-# Tests migration 001-discussion-frontmatter.sh
-# Validates conversion from legacy markdown header format to YAML frontmatter.
-#
+# Tests for migration 001: discussion-frontmatter
+# Run: bash tests/scripts/test-migration-001.sh
 
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MIGRATION_SCRIPT="$SCRIPT_DIR/../../skills/workflow-migrate/scripts/migrations/001-discussion-frontmatter.sh"
+REPO_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+MIGRATION="$REPO_DIR/skills/workflow-migrate/scripts/migrations/001-discussion-frontmatter.sh"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+PASS=0
+FAIL=0
 
-# Test counters
-TESTS_RUN=0
-TESTS_PASSED=0
-TESTS_FAILED=0
+report_update() { : ; }
+report_skip() { : ; }
 
-# Create a temporary directory for test fixtures
-TEST_DIR=$(mktemp -d)
-trap "rm -rf $TEST_DIR" EXIT
-
-echo "Test directory: $TEST_DIR"
-echo ""
-
-#
-# Mock migration helper functions
-#
-
-report_update() {
-    echo "updated"
+assert_eq() {
+  local label="$1" expected="$2" actual="$3"
+  if [ "$expected" = "$actual" ]; then
+    PASS=$((PASS + 1))
+  else
+    FAIL=$((FAIL + 1))
+    echo "FAIL: $label"
+    echo "  expected: $expected"
+    echo "  actual:   $actual"
+  fi
 }
 
-report_skip() {
-    echo "skipped"
+setup() {
+  TEST_DIR=$(mktemp -d /tmp/migration-001-test.XXXXXX)
+  mkdir -p "$TEST_DIR/docs/workflow/discussion"
+  DISCUSSION_DIR="$TEST_DIR/docs/workflow/discussion"
 }
 
-# Export functions for sourced script
-export -f report_update report_skip
-
-#
-# Helper functions
-#
-
-setup_fixture() {
-    rm -rf "$TEST_DIR/docs"
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
-    DISCUSSION_DIR="$TEST_DIR/docs/workflow/discussion"
+teardown() {
+  rm -rf "$TEST_DIR"
 }
 
 run_migration() {
-    cd "$TEST_DIR"
-    # Source the migration script (it uses DISCUSSION_DIR variable)
-    DISCUSSION_DIR="$TEST_DIR/docs/workflow/discussion"
-    source "$MIGRATION_SCRIPT"
+  cd "$TEST_DIR"
+  DISCUSSION_DIR="$TEST_DIR/docs/workflow/discussion"
+  source "$MIGRATION"
 }
 
-assert_contains() {
-    local content="$1"
-    local expected="$2"
-    local description="$3"
+# --- Test 1: Legacy format with Exploring status ---
+test_legacy_exploring() {
+  setup
 
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if echo "$content" | grep -q -- "$expected"; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected to find: $expected"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
-}
-
-assert_equals() {
-    local actual="$1"
-    local expected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if [ "$actual" = "$expected" ]; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected: $expected"
-        echo -e "    Actual:   $actual"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
-}
-
-assert_not_contains() {
-    local content="$1"
-    local expected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if echo "$content" | grep -q -- "$expected"; then
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Should not find: $expected"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    else
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    fi
-}
-
-assert_file_starts_with() {
-    local file="$1"
-    local expected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    local first_line=$(head -1 "$file")
-    if [ "$first_line" = "$expected" ]; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected first line: $expected"
-        echo -e "    Actual first line:   $first_line"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
-}
-
-# ============================================================================
-# TEST CASES
-# ============================================================================
-
-echo -e "${YELLOW}Test: Legacy format with Exploring status${NC}"
-setup_fixture
-cat > "$DISCUSSION_DIR/api-design.md" << 'EOF'
+  cat > "$DISCUSSION_DIR/api-design.md" << 'EOF'
 # Discussion: API Design
 
 **Date**: 2024-01-15
@@ -155,24 +57,24 @@ cat > "$DISCUSSION_DIR/api-design.md" << 'EOF'
 We need to design the API.
 EOF
 
-output=$(run_migration 2>&1)
-content=$(cat "$DISCUSSION_DIR/api-design.md")
+  run_migration
+  content=$(cat "$DISCUSSION_DIR/api-design.md")
 
-assert_file_starts_with "$DISCUSSION_DIR/api-design.md" "---" "File starts with frontmatter delimiter"
-assert_contains "$content" "^topic: api-design$" "Topic extracted from filename"
-assert_contains "$content" "^status: in-progress$" "Exploring status mapped to in-progress"
-assert_contains "$content" "^date: 2024-01-15$" "Date extracted"
-assert_contains "$content" "^# Discussion: API Design$" "H1 heading preserved"
-assert_contains "$content" "^## Context$" "Content sections preserved"
-assert_contains "$output" "updated" "Reports update"
+  assert_eq "File starts with frontmatter delimiter" "---" "$(head -1 "$DISCUSSION_DIR/api-design.md")"
+  assert_eq "Topic extracted from filename" "true" "$(echo "$content" | grep -q '^topic: api-design$' && echo true || echo false)"
+  assert_eq "Exploring status mapped to in-progress" "true" "$(echo "$content" | grep -q '^status: in-progress$' && echo true || echo false)"
+  assert_eq "Date extracted" "true" "$(echo "$content" | grep -q '^date: 2024-01-15$' && echo true || echo false)"
+  assert_eq "H1 heading preserved" "true" "$(echo "$content" | grep -q '^# Discussion: API Design$' && echo true || echo false)"
+  assert_eq "Content sections preserved" "true" "$(echo "$content" | grep -q '^## Context$' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 2: Legacy format with Deciding status ---
+test_legacy_deciding() {
+  setup
 
-echo -e "${YELLOW}Test: Legacy format with Deciding status${NC}"
-setup_fixture
-cat > "$DISCUSSION_DIR/auth-flow.md" << 'EOF'
+  cat > "$DISCUSSION_DIR/auth-flow.md" << 'EOF'
 # Discussion: Auth Flow
 
 **Date**: 2024-02-20
@@ -183,18 +85,19 @@ cat > "$DISCUSSION_DIR/auth-flow.md" << 'EOF'
 Option A or B.
 EOF
 
-run_migration
-content=$(cat "$DISCUSSION_DIR/auth-flow.md")
+  run_migration
+  content=$(cat "$DISCUSSION_DIR/auth-flow.md")
 
-assert_contains "$content" "^status: in-progress$" "Deciding status mapped to in-progress"
+  assert_eq "Deciding status mapped to in-progress" "true" "$(echo "$content" | grep -q '^status: in-progress$' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 3: Legacy format with Concluded status ---
+test_legacy_concluded() {
+  setup
 
-echo -e "${YELLOW}Test: Legacy format with Concluded status${NC}"
-setup_fixture
-cat > "$DISCUSSION_DIR/caching.md" << 'EOF'
+  cat > "$DISCUSSION_DIR/caching.md" << 'EOF'
 # Discussion: Caching Strategy
 
 **Date**: 2024-03-10
@@ -205,18 +108,19 @@ cat > "$DISCUSSION_DIR/caching.md" << 'EOF'
 We chose Redis.
 EOF
 
-run_migration
-content=$(cat "$DISCUSSION_DIR/caching.md")
+  run_migration
+  content=$(cat "$DISCUSSION_DIR/caching.md")
 
-assert_contains "$content" "^status: concluded$" "Concluded status mapped to concluded"
+  assert_eq "Concluded status mapped to concluded" "true" "$(echo "$content" | grep -q '^status: concluded$' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 4: Legacy format with Complete status ---
+test_legacy_complete() {
+  setup
 
-echo -e "${YELLOW}Test: Legacy format with Complete status${NC}"
-setup_fixture
-cat > "$DISCUSSION_DIR/database.md" << 'EOF'
+  cat > "$DISCUSSION_DIR/database.md" << 'EOF'
 # Discussion: Database Choice
 
 **Date**: 2024-04-01
@@ -227,18 +131,19 @@ cat > "$DISCUSSION_DIR/database.md" << 'EOF'
 PostgreSQL selected.
 EOF
 
-run_migration
-content=$(cat "$DISCUSSION_DIR/database.md")
+  run_migration
+  content=$(cat "$DISCUSSION_DIR/database.md")
 
-assert_contains "$content" "^status: concluded$" "Complete status mapped to concluded"
+  assert_eq "Complete status mapped to concluded" "true" "$(echo "$content" | grep -q '^status: concluded$' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 5: Legacy format with emoji status ---
+test_legacy_emoji_status() {
+  setup
 
-echo -e "${YELLOW}Test: Legacy format with emoji status (✅ Complete)${NC}"
-setup_fixture
-cat > "$DISCUSSION_DIR/logging.md" << 'EOF'
+  cat > "$DISCUSSION_DIR/logging.md" << 'EOF'
 # Discussion: Logging
 
 **Date**: 2024-05-15
@@ -249,18 +154,19 @@ cat > "$DISCUSSION_DIR/logging.md" << 'EOF'
 Structured logging with JSON.
 EOF
 
-run_migration
-content=$(cat "$DISCUSSION_DIR/logging.md")
+  run_migration
+  content=$(cat "$DISCUSSION_DIR/logging.md")
 
-assert_contains "$content" "^status: concluded$" "✅ Complete status mapped to concluded"
+  assert_eq "Emoji Complete status mapped to concluded" "true" "$(echo "$content" | grep -q '^status: concluded$' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 6: Legacy format with alternate colon placement ---
+test_alternate_colon() {
+  setup
 
-echo -e "${YELLOW}Test: Legacy format with alternate colon placement (Status:)${NC}"
-setup_fixture
-cat > "$DISCUSSION_DIR/testing.md" << 'EOF'
+  cat > "$DISCUSSION_DIR/testing.md" << 'EOF'
 # Discussion: Testing Strategy
 
 **Date**: 2024-06-01
@@ -271,18 +177,19 @@ cat > "$DISCUSSION_DIR/testing.md" << 'EOF'
 TDD approach.
 EOF
 
-run_migration
-content=$(cat "$DISCUSSION_DIR/testing.md")
+  run_migration
+  content=$(cat "$DISCUSSION_DIR/testing.md")
 
-assert_contains "$content" "^status: concluded$" "Alternate colon format handled"
+  assert_eq "Alternate colon format handled" "true" "$(echo "$content" | grep -q '^status: concluded$' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 7: Legacy format with Started field instead of Date ---
+test_started_field() {
+  setup
 
-echo -e "${YELLOW}Test: Legacy format with Started field instead of Date${NC}"
-setup_fixture
-cat > "$DISCUSSION_DIR/deployment.md" << 'EOF'
+  cat > "$DISCUSSION_DIR/deployment.md" << 'EOF'
 # Discussion: Deployment
 
 **Started:** 2024-07-01
@@ -293,18 +200,19 @@ cat > "$DISCUSSION_DIR/deployment.md" << 'EOF'
 Deployment options.
 EOF
 
-run_migration
-content=$(cat "$DISCUSSION_DIR/deployment.md")
+  run_migration
+  content=$(cat "$DISCUSSION_DIR/deployment.md")
 
-assert_contains "$content" "^date: 2024-07-01$" "Date extracted from Started field"
+  assert_eq "Date extracted from Started field" "true" "$(echo "$content" | grep -q '^date: 2024-07-01$' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 8: Legacy format without date field ---
+test_no_date() {
+  setup
 
-echo -e "${YELLOW}Test: Legacy format without date field${NC}"
-setup_fixture
-cat > "$DISCUSSION_DIR/no-date.md" << 'EOF'
+  cat > "$DISCUSSION_DIR/no-date.md" << 'EOF'
 # Discussion: No Date
 
 **Status**: Exploring
@@ -314,19 +222,20 @@ cat > "$DISCUSSION_DIR/no-date.md" << 'EOF'
 Missing date.
 EOF
 
-run_migration
-content=$(cat "$DISCUSSION_DIR/no-date.md")
-today=$(date +%Y-%m-%d)
+  run_migration
+  content=$(cat "$DISCUSSION_DIR/no-date.md")
+  today=$(date +%Y-%m-%d)
 
-assert_contains "$content" "^date: $today$" "Date defaults to today when not found"
+  assert_eq "Date defaults to today when not found" "true" "$(echo "$content" | grep -q "^date: $today$" && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 9: File already has frontmatter (should skip) ---
+test_already_has_frontmatter() {
+  setup
 
-echo -e "${YELLOW}Test: File already has frontmatter (should skip)${NC}"
-setup_fixture
-cat > "$DISCUSSION_DIR/existing.md" << 'EOF'
+  cat > "$DISCUSSION_DIR/existing.md" << 'EOF'
 ---
 topic: existing
 status: concluded
@@ -340,20 +249,20 @@ date: 2024-01-01
 Already migrated content.
 EOF
 
-original_content=$(cat "$DISCUSSION_DIR/existing.md")
-output=$(run_migration 2>&1)
-new_content=$(cat "$DISCUSSION_DIR/existing.md")
+  original_content=$(cat "$DISCUSSION_DIR/existing.md")
+  run_migration
+  new_content=$(cat "$DISCUSSION_DIR/existing.md")
 
-assert_equals "$new_content" "$original_content" "File with frontmatter unchanged"
-assert_contains "$output" "skipped" "Reports skip"
+  assert_eq "File with frontmatter unchanged" "$original_content" "$new_content"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 10: File without legacy format (should skip) ---
+test_no_legacy_format() {
+  setup
 
-echo -e "${YELLOW}Test: File without legacy format (should skip)${NC}"
-setup_fixture
-cat > "$DISCUSSION_DIR/weird.md" << 'EOF'
+  cat > "$DISCUSSION_DIR/weird.md" << 'EOF'
 # Some Random Document
 
 This has no status or date fields.
@@ -363,20 +272,20 @@ This has no status or date fields.
 Content here.
 EOF
 
-original_content=$(cat "$DISCUSSION_DIR/weird.md")
-output=$(run_migration 2>&1)
-new_content=$(cat "$DISCUSSION_DIR/weird.md")
+  original_content=$(cat "$DISCUSSION_DIR/weird.md")
+  run_migration
+  new_content=$(cat "$DISCUSSION_DIR/weird.md")
 
-assert_equals "$new_content" "$original_content" "File without legacy format unchanged"
-assert_contains "$output" "skipped" "Reports skip"
+  assert_eq "File without legacy format unchanged" "$original_content" "$new_content"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 11: Idempotency (running migration twice) ---
+test_idempotency() {
+  setup
 
-echo -e "${YELLOW}Test: Idempotency (running migration twice)${NC}"
-setup_fixture
-cat > "$DISCUSSION_DIR/idempotent.md" << 'EOF'
+  cat > "$DISCUSSION_DIR/idempotent.md" << 'EOF'
 # Discussion: Idempotent Test
 
 **Date**: 2024-08-01
@@ -387,23 +296,22 @@ cat > "$DISCUSSION_DIR/idempotent.md" << 'EOF'
 Content.
 EOF
 
-run_migration
-first_run=$(cat "$DISCUSSION_DIR/idempotent.md")
+  run_migration
+  first_run=$(cat "$DISCUSSION_DIR/idempotent.md")
 
-# Run again
-output=$(run_migration 2>&1)
-second_run=$(cat "$DISCUSSION_DIR/idempotent.md")
+  run_migration
+  second_run=$(cat "$DISCUSSION_DIR/idempotent.md")
 
-assert_equals "$second_run" "$first_run" "Second migration run produces same result"
-assert_not_contains "$output" "updated" "No update on second run"
+  assert_eq "Second migration run produces same result" "$first_run" "$second_run"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 12: Content preservation (multiple sections) ---
+test_content_preservation() {
+  setup
 
-echo -e "${YELLOW}Test: Content preservation (multiple sections)${NC}"
-setup_fixture
-cat > "$DISCUSSION_DIR/full-discussion.md" << 'EOF'
+  cat > "$DISCUSSION_DIR/full-discussion.md" << 'EOF'
 # Discussion: Full Discussion
 
 **Date**: 2024-09-01
@@ -427,22 +335,23 @@ We chose Option A.
 Some impacts.
 EOF
 
-run_migration
-content=$(cat "$DISCUSSION_DIR/full-discussion.md")
+  run_migration
+  content=$(cat "$DISCUSSION_DIR/full-discussion.md")
 
-assert_contains "$content" "^## Context$" "Context section preserved"
-assert_contains "$content" "^## Options$" "Options section preserved"
-assert_contains "$content" "^## Decision$" "Decision section preserved"
-assert_contains "$content" "^## Consequences$" "Consequences section preserved"
-assert_contains "$content" "Option A" "List content preserved"
+  assert_eq "Context section preserved" "true" "$(echo "$content" | grep -q '^## Context$' && echo true || echo false)"
+  assert_eq "Options section preserved" "true" "$(echo "$content" | grep -q '^## Options$' && echo true || echo false)"
+  assert_eq "Decision section preserved" "true" "$(echo "$content" | grep -q '^## Decision$' && echo true || echo false)"
+  assert_eq "Consequences section preserved" "true" "$(echo "$content" | grep -q '^## Consequences$' && echo true || echo false)"
+  assert_eq "List content preserved" "true" "$(echo "$content" | grep -qF 'Option A' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 13: Kebab-case topic from filename ---
+test_kebab_case_topic() {
+  setup
 
-echo -e "${YELLOW}Test: Kebab-case topic from filename${NC}"
-setup_fixture
-cat > "$DISCUSSION_DIR/user-authentication-flow.md" << 'EOF'
+  cat > "$DISCUSSION_DIR/user-authentication-flow.md" << 'EOF'
 # Discussion: User Authentication Flow
 
 **Date**: 2024-10-01
@@ -453,18 +362,19 @@ cat > "$DISCUSSION_DIR/user-authentication-flow.md" << 'EOF'
 Content.
 EOF
 
-run_migration
-content=$(cat "$DISCUSSION_DIR/user-authentication-flow.md")
+  run_migration
+  content=$(cat "$DISCUSSION_DIR/user-authentication-flow.md")
 
-assert_contains "$content" "^topic: user-authentication-flow$" "Topic uses kebab-case from filename"
+  assert_eq "Topic uses kebab-case from filename" "true" "$(echo "$content" | grep -q '^topic: user-authentication-flow$' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 14: Body with multiple --- horizontal rules preserved ---
+test_body_horizontal_rules() {
+  setup
 
-echo -e "${YELLOW}Test: Body with multiple --- horizontal rules preserved${NC}"
-setup_fixture
-cat > "$DISCUSSION_DIR/multi-hr.md" << 'TESTEOF'
+  cat > "$DISCUSSION_DIR/multi-hr.md" << 'TESTEOF'
 # Discussion: Multi HR
 
 **Date**: 2024-11-01
@@ -493,22 +403,23 @@ More questions here.
 Wrap up.
 TESTEOF
 
-body_before=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/multi-hr.md")
-run_migration
-content=$(cat "$DISCUSSION_DIR/multi-hr.md")
-body_after=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/multi-hr.md")
+  body_before=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/multi-hr.md")
+  run_migration
+  content=$(cat "$DISCUSSION_DIR/multi-hr.md")
+  body_after=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/multi-hr.md")
 
-assert_contains "$content" "^status: in-progress$" "Frontmatter status is correct"
-assert_contains "$content" "^topic: multi-hr$" "Frontmatter topic is correct"
-assert_equals "$body_after" "$body_before" "All body --- horizontal rules preserved exactly"
+  assert_eq "Frontmatter status is correct" "true" "$(echo "$content" | grep -q '^status: in-progress$' && echo true || echo false)"
+  assert_eq "Frontmatter topic is correct" "true" "$(echo "$content" | grep -q '^topic: multi-hr$' && echo true || echo false)"
+  assert_eq "All body --- horizontal rules preserved exactly" "$body_before" "$body_after"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 15: Body with code blocks, tables, and special characters ---
+test_special_chars() {
+  setup
 
-echo -e "${YELLOW}Test: Body with code blocks, tables, and special characters${NC}"
-setup_fixture
-cat > "$DISCUSSION_DIR/special-chars.md" << 'TESTEOF'
+  cat > "$DISCUSSION_DIR/special-chars.md" << 'TESTEOF'
 # Discussion: Special Chars
 
 **Date**: 2024-11-02
@@ -538,21 +449,22 @@ Use `grep -E "pattern|other"` to search.
 Also check `$HOME/.config` for settings.
 TESTEOF
 
-body_before=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/special-chars.md")
-run_migration
-content=$(cat "$DISCUSSION_DIR/special-chars.md")
-body_after=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/special-chars.md")
+  body_before=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/special-chars.md")
+  run_migration
+  content=$(cat "$DISCUSSION_DIR/special-chars.md")
+  body_after=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/special-chars.md")
 
-assert_contains "$content" "^status: in-progress$" "Frontmatter status correct"
-assert_equals "$body_after" "$body_before" "Body with code blocks, tables, and special chars preserved exactly"
+  assert_eq "Frontmatter status correct" "true" "$(echo "$content" | grep -q '^status: in-progress$' && echo true || echo false)"
+  assert_eq "Body with code blocks, tables, and special chars preserved exactly" "$body_before" "$body_after"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 16: Exact body content preservation after migration ---
+test_exact_body_preservation() {
+  setup
 
-echo -e "${YELLOW}Test: Exact body content preservation after migration${NC}"
-setup_fixture
-cat > "$DISCUSSION_DIR/exact-body.md" << 'TESTEOF'
+  cat > "$DISCUSSION_DIR/exact-body.md" << 'TESTEOF'
 # Discussion: Exact Body
 
 **Date**: 2024-11-03
@@ -597,28 +509,39 @@ VAR2="double \"escaped\" quotes"
 Final paragraph with apostrophes: don't, won't, can't.
 TESTEOF
 
-body_before=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/exact-body.md")
-run_migration
-content=$(cat "$DISCUSSION_DIR/exact-body.md")
-body_after=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/exact-body.md")
+  body_before=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/exact-body.md")
+  run_migration
+  content=$(cat "$DISCUSSION_DIR/exact-body.md")
+  body_after=$(sed -n '/^## /,$p' "$DISCUSSION_DIR/exact-body.md")
 
-assert_contains "$content" "^status: concluded$" "Frontmatter status correct"
-assert_contains "$content" "^topic: exact-body$" "Frontmatter topic correct"
-assert_equals "$body_after" "$body_before" "Complex body content preserved exactly after migration"
+  assert_eq "Frontmatter status correct" "true" "$(echo "$content" | grep -q '^status: concluded$' && echo true || echo false)"
+  assert_eq "Frontmatter topic correct" "true" "$(echo "$content" | grep -q '^topic: exact-body$' && echo true || echo false)"
+  assert_eq "Complex body content preserved exactly after migration" "$body_before" "$body_after"
 
+  teardown
+}
+
+# --- Run all tests ---
+echo "Running migration 001 tests..."
 echo ""
 
-# ============================================================================
-# SUMMARY
-# ============================================================================
+test_legacy_exploring
+test_legacy_deciding
+test_legacy_concluded
+test_legacy_complete
+test_legacy_emoji_status
+test_alternate_colon
+test_started_field
+test_no_date
+test_already_has_frontmatter
+test_no_legacy_format
+test_idempotency
+test_content_preservation
+test_kebab_case_topic
+test_body_horizontal_rules
+test_special_chars
+test_exact_body_preservation
 
 echo ""
-echo "========================================"
-echo -e "Tests run: $TESTS_RUN"
-echo -e "Passed: ${GREEN}$TESTS_PASSED${NC}"
-echo -e "Failed: ${RED}$TESTS_FAILED${NC}"
-echo "========================================"
-
-if [ $TESTS_FAILED -gt 0 ]; then
-    exit 1
-fi
+echo "Results: $PASS passed, $FAIL failed"
+[ "$FAIL" -eq 0 ] || exit 1

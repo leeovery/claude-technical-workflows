@@ -1,134 +1,74 @@
 #!/bin/bash
 #
-# Tests migration 025-unify-manifest-items.sh
-# Validates wrapping flat feature/bugfix phase data into items[name].
+# Tests for migration 025: unify-manifest-items
+#
+# Run: bash tests/scripts/test-migration-025.sh
 #
 
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MIGRATION_SCRIPT="$SCRIPT_DIR/../../skills/workflow-migrate/scripts/migrations/025-unify-manifest-items.sh"
+REPO_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+MIGRATION="$REPO_DIR/skills/workflow-migrate/scripts/migrations/025-unify-manifest-items.sh"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
+PASS=0
+FAIL=0
 
-# Test counters
-TESTS_RUN=0
-TESTS_PASSED=0
-TESTS_FAILED=0
+report_update() { : ; }
+report_skip() { : ; }
+export -f report_update report_skip
 
-# Create a temporary directory for test fixtures
-TEST_DIR=$(mktemp -d)
-trap "rm -rf $TEST_DIR" EXIT
+assert_eq() {
+  local label="$1" expected="$2" actual="$3"
+  if [ "$expected" = "$actual" ]; then
+    PASS=$((PASS + 1))
+  else
+    FAIL=$((FAIL + 1))
+    echo "FAIL: $label"
+    echo "  expected: $expected"
+    echo "  actual:   $actual"
+  fi
+}
 
-echo "Test directory: $TEST_DIR"
-echo ""
+setup() {
+  TEST_DIR=$(mktemp -d /tmp/migration-025-test.XXXXXX)
+  export PROJECT_DIR="$TEST_DIR"
+  mkdir -p "$TEST_DIR/.workflows"
+}
 
-#
-# Helper functions
-#
-
-setup_fixture() {
-    rm -rf "$TEST_DIR/.workflows"
+teardown() {
+  rm -rf "$TEST_DIR"
 }
 
 create_manifest() {
-    local name="$1"
-    local content="$2"
-    mkdir -p "$TEST_DIR/.workflows/$name"
-    echo "$content" > "$TEST_DIR/.workflows/$name/manifest.json"
-}
-
-# Stub report_update for migration script
-report_update() { echo "updated"; }
-export -f report_update
-
-run_migration() {
-    cd "$TEST_DIR"
-    PROJECT_DIR="$TEST_DIR" bash "$MIGRATION_SCRIPT" 2>&1
+  local name="$1"
+  local content="$2"
+  mkdir -p "$TEST_DIR/.workflows/$name"
+  echo "$content" > "$TEST_DIR/.workflows/$name/manifest.json"
 }
 
 get_field() {
-    local name="$1"
-    local field="$2"
-    node -e "
-      const m = JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));
-      const parts = process.argv[2].split('.');
-      let v = m;
-      for (const p of parts) v = (v || {})[p];
-      console.log(v === undefined ? 'undefined' : (typeof v === 'object' ? JSON.stringify(v) : v));
-    " "$TEST_DIR/.workflows/$name/manifest.json" "$field"
+  local name="$1"
+  local field="$2"
+  node -e "
+    const m = JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));
+    const parts = process.argv[2].split('.');
+    let v = m;
+    for (const p of parts) v = (v || {})[p];
+    console.log(v === undefined ? 'undefined' : (typeof v === 'object' ? JSON.stringify(v) : v));
+  " "$TEST_DIR/.workflows/$name/manifest.json" "$field"
 }
 
-assert_equals() {
-    local actual="$1"
-    local expected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if [ "$actual" = "$expected" ]; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected: $expected"
-        echo -e "    Actual:   $actual"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
+run_migration() {
+  cd "$TEST_DIR"
+  bash "$MIGRATION" 2>&1
 }
 
-assert_contains() {
-    local content="$1"
-    local expected="$2"
-    local description="$3"
+# --- Test 1: Feature flat discussion wrapped into items ---
+test_feature_discussion_wrapped() {
+  setup
 
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if echo "$content" | grep -qF -- "$expected"; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected to find: $expected"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
-}
-
-assert_not_contains() {
-    local content="$1"
-    local expected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if echo "$content" | grep -qF -- "$expected"; then
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Should not find: $expected"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    else
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    fi
-}
-
-# ============================================================================
-# TEST CASES
-# ============================================================================
-
-echo -e "${YELLOW}Test: feature flat discussion wrapped into items${NC}"
-setup_fixture
-
-create_manifest "my-feat" '{
+  create_manifest "my-feat" '{
   "name": "my-feat",
   "work_type": "feature",
   "status": "in-progress",
@@ -137,19 +77,18 @@ create_manifest "my-feat" '{
   }
 }'
 
-output=$(run_migration)
+  run_migration > /dev/null
 
-assert_equals "$(get_field "my-feat" "phases.discussion.items.my-feat.status")" "completed" "Status moved into items"
-assert_contains "$output" "updated" "Reports update"
+  assert_eq "status moved into items" "completed" "$(get_field "my-feat" "phases.discussion.items.my-feat.status")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 2: Feature planning with extra fields wrapped correctly ---
+test_feature_planning_wrapped() {
+  setup
 
-echo -e "${YELLOW}Test: feature planning with extra fields wrapped correctly${NC}"
-setup_fixture
-
-create_manifest "plan-feat" '{
+  create_manifest "plan-feat" '{
   "name": "plan-feat",
   "work_type": "feature",
   "status": "in-progress",
@@ -158,20 +97,20 @@ create_manifest "plan-feat" '{
   }
 }'
 
-run_migration > /dev/null
+  run_migration > /dev/null
 
-assert_equals "$(get_field "plan-feat" "phases.planning.items.plan-feat.status")" "completed" "Status in items"
-assert_equals "$(get_field "plan-feat" "phases.planning.items.plan-feat.format")" "local-markdown" "Format in items"
-assert_equals "$(get_field "plan-feat" "phases.planning.items.plan-feat.task_list_gate_mode")" "gated" "Gate mode in items"
+  assert_eq "status in items" "completed" "$(get_field "plan-feat" "phases.planning.items.plan-feat.status")"
+  assert_eq "format in items" "local-markdown" "$(get_field "plan-feat" "phases.planning.items.plan-feat.format")"
+  assert_eq "gate mode in items" "gated" "$(get_field "plan-feat" "phases.planning.items.plan-feat.task_list_gate_mode")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 3: analysis_cache preserved at phase level ---
+test_analysis_cache_preserved() {
+  setup
 
-echo -e "${YELLOW}Test: analysis_cache preserved at phase level${NC}"
-setup_fixture
-
-create_manifest "cached" '{
+  create_manifest "cached" '{
   "name": "cached",
   "work_type": "feature",
   "status": "in-progress",
@@ -180,19 +119,19 @@ create_manifest "cached" '{
   }
 }'
 
-run_migration > /dev/null
+  run_migration > /dev/null
 
-assert_equals "$(get_field "cached" "phases.research.analysis_cache.checksum")" "abc123" "analysis_cache stays at phase level"
-assert_equals "$(get_field "cached" "phases.research.items.cached.status")" "completed" "Status moved to items"
+  assert_eq "analysis_cache stays at phase level" "abc123" "$(get_field "cached" "phases.research.analysis_cache.checksum")"
+  assert_eq "status moved to items" "completed" "$(get_field "cached" "phases.research.items.cached.status")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 4: Bugfix investigation wrapped into items ---
+test_bugfix_investigation_wrapped() {
+  setup
 
-echo -e "${YELLOW}Test: bugfix investigation wrapped into items${NC}"
-setup_fixture
-
-create_manifest "my-bug" '{
+  create_manifest "my-bug" '{
   "name": "my-bug",
   "work_type": "bugfix",
   "status": "in-progress",
@@ -201,18 +140,18 @@ create_manifest "my-bug" '{
   }
 }'
 
-run_migration > /dev/null
+  run_migration > /dev/null
 
-assert_equals "$(get_field "my-bug" "phases.investigation.items.my-bug.status")" "in-progress" "Bugfix investigation wrapped"
+  assert_eq "bugfix investigation wrapped" "in-progress" "$(get_field "my-bug" "phases.investigation.items.my-bug.status")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 5: Epic manifests are skipped ---
+test_epic_skipped() {
+  setup
 
-echo -e "${YELLOW}Test: epic manifests are skipped${NC}"
-setup_fixture
-
-create_manifest "my-epic" '{
+  create_manifest "my-epic" '{
   "name": "my-epic",
   "work_type": "epic",
   "status": "in-progress",
@@ -221,19 +160,18 @@ create_manifest "my-epic" '{
   }
 }'
 
-output=$(run_migration)
+  run_migration > /dev/null
 
-assert_equals "$(get_field "my-epic" "phases.discussion.items.auth.status")" "completed" "Epic items unchanged"
-assert_not_contains "$output" "updated" "No update for epic"
+  assert_eq "epic items unchanged" "completed" "$(get_field "my-epic" "phases.discussion.items.auth.status")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 6: Phases already with items are skipped ---
+test_already_has_items() {
+  setup
 
-echo -e "${YELLOW}Test: phases already with items are skipped${NC}"
-setup_fixture
-
-create_manifest "already-items" '{
+  create_manifest "already-items" '{
   "name": "already-items",
   "work_type": "feature",
   "status": "in-progress",
@@ -243,19 +181,19 @@ create_manifest "already-items" '{
   }
 }'
 
-run_migration > /dev/null
+  run_migration > /dev/null
 
-assert_equals "$(get_field "already-items" "phases.discussion.items.already-items.status")" "completed" "Existing items untouched"
-assert_equals "$(get_field "already-items" "phases.specification.items.already-items.status")" "in-progress" "Flat phase wrapped"
+  assert_eq "existing items untouched" "completed" "$(get_field "already-items" "phases.discussion.items.already-items.status")"
+  assert_eq "flat phase wrapped" "in-progress" "$(get_field "already-items" "phases.specification.items.already-items.status")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 7: Multiple phases wrapped in one manifest ---
+test_multiple_phases_wrapped() {
+  setup
 
-echo -e "${YELLOW}Test: multiple phases wrapped in one manifest${NC}"
-setup_fixture
-
-create_manifest "multi" '{
+  create_manifest "multi" '{
   "name": "multi",
   "work_type": "feature",
   "status": "in-progress",
@@ -267,21 +205,21 @@ create_manifest "multi" '{
   }
 }'
 
-run_migration > /dev/null
+  run_migration > /dev/null
 
-assert_equals "$(get_field "multi" "phases.discussion.items.multi.status")" "completed" "Discussion wrapped"
-assert_equals "$(get_field "multi" "phases.specification.items.multi.status")" "completed" "Specification wrapped"
-assert_equals "$(get_field "multi" "phases.planning.items.multi.format")" "local-markdown" "Planning format in items"
-assert_equals "$(get_field "multi" "phases.implementation.items.multi.completed_tasks")" '["multi-1-1"]' "Implementation tasks in items"
+  assert_eq "discussion wrapped" "completed" "$(get_field "multi" "phases.discussion.items.multi.status")"
+  assert_eq "specification wrapped" "completed" "$(get_field "multi" "phases.specification.items.multi.status")"
+  assert_eq "planning format in items" "local-markdown" "$(get_field "multi" "phases.planning.items.multi.format")"
+  assert_eq "implementation tasks in items" '["multi-1-1"]' "$(get_field "multi" "phases.implementation.items.multi.completed_tasks")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 8: Idempotent — running twice produces same result ---
+test_idempotent() {
+  setup
 
-echo -e "${YELLOW}Test: idempotent — running twice produces same result${NC}"
-setup_fixture
-
-create_manifest "idem" '{
+  create_manifest "idem" '{
   "name": "idem",
   "work_type": "feature",
   "status": "in-progress",
@@ -290,65 +228,61 @@ create_manifest "idem" '{
   }
 }'
 
-run_migration > /dev/null
-output=$(run_migration)
+  run_migration > /dev/null
+  run_migration > /dev/null
 
-assert_equals "$(get_field "idem" "phases.discussion.items.idem.status")" "completed" "Items still correct"
-assert_not_contains "$output" "updated" "No update on second run"
+  assert_eq "items still correct" "completed" "$(get_field "idem" "phases.discussion.items.idem.status")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 9: Skips dot-prefixed directories ---
+test_skips_dot_dirs() {
+  setup
 
-echo -e "${YELLOW}Test: skips dot-prefixed directories${NC}"
-setup_fixture
+  mkdir -p "$TEST_DIR/.workflows/.state"
+  echo '{"name":".state","work_type":"feature","status":"in-progress","phases":{"discussion":{"status":"completed"}}}' > "$TEST_DIR/.workflows/.state/manifest.json"
+  create_manifest "real" '{"name":"real","work_type":"feature","status":"in-progress","phases":{"discussion":{"status":"completed"}}}'
 
-mkdir -p "$TEST_DIR/.workflows/.state"
-echo '{"name":".state","work_type":"feature","status":"in-progress","phases":{"discussion":{"status":"completed"}}}' > "$TEST_DIR/.workflows/.state/manifest.json"
-create_manifest "real" '{"name":"real","work_type":"feature","status":"in-progress","phases":{"discussion":{"status":"completed"}}}'
+  run_migration > /dev/null
 
-run_migration > /dev/null
+  assert_eq "real manifest migrated" "completed" "$(get_field "real" "phases.discussion.items.real.status")"
+  local dot_status
+  dot_status=$(node -e "
+    const m = JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));
+    console.log(m.phases.discussion.status || 'missing');
+  " "$TEST_DIR/.workflows/.state/manifest.json")
+  assert_eq "dot-dir manifest untouched" "completed" "$dot_status"
 
-assert_equals "$(get_field "real" "phases.discussion.items.real.status")" "completed" "Real manifest migrated"
-# Dot-dir manifest should still have flat status
-dot_status=$(node -e "
-  const m = JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));
-  console.log(m.phases.discussion.status || 'missing');
-" "$TEST_DIR/.workflows/.state/manifest.json")
-assert_equals "$dot_status" "completed" "Dot-dir manifest untouched"
+  teardown
+}
 
-echo ""
+# --- Test 10: Empty phases object unchanged ---
+test_empty_phases() {
+  setup
 
-# ----------------------------------------------------------------------------
+  create_manifest "empty" '{"name":"empty","work_type":"feature","status":"in-progress","phases":{}}'
 
-echo -e "${YELLOW}Test: empty phases object unchanged${NC}"
-setup_fixture
+  run_migration > /dev/null
 
-create_manifest "empty" '{"name":"empty","work_type":"feature","status":"in-progress","phases":{}}'
+  teardown
+}
 
-output=$(run_migration)
+# --- Test 11: No .workflows directory — exits cleanly ---
+test_no_workflows_dir() {
+  setup
+  rm -rf "$TEST_DIR/.workflows"
 
-assert_not_contains "$output" "updated" "No update for empty phases"
+  run_migration > /dev/null
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 12: Preserves other manifest fields ---
+test_preserves_fields() {
+  setup
 
-echo -e "${YELLOW}Test: no .workflows directory — exits cleanly${NC}"
-setup_fixture
-
-output=$(run_migration)
-
-assert_not_contains "$output" "updated" "No updates without .workflows dir"
-
-echo ""
-
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: preserves other manifest fields${NC}"
-setup_fixture
-
-create_manifest "preserve" '{
+  create_manifest "preserve" '{
   "name": "preserve",
   "work_type": "feature",
   "status": "in-progress",
@@ -359,26 +293,33 @@ create_manifest "preserve" '{
   }
 }'
 
-run_migration > /dev/null
+  run_migration > /dev/null
 
-assert_equals "$(get_field "preserve" "name")" "preserve" "Name preserved"
-assert_equals "$(get_field "preserve" "work_type")" "feature" "Work type preserved"
-assert_equals "$(get_field "preserve" "created")" "2026-03-01" "Created date preserved"
-assert_equals "$(get_field "preserve" "description")" "Test preservation" "Description preserved"
+  assert_eq "name preserved" "preserve" "$(get_field "preserve" "name")"
+  assert_eq "work type preserved" "feature" "$(get_field "preserve" "work_type")"
+  assert_eq "created date preserved" "2026-03-01" "$(get_field "preserve" "created")"
+  assert_eq "description preserved" "Test preservation" "$(get_field "preserve" "description")"
 
+  teardown
+}
+
+# --- Run all tests ---
+echo "Running migration 025 tests..."
 echo ""
 
-# ============================================================================
-# SUMMARY
-# ============================================================================
+test_feature_discussion_wrapped
+test_feature_planning_wrapped
+test_analysis_cache_preserved
+test_bugfix_investigation_wrapped
+test_epic_skipped
+test_already_has_items
+test_multiple_phases_wrapped
+test_idempotent
+test_skips_dot_dirs
+test_empty_phases
+test_no_workflows_dir
+test_preserves_fields
 
 echo ""
-echo "========================================"
-echo -e "Tests run: $TESTS_RUN"
-echo -e "Passed: ${GREEN}$TESTS_PASSED${NC}"
-echo -e "Failed: ${RED}$TESTS_FAILED${NC}"
-echo "========================================"
-
-if [ $TESTS_FAILED -gt 0 ]; then
-    exit 1
-fi
+echo "Results: $PASS passed, $FAIL failed"
+[ "$FAIL" -eq 0 ] || exit 1

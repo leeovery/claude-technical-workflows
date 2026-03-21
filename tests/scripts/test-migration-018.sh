@@ -1,233 +1,133 @@
 #!/bin/bash
-#
-# Tests migration 018-remove-stale-environment-setup.sh
-# Validates cleanup of stale environment-setup.md from workflows root.
-#
+# Tests for migration 018: remove-stale-environment-setup
+# Run: bash tests/scripts/test-migration-018.sh
 
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MIGRATION_SCRIPT="$SCRIPT_DIR/../../skills/workflow-migrate/scripts/migrations/018-remove-stale-environment-setup.sh"
+REPO_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+MIGRATION="$REPO_DIR/skills/workflow-migrate/scripts/migrations/018-remove-stale-environment-setup.sh"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+PASS=0
+FAIL=0
 
-# Test counters
-TESTS_RUN=0
-TESTS_PASSED=0
-TESTS_FAILED=0
+report_update() { : ; }
+report_skip() { : ; }
 
-# Create a temporary directory for test fixtures
-TEST_DIR=$(mktemp -d)
-trap "rm -rf $TEST_DIR" EXIT
+assert_eq() {
+  local label="$1" expected="$2" actual="$3"
+  if [ "$expected" = "$actual" ]; then
+    PASS=$((PASS + 1))
+  else
+    FAIL=$((FAIL + 1))
+    echo "FAIL: $label"
+    echo "  expected: $expected"
+    echo "  actual:   $actual"
+  fi
+}
 
-echo "Test directory: $TEST_DIR"
+setup() {
+  TEST_DIR=$(mktemp -d /tmp/migration-018-test.XXXXXX)
+  mkdir -p "$TEST_DIR/.workflows"
+}
+
+teardown() {
+  rm -rf "$TEST_DIR"
+}
+
+# --- Test 1: Both exist — removes stale root copy, keeps .state/ ---
+test_both_exist() {
+  setup
+
+  mkdir -p "$TEST_DIR/.workflows/.state"
+  echo "stale content" > "$TEST_DIR/.workflows/environment-setup.md"
+  echo "real content" > "$TEST_DIR/.workflows/.state/environment-setup.md"
+
+  cd "$TEST_DIR"
+  source "$MIGRATION"
+
+  assert_eq "Stale root file removed" "false" "$([ -f "$TEST_DIR/.workflows/environment-setup.md" ] && echo true || echo false)"
+  assert_eq ".state/ copy preserved" "true" "$([ -f "$TEST_DIR/.workflows/.state/environment-setup.md" ] && echo true || echo false)"
+  assert_eq ".state/ content unchanged" "real content" "$(cat "$TEST_DIR/.workflows/.state/environment-setup.md")"
+
+  teardown
+}
+
+# --- Test 2: Only root exists — moves to .state/ ---
+test_only_root() {
+  setup
+
+  echo "needs moving" > "$TEST_DIR/.workflows/environment-setup.md"
+
+  cd "$TEST_DIR"
+  source "$MIGRATION"
+
+  assert_eq "Root file removed" "false" "$([ -f "$TEST_DIR/.workflows/environment-setup.md" ] && echo true || echo false)"
+  assert_eq "File moved to .state/" "true" "$([ -f "$TEST_DIR/.workflows/.state/environment-setup.md" ] && echo true || echo false)"
+  assert_eq "Content preserved" "needs moving" "$(cat "$TEST_DIR/.workflows/.state/environment-setup.md")"
+
+  teardown
+}
+
+# --- Test 3: Only .state/ exists — no-op ---
+test_only_state() {
+  setup
+
+  mkdir -p "$TEST_DIR/.workflows/.state"
+  echo "already correct" > "$TEST_DIR/.workflows/.state/environment-setup.md"
+
+  cd "$TEST_DIR"
+  source "$MIGRATION"
+
+  assert_eq ".state/ copy still exists" "true" "$([ -f "$TEST_DIR/.workflows/.state/environment-setup.md" ] && echo true || echo false)"
+  assert_eq "No root file created" "false" "$([ -f "$TEST_DIR/.workflows/environment-setup.md" ] && echo true || echo false)"
+  assert_eq "Content unchanged" "already correct" "$(cat "$TEST_DIR/.workflows/.state/environment-setup.md")"
+
+  teardown
+}
+
+# --- Test 4: Neither exists — no-op ---
+test_neither_exists() {
+  setup
+
+  cd "$TEST_DIR"
+  source "$MIGRATION"
+
+  assert_eq "No root file created" "false" "$([ -f "$TEST_DIR/.workflows/environment-setup.md" ] && echo true || echo false)"
+  assert_eq "No .state/ file created" "false" "$([ -f "$TEST_DIR/.workflows/.state/environment-setup.md" ] && echo true || echo false)"
+
+  teardown
+}
+
+# --- Test 5: Idempotency — running twice with both files ---
+test_idempotency() {
+  setup
+
+  mkdir -p "$TEST_DIR/.workflows/.state"
+  echo "stale" > "$TEST_DIR/.workflows/environment-setup.md"
+  echo "canonical" > "$TEST_DIR/.workflows/.state/environment-setup.md"
+
+  cd "$TEST_DIR"
+  source "$MIGRATION"
+  source "$MIGRATION"
+
+  assert_eq "Root file still gone after second run" "false" "$([ -f "$TEST_DIR/.workflows/environment-setup.md" ] && echo true || echo false)"
+  assert_eq ".state/ copy still exists" "true" "$([ -f "$TEST_DIR/.workflows/.state/environment-setup.md" ] && echo true || echo false)"
+  assert_eq "Content unchanged after second run" "canonical" "$(cat "$TEST_DIR/.workflows/.state/environment-setup.md")"
+
+  teardown
+}
+
+# --- Run all tests ---
+echo "Running migration 018 tests..."
 echo ""
 
-#
-# Mock migration helper functions
-#
-
-report_update() {
-    echo "updated"
-}
-
-report_skip() {
-    echo "skipped"
-}
-
-# Export functions for sourced script
-export -f report_update report_skip
-
-#
-# Helper functions
-#
-
-setup_fixture() {
-    rm -rf "$TEST_DIR/.workflows"
-}
-
-run_migration() {
-    cd "$TEST_DIR"
-    source "$MIGRATION_SCRIPT"
-}
-
-assert_equals() {
-    local actual="$1"
-    local expected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if [ "$actual" = "$expected" ]; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected: $expected"
-        echo -e "    Actual:   $actual"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
-}
-
-assert_file_exists() {
-    local filepath="$1"
-    local description="$2"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if [ -f "$filepath" ]; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    File not found: $filepath"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
-}
-
-assert_file_not_exists() {
-    local filepath="$1"
-    local description="$2"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if [ ! -f "$filepath" ]; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    File should not exist: $filepath"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
-}
-
-assert_contains() {
-    local content="$1"
-    local expected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if echo "$content" | grep -qF -- "$expected"; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected to find: $expected"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
-}
-
-# ============================================================================
-# TEST CASES
-# ============================================================================
-
-echo -e "${YELLOW}Test: Both exist — removes stale root copy, keeps .state/${NC}"
-setup_fixture
-
-mkdir -p "$TEST_DIR/.workflows/.state"
-echo "stale content" > "$TEST_DIR/.workflows/environment-setup.md"
-echo "real content" > "$TEST_DIR/.workflows/.state/environment-setup.md"
-
-output=$(run_migration 2>&1)
-
-assert_file_not_exists "$TEST_DIR/.workflows/environment-setup.md" "Stale root file removed"
-assert_file_exists "$TEST_DIR/.workflows/.state/environment-setup.md" ".state/ copy preserved"
-assert_equals "$(cat "$TEST_DIR/.workflows/.state/environment-setup.md")" "real content" ".state/ content unchanged"
-assert_contains "$output" "updated" "Reports update"
+test_both_exist
+test_only_root
+test_only_state
+test_neither_exists
+test_idempotency
 
 echo ""
-
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: Only root exists — moves to .state/${NC}"
-setup_fixture
-
-mkdir -p "$TEST_DIR/.workflows"
-echo "needs moving" > "$TEST_DIR/.workflows/environment-setup.md"
-
-output=$(run_migration 2>&1)
-
-assert_file_not_exists "$TEST_DIR/.workflows/environment-setup.md" "Root file removed"
-assert_file_exists "$TEST_DIR/.workflows/.state/environment-setup.md" "File moved to .state/"
-assert_equals "$(cat "$TEST_DIR/.workflows/.state/environment-setup.md")" "needs moving" "Content preserved"
-assert_contains "$output" "updated" "Reports update"
-
-echo ""
-
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: Only .state/ exists — no-op${NC}"
-setup_fixture
-
-mkdir -p "$TEST_DIR/.workflows/.state"
-echo "already correct" > "$TEST_DIR/.workflows/.state/environment-setup.md"
-
-output=$(run_migration 2>&1)
-
-assert_file_exists "$TEST_DIR/.workflows/.state/environment-setup.md" ".state/ copy still exists"
-assert_file_not_exists "$TEST_DIR/.workflows/environment-setup.md" "No root file created"
-assert_equals "$(cat "$TEST_DIR/.workflows/.state/environment-setup.md")" "already correct" "Content unchanged"
-assert_contains "$output" "skipped" "Reports skip"
-
-echo ""
-
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: Neither exists — no-op${NC}"
-setup_fixture
-
-mkdir -p "$TEST_DIR/.workflows"
-
-output=$(run_migration 2>&1)
-
-assert_file_not_exists "$TEST_DIR/.workflows/environment-setup.md" "No root file created"
-assert_file_not_exists "$TEST_DIR/.workflows/.state/environment-setup.md" "No .state/ file created"
-assert_contains "$output" "skipped" "Reports skip"
-
-echo ""
-
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: Idempotency — running twice with both files${NC}"
-setup_fixture
-
-mkdir -p "$TEST_DIR/.workflows/.state"
-echo "stale" > "$TEST_DIR/.workflows/environment-setup.md"
-echo "canonical" > "$TEST_DIR/.workflows/.state/environment-setup.md"
-
-run_migration
-run_migration
-
-assert_file_not_exists "$TEST_DIR/.workflows/environment-setup.md" "Root file still gone after second run"
-assert_file_exists "$TEST_DIR/.workflows/.state/environment-setup.md" ".state/ copy still exists"
-assert_equals "$(cat "$TEST_DIR/.workflows/.state/environment-setup.md")" "canonical" "Content unchanged after second run"
-
-echo ""
-
-# ============================================================================
-# SUMMARY
-# ============================================================================
-
-echo ""
-echo "========================================"
-echo -e "Tests run: $TESTS_RUN"
-echo -e "Passed: ${GREEN}$TESTS_PASSED${NC}"
-echo -e "Failed: ${RED}$TESTS_FAILED${NC}"
-echo "========================================"
-
-if [ $TESTS_FAILED -gt 0 ]; then
-    exit 1
-fi
+echo "Results: $PASS passed, $FAIL failed"
+[ "$FAIL" -eq 0 ] || exit 1

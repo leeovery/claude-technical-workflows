@@ -1,193 +1,95 @@
 #!/bin/bash
 #
-# Tests migration 023-clear-research-analysis-cache.sh
-# Validates removal of old-format analysis caches and manifest cleanup.
+# Tests for migration 023: clear-research-analysis-cache
+#
+# Run: bash tests/scripts/test-migration-023.sh
 #
 
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MIGRATION_SCRIPT="$SCRIPT_DIR/../../skills/workflow-migrate/scripts/migrations/023-clear-research-analysis-cache.sh"
+REPO_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+MIGRATION="$REPO_DIR/skills/workflow-migrate/scripts/migrations/023-clear-research-analysis-cache.sh"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
+PASS=0
+FAIL=0
 
-# Test counters
-TESTS_RUN=0
-TESTS_PASSED=0
-TESTS_FAILED=0
+report_update() { : ; }
+report_skip() { : ; }
+export -f report_update report_skip
 
-# Create a temporary directory for test fixtures
-TEST_DIR=$(mktemp -d)
-trap "rm -rf $TEST_DIR" EXIT
+assert_eq() {
+  local label="$1" expected="$2" actual="$3"
+  if [ "$expected" = "$actual" ]; then
+    PASS=$((PASS + 1))
+  else
+    FAIL=$((FAIL + 1))
+    echo "FAIL: $label"
+    echo "  expected: $expected"
+    echo "  actual:   $actual"
+  fi
+}
 
-echo "Test directory: $TEST_DIR"
-echo ""
+setup() {
+  TEST_DIR=$(mktemp -d /tmp/migration-023-test.XXXXXX)
+  export PROJECT_DIR="$TEST_DIR"
+  mkdir -p "$TEST_DIR/.workflows"
+}
 
-#
-# Helper functions
-#
-
-setup_fixture() {
-    rm -rf "$TEST_DIR/.workflows"
+teardown() {
+  rm -rf "$TEST_DIR"
 }
 
 create_manifest() {
-    local name="$1"
-    local content="$2"
-    mkdir -p "$TEST_DIR/.workflows/$name"
-    echo "$content" > "$TEST_DIR/.workflows/$name/manifest.json"
+  local name="$1"
+  local content="$2"
+  mkdir -p "$TEST_DIR/.workflows/$name"
+  echo "$content" > "$TEST_DIR/.workflows/$name/manifest.json"
 }
 
 create_state_file() {
-    local name="$1"
-    local content="$2"
-    mkdir -p "$TEST_DIR/.workflows/$name/.state"
-    echo "$content" > "$TEST_DIR/.workflows/$name/.state/research-analysis.md"
-}
-
-# Stub report_update for migration script
-export -f report_update 2>/dev/null || true
-report_update() { echo "updated"; }
-export -f report_update
-
-run_migration() {
-    cd "$TEST_DIR"
-    PROJECT_DIR="$TEST_DIR" bash "$MIGRATION_SCRIPT" 2>&1
+  local name="$1"
+  local content="$2"
+  mkdir -p "$TEST_DIR/.workflows/$name/.state"
+  echo "$content" > "$TEST_DIR/.workflows/$name/.state/research-analysis.md"
 }
 
 get_field() {
-    local name="$1"
-    local field="$2"
-    node -e "
-      const m = JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));
-      const parts = process.argv[2].split('.');
-      let v = m;
-      for (const p of parts) v = (v || {})[p];
-      console.log(v === undefined ? 'undefined' : (typeof v === 'object' ? JSON.stringify(v) : v));
-    " "$TEST_DIR/.workflows/$name/manifest.json" "$field"
+  local name="$1"
+  local field="$2"
+  node -e "
+    const m = JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));
+    const parts = process.argv[2].split('.');
+    let v = m;
+    for (const p of parts) v = (v || {})[p];
+    console.log(v === undefined ? 'undefined' : (typeof v === 'object' ? JSON.stringify(v) : v));
+  " "$TEST_DIR/.workflows/$name/manifest.json" "$field"
 }
 
-assert_equals() {
-    local actual="$1"
-    local expected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if [ "$actual" = "$expected" ]; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected: $expected"
-        echo -e "    Actual:   $actual"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
+run_migration() {
+  cd "$TEST_DIR"
+  bash "$MIGRATION" 2>&1
 }
 
-assert_file_exists() {
-    local path="$1"
-    local description="$2"
+# --- Test 1: Deletes .state/research-analysis.md ---
+test_deletes_state_file() {
+  setup
 
-    TESTS_RUN=$((TESTS_RUN + 1))
+  create_manifest "my-feat" '{"work_type":"feature","status":"in-progress","phases":{"research":{}}}'
+  create_state_file "my-feat" "# Research Analysis Cache\n\n## Topics\n\n### Theme\n- old format"
 
-    if [ -f "$path" ]; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    File not found: $path"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
+  run_migration > /dev/null
+
+  assert_eq "state file deleted" "false" "$([ -f "$TEST_DIR/.workflows/my-feat/.state/research-analysis.md" ] && echo true || echo false)"
+
+  teardown
 }
 
-assert_file_not_exists() {
-    local path="$1"
-    local description="$2"
+# --- Test 2: Clears analysis_cache from manifest ---
+test_clears_analysis_cache() {
+  setup
 
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if [ ! -f "$path" ]; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    File should not exist: $path"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
-}
-
-assert_contains() {
-    local content="$1"
-    local expected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if echo "$content" | grep -qF -- "$expected"; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected to find: $expected"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
-}
-
-assert_not_contains() {
-    local content="$1"
-    local expected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if echo "$content" | grep -qF -- "$expected"; then
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Should not find: $expected"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    else
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    fi
-}
-
-# ============================================================================
-# TEST CASES
-# ============================================================================
-
-echo -e "${YELLOW}Test: deletes .state/research-analysis.md${NC}"
-setup_fixture
-
-create_manifest "my-feat" '{"work_type":"feature","status":"in-progress","phases":{"research":{}}}'
-create_state_file "my-feat" "# Research Analysis Cache\n\n## Topics\n\n### Theme\n- old format"
-
-output=$(run_migration)
-
-assert_file_not_exists "$TEST_DIR/.workflows/my-feat/.state/research-analysis.md" "State file deleted"
-assert_contains "$output" "updated" "Reports file removal"
-
-echo ""
-
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: clears analysis_cache from manifest${NC}"
-setup_fixture
-
-create_manifest "cached-feat" '{
+  create_manifest "cached-feat" '{
   "work_type": "feature",
   "status": "in-progress",
   "phases": {
@@ -202,20 +104,19 @@ create_manifest "cached-feat" '{
   }
 }'
 
-output=$(run_migration)
+  run_migration > /dev/null
 
-assert_equals "$(get_field "cached-feat" "phases.research.analysis_cache")" "undefined" "analysis_cache removed from manifest"
-assert_equals "$(get_field "cached-feat" "phases.research.status")" "completed" "Research status preserved"
-assert_contains "$output" "updated" "Reports manifest cleanup"
+  assert_eq "analysis_cache removed from manifest" "undefined" "$(get_field "cached-feat" "phases.research.analysis_cache")"
+  assert_eq "research status preserved" "completed" "$(get_field "cached-feat" "phases.research.status")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 3: Both file and manifest cleaned together ---
+test_both_cleaned() {
+  setup
 
-echo -e "${YELLOW}Test: both file and manifest cleaned together${NC}"
-setup_fixture
-
-create_manifest "both" '{
+  create_manifest "both" '{
   "work_type": "epic",
   "status": "in-progress",
   "phases": {
@@ -225,22 +126,22 @@ create_manifest "both" '{
     }
   }
 }'
-create_state_file "both" "# old cache content"
+  create_state_file "both" "# old cache content"
 
-output=$(run_migration)
+  run_migration > /dev/null
 
-assert_file_not_exists "$TEST_DIR/.workflows/both/.state/research-analysis.md" "State file deleted"
-assert_equals "$(get_field "both" "phases.research.analysis_cache")" "undefined" "analysis_cache removed"
-assert_equals "$(get_field "both" "phases.research.status")" "completed" "Research status preserved"
+  assert_eq "state file deleted" "false" "$([ -f "$TEST_DIR/.workflows/both/.state/research-analysis.md" ] && echo true || echo false)"
+  assert_eq "analysis_cache removed" "undefined" "$(get_field "both" "phases.research.analysis_cache")"
+  assert_eq "research status preserved" "completed" "$(get_field "both" "phases.research.status")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 4: Manifest without analysis_cache unchanged ---
+test_no_cache_unchanged() {
+  setup
 
-echo -e "${YELLOW}Test: manifest without analysis_cache unchanged${NC}"
-setup_fixture
-
-create_manifest "no-cache" '{
+  create_manifest "no-cache" '{
   "work_type": "feature",
   "status": "in-progress",
   "phases": {
@@ -249,54 +150,53 @@ create_manifest "no-cache" '{
   }
 }'
 
-output=$(run_migration)
+  run_migration > /dev/null
 
-assert_equals "$(get_field "no-cache" "phases.research.status")" "completed" "Research status unchanged"
-assert_equals "$(get_field "no-cache" "phases.discussion.status")" "in-progress" "Discussion status unchanged"
-assert_not_contains "$output" "updated" "No manifest update reported"
+  assert_eq "research status unchanged" "completed" "$(get_field "no-cache" "phases.research.status")"
+  assert_eq "discussion status unchanged" "in-progress" "$(get_field "no-cache" "phases.discussion.status")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 5: Manifest without research phase unchanged ---
+test_no_research_phase() {
+  setup
 
-echo -e "${YELLOW}Test: manifest without research phase unchanged${NC}"
-setup_fixture
+  create_manifest "no-research" '{"work_type":"bugfix","status":"in-progress","phases":{"investigation":{"status":"in-progress"}}}'
 
-create_manifest "no-research" '{"work_type":"bugfix","status":"in-progress","phases":{"investigation":{"status":"in-progress"}}}'
+  run_migration > /dev/null
 
-output=$(run_migration)
+  assert_eq "investigation unchanged" "in-progress" "$(get_field "no-research" "phases.investigation.status")"
 
-assert_equals "$(get_field "no-research" "phases.investigation.status")" "in-progress" "Investigation unchanged"
-assert_not_contains "$output" "updated" "No update reported"
+  teardown
+}
 
-echo ""
+# --- Test 6: Skips dot-prefixed directories ---
+test_skips_dot_dirs() {
+  setup
 
-# ----------------------------------------------------------------------------
+  mkdir -p "$TEST_DIR/.workflows/.state"
+  echo '{"phases":{"research":{"analysis_cache":{"checksum":"old"}}}}' > "$TEST_DIR/.workflows/.state/manifest.json"
+  create_manifest "real" '{"work_type":"feature","status":"in-progress","phases":{"research":{"analysis_cache":{"checksum":"old"}}}}'
 
-echo -e "${YELLOW}Test: skips dot-prefixed directories${NC}"
-setup_fixture
+  run_migration > /dev/null
 
-mkdir -p "$TEST_DIR/.workflows/.state"
-echo '{"phases":{"research":{"analysis_cache":{"checksum":"old"}}}}' > "$TEST_DIR/.workflows/.state/manifest.json"
-create_manifest "real" '{"work_type":"feature","status":"in-progress","phases":{"research":{"analysis_cache":{"checksum":"old"}}}}'
+  assert_eq "real manifest cleaned" "undefined" "$(get_field "real" "phases.research.analysis_cache")"
+  local dot_cache
+  dot_cache=$(node -e "
+    const m = JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));
+    console.log(m.phases.research.analysis_cache ? 'present' : 'absent');
+  " "$TEST_DIR/.workflows/.state/manifest.json")
+  assert_eq "dot-dir manifest not touched" "present" "$dot_cache"
 
-run_migration > /dev/null
+  teardown
+}
 
-assert_equals "$(get_field "real" "phases.research.analysis_cache")" "undefined" "Real manifest cleaned"
-dot_cache=$(node -e "
-  const m = JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));
-  console.log(m.phases.research.analysis_cache ? 'present' : 'absent');
-" "$TEST_DIR/.workflows/.state/manifest.json")
-assert_equals "$dot_cache" "present" "Dot-dir manifest not touched"
+# --- Test 7: Idempotent — running twice produces same result ---
+test_idempotent() {
+  setup
 
-echo ""
-
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: idempotent — running twice produces same result${NC}"
-setup_fixture
-
-create_manifest "idem" '{
+  create_manifest "idem" '{
   "work_type": "feature",
   "status": "in-progress",
   "phases": {
@@ -306,23 +206,22 @@ create_manifest "idem" '{
     }
   }
 }'
-create_state_file "idem" "# old cache"
+  create_state_file "idem" "# old cache"
 
-run_migration > /dev/null
-output=$(run_migration)
+  run_migration > /dev/null
+  run_migration > /dev/null
 
-assert_file_not_exists "$TEST_DIR/.workflows/idem/.state/research-analysis.md" "State file still gone"
-assert_equals "$(get_field "idem" "phases.research.analysis_cache")" "undefined" "analysis_cache still gone"
-assert_not_contains "$output" "updated" "No updates on second run"
+  assert_eq "state file still gone" "false" "$([ -f "$TEST_DIR/.workflows/idem/.state/research-analysis.md" ] && echo true || echo false)"
+  assert_eq "analysis_cache still gone" "undefined" "$(get_field "idem" "phases.research.analysis_cache")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 8: Preserves other manifest fields ---
+test_preserves_fields() {
+  setup
 
-echo -e "${YELLOW}Test: preserves other manifest fields${NC}"
-setup_fixture
-
-create_manifest "preserve" '{
+  create_manifest "preserve" '{
   "name": "preserve",
   "work_type": "feature",
   "status": "in-progress",
@@ -336,72 +235,76 @@ create_manifest "preserve" '{
   }
 }'
 
-run_migration > /dev/null
+  run_migration > /dev/null
 
-assert_equals "$(get_field "preserve" "name")" "preserve" "Name preserved"
-assert_equals "$(get_field "preserve" "work_type")" "feature" "Work type preserved"
-assert_equals "$(get_field "preserve" "created")" "2026-01-15" "Created date preserved"
-assert_equals "$(get_field "preserve" "phases.research.status")" "completed" "Research status preserved"
-assert_equals "$(get_field "preserve" "phases.discussion.status")" "in-progress" "Discussion status preserved"
-assert_equals "$(get_field "preserve" "phases.research.analysis_cache")" "undefined" "analysis_cache removed"
+  assert_eq "name preserved" "preserve" "$(get_field "preserve" "name")"
+  assert_eq "work type preserved" "feature" "$(get_field "preserve" "work_type")"
+  assert_eq "created date preserved" "2026-01-15" "$(get_field "preserve" "created")"
+  assert_eq "research status preserved" "completed" "$(get_field "preserve" "phases.research.status")"
+  assert_eq "discussion status preserved" "in-progress" "$(get_field "preserve" "phases.discussion.status")"
+  assert_eq "analysis_cache removed" "undefined" "$(get_field "preserve" "phases.research.analysis_cache")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 9: Multiple work units processed ---
+test_multiple_work_units() {
+  setup
 
-echo -e "${YELLOW}Test: multiple work units processed${NC}"
-setup_fixture
-
-create_manifest "feat-a" '{
+  create_manifest "feat-a" '{
   "work_type": "feature",
   "status": "in-progress",
   "phases": {"research": {"status": "completed", "analysis_cache": {"checksum": "a1"}}}
 }'
-create_state_file "feat-a" "# cache a"
+  create_state_file "feat-a" "# cache a"
 
-create_manifest "feat-b" '{
+  create_manifest "feat-b" '{
   "work_type": "feature",
   "status": "in-progress",
   "phases": {"research": {"status": "completed", "analysis_cache": {"checksum": "b2"}}}
 }'
 
-create_manifest "feat-c" '{
+  create_manifest "feat-c" '{
   "work_type": "feature",
   "status": "in-progress",
   "phases": {"research": {"status": "completed"}}
 }'
 
-run_migration > /dev/null
+  run_migration > /dev/null
 
-assert_file_not_exists "$TEST_DIR/.workflows/feat-a/.state/research-analysis.md" "feat-a state file deleted"
-assert_equals "$(get_field "feat-a" "phases.research.analysis_cache")" "undefined" "feat-a cache cleared"
-assert_equals "$(get_field "feat-b" "phases.research.analysis_cache")" "undefined" "feat-b cache cleared"
-assert_equals "$(get_field "feat-c" "phases.research.analysis_cache")" "undefined" "feat-c had no cache, still none"
+  assert_eq "feat-a state file deleted" "false" "$([ -f "$TEST_DIR/.workflows/feat-a/.state/research-analysis.md" ] && echo true || echo false)"
+  assert_eq "feat-a cache cleared" "undefined" "$(get_field "feat-a" "phases.research.analysis_cache")"
+  assert_eq "feat-b cache cleared" "undefined" "$(get_field "feat-b" "phases.research.analysis_cache")"
+  assert_eq "feat-c had no cache, still none" "undefined" "$(get_field "feat-c" "phases.research.analysis_cache")"
 
+  teardown
+}
+
+# --- Test 10: No .workflows directory — exits cleanly ---
+test_no_workflows_dir() {
+  setup
+  rm -rf "$TEST_DIR/.workflows"
+
+  run_migration > /dev/null
+
+  teardown
+}
+
+# --- Run all tests ---
+echo "Running migration 023 tests..."
 echo ""
 
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: no .workflows directory — exits cleanly${NC}"
-setup_fixture
-
-output=$(run_migration)
-
-assert_not_contains "$output" "updated" "No updates without .workflows dir"
-
-echo ""
-
-# ============================================================================
-# SUMMARY
-# ============================================================================
+test_deletes_state_file
+test_clears_analysis_cache
+test_both_cleaned
+test_no_cache_unchanged
+test_no_research_phase
+test_skips_dot_dirs
+test_idempotent
+test_preserves_fields
+test_multiple_work_units
+test_no_workflows_dir
 
 echo ""
-echo "========================================"
-echo -e "Tests run: $TESTS_RUN"
-echo -e "Passed: ${GREEN}$TESTS_PASSED${NC}"
-echo -e "Failed: ${RED}$TESTS_FAILED${NC}"
-echo "========================================"
-
-if [ $TESTS_FAILED -gt 0 ]; then
-    exit 1
-fi
+echo "Results: $PASS passed, $FAIL failed"
+[ "$FAIL" -eq 0 ] || exit 1

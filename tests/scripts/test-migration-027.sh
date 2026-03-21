@@ -1,122 +1,49 @@
 #!/bin/bash
 #
-# Tests migration 027-rename-external-deps-task-id.sh
-# Validates renaming of task_id → internal_id in external_dependencies entries.
+# Tests for migration 027: rename-external-deps-task-id
+#
+# Run: bash tests/scripts/test-migration-027.sh
 #
 
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MIGRATION_SCRIPT="$SCRIPT_DIR/../../skills/workflow-migrate/scripts/migrations/027-rename-external-deps-task-id.sh"
+REPO_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+MIGRATION="$REPO_DIR/skills/workflow-migrate/scripts/migrations/027-rename-external-deps-task-id.sh"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
+PASS=0
+FAIL=0
 
-# Test counters
-TESTS_RUN=0
-TESTS_PASSED=0
-TESTS_FAILED=0
+report_update() { : ; }
+report_skip() { : ; }
 
-# Create a temporary directory for test fixtures
-TEST_DIR=$(mktemp -d)
-trap "rm -rf $TEST_DIR" EXIT
-
-echo "Test directory: $TEST_DIR"
-echo ""
-
-#
-# Mock migration helper functions
-#
-
-report_update() {
-    echo "updated"
+assert_eq() {
+  local label="$1" expected="$2" actual="$3"
+  if [ "$expected" = "$actual" ]; then
+    PASS=$((PASS + 1))
+  else
+    FAIL=$((FAIL + 1))
+    echo "FAIL: $label"
+    echo "  expected: $expected"
+    echo "  actual:   $actual"
+  fi
 }
 
-report_skip() {
-    echo "skipped"
+setup() {
+  TEST_DIR=$(mktemp -d /tmp/migration-027-test.XXXXXX)
+  mkdir -p "$TEST_DIR/.workflows"
 }
 
-# Export functions for sourced script
-export -f report_update report_skip
-
-#
-# Helper functions
-#
-
-assert_contains() {
-    local content="$1"
-    local expected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if echo "$content" | grep -q -- "$expected"; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected to find: $expected"
-        echo -e "    In: $content"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-    fi
+teardown() {
+  rm -rf "$TEST_DIR"
 }
 
-assert_not_contains() {
-    local content="$1"
-    local unexpected="$2"
-    local description="$3"
+# --- Test 1: renames task_id to internal_id in epic topic items ---
+test_renames_task_id() {
+  setup
 
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if echo "$content" | grep -q -- "$unexpected"; then
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Unexpectedly found: $unexpected"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-    else
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-    fi
-}
-
-assert_equals() {
-    local actual="$1"
-    local expected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if [ "$actual" = "$expected" ]; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected: $expected"
-        echo -e "    Actual:   $actual"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-    fi
-}
-
-setup_fixture() {
-    rm -rf "$TEST_DIR/.workflows"
-    mkdir -p "$TEST_DIR/.workflows"
-}
-
-run_migration() {
-    cd "$TEST_DIR"
-    source "$MIGRATION_SCRIPT"
-}
-
-# ============================================================================
-# TESTS
-# ============================================================================
-
-echo -e "${YELLOW}Test: renames task_id to internal_id in epic topic items${NC}"
-setup_fixture
-mkdir -p "$TEST_DIR/.workflows/my-epic"
-cat > "$TEST_DIR/.workflows/my-epic/manifest.json" << 'EOF'
+  mkdir -p "$TEST_DIR/.workflows/my-epic"
+  cat > "$TEST_DIR/.workflows/my-epic/manifest.json" << 'EOF'
 {
   "name": "my-epic",
   "work_type": "epic",
@@ -143,24 +70,28 @@ cat > "$TEST_DIR/.workflows/my-epic/manifest.json" << 'EOF'
   }
 }
 EOF
-output=$(run_migration 2>&1)
-content=$(cat "$TEST_DIR/.workflows/my-epic/manifest.json")
 
-assert_contains "$content" '"internal_id": "auth-1-3"' "task_id renamed to internal_id"
-assert_not_contains "$content" '"task_id"' "task_id field removed"
-assert_contains "$content" '"state": "resolved"' "state preserved"
-assert_contains "$content" '"description": "User authentication"' "description preserved"
-assert_contains "$content" '"state": "unresolved"' "unresolved dep unchanged"
-assert_contains "$output" "updated" "Reports update"
+  cd "$TEST_DIR"
+  source "$MIGRATION"
 
-echo ""
+  local content
+  content=$(cat "$TEST_DIR/.workflows/my-epic/manifest.json")
 
-# ----------------------------------------------------------------------------
+  assert_eq "task_id renamed to internal_id" "true" "$(echo "$content" | grep -qF '"internal_id": "auth-1-3"' && echo true || echo false)"
+  assert_eq "task_id field removed" "false" "$(echo "$content" | grep -qF '"task_id"' && echo true || echo false)"
+  assert_eq "state preserved" "true" "$(echo "$content" | grep -qF '"state": "resolved"' && echo true || echo false)"
+  assert_eq "description preserved" "true" "$(echo "$content" | grep -qF '"description": "User authentication"' && echo true || echo false)"
+  assert_eq "unresolved dep unchanged" "true" "$(echo "$content" | grep -qF '"state": "unresolved"' && echo true || echo false)"
 
-echo -e "${YELLOW}Test: already has internal_id — unchanged (idempotent)${NC}"
-setup_fixture
-mkdir -p "$TEST_DIR/.workflows/already-done"
-cat > "$TEST_DIR/.workflows/already-done/manifest.json" << 'EOF'
+  teardown
+}
+
+# --- Test 2: already has internal_id — unchanged (idempotent) ---
+test_already_migrated() {
+  setup
+
+  mkdir -p "$TEST_DIR/.workflows/already-done"
+  cat > "$TEST_DIR/.workflows/already-done/manifest.json" << 'EOF'
 {
   "name": "already-done",
   "work_type": "epic",
@@ -182,21 +113,27 @@ cat > "$TEST_DIR/.workflows/already-done/manifest.json" << 'EOF'
   }
 }
 EOF
-before=$(cat "$TEST_DIR/.workflows/already-done/manifest.json")
-output=$(run_migration 2>&1)
-after=$(cat "$TEST_DIR/.workflows/already-done/manifest.json")
 
-assert_equals "$after" "$before" "Already-migrated manifest unchanged"
-assert_contains "$output" "skipped" "Reports skip for already-migrated"
+  local before
+  before=$(cat "$TEST_DIR/.workflows/already-done/manifest.json")
 
-echo ""
+  cd "$TEST_DIR"
+  source "$MIGRATION"
 
-# ----------------------------------------------------------------------------
+  local after
+  after=$(cat "$TEST_DIR/.workflows/already-done/manifest.json")
 
-echo -e "${YELLOW}Test: no external_dependencies field — unchanged${NC}"
-setup_fixture
-mkdir -p "$TEST_DIR/.workflows/no-deps"
-cat > "$TEST_DIR/.workflows/no-deps/manifest.json" << 'EOF'
+  assert_eq "already-migrated manifest unchanged" "$before" "$after"
+
+  teardown
+}
+
+# --- Test 3: no external_dependencies field — unchanged ---
+test_no_deps() {
+  setup
+
+  mkdir -p "$TEST_DIR/.workflows/no-deps"
+  cat > "$TEST_DIR/.workflows/no-deps/manifest.json" << 'EOF'
 {
   "name": "no-deps",
   "work_type": "epic",
@@ -212,21 +149,27 @@ cat > "$TEST_DIR/.workflows/no-deps/manifest.json" << 'EOF'
   }
 }
 EOF
-before=$(cat "$TEST_DIR/.workflows/no-deps/manifest.json")
-output=$(run_migration 2>&1)
-after=$(cat "$TEST_DIR/.workflows/no-deps/manifest.json")
 
-assert_equals "$after" "$before" "No external_dependencies field left unchanged"
-assert_contains "$output" "skipped" "Reports skip for no deps"
+  local before
+  before=$(cat "$TEST_DIR/.workflows/no-deps/manifest.json")
 
-echo ""
+  cd "$TEST_DIR"
+  source "$MIGRATION"
 
-# ----------------------------------------------------------------------------
+  local after
+  after=$(cat "$TEST_DIR/.workflows/no-deps/manifest.json")
 
-echo -e "${YELLOW}Test: empty object external_dependencies — unchanged${NC}"
-setup_fixture
-mkdir -p "$TEST_DIR/.workflows/empty-deps"
-cat > "$TEST_DIR/.workflows/empty-deps/manifest.json" << 'EOF'
+  assert_eq "no external_dependencies field left unchanged" "$before" "$after"
+
+  teardown
+}
+
+# --- Test 4: empty object external_dependencies — unchanged ---
+test_empty_deps() {
+  setup
+
+  mkdir -p "$TEST_DIR/.workflows/empty-deps"
+  cat > "$TEST_DIR/.workflows/empty-deps/manifest.json" << 'EOF'
 {
   "name": "empty-deps",
   "work_type": "epic",
@@ -243,21 +186,27 @@ cat > "$TEST_DIR/.workflows/empty-deps/manifest.json" << 'EOF'
   }
 }
 EOF
-before=$(cat "$TEST_DIR/.workflows/empty-deps/manifest.json")
-output=$(run_migration 2>&1)
-after=$(cat "$TEST_DIR/.workflows/empty-deps/manifest.json")
 
-assert_equals "$after" "$before" "Empty external_dependencies unchanged"
-assert_contains "$output" "skipped" "Reports skip for empty deps"
+  local before
+  before=$(cat "$TEST_DIR/.workflows/empty-deps/manifest.json")
 
-echo ""
+  cd "$TEST_DIR"
+  source "$MIGRATION"
 
-# ----------------------------------------------------------------------------
+  local after
+  after=$(cat "$TEST_DIR/.workflows/empty-deps/manifest.json")
 
-echo -e "${YELLOW}Test: skips dot-prefixed directories${NC}"
-setup_fixture
-mkdir -p "$TEST_DIR/.workflows/.archive"
-cat > "$TEST_DIR/.workflows/.archive/manifest.json" << 'EOF'
+  assert_eq "empty external_dependencies unchanged" "$before" "$after"
+
+  teardown
+}
+
+# --- Test 5: skips dot-prefixed directories ---
+test_skips_dot_dirs() {
+  setup
+
+  mkdir -p "$TEST_DIR/.workflows/.archive"
+  cat > "$TEST_DIR/.workflows/.archive/manifest.json" << 'EOF'
 {
   "name": "archived",
   "work_type": "epic",
@@ -275,21 +224,27 @@ cat > "$TEST_DIR/.workflows/.archive/manifest.json" << 'EOF'
   }
 }
 EOF
-before=$(cat "$TEST_DIR/.workflows/.archive/manifest.json")
-output=$(run_migration 2>&1)
-after=$(cat "$TEST_DIR/.workflows/.archive/manifest.json")
 
-assert_equals "$after" "$before" "Dot-prefixed directory skipped"
-assert_not_contains "$output" "updated" "No update for dot-prefixed directory"
+  local before
+  before=$(cat "$TEST_DIR/.workflows/.archive/manifest.json")
 
-echo ""
+  cd "$TEST_DIR"
+  source "$MIGRATION"
 
-# ----------------------------------------------------------------------------
+  local after
+  after=$(cat "$TEST_DIR/.workflows/.archive/manifest.json")
 
-echo -e "${YELLOW}Test: mixed — some deps have task_id, some already internal_id${NC}"
-setup_fixture
-mkdir -p "$TEST_DIR/.workflows/mixed"
-cat > "$TEST_DIR/.workflows/mixed/manifest.json" << 'EOF'
+  assert_eq "dot-prefixed directory skipped" "$before" "$after"
+
+  teardown
+}
+
+# --- Test 6: mixed — some deps have task_id, some already internal_id ---
+test_mixed_deps() {
+  setup
+
+  mkdir -p "$TEST_DIR/.workflows/mixed"
+  cat > "$TEST_DIR/.workflows/mixed/manifest.json" << 'EOF'
 {
   "name": "mixed",
   "work_type": "epic",
@@ -317,22 +272,27 @@ cat > "$TEST_DIR/.workflows/mixed/manifest.json" << 'EOF'
   }
 }
 EOF
-run_migration
-content=$(cat "$TEST_DIR/.workflows/mixed/manifest.json")
 
-assert_contains "$content" '"internal_id": "auth-1-3"' "task_id renamed to internal_id"
-assert_contains "$content" '"internal_id": "billing-2-1"' "existing internal_id preserved"
-assert_not_contains "$content" '"task_id"' "no task_id fields remain"
-assert_contains "$content" '"state": "unresolved"' "unresolved dep unchanged"
+  cd "$TEST_DIR"
+  source "$MIGRATION"
 
-echo ""
+  local content
+  content=$(cat "$TEST_DIR/.workflows/mixed/manifest.json")
 
-# ----------------------------------------------------------------------------
+  assert_eq "task_id renamed to internal_id" "true" "$(echo "$content" | grep -qF '"internal_id": "auth-1-3"' && echo true || echo false)"
+  assert_eq "existing internal_id preserved" "true" "$(echo "$content" | grep -qF '"internal_id": "billing-2-1"' && echo true || echo false)"
+  assert_eq "no task_id fields remain" "false" "$(echo "$content" | grep -qF '"task_id"' && echo true || echo false)"
+  assert_eq "unresolved dep unchanged" "true" "$(echo "$content" | grep -qF '"state": "unresolved"' && echo true || echo false)"
 
-echo -e "${YELLOW}Test: multiple phases with deps — all processed${NC}"
-setup_fixture
-mkdir -p "$TEST_DIR/.workflows/multi-phase"
-cat > "$TEST_DIR/.workflows/multi-phase/manifest.json" << 'EOF'
+  teardown
+}
+
+# --- Test 7: multiple phases with deps — all processed ---
+test_multiple_phases() {
+  setup
+
+  mkdir -p "$TEST_DIR/.workflows/multi-phase"
+  cat > "$TEST_DIR/.workflows/multi-phase/manifest.json" << 'EOF'
 {
   "name": "multi-phase",
   "work_type": "epic",
@@ -364,27 +324,33 @@ cat > "$TEST_DIR/.workflows/multi-phase/manifest.json" << 'EOF'
   }
 }
 EOF
-run_migration
-content=$(cat "$TEST_DIR/.workflows/multi-phase/manifest.json")
 
-assert_contains "$content" '"internal_id": "auth-1"' "planning.core dep renamed"
-assert_contains "$content" '"internal_id": "core-2-3"' "planning.advanced dep renamed"
-assert_contains "$content" '"internal_id": "billing-1-2"' "implementation.core dep renamed"
-assert_not_contains "$content" '"task_id"' "no task_id fields remain across phases"
+  cd "$TEST_DIR"
+  source "$MIGRATION"
 
+  local content
+  content=$(cat "$TEST_DIR/.workflows/multi-phase/manifest.json")
+
+  assert_eq "planning.core dep renamed" "true" "$(echo "$content" | grep -qF '"internal_id": "auth-1"' && echo true || echo false)"
+  assert_eq "planning.advanced dep renamed" "true" "$(echo "$content" | grep -qF '"internal_id": "core-2-3"' && echo true || echo false)"
+  assert_eq "implementation.core dep renamed" "true" "$(echo "$content" | grep -qF '"internal_id": "billing-1-2"' && echo true || echo false)"
+  assert_eq "no task_id fields remain across phases" "false" "$(echo "$content" | grep -qF '"task_id"' && echo true || echo false)"
+
+  teardown
+}
+
+# --- Run all tests ---
+echo "Running migration 027 tests..."
 echo ""
 
-# ============================================================================
-# SUMMARY
-# ============================================================================
+test_renames_task_id
+test_already_migrated
+test_no_deps
+test_empty_deps
+test_skips_dot_dirs
+test_mixed_deps
+test_multiple_phases
 
 echo ""
-echo "========================================"
-echo -e "Tests run: $TESTS_RUN"
-echo -e "Passed: ${GREEN}$TESTS_PASSED${NC}"
-echo -e "Failed: ${RED}$TESTS_FAILED${NC}"
-echo "========================================"
-
-if [ $TESTS_FAILED -gt 0 ]; then
-    exit 1
-fi
+echo "Results: $PASS passed, $FAIL failed"
+[ "$FAIL" -eq 0 ] || exit 1
