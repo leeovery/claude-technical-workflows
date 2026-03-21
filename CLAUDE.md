@@ -134,6 +134,67 @@ The `/workflow-migrate` skill keeps workflow files in sync with the current syst
 
 Migration scripts are point-in-time snapshots. The manifest CLI validates values against the current schema, which changes over time (e.g., valid statuses). A migration that uses the CLI today may break silently when validation rules change in a later release. Always read and write `manifest.json` directly using `node` (or `jq`) — never via the manifest CLI. This ensures migrations remain stable regardless of future schema changes.
 
+**Bash 3.2 compatibility**: Migration scripts must be compatible with Bash 3.2 (macOS default). Avoid `mapfile`/`readarray` (bash 4+), associative arrays `declare -A` (bash 4+), and `local -n` namerefs (bash 4.3+).
+
+**Testing migrations:**
+
+Every migration must have a corresponding test file at `tests/scripts/test-migration-NNN.sh`. The test harness follows this structure:
+
+```bash
+#!/bin/bash
+#
+# Tests for migration NNN: description
+#
+# Run: bash tests/scripts/test-migration-NNN.sh
+#
+
+set -eo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+MIGRATION="$REPO_DIR/skills/workflow-migrate/scripts/migrations/NNN-description.sh"
+
+PASS=0
+FAIL=0
+
+report_update() { : ; }
+report_skip() { : ; }
+
+assert_eq() {
+  local label="$1" expected="$2" actual="$3"
+  if [ "$expected" = "$actual" ]; then
+    PASS=$((PASS + 1))
+  else
+    FAIL=$((FAIL + 1))
+    echo "FAIL: $label"
+    echo "  expected: $expected"
+    echo "  actual:   $actual"
+  fi
+}
+
+setup() {
+  TEST_DIR=$(mktemp -d /tmp/migration-NNN-test.XXXXXX)
+  export PROJECT_DIR="$TEST_DIR"
+  mkdir -p "$TEST_DIR/.workflows"
+}
+
+teardown() {
+  rm -rf "$TEST_DIR"
+}
+```
+
+Conventions:
+- **Invocation**: Use `source "$MIGRATION"` for migrations that use `return 0`. Use `bash "$MIGRATION"` with `export -f report_update report_skip` for migrations that use `exit 0`.
+- **Isolation**: Each test function calls `setup` at the start and `teardown` at the end. No shared state between tests.
+- **Assertions**: Use only `assert_eq`. Parameter order: `label`, `expected`, `actual`. Convert other checks inline:
+  - File exists: `assert_eq "desc" "true" "$([ -f "$path" ] && echo true || echo false)"`
+  - Content match: `assert_eq "desc" "true" "$(echo "$content" | grep -q 'pattern' && echo true || echo false)"`
+  - Fixed-string match: `assert_eq "desc" "true" "$(echo "$content" | grep -qF 'text' && echo true || echo false)"`
+- **grep with leading dashes**: Always use `--` before patterns starting with `-` (e.g., `grep -qF -- '- item'`).
+- **Test naming**: Functions prefixed `test_`, comments `# --- Test N: Description ---`.
+- **Summary**: `echo "Results: $PASS passed, $FAIL failed"` then `[ "$FAIL" -eq 0 ] || exit 1`.
+- **Coverage**: Every migration test must cover at minimum: happy path, skip/no-op conditions, idempotency (run twice, same result), and content preservation where applicable.
+
 ## Manifest CLI
 
 The manifest CLI at `skills/workflow-manifest/scripts/manifest.cjs` is the single source of truth for all workflow state. Uses dot-path syntax: `command <work-unit>[.<phase>[.<topic>]] [field] [value]`. Segment count determines access level (1 = work unit, 2 = phase, 3 = topic). See `skills/workflow-manifest/SKILL.md` for the full API.

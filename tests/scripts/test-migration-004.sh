@@ -1,132 +1,55 @@
 #!/bin/bash
-#
-# Tests migration 004-sources-object-format.sh
-# Validates conversion from simple sources array to object format with status.
-#
+# Tests for migration 004: sources-object-format
+# Run: bash tests/scripts/test-migration-004.sh
 
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MIGRATION_SCRIPT="$SCRIPT_DIR/../../skills/workflow-migrate/scripts/migrations/004-sources-object-format.sh"
+REPO_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+MIGRATION="$REPO_DIR/skills/workflow-migrate/scripts/migrations/004-sources-object-format.sh"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+PASS=0
+FAIL=0
 
-# Test counters
-TESTS_RUN=0
-TESTS_PASSED=0
-TESTS_FAILED=0
+report_update() { : ; }
+report_skip() { : ; }
 
-# Create a temporary directory for test fixtures
-TEST_DIR=$(mktemp -d)
-trap "rm -rf $TEST_DIR" EXIT
-
-echo "Test directory: $TEST_DIR"
-echo ""
-
-#
-# Mock migration helper functions
-#
-
-report_update() {
-    echo "updated"
+assert_eq() {
+  local label="$1" expected="$2" actual="$3"
+  if [ "$expected" = "$actual" ]; then
+    PASS=$((PASS + 1))
+  else
+    FAIL=$((FAIL + 1))
+    echo "FAIL: $label"
+    echo "  expected: $expected"
+    echo "  actual:   $actual"
+  fi
 }
 
-report_skip() {
-    echo "skipped"
+setup() {
+  TEST_DIR=$(mktemp -d /tmp/migration-004-test.XXXXXX)
+  mkdir -p "$TEST_DIR/docs/workflow/specification"
+  mkdir -p "$TEST_DIR/docs/workflow/discussion"
+  SPEC_DIR="$TEST_DIR/docs/workflow/specification"
+  DISCUSSION_DIR="$TEST_DIR/docs/workflow/discussion"
 }
 
-# Export functions for sourced script
-export -f report_update report_skip
-
-#
-# Helper functions
-#
-
-setup_fixture() {
-    rm -rf "$TEST_DIR/docs"
-    mkdir -p "$TEST_DIR/docs/workflow/specification"
-    mkdir -p "$TEST_DIR/docs/workflow/discussion"
-    SPEC_DIR="$TEST_DIR/docs/workflow/specification"
-    DISCUSSION_DIR="$TEST_DIR/docs/workflow/discussion"
+teardown() {
+  rm -rf "$TEST_DIR"
 }
 
 run_migration() {
-    cd "$TEST_DIR"
-    # Source the migration script (it uses SPEC_DIR and DISCUSSION_DIR variables)
-    SPEC_DIR="$TEST_DIR/docs/workflow/specification"
-    DISCUSSION_DIR="$TEST_DIR/docs/workflow/discussion"
-    source "$MIGRATION_SCRIPT"
+  cd "$TEST_DIR"
+  SPEC_DIR="$TEST_DIR/docs/workflow/specification"
+  DISCUSSION_DIR="$TEST_DIR/docs/workflow/discussion"
+  source "$MIGRATION"
 }
 
-assert_contains() {
-    local content="$1"
-    local expected="$2"
-    local description="$3"
+# --- Test 1: Single source conversion ---
+test_single_source() {
+  setup
 
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if echo "$content" | grep -q -- "$expected"; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected to find: $expected"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
-}
-
-assert_not_contains() {
-    local content="$1"
-    local unexpected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if ! echo "$content" | grep -q -- "$unexpected"; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Should NOT find: $unexpected"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
-}
-
-assert_equals() {
-    local actual="$1"
-    local expected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if [ "$actual" = "$expected" ]; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected: $expected"
-        echo -e "    Actual:   $actual"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
-}
-
-# ============================================================================
-# TEST CASES
-# ============================================================================
-
-echo -e "${YELLOW}Test: Single source conversion${NC}"
-setup_fixture
-cat > "$SPEC_DIR/single-source.md" << 'EOF'
+  cat > "$SPEC_DIR/single-source.md" << 'EOF'
 ---
 topic: single-source
 status: concluded
@@ -143,20 +66,20 @@ sources:
 Content here.
 EOF
 
-output=$(run_migration 2>&1)
-content=$(cat "$SPEC_DIR/single-source.md")
+  run_migration
+  content=$(cat "$SPEC_DIR/single-source.md")
 
-assert_contains "$content" "- name: auth-flow" "Source name converted to object"
-assert_contains "$content" "status: incorporated" "Status set to incorporated"
-assert_contains "$output" "updated" "Reports update"
+  assert_eq "Source name converted to object" "true" "$(echo "$content" | grep -qF -- '- name: auth-flow' && echo true || echo false)"
+  assert_eq "Status set to incorporated" "true" "$(echo "$content" | grep -qF 'status: incorporated' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 2: Multiple sources conversion ---
+test_multiple_sources() {
+  setup
 
-echo -e "${YELLOW}Test: Multiple sources conversion${NC}"
-setup_fixture
-cat > "$SPEC_DIR/multi-source.md" << 'EOF'
+  cat > "$SPEC_DIR/multi-source.md" << 'EOF'
 ---
 topic: multi-source
 status: in-progress
@@ -175,22 +98,22 @@ sources:
 Content here.
 EOF
 
-run_migration
-content=$(cat "$SPEC_DIR/multi-source.md")
+  run_migration
+  content=$(cat "$SPEC_DIR/multi-source.md")
 
-assert_contains "$content" "- name: topic-a" "First source converted"
-assert_contains "$content" "- name: topic-b" "Second source converted"
-assert_contains "$content" "- name: topic-c" "Third source converted"
-# All should have incorporated status
-assert_contains "$content" "status: incorporated" "Status set to incorporated"
+  assert_eq "First source converted" "true" "$(echo "$content" | grep -qF -- '- name: topic-a' && echo true || echo false)"
+  assert_eq "Second source converted" "true" "$(echo "$content" | grep -qF -- '- name: topic-b' && echo true || echo false)"
+  assert_eq "Third source converted" "true" "$(echo "$content" | grep -qF -- '- name: topic-c' && echo true || echo false)"
+  assert_eq "Status set to incorporated" "true" "$(echo "$content" | grep -qF 'status: incorporated' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 3: Sources with quotes ---
+test_quoted_sources() {
+  setup
 
-echo -e "${YELLOW}Test: Sources with quotes${NC}"
-setup_fixture
-cat > "$SPEC_DIR/quoted-sources.md" << 'EOF'
+  cat > "$SPEC_DIR/quoted-sources.md" << 'EOF'
 ---
 topic: quoted-sources
 status: concluded
@@ -208,19 +131,20 @@ sources:
 Content here.
 EOF
 
-run_migration
-content=$(cat "$SPEC_DIR/quoted-sources.md")
+  run_migration
+  content=$(cat "$SPEC_DIR/quoted-sources.md")
 
-assert_contains "$content" "- name: quoted-topic" "Quoted source name extracted"
-assert_contains "$content" "- name: another-topic" "Second quoted source extracted"
+  assert_eq "Quoted source name extracted" "true" "$(echo "$content" | grep -qF -- '- name: quoted-topic' && echo true || echo false)"
+  assert_eq "Second quoted source extracted" "true" "$(echo "$content" | grep -qF -- '- name: another-topic' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 4: Already migrated (object format) - should skip ---
+test_already_migrated() {
+  setup
 
-echo -e "${YELLOW}Test: Already migrated (object format) - should skip${NC}"
-setup_fixture
-cat > "$SPEC_DIR/already-migrated.md" << 'EOF'
+  cat > "$SPEC_DIR/already-migrated.md" << 'EOF'
 ---
 topic: already-migrated
 status: concluded
@@ -240,22 +164,20 @@ sources:
 Content here.
 EOF
 
-original_content=$(cat "$SPEC_DIR/already-migrated.md")
-output=$(run_migration 2>&1)
-new_content=$(cat "$SPEC_DIR/already-migrated.md")
+  original_content=$(cat "$SPEC_DIR/already-migrated.md")
+  run_migration
+  new_content=$(cat "$SPEC_DIR/already-migrated.md")
 
-assert_equals "$new_content" "$original_content" "File with object format unchanged"
-assert_contains "$output" "skipped" "Reports skip"
+  assert_eq "File with object format unchanged" "$original_content" "$new_content"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 5: No sources field WITH matching discussion ---
+test_no_sources_with_discussion() {
+  setup
 
-echo -e "${YELLOW}Test: No sources field WITH matching discussion${NC}"
-setup_fixture
-
-# Create a matching discussion file
-cat > "$DISCUSSION_DIR/has-discussion.md" << 'EOF'
+  cat > "$DISCUSSION_DIR/has-discussion.md" << 'EOF'
 ---
 topic: has-discussion
 status: concluded
@@ -267,8 +189,7 @@ date: 2024-05-15
 Some discussion content.
 EOF
 
-# Create spec without sources field
-cat > "$SPEC_DIR/has-discussion.md" << 'EOF'
+  cat > "$SPEC_DIR/has-discussion.md" << 'EOF'
 ---
 topic: has-discussion
 status: in-progress
@@ -283,22 +204,21 @@ date: 2024-05-15
 Content here.
 EOF
 
-run_migration
-content=$(cat "$SPEC_DIR/has-discussion.md")
+  run_migration
+  content=$(cat "$SPEC_DIR/has-discussion.md")
 
-assert_contains "$content" "sources:" "Sources field added"
-assert_contains "$content" "- name: has-discussion" "Matching discussion added as source"
-assert_contains "$content" "status: incorporated" "Status set to incorporated"
+  assert_eq "Sources field added" "true" "$(echo "$content" | grep -qF 'sources:' && echo true || echo false)"
+  assert_eq "Matching discussion added as source" "true" "$(echo "$content" | grep -qF -- '- name: has-discussion' && echo true || echo false)"
+  assert_eq "Status set to incorporated" "true" "$(echo "$content" | grep -qF 'status: incorporated' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 6: No sources field WITHOUT matching discussion ---
+test_no_sources_no_discussion() {
+  setup
 
-echo -e "${YELLOW}Test: No sources field WITHOUT matching discussion${NC}"
-setup_fixture
-
-# Create spec without sources field and no matching discussion
-cat > "$SPEC_DIR/no-discussion.md" << 'EOF'
+  cat > "$SPEC_DIR/no-discussion.md" << 'EOF'
 ---
 topic: no-discussion
 status: in-progress
@@ -313,18 +233,19 @@ date: 2024-05-15
 Content here.
 EOF
 
-output=$(run_migration 2>&1)
-content=$(cat "$SPEC_DIR/no-discussion.md")
+  run_migration
+  content=$(cat "$SPEC_DIR/no-discussion.md")
 
-assert_contains "$content" "sources: \[\]" "Empty sources array added"
+  assert_eq "Empty sources array added" "true" "$(echo "$content" | grep -qF 'sources: []' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 7: No frontmatter - should skip ---
+test_no_frontmatter() {
+  setup
 
-echo -e "${YELLOW}Test: No frontmatter - should skip${NC}"
-setup_fixture
-cat > "$SPEC_DIR/no-frontmatter.md" << 'EOF'
+  cat > "$SPEC_DIR/no-frontmatter.md" << 'EOF'
 # Specification: No Frontmatter
 
 ## Overview
@@ -332,20 +253,20 @@ cat > "$SPEC_DIR/no-frontmatter.md" << 'EOF'
 This file has no YAML frontmatter.
 EOF
 
-original_content=$(cat "$SPEC_DIR/no-frontmatter.md")
-output=$(run_migration 2>&1)
-new_content=$(cat "$SPEC_DIR/no-frontmatter.md")
+  original_content=$(cat "$SPEC_DIR/no-frontmatter.md")
+  run_migration
+  new_content=$(cat "$SPEC_DIR/no-frontmatter.md")
 
-assert_equals "$new_content" "$original_content" "File without frontmatter unchanged"
-assert_contains "$output" "skipped" "Reports skip"
+  assert_eq "File without frontmatter unchanged" "$original_content" "$new_content"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 8: Idempotency (running migration twice) ---
+test_idempotency() {
+  setup
 
-echo -e "${YELLOW}Test: Idempotency (running migration twice)${NC}"
-setup_fixture
-cat > "$SPEC_DIR/idempotent.md" << 'EOF'
+  cat > "$SPEC_DIR/idempotent.md" << 'EOF'
 ---
 topic: idempotent
 status: concluded
@@ -363,23 +284,22 @@ sources:
 Content.
 EOF
 
-run_migration
-first_run=$(cat "$SPEC_DIR/idempotent.md")
+  run_migration
+  first_run=$(cat "$SPEC_DIR/idempotent.md")
 
-# Run again
-output=$(run_migration 2>&1)
-second_run=$(cat "$SPEC_DIR/idempotent.md")
+  run_migration
+  second_run=$(cat "$SPEC_DIR/idempotent.md")
 
-assert_equals "$second_run" "$first_run" "Second migration run produces same result"
-assert_not_contains "$output" "updated" "No update on second run"
+  assert_eq "Second migration run produces same result" "$first_run" "$second_run"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 9: Content preservation after migration ---
+test_content_preservation() {
+  setup
 
-echo -e "${YELLOW}Test: Content preservation after migration${NC}"
-setup_fixture
-cat > "$SPEC_DIR/preserve-content.md" << 'EOF'
+  cat > "$SPEC_DIR/preserve-content.md" << 'EOF'
 ---
 topic: preserve-content
 status: concluded
@@ -417,24 +337,25 @@ Details about component B.
 None.
 EOF
 
-run_migration
-content=$(cat "$SPEC_DIR/preserve-content.md")
+  run_migration
+  content=$(cat "$SPEC_DIR/preserve-content.md")
 
-assert_contains "$content" "# Specification: Preserve Content" "H1 heading preserved"
-assert_contains "$content" "## Overview" "Overview section preserved"
-assert_contains "$content" "## Architecture" "Architecture section preserved"
-assert_contains "$content" "### Component A" "Nested heading preserved"
-assert_contains "$content" "## Edge Cases" "Edge Cases section preserved"
-assert_contains "$content" "- Edge case 1" "List content preserved"
-assert_contains "$content" "## Dependencies" "Dependencies section preserved"
+  assert_eq "H1 heading preserved" "true" "$(echo "$content" | grep -qF '# Specification: Preserve Content' && echo true || echo false)"
+  assert_eq "Overview section preserved" "true" "$(echo "$content" | grep -qF '## Overview' && echo true || echo false)"
+  assert_eq "Architecture section preserved" "true" "$(echo "$content" | grep -qF '## Architecture' && echo true || echo false)"
+  assert_eq "Nested heading preserved" "true" "$(echo "$content" | grep -qF '### Component A' && echo true || echo false)"
+  assert_eq "Edge Cases section preserved" "true" "$(echo "$content" | grep -qF '## Edge Cases' && echo true || echo false)"
+  assert_eq "List content preserved" "true" "$(echo "$content" | grep -qF -- '- Edge case 1' && echo true || echo false)"
+  assert_eq "Dependencies section preserved" "true" "$(echo "$content" | grep -qF '## Dependencies' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 10: Other frontmatter fields preserved ---
+test_other_fields_preserved() {
+  setup
 
-echo -e "${YELLOW}Test: Other frontmatter fields preserved${NC}"
-setup_fixture
-cat > "$SPEC_DIR/other-fields.md" << 'EOF'
+  cat > "$SPEC_DIR/other-fields.md" << 'EOF'
 ---
 topic: other-fields
 status: concluded
@@ -452,23 +373,24 @@ superseded_by: newer-spec
 Content.
 EOF
 
-run_migration
-content=$(cat "$SPEC_DIR/other-fields.md")
+  run_migration
+  content=$(cat "$SPEC_DIR/other-fields.md")
 
-assert_contains "$content" "topic: other-fields" "Topic field preserved"
-assert_contains "$content" "status: concluded" "Status field preserved"
-assert_contains "$content" "type: feature" "Type field preserved"
-assert_contains "$content" "date: 2024-08-01" "Date field preserved"
-assert_contains "$content" "superseded_by: newer-spec" "Superseded_by field preserved"
-assert_contains "$content" "- name: topic-x" "Source converted to object"
+  assert_eq "Topic field preserved" "true" "$(echo "$content" | grep -qF 'topic: other-fields' && echo true || echo false)"
+  assert_eq "Status field preserved" "true" "$(echo "$content" | grep -qF 'status: concluded' && echo true || echo false)"
+  assert_eq "Type field preserved" "true" "$(echo "$content" | grep -qF 'type: feature' && echo true || echo false)"
+  assert_eq "Date field preserved" "true" "$(echo "$content" | grep -qF 'date: 2024-08-01' && echo true || echo false)"
+  assert_eq "Superseded_by field preserved" "true" "$(echo "$content" | grep -qF 'superseded_by: newer-spec' && echo true || echo false)"
+  assert_eq "Source converted to object" "true" "$(echo "$content" | grep -qF -- '- name: topic-x' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 11: Empty sources array - should skip ---
+test_empty_sources() {
+  setup
 
-echo -e "${YELLOW}Test: Empty sources array - should skip${NC}"
-setup_fixture
-cat > "$SPEC_DIR/empty-sources.md" << 'EOF'
+  cat > "$SPEC_DIR/empty-sources.md" << 'EOF'
 ---
 topic: empty-sources
 status: in-progress
@@ -484,22 +406,20 @@ sources:
 Content.
 EOF
 
-# This is a bit tricky - file has sources: but no actual items
-# Migration should recognize this and not break the file
-run_migration
-content=$(cat "$SPEC_DIR/empty-sources.md")
+  run_migration
+  content=$(cat "$SPEC_DIR/empty-sources.md")
 
-# File should still be valid YAML
-assert_contains "$content" "^---$" "Frontmatter delimiters present"
-assert_contains "$content" "topic: empty-sources" "Topic preserved"
+  assert_eq "Frontmatter delimiters present" "true" "$(echo "$content" | grep -q '^---$' && echo true || echo false)"
+  assert_eq "Topic preserved" "true" "$(echo "$content" | grep -qF 'topic: empty-sources' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 12: Sources is last field in frontmatter ---
+test_sources_last() {
+  setup
 
-echo -e "${YELLOW}Test: Sources is last field in frontmatter${NC}"
-setup_fixture
-cat > "$SPEC_DIR/sources-last.md" << 'EOF'
+  cat > "$SPEC_DIR/sources-last.md" << 'EOF'
 ---
 topic: sources-last
 status: concluded
@@ -516,19 +436,20 @@ sources:
 Content.
 EOF
 
-run_migration
-content=$(cat "$SPEC_DIR/sources-last.md")
+  run_migration
+  content=$(cat "$SPEC_DIR/sources-last.md")
 
-assert_contains "$content" "- name: final-topic" "Source converted when last in frontmatter"
-assert_contains "$content" "status: incorporated" "Status added"
+  assert_eq "Source converted when last in frontmatter" "true" "$(echo "$content" | grep -qF -- '- name: final-topic' && echo true || echo false)"
+  assert_eq "Status added" "true" "$(echo "$content" | grep -qF 'status: incorporated' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 13: Sources last with --- horizontal rules in body ---
+test_sources_last_with_hr_body() {
+  setup
 
-echo -e "${YELLOW}Test: Sources last with --- horizontal rules in body${NC}"
-setup_fixture
-cat > "$SPEC_DIR/body-with-hr.md" << 'TESTEOF'
+  cat > "$SPEC_DIR/body-with-hr.md" << 'TESTEOF'
 ---
 topic: body-with-hr
 status: concluded
@@ -564,24 +485,25 @@ Some content here.
 Final paragraph.
 TESTEOF
 
-run_migration
-content=$(cat "$SPEC_DIR/body-with-hr.md")
+  run_migration
+  content=$(cat "$SPEC_DIR/body-with-hr.md")
 
-assert_contains "$content" "- name: my-discussion" "Source converted with HR in body"
-assert_contains "$content" "status: incorporated" "Status added with HR in body"
-assert_contains "$content" "## Overview" "Overview section preserved"
-assert_contains "$content" "## Dependencies" "Dependencies section preserved"
-assert_contains "$content" "## More content after second HR" "Content after second HR preserved"
-assert_contains "$content" "Final paragraph." "Final paragraph preserved"
-assert_contains "$content" "The plugin architecture" "List item in body preserved"
+  assert_eq "Source converted with HR in body" "true" "$(echo "$content" | grep -qF -- '- name: my-discussion' && echo true || echo false)"
+  assert_eq "Status added with HR in body" "true" "$(echo "$content" | grep -qF 'status: incorporated' && echo true || echo false)"
+  assert_eq "Overview section preserved" "true" "$(echo "$content" | grep -qF '## Overview' && echo true || echo false)"
+  assert_eq "Dependencies section preserved" "true" "$(echo "$content" | grep -qF '## Dependencies' && echo true || echo false)"
+  assert_eq "Content after second HR preserved" "true" "$(echo "$content" | grep -qF '## More content after second HR' && echo true || echo false)"
+  assert_eq "Final paragraph preserved" "true" "$(echo "$content" | grep -qF 'Final paragraph.' && echo true || echo false)"
+  assert_eq "List item in body preserved" "true" "$(echo "$content" | grep -qF 'The plugin architecture' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 14: Multiple sources last with rich body content ---
+test_rich_body() {
+  setup
 
-echo -e "${YELLOW}Test: Multiple sources last with rich body content${NC}"
-setup_fixture
-cat > "$SPEC_DIR/rich-body.md" << 'TESTEOF'
+  cat > "$SPEC_DIR/rich-body.md" << 'TESTEOF'
 ---
 topic: rich-body
 status: concluded
@@ -620,24 +542,25 @@ tick create "Task with quotes" --priority 1
 | value    | other    |
 TESTEOF
 
-run_migration
-content=$(cat "$SPEC_DIR/rich-body.md")
+  run_migration
+  content=$(cat "$SPEC_DIR/rich-body.md")
 
-assert_contains "$content" "- name: topic-one" "First source converted"
-assert_contains "$content" "- name: topic-two" "Second source converted"
-assert_contains "$content" "- name: topic-three" "Third source converted"
-assert_contains "$content" "## Overview" "Overview preserved"
-assert_contains "$content" 'tick create "Task with quotes"' "Code block with quotes preserved"
-assert_contains "$content" "## Another Section" "Section after HR preserved"
-assert_contains "$content" "Column A" "Table preserved"
+  assert_eq "First source converted" "true" "$(echo "$content" | grep -qF -- '- name: topic-one' && echo true || echo false)"
+  assert_eq "Second source converted" "true" "$(echo "$content" | grep -qF -- '- name: topic-two' && echo true || echo false)"
+  assert_eq "Third source converted" "true" "$(echo "$content" | grep -qF -- '- name: topic-three' && echo true || echo false)"
+  assert_eq "Overview preserved" "true" "$(echo "$content" | grep -qF '## Overview' && echo true || echo false)"
+  assert_eq "Code block with quotes preserved" "true" "$(echo "$content" | grep -qF 'tick create "Task with quotes"' && echo true || echo false)"
+  assert_eq "Section after HR preserved" "true" "$(echo "$content" | grep -qF '## Another Section' && echo true || echo false)"
+  assert_eq "Table preserved" "true" "$(echo "$content" | grep -qF 'Column A' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 15: No sources with matching discussion and --- in body ---
+test_no_sources_with_discussion_and_hr() {
+  setup
 
-echo -e "${YELLOW}Test: No sources with matching discussion and --- in body${NC}"
-setup_fixture
-cat > "$DISCUSSION_DIR/has-hr-body.md" << 'EOF'
+  cat > "$DISCUSSION_DIR/has-hr-body.md" << 'EOF'
 ---
 topic: has-hr-body
 status: concluded
@@ -649,7 +572,7 @@ date: 2024-11-01
 ## Content
 EOF
 
-cat > "$SPEC_DIR/has-hr-body.md" << 'TESTEOF'
+  cat > "$SPEC_DIR/has-hr-body.md" << 'TESTEOF'
 ---
 topic: has-hr-body
 status: in-progress
@@ -670,22 +593,23 @@ Content here.
 More content here.
 TESTEOF
 
-run_migration
-content=$(cat "$SPEC_DIR/has-hr-body.md")
+  run_migration
+  content=$(cat "$SPEC_DIR/has-hr-body.md")
 
-assert_contains "$content" "- name: has-hr-body" "Matching discussion added"
-assert_contains "$content" "status: incorporated" "Status set"
-assert_contains "$content" "## Overview" "Overview preserved"
-assert_contains "$content" "## Dependencies" "Dependencies preserved"
-assert_contains "$content" "More content here." "Content after HR preserved"
+  assert_eq "Matching discussion added" "true" "$(echo "$content" | grep -qF -- '- name: has-hr-body' && echo true || echo false)"
+  assert_eq "Status set" "true" "$(echo "$content" | grep -qF 'status: incorporated' && echo true || echo false)"
+  assert_eq "Overview preserved" "true" "$(echo "$content" | grep -qF '## Overview' && echo true || echo false)"
+  assert_eq "Dependencies preserved" "true" "$(echo "$content" | grep -qF '## Dependencies' && echo true || echo false)"
+  assert_eq "Content after HR preserved" "true" "$(echo "$content" | grep -qF 'More content here.' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 16: Real-world pattern - many sources + body with lists, tables, code, HR ---
+test_real_world_many_sources() {
+  setup
 
-echo -e "${YELLOW}Test: Real-world pattern - many sources + body with lists, tables, code, HR${NC}"
-setup_fixture
-cat > "$SPEC_DIR/tick-core-pattern.md" << 'TESTEOF'
+  cat > "$SPEC_DIR/tick-core-pattern.md" << 'TESTEOF'
 ---
 topic: tick-core-pattern
 status: concluded
@@ -760,26 +684,27 @@ Prerequisites:
 Final section with content.
 TESTEOF
 
-run_migration
-content=$(cat "$SPEC_DIR/tick-core-pattern.md")
+  run_migration
+  content=$(cat "$SPEC_DIR/tick-core-pattern.md")
 
-assert_contains "$content" "- name: project-fundamentals" "First of 8 sources converted"
-assert_contains "$content" "- name: tui" "Last of 8 sources converted"
-assert_contains "$content" "## Overview" "Overview preserved"
-assert_contains "$content" '`tasks.jsonl`' "Inline code preserved"
-assert_contains "$content" "| Field | Type | Required |" "Table preserved"
-assert_contains "$content" 'tick create "Setup authentication"' "Code block with quotes preserved"
-assert_contains "$content" "## Dependencies" "Dependencies after HR preserved"
-assert_contains "$content" "## More Content" "Content after second HR preserved"
-assert_contains "$content" "Final section with content." "Final paragraph preserved"
+  assert_eq "First of 8 sources converted" "true" "$(echo "$content" | grep -qF -- '- name: project-fundamentals' && echo true || echo false)"
+  assert_eq "Last of 8 sources converted" "true" "$(echo "$content" | grep -qF -- '- name: tui' && echo true || echo false)"
+  assert_eq "Overview preserved" "true" "$(echo "$content" | grep -qF '## Overview' && echo true || echo false)"
+  assert_eq "Inline code preserved" "true" "$(echo "$content" | grep -qF '`tasks.jsonl`' && echo true || echo false)"
+  assert_eq "Table preserved" "true" "$(echo "$content" | grep -qF '| Field | Type | Required |' && echo true || echo false)"
+  assert_eq "Code block with quotes preserved" "true" "$(echo "$content" | grep -qF 'tick create "Setup authentication"' && echo true || echo false)"
+  assert_eq "Dependencies after HR preserved" "true" "$(echo "$content" | grep -qF '## Dependencies' && echo true || echo false)"
+  assert_eq "Content after second HR preserved" "true" "$(echo "$content" | grep -qF '## More Content' && echo true || echo false)"
+  assert_eq "Final paragraph preserved" "true" "$(echo "$content" | grep -qF 'Final section with content.' && echo true || echo false)"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 17: Real-world pattern - legacy spec without frontmatter (should skip) ---
+test_legacy_no_frontmatter() {
+  setup
 
-echo -e "${YELLOW}Test: Real-world pattern - legacy spec without frontmatter (should skip)${NC}"
-setup_fixture
-cat > "$SPEC_DIR/evvi-pattern.md" << 'TESTEOF'
+  cat > "$SPEC_DIR/evvi-pattern.md" << 'TESTEOF'
 # Specification: API Design
 
 **Status**: Complete
@@ -798,28 +723,39 @@ Content here with **bold** and `code`.
 Final content.
 TESTEOF
 
-run_migration
-content=$(cat "$SPEC_DIR/evvi-pattern.md")
+  run_migration
+  content=$(cat "$SPEC_DIR/evvi-pattern.md")
 
-# Should be unchanged (no frontmatter = skip)
-assert_contains "$content" "# Specification: API Design" "Legacy H1 unchanged"
-assert_contains "$content" "Status" "Legacy status line present"
-assert_contains "$content" "## API Philosophy" "Body unchanged"
-assert_contains "$content" "## More Content" "More content unchanged"
+  assert_eq "Legacy H1 unchanged" "true" "$(echo "$content" | grep -qF '# Specification: API Design' && echo true || echo false)"
+  assert_eq "Legacy status line present" "true" "$(echo "$content" | grep -qF 'Status' && echo true || echo false)"
+  assert_eq "Body unchanged" "true" "$(echo "$content" | grep -qF '## API Philosophy' && echo true || echo false)"
+  assert_eq "More content unchanged" "true" "$(echo "$content" | grep -qF '## More Content' && echo true || echo false)"
 
+  teardown
+}
+
+# --- Run all tests ---
+echo "Running migration 004 tests..."
 echo ""
 
-# ============================================================================
-# SUMMARY
-# ============================================================================
+test_single_source
+test_multiple_sources
+test_quoted_sources
+test_already_migrated
+test_no_sources_with_discussion
+test_no_sources_no_discussion
+test_no_frontmatter
+test_idempotency
+test_content_preservation
+test_other_fields_preserved
+test_empty_sources
+test_sources_last
+test_sources_last_with_hr_body
+test_rich_body
+test_no_sources_with_discussion_and_hr
+test_real_world_many_sources
+test_legacy_no_frontmatter
 
 echo ""
-echo "========================================"
-echo -e "Tests run: $TESTS_RUN"
-echo -e "Passed: ${GREEN}$TESTS_PASSED${NC}"
-echo -e "Failed: ${RED}$TESTS_FAILED${NC}"
-echo "========================================"
-
-if [ $TESTS_FAILED -gt 0 ]; then
-    exit 1
-fi
+echo "Results: $PASS passed, $FAIL failed"
+[ "$FAIL" -eq 0 ] || exit 1

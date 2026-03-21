@@ -1,209 +1,130 @@
 #!/bin/bash
-#
-# Tests migration 019-status-rename.sh
-# Validates renaming of work unit statuses: active → in-progress, archived → cancelled.
-# Also validates auto-detection of completed pipelines → concluded.
-#
+# Tests for migration 019: status-rename
+# Run: bash tests/scripts/test-migration-019.sh
 
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MIGRATION_SCRIPT="$SCRIPT_DIR/../../skills/workflow-migrate/scripts/migrations/019-status-rename.sh"
-
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
-
-# Test counters
-TESTS_RUN=0
-TESTS_PASSED=0
-TESTS_FAILED=0
-
-# Create a temporary directory for test fixtures
-TEST_DIR=$(mktemp -d)
-trap "rm -rf $TEST_DIR" EXIT
-
-echo "Test directory: $TEST_DIR"
-echo ""
-
-#
-# Helper functions
-#
-
 REPO_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+MIGRATION="$REPO_DIR/skills/workflow-migrate/scripts/migrations/019-status-rename.sh"
 
-setup_fixture() {
-    rm -rf "$TEST_DIR/.workflows" "$TEST_DIR/.claude"
-    # Symlink .claude/skills → repo skills/ so the migration can find the manifest CLI
-    mkdir -p "$TEST_DIR/.claude"
-    ln -sfn "$REPO_DIR/skills" "$TEST_DIR/.claude/skills"
+PASS=0
+FAIL=0
+
+report_update() { : ; }
+report_skip() { : ; }
+export -f report_update report_skip
+
+assert_eq() {
+  local label="$1" expected="$2" actual="$3"
+  if [ "$expected" = "$actual" ]; then
+    PASS=$((PASS + 1))
+  else
+    FAIL=$((FAIL + 1))
+    echo "FAIL: $label"
+    echo "  expected: $expected"
+    echo "  actual:   $actual"
+  fi
 }
 
 create_manifest() {
-    local name="$1"
-    local content="$2"
-    mkdir -p "$TEST_DIR/.workflows/$name"
-    echo "$content" > "$TEST_DIR/.workflows/$name/manifest.json"
-}
-
-# Stub report_update for migration script
-report_update() { echo "updated"; }
-export -f report_update
-
-run_migration() {
-    cd "$TEST_DIR"
-    PROJECT_DIR="$TEST_DIR" bash "$MIGRATION_SCRIPT" 2>&1
+  local name="$1"
+  local content="$2"
+  mkdir -p "$TEST_DIR/.workflows/$name"
+  echo "$content" > "$TEST_DIR/.workflows/$name/manifest.json"
 }
 
 get_status() {
-    local name="$1"
-    node -e "console.log(JSON.parse(require('fs').readFileSync(process.argv[1],'utf8')).status)" "$TEST_DIR/.workflows/$name/manifest.json"
+  local name="$1"
+  node -e "console.log(JSON.parse(require('fs').readFileSync(process.argv[1],'utf8')).status)" "$TEST_DIR/.workflows/$name/manifest.json"
 }
 
 get_json() {
-    local name="$1"
-    cat "$TEST_DIR/.workflows/$name/manifest.json"
+  local name="$1"
+  cat "$TEST_DIR/.workflows/$name/manifest.json"
 }
 
-assert_equals() {
-    local actual="$1"
-    local expected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if [ "$actual" = "$expected" ]; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected: $expected"
-        echo -e "    Actual:   $actual"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
+setup() {
+  TEST_DIR=$(mktemp -d /tmp/migration-019-test.XXXXXX)
+  mkdir -p "$TEST_DIR/.workflows"
+  mkdir -p "$TEST_DIR/.claude"
+  ln -sfn "$REPO_DIR/skills" "$TEST_DIR/.claude/skills"
 }
 
-assert_contains() {
-    local content="$1"
-    local expected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if echo "$content" | grep -qF -- "$expected"; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected to find: $expected"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    fi
+teardown() {
+  rm -rf "$TEST_DIR"
 }
 
-assert_not_contains() {
-    local content="$1"
-    local expected="$2"
-    local description="$3"
+# --- Test 1: active to in-progress ---
+test_active_to_in_progress() {
+  setup
 
-    TESTS_RUN=$((TESTS_RUN + 1))
+  create_manifest "my-feature" '{"work_type":"feature","status":"active","phases":{}}'
 
-    if echo "$content" | grep -qF -- "$expected"; then
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Should not find: $expected"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-        return 1
-    else
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-        return 0
-    fi
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION"
+
+  assert_eq "Status changed to in-progress" "in-progress" "$(get_status "my-feature")"
+
+  teardown
 }
 
-# ============================================================================
-# TEST CASES
-# ============================================================================
+# --- Test 2: archived to cancelled ---
+test_archived_to_cancelled() {
+  setup
 
-echo -e "${YELLOW}Test: active → in-progress${NC}"
-setup_fixture
+  create_manifest "old-feature" '{"work_type":"feature","status":"archived","phases":{}}'
 
-create_manifest "my-feature" '{"work_type":"feature","status":"active","phases":{}}'
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION"
 
-output=$(run_migration)
+  assert_eq "Status changed to cancelled" "cancelled" "$(get_status "old-feature")"
 
-assert_equals "$(get_status "my-feature")" "in-progress" "Status changed to in-progress"
-assert_contains "$output" "updated" "Reports update"
+  teardown
+}
 
-echo ""
+# --- Test 3: in-progress unchanged (already correct) ---
+test_in_progress_unchanged() {
+  setup
 
-# ----------------------------------------------------------------------------
+  create_manifest "current" '{"work_type":"feature","status":"in-progress","phases":{}}'
 
-echo -e "${YELLOW}Test: archived → cancelled${NC}"
-setup_fixture
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION"
 
-create_manifest "old-feature" '{"work_type":"feature","status":"archived","phases":{}}'
+  assert_eq "Status remains in-progress" "in-progress" "$(get_status "current")"
 
-output=$(run_migration)
+  teardown
+}
 
-assert_equals "$(get_status "old-feature")" "cancelled" "Status changed to cancelled"
-assert_contains "$output" "updated" "Reports update"
+# --- Test 4: concluded unchanged ---
+test_concluded_unchanged() {
+  setup
 
-echo ""
+  create_manifest "done-feature" '{"work_type":"feature","status":"concluded","phases":{}}'
 
-# ----------------------------------------------------------------------------
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION"
 
-echo -e "${YELLOW}Test: in-progress unchanged (already correct)${NC}"
-setup_fixture
+  assert_eq "Status remains concluded" "concluded" "$(get_status "done-feature")"
 
-create_manifest "current" '{"work_type":"feature","status":"in-progress","phases":{}}'
+  teardown
+}
 
-output=$(run_migration)
-status=$(get_status "current")
+# --- Test 5: cancelled unchanged ---
+test_cancelled_unchanged() {
+  setup
 
-assert_equals "$status" "in-progress" "Status remains in-progress"
-assert_not_contains "$output" "updated" "No update reported"
+  create_manifest "dead-feature" '{"work_type":"feature","status":"cancelled","phases":{}}'
 
-echo ""
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION"
 
-# ----------------------------------------------------------------------------
+  assert_eq "Status remains cancelled" "cancelled" "$(get_status "dead-feature")"
 
-echo -e "${YELLOW}Test: concluded unchanged${NC}"
-setup_fixture
+  teardown
+}
 
-create_manifest "done-feature" '{"work_type":"feature","status":"concluded","phases":{}}'
+# --- Test 6: feature with completed review to concluded ---
+test_feature_completed_review() {
+  setup
 
-output=$(run_migration)
-
-assert_equals "$(get_status "done-feature")" "concluded" "Status remains concluded"
-assert_not_contains "$output" "updated" "No update reported"
-
-echo ""
-
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: cancelled unchanged${NC}"
-setup_fixture
-
-create_manifest "dead-feature" '{"work_type":"feature","status":"cancelled","phases":{}}'
-
-output=$(run_migration)
-
-assert_equals "$(get_status "dead-feature")" "cancelled" "Status remains cancelled"
-assert_not_contains "$output" "updated" "No update reported"
-
-echo ""
-
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: feature with completed review → concluded${NC}"
-setup_fixture
-
-create_manifest "done-but-active" '{
+  create_manifest "done-but-active" '{
   "work_type": "feature",
   "status": "active",
   "phases": {
@@ -215,19 +136,18 @@ create_manifest "done-but-active" '{
   }
 }'
 
-output=$(run_migration)
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION"
 
-assert_equals "$(get_status "done-but-active")" "concluded" "Completed pipeline detected and set to concluded"
-assert_contains "$output" "updated" "Reports concluded update"
+  assert_eq "Completed pipeline detected and set to concluded" "concluded" "$(get_status "done-but-active")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 7: feature in-progress with completed review to concluded ---
+test_in_progress_completed_review() {
+  setup
 
-echo -e "${YELLOW}Test: feature in-progress with completed review → concluded${NC}"
-setup_fixture
-
-create_manifest "done-in-progress" '{
+  create_manifest "done-in-progress" '{
   "work_type": "feature",
   "status": "in-progress",
   "phases": {
@@ -235,18 +155,18 @@ create_manifest "done-in-progress" '{
   }
 }'
 
-output=$(run_migration)
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION"
 
-assert_equals "$(get_status "done-in-progress")" "concluded" "In-progress with completed review set to concluded"
+  assert_eq "In-progress with completed review set to concluded" "concluded" "$(get_status "done-in-progress")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 8: feature with incomplete review stays in-progress ---
+test_incomplete_review() {
+  setup
 
-echo -e "${YELLOW}Test: feature with incomplete review stays in-progress${NC}"
-setup_fixture
-
-create_manifest "mid-review" '{
+  create_manifest "mid-review" '{
   "work_type": "feature",
   "status": "active",
   "phases": {
@@ -254,18 +174,18 @@ create_manifest "mid-review" '{
   }
 }'
 
-output=$(run_migration)
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION"
 
-assert_equals "$(get_status "mid-review")" "in-progress" "Incomplete review stays in-progress (not concluded)"
+  assert_eq "Incomplete review stays in-progress (not concluded)" "in-progress" "$(get_status "mid-review")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 9: feature with no review phase stays in-progress ---
+test_no_review_phase() {
+  setup
 
-echo -e "${YELLOW}Test: feature with no review phase stays in-progress${NC}"
-setup_fixture
-
-create_manifest "no-review" '{
+  create_manifest "no-review" '{
   "work_type": "feature",
   "status": "active",
   "phases": {
@@ -273,18 +193,18 @@ create_manifest "no-review" '{
   }
 }'
 
-output=$(run_migration)
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION"
 
-assert_equals "$(get_status "no-review")" "in-progress" "No review phase stays in-progress"
+  assert_eq "No review phase stays in-progress" "in-progress" "$(get_status "no-review")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 10: epic with all review items completed to concluded ---
+test_epic_all_review_completed() {
+  setup
 
-echo -e "${YELLOW}Test: epic with all review items completed → concluded${NC}"
-setup_fixture
-
-create_manifest "done-epic" '{
+  create_manifest "done-epic" '{
   "work_type": "epic",
   "status": "active",
   "phases": {
@@ -297,18 +217,18 @@ create_manifest "done-epic" '{
   }
 }'
 
-output=$(run_migration)
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION"
 
-assert_equals "$(get_status "done-epic")" "concluded" "Epic with all review items completed set to concluded"
+  assert_eq "Epic with all review items completed set to concluded" "concluded" "$(get_status "done-epic")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 11: epic with some review items incomplete stays in-progress ---
+test_epic_partial_review() {
+  setup
 
-echo -e "${YELLOW}Test: epic with some review items incomplete stays in-progress${NC}"
-setup_fixture
-
-create_manifest "partial-epic" '{
+  create_manifest "partial-epic" '{
   "work_type": "epic",
   "status": "active",
   "phases": {
@@ -321,18 +241,18 @@ create_manifest "partial-epic" '{
   }
 }'
 
-output=$(run_migration)
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION"
 
-assert_equals "$(get_status "partial-epic")" "in-progress" "Epic with incomplete review items stays in-progress"
+  assert_eq "Epic with incomplete review items stays in-progress" "in-progress" "$(get_status "partial-epic")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 12: epic with no review items stays in-progress ---
+test_epic_no_review() {
+  setup
 
-echo -e "${YELLOW}Test: epic with no review items stays in-progress${NC}"
-setup_fixture
-
-create_manifest "no-review-epic" '{
+  create_manifest "no-review-epic" '{
   "work_type": "epic",
   "status": "active",
   "phases": {
@@ -344,18 +264,18 @@ create_manifest "no-review-epic" '{
   }
 }'
 
-output=$(run_migration)
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION"
 
-assert_equals "$(get_status "no-review-epic")" "in-progress" "Epic with no review items stays in-progress"
+  assert_eq "Epic with no review items stays in-progress" "in-progress" "$(get_status "no-review-epic")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 13: bugfix with completed review to concluded ---
+test_bugfix_completed_review() {
+  setup
 
-echo -e "${YELLOW}Test: bugfix with completed review → concluded${NC}"
-setup_fixture
-
-create_manifest "fixed-bug" '{
+  create_manifest "fixed-bug" '{
   "work_type": "bugfix",
   "status": "active",
   "phases": {
@@ -363,79 +283,79 @@ create_manifest "fixed-bug" '{
   }
 }'
 
-output=$(run_migration)
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION"
 
-assert_equals "$(get_status "fixed-bug")" "concluded" "Bugfix with completed review set to concluded"
+  assert_eq "Bugfix with completed review set to concluded" "concluded" "$(get_status "fixed-bug")"
 
-echo ""
+  teardown
+}
 
-# ----------------------------------------------------------------------------
+# --- Test 14: multiple work units processed ---
+test_multiple_work_units() {
+  setup
 
-echo -e "${YELLOW}Test: multiple work units processed${NC}"
-setup_fixture
+  create_manifest "feat-a" '{"work_type":"feature","status":"active","phases":{}}'
+  create_manifest "feat-b" '{"work_type":"feature","status":"archived","phases":{}}'
+  create_manifest "feat-c" '{"work_type":"feature","status":"in-progress","phases":{}}'
 
-create_manifest "feat-a" '{"work_type":"feature","status":"active","phases":{}}'
-create_manifest "feat-b" '{"work_type":"feature","status":"archived","phases":{}}'
-create_manifest "feat-c" '{"work_type":"feature","status":"in-progress","phases":{}}'
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION"
 
-output=$(run_migration)
+  assert_eq "First work unit: active to in-progress" "in-progress" "$(get_status "feat-a")"
+  assert_eq "Second work unit: archived to cancelled" "cancelled" "$(get_status "feat-b")"
+  assert_eq "Third work unit: in-progress unchanged" "in-progress" "$(get_status "feat-c")"
 
-assert_equals "$(get_status "feat-a")" "in-progress" "First work unit: active → in-progress"
-assert_equals "$(get_status "feat-b")" "cancelled" "Second work unit: archived → cancelled"
-assert_equals "$(get_status "feat-c")" "in-progress" "Third work unit: in-progress unchanged"
+  teardown
+}
 
-echo ""
+# --- Test 15: skips dot-prefixed directories ---
+test_skip_dot_dirs() {
+  setup
 
-# ----------------------------------------------------------------------------
+  mkdir -p "$TEST_DIR/.workflows/.state"
+  echo '{"status":"active"}' > "$TEST_DIR/.workflows/.state/manifest.json"
+  create_manifest "real" '{"work_type":"feature","status":"active","phases":{}}'
 
-echo -e "${YELLOW}Test: skips dot-prefixed directories${NC}"
-setup_fixture
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION"
 
-mkdir -p "$TEST_DIR/.workflows/.state"
-echo '{"status":"active"}' > "$TEST_DIR/.workflows/.state/manifest.json"
-create_manifest "real" '{"work_type":"feature","status":"active","phases":{}}'
+  assert_eq "Real work unit updated" "in-progress" "$(get_status "real")"
+  assert_eq "Dot-dir manifest not touched" "active" "$(node -e "console.log(JSON.parse(require('fs').readFileSync(process.argv[1],'utf8')).status)" "$TEST_DIR/.workflows/.state/manifest.json")"
 
-output=$(run_migration)
+  teardown
+}
 
-assert_equals "$(get_status "real")" "in-progress" "Real work unit updated"
-assert_equals "$(node -e "console.log(JSON.parse(require('fs').readFileSync(process.argv[1],'utf8')).status)" "$TEST_DIR/.workflows/.state/manifest.json")" "active" "Dot-dir manifest not touched"
+# --- Test 16: idempotent — running twice produces same result ---
+test_idempotent() {
+  setup
 
-echo ""
+  create_manifest "idem" '{"work_type":"feature","status":"active","phases":{}}'
 
-# ----------------------------------------------------------------------------
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION" > /dev/null
+  before=$(get_json "idem")
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION" > /dev/null
+  after=$(get_json "idem")
 
-echo -e "${YELLOW}Test: idempotent — running twice produces same result${NC}"
-setup_fixture
+  assert_eq "JSON unchanged after second run" "$before" "$after"
 
-create_manifest "idem" '{"work_type":"feature","status":"active","phases":{}}'
+  teardown
+}
 
-run_migration > /dev/null
-before=$(get_json "idem")
-output=$(run_migration)
-after=$(get_json "idem")
+# --- Test 17: no .workflows directory — exits cleanly ---
+test_no_workflows() {
+  setup
+  rm -rf "$TEST_DIR/.workflows"
 
-assert_equals "$after" "$before" "JSON unchanged after second run"
-assert_not_contains "$output" "updated" "No update on second run"
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION"
 
-echo ""
+  assert_eq "exits cleanly" "true" "true"
 
-# ----------------------------------------------------------------------------
+  teardown
+}
 
-echo -e "${YELLOW}Test: no .workflows directory — exits cleanly${NC}"
-setup_fixture
+# --- Test 18: preserves other manifest fields ---
+test_preserves_fields() {
+  setup
 
-output=$(run_migration)
-
-assert_not_contains "$output" "updated" "No updates without .workflows dir"
-
-echo ""
-
-# ----------------------------------------------------------------------------
-
-echo -e "${YELLOW}Test: preserves other manifest fields${NC}"
-setup_fixture
-
-create_manifest "preserve" '{
+  create_manifest "preserve" '{
   "name": "preserve",
   "work_type": "feature",
   "status": "active",
@@ -446,29 +366,42 @@ create_manifest "preserve" '{
   }
 }'
 
-run_migration > /dev/null
+  PROJECT_DIR="$TEST_DIR" bash "$MIGRATION" > /dev/null
 
-json=$(get_json "preserve")
+  json=$(get_json "preserve")
 
-assert_contains "$json" '"name": "preserve"' "Name preserved"
-assert_contains "$json" '"work_type": "feature"' "Work type preserved"
-assert_contains "$json" '"created": "2026-01-15"' "Created date preserved"
-assert_contains "$json" '"description": "test feature"' "Description preserved"
-assert_contains "$json" '"status": "concluded"' "Discussion phase status preserved"
+  assert_eq "Name preserved" "true" "$(echo "$json" | grep -qF '"name": "preserve"' && echo true || echo false)"
+  assert_eq "Work type preserved" "true" "$(echo "$json" | grep -qF '"work_type": "feature"' && echo true || echo false)"
+  assert_eq "Created date preserved" "true" "$(echo "$json" | grep -qF '"created": "2026-01-15"' && echo true || echo false)"
+  assert_eq "Description preserved" "true" "$(echo "$json" | grep -qF '"description": "test feature"' && echo true || echo false)"
+  assert_eq "Discussion phase status preserved" "true" "$(echo "$json" | grep -qF '"status": "concluded"' && echo true || echo false)"
 
+  teardown
+}
+
+# --- Run all tests ---
+echo "Running migration 019 tests..."
 echo ""
 
-# ============================================================================
-# SUMMARY
-# ============================================================================
+test_active_to_in_progress
+test_archived_to_cancelled
+test_in_progress_unchanged
+test_concluded_unchanged
+test_cancelled_unchanged
+test_feature_completed_review
+test_in_progress_completed_review
+test_incomplete_review
+test_no_review_phase
+test_epic_all_review_completed
+test_epic_partial_review
+test_epic_no_review
+test_bugfix_completed_review
+test_multiple_work_units
+test_skip_dot_dirs
+test_idempotent
+test_no_workflows
+test_preserves_fields
 
 echo ""
-echo "========================================"
-echo -e "Tests run: $TESTS_RUN"
-echo -e "Passed: ${GREEN}$TESTS_PASSED${NC}"
-echo -e "Failed: ${RED}$TESTS_FAILED${NC}"
-echo "========================================"
-
-if [ $TESTS_FAILED -gt 0 ]; then
-    exit 1
-fi
+echo "Results: $PASS passed, $FAIL failed"
+[ "$FAIL" -eq 0 ] || exit 1

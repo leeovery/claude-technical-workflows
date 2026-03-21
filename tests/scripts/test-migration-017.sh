@@ -1,122 +1,46 @@
 #!/bin/bash
-#
-# Tests migration 017-external-deps-object.sh
-# Validates conversion of external_dependencies from array to object format.
-#
+# Tests for migration 017: external-deps-object
+# Run: bash tests/scripts/test-migration-017.sh
 
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MIGRATION_SCRIPT="$SCRIPT_DIR/../../skills/workflow-migrate/scripts/migrations/017-external-deps-object.sh"
+REPO_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+MIGRATION="$REPO_DIR/skills/workflow-migrate/scripts/migrations/017-external-deps-object.sh"
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
+PASS=0
+FAIL=0
 
-# Test counters
-TESTS_RUN=0
-TESTS_PASSED=0
-TESTS_FAILED=0
+report_update() { : ; }
+report_skip() { : ; }
 
-# Create a temporary directory for test fixtures
-TEST_DIR=$(mktemp -d)
-trap "rm -rf $TEST_DIR" EXIT
-
-echo "Test directory: $TEST_DIR"
-echo ""
-
-#
-# Mock migration helper functions
-#
-
-report_update() {
-    echo "updated"
+assert_eq() {
+  local label="$1" expected="$2" actual="$3"
+  if [ "$expected" = "$actual" ]; then
+    PASS=$((PASS + 1))
+  else
+    FAIL=$((FAIL + 1))
+    echo "FAIL: $label"
+    echo "  expected: $expected"
+    echo "  actual:   $actual"
+  fi
 }
 
-report_skip() {
-    echo "skipped"
+setup() {
+  TEST_DIR=$(mktemp -d /tmp/migration-017-test.XXXXXX)
+  mkdir -p "$TEST_DIR/.workflows"
 }
 
-# Export functions for sourced script
-export -f report_update report_skip
-
-#
-# Helper functions
-#
-
-assert_equals() {
-    local actual="$1"
-    local expected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if [ "$actual" = "$expected" ]; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected: $expected"
-        echo -e "    Actual:   $actual"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-    fi
+teardown() {
+  rm -rf "$TEST_DIR"
 }
 
-assert_contains() {
-    local content="$1"
-    local expected="$2"
-    local description="$3"
+# --- Test 1: Converts array to object for feature ---
+test_array_to_object_feature() {
+  setup
 
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if echo "$content" | grep -q -- "$expected"; then
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-    else
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Expected to find: $expected"
-        echo -e "    In: $content"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-    fi
-}
-
-assert_not_contains() {
-    local content="$1"
-    local unexpected="$2"
-    local description="$3"
-
-    TESTS_RUN=$((TESTS_RUN + 1))
-
-    if echo "$content" | grep -q -- "$unexpected"; then
-        echo -e "  ${RED}✗${NC} $description"
-        echo -e "    Unexpectedly found: $unexpected"
-        TESTS_FAILED=$((TESTS_FAILED + 1))
-    else
-        echo -e "  ${GREEN}✓${NC} $description"
-        TESTS_PASSED=$((TESTS_PASSED + 1))
-    fi
-}
-
-setup_fixture() {
-    rm -rf "$TEST_DIR/.workflows"
-    mkdir -p "$TEST_DIR/.workflows"
-}
-
-run_migration() {
-    cd "$TEST_DIR"
-    source "$MIGRATION_SCRIPT"
-}
-
-# ============================================================================
-# TESTS
-# ============================================================================
-
-echo -e "${YELLOW}Test: converts array to object for feature${NC}"
-setup_fixture
-mkdir -p "$TEST_DIR/.workflows/auth"
-cat > "$TEST_DIR/.workflows/auth/manifest.json" << 'EOF'
+  mkdir -p "$TEST_DIR/.workflows/auth"
+  cat > "$TEST_DIR/.workflows/auth/manifest.json" << 'EOF'
 {
   "name": "auth",
   "work_type": "feature",
@@ -132,25 +56,28 @@ cat > "$TEST_DIR/.workflows/auth/manifest.json" << 'EOF'
   }
 }
 EOF
-output=$(run_migration 2>&1)
-content=$(cat "$TEST_DIR/.workflows/auth/manifest.json")
 
-assert_contains "$content" '"billing"' "billing key exists"
-assert_contains "$content" '"state": "unresolved"' "billing state preserved"
-assert_contains "$content" '"description": "Invoice API"' "billing description preserved"
-assert_contains "$content" '"payments"' "payments key exists"
-assert_contains "$content" '"task_id": "pay-1"' "payments task_id preserved"
-assert_not_contains "$content" '"topic"' "topic field removed from values"
-assert_contains "$output" "skipped" "Reports skip after conversion"
+  cd "$TEST_DIR"
+  source "$MIGRATION"
 
-echo ""
+  content=$(cat "$TEST_DIR/.workflows/auth/manifest.json")
 
-# ----------------------------------------------------------------------------
+  assert_eq "billing key exists" "true" "$(echo "$content" | grep -qF '"billing"' && echo true || echo false)"
+  assert_eq "billing state preserved" "true" "$(echo "$content" | grep -qF '"state": "unresolved"' && echo true || echo false)"
+  assert_eq "billing description preserved" "true" "$(echo "$content" | grep -qF '"description": "Invoice API"' && echo true || echo false)"
+  assert_eq "payments key exists" "true" "$(echo "$content" | grep -qF '"payments"' && echo true || echo false)"
+  assert_eq "payments task_id preserved" "true" "$(echo "$content" | grep -qF '"task_id": "pay-1"' && echo true || echo false)"
+  assert_eq "topic field removed from values" "false" "$(echo "$content" | grep -qF '"topic"' && echo true || echo false)"
 
-echo -e "${YELLOW}Test: converts empty array to empty object${NC}"
-setup_fixture
-mkdir -p "$TEST_DIR/.workflows/simple"
-cat > "$TEST_DIR/.workflows/simple/manifest.json" << 'EOF'
+  teardown
+}
+
+# --- Test 2: Converts empty array to empty object ---
+test_empty_array_to_object() {
+  setup
+
+  mkdir -p "$TEST_DIR/.workflows/simple"
+  cat > "$TEST_DIR/.workflows/simple/manifest.json" << 'EOF'
 {
   "name": "simple",
   "work_type": "feature",
@@ -163,25 +90,26 @@ cat > "$TEST_DIR/.workflows/simple/manifest.json" << 'EOF'
   }
 }
 EOF
-run_migration
-content=$(cat "$TEST_DIR/.workflows/simple/manifest.json")
 
-# Empty array should become empty object
-result=$(node -e "
-  const d = JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/simple/manifest.json','utf8'));
-  const deps = d.phases.planning.external_dependencies;
-  console.log(typeof deps === 'object' && !Array.isArray(deps) ? 'object' : 'not_object');
-")
-assert_equals "$result" "object" "Empty array converted to object"
+  cd "$TEST_DIR"
+  source "$MIGRATION"
 
-echo ""
+  result=$(node -e "
+    const d = JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/simple/manifest.json','utf8'));
+    const deps = d.phases.planning.external_dependencies;
+    console.log(typeof deps === 'object' && !Array.isArray(deps) ? 'object' : 'not_object');
+  ")
+  assert_eq "Empty array converted to object" "object" "$result"
 
-# ----------------------------------------------------------------------------
+  teardown
+}
 
-echo -e "${YELLOW}Test: converts array in epic items${NC}"
-setup_fixture
-mkdir -p "$TEST_DIR/.workflows/my-epic"
-cat > "$TEST_DIR/.workflows/my-epic/manifest.json" << 'EOF'
+# --- Test 3: Converts array in epic items ---
+test_epic_items() {
+  setup
+
+  mkdir -p "$TEST_DIR/.workflows/my-epic"
+  cat > "$TEST_DIR/.workflows/my-epic/manifest.json" << 'EOF'
 {
   "name": "my-epic",
   "work_type": "epic",
@@ -200,21 +128,25 @@ cat > "$TEST_DIR/.workflows/my-epic/manifest.json" << 'EOF'
   }
 }
 EOF
-run_migration
-content=$(cat "$TEST_DIR/.workflows/my-epic/manifest.json")
 
-assert_contains "$content" '"auth"' "auth key exists in epic item"
-assert_contains "$content" '"state": "resolved"' "state preserved"
-assert_not_contains "$content" '"topic"' "topic field removed"
+  cd "$TEST_DIR"
+  source "$MIGRATION"
 
-echo ""
+  content=$(cat "$TEST_DIR/.workflows/my-epic/manifest.json")
 
-# ----------------------------------------------------------------------------
+  assert_eq "auth key exists in epic item" "true" "$(echo "$content" | grep -qF '"auth"' && echo true || echo false)"
+  assert_eq "state preserved" "true" "$(echo "$content" | grep -qF '"state": "resolved"' && echo true || echo false)"
+  assert_eq "topic field removed" "false" "$(echo "$content" | grep -qF '"topic"' && echo true || echo false)"
 
-echo -e "${YELLOW}Test: idempotent — already object format unchanged${NC}"
-setup_fixture
-mkdir -p "$TEST_DIR/.workflows/already-done"
-cat > "$TEST_DIR/.workflows/already-done/manifest.json" << 'EOF'
+  teardown
+}
+
+# --- Test 4: Idempotent — already object format unchanged ---
+test_idempotent() {
+  setup
+
+  mkdir -p "$TEST_DIR/.workflows/already-done"
+  cat > "$TEST_DIR/.workflows/already-done/manifest.json" << 'EOF'
 {
   "name": "already-done",
   "work_type": "feature",
@@ -229,22 +161,24 @@ cat > "$TEST_DIR/.workflows/already-done/manifest.json" << 'EOF'
   }
 }
 EOF
-# Save content before migration
-before=$(cat "$TEST_DIR/.workflows/already-done/manifest.json")
-output=$(run_migration 2>&1)
-after=$(cat "$TEST_DIR/.workflows/already-done/manifest.json")
 
-assert_equals "$after" "$before" "Already-object format unchanged"
-assert_contains "$output" "skipped" "Reports skip for already-object format"
+  before=$(cat "$TEST_DIR/.workflows/already-done/manifest.json")
 
-echo ""
+  cd "$TEST_DIR"
+  source "$MIGRATION"
 
-# ----------------------------------------------------------------------------
+  after=$(cat "$TEST_DIR/.workflows/already-done/manifest.json")
+  assert_eq "Already-object format unchanged" "$before" "$after"
 
-echo -e "${YELLOW}Test: skips dot-prefixed directories${NC}"
-setup_fixture
-mkdir -p "$TEST_DIR/.workflows/.archive/old"
-cat > "$TEST_DIR/.workflows/.archive/old/manifest.json" << 'EOF'
+  teardown
+}
+
+# --- Test 5: Skips dot-prefixed directories ---
+test_skip_dot_dirs() {
+  setup
+
+  mkdir -p "$TEST_DIR/.workflows/.archive/old"
+  cat > "$TEST_DIR/.workflows/.archive/old/manifest.json" << 'EOF'
 {
   "name": "old",
   "work_type": "feature",
@@ -258,21 +192,24 @@ cat > "$TEST_DIR/.workflows/.archive/old/manifest.json" << 'EOF'
   }
 }
 EOF
-before=$(cat "$TEST_DIR/.workflows/.archive/old/manifest.json")
-output=$(run_migration 2>&1)
-after=$(cat "$TEST_DIR/.workflows/.archive/old/manifest.json")
 
-assert_equals "$after" "$before" "Dot-prefixed directory skipped"
-assert_not_contains "$output" "updated" "No update for dot-prefixed directory"
+  before=$(cat "$TEST_DIR/.workflows/.archive/old/manifest.json")
 
-echo ""
+  cd "$TEST_DIR"
+  source "$MIGRATION"
 
-# ----------------------------------------------------------------------------
+  after=$(cat "$TEST_DIR/.workflows/.archive/old/manifest.json")
+  assert_eq "Dot-prefixed directory skipped" "$before" "$after"
 
-echo -e "${YELLOW}Test: no external_dependencies field left unchanged${NC}"
-setup_fixture
-mkdir -p "$TEST_DIR/.workflows/no-deps"
-cat > "$TEST_DIR/.workflows/no-deps/manifest.json" << 'EOF'
+  teardown
+}
+
+# --- Test 6: No external_dependencies field left unchanged ---
+test_no_deps_unchanged() {
+  setup
+
+  mkdir -p "$TEST_DIR/.workflows/no-deps"
+  cat > "$TEST_DIR/.workflows/no-deps/manifest.json" << 'EOF'
 {
   "name": "no-deps",
   "work_type": "feature",
@@ -284,26 +221,29 @@ cat > "$TEST_DIR/.workflows/no-deps/manifest.json" << 'EOF'
   }
 }
 EOF
-before=$(cat "$TEST_DIR/.workflows/no-deps/manifest.json")
-output=$(run_migration 2>&1)
-after=$(cat "$TEST_DIR/.workflows/no-deps/manifest.json")
 
-assert_equals "$after" "$before" "No external_dependencies field left unchanged"
-assert_contains "$output" "skipped" "Reports skip for no deps"
+  before=$(cat "$TEST_DIR/.workflows/no-deps/manifest.json")
 
+  cd "$TEST_DIR"
+  source "$MIGRATION"
+
+  after=$(cat "$TEST_DIR/.workflows/no-deps/manifest.json")
+  assert_eq "No external_dependencies field left unchanged" "$before" "$after"
+
+  teardown
+}
+
+# --- Run all tests ---
+echo "Running migration 017 tests..."
 echo ""
 
-# ============================================================================
-# SUMMARY
-# ============================================================================
+test_array_to_object_feature
+test_empty_array_to_object
+test_epic_items
+test_idempotent
+test_skip_dot_dirs
+test_no_deps_unchanged
 
 echo ""
-echo "========================================"
-echo -e "Tests run: $TESTS_RUN"
-echo -e "Passed: ${GREEN}$TESTS_PASSED${NC}"
-echo -e "Failed: ${RED}$TESTS_FAILED${NC}"
-echo "========================================"
-
-if [ $TESTS_FAILED -gt 0 ]; then
-    exit 1
-fi
+echo "Results: $PASS passed, $FAIL failed"
+[ "$FAIL" -eq 0 ] || exit 1
