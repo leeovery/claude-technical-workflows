@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Tests for migration 035: Move phase-level format and project_skills to project defaults
+# Tests for migration 035: Remove phase-level format, project_skills, and linters
 #
 # Run: bash tests/scripts/test-migration-035.sh
 #
@@ -39,20 +39,10 @@ teardown() {
   rm -rf "$TEST_DIR"
 }
 
-# --- Test 1: Happy path — phase-level values migrated to project defaults ---
+# --- Test 1: Happy path — all phase-level keys removed ---
 test_happy_path() {
   setup
 
-  # Create project manifest
-  cat > "$TEST_DIR/.workflows/manifest.json" <<'JSON'
-{
-  "work_units": {
-    "alpha": { "work_type": "feature" }
-  }
-}
-JSON
-
-  # Create work unit manifest with phase-level format and project_skills
   mkdir -p "$TEST_DIR/.workflows/alpha"
   cat > "$TEST_DIR/.workflows/alpha/manifest.json" <<'JSON'
 {
@@ -66,6 +56,7 @@ JSON
     },
     "implementation": {
       "project_skills": [".claude/skills/golang-pro"],
+      "linters": [{"name": "eslint", "command": "npx eslint"}],
       "items": { "alpha": { "status": "in-progress", "project_skills": [".claude/skills/golang-pro"] } }
     }
   }
@@ -74,23 +65,18 @@ JSON
 
   source "$MIGRATION"
 
-  # Project defaults should be set
-  local proj_format
-  proj_format=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/manifest.json','utf8')); console.log(m.defaults.plan_format)")
-  assert_eq "project default plan_format" "local-markdown" "$proj_format"
-
-  local proj_skills
-  proj_skills=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/manifest.json','utf8')); console.log(JSON.stringify(m.defaults.project_skills))")
-  assert_eq "project default project_skills" '[".claude/skills/golang-pro"]' "$proj_skills"
-
   # Phase-level keys should be removed
-  local has_planning_format
-  has_planning_format=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/alpha/manifest.json','utf8')); console.log(m.phases.planning.format === undefined)")
-  assert_eq "planning format removed" "true" "$has_planning_format"
+  local has_format
+  has_format=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/alpha/manifest.json','utf8')); console.log(m.phases.planning.format === undefined)")
+  assert_eq "planning format removed" "true" "$has_format"
 
-  local has_impl_skills
-  has_impl_skills=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/alpha/manifest.json','utf8')); console.log(m.phases.implementation.project_skills === undefined)")
-  assert_eq "implementation project_skills removed" "true" "$has_impl_skills"
+  local has_skills
+  has_skills=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/alpha/manifest.json','utf8')); console.log(m.phases.implementation.project_skills === undefined)")
+  assert_eq "implementation project_skills removed" "true" "$has_skills"
+
+  local has_linters
+  has_linters=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/alpha/manifest.json','utf8')); console.log(m.phases.implementation.linters === undefined)")
+  assert_eq "implementation linters removed" "true" "$has_linters"
 
   # Topic-level values should be preserved
   local topic_format
@@ -98,23 +84,15 @@ JSON
   assert_eq "topic format preserved" "local-markdown" "$topic_format"
 
   local topic_skills
-  topic_skills=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/alpha/manifest.json','utf8')); console.log(JSON.stringify(m.phases.planning.items.alpha.status))")
-  assert_eq "topic status preserved" '"completed"' "$topic_skills"
+  topic_skills=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/alpha/manifest.json','utf8')); console.log(JSON.stringify(m.phases.implementation.items.alpha.project_skills))")
+  assert_eq "topic project_skills preserved" '[".claude/skills/golang-pro"]' "$topic_skills"
 
   teardown
 }
 
-# --- Test 2: No-op — no phase-level keys to migrate ---
+# --- Test 2: No-op — no phase-level keys to remove ---
 test_noop() {
   setup
-
-  cat > "$TEST_DIR/.workflows/manifest.json" <<'JSON'
-{
-  "work_units": {
-    "beta": { "work_type": "epic" }
-  }
-}
-JSON
 
   mkdir -p "$TEST_DIR/.workflows/beta"
   cat > "$TEST_DIR/.workflows/beta/manifest.json" <<'JSON'
@@ -130,12 +108,15 @@ JSON
 }
 JSON
 
+  local before
+  before=$(cat "$TEST_DIR/.workflows/beta/manifest.json")
+
   source "$MIGRATION"
 
-  # No defaults should be created
-  local has_defaults
-  has_defaults=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/manifest.json','utf8')); console.log(m.defaults === undefined)")
-  assert_eq "no defaults created" "true" "$has_defaults"
+  local after
+  after=$(cat "$TEST_DIR/.workflows/beta/manifest.json")
+
+  assert_eq "manifest unchanged" "$before" "$after"
 
   teardown
 }
@@ -143,14 +124,6 @@ JSON
 # --- Test 3: Idempotent — run twice, same result ---
 test_idempotent() {
   setup
-
-  cat > "$TEST_DIR/.workflows/manifest.json" <<'JSON'
-{
-  "work_units": {
-    "gamma": { "work_type": "feature" }
-  }
-}
-JSON
 
   mkdir -p "$TEST_DIR/.workflows/gamma"
   cat > "$TEST_DIR/.workflows/gamma/manifest.json" <<'JSON'
@@ -168,31 +141,27 @@ JSON
 JSON
 
   source "$MIGRATION"
+
+  local after_first
+  after_first=$(cat "$TEST_DIR/.workflows/gamma/manifest.json")
+
   source "$MIGRATION"
 
-  local proj_format
-  proj_format=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/manifest.json','utf8')); console.log(m.defaults.plan_format)")
-  assert_eq "idempotent project default" "tick" "$proj_format"
+  local after_second
+  after_second=$(cat "$TEST_DIR/.workflows/gamma/manifest.json")
 
-  local has_planning_format
-  has_planning_format=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/gamma/manifest.json','utf8')); console.log(m.phases.planning.format === undefined)")
-  assert_eq "idempotent phase format removed" "true" "$has_planning_format"
+  assert_eq "idempotent" "$after_first" "$after_second"
+
+  local has_format
+  has_format=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/gamma/manifest.json','utf8')); console.log(m.phases.planning.format === undefined)")
+  assert_eq "format still removed after second run" "true" "$has_format"
 
   teardown
 }
 
-# --- Test 4: Multiple work units — first value wins, all phase keys removed ---
+# --- Test 4: Multiple work units — all phase keys removed ---
 test_multiple_work_units() {
   setup
-
-  cat > "$TEST_DIR/.workflows/manifest.json" <<'JSON'
-{
-  "work_units": {
-    "first": { "work_type": "feature" },
-    "second": { "work_type": "feature" }
-  }
-}
-JSON
 
   mkdir -p "$TEST_DIR/.workflows/first"
   cat > "$TEST_DIR/.workflows/first/manifest.json" <<'JSON'
@@ -213,44 +182,32 @@ JSON
   "work_type": "feature",
   "status": "in-progress",
   "phases": {
-    "planning": { "format": "tick", "items": {} }
+    "planning": { "format": "tick", "items": {} },
+    "implementation": { "linters": [], "items": {} }
   }
 }
 JSON
 
   source "$MIGRATION"
 
-  # First value wins
-  local proj_format
-  proj_format=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/manifest.json','utf8')); console.log(m.defaults.plan_format)")
-  assert_eq "first value wins" "local-markdown" "$proj_format"
-
-  # Both phase-level keys removed
   local first_removed
   first_removed=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/first/manifest.json','utf8')); console.log(m.phases.planning.format === undefined)")
   assert_eq "first phase format removed" "true" "$first_removed"
 
-  local second_removed
-  second_removed=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/second/manifest.json','utf8')); console.log(m.phases.planning.format === undefined)")
-  assert_eq "second phase format removed" "true" "$second_removed"
+  local second_format_removed
+  second_format_removed=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/second/manifest.json','utf8')); console.log(m.phases.planning.format === undefined)")
+  assert_eq "second phase format removed" "true" "$second_format_removed"
+
+  local second_linters_removed
+  second_linters_removed=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/second/manifest.json','utf8')); console.log(m.phases.implementation.linters === undefined)")
+  assert_eq "second phase linters removed" "true" "$second_linters_removed"
 
   teardown
 }
 
-# --- Test 5: Existing project defaults not overwritten ---
-test_existing_defaults_preserved() {
+# --- Test 5: Other phase fields preserved ---
+test_content_preservation() {
   setup
-
-  cat > "$TEST_DIR/.workflows/manifest.json" <<'JSON'
-{
-  "work_units": {
-    "delta": { "work_type": "feature" }
-  },
-  "defaults": {
-    "plan_format": "linear"
-  }
-}
-JSON
 
   mkdir -p "$TEST_DIR/.workflows/delta"
   cat > "$TEST_DIR/.workflows/delta/manifest.json" <<'JSON'
@@ -258,6 +215,68 @@ JSON
   "name": "delta",
   "work_type": "feature",
   "status": "in-progress",
+  "description": "Test delta",
+  "phases": {
+    "planning": {
+      "format": "tick",
+      "items": { "delta": { "status": "completed", "format": "tick", "spec_commit": "abc123" } }
+    },
+    "research": {
+      "analysis_cache": { "checksum": "abc", "generated": "2025-01-01" }
+    }
+  }
+}
+JSON
+
+  source "$MIGRATION"
+
+  # Phase-level format removed
+  local has_format
+  has_format=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/delta/manifest.json','utf8')); console.log(m.phases.planning.format === undefined)")
+  assert_eq "phase format removed" "true" "$has_format"
+
+  # Topic-level fields preserved
+  local spec_commit
+  spec_commit=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/delta/manifest.json','utf8')); console.log(m.phases.planning.items.delta.spec_commit)")
+  assert_eq "spec_commit preserved" "abc123" "$spec_commit"
+
+  # analysis_cache preserved (not a phase-level default)
+  local cache
+  cache=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/delta/manifest.json','utf8')); console.log(m.phases.research.analysis_cache.checksum)")
+  assert_eq "analysis_cache preserved" "abc" "$cache"
+
+  # Work unit fields preserved
+  local desc
+  desc=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/delta/manifest.json','utf8')); console.log(m.description)")
+  assert_eq "description preserved" "Test delta" "$desc"
+
+  teardown
+}
+
+# --- Test 6: No workflows dir ---
+test_no_workflows() {
+  TEST_DIR=$(mktemp -d /tmp/migration-035-test.XXXXXX)
+  export PROJECT_DIR="$TEST_DIR"
+
+  source "$MIGRATION"
+
+  assert_eq "no crash" "true" "true"
+
+  teardown
+}
+
+# --- Test 7: Dot-prefixed directories skipped ---
+test_skips_dot_dirs() {
+  setup
+
+  mkdir -p "$TEST_DIR/.workflows/.state"
+  mkdir -p "$TEST_DIR/.workflows/.cache"
+  mkdir -p "$TEST_DIR/.workflows/real"
+  cat > "$TEST_DIR/.workflows/real/manifest.json" <<'JSON'
+{
+  "name": "real",
+  "work_type": "feature",
+  "status": "in-progress",
   "phases": {
     "planning": { "format": "tick", "items": {} }
   }
@@ -266,64 +285,9 @@ JSON
 
   source "$MIGRATION"
 
-  # Existing default preserved
-  local proj_format
-  proj_format=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/manifest.json','utf8')); console.log(m.defaults.plan_format)")
-  assert_eq "existing default preserved" "linear" "$proj_format"
-
-  # Phase-level key still removed
   local removed
-  removed=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/delta/manifest.json','utf8')); console.log(m.phases.planning.format === undefined)")
-  assert_eq "phase format still removed" "true" "$removed"
-
-  teardown
-}
-
-# --- Test 6: Empty project_skills array handled correctly ---
-test_empty_skills_array() {
-  setup
-
-  cat > "$TEST_DIR/.workflows/manifest.json" <<'JSON'
-{
-  "work_units": {
-    "epsilon": { "work_type": "feature" }
-  }
-}
-JSON
-
-  mkdir -p "$TEST_DIR/.workflows/epsilon"
-  cat > "$TEST_DIR/.workflows/epsilon/manifest.json" <<'JSON'
-{
-  "name": "epsilon",
-  "work_type": "feature",
-  "status": "in-progress",
-  "phases": {
-    "implementation": { "project_skills": [], "items": {} }
-  }
-}
-JSON
-
-  source "$MIGRATION"
-
-  local proj_skills
-  proj_skills=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/manifest.json','utf8')); console.log(JSON.stringify(m.defaults.project_skills))")
-  assert_eq "empty array migrated" "[]" "$proj_skills"
-
-  local removed
-  removed=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/epsilon/manifest.json','utf8')); console.log(m.phases.implementation.project_skills === undefined)")
-  assert_eq "empty array removed from phase" "true" "$removed"
-
-  teardown
-}
-
-# --- Test 7: No workflows dir ---
-test_no_workflows() {
-  setup
-  rm -rf "$TEST_DIR/.workflows"
-
-  source "$MIGRATION"
-
-  assert_eq "no crash without workflows" "true" "true"
+  removed=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_DIR/.workflows/real/manifest.json','utf8')); console.log(m.phases.planning.format === undefined)")
+  assert_eq "real work unit processed" "true" "$removed"
 
   teardown
 }
@@ -336,9 +300,9 @@ test_happy_path
 test_noop
 test_idempotent
 test_multiple_work_units
-test_existing_defaults_preserved
-test_empty_skills_array
+test_content_preservation
 test_no_workflows
+test_skips_dot_dirs
 
 echo ""
 echo "Results: $PASS passed, $FAIL failed"

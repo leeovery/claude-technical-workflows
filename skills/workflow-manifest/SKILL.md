@@ -339,6 +339,7 @@ Project-wide settings are stored in the `defaults` section of the project manife
 |---------|-------------|---------|
 | `plan_format` | Output format for plans (e.g., `local-markdown`, `tick`, `linear`) | Planning |
 | `project_skills` | Array of skill paths used during implementation | Implementation |
+| `linters` | Array of linter configs used during TDD cycle | Implementation |
 
 The cascade is: **project defaults** (suggestion) → **topic level** (actual value used). There is no phase-level storage.
 

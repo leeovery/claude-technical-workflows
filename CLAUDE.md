@@ -199,7 +199,7 @@ Conventions:
 
 The manifest CLI at `skills/workflow-manifest/scripts/manifest.cjs` is the single source of truth for all workflow state. Uses dot-path syntax: `command <work-unit>[.<phase>[.<topic>]] [field] [value]`. Segment count determines access level (1 = work unit, 2 = phase, 3 = topic). The reserved prefix `project` routes to the project manifest (`.workflows/manifest.json`) — e.g., `get project.defaults.plan_format`. See `skills/workflow-manifest/SKILL.md` for the full API.
 
-**Project defaults cascade**: `project.defaults` → topic level. Project defaults are suggestions (user confirms or overrides). Topic level records the actual value in use. There is no phase-level storage for settings like `plan_format` or `project_skills`.
+**Project defaults cascade**: `project.defaults` → topic level. Project defaults are suggestions (user confirms or overrides). Topic level records the actual value in use. There is no phase-level storage for settings like `plan_format`, `project_skills`, or `linters`.
 
 **Shell quoting**: Always single-quote values that zsh would interpret — `'[]'`, `'[...]'`, `'{}'`, `'~'`. Bare `[]` is a glob pattern (causes `no matches found` errors) and bare `~` expands to the home directory.
 
