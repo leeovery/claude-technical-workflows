@@ -134,6 +134,8 @@ After the loop completes:
 
 #### Otherwise
 
+**CRITICAL**: This routing applies on **every** task loop completion — including after returning from Step 7 with analysis-created tasks. Step 6 and Step 7 form a mandatory cycle: tasks execute → analysis runs → new tasks may be created → tasks execute again → analysis runs again. Never skip Step 7 after a task loop completes.
+
 → Proceed to **Step 7**.
 
 ---

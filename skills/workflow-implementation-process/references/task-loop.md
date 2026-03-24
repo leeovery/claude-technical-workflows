@@ -292,4 +292,6 @@ Code, tests, and plan progress — one commit per approved task.
 All tasks complete. {M} tasks implemented.
 ```
 
+**CRITICAL**: The caller always routes to the analysis loop after task loop completion — on every pass, not just the first. Even if you have already been through this cycle before, return to the caller and let it route to the analysis loop. Never skip ahead to completion from here.
+
 → Return to caller.
