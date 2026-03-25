@@ -127,7 +127,17 @@ Continue or restart?
 
 #### If `continue`
 
-If unreviewed tasks exist, set `unreviewed_tasks` = `[{list of unreviewed internal IDs}]`.
+**If unreviewed tasks exist:**
+
+Set `unreviewed_tasks` = `[{list of unreviewed internal IDs}]`.
+
+→ Proceed to **Step 1**.
+
+**If all tasks reviewed:**
+
+→ Proceed to **Step 6**.
+
+**Otherwise** (no tracking data):
 
 → Proceed to **Step 1**.
 
@@ -150,7 +160,23 @@ If unreviewed tasks exist, set `unreviewed_tasks` = `[{list of unreviewed intern
 
 ## Step 1: Initialize Review
 
-Load **[initialize-review.md](references/initialize-review.md)** and follow its instructions as written.
+Check if review phase is registered in manifest:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}.review.{topic}
+```
+
+#### If `false`
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs init-phase {work_unit}.review.{topic}
+```
+
+→ Proceed to **Step 2**.
+
+#### Otherwise
+
+→ Proceed to **Step 2**.
 
 ---
 
