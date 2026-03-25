@@ -1,4 +1,6 @@
-# Skill Compliance Self-Check
+# ~~Skill Compliance Self-Check~~ — Done
+
+> Implemented in PR #223. Shared reference file at `skills/workflow-shared/references/compliance-check.md`, wired into all 7 processing skills before their conclusion step.
 
 ## The Idea
 
