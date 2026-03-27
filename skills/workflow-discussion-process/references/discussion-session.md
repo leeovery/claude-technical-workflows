@@ -9,8 +9,8 @@
 The discussion is a conversation. Follow this loop:
 
 1. **Check for findings** — At natural conversational breaks, check for completed agent work:
-   - Load **[review-agent.md](review-agent.md)** for **C. Check for Results**.
-   - Load **[perspective-agents.md](perspective-agents.md)** for **D. Check for Results**.
+   - Load **[review-agent.md](review-agent.md)** for **Check for Results**.
+   - Load **[perspective-agents.md](perspective-agents.md)** for **Check for Results**.
 
    Skip on the first iteration (no agents have been dispatched yet).
 
@@ -21,8 +21,8 @@ The discussion is a conversation. Follow this loop:
 4. **Commit** — Git commit after each write. Don't batch.
 
 5. **Consider agents** — After each substantive commit:
-   - Load **[review-agent.md](review-agent.md)** for **A. Trigger Conditions**.
-   - Load **[perspective-agents.md](perspective-agents.md)** for **A. Trigger Conditions**.
+   - Load **[review-agent.md](review-agent.md)** for **Trigger Conditions**.
+   - Load **[perspective-agents.md](perspective-agents.md)** for **Trigger Conditions**.
 
 6. **Repeat** — Continue with the next question or follow where the conversation leads.
 
@@ -63,8 +63,8 @@ There are still {N} background agents working.
 #### If `wait`
 
 Check for agent completion. When all agents have returned, process their findings:
-- Load **[review-agent.md](review-agent.md)** for **C. Check for Results**.
-- Load **[perspective-agents.md](perspective-agents.md)** for **D. Check for Results**.
+- Load **[review-agent.md](review-agent.md)** for **Check for Results**.
+- Load **[perspective-agents.md](perspective-agents.md)** for **Check for Results**.
 
 → Return to **Session Loop**.
 
