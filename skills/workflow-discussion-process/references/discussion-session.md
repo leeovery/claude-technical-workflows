@@ -4,26 +4,25 @@
 
 ---
 
+## Background Agents
+
+Two types of background agent operate during the discussion. Load their lifecycle instructions now — apply them at the appropriate moments during the session loop.
+
+Load **[review-agent.md](review-agent.md)** and follow its instructions as written.
+
+Load **[perspective-agents.md](perspective-agents.md)** and follow its instructions as written.
+
+---
+
 ## Session Loop
 
 The discussion is a conversation. Follow this loop:
 
-1. **Check for findings** — At natural conversational breaks, check for completed agent work:
-   - Load **[review-agent.md](review-agent.md)** for **Check for Results**.
-   - Load **[perspective-agents.md](perspective-agents.md)** for **Check for Results**.
-
-   Skip on the first iteration (no agents have been dispatched yet).
-
+1. **Check for findings** — At natural conversational breaks, check for completed agent results and surface them. Skip on the first iteration (no agents have been dispatched yet).
 2. **Discuss** — Engage with the user on the current question or topic. Challenge thinking, push back, explore edge cases. Participate as an expert architect.
-
 3. **Document** — At natural pauses, update the discussion file with decisions, debates, options explored, and rationale. Use the per-question structure from the template (Context → Options → Journey → Decision).
-
 4. **Commit** — Git commit after each write. Don't batch.
-
-5. **Consider agents** — After each substantive commit:
-   - Load **[review-agent.md](review-agent.md)** for **Trigger Conditions**.
-   - Load **[perspective-agents.md](perspective-agents.md)** for **Trigger Conditions**.
-
+5. **Consider agents** — After each substantive commit, evaluate the review agent trigger conditions. If a decision point with genuine ambiguity has emerged, evaluate the perspective agent trigger conditions.
 6. **Repeat** — Continue with the next question or follow where the conversation leads.
 
 ---
@@ -62,9 +61,7 @@ There are still {N} background agents working.
 
 #### If `wait`
 
-Check for agent completion. When all agents have returned, process their findings:
-- Load **[review-agent.md](review-agent.md)** for **Check for Results**.
-- Load **[perspective-agents.md](perspective-agents.md)** for **Check for Results**.
+Check for agent completion. When all agents have returned, check for findings and surface them.
 
 → Return to **Session Loop**.
 
