@@ -8,9 +8,9 @@
 
 Two types of background agent operate during the discussion. Load their lifecycle instructions now — apply them at the appropriate moments during the session loop.
 
-Load **[review-agent.md](review-agent.md)** and follow its instructions as written.
+→ Load **[review-agent.md](review-agent.md)** and follow its instructions as written.
 
-Load **[perspective-agents.md](perspective-agents.md)** and follow its instructions as written.
+→ Load **[perspective-agents.md](perspective-agents.md)** and follow its instructions as written.
 
 ---
 
