@@ -57,19 +57,36 @@ Fire a review agent after a **substantive commit** to the discussion file — a 
 - Do not fire on consecutive commits — allow at least 2-3 conversational exchanges between reviews
 - Maximum one review agent in flight at any time
 
-### How to Fire
+### How to Dispatch
 
-Read **[agent-review.md](agent-review.md)** and use its content to construct the sub-agent prompt. Fire using the Agent tool with `run_in_background: true`.
+**Agent path**: `../../../agents/workflow-discussion-review.md`
 
-Provide the agent with:
-1. The full content of agent-review.md as its instructions
-2. The discussion file path: `.workflows/{work_unit}/discussion/{topic}.md`
-3. The output file path: `.workflows/.cache/{work_unit}/discussion/{topic}/review-{NNN}.md`
-4. The frontmatter to use (with `type: review`, `status: pending`, current date, set number)
+Dispatch **one agent** via the Task tool with `run_in_background: true`.
+
+The review agent receives:
+
+1. **Discussion file path** — `.workflows/{work_unit}/discussion/{topic}.md`
+2. **Output file path** — `.workflows/.cache/{work_unit}/discussion/{topic}/review-{NNN}.md`
+3. **Frontmatter** — the frontmatter block to write (with `type: review`, `status: pending`, current date, set number)
+
+No CHECKPOINT — the agent runs in the background.
 
 ### Conversational Cue
 
-No announcement needed. The review agent fires silently in the background. Its findings are surfaced later via the findings integration process.
+No announcement needed. The review agent fires silently. Its findings are surfaced later via the findings integration process.
+
+### Expected Result
+
+The review agent returns:
+
+```
+STATUS: gaps_found | clean
+GAPS_COUNT: {N}
+QUESTIONS_COUNT: {N}
+SUMMARY: {1 sentence}
+```
+
+The full analysis is at the output file path.
 
 ---
 
@@ -99,33 +116,72 @@ Perspective agents should be offered conversationally, not fired silently:
 If the user agrees, or if the orchestrator judges the ambiguity is significant enough:
 
 1. Identify 2-3 distinct perspectives worth exploring. Each should be a genuinely defensible position, not a strawman.
-2. Read **[agent-perspective.md](agent-perspective.md)** and use its content to construct each sub-agent prompt.
-3. Fire each perspective agent using the Agent tool with `run_in_background: true`.
-4. Provide each agent with:
-   - The full content of agent-perspective.md as its instructions
-   - The assigned perspective/angle to advocate
-   - The decision topic being explored
-   - The discussion file path for context
-   - The output file path: `.workflows/.cache/{work_unit}/discussion/{topic}/perspective-{NNN}-{angle}.md`
-   - The frontmatter to use
 
-### After Perspective Agents Return
+### How to Dispatch
 
-When all perspective agents in a set have completed, automatically fire the synthesis agent:
+**Agent path**: `../../../agents/workflow-discussion-perspective.md`
 
-1. Read **[agent-synthesis.md](agent-synthesis.md)** and use its content to construct the prompt.
-2. Fire using the Agent tool with `run_in_background: true`.
-3. Provide:
-   - The full content of agent-synthesis.md as its instructions
-   - The paths to all perspective files in this set
-   - The output file path: `.workflows/.cache/{work_unit}/discussion/{topic}/synthesis-{NNN}.md`
-   - The frontmatter to use
+Dispatch **all perspective agents in parallel** via the Task tool with `run_in_background: true`.
+
+Each perspective agent receives:
+
+1. **Perspective** — the specific angle to advocate
+2. **Decision topic** — the decision being explored
+3. **Discussion file path** — `.workflows/{work_unit}/discussion/{topic}.md`
+4. **Output file path** — `.workflows/.cache/{work_unit}/discussion/{topic}/perspective-{NNN}-{angle}.md`
+5. **Frontmatter** — the frontmatter block to write (with `type: perspective`, `status: pending`, current date, set number, perspective name, decision topic)
+
+No CHECKPOINT — agents run in the background.
 
 ### Conversational Cue
 
 After firing perspective agents:
 
 > "I've kicked off {N} perspective agents to explore {brief description of the angles}. While they work — {natural transition to another topic or continuation of current discussion}."
+
+### Expected Result
+
+Each perspective agent returns:
+
+```
+STATUS: complete
+PERSPECTIVE: {angle}
+SUMMARY: {1 sentence}
+```
+
+---
+
+## Synthesis Agent
+
+### When to Fire
+
+Fire the synthesis agent **automatically** when all perspective agents in a set have completed.
+
+### How to Dispatch
+
+**Agent path**: `../../../agents/workflow-discussion-synthesis.md`
+
+Dispatch **one agent** via the Task tool with `run_in_background: true`.
+
+The synthesis agent receives:
+
+1. **Perspective file paths** — paths to all perspective files in this set
+2. **Decision topic** — the decision being explored
+3. **Output file path** — `.workflows/.cache/{work_unit}/discussion/{topic}/synthesis-{NNN}.md`
+4. **Frontmatter** — the frontmatter block to write (with `type: synthesis`, `status: pending`, current date, set number, decision topic)
+
+No CHECKPOINT — the agent runs in the background.
+
+### Expected Result
+
+The synthesis agent returns:
+
+```
+STATUS: complete
+DECISION: {topic}
+TENSIONS: {N}
+SUMMARY: {1-2 sentences}
+```
 
 ---
 
