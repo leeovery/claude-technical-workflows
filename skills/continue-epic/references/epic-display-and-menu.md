@@ -187,7 +187,6 @@ What would you like to do?
 8. Start new discussion topic
 9. Start new research
 10. Resume a completed topic
-11. Stop here — resume later with /workflow-start
 
 Select an option (enter number):
 · · · · · · · · · · · ·
