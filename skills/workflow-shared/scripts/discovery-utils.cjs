@@ -127,6 +127,17 @@ function computeNextPhase(manifest) {
 
   const ps = (phase) => phaseStatus(manifest, phase);
 
+  // Quick-fix has its own short pipeline: scoping → implementation → review
+  if (wt === 'quick-fix') {
+    if (ps('review') === 'completed') return { next_phase: 'done', phase_label: 'pipeline complete' };
+    if (ps('review') === 'in-progress') return { next_phase: 'review', phase_label: 'review (in-progress)' };
+    if (ps('implementation') === 'completed') return { next_phase: 'review', phase_label: 'ready for review' };
+    if (ps('implementation') === 'in-progress') return { next_phase: 'implementation', phase_label: 'implementation (in-progress)' };
+    if (ps('scoping') === 'completed') return { next_phase: 'implementation', phase_label: 'ready for implementation' };
+    if (ps('scoping') === 'in-progress') return { next_phase: 'scoping', phase_label: 'scoping (in-progress)' };
+    return { next_phase: 'scoping', phase_label: 'ready for scoping' };
+  }
+
   if (ps('review') === 'completed') {
     return { next_phase: 'done', phase_label: 'pipeline complete' };
   }
