@@ -21,7 +21,7 @@ This is **Phase 5** of the six-phase workflow:
 | **5. Implementation** | DOING - tests first, then code | ◀ HERE |
 | 6. Review | VALIDATING - check work against artifacts | |
 
-**Stay in your lane**: Execute the plan via strict TDD - tests first, then code. Don't re-debate decisions from the specification or expand scope beyond the plan. The plan is your authority.
+**Stay in your lane**: Execute the plan via strict TDD (or verification workflow for quick-fix). Don't re-debate decisions from the specification or expand scope beyond the plan. The plan is your authority.
 
 ---
 
