@@ -105,7 +105,7 @@ The contract and scaffolding templates live in `.claude/skills/create-output-for
 
 ## Output Format References (IMPORTANT)
 
-**NEVER list output format names (linear, local-markdown, etc.) anywhere except:**
+**NEVER list output format names (tick, linear, local-markdown, etc.) anywhere except:**
 - `skills/workflow-planning-process/references/output-formats.md` - the authoritative list
 - `skills/workflow-planning-process/references/output-formats/{format}/` - individual format directories
 - `README.md` - user-facing documentation where format options are presented
