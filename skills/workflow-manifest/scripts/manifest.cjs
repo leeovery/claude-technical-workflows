@@ -10,10 +10,10 @@ const path = require('path');
 
 const WORKFLOWS_DIR = path.resolve(process.cwd(), '.workflows');
 
-const VALID_WORK_TYPES = ['epic', 'feature', 'bugfix', 'cross-cutting'];
+const VALID_WORK_TYPES = ['epic', 'feature', 'bugfix', 'cross-cutting', 'quick-fix'];
 
 const VALID_PHASES = [
-  'research', 'discussion', 'investigation',
+  'research', 'discussion', 'investigation', 'scoping',
   'specification', 'planning', 'implementation',
   'review'
 ];
@@ -22,6 +22,7 @@ const VALID_PHASE_STATUSES = {
   research:       ['in-progress', 'completed'],
   discussion:     ['in-progress', 'completed'],
   investigation:  ['in-progress', 'completed'],
+  scoping:        ['in-progress', 'completed'],
   specification:  ['in-progress', 'completed', 'superseded', 'promoted'],
   planning:       ['in-progress', 'completed'],
   implementation: ['in-progress', 'completed'],

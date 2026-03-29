@@ -1,7 +1,7 @@
 ---
-name: workflow-implementation-entry
+name: workflow-scoping-entry
 user-invocable: false
-allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.cjs), Bash(cat .workflows/.state/environment-setup.md)
+allowed-tools: Bash(node .claude/skills/workflow-manifest/scripts/manifest.cjs)
 ---
 
 Act as **precise intake coordinator**. Follow each step literally without interpretation. Do not engage with the subject matter — your role is preparation, not processing.
@@ -10,18 +10,15 @@ Act as **precise intake coordinator**. Follow each step literally without interp
 
 ## Workflow Context
 
-This is **Phase 5** of the six-phase workflow:
+This is the **entry phase** of the quick-fix pipeline:
 
 | Phase | Focus | You |
 |-------|-------|-----|
-| 1. Research | EXPLORE - ideas, feasibility, market, business | |
-| 2. Discussion | WHAT and WHY - decisions, architecture, edge cases | |
-| 3. Specification | REFINE - validate into standalone spec | |
-| 4. Planning | HOW - phases, tasks, acceptance criteria | |
-| **5. Implementation** | DOING - tests first, then code | ◀ HERE |
-| 6. Review | VALIDATING - check work against artifacts | |
+| **Scoping** | SCOPE - context, spec, plan in one pass | ◀ HERE |
+| Implementation | DOING - execute the plan | |
+| Review | VALIDATING - check work against artifacts | |
 
-**Stay in your lane**: Execute the plan via strict TDD (or verification workflow for quick-fix). Don't re-debate decisions from the specification or expand scope beyond the plan. The plan is your authority.
+**Stay in your lane**: Gather context, validate prerequisites, and hand off to the processing skill. Don't analyse the change or assess complexity — that's the processing skill's job.
 
 ---
 
@@ -33,7 +30,6 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 - After each user interaction, STOP and wait for their response before proceeding
 - Never assume or anticipate user choices
-- Even if the user's initial prompt seems to answer a question, still confirm with them at the appropriate step
 - Complete each step fully before moving to the next
 - Do not act on gathered information until the skill is loaded - it contains the instructions for how to proceed
 
@@ -58,22 +54,6 @@ Load **[validate-phase.md](references/validate-phase.md)** and follow its instru
 
 ---
 
-## Step 3: Check Dependencies
-
-Load **[validate-dependencies.md](references/validate-dependencies.md)** and follow its instructions as written.
-
-→ Proceed to **Step 4**.
-
----
-
-## Step 4: Check Environment
-
-Load **[environment-check.md](references/environment-check.md)** and follow its instructions as written.
-
-→ Proceed to **Step 5**.
-
----
-
-## Step 5: Invoke the Skill
+## Step 3: Invoke the Skill
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

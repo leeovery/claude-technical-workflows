@@ -41,11 +41,21 @@ Are all criteria genuinely met — not just self-reported?
 - Verify the code actually satisfies it (don't trust the executor's claim)
 - Check for criteria that are technically met but miss the intent
 
+**For quick-fix mechanical changes**: Instead of acceptance criteria, verify completeness:
+- Are all target files updated?
+- Do any occurrences of the old pattern remain in scope?
+- Were exclusions respected?
+
 ### 3. Test Adequacy
 Do tests actually verify the criteria? Are assertions precise? Are edge cases covered?
 - Is there a test for each acceptance criterion?
 - Would the tests fail if the feature broke?
 - Are edge cases from the task's test cases covered?
+
+**For quick-fix mechanical changes**: Instead of new test coverage, verify the verification workflow:
+- Were tests run before and after the change?
+- Do all previously passing tests still pass?
+- If tests were updated (e.g., to reference new API), are the updates correct?
 - **Assertion depth**: For mutation operations, do tests verify observable side effects — not just that the operation returned success? State changes should be asserted independently.
 - **Assertion precision**: When expected output is deterministic, do tests use exact comparison? Substring or partial matching masks formatting regressions and missing/extra content.
 - Flag both under-testing AND over-testing
