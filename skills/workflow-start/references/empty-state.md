@@ -9,8 +9,14 @@ No active work found. Offer to start something new, with option to view complete
 > *Output the next fenced block as a code block:*
 
 ```
-Workflow Overview
+●───────────────────────────────────────────────●
+  Workflow
+●───────────────────────────────────────────────●
+```
 
+> *Output the next fenced block as a code block:*
+
+```
 No active work found.
 
 @if(completed_count > 0 || cancelled_count > 0)

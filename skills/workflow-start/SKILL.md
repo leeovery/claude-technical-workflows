@@ -23,7 +23,7 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 > *Output the next fenced block as a code block:*
 
 ```
-──────────────────────────────────────────────────────────────────────
+●─────────────────────────────────────────────────────────────────●
     ___   _____________   __________________
    /   | / ____/ ____/ | / /_  __/  _/ ____/
   / /| |/ / __/ __/ /  |/ / / /  / // /
@@ -35,9 +35,8 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 | |/ |/ / /_/ / _, _/ /| |/ __/ / /___/ /_/ /| |/ |/ /___/ /
 |__/|__/\____/_/ |_/_/ |_/_/   /_____/\____/ |__/|__//____/
 
-──────────────────────────────────────────────────────────────────────
-Agentic engineering workflows — from idea to implementation.
-──────────────────────────────────────────────────────────────────────
+  Agentic engineering workflows — from idea to implementation.
+●─────────────────────────────────────────────────────────────────●
 ```
 
 ---
