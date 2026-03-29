@@ -19,9 +19,9 @@ Always create a feature branch **before** the first commit. Never commit to main
 3. **Investigation** (`workflow-investigation-process` skill): Bugfix-specific - symptom gathering + code analysis → root cause
 4. **Scoping** (`workflow-scoping-process` skill): Quick-fix-specific - context, spec, and plan in one pass
 5. **Specification** (`workflow-specification-process` skill): Validate and refine into standalone spec
-5. **Planning** (`workflow-planning-process` skill): Define HOW - phases, tasks, acceptance criteria
-6. **Implementation** (`workflow-implementation-process` skill): Execute plan via strict TDD
-7. **Review** (`workflow-review-process` skill): Validate work against discussion, specification, and plan
+6. **Planning** (`workflow-planning-process` skill): Define HOW - phases, tasks, acceptance criteria
+7. **Implementation** (`workflow-implementation-process` skill): Execute plan via TDD (or verification workflow for quick-fix)
+8. **Review** (`workflow-review-process` skill): Validate work against discussion, specification, and plan
 
 ## Skill Architecture
 
@@ -33,7 +33,7 @@ Skills are organised in two tiers:
 
 **Processing skills** (`workflow-*-process`) are model-invocable. They assume pipeline context — work_type is set, prior phases are complete, artifacts are in expected locations. Phase entry skills provide all required inputs before invoking them.
 
-**Capture skills** (`workflow-log-idea`, `workflow-log-bug`) are model-invocable, lightweight skills outside the pipeline. They capture ideas or bugs as markdown files in the inbox (`.workflows/.inbox/`). No manifest, no migrations, no step/reference structure — just natural language instructions with capture-only constraints. They can be invoked directly by the user or discovered by the model when the user wants to log something.
+**Capture skills** (`workflow-log-idea`, `workflow-log-bug`, `workflow-log-quickfix`) are model-invocable, lightweight skills outside the pipeline. They capture ideas, bugs, or quick-fixes as markdown files in the inbox (`.workflows/.inbox/`). No manifest, no migrations, no step/reference structure — just natural language instructions with capture-only constraints. They can be invoked directly by the user or discovered by the model when the user wants to log something.
 
 ### Phase Entry Skill Routing
 
@@ -60,7 +60,7 @@ Phase entry skills (`workflow-*-entry`) receive positional arguments: `$0` = wor
 
 **Topics**: A *topic* is the item within a phase. For feature/bugfix/quick-fix, the topic name equals the work unit name (single topic moving through the pipeline). For epic, topics are distinct from the work unit name (multiple topics per phase). All work types use per-topic items in the manifest (unified structure). The discussion phase analyses all research files collectively to derive discussion topics.
 
-Work-unit-first directory structure with uniform `{topic}` in all paths. For feature/bugfix, `{topic}` equals `{work_unit}`. For epic, `{topic}` is the item within a phase.
+Work-unit-first directory structure with uniform `{topic}` in all paths. For feature/bugfix/quick-fix, `{topic}` equals `{work_unit}`. For epic, `{topic}` is the item within a phase.
 
 - Project manifest: `.workflows/manifest.json` (work unit registry + project defaults)
 - Manifest: `.workflows/{work_unit}/manifest.json`

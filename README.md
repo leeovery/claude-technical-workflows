@@ -116,7 +116,7 @@ These aren't just different shapes — every phase adapts its behaviour to the w
 
 ### Lifecycle
 
-Work units are **in-progress**, **completed**, or **cancelled**. Completion happens automatically when the pipeline finishes, or manually via the manage menu in `/workflow-start`. Completed and cancelled work can be reactivated. Feature and bugfix pipelines offer early completion after implementation (skip review).
+Work units are **in-progress**, **completed**, or **cancelled**. Completion happens automatically when the pipeline finishes, or manually via the manage menu in `/workflow-start`. Completed and cancelled work can be reactivated. Feature, bugfix, and quick-fix pipelines offer early completion after implementation (skip review).
 
 ## Key Features
 
@@ -188,11 +188,11 @@ Log ideas and bugs as you go — mid-conversation or from scratch. Say "log that
 <details>
 <summary><strong>Entry-Point Skills</strong> — user-facing commands</summary>
 
-**Start:** [`/start-feature`](skills/start-feature/) | [`/start-epic`](skills/start-epic/) | [`/start-bugfix`](skills/start-bugfix/) | [`/start-cross-cutting`](skills/start-cross-cutting/)
+**Start:** [`/start-feature`](skills/start-feature/) | [`/start-epic`](skills/start-epic/) | [`/start-bugfix`](skills/start-bugfix/) | [`/start-quickfix`](skills/start-quickfix/) | [`/start-cross-cutting`](skills/start-cross-cutting/)
 
-**Continue:** [`/workflow-start`](skills/workflow-start/) | [`/continue-feature`](skills/continue-feature/) | [`/continue-epic`](skills/continue-epic/) | [`/continue-bugfix`](skills/continue-bugfix/) | [`/continue-cross-cutting`](skills/continue-cross-cutting/)
+**Continue:** [`/workflow-start`](skills/workflow-start/) | [`/continue-feature`](skills/continue-feature/) | [`/continue-epic`](skills/continue-epic/) | [`/continue-bugfix`](skills/continue-bugfix/) | [`/continue-quickfix`](skills/continue-quickfix/) | [`/continue-cross-cutting`](skills/continue-cross-cutting/)
 
-**Capture:** [`/workflow-log-idea`](skills/workflow-log-idea/) | [`/workflow-log-bug`](skills/workflow-log-bug/)
+**Capture:** [`/workflow-log-idea`](skills/workflow-log-idea/) | [`/workflow-log-bug`](skills/workflow-log-bug/) | [`/workflow-log-quickfix`](skills/workflow-log-quickfix/)
 
 **Utilities:** [`/workflow-migrate`](skills/workflow-migrate/)
 
