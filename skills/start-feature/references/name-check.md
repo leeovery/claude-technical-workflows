@@ -11,6 +11,8 @@ Based on the feature description, suggest a name in kebab-case. Once confirmed, 
 > *Output the next fenced block as a code block:*
 
 ```
+── Step 2: Name Check ──────────────────────────────
+
 Suggested feature name: {work_unit}
 ```
 
