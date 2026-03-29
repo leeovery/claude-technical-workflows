@@ -136,20 +136,4 @@ Load **[write-tasks.md](references/write-tasks.md)** and follow its instructions
 
 ## Step 6: Conclude Scoping
 
-> *Output the next fenced block as a code block:*
-
-```
-Scoping complete for "{topic:(titlecase)}".
-
-  Spec: .workflows/{work_unit}/specification/{topic}/specification.md
-  Plan: .workflows/{work_unit}/planning/{topic}/
-```
-
-Invoke the workflow-bridge skill with context:
-
-```
-Pipeline bridge for: {work_unit}
-Completed phase: scoping
-
-Invoke the workflow-bridge skill to enter plan mode with continuation instructions.
-```
+Load **[conclude-scoping.md](references/conclude-scoping.md)** and follow its instructions as written.
