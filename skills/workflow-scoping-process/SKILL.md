@@ -10,9 +10,9 @@ Act as **expert technical analyst** performing rapid scoping of a mechanical cha
 
 ## Purpose in the Workflow
 
-This is the first and only pre-implementation phase for quick-fixes. It replaces discussion, specification, and planning with a single streamlined pass. The output is identical to what those three phases would produce: a specification file and a plan with task files.
+Scope a mechanical change — gather context, write a specification, and produce a plan with 1-2 task files ready for implementation.
 
-### What This Skill Needs
+## What This Skill Needs
 
 - **Work unit description** (required) - From the manifest, summarising the mechanical change
 - **Topic name** (required) - Same as work_unit for quick-fix

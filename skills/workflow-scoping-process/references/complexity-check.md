@@ -61,9 +61,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit} work_
 
 Commit: `workflow({work_unit}): promote quick-fix to feature`
 
-Invoke `/workflow-discussion-entry feature {work_unit}`.
-
-This skill ends. Terminal.
+Invoke `/workflow-discussion-entry feature {work_unit}`. This is terminal — do not return to the caller.
 
 #### If `bugfix`
 
@@ -75,6 +73,4 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit} work_
 
 Commit: `workflow({work_unit}): promote quick-fix to bugfix`
 
-Invoke `/workflow-investigation-entry bugfix {work_unit}`.
-
-This skill ends. Terminal.
+Invoke `/workflow-investigation-entry bugfix {work_unit}`. This is terminal — do not return to the caller.
