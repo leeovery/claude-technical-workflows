@@ -21,6 +21,18 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 ## Step 0: Initialisation
 
+> *Output the next fenced block as a code block:*
+
+```
+── Initialisation ──────────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Running migrations to keep workflow files in sync.**
+```
+
 Load **[casing-conventions.md](../workflow-shared/references/casing-conventions.md)** and follow its instructions as written.
 
 **Run migrations — this is mandatory. You must complete it before proceeding.**
@@ -49,6 +61,19 @@ Invoke the `/workflow-migrate` skill and follow its instructions exactly — if 
 
 ## Step 1: Gather Feature Context
 
+> *Output the next fenced block as a code block:*
+
+```
+── Gather Feature Context ──────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Tell me about the feature.** A brief description is enough
+> to get started — we'll explore the details in discussion.
+```
+
 #### If inbox file path was provided as positional argument (`$0`)
 
 Read the inbox file at the provided path. Use its content as the feature description — skip the gather-context prompt. The slug from the filename (strip the `YYYY-MM-DD--` prefix, strip `.md`) becomes the suggested work unit name in Step 2.
@@ -65,6 +90,19 @@ Load **[gather-feature-context.md](references/gather-feature-context.md)** and f
 
 ## Step 2: Feature Name and Conflict Check
 
+> *Output the next fenced block as a code block:*
+
+```
+── Feature Name ────────────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Suggesting a name for this feature.** This becomes the identifier
+> used throughout the workflow — you can change it if it doesn't fit.
+```
+
 Load **[name-check.md](references/name-check.md)** and follow its instructions as written.
 
 → Proceed to **Step 3**.
@@ -73,6 +111,12 @@ Load **[name-check.md](references/name-check.md)** and follow its instructions a
 
 ## Step 3: Route to First Phase
 
+> *Output the next fenced block as a code block:*
+
+```
+── Choose Starting Phase ───────────────────────────
+```
+
 Load **[research-gating.md](references/research-gating.md)** and follow its instructions as written.
 
 → Proceed to **Step 4**.
@@ -80,6 +124,19 @@ Load **[research-gating.md](references/research-gating.md)** and follow its inst
 ---
 
 ## Step 4: Invoke Entry-Point Skill
+
+> *Output the next fenced block as a code block:*
+
+```
+── Invoke Phase Skill ──────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Handing off to the selected phase.** The next skill will load
+> and guide you through the process.
+```
 
 Invoke the appropriate entry-point skill based on the selected phase:
 
