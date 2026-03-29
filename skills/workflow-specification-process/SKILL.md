@@ -58,6 +58,12 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 ## Step 0: Resume Detection
 
+> *Output the next fenced block as a code block:*
+
+```
+── Resume Detection ────────────────────────────────
+```
+
 Check if `.workflows/{work_unit}/specification/{topic}/specification.md` exists.
 
 #### If no file exists
@@ -102,6 +108,12 @@ Continue or restart?
 
 ## Step 1: Verify Source Material
 
+> *Output the next fenced block as a code block:*
+
+```
+── Verify Source Material ──────────────────────────
+```
+
 Load **[verify-source-material.md](references/verify-source-material.md)** and follow its instructions as written.
 
 → Proceed to **Step 2**.
@@ -109,6 +121,12 @@ Load **[verify-source-material.md](references/verify-source-material.md)** and f
 ---
 
 ## Step 2: Initialize Specification
+
+> *Output the next fenced block as a code block:*
+
+```
+── Initialize Specification ────────────────────────
+```
 
 Load **[initialize-specification.md](references/initialize-specification.md)** and follow its instructions as written.
 
@@ -118,6 +136,12 @@ Load **[initialize-specification.md](references/initialize-specification.md)** a
 
 ## Step 3: Session Setup
 
+> *Output the next fenced block as a code block:*
+
+```
+── Session Setup ───────────────────────────────────
+```
+
 Load **[session-setup.md](references/session-setup.md)** and follow its instructions as written.
 
 → Proceed to **Step 4**.
@@ -125,6 +149,12 @@ Load **[session-setup.md](references/session-setup.md)** and follow its instruct
 ---
 
 ## Step 4: Load Specification Principles
+
+> *Output the next fenced block as a code block:*
+
+```
+── Load Specification Principles ───────────────────
+```
 
 Load **[specification-principles.md](references/specification-principles.md)** and follow its instructions as written.
 
@@ -137,7 +167,7 @@ Load **[specification-principles.md](references/specification-principles.md)** a
 > *Output the next fenced block as a code block:*
 
 ```
-── Step 5: Spec Construction ───────────────────────
+── Spec Construction ───────────────────────────────
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -156,6 +186,12 @@ Load **[spec-construction.md](references/spec-construction.md)** and follow its 
 
 ## Step 6: Document Dependencies
 
+> *Output the next fenced block as a code block:*
+
+```
+── Document Dependencies ───────────────────────────
+```
+
 #### If work_type is not `epic`
 
 → Proceed to **Step 7**.
@@ -173,7 +209,7 @@ Load **[dependencies.md](references/dependencies.md)** and follow its instructio
 > *Output the next fenced block as a code block:*
 
 ```
-── Step 7: Specification Review ────────────────────
+── Specification Review ────────────────────────────
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -192,6 +228,12 @@ Load **[spec-review.md](references/spec-review.md)** and follow its instructions
 
 ## Step 8: Compliance Self-Check
 
+> *Output the next fenced block as a code block:*
+
+```
+── Compliance Self-Check ───────────────────────────
+```
+
 Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)** and follow its instructions as written.
 
 → Proceed to **Step 9**.
@@ -203,7 +245,7 @@ Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)*
 > *Output the next fenced block as a code block:*
 
 ```
-── Step 9: Conclude ────────────────────────────────
+── Conclude ────────────────────────────────────────
 ```
 
 Load **[spec-completion.md](references/spec-completion.md)** and follow its instructions as written.

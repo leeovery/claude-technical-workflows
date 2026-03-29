@@ -221,7 +221,7 @@ All user-facing output uses five distinct visual tiers, each with a specific pur
 | 4 | Sub-step marker | Progress within a step | Code block |
 | 5 | Status / menu | Data displays and interactive choices | Code block / markdown |
 
-Every skill invocation should produce at most one phase title. Step markers appear at each step boundary. Signpost blockquotes appear at phase entry, before steps where context helps, and at phase completion. Status displays and menus are unchanged from existing conventions.
+Every skill invocation should produce at most one phase title. Step markers appear at every step boundary — including steps with no explicit output, since Claude's visible processing (file reads, commands, thinking) is the user experience and the marker labels it. Signpost blockquotes appear at phase entry, before steps where context helps, and at phase completion. Status displays and menus are unchanged from existing conventions.
 
 ### Rendering Instructions
 
@@ -260,26 +260,26 @@ Phase titles replace the old plain-text title pattern. Status displays that prev
 
 ### Step Markers
 
-Em-dash framed progress indicators. Embedded at each step boundary — never instructed once at the top of a file. Short left side, long right side to fill width.
+Em-dash framed progress indicators. Embedded at each step boundary — never instructed once at the top of a file. Short left side, long right side to fill width. Every step in a skill gets a marker, even if the step has no explicit output — Claude's visible processing (reading files, running commands, thinking) IS the user experience, and the marker labels that activity.
 
 ```
-── Step 3: Construct Specification ──────────────────
+── Construct Specification ──────────────────────────
 ```
 
 Variations for loops and routing:
 
 ```
-── Step 4: Task Execution (3 of 12) ─────────────────
-── Step 5: Review (cycle 2) ─────────────────────────
-── Returning to Step 2: Discussion Session ──────────
+── Task Execution (3 of 12) ─────────────────────────
+── Review (cycle 2) ─────────────────────────────────
+── Returning to Discussion Session ──────────────────
 ```
 
 Rules:
 - Always `── ` (two em-dashes + space) on the left
 - Right side padded with em-dashes to ~55 characters total
-- Step numbers match the skill file's internal step numbering
+- **No step numbers** — steps may be skipped based on conditionals and routing is non-linear. Names alone are sufficient
 - Loop iterations shown in parentheses: `(cycle N)`, `(N of M)`
-- Route-back uses `Returning to Step N: Name`
+- Route-back uses `Returning to {Name}`
 - Rendered as a single-line code block with its own rendering instruction
 
 ### Sub-step Markers
@@ -287,13 +287,13 @@ Rules:
 Dot-framed markers for stages within a step. Visually lighter than step markers to indicate nesting.
 
 ```
-·· Step 3a: Extract Sources ·························
+·· Extract Sources ··································
 ```
 
 Rules:
 - Always `·· ` (two middle dots + space) on the left
 - Right side padded with middle dots to ~55 characters total
-- Lettered suffixes: `3a`, `3b`, `3c` matching the parent step
+- Named only — no numbering or lettered suffixes
 - Same loop/iteration conventions as step markers
 - Rendered as a single-line code block with its own rendering instruction
 
@@ -594,7 +594,7 @@ Sequential: `## Step 0`, `## Step 1`, `## Step 2`, etc.
 - **Step 0** runs migrations via the `/workflow-migrate` skill (mandatory in all entry-point skills)
 - Steps are separated by `---` horizontal rules
 - Each step completes fully before the next begins
-- User-facing step markers (see Display & Output Conventions → Step Markers) are embedded at each step boundary in the skill file — never instructed once at the top
+- User-facing step markers (see Display & Output Conventions → Step Markers) use names only — no numbers. They are embedded at each step boundary, including steps with no explicit output (Claude's visible processing labels the activity for the user)
 
 ### Conditional Routing
 
