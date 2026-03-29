@@ -56,12 +56,6 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 ---
 
-## Output Formatting
-
-When announcing a new step, output `── ── ── ── ──` on its own line before the step heading.
-
----
-
 ## Step 0: Resume Detection
 
 Check if `.workflows/{work_unit}/specification/{topic}/specification.md` exists.
@@ -140,6 +134,20 @@ Load **[specification-principles.md](references/specification-principles.md)** a
 
 ## Step 5: Spec Construction
 
+> *Output the next fenced block as a code block:*
+
+```
+── Step 5: Spec Construction ───────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Building the specification.** Topics from your source material will
+> be extracted and presented one at a time. Nothing gets written without
+> your explicit approval.
+```
+
 Load **[spec-construction.md](references/spec-construction.md)** and follow its instructions as written.
 
 → Proceed to **Step 6**.
@@ -162,6 +170,20 @@ Load **[dependencies.md](references/dependencies.md)** and follow its instructio
 
 ## Step 7: Specification Review
 
+> *Output the next fenced block as a code block:*
+
+```
+── Step 7: Specification Review ────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Reviewing the specification.** Agents will analyse it against
+> source material for gaps and inconsistencies. You'll approve or
+> dismiss each finding.
+```
+
 Load **[spec-review.md](references/spec-review.md)** and follow its instructions as written.
 
 → Proceed to **Step 8**.
@@ -177,6 +199,12 @@ Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)*
 ---
 
 ## Step 9: Assess Cross-Cutting & Conclude
+
+> *Output the next fenced block as a code block:*
+
+```
+── Step 9: Conclude ────────────────────────────────
+```
 
 Load **[spec-completion.md](references/spec-completion.md)** and follow its instructions as written.
 
