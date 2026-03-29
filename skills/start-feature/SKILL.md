@@ -31,6 +31,8 @@ Invoke the `/workflow-migrate` skill and follow its instructions exactly — if 
 
 ---
 
+## Step 1: Gather Feature Context
+
 > *Output the next fenced block as a code block:*
 
 ```
@@ -44,8 +46,6 @@ Invoke the `/workflow-migrate` skill and follow its instructions exactly — if 
 ```
 > **Starting a new feature.** I'll ask what you're building, suggest a name, then you'll choose whether to research first or go straight to discussion.
 ```
-
-## Step 1: Gather Feature Context
 
 #### If inbox file path was provided as positional argument (`$0`)
 
