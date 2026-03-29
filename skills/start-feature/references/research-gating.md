@@ -10,11 +10,7 @@ Let the user choose whether to start with research or go directly to discussion.
 
 ```
 > **Choose your starting point.** Research is open-ended exploration — gather context, weigh options, no commitments. Discussion is structured conversation that works toward decisions. If you're unsure, research is a safe place to start.
-```
 
-> *Output the next fenced block as markdown (not a code block):*
-
-```
 · · · · · · · · · · · ·
 How would you like to start?
 
