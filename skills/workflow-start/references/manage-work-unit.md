@@ -27,6 +27,13 @@ Bugfixes:
 @endforeach
 @endif
 
+@if(quickfix_count > 0)
+Quick Fixes:
+@foreach(unit in quick_fixes.work_units)
+  {N}. {unit.name:(titlecase)}
+@endforeach
+@endif
+
 @if(cross_cutting_count > 0)
 Cross-Cutting:
 @foreach(unit in cross_cutting.work_units)
