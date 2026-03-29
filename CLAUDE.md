@@ -260,7 +260,7 @@ Phase titles replace the old plain-text title pattern. Status displays that prev
 
 ### Step Markers
 
-Em-dash framed progress indicators. Embedded at each step boundary — never instructed once at the top of a file. Short left side, long right side to fill width. Every step in a skill gets a marker, even if the step has no explicit output — Claude's visible processing (reading files, running commands, thinking) IS the user experience, and the marker labels that activity.
+Em-dash framed progress indicators. Embedded at each step boundary — never instructed once at the top of a file. Short left side, long right side to fill width. Every step in a skill gets a marker, even if the step has no explicit output — Claude's visible processing (reading files, running commands, thinking) IS the user experience, and the marker labels that activity. Every step marker must be followed by a signpost blockquote explaining what the step does and why — the marker names the step, the signpost explains it.
 
 ```
 ── Construct Specification ──────────────────────────
