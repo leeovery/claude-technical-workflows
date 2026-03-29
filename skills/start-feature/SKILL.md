@@ -70,8 +70,8 @@ Invoke the `/workflow-migrate` skill and follow its instructions exactly — if 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Tell me about the feature.** A brief description is enough
-> to get started — we'll explore the details in discussion.
+> **Gathering context for the feature.** This is used to
+> understand the scope and suggest a name.
 ```
 
 #### If inbox file path was provided as positional argument (`$0`)
@@ -99,8 +99,8 @@ Load **[gather-feature-context.md](references/gather-feature-context.md)** and f
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Suggesting a name for this feature.** This becomes the identifier
-> used throughout the workflow — you can change it if it doesn't fit.
+> **Naming the feature and checking for conflicts.** The name becomes
+> the identifier used throughout the workflow.
 ```
 
 Load **[name-check.md](references/name-check.md)** and follow its instructions as written.
