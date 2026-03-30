@@ -45,13 +45,22 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 ---
 
-## Output Formatting
-
-When announcing a new step, output `── ── ── ── ──` on its own line before the step heading.
-
----
-
 ## Step 0: Resume Detection
+
+> *Output the next fenced block as a code block:*
+
+```
+── Resume Detection ─────────────────────────────
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Checking for an existing review.** If one exists, you can
+> continue reviewing unreviewed tasks or start fresh.
+
+```
 
 Check if a review file exists at `.workflows/{work_unit}/review/{topic}/report.md`.
 
@@ -160,6 +169,20 @@ Set `unreviewed_tasks` = `[{list of unreviewed internal IDs}]`.
 
 ## Step 1: Initialize Review
 
+> *Output the next fenced block as a code block:*
+
+```
+── Initialize Review ────────────────────────────
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Registering the review phase in the manifest.**
+
+```
+
 Check if review phase is registered in manifest:
 
 ```bash
@@ -182,6 +205,21 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs init-phase {work_unit
 
 ## Step 2: Read Plan(s) and Specification(s)
 
+> *Output the next fenced block as a code block:*
+
+```
+── Read Plans and Specifications ────────────────
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Reading the plan and specification that the
+> implementation was built from.**
+
+```
+
 Load **[read-plans.md](references/read-plans.md)** and follow its instructions as written.
 
 → Proceed to **Step 3**.
@@ -189,6 +227,21 @@ Load **[read-plans.md](references/read-plans.md)** and follow its instructions a
 ---
 
 ## Step 3: Load Project Skills
+
+> *Output the next fenced block as a code block:*
+
+```
+── Load Project Skills ──────────────────────────
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Loading project-level skills that inform
+> quality expectations.**
+
+```
 
 Load **[load-project-skills.md](references/load-project-skills.md)** and follow its instructions as written.
 
@@ -198,6 +251,22 @@ Load **[load-project-skills.md](references/load-project-skills.md)** and follow 
 
 ## Step 4: QA Verification
 
+> *Output the next fenced block as a code block:*
+
+```
+── QA Verification ──────────────────────────────
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Dispatching task verifier agents.** Each task is
+> independently verified against its acceptance criteria
+> and the specification.
+
+```
+
 Load **[invoke-task-verifiers.md](references/invoke-task-verifiers.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
@@ -205,6 +274,21 @@ Load **[invoke-task-verifiers.md](references/invoke-task-verifiers.md)** and fol
 ---
 
 ## Step 5: Produce Review
+
+> *Output the next fenced block as a code block:*
+
+```
+── Produce Review ───────────────────────────────
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Synthesising agent findings into the review report.**
+> Aggregating per-task results into an overall assessment.
+
+```
 
 Load **[produce-review.md](references/produce-review.md)** and follow its instructions as written.
 
@@ -214,6 +298,21 @@ Load **[produce-review.md](references/produce-review.md)** and follow its instru
 
 ## Step 6: Present Review
 
+> *Output the next fenced block as a code block:*
+
+```
+── Present Review ───────────────────────────────
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Presenting the review findings.** You'll see the
+> verdict, summary, and detailed per-task results.
+
+```
+
 Load **[present-review.md](references/present-review.md)** and follow its instructions as written.
 
 → Proceed to **Step 7**.
@@ -222,6 +321,20 @@ Load **[present-review.md](references/present-review.md)** and follow its instru
 
 ## Step 7: Compliance Self-Check
 
+> *Output the next fenced block as a code block:*
+
+```
+── Compliance Self-Check ────────────────────────
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Verifying the review follows workflow conventions.**
+
+```
+
 Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)** and follow its instructions as written.
 
 → Proceed to **Step 8**.
@@ -229,6 +342,21 @@ Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)*
 ---
 
 ## Step 8: Review Actions
+
+> *Output the next fenced block as a code block:*
+
+```
+── Review Actions ───────────────────────────────
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Deciding what to do with the findings.** You can
+> accept the review, request fixes, or ask questions.
+
+```
 
 Load **[review-actions-loop.md](references/review-actions-loop.md)** and follow its instructions as written.
 
