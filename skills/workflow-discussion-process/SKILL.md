@@ -95,8 +95,8 @@ Found existing discussion for **{topic:(titlecase)}**.
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Creating the discussion file and seeding the Discussion Map
-> with initial subtopics from your context.**
+> Creating the discussion file and seeding the Discussion Map
+> with initial subtopics from your context.
 ```
 
 Load **[initialize-discussion.md](references/initialize-discussion.md)** and follow its instructions as written.
@@ -116,8 +116,8 @@ Load **[initialize-discussion.md](references/initialize-discussion.md)** and fol
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Loading the guidelines that shape how the discussion
-> is structured and documented.**
+> Loading the guidelines that shape how the discussion
+> is structured and documented.
 ```
 
 Load **[discussion-guidelines.md](references/discussion-guidelines.md)** and follow its instructions as written.
@@ -159,7 +159,7 @@ Load **[discussion-session.md](references/discussion-session.md)** and follow it
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Verifying the discussion file follows workflow conventions.**
+> Verifying the discussion file follows workflow conventions.
 ```
 
 Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)** and follow its instructions as written.

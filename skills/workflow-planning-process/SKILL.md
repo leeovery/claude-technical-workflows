@@ -193,7 +193,7 @@ Load **[session-setup.md](references/session-setup.md)** and follow its instruct
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Loading the guidelines for how plans are structured.**
+> Loading the guidelines for how plans are structured.
 > These ensure tasks are well-scoped, testable, and sequenced
 > correctly.
 ```
@@ -328,7 +328,7 @@ Load **[plan-review.md](references/plan-review.md)** and follow its instructions
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Verifying the plan follows workflow conventions.**
+> Verifying the plan follows workflow conventions.
 ```
 
 Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)** and follow its instructions as written.

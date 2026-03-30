@@ -51,7 +51,7 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Running migrations to keep workflow files in sync.**
+> Running migrations to keep workflow files in sync.
 > This ensures everything is up to date before we proceed.
 ```
 
@@ -152,7 +152,7 @@ Load **[empty-state.md](references/empty-state.md)** and follow its instructions
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Showing your active work and available options.**
+> Showing your active work and available options.
 ```
 
 Load **[active-work.md](references/active-work.md)** and follow its instructions as written.

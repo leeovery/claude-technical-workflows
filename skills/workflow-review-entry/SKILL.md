@@ -50,8 +50,8 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Reading the handoff context to identify which
-> topic to review.**
+> Reading the handoff context to identify which
+> topic to review.
 ```
 
 Arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional).
@@ -74,8 +74,8 @@ Store work_unit for the handoff.
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Checking that a completed plan and implementation
-> exist for this topic.**
+> Checking that a completed plan and implementation
+> exist for this topic.
 ```
 
 Load **[validate-phase.md](references/validate-phase.md)** and follow its instructions as written.
@@ -95,8 +95,8 @@ Load **[validate-phase.md](references/validate-phase.md)** and follow its instru
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Handing off to the review process to validate the
-> implementation against the specification and plan.**
+> Handing off to the review process to validate the
+> implementation against the specification and plan.
 ```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

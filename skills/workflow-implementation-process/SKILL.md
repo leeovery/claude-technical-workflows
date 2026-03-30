@@ -122,7 +122,7 @@ Load **[environment-setup.md](references/environment-setup.md)** and follow its 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Reading the plan and loading the format adapter.**
+> Reading the plan and loading the format adapter.
 > This determines how tasks are extracted and tracked.
 ```
 
@@ -143,7 +143,7 @@ Load **[load-plan-adapter.md](references/load-plan-adapter.md)** and follow its 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Setting up implementation tracking in the manifest.**
+> Setting up implementation tracking in the manifest.
 > This records progress as tasks are completed.
 ```
 
@@ -164,8 +164,8 @@ Load **[initialize-tracking.md](references/initialize-tracking.md)** and follow 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Discovering project-level skills that agents should
-> use during implementation.**
+> Discovering project-level skills that agents should
+> use during implementation.
 ```
 
 Load **[project-skills-discovery.md](references/project-skills-discovery.md)** and follow its instructions as written.
@@ -185,8 +185,8 @@ Load **[project-skills-discovery.md](references/project-skills-discovery.md)** a
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Discovering linters and formatters that should be
-> run after each task to ensure code quality.**
+> Discovering linters and formatters that should be
+> run after each task to ensure code quality.
 ```
 
 Load **[linter-setup.md](references/linter-setup.md)** and follow its instructions as written.
@@ -238,7 +238,7 @@ After the loop completes:
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Analysing the implementation for gaps and issues.**
+> Analysing the implementation for gaps and issues.
 > Agents review what was built against the plan and spec.
 > New tasks may be created if problems are found.
 ```
@@ -266,7 +266,7 @@ Load **[analysis-loop.md](references/analysis-loop.md)** and follow its instruct
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Verifying the implementation follows workflow conventions.**
+> Verifying the implementation follows workflow conventions.
 ```
 
 Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)** and follow its instructions as written.

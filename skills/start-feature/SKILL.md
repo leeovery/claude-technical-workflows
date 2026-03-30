@@ -30,7 +30,7 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Running migrations to keep workflow files in sync.**
+> Running migrations to keep workflow files in sync.
 ```
 
 Load **[casing-conventions.md](../workflow-shared/references/casing-conventions.md)** and follow its instructions as written.

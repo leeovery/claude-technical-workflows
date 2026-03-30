@@ -176,7 +176,7 @@ Set `unreviewed_tasks` = `[{list of unreviewed internal IDs}]`.
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Registering the review phase in the manifest.**
+> Registering the review phase in the manifest.
 ```
 
 Check if review phase is registered in manifest:
@@ -210,8 +210,8 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs init-phase {work_unit
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Reading the plan and specification that the
-> implementation was built from.**
+> Reading the plan and specification that the
+> implementation was built from.
 ```
 
 Load **[read-plans.md](references/read-plans.md)** and follow its instructions as written.
@@ -231,8 +231,8 @@ Load **[read-plans.md](references/read-plans.md)** and follow its instructions a
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Loading project-level skills that inform
-> quality expectations.**
+> Loading project-level skills that inform
+> quality expectations.
 ```
 
 Load **[load-project-skills.md](references/load-project-skills.md)** and follow its instructions as written.
@@ -274,7 +274,7 @@ Load **[invoke-task-verifiers.md](references/invoke-task-verifiers.md)** and fol
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Synthesising agent findings into the review report.**
+> Synthesising agent findings into the review report.
 > Aggregating per-task results into an overall assessment.
 ```
 
@@ -316,7 +316,7 @@ Load **[present-review.md](references/present-review.md)** and follow its instru
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Verifying the review follows workflow conventions.**
+> Verifying the review follows workflow conventions.
 ```
 
 Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)** and follow its instructions as written.

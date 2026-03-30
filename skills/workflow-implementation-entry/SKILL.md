@@ -50,8 +50,8 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Reading the handoff context to identify which
-> topic to implement.**
+> Reading the handoff context to identify which
+> topic to implement.
 ```
 
 Arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional).
@@ -74,8 +74,8 @@ Store work_unit for the handoff.
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Checking that a completed plan exists and determining
-> where implementation left off.**
+> Checking that a completed plan exists and determining
+> where implementation left off.
 ```
 
 Load **[validate-phase.md](references/validate-phase.md)** and follow its instructions as written.
@@ -95,8 +95,8 @@ Load **[validate-phase.md](references/validate-phase.md)** and follow its instru
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Verifying that cross-plan dependencies are satisfied
-> before implementation begins.**
+> Verifying that cross-plan dependencies are satisfied
+> before implementation begins.
 ```
 
 Load **[validate-dependencies.md](references/validate-dependencies.md)** and follow its instructions as written.
@@ -116,8 +116,8 @@ Load **[validate-dependencies.md](references/validate-dependencies.md)** and fol
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Checking for any environment setup instructions
-> that need to be in place before coding begins.**
+> Checking for any environment setup instructions
+> that need to be in place before coding begins.
 ```
 
 Load **[environment-check.md](references/environment-check.md)** and follow its instructions as written.
@@ -137,8 +137,8 @@ Load **[environment-check.md](references/environment-check.md)** and follow its 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Handing off to the implementation process with
-> plan, specification, and environment context.**
+> Handing off to the implementation process with
+> plan, specification, and environment context.
 ```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

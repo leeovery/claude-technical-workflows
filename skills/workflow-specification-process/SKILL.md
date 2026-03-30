@@ -189,7 +189,7 @@ Load **[session-setup.md](references/session-setup.md)** and follow its instruct
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Loading the guidelines for how specifications are built.**
+> Loading the guidelines for how specifications are built.
 > These ensure consistency and completeness across the document.
 ```
 
@@ -281,7 +281,7 @@ Load **[spec-review.md](references/spec-review.md)** and follow its instructions
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Verifying the specification follows workflow conventions.**
+> Verifying the specification follows workflow conventions.
 > A quick internal check before we wrap up.
 ```
 
