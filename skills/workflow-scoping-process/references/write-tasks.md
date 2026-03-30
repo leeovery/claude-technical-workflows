@@ -76,6 +76,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.plann
 node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.planning.{topic} phase 1
 node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.planning.{topic} task '~'
 node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.planning.{topic} task_map '{}'
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.planning.{topic} external_id {external_id}
 node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.planning.{topic} status completed
 ```
 
@@ -85,7 +86,7 @@ Register the task_map entries. For each task, map internal_id to external_id:
 node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.planning.{topic} task_map.{internal_id} {external_id}
 ```
 
-The external_id is determined by the format's authoring instructions.
+Both the plan-level `external_id` and per-task external IDs are determined by the format's authoring instructions (see the Plan Structure and Task Storage sections).
 
 ## D. Mark Scoping Complete
 
