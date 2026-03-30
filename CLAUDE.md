@@ -247,13 +247,14 @@ Bullet-bordered box. One per skill invocation. Serves as the top-level anchor te
 ●───────────────────────────────────────────────●
   Specification Overview
 ●───────────────────────────────────────────────●
+
 ```
 
 Rules:
 - Fixed width: 49 characters total (● + 47 em-dashes + ●)
 - 2-space left padding on the title text
 - Title text is the phase or context name (e.g., "Workflow Overview", "Planning Overview")
-- One blank line after the closing border before any content
+- Include a trailing blank line after the closing border inside the code block — this creates visual breathing room in the rendered output
 - **Must be inside a code block** — never markdown. Code blocks preserve the indentation and whitespace that the border layout depends on. Markdown rendering would collapse the spacing and break the layout
 
 Phase titles replace the old plain-text title pattern. Status displays that previously opened with a title line (e.g., `Planning Overview`) now use the phase title at the top of the same code block, followed by a blank line before the content.
@@ -263,20 +264,20 @@ Phase titles replace the old plain-text title pattern. Status displays that prev
 Em-dash framed progress indicators. Embedded at each step boundary — never instructed once at the top of a file. Short left side, long right side to fill width. Every step in a skill gets a marker, even if the step has no explicit output — Claude's visible processing (reading files, running commands, thinking) IS the user experience, and the marker labels that activity. Every step marker must be followed by a signpost blockquote explaining what the step does and why — the marker names the step, the signpost explains it.
 
 ```
-── Construct Specification ──────────────────────────
+── Construct Specification ─────────────────────
 ```
 
 Variations for loops and routing:
 
 ```
-── Task Execution (3 of 12) ─────────────────────────
-── Review (cycle 2) ─────────────────────────────────
-── Returning to Discussion Session ──────────────────
+── Task Execution (3 of 12) ────────────────────
+── Review (cycle 2) ────────────────────────────
+── Returning to Discussion Session ─────────────
 ```
 
 Rules:
 - Always `── ` (two em-dashes + space) on the left
-- Right side padded with em-dashes to ~55 characters total
+- Right side padded with em-dashes to 49 characters total — aligned with phase title width
 - **No step numbers** — steps may be skipped based on conditionals and routing is non-linear. Names alone are sufficient
 - Loop iterations shown in parentheses: `(cycle N)`, `(N of M)`
 - Route-back uses `Returning to {Name}`
@@ -287,12 +288,12 @@ Rules:
 Dot-framed markers for stages within a step. Visually lighter than step markers to indicate nesting.
 
 ```
-·· Extract Sources ··································
+·· Extract Sources ·································
 ```
 
 Rules:
 - Always `·· ` (two middle dots + space) on the left
-- Right side padded with middle dots to ~55 characters total
+- Right side padded with middle dots to 49 characters total — aligned with phase title and step marker width
 - Named only — no numbering or lettered suffixes
 - Same loop/iteration conventions as step markers
 - Rendered as a single-line code block with its own rendering instruction
