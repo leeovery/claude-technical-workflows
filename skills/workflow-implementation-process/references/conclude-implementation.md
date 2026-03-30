@@ -39,7 +39,6 @@ Commit: `impl({work_unit}): complete implementation`
 ```
 > **Implementation complete.** The review phase will validate
 > your work against the specification and plan.
-
 ```
 
 Invoke the bridge:

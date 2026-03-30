@@ -45,7 +45,6 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 ```
 ── Parse Arguments ──────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -53,7 +52,6 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 ```
 > **Reading the handoff context and determining which
 > discussion to work with.**
-
 ```
 
 Arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional).
@@ -119,7 +117,6 @@ Parse the discovery output to understand:
 
 ```
 ── Validate Phase ───────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -127,7 +124,6 @@ Parse the discovery output to understand:
 ```
 > **Checking the status of this discussion — new,
 > in progress, or completed.**
-
 ```
 
 Load **[validate-phase.md](references/validate-phase.md)** and follow its instructions as written.
@@ -142,7 +138,6 @@ Load **[validate-phase.md](references/validate-phase.md)** and follow its instru
 
 ```
 ── Route Based on Scenario ──────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -150,7 +145,6 @@ Load **[validate-phase.md](references/validate-phase.md)** and follow its instru
 ```
 > **Determining the best path based on existing research
 > and discussions.**
-
 ```
 
 Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
@@ -175,7 +169,6 @@ Load **[route-scenario.md](references/route-scenario.md)** and follow its instru
 
 ```
 ── Research Analysis ────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -183,7 +176,6 @@ Load **[route-scenario.md](references/route-scenario.md)** and follow its instru
 ```
 > **Analysing your research documents to identify potential
 > discussion topics.**
-
 ```
 
 Load **[research-analysis.md](references/research-analysis.md)** and follow its instructions as written.
@@ -198,14 +190,12 @@ Load **[research-analysis.md](references/research-analysis.md)** and follow its 
 
 ```
 ── Display Options ──────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 > **Showing available research topics and existing discussions.**
-
 ```
 
 Load **[display-options.md](references/display-options.md)** and follow its instructions as written.
@@ -220,14 +210,12 @@ Load **[display-options.md](references/display-options.md)** and follow its inst
 
 ```
 ── Gather Context ───────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 > **Collecting the context needed before starting the discussion.**
-
 ```
 
 #### If discussion context is already available in conversation
@@ -250,7 +238,6 @@ Load **[gather-context.md](references/gather-context.md)** and follow its instru
 
 ```
 ── Invoke Discussion ────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -258,7 +245,6 @@ Load **[gather-context.md](references/gather-context.md)** and follow its instru
 ```
 > **Handing off to the discussion process with all
 > gathered context.**
-
 ```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

@@ -49,7 +49,6 @@ Status has been marked as `completed`. The plan is ready for implementation.
 ```
 > **Planning complete.** The implementation phase will execute
 > these tasks using TDD — tests first, then code.
-
 ```
 
 Invoke the bridge:

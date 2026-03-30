@@ -45,7 +45,6 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 ```
 ── Parse Arguments ──────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -53,7 +52,6 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 ```
 > **Reading the handoff context and determining which
 > specification to work with.**
-
 ```
 
 Arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional).
@@ -95,7 +93,6 @@ Parse the discovery output to understand:
 
 ```
 ── Validate Source Material ─────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -103,7 +100,6 @@ Parse the discovery output to understand:
 ```
 > **Checking that the required source material is ready
 > — completed discussions or investigations.**
-
 ```
 
 Load **[validate-source.md](references/validate-source.md)** and follow its instructions as written.
@@ -118,7 +114,6 @@ Load **[validate-source.md](references/validate-source.md)** and follow its inst
 
 ```
 ── Validate Phase ───────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -126,7 +121,6 @@ Load **[validate-source.md](references/validate-source.md)** and follow its inst
 ```
 > **Checking whether a specification already exists
 > for this topic.**
-
 ```
 
 Load **[validate-phase.md](references/validate-phase.md)** and follow its instructions as written.
@@ -141,7 +135,6 @@ Load **[validate-phase.md](references/validate-phase.md)** and follow its instru
 
 ```
 ── Invoke Specification ─────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -149,7 +142,6 @@ Load **[validate-phase.md](references/validate-phase.md)** and follow its instru
 ```
 > **Handing off to the specification process with all
 > gathered context.**
-
 ```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
@@ -162,7 +154,6 @@ Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructio
 
 ```
 ── Check Prerequisites ──────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -170,7 +161,6 @@ Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructio
 ```
 > **Verifying that completed discussions are available
 > to build specifications from.**
-
 ```
 
 Load **[check-prerequisites.md](references/check-prerequisites.md)** and follow its instructions as written.
@@ -185,7 +175,6 @@ Load **[check-prerequisites.md](references/check-prerequisites.md)** and follow 
 
 ```
 ── Route Based on State ─────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -193,7 +182,6 @@ Load **[check-prerequisites.md](references/check-prerequisites.md)** and follow 
 ```
 > **Evaluating what discussions and specifications exist
 > to determine next steps.**
-
 ```
 
 Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.

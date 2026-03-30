@@ -34,14 +34,12 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 ```
 ── Initialisation ───────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 > **Running migrations to keep workflow files in sync.**
-
 ```
 
 Load **[casing-conventions.md](../workflow-shared/references/casing-conventions.md)** and follow its instructions as written.
@@ -60,14 +58,12 @@ Invoke the `/workflow-migrate` skill and follow its instructions exactly — if 
 
 ```
 ── Run Discovery ────────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 > **Scanning for active features and their current progress.**
-
 ```
 
 !`node .claude/skills/continue-feature/scripts/discovery.cjs`
@@ -106,14 +102,12 @@ Parse the discovery output to understand:
 
 ```
 ── Check State ──────────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 > **Checking how many features are in progress.**
-
 ```
 
 #### If `count` is 0
@@ -146,14 +140,12 @@ Store the work_unit.
 
 ```
 ── Select Feature ───────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 > **Showing your active features for selection.**
-
 ```
 
 Load **[select-feature.md](references/select-feature.md)** and follow its instructions as written.
@@ -168,14 +160,12 @@ Load **[select-feature.md](references/select-feature.md)** and follow its instru
 
 ```
 ── Validate Selection ───────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 > **Confirming the selected feature exists and is active.**
-
 ```
 
 Load **[validate-selection.md](references/validate-selection.md)** and follow its instructions as written.
@@ -190,14 +180,12 @@ Load **[validate-selection.md](references/validate-selection.md)** and follow it
 
 ```
 ── Check Progress ───────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 > **Checking whether earlier phases are available to revisit.**
-
 ```
 
 Load **[revisit-phase.md](references/revisit-phase.md)** and follow its instructions as written.
@@ -212,14 +200,12 @@ Load **[revisit-phase.md](references/revisit-phase.md)** and follow its instruct
 
 ```
 ── Route to Phase ───────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 > **Handing off to the next phase for this feature.**
-
 ```
 
 Using the selected feature's `next_phase`, invoke the appropriate phase skill:

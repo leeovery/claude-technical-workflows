@@ -281,7 +281,7 @@ Rules:
 - **No step numbers** — steps may be skipped based on conditionals and routing is non-linear. Names alone are sufficient
 - Loop iterations shown in parentheses: `(cycle N)`, `(N of M)`
 - Route-back uses `Returning to {Name}`
-- Rendered as a code block with its own rendering instruction. Include a trailing blank line after the marker inside the code block for breathing room
+- Rendered as a code block with its own rendering instruction. No trailing blank line — natural block separation provides enough spacing
 
 ### Sub-step Markers
 
@@ -315,7 +315,7 @@ Rules:
 - Lead phrases are freeform — no fixed vocabulary, chosen to fit the context
 - 1-3 sentences maximum — never compete with the actual content
 - Placement: after phase titles, before menus where context helps the decision, at phase transitions, explaining soft gates or blockers
-- Include a trailing blank line after the blockquote content inside the fenced block — this creates breathing room before whatever follows
+- No trailing blank line inside the fenced block — natural block separation provides enough spacing
 - Never between two code blocks that are part of the same logical display
 
 ### Workflow Banner

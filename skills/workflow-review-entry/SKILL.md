@@ -45,7 +45,6 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 ```
 ── Parse Arguments ──────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -53,7 +52,6 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 ```
 > **Reading the handoff context to identify which
 > topic to review.**
-
 ```
 
 Arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional).
@@ -71,7 +69,6 @@ Store work_unit for the handoff.
 
 ```
 ── Validate Phase ───────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -79,7 +76,6 @@ Store work_unit for the handoff.
 ```
 > **Checking that a completed plan and implementation
 > exist for this topic.**
-
 ```
 
 Load **[validate-phase.md](references/validate-phase.md)** and follow its instructions as written.
@@ -94,7 +90,6 @@ Load **[validate-phase.md](references/validate-phase.md)** and follow its instru
 
 ```
 ── Invoke Review ────────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -102,7 +97,6 @@ Load **[validate-phase.md](references/validate-phase.md)** and follow its instru
 ```
 > **Handing off to the review process to validate the
 > implementation against the specification and plan.**
-
 ```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

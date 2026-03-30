@@ -34,7 +34,6 @@ Conclude this discussion and mark as completed?
 ```
 > **Discussion complete.** The specification phase will
 > synthesise your decisions into a formal document.
-
 ```
 
 ```

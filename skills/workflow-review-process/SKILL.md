@@ -51,7 +51,6 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 ```
 ── Resume Detection ─────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -59,7 +58,6 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 ```
 > **Checking for an existing review.** If one exists, you can
 > continue reviewing unreviewed tasks or start fresh.
-
 ```
 
 Check if a review file exists at `.workflows/{work_unit}/review/{topic}/report.md`.
@@ -173,14 +171,12 @@ Set `unreviewed_tasks` = `[{list of unreviewed internal IDs}]`.
 
 ```
 ── Initialize Review ────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 > **Registering the review phase in the manifest.**
-
 ```
 
 Check if review phase is registered in manifest:
@@ -209,7 +205,6 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs init-phase {work_unit
 
 ```
 ── Read Plans and Specifications ────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -217,7 +212,6 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs init-phase {work_unit
 ```
 > **Reading the plan and specification that the
 > implementation was built from.**
-
 ```
 
 Load **[read-plans.md](references/read-plans.md)** and follow its instructions as written.
@@ -232,7 +226,6 @@ Load **[read-plans.md](references/read-plans.md)** and follow its instructions a
 
 ```
 ── Load Project Skills ──────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -240,7 +233,6 @@ Load **[read-plans.md](references/read-plans.md)** and follow its instructions a
 ```
 > **Loading project-level skills that inform
 > quality expectations.**
-
 ```
 
 Load **[load-project-skills.md](references/load-project-skills.md)** and follow its instructions as written.
@@ -255,7 +247,6 @@ Load **[load-project-skills.md](references/load-project-skills.md)** and follow 
 
 ```
 ── QA Verification ──────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -264,7 +255,6 @@ Load **[load-project-skills.md](references/load-project-skills.md)** and follow 
 > **Dispatching task verifier agents.** Each task is
 > independently verified against its acceptance criteria
 > and the specification.
-
 ```
 
 Load **[invoke-task-verifiers.md](references/invoke-task-verifiers.md)** and follow its instructions as written.
@@ -279,7 +269,6 @@ Load **[invoke-task-verifiers.md](references/invoke-task-verifiers.md)** and fol
 
 ```
 ── Produce Review ───────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -287,7 +276,6 @@ Load **[invoke-task-verifiers.md](references/invoke-task-verifiers.md)** and fol
 ```
 > **Synthesising agent findings into the review report.**
 > Aggregating per-task results into an overall assessment.
-
 ```
 
 Load **[produce-review.md](references/produce-review.md)** and follow its instructions as written.
@@ -302,7 +290,6 @@ Load **[produce-review.md](references/produce-review.md)** and follow its instru
 
 ```
 ── Present Review ───────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -310,7 +297,6 @@ Load **[produce-review.md](references/produce-review.md)** and follow its instru
 ```
 > **Presenting the review findings.** You'll see the
 > verdict, summary, and detailed per-task results.
-
 ```
 
 Load **[present-review.md](references/present-review.md)** and follow its instructions as written.
@@ -325,14 +311,12 @@ Load **[present-review.md](references/present-review.md)** and follow its instru
 
 ```
 ── Compliance Self-Check ────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 > **Verifying the review follows workflow conventions.**
-
 ```
 
 Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)** and follow its instructions as written.
@@ -347,7 +331,6 @@ Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)*
 
 ```
 ── Review Actions ───────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -355,7 +338,6 @@ Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)*
 ```
 > **Deciding what to do with the findings.** You can
 > accept the review, request fixes, or ask questions.
-
 ```
 
 Load **[review-actions-loop.md](references/review-actions-loop.md)** and follow its instructions as written.

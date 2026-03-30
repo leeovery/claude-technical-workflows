@@ -165,7 +165,6 @@ If any of your sources were **existing specifications** (as opposed to discussio
 ```
 > **Specification complete.** The planning phase will break this into
 > implementable tasks with dependencies and acceptance criteria.
-
 ```
 
 Invoke the bridge:

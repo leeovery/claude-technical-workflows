@@ -58,7 +58,6 @@ Follow every step in sequence. No steps are optional.
 
 ```
 ── Resume Detection ─────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -66,7 +65,6 @@ Follow every step in sequence. No steps are optional.
 ```
 > **Checking for an existing plan.** If one exists, you can
 > pick up where you left off or start fresh.
-
 ```
 
 Check if a planning entry exists in the manifest:
@@ -148,7 +146,6 @@ Continue or restart?
 
 ```
 ── Initialize Plan ──────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -156,7 +153,6 @@ Continue or restart?
 ```
 > **Setting up the plan.** Selecting an output format and creating
 > the planning file structure.
-
 ```
 
 Load **[initialize-plan.md](references/initialize-plan.md)** and follow its instructions as written.
@@ -171,7 +167,6 @@ Load **[initialize-plan.md](references/initialize-plan.md)** and follow its inst
 
 ```
 ── Session Setup ────────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -179,7 +174,6 @@ Load **[initialize-plan.md](references/initialize-plan.md)** and follow its inst
 ```
 > **Loading context from previous work.** Reading the specification
 > and any existing planning progress.
-
 ```
 
 Load **[session-setup.md](references/session-setup.md)** and follow its instructions as written.
@@ -194,7 +188,6 @@ Load **[session-setup.md](references/session-setup.md)** and follow its instruct
 
 ```
 ── Load Planning Principles ─────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -203,7 +196,6 @@ Load **[session-setup.md](references/session-setup.md)** and follow its instruct
 > **Loading the guidelines for how plans are structured.**
 > These ensure tasks are well-scoped, testable, and sequenced
 > correctly.
-
 ```
 
 Load **[planning-principles.md](references/planning-principles.md)** and follow its instructions as written.
@@ -218,7 +210,6 @@ Load **[planning-principles.md](references/planning-principles.md)** and follow 
 
 ```
 ── Verify Source Material ───────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -226,7 +217,6 @@ Load **[planning-principles.md](references/planning-principles.md)** and follow 
 ```
 > **Reading the specification that drives this plan.** Everything
 > in the plan traces back to the specification.
-
 ```
 
 Load **[verify-source-material.md](references/verify-source-material.md)** and follow its instructions as written.
@@ -241,7 +231,6 @@ Load **[verify-source-material.md](references/verify-source-material.md)** and f
 
 ```
 ── Plan Construction ────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -250,7 +239,6 @@ Load **[verify-source-material.md](references/verify-source-material.md)** and f
 > **Building the plan.** Designing phases with goals and acceptance
 > criteria, then authoring detailed tasks for each phase. You'll
 > approve task lists and individual tasks as we go.
-
 ```
 
 Load **[plan-construction.md](references/plan-construction.md)** and follow its instructions as written.
@@ -265,7 +253,6 @@ Load **[plan-construction.md](references/plan-construction.md)** and follow its 
 
 ```
 ── Analyze Task Graph ───────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -273,7 +260,6 @@ Load **[plan-construction.md](references/plan-construction.md)** and follow its 
 ```
 > **Analysing dependencies between tasks.** Setting priority and
 > execution order based on what depends on what.
-
 ```
 
 Load **[analyze-task-graph.md](references/analyze-task-graph.md)** and follow its instructions as written.
@@ -288,7 +274,6 @@ Load **[analyze-task-graph.md](references/analyze-task-graph.md)** and follow it
 
 ```
 ── Resolve External Dependencies ────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -296,7 +281,6 @@ Load **[analyze-task-graph.md](references/analyze-task-graph.md)** and follow it
 ```
 > **Checking for dependencies on other plans.** For epics,
 > tasks in one plan may depend on tasks in another.
-
 ```
 
 #### If work_type is not `epic`
@@ -317,7 +301,6 @@ Load **[resolve-dependencies.md](references/resolve-dependencies.md)** and follo
 
 ```
 ── Plan Review ──────────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -326,7 +309,6 @@ Load **[resolve-dependencies.md](references/resolve-dependencies.md)** and follo
 > **Reviewing the plan.** Agents will check that tasks are
 > well-scoped, dependencies are sound, and nothing from the
 > specification was missed.
-
 ```
 
 Load **[plan-review.md](references/plan-review.md)** and follow its instructions as written.
@@ -341,14 +323,12 @@ Load **[plan-review.md](references/plan-review.md)** and follow its instructions
 
 ```
 ── Compliance Self-Check ────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
 > **Verifying the plan follows workflow conventions.**
-
 ```
 
 Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)** and follow its instructions as written.
@@ -363,7 +343,6 @@ Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)*
 
 ```
 ── Conclude the Plan ────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -371,7 +350,6 @@ Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)*
 ```
 > **Wrapping up.** Final confirmation before marking the plan
 > as complete and handing off to implementation.
-
 ```
 
 Load **[conclude-plan.md](references/conclude-plan.md)** and follow its instructions as written.

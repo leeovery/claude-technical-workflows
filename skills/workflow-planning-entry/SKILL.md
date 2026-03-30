@@ -45,7 +45,6 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 ```
 ── Parse Arguments ──────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -53,7 +52,6 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 ```
 > **Reading the handoff context to identify which
 > topic to plan.**
-
 ```
 
 Arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional).
@@ -71,7 +69,6 @@ Store work_unit for the handoff.
 
 ```
 ── Validate Specification ───────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -79,7 +76,6 @@ Store work_unit for the handoff.
 ```
 > **Checking that a completed specification exists
 > for this topic.**
-
 ```
 
 Load **[validate-spec.md](references/validate-spec.md)** and follow its instructions as written.
@@ -94,7 +90,6 @@ Load **[validate-spec.md](references/validate-spec.md)** and follow its instruct
 
 ```
 ── Validate Phase ───────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -102,7 +97,6 @@ Load **[validate-spec.md](references/validate-spec.md)** and follow its instruct
 ```
 > **Checking whether a plan already exists for this
 > topic.**
-
 ```
 
 Load **[validate-phase.md](references/validate-phase.md)** and follow its instructions as written.
@@ -123,7 +117,6 @@ Load **[validate-phase.md](references/validate-phase.md)** and follow its instru
 
 ```
 ── Cross-Cutting Context ────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -131,7 +124,6 @@ Load **[validate-phase.md](references/validate-phase.md)** and follow its instru
 ```
 > **Loading any cross-cutting specifications that apply
 > to this plan.**
-
 ```
 
 Load **[cross-cutting-context.md](references/cross-cutting-context.md)** and follow its instructions as written.
@@ -146,7 +138,6 @@ Load **[cross-cutting-context.md](references/cross-cutting-context.md)** and fol
 
 ```
 ── Invoke Planning ──────────────────────────────
-
 ```
 
 > *Output the next fenced block as markdown (not a code block):*
@@ -154,7 +145,6 @@ Load **[cross-cutting-context.md](references/cross-cutting-context.md)** and fol
 ```
 > **Handing off to the planning process with
 > specification and context.**
-
 ```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
