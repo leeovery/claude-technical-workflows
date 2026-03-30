@@ -11,8 +11,6 @@ Validate the selected work unit against the discovery output and store its data.
 > *Output the next fenced block as a code block:*
 
 ```
-Continue Epic
-
 No active epic named "{work_unit}" found.
 
 Run /continue-epic to see available epics, or /start-epic to begin a new one.
