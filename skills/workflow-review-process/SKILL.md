@@ -56,7 +56,7 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Checking for an existing review.** If one exists, you can
+> Checking for an existing review. If one exists, you can
 > continue reviewing unreviewed tasks or start fresh.
 ```
 
@@ -252,7 +252,7 @@ Load **[load-project-skills.md](references/load-project-skills.md)** and follow 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Dispatching task verifier agents.** Each task is
+> Dispatching task verifier agents. Each task is
 > independently verified against its acceptance criteria
 > and the specification.
 ```
@@ -295,7 +295,7 @@ Load **[produce-review.md](references/produce-review.md)** and follow its instru
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Presenting the review findings.** You'll see the
+> Presenting the review findings. You'll see the
 > verdict, summary, and detailed per-task results.
 ```
 
@@ -336,7 +336,7 @@ Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)*
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Deciding what to do with the findings.** You can
+> Deciding what to do with the findings. You can
 > accept the review, request fixes, or ask questions.
 ```
 

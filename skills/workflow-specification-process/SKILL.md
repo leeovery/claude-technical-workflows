@@ -67,7 +67,7 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Checking for existing work.** If a specification is already
+> Checking for existing work. If a specification is already
 > in progress, you can pick up where you left off or start fresh.
 ```
 
@@ -124,7 +124,7 @@ Continue or restart?
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Checking your discussions and research are ready.** The
+> Checking your discussions and research are ready. The
 > specification is built from these — if anything's missing or
 > incomplete, we'll flag it now.
 ```
@@ -146,7 +146,7 @@ Load **[verify-source-material.md](references/verify-source-material.md)** and f
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Creating the specification file.** Setting up the document
+> Creating the specification file. Setting up the document
 > structure that we'll populate together in the next step.
 ```
 
@@ -167,7 +167,7 @@ Load **[initialize-specification.md](references/initialize-specification.md)** a
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Loading context from previous work.** Reading your source
+> Loading context from previous work. Reading your source
 > material and any existing progress so we're working from the
 > full picture.
 ```
@@ -210,7 +210,7 @@ Load **[specification-principles.md](references/specification-principles.md)** a
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Building the specification.** Topics from your source material will
+> Building the specification. Topics from your source material will
 > be extracted and presented one at a time. Nothing gets written without
 > your explicit approval.
 ```
@@ -232,7 +232,7 @@ Load **[spec-construction.md](references/spec-construction.md)** and follow its 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Recording cross-topic dependencies.** For epics, specifications
+> Recording cross-topic dependencies. For epics, specifications
 > may depend on each other — this step captures those relationships.
 ```
 
@@ -259,7 +259,7 @@ Load **[dependencies.md](references/dependencies.md)** and follow its instructio
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Reviewing the specification.** Agents will analyse it against
+> Reviewing the specification. Agents will analyse it against
 > source material for gaps and inconsistencies. You'll approve or
 > dismiss each finding.
 ```
@@ -302,7 +302,7 @@ Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)*
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Wrapping up.** Final assessment, sign-off, and handover to the
+> Wrapping up. Final assessment, sign-off, and handover to the
 > planning phase.
 ```
 

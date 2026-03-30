@@ -46,7 +46,7 @@ No `---` separator before these messages.
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **What happens next.** Your discussions will be analyzed for natural
+> What happens next. Your discussions will be analyzed for natural
 > groupings to determine how they should be organized into specifications.
 > Results are cached and reused until discussions change.
 
@@ -66,7 +66,7 @@ Proceed with analysis?
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Analysis outdated.** A previous grouping analysis exists but
+> Analysis outdated. A previous grouping analysis exists but
 > discussions have changed since it was created. Your discussions will
 > be re-analyzed for natural groupings. Results are cached and reused
 > until discussions change.

@@ -51,7 +51,7 @@ Invoke the `/workflow-migrate` skill and follow its instructions exactly — if 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Starting a new feature.** I'll ask what you're building, suggest
+> Starting a new feature. I'll ask what you're building, suggest
 > a name, then you'll choose whether to research first or go straight
 > to discussion.
 ```
@@ -73,7 +73,7 @@ Invoke the `/workflow-migrate` skill and follow its instructions exactly — if 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Using context from your inbox item.** Reading the inbox file
+> Using context from your inbox item. Reading the inbox file
 > to understand scope and suggest a name.
 ```
 
@@ -86,7 +86,7 @@ Read the inbox file at the provided path. Use its content as the feature descrip
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Gathering context for the feature.** A brief description
+> Gathering context for the feature. A brief description
 > is enough to understand the scope and suggest a name.
 ```
 
@@ -107,7 +107,7 @@ Load **[gather-feature-context.md](references/gather-feature-context.md)** and f
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Naming the feature and checking for conflicts.** The name becomes
+> Naming the feature and checking for conflicts. The name becomes
 > the identifier used throughout the workflow.
 ```
 
@@ -142,7 +142,7 @@ Load **[research-gating.md](references/research-gating.md)** and follow its inst
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Handing off to the selected phase.** The next skill will load
+> Handing off to the selected phase. The next skill will load
 > and guide you through the process.
 ```
 

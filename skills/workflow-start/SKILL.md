@@ -76,7 +76,7 @@ Invoke the `/workflow-migrate` skill and follow its instructions exactly — if 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Scanning your workflow directory.** Looking for active work,
+> Scanning your workflow directory. Looking for active work,
 > completed items, and inbox entries to show you the full picture.
 ```
 
@@ -127,7 +127,7 @@ Parse the output to understand the current workflow state:
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Determining what to show you.** Routing based on whether
+> Determining what to show you. Routing based on whether
 > active work was found.
 ```
 

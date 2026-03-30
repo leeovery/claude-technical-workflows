@@ -163,7 +163,7 @@ If any of your sources were **existing specifications** (as opposed to discussio
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Specification complete.** The planning phase will break this into
+> Specification complete. The planning phase will break this into
 > implementable tasks with dependencies and acceptance criteria.
 ```
 

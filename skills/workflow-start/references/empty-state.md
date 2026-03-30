@@ -23,7 +23,7 @@ No active work found.
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Each work type follows a different pipeline.** Features and
+> Each work type follows a different pipeline. Features and
 > epics can start with research or discussion, bugfixes start with
 > investigation, quick-fixes go straight to scoping. If unsure,
 > feature is the most common choice.

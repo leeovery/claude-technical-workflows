@@ -122,7 +122,7 @@ Set `implementation_completed` = true.
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Lifecycle actions for this work unit.** Done marks it finished,
+> Lifecycle actions for this work unit. Done marks it finished,
 > cancel abandons it, pivot converts a feature to an epic when the
 > scope grows beyond a single topic.
 

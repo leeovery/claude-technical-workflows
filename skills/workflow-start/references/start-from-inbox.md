@@ -65,7 +65,7 @@ This skill ends. The invoked skill handles archival. Terminal.
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Choose based on scope.** Feature for a single focused piece of work,
+> Choose based on scope. Feature for a single focused piece of work,
 > epic if it'll need multiple discussion topics, cross-cutting if it
 > defines patterns that other work will follow.
 

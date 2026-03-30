@@ -63,7 +63,7 @@ Follow every step in sequence. No steps are optional.
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Checking for an existing plan.** If one exists, you can
+> Checking for an existing plan. If one exists, you can
 > pick up where you left off or start fresh.
 ```
 
@@ -151,7 +151,7 @@ Continue or restart?
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Setting up the plan.** Selecting an output format and creating
+> Setting up the plan. Selecting an output format and creating
 > the planning file structure.
 ```
 
@@ -172,7 +172,7 @@ Load **[initialize-plan.md](references/initialize-plan.md)** and follow its inst
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Loading context from previous work.** Reading the specification
+> Loading context from previous work. Reading the specification
 > and any existing planning progress.
 ```
 
@@ -215,7 +215,7 @@ Load **[planning-principles.md](references/planning-principles.md)** and follow 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Reading the specification that drives this plan.** Everything
+> Reading the specification that drives this plan. Everything
 > in the plan traces back to the specification.
 ```
 
@@ -236,7 +236,7 @@ Load **[verify-source-material.md](references/verify-source-material.md)** and f
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Building the plan.** Designing phases with goals and acceptance
+> Building the plan. Designing phases with goals and acceptance
 > criteria, then authoring detailed tasks for each phase. You'll
 > approve task lists and individual tasks as we go.
 ```
@@ -258,7 +258,7 @@ Load **[plan-construction.md](references/plan-construction.md)** and follow its 
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Analysing dependencies between tasks.** Setting priority and
+> Analysing dependencies between tasks. Setting priority and
 > execution order based on what depends on what.
 ```
 
@@ -279,7 +279,7 @@ Load **[analyze-task-graph.md](references/analyze-task-graph.md)** and follow it
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Checking for dependencies on other plans.** For epics,
+> Checking for dependencies on other plans. For epics,
 > tasks in one plan may depend on tasks in another.
 ```
 
@@ -306,7 +306,7 @@ Load **[resolve-dependencies.md](references/resolve-dependencies.md)** and follo
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Reviewing the plan.** Agents will check that tasks are
+> Reviewing the plan. Agents will check that tasks are
 > well-scoped, dependencies are sound, and nothing from the
 > specification was missed.
 ```
@@ -348,7 +348,7 @@ Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)*
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Wrapping up.** Final confirmation before marking the plan
+> Wrapping up. Final confirmation before marking the plan
 > as complete and handing off to implementation.
 ```
 

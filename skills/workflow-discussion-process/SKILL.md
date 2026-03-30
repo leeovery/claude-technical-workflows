@@ -44,7 +44,7 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Checking for an existing discussion file.** If one exists,
+> Checking for an existing discussion file. If one exists,
 > you can pick up where you left off or start fresh.
 ```
 
@@ -137,7 +137,7 @@ Load **[discussion-guidelines.md](references/discussion-guidelines.md)** and fol
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Discussion starting.** I'll track our conversation on a Discussion
+> Discussion starting. I'll track our conversation on a Discussion
 > Map. You can lead wherever you want — I'll challenge thinking,
 > explore edge cases, and capture decisions as we go.
 ```
@@ -179,7 +179,7 @@ Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)*
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Wrapping up.** Final confirmation before marking the
+> Wrapping up. Final confirmation before marking the
 > discussion as complete.
 ```
 

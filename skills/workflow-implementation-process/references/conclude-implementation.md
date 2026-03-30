@@ -37,7 +37,7 @@ Commit: `impl({work_unit}): complete implementation`
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Implementation complete.** The review phase will validate
+> Implementation complete. The review phase will validate
 > your work against the specification and plan.
 ```
 

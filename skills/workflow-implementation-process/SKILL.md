@@ -55,7 +55,7 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Checking for existing implementation progress.** If a
+> Checking for existing implementation progress. If a
 > previous session exists, gates and counters will be reset
 > for this session.
 ```
@@ -101,7 +101,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.imple
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Checking for environment setup instructions.** Any
+> Checking for environment setup instructions. Any
 > first-time setup will be handled before tasks begin.
 ```
 
@@ -206,7 +206,7 @@ Load **[linter-setup.md](references/linter-setup.md)** and follow its instructio
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Executing tasks from the plan.** Each task is implemented
+> Executing tasks from the plan. Each task is implemented
 > via TDD by an executor agent, then independently verified by
 > a reviewer agent. You'll approve each task before it proceeds.
 ```
@@ -286,7 +286,7 @@ Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)*
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
-> **Wrapping up.** Final confirmation before marking
+> Wrapping up. Final confirmation before marking
 > implementation as complete and moving to review.
 ```
 
