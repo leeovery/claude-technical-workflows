@@ -41,6 +41,20 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 ## Step 1: Parse Arguments
 
+> *Output the next fenced block as a code block:*
+
+```
+── Parse Arguments ──────────────────────────────
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Reading the handoff context and determining which
+> discussion to work with.**
+```
+
 Arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional).
 Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, topic = `$1`.
 
@@ -100,6 +114,20 @@ Parse the discovery output to understand:
 
 ## Step 2: Validate Phase
 
+> *Output the next fenced block as a code block:*
+
+```
+── Validate Phase ───────────────────────────────
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Checking the status of this discussion — new,
+> in progress, or completed.**
+```
+
 Load **[validate-phase.md](references/validate-phase.md)** and follow its instructions as written.
 
 → Proceed to **Step 6**.
@@ -107,6 +135,20 @@ Load **[validate-phase.md](references/validate-phase.md)** and follow its instru
 ---
 
 ## Step 3: Route Based on Scenario
+
+> *Output the next fenced block as a code block:*
+
+```
+── Route Based on Scenario ──────────────────────
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Determining the best path based on existing research
+> and discussions.**
+```
 
 Load **[route-scenario.md](references/route-scenario.md)** and follow its instructions as written.
 
@@ -126,6 +168,20 @@ Load **[route-scenario.md](references/route-scenario.md)** and follow its instru
 
 ## Step 4: Research Analysis
 
+> *Output the next fenced block as a code block:*
+
+```
+── Research Analysis ────────────────────────────
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Analysing your research documents to identify potential
+> discussion topics.**
+```
+
 Load **[research-analysis.md](references/research-analysis.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
@@ -134,6 +190,19 @@ Load **[research-analysis.md](references/research-analysis.md)** and follow its 
 
 ## Step 5: Display Options
 
+> *Output the next fenced block as a code block:*
+
+```
+── Display Options ──────────────────────────────
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Showing available research topics and existing discussions.**
+```
+
 Load **[display-options.md](references/display-options.md)** and follow its instructions as written.
 
 → Proceed to **Step 6**.
@@ -141,6 +210,19 @@ Load **[display-options.md](references/display-options.md)** and follow its inst
 ---
 
 ## Step 6: Gather Context
+
+> *Output the next fenced block as a code block:*
+
+```
+── Gather Context ───────────────────────────────
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Collecting the context needed before starting the discussion.**
+```
 
 #### If discussion context is already available in conversation
 
@@ -157,5 +239,19 @@ Load **[gather-context.md](references/gather-context.md)** and follow its instru
 ---
 
 ## Step 7: Invoke the Skill
+
+> *Output the next fenced block as a code block:*
+
+```
+── Invoke Discussion ────────────────────────────
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> **Handing off to the discussion process with all
+> gathered context.**
+```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
