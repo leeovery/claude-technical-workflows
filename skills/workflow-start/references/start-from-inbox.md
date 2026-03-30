@@ -11,7 +11,9 @@ Select an inbox item and route to the appropriate start skill.
 > *Output the next fenced block as a code block:*
 
 ```
-Inbox
+●───────────────────────────────────────────────●
+  Inbox
+●───────────────────────────────────────────────●
 
 @foreach(item in inbox_items sorted by date)
 {N}. {item.title} ({item.type}, {item.date})

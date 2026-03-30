@@ -11,7 +11,9 @@ Manage an in-progress work unit's lifecycle. Self-contained four-step flow.
 > *Output the next fenced block as a code block:*
 
 ```
-Manage
+●───────────────────────────────────────────────●
+  Manage
+●───────────────────────────────────────────────●
 
 @if(feature_count > 0)
 Features:
