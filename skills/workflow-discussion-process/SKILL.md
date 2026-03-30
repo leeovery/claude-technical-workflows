@@ -47,6 +47,7 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 ```
 > **Checking for an existing discussion file.** If one exists,
 > you can pick up where you left off or start fresh.
+
 ```
 
 Check if the discussion file exists at `.workflows/{work_unit}/discussion/{topic}.md`.
@@ -99,6 +100,7 @@ Found existing discussion for **{topic:(titlecase)}**.
 ```
 > **Creating the discussion file and seeding the Discussion Map
 > with initial subtopics from your context.**
+
 ```
 
 Load **[initialize-discussion.md](references/initialize-discussion.md)** and follow its instructions as written.
@@ -121,6 +123,7 @@ Load **[initialize-discussion.md](references/initialize-discussion.md)** and fol
 ```
 > **Loading the guidelines that shape how the discussion
 > is structured and documented.**
+
 ```
 
 Load **[discussion-guidelines.md](references/discussion-guidelines.md)** and follow its instructions as written.
@@ -144,6 +147,7 @@ Load **[discussion-guidelines.md](references/discussion-guidelines.md)** and fol
 > **Discussion starting.** I'll track our conversation on a Discussion
 > Map. You can lead wherever you want — I'll challenge thinking,
 > explore edge cases, and capture decisions as we go.
+
 ```
 
 Load **[discussion-session.md](references/discussion-session.md)** and follow its instructions as written.
@@ -165,6 +169,7 @@ Load **[discussion-session.md](references/discussion-session.md)** and follow it
 
 ```
 > **Verifying the discussion file follows workflow conventions.**
+
 ```
 
 Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)** and follow its instructions as written.
@@ -187,6 +192,7 @@ Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)*
 ```
 > **Wrapping up.** Final confirmation before marking the
 > discussion as complete.
+
 ```
 
 Load **[conclude-discussion.md](references/conclude-discussion.md)** and follow its instructions as written.

@@ -315,6 +315,7 @@ Rules:
 - Lead phrases are freeform — no fixed vocabulary, chosen to fit the context
 - 1-3 sentences maximum — never compete with the actual content
 - Placement: after phase titles, before menus where context helps the decision, at phase transitions, explaining soft gates or blockers
+- Include a trailing blank line after the blockquote content inside the fenced block — this creates breathing room before whatever follows
 - Never between two code blocks that are part of the same logical display
 
 ### Workflow Banner

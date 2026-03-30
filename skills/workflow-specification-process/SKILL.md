@@ -69,6 +69,7 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 ```
 > **Checking for existing work.** If a specification is already
 > in progress, you can pick up where you left off or start fresh.
+
 ```
 
 Check if `.workflows/{work_unit}/specification/{topic}/specification.md` exists.
@@ -127,6 +128,7 @@ Continue or restart?
 > **Checking your discussions and research are ready.** The
 > specification is built from these — if anything's missing or
 > incomplete, we'll flag it now.
+
 ```
 
 Load **[verify-source-material.md](references/verify-source-material.md)** and follow its instructions as written.
@@ -148,6 +150,7 @@ Load **[verify-source-material.md](references/verify-source-material.md)** and f
 ```
 > **Creating the specification file.** Setting up the document
 > structure that we'll populate together in the next step.
+
 ```
 
 Load **[initialize-specification.md](references/initialize-specification.md)** and follow its instructions as written.
@@ -170,6 +173,7 @@ Load **[initialize-specification.md](references/initialize-specification.md)** a
 > **Loading context from previous work.** Reading your source
 > material and any existing progress so we're working from the
 > full picture.
+
 ```
 
 Load **[session-setup.md](references/session-setup.md)** and follow its instructions as written.
@@ -191,6 +195,7 @@ Load **[session-setup.md](references/session-setup.md)** and follow its instruct
 ```
 > **Loading the guidelines for how specifications are built.**
 > These ensure consistency and completeness across the document.
+
 ```
 
 Load **[specification-principles.md](references/specification-principles.md)** and follow its instructions as written.
@@ -213,6 +218,7 @@ Load **[specification-principles.md](references/specification-principles.md)** a
 > **Building the specification.** Topics from your source material will
 > be extracted and presented one at a time. Nothing gets written without
 > your explicit approval.
+
 ```
 
 Load **[spec-construction.md](references/spec-construction.md)** and follow its instructions as written.
@@ -234,6 +240,7 @@ Load **[spec-construction.md](references/spec-construction.md)** and follow its 
 ```
 > **Recording cross-topic dependencies.** For epics, specifications
 > may depend on each other — this step captures those relationships.
+
 ```
 
 #### If work_type is not `epic`
@@ -262,6 +269,7 @@ Load **[dependencies.md](references/dependencies.md)** and follow its instructio
 > **Reviewing the specification.** Agents will analyse it against
 > source material for gaps and inconsistencies. You'll approve or
 > dismiss each finding.
+
 ```
 
 Load **[spec-review.md](references/spec-review.md)** and follow its instructions as written.
@@ -283,6 +291,7 @@ Load **[spec-review.md](references/spec-review.md)** and follow its instructions
 ```
 > **Verifying the specification follows workflow conventions.**
 > A quick internal check before we wrap up.
+
 ```
 
 Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)** and follow its instructions as written.
@@ -304,6 +313,7 @@ Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)*
 ```
 > **Wrapping up.** Final assessment, sign-off, and handover to the
 > planning phase.
+
 ```
 
 Load **[spec-completion.md](references/spec-completion.md)** and follow its instructions as written.

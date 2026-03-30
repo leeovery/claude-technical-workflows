@@ -32,6 +32,7 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 ```
 > **Running migrations to keep workflow files in sync.**
+
 ```
 
 Load **[casing-conventions.md](../workflow-shared/references/casing-conventions.md)** and follow its instructions as written.
@@ -55,6 +56,7 @@ Invoke the `/workflow-migrate` skill and follow its instructions exactly — if 
 > **Starting a new feature.** I'll ask what you're building, suggest
 > a name, then you'll choose whether to research first or go straight
 > to discussion.
+
 ```
 
 → Proceed to **Step 1**.
@@ -77,6 +79,7 @@ Invoke the `/workflow-migrate` skill and follow its instructions exactly — if 
 ```
 > **Using context from your inbox item.** Reading the inbox file
 > to understand scope and suggest a name.
+
 ```
 
 Read the inbox file at the provided path. Use its content as the feature description — skip the gather-context prompt. The slug from the filename (strip the `YYYY-MM-DD--` prefix, strip `.md`) becomes the suggested work unit name in Step 2.
@@ -90,6 +93,7 @@ Read the inbox file at the provided path. Use its content as the feature descrip
 ```
 > **Gathering context for the feature.** A brief description
 > is enough to understand the scope and suggest a name.
+
 ```
 
 Load **[gather-feature-context.md](references/gather-feature-context.md)** and follow its instructions as written.
@@ -112,6 +116,7 @@ Load **[gather-feature-context.md](references/gather-feature-context.md)** and f
 ```
 > **Naming the feature and checking for conflicts.** The name becomes
 > the identifier used throughout the workflow.
+
 ```
 
 Load **[name-check.md](references/name-check.md)** and follow its instructions as written.
@@ -149,6 +154,7 @@ Load **[research-gating.md](references/research-gating.md)** and follow its inst
 ```
 > **Handing off to the selected phase.** The next skill will load
 > and guide you through the process.
+
 ```
 
 Invoke the appropriate entry-point skill based on the selected phase:
