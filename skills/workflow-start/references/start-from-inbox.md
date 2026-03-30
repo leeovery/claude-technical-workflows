@@ -65,12 +65,16 @@ This skill ends. The invoked skill handles archival. Terminal.
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
+> **Choose based on scope.** Feature for a single focused piece of work,
+> epic if it'll need multiple discussion topics, cross-cutting if it
+> defines patterns that other work will follow.
+
 · · · · · · · · · · · ·
 What type of work unit?
 
-- **`f`/`feature`** — Single-topic feature
-- **`e`/`epic`** — Multi-topic initiative
-- **`c`/`cross-cutting`** — Cross-cutting concern (pattern or policy)
+- **`f`/`feature`** — Single-topic, linear pipeline
+- **`e`/`epic`** — Multiple topics, multi-session
+- **`c`/`cross-cutting`** — Patterns or policies that inform other work
 · · · · · · · · · · · ·
 ```
 

@@ -97,6 +97,9 @@ Build the menu with numbered continue items first, then command options for star
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
+> **Numbered items continue existing work.** Letter commands below
+> start something new or manage lifecycle.
+
 · · · · · · · · · · · ·
 What would you like to do?
 
