@@ -11,8 +11,6 @@ Display active bugfixes and let the user select one.
 > *Output the next fenced block as a code block:*
 
 ```
-Continue Bugfix
-
 {count} bugfix(es) in progress:
 
 @foreach(bugfix in bugfixes)
