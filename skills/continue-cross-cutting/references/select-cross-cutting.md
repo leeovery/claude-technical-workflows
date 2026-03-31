@@ -11,8 +11,6 @@ Display active cross-cutting concerns and let the user select one.
 > *Output the next fenced block as a code block:*
 
 ```
-Continue Cross-Cutting
-
 {count} cross-cutting concern(s) in progress:
 
 @foreach(cc in cross_cutting)
