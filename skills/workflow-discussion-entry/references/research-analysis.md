@@ -105,7 +105,7 @@ For each topic identified in the analysis above:
 
 Using `discussions.files` from discovery, check each discussion with `status === 'pending'`:
 
-1. Convert the topic name back to title case and check if it matches any topic from the new analysis
+1. Convert each analysis topic name to kebab-case and check if the pending entry's name matches any of them
 2. If NOT found in the new analysis — delete the stale pending entry:
    ```bash
    node .claude/skills/workflow-manifest/scripts/manifest.cjs delete {work_unit}.discussion items.{topic_kebab}

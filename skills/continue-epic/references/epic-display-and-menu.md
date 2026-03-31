@@ -264,50 +264,6 @@ Commit the change.
 
 → Return to **C. Menu**.
 
-#### If user chose a pending discussion item
-
-A pending item is a discussion with `status === 'pending'` from `detail.phases.discussion`.
-
-> *Output the next fenced block as a code block:*
-
-```
-"{topic:(titlecase)}" is pending from research analysis.
-```
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-- **`d`/`discuss`** — Start discussing this topic
-- **`s`/`skip`** — Skip this topic (mark as resolved)
-- **`b`/`back`** — Return to menu
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-**If user chose `discuss`:**
-
-→ Proceed to **E. Route Selection** with phase=discussion and topic={topic}.
-
-**If user chose `skip`:**
-
-```bash
-node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.discussion.{topic} status skipped
-```
-
-> *Output the next fenced block as a code block:*
-
-```
-Skipped: {topic:(titlecase)}
-```
-
-→ Return to **C. Menu**.
-
-**If user chose `back`:**
-
-→ Return to **C. Menu**.
-
 #### If user chose `Manage pending topics`
 
 → Proceed to **G. Manage Pending**.
@@ -375,7 +331,6 @@ Store the selected action, phase, and topic (if applicable). Map to a routing en
 | Start implementation of {topic} | implementation | {topic} |
 | Start review for {topic} | review | {topic} |
 | Start specification | specification | — |
-| Discuss {topic} (from pending) | discussion | {topic} |
 | Start new discussion topic | discussion | — |
 | Start new research | research | — |
 
@@ -491,7 +446,23 @@ Skipped {N} pending topic(s).
 
 #### If user chose a topic number
 
-Show the discuss/skip/back prompt for that topic (same as the pending item handler in **D. Handle Selection**).
+> *Output the next fenced block as a code block:*
+
+```
+"{topic:(titlecase)}" is pending from research analysis.
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+- **`d`/`discuss`** — Start discussing this topic
+- **`s`/`skip`** — Skip this topic
+- **`b`/`back`** — Return to menu
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
 
 **If user chose `discuss`:**
 
