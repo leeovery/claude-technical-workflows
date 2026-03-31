@@ -41,6 +41,19 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 ## Step 1: Parse Arguments
 
+> *Output the next fenced block as a code block:*
+
+```
+── Parse Arguments ──────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Reading the handoff context and determining which
+> research topic to work with.
+```
+
 Arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional).
 Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, topic = `$1`.
 
@@ -70,6 +83,18 @@ Deferred — gather-context will resolve it.
 
 ## Step 2: Check Phase Entry
 
+> *Output the next fenced block as a code block:*
+
+```
+── Check Phase Entry ────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Checking if research already exists for this topic.
+```
+
 Check if the research phase entry exists:
 
 ```bash
@@ -88,6 +113,19 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}.re
 
 ## Step 3: Validate Phase
 
+> *Output the next fenced block as a code block:*
+
+```
+── Validate Phase ───────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Checking the status of this research — in progress
+> or completed.
+```
+
 Load **[validate-phase.md](references/validate-phase.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
@@ -95,6 +133,18 @@ Load **[validate-phase.md](references/validate-phase.md)** and follow its instru
 ---
 
 ## Step 4: Gather Context
+
+> *Output the next fenced block as a code block:*
+
+```
+── Gather Context ───────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Collecting initial context to seed the research session.
+```
 
 #### If research context is already available in conversation
 
@@ -111,5 +161,18 @@ Load **[gather-context.md](references/gather-context.md)** and follow its instru
 ---
 
 ## Step 5: Invoke the Skill
+
+> *Output the next fenced block as a code block:*
+
+```
+── Invoke Research ──────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Handing off to the research process with all
+> gathered context.
+```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.
