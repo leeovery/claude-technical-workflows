@@ -11,8 +11,6 @@ Validate the selected work unit against the discovery output and store its data.
 > *Output the next fenced block as a code block:*
 
 ```
-Continue Quick-Fix
-
 No active quick-fix named "{work_unit}" found.
 
 Run /continue-quickfix to see available quick-fixes, or /start-quickfix to begin a new one.

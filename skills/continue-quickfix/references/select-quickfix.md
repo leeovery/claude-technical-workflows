@@ -11,8 +11,6 @@ Display active quick-fixes and let the user select one.
 > *Output the next fenced block as a code block:*
 
 ```
-Continue Quick-Fix
-
 {count} quick-fix(es) in progress:
 
 @foreach(quickfix in quick_fixes)

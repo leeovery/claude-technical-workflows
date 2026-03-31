@@ -11,8 +11,6 @@ Validate the selected work unit against the discovery output and store its data.
 > *Output the next fenced block as a code block:*
 
 ```
-Continue Cross-Cutting
-
 No active cross-cutting concern named "{work_unit}" found.
 
 Run /continue-cross-cutting to see available concerns, or /start-cross-cutting to begin a new one.

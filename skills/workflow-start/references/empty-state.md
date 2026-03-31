@@ -9,7 +9,9 @@ No active work found. Offer to start something new, with option to view complete
 > *Output the next fenced block as a code block:*
 
 ```
-Workflow Overview
+●───────────────────────────────────────────────●
+  Workflow Overview
+●───────────────────────────────────────────────●
 
 No active work found.
 
@@ -21,14 +23,19 @@ No active work found.
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
+> Each work type follows a different pipeline. Features and
+> epics can start with research or discussion, bugfixes start with
+> investigation, quick-fixes go straight to scoping. If unsure,
+> feature is the most common choice.
+
 · · · · · · · · · · · ·
 What would you like to start?
 
-- **`f`/`feature`** — Add functionality to an existing product
-- **`e`/`epic`** — Large initiative, multi-topic, multi-session
-- **`b`/`bugfix`** — Fix broken behavior
-- **`q`/`quick-fix`** — Trivially scoped mechanical change
-- **`c`/`cross-cutting`** — Define patterns or policies that inform features
+- **`f`/`feature`** — Single topic: (research →) discussion → spec → plan → implement → review
+- **`e`/`epic`** — Multiple topics, multi-session, same pipeline per topic
+- **`b`/`bugfix`** — Investigation → spec → plan → implement → review
+- **`q`/`quick-fix`** — Scoping → implement → review (no formal planning)
+- **`c`/`cross-cutting`** — (Research →) discussion → spec (patterns or policies that inform other work)
 @if(has_inbox)
 - **`i`/`inbox`** — Start from an inbox item ({inbox_count} items)
 @endif

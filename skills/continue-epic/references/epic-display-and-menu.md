@@ -19,7 +19,9 @@ This reference collects the user's selection and returns control to the caller. 
 > *Output the next fenced block as a code block:*
 
 ```
-{work_unit:(titlecase)}
+●───────────────────────────────────────────────●
+  {work_unit:(titlecase)}
+●───────────────────────────────────────────────●
 
 No work started yet.
 ```
@@ -31,7 +33,9 @@ No work started yet.
 > *Output the next fenced block as a code block:*
 
 ```
-{work_unit:(titlecase)}
+●───────────────────────────────────────────────●
+  {work_unit:(titlecase)}
+●───────────────────────────────────────────────●
 
 @foreach(phase in phases)
 @if(phase.items)

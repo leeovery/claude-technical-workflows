@@ -21,6 +21,27 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 ## Step 0: Initialisation
 
+> *Output the next fenced block as a code block:*
+
+```
+●───────────────────────────────────────────────●
+  Continue Quick-Fix
+●───────────────────────────────────────────────●
+
+```
+
+> *Output the next fenced block as a code block:*
+
+```
+── Initialisation ───────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Running migrations to keep workflow files in sync.
+```
+
 Load **[casing-conventions.md](../workflow-shared/references/casing-conventions.md)** and follow its instructions as written.
 
 **Run migrations — this is mandatory. You must complete it before proceeding.**
@@ -32,6 +53,18 @@ Invoke the `/workflow-migrate` skill and follow its instructions exactly — if 
 ---
 
 ## Step 1: Discovery State
+
+> *Output the next fenced block as a code block:*
+
+```
+── Run Discovery ────────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Scanning for active quick-fixes and their current progress.
+```
 
 !`node .claude/skills/continue-quickfix/scripts/discovery.cjs`
 
@@ -65,13 +98,23 @@ Parse the discovery output to understand:
 
 ## Step 2: Check Count and Arguments
 
+> *Output the next fenced block as a code block:*
+
+```
+── Check State ──────────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Checking if there are any quick-fixes in progress.
+```
+
 #### If `count` is 0
 
 > *Output the next fenced block as a code block:*
 
 ```
-Continue Quick-Fix
-
 No quick-fixes in progress.
 
 Run /start-quickfix to begin a new one.
@@ -93,6 +136,18 @@ Store the work_unit.
 
 ## Step 3: Select Quick-Fix
 
+> *Output the next fenced block as a code block:*
+
+```
+── Select Quick-Fix ─────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Showing your active quick-fixes for selection.
+```
+
 Load **[select-quickfix.md](references/select-quickfix.md)** and follow its instructions as written.
 
 → Proceed to **Step 4**.
@@ -100,6 +155,18 @@ Load **[select-quickfix.md](references/select-quickfix.md)** and follow its inst
 ---
 
 ## Step 4: Validate Selection
+
+> *Output the next fenced block as a code block:*
+
+```
+── Validate Selection ───────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Confirming the selected quick-fix exists and is active.
+```
 
 Load **[validate-selection.md](references/validate-selection.md)** and follow its instructions as written.
 
@@ -109,6 +176,18 @@ Load **[validate-selection.md](references/validate-selection.md)** and follow it
 
 ## Step 5: Backwards Navigation
 
+> *Output the next fenced block as a code block:*
+
+```
+── Check Progress ───────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Checking whether earlier phases are available to revisit.
+```
+
 Load **[revisit-phase.md](references/revisit-phase.md)** and follow its instructions as written.
 
 → Proceed to **Step 6**.
@@ -116,6 +195,18 @@ Load **[revisit-phase.md](references/revisit-phase.md)** and follow its instruct
 ---
 
 ## Step 6: Route to Phase Skill
+
+> *Output the next fenced block as a code block:*
+
+```
+── Route to Phase ───────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Handing off to the next phase for this quick-fix.
+```
 
 Using the selected quick-fix's `next_phase`, invoke the appropriate phase skill:
 

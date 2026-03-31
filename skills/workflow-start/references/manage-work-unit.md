@@ -11,7 +11,9 @@ Manage an in-progress work unit's lifecycle. Self-contained four-step flow.
 > *Output the next fenced block as a code block:*
 
 ```
-Manage
+●───────────────────────────────────────────────●
+  Manage
+●───────────────────────────────────────────────●
 
 @if(feature_count > 0)
 Features:
@@ -120,6 +122,10 @@ Set `implementation_completed` = true.
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
+> Lifecycle actions for this work unit. Done marks it finished,
+> cancel abandons it, pivot converts a feature to an epic when the
+> scope grows beyond a single topic.
+
 · · · · · · · · · · · ·
 **{selected.name:(titlecase)}** ({selected.work_type})
 

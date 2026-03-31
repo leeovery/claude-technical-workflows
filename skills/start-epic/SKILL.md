@@ -21,11 +21,40 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 ## Step 0: Initialisation
 
+> *Output the next fenced block as a code block:*
+
+```
+── Initialisation ───────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Running migrations to keep workflow files in sync.
+```
+
 Load **[casing-conventions.md](../workflow-shared/references/casing-conventions.md)** and follow its instructions as written.
 
 **Run migrations — this is mandatory. You must complete it before proceeding.**
 
 Invoke the `/workflow-migrate` skill and follow its instructions exactly — if it issues a STOP gate, you must stop.
+
+> *Output the next fenced block as a code block:*
+
+```
+●───────────────────────────────────────────────●
+  New Epic
+●───────────────────────────────────────────────●
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Starting a new epic. I'll ask what you're building, suggest
+> a name, then you'll choose whether to research first or go
+> straight to discussion.
+```
 
 → Proceed to **Step 1**.
 
@@ -33,13 +62,33 @@ Invoke the `/workflow-migrate` skill and follow its instructions exactly — if 
 
 ## Step 1: Gather Epic Context
 
+> *Output the next fenced block as a code block:*
+
+```
+── Gather Epic Context ──────────────────────────
+```
+
 #### If inbox file path was provided as positional argument (`$0`)
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Using context from your inbox item. Reading the inbox file
+> to understand scope and suggest a name.
+```
 
 Read the inbox file at the provided path. Use its content as the epic description — skip the gather-context prompt. The slug from the filename (strip the `YYYY-MM-DD--` prefix, strip `.md`) becomes the suggested work unit name in Step 2.
 
 → Proceed to **Step 2**.
 
 #### Otherwise
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Gathering context for the epic. A brief description is enough
+> to understand the scope and suggest a name.
+```
 
 Load **[gather-epic-context.md](references/gather-epic-context.md)** and follow its instructions as written.
 
@@ -49,6 +98,19 @@ Load **[gather-epic-context.md](references/gather-epic-context.md)** and follow 
 
 ## Step 2: Epic Name and Conflict Check
 
+> *Output the next fenced block as a code block:*
+
+```
+── Epic Name ────────────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Naming the epic and checking for conflicts. The name becomes
+> the identifier used throughout the workflow.
+```
+
 Load **[name-check.md](references/name-check.md)** and follow its instructions as written.
 
 → Proceed to **Step 3**.
@@ -57,6 +119,12 @@ Load **[name-check.md](references/name-check.md)** and follow its instructions a
 
 ## Step 3: Route to First Phase
 
+> *Output the next fenced block as a code block:*
+
+```
+── Choose Starting Phase ────────────────────────
+```
+
 Load **[route-first-phase.md](references/route-first-phase.md)** and follow its instructions as written.
 
 → Proceed to **Step 4**.
@@ -64,6 +132,19 @@ Load **[route-first-phase.md](references/route-first-phase.md)** and follow its 
 ---
 
 ## Step 4: Invoke Entry-Point Skill
+
+> *Output the next fenced block as a code block:*
+
+```
+── Invoke Phase Skill ───────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Handing off to the selected phase. The next skill will load
+> and guide you through the process.
+```
 
 Invoke the appropriate entry-point skill based on the selected phase:
 

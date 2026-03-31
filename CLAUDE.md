@@ -209,6 +209,20 @@ The manifest CLI at `skills/workflow-manifest/scripts/manifest.cjs` is the singl
 
 These are hard rules, not suggestions. All entry-point skills that present discovery state, menus, or interactive choices MUST follow these conventions exactly. When writing or editing skill files, read existing skills and references as working examples — they are the authoritative demonstration of these rules in practice.
 
+### Visual Hierarchy
+
+All user-facing output uses five distinct visual tiers, each with a specific purpose. From heaviest to lightest:
+
+| Tier | Element | Purpose | Rendering |
+|------|---------|---------|-----------|
+| 1 | Phase title | "Where am I" — top-level anchor | Code block |
+| 2 | Signpost blockquote | "What's happening" — guidance, context, closure | Markdown |
+| 3 | Step marker | Progress through the phase | Code block |
+| 4 | Sub-step marker | Progress within a step | Code block |
+| 5 | Status / menu | Data displays and interactive choices | Code block / markdown |
+
+Every skill invocation should produce at most one phase title. Step markers appear at every step boundary — including steps with no explicit output, since Claude's visible processing (file reads, commands, thinking) is the user experience and the marker labels it. Signpost blockquotes appear at phase entry, before steps where context helps, and at phase completion. Status displays and menus are unchanged from existing conventions.
+
 ### Rendering Instructions
 
 Every **user-facing output** fenced block in skill files must be preceded by a rendering instruction. Fenced blocks that are model instructions (bash commands to execute, file paths to load) are exempt — they are not displayed to the user.
@@ -223,17 +237,110 @@ or:
 > *Output the next fenced block as markdown (not a code block):*
 ```
 
-Code blocks are used for informational displays (overviews, status, keys) — they preserve indentation for tree structures and aligned lists. Markdown is used for interactive elements (menus, prompts) where bold formatting is needed. When content benefits from rendered formatting (headings, checkboxes, bold) and indentation control isn't needed, prefer markdown rendering even for informational displays.
+Code blocks are used for informational displays (overviews, status, keys, phase titles, step markers) — they preserve indentation for tree structures and aligned lists. Markdown is used for interactive elements (menus, prompts) and signpost blockquotes where bold formatting is needed. When content benefits from rendered formatting (headings, checkboxes, bold) and indentation control isn't needed, prefer markdown rendering even for informational displays.
 
-### Title Pattern
+### Phase Titles
 
-Always `{Phase} Overview` as the first line of the opening code block, followed by a blank line and a summary sentence.
+Bullet-bordered box. One per skill invocation. Serves as the top-level anchor telling the user where they are. Always followed by a blank line before any subsequent content.
 
 ```
-Planning Overview
+●───────────────────────────────────────────────●
+  Specification Overview
+●───────────────────────────────────────────────●
 
-4 specifications found. 2 plans exist.
 ```
+
+Rules:
+- Fixed width: 49 characters total (● + 47 em-dashes + ●)
+- 2-space left padding on the title text
+- Title text is the phase or context name (e.g., "Workflow Overview", "Planning Overview")
+- Include a trailing blank line after the closing border inside the code block — this creates visual breathing room in the rendered output
+- **Must be inside a code block** — never markdown. Code blocks preserve the indentation and whitespace that the border layout depends on. Markdown rendering would collapse the spacing and break the layout
+
+Phase titles replace the old plain-text title pattern. Status displays that previously opened with a title line (e.g., `Planning Overview`) now use the phase title at the top of the same code block, followed by a blank line before the content.
+
+### Step Markers
+
+Em-dash framed progress indicators. Embedded at each step boundary — never instructed once at the top of a file. Short left side, long right side to fill width. Every step in a skill gets a marker, even if the step has no explicit output — Claude's visible processing (reading files, running commands, thinking) IS the user experience, and the marker labels that activity. Every step marker must be followed by a signpost blockquote explaining what the step does and why — the marker names the step, the signpost explains it.
+
+```
+── Construct Specification ─────────────────────
+```
+
+Variations for loops and routing:
+
+```
+── Task Execution (3 of 12) ────────────────────
+── Review (cycle 2) ────────────────────────────
+── Returning to Discussion Session ─────────────
+```
+
+Rules:
+- Always `── ` (two em-dashes + space) on the left
+- Right side padded with em-dashes to 49 characters total — aligned with phase title width
+- **No step numbers** — steps may be skipped based on conditionals and routing is non-linear. Names alone are sufficient
+- Loop iterations shown in parentheses: `(cycle N)`, `(N of M)`
+- Route-back uses `Returning to {Name}`
+- Rendered as a code block with its own rendering instruction. No trailing blank line — natural block separation provides enough spacing
+
+### Sub-step Markers
+
+Dot-framed markers for stages within a step. Visually lighter than step markers to indicate nesting.
+
+```
+·· Extract Sources ·································
+```
+
+Rules:
+- Always `·· ` (two middle dots + space) on the left
+- Right side padded with middle dots to 49 characters total — aligned with phase title and step marker width
+- Named only — no numbering or lettered suffixes
+- Same loop/iteration conventions as step markers
+- Rendered as a single-line code block with its own rendering instruction
+
+### Signpost Blockquotes
+
+Guidance text rendered as markdown blockquotes. Used for phase entry context, pre-step guidance, post-phase closure, and explaining blockers or gates. Never for status data or interactive choices.
+
+```
+> Your completed discussions will be synthesised into a formal spec.
+> Expect questions about gaps, contradictions, and missing edge cases.
+> The output is a standalone document that drives planning.
+```
+
+Rules:
+- Rendered as markdown (use the markdown rendering instruction)
+- **Every line must start with `>`** — Claude Code only renders the blockquote border on lines that have the `>` prefix. A single long line will wrap without the border on subsequent lines. Wrap at ~70 characters per line (including the `> ` prefix) to keep the blockquote visually intact
+- **Plain text only** — no bold. The blockquote styling (indented, dimmed) already sets signposts apart visually. If bold is ever needed on multiple lines, each line must have its own `**` open and close — bold does not carry across `>` prefixed line breaks
+- Lead phrases are freeform — no fixed vocabulary, chosen to fit the context
+- 1-3 sentences maximum — never compete with the actual content
+- Placement: after phase titles, before menus where context helps the decision, at phase transitions, explaining soft gates or blockers
+- No trailing blank line inside the fenced block — natural block separation provides enough spacing
+- Never between two code blocks that are part of the same logical display
+
+### Workflow Banner
+
+The `workflow-start` skill uses an ASCII art banner as the entry point. It uses the same bullet-border convention as phase titles, widened to accommodate the art:
+
+```
+●─────────────────────────────────────────────────────────────────●
+    ___   _____________   __________________
+   /   | / ____/ ____/ | / /_  __/  _/ ____/
+  / /| |/ / __/ __/ /  |/ / / /  / // /
+ / ___ / /_/ / /___/ /|  / / / _/ // /___
+/_/  |_\____/_____/_/ |_/ /_/ /___/\____/
+ _       ______  ____  __ __ ________    ____ _       _______
+| |     / / __ \/ __ \/ //_// ____/ /   / __ \ |     / / ___/
+| | /| / / / / / /_/ / ,<  / /_  / /   / / / / | /| / /\__ \
+| |/ |/ / /_/ / _, _/ /| |/ __/ / /___/ /_/ /| |/ |/ /___/ /
+|__/|__/\____/_/ |_/_/ |_/_/   /_____/\____/ |__/|__//____/
+
+●─────────────────────────────────────────────────────────────────●
+  Agentic engineering workflows — from idea to implementation.
+●─────────────────────────────────────────────────────────────────●
+```
+
+This is the only exception to the fixed-width phase title rule — the banner is wider to fit the ASCII art.
 
 ### Template Placeholders
 
@@ -427,10 +534,12 @@ Automatically proceeding with "{topic:(titlecase)}".
 
 ### Block / Terminal Messages
 
-When a phase can't proceed — use the phase title pattern, then explain:
+When a phase can't proceed — use the phase title at the top, then explain:
 
 ```
-Planning Overview
+●───────────────────────────────────────────────●
+  Planning Overview
+●───────────────────────────────────────────────●
 
 No specification found in .workflows/{work_unit}/specification/{topic}/
 
@@ -443,13 +552,12 @@ Use `•` for all bulleted lists (sources, files, not-ready items, etc.).
 
 ### Spacing Rules
 
-Inside code blocks, maintain **one blank line** between:
-- Title/summary and first content
+**Between blocks**: One blank line after the phase title closing border before any content (code block, blockquote, or step marker). No `---` separators between code blocks (overview → not-ready → key → menu) — just natural block separation.
+
+**Inside code blocks**: One blank line between:
 - Each numbered tree item
 - Section headings and their content
 - Key categories
-
-Between code blocks (overview → not-ready → key → menu), no `---` separators — just the natural block separation.
 
 ## Structural Conventions (MANDATORY)
 
@@ -488,6 +596,7 @@ Sequential: `## Step 0`, `## Step 1`, `## Step 2`, etc.
 - **Step 0** runs migrations via the `/workflow-migrate` skill (mandatory in all entry-point skills)
 - Steps are separated by `---` horizontal rules
 - Each step completes fully before the next begins
+- User-facing step markers (see Display & Output Conventions → Step Markers) use names only — no numbers. They are embedded at each step boundary, including steps with no explicit output (Claude's visible processing labels the activity for the user)
 
 ### Conditional Routing
 

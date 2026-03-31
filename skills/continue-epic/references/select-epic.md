@@ -11,8 +11,6 @@ Display active epics and let the user select one.
 > *Output the next fenced block as a code block:*
 
 ```
-Continue Epic
-
 {count} epic(s) in progress:
 
 @foreach(epic in epics)

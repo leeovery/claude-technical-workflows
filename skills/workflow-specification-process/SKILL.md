@@ -56,13 +56,20 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 ---
 
-## Output Formatting
-
-When announcing a new step, output `── ── ── ── ──` on its own line before the step heading.
-
----
-
 ## Step 0: Resume Detection
+
+> *Output the next fenced block as a code block:*
+
+```
+── Resume Detection ─────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Checking for existing work. If a specification is already
+> in progress, you can pick up where you left off or start fresh.
+```
 
 Check if `.workflows/{work_unit}/specification/{topic}/specification.md` exists.
 
@@ -108,6 +115,20 @@ Continue or restart?
 
 ## Step 1: Verify Source Material
 
+> *Output the next fenced block as a code block:*
+
+```
+── Verify Source Material ───────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Checking your discussions and research are ready. The
+> specification is built from these — if anything's missing or
+> incomplete, we'll flag it now.
+```
+
 Load **[verify-source-material.md](references/verify-source-material.md)** and follow its instructions as written.
 
 → Proceed to **Step 2**.
@@ -115,6 +136,19 @@ Load **[verify-source-material.md](references/verify-source-material.md)** and f
 ---
 
 ## Step 2: Initialize Specification
+
+> *Output the next fenced block as a code block:*
+
+```
+── Initialize Specification ─────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Creating the specification file. Setting up the document
+> structure that we'll populate together in the next step.
+```
 
 Load **[initialize-specification.md](references/initialize-specification.md)** and follow its instructions as written.
 
@@ -124,6 +158,20 @@ Load **[initialize-specification.md](references/initialize-specification.md)** a
 
 ## Step 3: Session Setup
 
+> *Output the next fenced block as a code block:*
+
+```
+── Session Setup ────────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Loading context from previous work. Reading your source
+> material and any existing progress so we're working from the
+> full picture.
+```
+
 Load **[session-setup.md](references/session-setup.md)** and follow its instructions as written.
 
 → Proceed to **Step 4**.
@@ -131,6 +179,19 @@ Load **[session-setup.md](references/session-setup.md)** and follow its instruct
 ---
 
 ## Step 4: Load Specification Principles
+
+> *Output the next fenced block as a code block:*
+
+```
+── Load Specification Principles ────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Loading the guidelines for how specifications are built.
+> These ensure consistency and completeness across the document.
+```
 
 Load **[specification-principles.md](references/specification-principles.md)** and follow its instructions as written.
 
@@ -140,6 +201,20 @@ Load **[specification-principles.md](references/specification-principles.md)** a
 
 ## Step 5: Spec Construction
 
+> *Output the next fenced block as a code block:*
+
+```
+── Spec Construction ────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Building the specification. Topics from your source material will
+> be extracted and presented one at a time. Nothing gets written without
+> your explicit approval.
+```
+
 Load **[spec-construction.md](references/spec-construction.md)** and follow its instructions as written.
 
 → Proceed to **Step 6**.
@@ -147,6 +222,19 @@ Load **[spec-construction.md](references/spec-construction.md)** and follow its 
 ---
 
 ## Step 6: Document Dependencies
+
+> *Output the next fenced block as a code block:*
+
+```
+── Document Dependencies ────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Recording cross-topic dependencies. For epics, specifications
+> may depend on each other — this step captures those relationships.
+```
 
 #### If work_type is not `epic`
 
@@ -162,6 +250,20 @@ Load **[dependencies.md](references/dependencies.md)** and follow its instructio
 
 ## Step 7: Specification Review
 
+> *Output the next fenced block as a code block:*
+
+```
+── Specification Review ─────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Reviewing the specification. Agents will analyse it against
+> source material for gaps and inconsistencies. You'll approve or
+> dismiss each finding.
+```
+
 Load **[spec-review.md](references/spec-review.md)** and follow its instructions as written.
 
 → Proceed to **Step 8**.
@@ -170,6 +272,19 @@ Load **[spec-review.md](references/spec-review.md)** and follow its instructions
 
 ## Step 8: Compliance Self-Check
 
+> *Output the next fenced block as a code block:*
+
+```
+── Compliance Self-Check ────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Verifying the specification follows workflow conventions.
+> A quick internal check before we wrap up.
+```
+
 Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)** and follow its instructions as written.
 
 → Proceed to **Step 9**.
@@ -177,6 +292,19 @@ Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)*
 ---
 
 ## Step 9: Assess Cross-Cutting & Conclude
+
+> *Output the next fenced block as a code block:*
+
+```
+── Conclude ─────────────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Wrapping up. Final assessment, sign-off, and handover to the
+> planning phase.
+```
 
 Load **[spec-completion.md](references/spec-completion.md)** and follow its instructions as written.
 

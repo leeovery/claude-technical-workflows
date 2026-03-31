@@ -23,7 +23,11 @@ No completed or cancelled work units found.
 > *Output the next fenced block as a code block:*
 
 ```
-Completed & Cancelled @if(work_type_filter) {work_type_filter:(titlecase)}s @else Work Units @endif
+●───────────────────────────────────────────────●
+  Completed & Cancelled
+●───────────────────────────────────────────────●
+
+@if(work_type_filter) Showing: {work_type_filter:(titlecase)}s @endif
 
 @if(completed.length > 0)
 Completed:

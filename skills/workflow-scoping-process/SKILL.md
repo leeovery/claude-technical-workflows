@@ -39,13 +39,20 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 2. **No acceptance criteria** — mechanical changes are verified by test baselines and completeness checks, not by acceptance criteria.
 3. **No agents** — scoping writes specs and tasks directly, without invoking planning agents or review cycles.
 
-## Output Formatting
-
-When announcing a new step, output `── ── ── ── ──` on its own line before the step heading.
-
----
-
 ## Step 0: Resume Detection
+
+> *Output the next fenced block as a code block:*
+
+```
+── Resume Detection ─────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Checking for existing scoping work. If a spec and plan
+> already exist, we can skip ahead.
+```
 
 Check if a specification already exists:
 
@@ -96,6 +103,19 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.scopi
 
 ## Step 1: Gather Context
 
+> *Output the next fenced block as a code block:*
+
+```
+── Gather Context ───────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Understanding what needs changing — reading code, asking
+> clarifying questions, and building a picture of the change.
+```
+
 Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
 
 → Proceed to **Step 2**.
@@ -103,6 +123,19 @@ Load **[gather-context.md](references/gather-context.md)** and follow its instru
 ---
 
 ## Step 2: Complexity Check
+
+> *Output the next fenced block as a code block:*
+
+```
+── Complexity Check ─────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Assessing whether this change fits the quick-fix model.
+> If it's too complex, it should be promoted to a feature.
+```
 
 Load **[complexity-check.md](references/complexity-check.md)** and follow its instructions as written.
 
@@ -112,6 +145,19 @@ Load **[complexity-check.md](references/complexity-check.md)** and follow its in
 
 ## Step 3: Write Specification
 
+> *Output the next fenced block as a code block:*
+
+```
+── Write Specification ──────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Writing a lightweight specification for the change.
+> This captures what's changing and why.
+```
+
 Load **[write-specification.md](references/write-specification.md)** and follow its instructions as written.
 
 → Proceed to **Step 4**.
@@ -119,6 +165,18 @@ Load **[write-specification.md](references/write-specification.md)** and follow 
 ---
 
 ## Step 4: Select Output Format
+
+> *Output the next fenced block as a code block:*
+
+```
+── Select Output Format ─────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Choosing the output format for task files.
+```
 
 Load **[select-format.md](references/select-format.md)** and follow its instructions as written.
 
@@ -128,6 +186,19 @@ Load **[select-format.md](references/select-format.md)** and follow its instruct
 
 ## Step 5: Write Tasks
 
+> *Output the next fenced block as a code block:*
+
+```
+── Write Tasks ──────────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Writing 1-2 task files for the change. Quick-fixes
+> are limited to two tasks maximum.
+```
+
 Load **[write-tasks.md](references/write-tasks.md)** and follow its instructions as written.
 
 → Proceed to **Step 6**.
@@ -135,5 +206,17 @@ Load **[write-tasks.md](references/write-tasks.md)** and follow its instructions
 ---
 
 ## Step 6: Conclude Scoping
+
+> *Output the next fenced block as a code block:*
+
+```
+── Conclude Scoping ─────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Wrapping up. Spec and plan are ready for implementation.
+```
 
 Load **[conclude-scoping.md](references/conclude-scoping.md)** and follow its instructions as written.

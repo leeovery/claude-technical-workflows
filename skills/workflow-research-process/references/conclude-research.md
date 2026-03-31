@@ -9,7 +9,16 @@
    node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.research.{topic} status completed
    ```
 2. Final commit: `research({work_unit}): complete {topic} research`
-3. Invoke the `/workflow-bridge` skill:
+3. Closure signpost:
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Research complete. The discussion phase will use these findings
+> to make decisions about architecture and approach.
+```
+
+4. Invoke the `/workflow-bridge` skill:
    ```
    Pipeline bridge for: {work_unit}
    Completed phase: research

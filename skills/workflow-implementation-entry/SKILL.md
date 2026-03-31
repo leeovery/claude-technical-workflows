@@ -41,6 +41,19 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them. Presen
 
 ## Step 1: Parse Arguments
 
+> *Output the next fenced block as a code block:*
+
+```
+── Parse Arguments ──────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Reading the handoff context to identify which
+> topic to implement.
+```
+
 Arguments: work_type = `$0`, work_unit = `$1`, topic = `$2` (optional).
 Resolve topic: topic = `$2`, or if not provided and work_type is not `epic`, topic = `$1`.
 
@@ -52,6 +65,19 @@ Store work_unit for the handoff.
 
 ## Step 2: Validate Phase
 
+> *Output the next fenced block as a code block:*
+
+```
+── Validate Phase ───────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Checking that a completed plan exists and determining
+> where implementation left off.
+```
+
 Load **[validate-phase.md](references/validate-phase.md)** and follow its instructions as written.
 
 → Proceed to **Step 3**.
@@ -59,6 +85,19 @@ Load **[validate-phase.md](references/validate-phase.md)** and follow its instru
 ---
 
 ## Step 3: Check Dependencies
+
+> *Output the next fenced block as a code block:*
+
+```
+── Check Dependencies ───────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Verifying that cross-plan dependencies are satisfied
+> before implementation begins.
+```
 
 Load **[validate-dependencies.md](references/validate-dependencies.md)** and follow its instructions as written.
 
@@ -68,6 +107,19 @@ Load **[validate-dependencies.md](references/validate-dependencies.md)** and fol
 
 ## Step 4: Check Environment
 
+> *Output the next fenced block as a code block:*
+
+```
+── Check Environment ────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Checking for any environment setup instructions
+> that need to be in place before coding begins.
+```
+
 Load **[environment-check.md](references/environment-check.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
@@ -75,5 +127,18 @@ Load **[environment-check.md](references/environment-check.md)** and follow its 
 ---
 
 ## Step 5: Invoke the Skill
+
+> *Output the next fenced block as a code block:*
+
+```
+── Invoke Implementation ────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Handing off to the implementation process with
+> plan, specification, and environment context.
+```
 
 Load **[invoke-skill.md](references/invoke-skill.md)** and follow its instructions as written.

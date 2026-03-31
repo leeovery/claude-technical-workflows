@@ -11,8 +11,6 @@ Validate the selected work unit against the discovery output and store its data.
 > *Output the next fenced block as a code block:*
 
 ```
-Continue Bugfix
-
 No active bugfix named "{work_unit}" found.
 
 Run /continue-bugfix to see available bugfixes, or /start-bugfix to begin a new one.

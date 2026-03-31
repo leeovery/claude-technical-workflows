@@ -11,7 +11,9 @@ Display all active work and present a unified menu for continuing or starting wo
 > *Output the next fenced block as a code block:*
 
 ```
-Workflow Overview
+●───────────────────────────────────────────────●
+  Workflow Overview
+●───────────────────────────────────────────────●
 
 @if(feature_count > 0)
 Features:
@@ -95,6 +97,9 @@ Build the menu with numbered continue items first, then command options for star
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
+> Numbered items continue existing work. Letter commands below
+> start something new or manage lifecycle.
+
 · · · · · · · · · · · ·
 What would you like to do?
 

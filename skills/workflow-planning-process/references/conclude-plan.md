@@ -42,7 +42,16 @@ The plan contains **{N} phases** with **{M} tasks** total, reviewed for traceabi
 Status has been marked as `completed`. The plan is ready for implementation.
 ```
 
-4. **Pipeline continuation** — Invoke the bridge:
+4. **Pipeline continuation**:
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Planning complete. The implementation phase will execute
+> these tasks using TDD — tests first, then code.
+```
+
+Invoke the bridge:
 
 ```
 Pipeline bridge for: {work_unit}

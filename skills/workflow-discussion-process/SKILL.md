@@ -33,13 +33,20 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 ---
 
-## Output Formatting
-
-When announcing a new step, output `── ── ── ── ──` on its own line before the step heading.
-
----
-
 ## Step 0: Resume Detection
+
+> *Output the next fenced block as a code block:*
+
+```
+── Resume Detection ─────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Checking for an existing discussion file. If one exists,
+> you can pick up where you left off or start fresh.
+```
 
 Check if the discussion file exists at `.workflows/{work_unit}/discussion/{topic}.md`.
 
@@ -79,6 +86,19 @@ Found existing discussion for **{topic:(titlecase)}**.
 
 ## Step 1: Initialize Discussion
 
+> *Output the next fenced block as a code block:*
+
+```
+── Initialize Discussion ────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Creating the discussion file and seeding the Discussion Map
+> with initial subtopics from your context.
+```
+
 Load **[initialize-discussion.md](references/initialize-discussion.md)** and follow its instructions as written.
 
 → Proceed to **Step 2**.
@@ -86,6 +106,19 @@ Load **[initialize-discussion.md](references/initialize-discussion.md)** and fol
 ---
 
 ## Step 2: Load Discussion Guidelines
+
+> *Output the next fenced block as a code block:*
+
+```
+── Load Discussion Guidelines ───────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Loading the guidelines that shape how the discussion
+> is structured and documented.
+```
 
 Load **[discussion-guidelines.md](references/discussion-guidelines.md)** and follow its instructions as written.
 
@@ -95,6 +128,20 @@ Load **[discussion-guidelines.md](references/discussion-guidelines.md)** and fol
 
 ## Step 3: Discussion Session
 
+> *Output the next fenced block as a code block:*
+
+```
+── Discussion Session ───────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Discussion starting. I'll track our conversation on a Discussion
+> Map. You can lead wherever you want — I'll challenge thinking,
+> explore edge cases, and capture decisions as we go.
+```
+
 Load **[discussion-session.md](references/discussion-session.md)** and follow its instructions as written.
 
 → Proceed to **Step 4**.
@@ -103,6 +150,18 @@ Load **[discussion-session.md](references/discussion-session.md)** and follow it
 
 ## Step 4: Compliance Self-Check
 
+> *Output the next fenced block as a code block:*
+
+```
+── Compliance Self-Check ────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Verifying the discussion file follows workflow conventions.
+```
+
 Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
@@ -110,5 +169,18 @@ Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)*
 ---
 
 ## Step 5: Conclude Discussion
+
+> *Output the next fenced block as a code block:*
+
+```
+── Conclude Discussion ──────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Wrapping up. Final confirmation before marking the
+> discussion as complete.
+```
 
 Load **[conclude-discussion.md](references/conclude-discussion.md)** and follow its instructions as written.

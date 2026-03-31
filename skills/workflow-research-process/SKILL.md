@@ -34,13 +34,20 @@ Do not guess at progress or continue from memory. The files on disk and git hist
 
 ---
 
-## Output Formatting
-
-When announcing a new step, output `── ── ── ── ──` on its own line before the step heading.
-
----
-
 ## Step 0: Resume Detection
+
+> *Output the next fenced block as a code block:*
+
+```
+── Resume Detection ─────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Checking for existing research on this topic. If found,
+> you can pick up where you left off or start fresh.
+```
 
 Check if the research file exists at the handoff's Output path.
 
@@ -80,6 +87,19 @@ Found existing research for **{topic:(titlecase)}**.
 
 ## Step 1: Initialize Research
 
+> *Output the next fenced block as a code block:*
+
+```
+── Initialize Research ──────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Creating the research file and seeding it with initial
+> context from the handoff.
+```
+
 Load **[initialize-research.md](references/initialize-research.md)** and follow its instructions as written.
 
 → Proceed to **Step 2**.
@@ -87,6 +107,19 @@ Load **[initialize-research.md](references/initialize-research.md)** and follow 
 ---
 
 ## Step 2: File Strategy
+
+> *Output the next fenced block as a code block:*
+
+```
+── File Strategy ────────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Determining how research files are organized for this
+> work type — single file or multiple topics.
+```
 
 Load **[file-strategy.md](references/file-strategy.md)** and follow its instructions as written.
 
@@ -96,6 +129,19 @@ Load **[file-strategy.md](references/file-strategy.md)** and follow its instruct
 
 ## Step 3: Research Guidelines
 
+> *Output the next fenced block as a code block:*
+
+```
+── Research Guidelines ──────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Loading the guidelines that shape how research is
+> conducted and documented.
+```
+
 Load **[research-guidelines.md](references/research-guidelines.md)** and follow its instructions as written.
 
 → Proceed to **Step 4**.
@@ -103,5 +149,19 @@ Load **[research-guidelines.md](references/research-guidelines.md)** and follow 
 ---
 
 ## Step 4: Research Session
+
+> *Output the next fenced block as a code block:*
+
+```
+── Research Session ─────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Starting the research session. This is open-ended exploration
+> — follow threads, surface options, and document findings.
+> No decisions needed at this stage.
+```
 
 Load **[route-session.md](references/route-session.md)** and follow its instructions as written.
