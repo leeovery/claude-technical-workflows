@@ -21,11 +21,40 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 
 ## Step 0: Initialisation
 
+> *Output the next fenced block as a code block:*
+
+```
+── Initialisation ───────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Running migrations to keep workflow files in sync.
+```
+
 Load **[casing-conventions.md](../workflow-shared/references/casing-conventions.md)** and follow its instructions as written.
 
 **Run migrations — this is mandatory. You must complete it before proceeding.**
 
 Invoke the `/workflow-migrate` skill and follow its instructions exactly — if it issues a STOP gate, you must stop.
+
+> *Output the next fenced block as a code block:*
+
+```
+●───────────────────────────────────────────────●
+  New Quick-Fix
+●───────────────────────────────────────────────●
+
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Starting a new quick-fix. I'll ask what needs changing, suggest
+> a name, then hand off to scoping — which combines context, spec,
+> and plan into a single streamlined pass.
+```
 
 → Proceed to **Step 1**.
 
@@ -33,13 +62,33 @@ Invoke the `/workflow-migrate` skill and follow its instructions exactly — if 
 
 ## Step 1: Gather Quick-Fix Context
 
+> *Output the next fenced block as a code block:*
+
+```
+── Gather Context ───────────────────────────────
+```
+
 #### If inbox file path was provided as positional argument (`$0`)
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Using context from your inbox item. Reading the inbox file
+> to understand the change and suggest a name.
+```
 
 Read the inbox file at the provided path. Use its content as the quick-fix description — skip the gather-context prompt. The slug from the filename (strip the `YYYY-MM-DD--` prefix, strip `.md`) becomes the suggested work unit name in Step 2.
 
 → Proceed to **Step 2**.
 
 #### Otherwise
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Gathering context about the quick-fix. Describe what needs
+> changing, where, and why.
+```
 
 Load **[gather-quickfix-context.md](references/gather-quickfix-context.md)** and follow its instructions as written.
 
@@ -49,6 +98,19 @@ Load **[gather-quickfix-context.md](references/gather-quickfix-context.md)** and
 
 ## Step 2: Quick-Fix Name and Conflict Check
 
+> *Output the next fenced block as a code block:*
+
+```
+── Quick-Fix Name ───────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Naming the quick-fix and checking for conflicts. The name
+> becomes the identifier used throughout the workflow.
+```
+
 Load **[name-check.md](references/name-check.md)** and follow its instructions as written.
 
 → Proceed to **Step 3**.
@@ -56,6 +118,20 @@ Load **[name-check.md](references/name-check.md)** and follow its instructions a
 ---
 
 ## Step 3: Invoke Entry-Point Skill
+
+> *Output the next fenced block as a code block:*
+
+```
+── Invoke Scoping ───────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Handing off to the scoping phase. This will gather context,
+> build a lightweight spec, and create the implementation plan
+> in a single pass.
+```
 
 Invoke `/workflow-scoping-entry quick-fix {work_unit}`.
 
