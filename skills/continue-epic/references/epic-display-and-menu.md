@@ -417,28 +417,10 @@ Pick a topic to discuss or skip it.
 1. {item.name:(titlecase)}
 2. ...
 {N}. Back to main menu
-
-- **`sa`/`skip-all`** — Skip all pending topics
 · · · · · · · · · · · ·
 ```
 
 **STOP.** Wait for user response.
-
-#### If user chose `skip-all`
-
-For each pending discussion item:
-
-```bash
-node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.discussion.{topic} status skipped
-```
-
-> *Output the next fenced block as a code block:*
-
-```
-Skipped {N} pending topic(s).
-```
-
-→ Return to **C. Menu**.
 
 #### If user chose `Back to main menu`
 
