@@ -14,16 +14,24 @@ For each topic identified in the research analysis (loaded or freshly generated 
 node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}.discussion.{topic_kebab}
 ```
 
-**If `false`** — create a pending entry:
+#### If `true`
+
+Skip — leave existing entries untouched regardless of their status.
+
+Continue to the next topic.
+
+#### If `false`
+
+Create a pending entry:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.cjs init-phase {work_unit}.discussion.{topic_kebab}
 node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.discussion.{topic_kebab} status pending
 ```
 
-**If `true`** — skip. Leave existing entries untouched regardless of their status.
+Continue to the next topic.
 
-Repeat for all topics, then:
+After all topics are processed:
 
 → Proceed to **B. Remove Stale Entries**.
 
@@ -31,15 +39,23 @@ Repeat for all topics, then:
 
 ## B. Remove Stale Entries
 
-Using `discussions.files` from discovery, check each discussion with `status === 'pending'`. Convert each analysis topic name to kebab-case and check if the pending entry's name matches any of them.
+For each discussion with `status === 'pending'` in `discussions.files` from discovery, convert each analysis topic name to kebab-case and check if the pending entry's name matches any of them.
 
-**If NOT found in the analysis** — delete the stale pending entry:
+#### If not found in the analysis
+
+Delete the stale pending entry:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.cjs delete {work_unit}.discussion items.{topic_kebab}
 ```
 
-**If found** — skip. The entry is still valid.
+Continue to the next entry.
+
+#### If found
+
+Skip — the entry is still valid.
+
+Continue to the next entry.
 
 **CRITICAL**: Only delete `pending` entries during reconciliation. Never touch `in-progress`, `completed`, or `skipped` entries.
 
