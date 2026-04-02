@@ -34,13 +34,7 @@ Load the topics from `.workflows/{work_unit}/.state/research-analysis.md`.
 Analyzing research documents...
 ```
 
-Read each research file and extract every distinct theme or concern. Be exhaustive — this analysis will be cached, so nothing should be missed:
-- Architectural decisions and trade-offs
-- Open questions or unresolved concerns
-- Implementation approaches discussed
-- Integration points with external systems
-- Security, performance, or operational considerations
-- Edge cases or failure modes mentioned
+Read each research file end-to-end and extract every distinct theme, concern, or decision point. If the research mentions it, it matters — technical, business, operational, regulatory, user-facing, or otherwise. This analysis will be cached, so nothing should be missed.
 
 For each theme, note the source file(s) that contributed to it.
 
