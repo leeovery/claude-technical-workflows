@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Agentic Engineering Workflows for Claude Code. Installed via `npx agntc add leeovery/agentic-workflows`.
 
-**This CLAUDE.md is development documentation for authoring the workflows — it does not ship with the product.** When installed, only the skills and agents are copied into the target project (which has its own CLAUDE.md). Skills and agents must be fully self-contained — never rely on this file for runtime behaviour, conventions, or formats that agents need to follow.
+**Development documentation only — not shipped with the product.** Installed projects get their own CLAUDE.md. Skills and agents must be self-contained — never rely on this file for runtime behaviour.
 
 ## Git Workflow
 
@@ -15,7 +15,7 @@ Always create a feature branch **before** the first commit. Never commit to main
 ## Workflow Phases
 
 1. **Research** (`workflow-research-process` skill): EXPLORE - feasibility, market, viability, early ideas
-2. **Discussion** (`workflow-discussion-process` skill): Organic conversation guided by a live Discussion Map. Subtopics tracked through `pending` → `exploring` → `converging` → `decided`. Topic elevation seeds sibling concerns as separate discussion topics (epics only)
+2. **Discussion** (`workflow-discussion-process` skill): Organic conversation guided by a live Discussion Map (`pending` → `exploring` → `converging` → `decided`). Topic elevation seeds sibling discussions (epics only)
 3. **Investigation** (`workflow-investigation-process` skill): Bugfix-specific - symptom gathering + code analysis → root cause
 4. **Scoping** (`workflow-scoping-process` skill): Quick-fix-specific - context, spec, and plan in one pass
 5. **Specification** (`workflow-specification-process` skill): Validate and refine into standalone spec
@@ -27,13 +27,13 @@ Always create a feature branch **before** the first commit. Never commit to main
 
 Skills are organised in two tiers:
 
-**Entry-point skills** (`/start-*`, `/continue-*`, `/workflow-migrate`, etc.) are user-invocable. They gather context from files, prompts, or inline input, then invoke a processing skill. Utility entry-points (`/workflow-start`) have `disable-model-invocation: true`. `/workflow-migrate` has `user-invocable: false` — it is model-invoked only (Step 0 of every user-invocable entry-point skill).
+**Entry-point skills** (`/start-*`, `/continue-*`, `/workflow-migrate`, etc.) are user-invocable. Gather context from files, prompts, or inline input, then invoke a processing skill. Utility entry-points (`/workflow-start`) have `disable-model-invocation: true`. `/workflow-migrate` is model-invoked only (Step 0 of every entry-point skill).
 
-**Phase entry skills** (`workflow-*-entry`) are internal (`user-invocable: false`). They are invoked by start/continue/bridge skills with work_type and work_unit always provided. They handle phase-specific validation, bootstrap questions for new entries, and processing skill invocation.
+**Phase entry skills** (`workflow-*-entry`) are internal (`user-invocable: false`). Invoked by start/continue/bridge skills with work_type and work_unit always provided. Handle phase-specific validation, bootstrap questions, and processing skill invocation.
 
-**Processing skills** (`workflow-*-process`) are model-invocable. They assume pipeline context — work_type is set, prior phases are complete, artifacts are in expected locations. Phase entry skills provide all required inputs before invoking them.
+**Processing skills** (`workflow-*-process`) are model-invocable. Assume pipeline context — work_type is set, prior phases complete, artifacts in expected locations.
 
-**Capture skills** (`workflow-log-idea`, `workflow-log-bug`, `workflow-log-quickfix`) are model-invocable, lightweight skills outside the pipeline. They capture ideas, bugs, or quick-fixes as markdown files in the inbox (`.workflows/.inbox/`). No manifest, no migrations, no step/reference structure — just natural language instructions with capture-only constraints. They can be invoked directly by the user or discovered by the model when the user wants to log something.
+**Capture skills** (`workflow-log-idea`, `workflow-log-bug`, `workflow-log-quickfix`) are model-invocable, lightweight skills outside the pipeline. Capture ideas, bugs, or quick-fixes as markdown files in the inbox (`.workflows/.inbox/`). No manifest, no migrations, no step/reference structure — just natural language instructions with capture-only constraints.
 
 ### Phase Entry Skill Routing
 
@@ -58,9 +58,9 @@ Phase entry skills (`workflow-*-entry`) receive positional arguments: `$0` = wor
 - **Quick-fix**: Single-topic, scoping-centric (Scoping → Implementation → Review)
 - **Cross-cutting**: Single-topic, project-level (Research (opt.) → Discussion → Specification — terminal)
 
-**Topics**: A *topic* is the item within a phase. For feature/bugfix/quick-fix, the topic name equals the work unit name (single topic moving through the pipeline). For epic, topics are distinct from the work unit name (multiple topics per phase). All work types use per-topic items in the manifest (unified structure). The discussion phase analyses all research files collectively to derive discussion topics.
+**Topics**: A *topic* is the item within a phase. For feature/bugfix/quick-fix, topic name equals work unit name. For epic, topics are distinct from the work unit name. All work types use per-topic manifest items (unified structure).
 
-Work-unit-first directory structure with uniform `{topic}` in all paths. For feature/bugfix/quick-fix, `{topic}` equals `{work_unit}`. For epic, `{topic}` is the item within a phase.
+Work-unit-first directory structure with uniform `{topic}` in all paths (`{topic}` = `{work_unit}` for feature/bugfix/quick-fix).
 
 - Project manifest: `.workflows/manifest.json` (work unit registry + project defaults)
 - Manifest: `.workflows/{work_unit}/manifest.json`
@@ -74,19 +74,18 @@ Work-unit-first directory structure with uniform `{topic}` in all paths. For fea
 - State: `.workflows/{work_unit}/.state/` (per-work-unit analysis files)
 - Global state: `.workflows/.state/` (migrations, environment-setup.md)
 - Cache: `.workflows/.cache/{work_unit}/{phase}/{topic}/` (scratch files for any phase)
-- Inbox: `.workflows/.inbox/ideas/`, `.workflows/.inbox/bugs/`, `.workflows/.inbox/quickfixes/` (pre-pipeline capture, plain markdown)
-- Inbox archive: `.workflows/.inbox/.archived/{ideas,bugs,quickfixes}/` (moved here when an inbox item enters the pipeline)
+- Inbox: `.workflows/.inbox/{ideas,bugs,quickfixes}/` (pre-pipeline capture; archived to `.archived/` subfolder when entering pipeline)
 
 **Work unit lifecycle**: Each work unit has a `status` field in its manifest tracking its lifecycle state:
 - `in-progress` — actively being worked on (default on creation)
 - `completed` — pipeline finished (set automatically when the pipeline completes, or manually via the manage menu)
 - `cancelled` — abandoned (set manually via the manage menu)
 
-Discovery scripts filter by status — `workflow-start` and `continue-*` show active work by default, with menu options to view completed/cancelled items or manage lifecycle state. Completed/cancelled work units can be reactivated.
+Discovery filters by status — active work by default, with options to view completed/cancelled or manage lifecycle. Work units can be reactivated.
 
 **Feature-to-epic pivot**: Features can be converted to epics via the manage menu (`p`/`pivot`). After pivot, the user can continue immediately as an epic or return to the previous view.
 
-**Epic soft gates**: When navigating forward between phases in an epic (via `continue-epic`), advisory gates warn if prerequisite phase items are still in-progress. These are informational, not blocking — the user can proceed anyway. The system recovers gracefully via re-analysis if the user proceeds early.
+**Epic soft gates**: When navigating forward between epic phases, advisory gates warn if prerequisite items are still in-progress. Informational, not blocking — the system recovers via re-analysis if the user proceeds early.
 
 Commit docs frequently (natural breaks, before context refresh). Skills capture context, don't implement.
 
@@ -118,7 +117,7 @@ The contract and scaffolding templates live in `.claude/skills/create-output-for
 
 ## Migrations
 
-The `/workflow-migrate` skill keeps workflow files in sync with the current system design. It runs via Step 0 at the start of every entry-point skill.
+The `/workflow-migrate` skill keeps workflow files in sync with the current system design (runs via Step 0 of every entry-point skill).
 
 **How it works:**
 - `skills/workflow-migrate/scripts/migrate.sh` runs all migration scripts in `skills/workflow-migrate/scripts/migrations/` in numeric order
@@ -134,58 +133,13 @@ The `/workflow-migrate` skill keeps workflow files in sync with the current syst
 
 **Critical: Migration scripts must not use the manifest CLI**
 
-Migration scripts are point-in-time snapshots. The manifest CLI validates values against the current schema, which changes over time (e.g., valid statuses). A migration that uses the CLI today may break silently when validation rules change in a later release. Always read and write `manifest.json` directly using `node` (or `jq`) — never via the manifest CLI. This ensures migrations remain stable regardless of future schema changes.
+Migration scripts are point-in-time snapshots. The manifest CLI validates against the current schema, which changes over time — a migration using it today may break silently later. Always read/write `manifest.json` directly with `node` or `jq`.
 
-**Bash 3.2 compatibility**: Migration scripts must be compatible with Bash 3.2 (macOS default). Avoid `mapfile`/`readarray` (bash 4+), associative arrays `declare -A` (bash 4+), and `local -n` namerefs (bash 4.3+).
+**Bash 3.2 compatibility** (macOS default): Avoid `mapfile`/`readarray`, `declare -A`, `local -n` (all bash 4+).
 
 **Testing migrations:**
 
-Every migration must have a corresponding test file at `tests/scripts/test-migration-NNN.sh`. The test harness follows this structure:
-
-```bash
-#!/bin/bash
-#
-# Tests for migration NNN: description
-#
-# Run: bash tests/scripts/test-migration-NNN.sh
-#
-
-set -eo pipefail
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
-MIGRATION="$REPO_DIR/skills/workflow-migrate/scripts/migrations/NNN-description.sh"
-
-PASS=0
-FAIL=0
-
-report_update() { : ; }
-report_skip() { : ; }
-
-assert_eq() {
-  local label="$1" expected="$2" actual="$3"
-  if [ "$expected" = "$actual" ]; then
-    PASS=$((PASS + 1))
-  else
-    FAIL=$((FAIL + 1))
-    echo "FAIL: $label"
-    echo "  expected: $expected"
-    echo "  actual:   $actual"
-  fi
-}
-
-setup() {
-  TEST_DIR=$(mktemp -d /tmp/migration-NNN-test.XXXXXX)
-  export PROJECT_DIR="$TEST_DIR"
-  mkdir -p "$TEST_DIR/.workflows"
-}
-
-teardown() {
-  rm -rf "$TEST_DIR"
-}
-```
-
-Conventions:
+Every migration must have a corresponding test file at `tests/scripts/test-migration-NNN.sh`. Follow the harness structure in existing test files (`set -eo pipefail`, `PASS`/`FAIL` counters, `report_update`/`report_skip` stubs, `assert_eq` function, `setup`/`teardown` with temp dir). Conventions:
 - **Invocation**: Use `source "$MIGRATION"` for migrations that use `return 0`. Use `bash "$MIGRATION"` with `export -f report_update report_skip` for migrations that use `exit 0`.
 - **Isolation**: Each test function calls `setup` at the start and `teardown` at the end. No shared state between tests.
 - **Assertions**: Use only `assert_eq`. Parameter order: `label`, `expected`, `actual`. Convert other checks inline:
@@ -199,7 +153,7 @@ Conventions:
 
 ## Manifest CLI
 
-The manifest CLI at `skills/workflow-manifest/scripts/manifest.cjs` is the single source of truth for all workflow state. Uses dot-path syntax: `command <work-unit>[.<phase>[.<topic>]] [field] [value]`. Segment count determines access level (1 = work unit, 2 = phase, 3 = topic). The reserved prefix `project` routes to the project manifest (`.workflows/manifest.json`) — e.g., `get project.defaults.plan_format`. See `skills/workflow-manifest/SKILL.md` for the full API.
+The manifest CLI at `skills/workflow-manifest/scripts/manifest.cjs` is the single source of truth for all workflow state. Dot-path syntax: `command <work-unit>[.<phase>[.<topic>]] [field] [value]`. Segment count determines access level (1 = work unit, 2 = phase, 3 = topic). Reserved prefix `project` routes to the project manifest — e.g., `get project.defaults.plan_format`.
 
 **Project defaults cascade**: `project.defaults` → topic level. Project defaults are suggestions (user confirms or overrides). Topic level records the actual value in use. There is no phase-level storage for settings like `plan_format`, `project_skills`, or `linters`.
 
@@ -221,7 +175,7 @@ All user-facing output uses five distinct visual tiers, each with a specific pur
 | 4 | Sub-step marker | Progress within a step | Code block |
 | 5 | Status / menu | Data displays and interactive choices | Code block / markdown |
 
-Every skill invocation should produce at most one phase title. Step markers appear at every step boundary — including steps with no explicit output, since Claude's visible processing (file reads, commands, thinking) is the user experience and the marker labels it. Signpost blockquotes appear at phase entry, before steps where context helps, and at phase completion. Status displays and menus are unchanged from existing conventions.
+Every skill invocation should produce at most one phase title. Signpost blockquotes appear at phase entry, before steps where context helps, and at phase completion.
 
 ### Rendering Instructions
 
@@ -257,7 +211,7 @@ Rules:
 - Include a trailing blank line after the closing border inside the code block — this creates visual breathing room in the rendered output
 - **Must be inside a code block** — never markdown. Code blocks preserve the indentation and whitespace that the border layout depends on. Markdown rendering would collapse the spacing and break the layout
 
-Phase titles replace the old plain-text title pattern. Status displays that previously opened with a title line (e.g., `Planning Overview`) now use the phase title at the top of the same code block, followed by a blank line before the content.
+Status displays use the phase title at the top of the same code block, followed by a blank line before the content.
 
 ### Step Markers
 
@@ -320,27 +274,7 @@ Rules:
 
 ### Workflow Banner
 
-The `workflow-start` skill uses an ASCII art banner as the entry point. It uses the same bullet-border convention as phase titles, widened to accommodate the art:
-
-```
-●─────────────────────────────────────────────────────────────────●
-    ___   _____________   __________________
-   /   | / ____/ ____/ | / /_  __/  _/ ____/
-  / /| |/ / __/ __/ /  |/ / / /  / // /
- / ___ / /_/ / /___/ /|  / / / _/ // /___
-/_/  |_\____/_____/_/ |_/ /_/ /___/\____/
- _       ______  ____  __ __ ________    ____ _       _______
-| |     / / __ \/ __ \/ //_// ____/ /   / __ \ |     / / ___/
-| | /| / / / / / /_/ / ,<  / /_  / /   / / / / | /| / /\__ \
-| |/ |/ / /_/ / _, _/ /| |/ __/ / /___/ /_/ /| |/ |/ /___/ /
-|__/|__/\____/_/ |_/_/ |_/_/   /_____/\____/ |__/|__//____/
-
-●─────────────────────────────────────────────────────────────────●
-  Agentic engineering workflows — from idea to implementation.
-●─────────────────────────────────────────────────────────────────●
-```
-
-This is the only exception to the fixed-width phase title rule — the banner is wider to fit the ASCII art.
+The `workflow-start` skill uses an ASCII art banner (see skill file for exact art). Uses the same bullet-border convention as phase titles, widened to accommodate the art — the only exception to the fixed-width rule.
 
 ### Template Placeholders
 
@@ -561,7 +495,7 @@ Use `•` for all bulleted lists (sources, files, not-ready items, etc.).
 
 ## Structural Conventions (MANDATORY)
 
-These are hard rules, not suggestions. All skill files (entry-point and processing) MUST follow these conventions exactly. When writing or editing skill files, read existing skills and references as working examples — they are the authoritative demonstration of these rules in practice.
+These are hard rules, not suggestions. All skill files (entry-point and processing) MUST follow these conventions exactly.
 
 ### Stop Gates
 
@@ -734,7 +668,7 @@ What's on your mind?
 
 ## Skill File Structure (MANDATORY)
 
-These are hard rules, not suggestions. All skills (entry-point and processing) use a backbone + reference file pattern. The backbone (SKILL.md) is always loaded and reads like a table of contents. Reference files contain step detail, loaded on demand via Load directives. When writing or editing skill files, read existing skills and references as working examples — they are the authoritative demonstration of these rules in practice.
+All skills (entry-point and processing) use a backbone + reference file pattern. The backbone (SKILL.md) is always loaded and reads like a table of contents. Reference files contain step detail, loaded on demand via Load directives.
 
 ### Backbone Structure
 
