@@ -32,8 +32,6 @@ function discover(cwd, workUnit) {
   const discussions = [];
   let inProgress = 0;
   let completed = 0;
-  let pending = 0;
-  let skipped = 0;
 
   for (const m of manifests) {
     const items = phaseItems(m, 'discussion');
@@ -41,8 +39,6 @@ function discover(cwd, workUnit) {
       discussions.push({ name: item.name, work_unit: m.name, status: item.status || 'unknown', work_type: m.work_type });
       if (item.status === 'in-progress') inProgress++;
       else if (item.status === 'completed') completed++;
-      else if (item.status === 'pending') pending++;
-      else if (item.status === 'skipped') skipped++;
     }
   }
 
@@ -97,7 +93,7 @@ function discover(cwd, workUnit) {
     discussions: {
       exists: hasDiscussions,
       files: discussions,
-      counts: { in_progress: inProgress, completed, pending, skipped },
+      counts: { in_progress: inProgress, completed },
     },
     cache: { entries: cacheEntries },
     state: { has_research: hasResearch, has_discussions: hasDiscussions, scenario },
@@ -125,7 +121,7 @@ function format(result) {
     for (const d of result.discussions.files) {
       lines.push(`  ${d.work_unit}/${d.name} (${d.work_type}): ${d.status}`);
     }
-    lines.push(`  counts: ${result.discussions.counts.in_progress} in-progress, ${result.discussions.counts.completed} completed, ${result.discussions.counts.pending} pending, ${result.discussions.counts.skipped} skipped`);
+    lines.push(`  counts: ${result.discussions.counts.in_progress} in-progress, ${result.discussions.counts.completed} completed`);
   }
   lines.push('');
 

@@ -73,7 +73,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {work_unit}.di
 
 **If not exists (`false` — new entry):**
 
-→ Proceed to **Step 7** (Gather Context) with source="topic-provided".
+→ Proceed to **Step 6** (Gather Context) with source="topic-provided".
 
 #### If no `topic` (epic — scoped path)
 
@@ -128,7 +128,7 @@ Parse the discovery output to understand:
 
 Load **[validate-phase.md](references/validate-phase.md)** and follow its instructions as written.
 
-→ Proceed to **Step 7**.
+→ Proceed to **Step 6**.
 
 ---
 
@@ -155,11 +155,11 @@ Load **[route-scenario.md](references/route-scenario.md)** and follow its instru
 
 #### If discussions only
 
-→ Proceed to **Step 6**.
+→ Proceed to **Step 5**.
 
 #### If fresh
 
-→ Proceed to **Step 7**.
+→ Proceed to **Step 6**.
 
 ---
 
@@ -184,36 +184,7 @@ Load **[research-analysis.md](references/research-analysis.md)** and follow its 
 
 ---
 
-## Step 5: Reconcile Pending Topics
-
-> *Output the next fenced block as a code block:*
-
-```
-── Reconcile Pending Topics ────────────────────
-```
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-> Ensuring research topics are tracked as pending
-> discussions in the manifest.
-```
-
-#### If cache was `valid` in Step 4 (analysis loaded from cache, not regenerated)
-
-Pending entries were already created when the analysis was first generated. No reconciliation needed.
-
-→ Proceed to **Step 6**.
-
-#### If analysis was freshly generated (no cache or cache was `stale`)
-
-Load **[reconcile-pending.md](references/reconcile-pending.md)** and follow its instructions as written.
-
-→ Proceed to **Step 6**.
-
----
-
-## Step 6: Display Options
+## Step 5: Display Options
 
 > *Output the next fenced block as a code block:*
 
@@ -229,11 +200,11 @@ Load **[reconcile-pending.md](references/reconcile-pending.md)** and follow its 
 
 Load **[display-options.md](references/display-options.md)** and follow its instructions as written.
 
-→ Proceed to **Step 7**.
+→ Proceed to **Step 6**.
 
 ---
 
-## Step 7: Gather Context
+## Step 6: Gather Context
 
 > *Output the next fenced block as a code block:*
 
@@ -251,17 +222,17 @@ Load **[display-options.md](references/display-options.md)** and follow its inst
 
 The caller already gathered context (problem description, motivation, constraints). Do not re-ask.
 
-→ Proceed to **Step 8**.
+→ Proceed to **Step 7**.
 
 #### Otherwise
 
 Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
 
-→ Proceed to **Step 8**.
+→ Proceed to **Step 7**.
 
 ---
 
-## Step 8: Invoke the Skill
+## Step 7: Invoke the Skill
 
 > *Output the next fenced block as a code block:*
 

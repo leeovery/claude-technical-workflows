@@ -102,13 +102,11 @@ function phaseStatus(manifest, phase) {
   if (p.items && typeof p.items === 'object') {
     const keys = Object.keys(p.items);
     if (keys.length === 0) return null;
-    // Filter out skipped items — they're soft-deleted and invisible to phase calculations
-    const statuses = keys.map(k => (p.items[k] || {}).status).filter(s => s && s !== 'skipped');
+    if (keys.length === 1) return (p.items[keys[0]] || {}).status || null;
+    const statuses = keys.map(k => (p.items[k] || {}).status).filter(Boolean);
     if (statuses.length === 0) return null;
-    if (statuses.length === 1) return statuses[0];
     if (statuses.every(s => s === 'completed')) return 'completed';
     if (statuses.some(s => s === 'in-progress')) return 'in-progress';
-    if (statuses.some(s => s === 'pending')) return 'pending';
     return statuses[0];
   }
   return null;
@@ -195,9 +193,6 @@ function computeNextPhase(manifest) {
   }
   if (ps('discussion') === 'in-progress') {
     return { next_phase: 'discussion', phase_label: 'discussion (in-progress)' };
-  }
-  if (ps('discussion') === 'pending') {
-    return { next_phase: 'discussion', phase_label: 'discussion (pending topics)' };
   }
 
   // Research is optional for both epic and feature (not bugfix)
