@@ -6,6 +6,8 @@
 
 This step only runs when research files exist.
 
+## A. Check Cache
+
 Use `cache.entries` from discovery to determine the approach. Check if a cache entry exists for this work unit.
 
 #### If a cache entry exists with `status` `valid`
@@ -21,6 +23,12 @@ Load the topics from `.workflows/{work_unit}/.state/research-analysis.md`.
 → Return to caller.
 
 #### If no cache entry exists or entry `status` is `stale`
+
+→ Proceed to **B. Analyse Research**.
+
+---
+
+## B. Analyse Research
 
 > *Output the next fenced block as a code block:*
 
@@ -41,7 +49,11 @@ Read each research file and extract key themes and potential discussion topics. 
 - Security or performance considerations
 - Edge cases or error handling mentioned
 
-### Anchor to Existing Discussions
+→ Proceed to **C. Anchor to Existing Discussions**.
+
+---
+
+## C. Anchor to Existing Discussions
 
 **CRITICAL**: Check `discussions.files` from discovery. These are discussion filenames that already exist for this work unit.
 
@@ -50,7 +62,11 @@ When naming themes:
 - Only create new names for themes with no matching existing discussion.
 - For each topic, note if a discussion already exists.
 
-**Save to cache:**
+→ Proceed to **D. Save Results**.
+
+---
+
+## D. Save Results
 
 Write cache metadata to manifest:
 ```bash
@@ -80,8 +96,6 @@ Create/update `.workflows/{work_unit}/.state/research-analysis.md` (pure markdow
 - **Summary**: {as long as needed to convey what this topic covers}
 - **Sources**: {filename1}.md, {filename2}.md
 ```
-
-### Write Surfaced Topics
 
 Write the list of surfaced topic names to the manifest for discovery:
 
