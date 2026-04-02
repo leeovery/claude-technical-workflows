@@ -87,7 +87,7 @@ When naming topics:
 
 ## E. Save Results
 
-Write cache metadata to manifest. The `checksum` and `files` fields record which research input files were analysed, so the cache can detect when research changes.
+Write cache metadata to manifest. The `files` array is provenance — it records which research input files were analysed. The `checksum` is computed from these files so the cache can detect when research changes.
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.research analysis_cache.checksum "{research.checksum from discovery}"
 node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.research analysis_cache.generated "{ISO timestamp}"
