@@ -71,6 +71,7 @@ No work started yet.
 - Implementation items show progress: `Phase {N}, {M} task(s) completed` if in-progress with current_phase; `{M} task(s) completed` otherwise
 - Phases with no items don't appear
 - Blank line between phase sections
+- No trailing blank line after the last phase section (the code block ends immediately after the last item or recommendation)
 
 **Recommendations:** Check the following conditions in order. Show the first that applies as a line within the state display code block, separated by a blank line from the last phase section. If none apply, no recommendation.
 
@@ -115,16 +116,15 @@ Show only statuses and categories that appear in the current display. No `---` s
 > *Output the next fenced block as a code block:*
 
 ```
-Key:
+  Key:
+    Status:
+      in-progress — work is ongoing
+      completed   — phase or implementation done
+      promoted    — moved to its own cross-cutting work unit
 
-  Status:
-    in-progress — work is ongoing
-    completed   — phase or implementation done
-    promoted    — moved to its own cross-cutting work unit
-
-  Blocking reason:
-    blocked by {plan}:{task} — depends on another plan's task
-    blocked by {plan}        — dependency unresolved
+    Blocking reason:
+      blocked by {plan}:{task} — depends on another plan's task
+      blocked by {plan}        — dependency unresolved
 ```
 
 → Proceed to **C. Menu**.
@@ -153,11 +153,10 @@ Build a numbered menu with three sections:
   - Only show if `gating.can_start_specification` is true (at least one completed discussion)
 
 **Section 3 — Standing options:**
-- `Start new discussion topic — {N} pending from research` (if `gating.has_pending_discussions` is true; show count from `pending_from_research.length`). Without pending topics: `Start new discussion topic`
+- `Start new discussion topic — {N} pending from research` (if `gating.has_pending_discussions` is true; show count from `pending_from_research.length`). Without pending topics: @if(gating.has_research) `Start new discussion topic (from research)` @else `Start new discussion topic` @endif
 - `Manage pending topics` (only shown when `gating.has_pending_discussions` is true)
 - `Start new research` (always present)
 - `Resume a completed topic` (only shown when `completed` items exist)
-- `Stop here — resume later with /workflow-start` (always present)
 
 **Phase-forward gating:**
 - No "Start planning" unless `gating.can_start_planning` is true
@@ -189,7 +188,7 @@ What would you like to do?
 5. Start implementation of "Notifications" — plan completed (recommended)
 6. Start implementation of "Reporting" — blocked by core-features:core-2-3
 7. Start specification — 3 discussion(s) not yet in a spec
-8. Start new discussion topic
+8. Start new discussion topic (from research)
 9. Start new research
 10. Resume a completed topic
 
@@ -206,19 +205,6 @@ Recreate with actual items from discovery. Blank line between sections.
 ---
 
 ## D. Handle Selection
-
-#### If user chose `Stop here`
-
-> *Output the next fenced block as a code block:*
-
-```
-Session Paused
-
-To resume later, run /workflow-start — it will discover your
-current state and present all available options.
-```
-
-**STOP.** Do not proceed — terminal condition.
 
 #### If user chose a blocked item
 
@@ -330,7 +316,7 @@ Store the selected action, phase, and topic (if applicable). Map to a routing en
 | Start implementation of {topic} | implementation | {topic} |
 | Start review for {topic} | review | {topic} |
 | Start specification | specification | — |
-| Start new discussion topic | discussion | — |
+| Start new discussion topic / Start new discussion topic (from research) | discussion | — |
 | Discuss pending topic {topic} | discussion | {topic} |
 | Start new research | research | — |
 
