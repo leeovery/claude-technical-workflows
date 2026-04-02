@@ -34,7 +34,11 @@ Load the topics from `.workflows/{work_unit}/.state/research-analysis.md`.
 Analyzing research documents...
 ```
 
-Read each research file end-to-end and extract every distinct theme, concern, or decision point. If the research mentions it, it matters — technical, business, operational, regulatory, user-facing, or otherwise. This analysis will be cached, so nothing should be missed.
+**CRITICAL**: This analysis is the foundation for every downstream phase. The themes extracted here drive topic definition, which drives discussion, which drives specification, planning, and implementation. Anything missed here is invisible to the rest of the pipeline.
+
+Read every research file end-to-end. Then cross-reference across files — connections, contradictions, and shared concerns that span multiple documents are often the most important themes. Extract every distinct theme, concern, decision point, constraint, risk, open question, or nuance you find. Technical, business, operational, regulatory, user-facing, or otherwise — if the research mentions it, capture it. Even small details matter: a brief aside about a regulatory deadline, a passing mention of a dependency, a footnote about a limitation. These may not become their own topics, but they inform the grouping and ensure nothing is lost.
+
+This analysis is cached and only re-runs when research files change. Be exhaustive — this is the one opportunity to capture the full picture.
 
 For each theme, note the source file(s) that contributed to it.
 
