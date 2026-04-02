@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path');
-const { loadActiveManifests, phaseStatus, phaseItems, phaseData, listFiles, filesChecksum } = require('../../workflow-shared/scripts/discovery-utils.cjs');
+const { loadActiveManifests, phaseStatus, phaseItems, phaseData, listFiles, filesChecksum, computePendingFromResearch } = require('../../workflow-shared/scripts/discovery-utils.cjs');
 
 function discover(cwd, workUnit) {
   const allManifests = loadActiveManifests(cwd);
@@ -75,6 +75,12 @@ function discover(cwd, workUnit) {
     });
   }
 
+  // --- Surfaced topics (from research analysis) ---
+  const surfacedTopics = [];
+  for (const m of manifests) {
+    surfacedTopics.push(...computePendingFromResearch(m));
+  }
+
   // --- State ---
   const hasResearch = researchFiles.length > 0;
   const hasDiscussions = discussions.length > 0;
@@ -95,6 +101,7 @@ function discover(cwd, workUnit) {
       files: discussions,
       counts: { in_progress: inProgress, completed },
     },
+    surfaced_topics: surfacedTopics,
     cache: { entries: cacheEntries },
     state: { has_research: hasResearch, has_discussions: hasDiscussions, scenario },
   };

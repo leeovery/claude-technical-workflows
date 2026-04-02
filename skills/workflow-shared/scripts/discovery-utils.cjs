@@ -208,6 +208,13 @@ function computeNextPhase(manifest) {
   return { next_phase: 'discussion', phase_label: 'ready for discussion' };
 }
 
+function computePendingFromResearch(manifest) {
+  const rd = (manifest.phases || {}).research || {};
+  const surfaced = Array.isArray(rd.surfaced_topics) ? rd.surfaced_topics : [];
+  const discussed = new Set(phaseItems(manifest, 'discussion').map(i => i.name));
+  return surfaced.filter(t => !discussed.has(t));
+}
+
 module.exports = {
   listFiles,
   listDirs,
@@ -219,6 +226,7 @@ module.exports = {
   loadManifest,
   filesChecksum,
   computeNextPhase,
+  computePendingFromResearch,
   loadActiveManifests,
   loadAllManifests,
   loadProjectManifest,

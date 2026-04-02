@@ -153,7 +153,8 @@ Build a numbered menu with three sections:
   - Only show if `gating.can_start_specification` is true (at least one completed discussion)
 
 **Section 3 — Standing options:**
-- `Start new discussion topic` (always present)
+- `Start new discussion topic — {N} pending from research` (if `gating.has_pending_discussions` is true; show count from `pending_from_research.length`). Without pending topics: `Start new discussion topic`
+- `Manage pending topics` (only shown when `gating.has_pending_discussions` is true)
 - `Start new research` (always present)
 - `Resume a completed topic` (only shown when `completed` items exist)
 - `Stop here — resume later with /workflow-start` (always present)
@@ -260,6 +261,10 @@ Commit the change.
 
 → Return to **C. Menu**.
 
+#### If user chose `Manage pending topics`
+
+→ Proceed to **G. Manage Pending**.
+
 #### If user chose `Resume a completed topic`
 
 → Proceed to **F. Resume Completed**.
@@ -270,8 +275,9 @@ Commit the change.
 
 | User selected phase | Condition | Gate message |
 |---------------------|-----------|--------------|
-| discussion (new or continue) | `gating.has_research` is true and some research items are in-progress | "{N} of {M} research topics still in-progress. Discussion topic analysis works best with all research available." |
-| specification (new or continue) | discussion items exist with some in-progress | "{N} of {M} discussions still in-progress. Specification grouping analysis works best with all discussions available." |
+| discussion (new or continue) | `gating.has_research` is true and some research items are in-progress | "{N} of {M} research topics still in-progress. Topic analysis works best with all research available." |
+| specification (new or continue) | discussion items exist with some in-progress | "{N} of {M} discussions still in-progress. Grouping analysis works best with all discussions available." |
+| specification (new or continue) | `gating.has_pending_discussions` is true | "{N} pending discussion topic(s) from research have not been started. Starting these first ensures the specification covers all identified topics." |
 | planning | specification items exist with some in-progress | "{N} of {M} specifications still in-progress. Cross-cutting dependencies are easier to identify with all completed." |
 | implementation | planning items exist with some in-progress | "{N} of {M} plans still in-progress. Task dependencies across plans may be missed." |
 
@@ -281,7 +287,7 @@ Commit the change.
 
 ```
 · · · · · · · · · · · ·
-{N} of {M} {phase items} still in-progress. {Gate message}.
+{Gate message}
 
 The system will re-analyse if you revisit later — proceeding
 now is safe, but may require rework.
@@ -290,6 +296,8 @@ now is safe, but may require rework.
 - **`b`/`back`** — Return to menu
 · · · · · · · · · · · ·
 ```
+
+Gate messages are self-contained first lines. For "N of M in-progress" conditions, compose the count prefix into the message (e.g., "3 of 5 research topics still in-progress. Discussion topic analysis works best with all research available.").
 
 **STOP.** Wait for user response.
 
@@ -323,6 +331,7 @@ Store the selected action, phase, and topic (if applicable). Map to a routing en
 | Start review for {topic} | review | {topic} |
 | Start specification | specification | — |
 | Start new discussion topic | discussion | — |
+| Discuss pending topic {topic} | discussion | {topic} |
 | Start new research | research | — |
 
 → Return to caller.
@@ -380,3 +389,68 @@ List all completed items across all phases.
 Store the selected phase and topic.
 
 → Return to caller.
+
+---
+
+## G. Manage Pending
+
+Display pending topics from research and let the user take action on them. Uses `pending_from_research` from discovery output.
+
+> *Output the next fenced block as a code block:*
+
+```
+Pending Discussion Topics
+
+Topics identified by research analysis that have not yet
+been discussed.
+
+@foreach(topic in pending_from_research)
+  {N}. {topic.name:(titlecase)}
+@endforeach
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+Select a topic number, then choose an action:
+
+- **`d`/`discuss`** — Start a discussion for this topic
+- **`s`/`skip`** — Remove from pending list
+- **`b`/`back`** — Return to menu
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If user chose `back`
+
+→ Return to **C. Menu**.
+
+#### If user chose `skip`
+
+Remove the topic from the surfaced_topics array via the `pull` command:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs pull {work_unit}.research surfaced_topics "{topic}"
+```
+
+> *Output the next fenced block as a code block:*
+
+```
+Removed "{topic:(titlecase)}" from pending topics.
+```
+
+**If no more pending topics remain:**
+
+→ Return to **C. Menu**.
+
+**If pending topics still remain:**
+
+→ Return to **G. Manage Pending**.
+
+#### If user chose `discuss`
+
+Set selection to "Discuss pending topic {topic}" with the selected topic name.
+
+→ Return to **E. Route Selection**.

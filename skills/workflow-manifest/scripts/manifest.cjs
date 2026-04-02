@@ -743,6 +743,47 @@ function cmdPush(args) {
   });
 }
 
+function cmdPull(args) {
+  // Project manifest routing: pull project.field.path <value>
+  const proj = parseProjectPath(args[0]);
+  if (proj.isProject) {
+    if (proj.fieldSegments.length === 0 || args.length < 2) {
+      die('Usage: pull project.<field.path> <value>');
+    }
+    const value = parseValue(args[1]);
+    withProjectLock(() => {
+      const manifest = readProjectManifest();
+      const current = getByPath(manifest, proj.fieldSegments);
+      if (!Array.isArray(current)) return; // no-op
+      const idx = current.indexOf(value);
+      if (idx === -1) return; // no-op
+      current.splice(idx, 1);
+      writeProjectManifestAtomic(manifest);
+    });
+    return;
+  }
+
+  if (args.length < 3) die('Usage: pull <path> <field> <value>');
+
+  const { workUnit, phase, topic } = parsePath(args[0]);
+  const fieldSegments = args[1].split('.');
+  const value = parseValue(args[2]);
+
+  requireWorkUnit(workUnit);
+
+  const segments = resolveSegments(phase, topic, fieldSegments);
+
+  withLock(workUnit, () => {
+    const manifest = readManifest(workUnit);
+    const current = getByPath(manifest, segments);
+    if (!Array.isArray(current)) return; // no-op
+    const idx = current.indexOf(value);
+    if (idx === -1) return; // no-op
+    current.splice(idx, 1);
+    writeManifestAtomic(workUnit, manifest);
+  });
+}
+
 function cmdExists(args) {
   if (args.length < 1) die('Usage: exists <path> [field.path]');
 
@@ -873,7 +914,7 @@ function cmdKeyOf(args) {
 const [command, ...args] = process.argv.slice(2);
 
 if (!command) {
-  die('Usage: manifest.cjs <command> [args]\nCommands: init, get, set, delete, list, init-phase, push, exists, key-of, project');
+  die('Usage: manifest.cjs <command> [args]\nCommands: init, get, set, delete, list, init-phase, push, pull, exists, key-of, project');
 }
 
 switch (command) {
@@ -884,6 +925,7 @@ switch (command) {
   case 'list':     cmdList(args); break;
   case 'init-phase': cmdInitPhase(args); break;
   case 'push':     cmdPush(args); break;
+  case 'pull':     cmdPull(args); break;
   case 'exists':   cmdExists(args); break;
   case 'key-of':   cmdKeyOf(args); break;
   case 'project':  cmdProject(args); break;

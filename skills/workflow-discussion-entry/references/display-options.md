@@ -23,7 +23,7 @@ Research topics:
 
 1. {theme_name}
    └─ Sources: {filename1}.md, {filename2}.md
-   └─ Discussion: @if(has_discussion) {work_unit}/{topic} ({status:[in-progress|completed]}) @else (no discussion) @endif
+   └─ Discussion: @if(has_discussion) {work_unit}/{topic} ({status:[in-progress|completed]}) @else (pending from research) @endif
    └─ "{summary}"
 
 2. ...
@@ -49,8 +49,9 @@ No `---` separator before this section.
 Key:
 
   Discussion status:
-    in-progress — discussion is ongoing
-    completed   — discussion is done
+    in-progress           — discussion is ongoing
+    completed             — discussion is done
+    pending from research — identified by research, not yet discussed
 ```
 
 **Then present the options based on what exists:**

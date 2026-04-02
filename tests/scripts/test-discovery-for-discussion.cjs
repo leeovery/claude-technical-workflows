@@ -164,6 +164,39 @@ describe('workflow-discussion-entry discovery', () => {
     const r = discover(dir);
     assert.strictEqual(r.research.checksum, null);
   });
+
+  it('returns surfaced_topics for undiscussed research topics', () => {
+    createManifest(dir, 'v1', {
+      work_type: 'epic',
+      phases: {
+        research: { surfaced_topics: ['auth', 'billing', 'data-model'] },
+        discussion: { items: { auth: { status: 'completed' } } },
+      },
+    });
+    const r = discover(dir);
+    assert.deepStrictEqual(r.surfaced_topics, ['billing', 'data-model']);
+  });
+
+  it('returns empty surfaced_topics when all discussed', () => {
+    createManifest(dir, 'v1', {
+      work_type: 'epic',
+      phases: {
+        research: { surfaced_topics: ['auth'] },
+        discussion: { items: { auth: { status: 'in-progress' } } },
+      },
+    });
+    const r = discover(dir);
+    assert.deepStrictEqual(r.surfaced_topics, []);
+  });
+
+  it('returns empty surfaced_topics when no surfaced_topics in manifest', () => {
+    createManifest(dir, 'v1', {
+      work_type: 'epic',
+      phases: { research: { items: { explore: { status: 'completed' } } } },
+    });
+    const r = discover(dir);
+    assert.deepStrictEqual(r.surfaced_topics, []);
+  });
 });
 
 describe('workflow-discussion-entry format', () => {
