@@ -4,8 +4,6 @@
 
 ---
 
-This step only runs when research files exist.
-
 ## A. Check Cache
 
 Use `cache.entries` from discovery to determine the approach. Check if a cache entry exists for this work unit.
