@@ -269,6 +269,25 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs push <name>.implement
 node .claude/skills/workflow-manifest/scripts/manifest.cjs push <name>.review.{topic} reviewed_tasks "{topic}-1-1"
 ```
 
+### `pull`
+
+Remove the first occurrence of a value from an array field. No-op if the field doesn't exist, is not an array, or doesn't contain the value. Three levels:
+
+**Work-unit level** (1 segment):
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs pull <name> tags "v1"
+```
+
+**Phase level** (2 segments):
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs pull <name>.research surfaced_topics "topic-name"
+```
+
+**Topic level** (3 segments):
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs pull <name>.implementation.{topic} completed_tasks "{topic}-1-1"
+```
+
 ### `key-of`
 
 Find the key in an object whose value matches. Useful for reverse lookups — e.g., finding an internal ID from an external ID in `task_map`.

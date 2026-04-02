@@ -81,4 +81,14 @@ Create/update `.workflows/{work_unit}/.state/research-analysis.md` (pure markdow
 - **Sources**: {filename1}.md, {filename2}.md
 ```
 
+### Write Surfaced Topics
+
+Write the list of surfaced topic names to the manifest for discovery:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.research surfaced_topics '["topic-a-kebab","topic-b-kebab","topic-c-kebab"]'
+```
+
+Construct the JSON array from all topic names identified above, converted to kebab-case. This overwrites any previous list — no reconciliation needed.
+
 → Return to caller.

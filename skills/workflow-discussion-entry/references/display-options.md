@@ -23,7 +23,7 @@ Research topics:
 
 1. {theme_name}
    └─ Sources: {filename1}.md, {filename2}.md
-   └─ Discussion: @if(has_discussion) {work_unit}/{topic} ({status:[in-progress|completed]}) @else (no discussion) @endif
+   └─ Discussion: @if(has_discussion) {work_unit}/{topic} ({status:[in-progress|completed]}) @else (pending from research) @endif
    └─ "{summary}"
 
 2. ...

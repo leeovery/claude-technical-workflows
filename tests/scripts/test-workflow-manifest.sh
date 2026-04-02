@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Tests for the workflow manifest CLI (manifest.cjs)
-# Validates init, get, set, list, init-phase, push, exists commands.
+# Validates init, get, set, list, init-phase, push, pull, exists commands.
 # Uses dot-path syntax: <work-unit>[.<phase>[.<topic>]]
 #
 
@@ -1348,6 +1348,107 @@ setup_fixture
 run_cli set project.defaults.plan_format tick >/dev/null 2>&1
 output=$(run_cli_stdout get project.defaults.plan_format)
 assert_equals "$output" "tick" "Can set project default without any work units"
+
+echo ""
+
+# ============================================================================
+# PULL COMMAND TESTS
+# ============================================================================
+
+echo -e "${YELLOW}Test: pull removes value from array${NC}"
+setup_fixture
+run_cli init pull-basic --work-type feature --description "Pull basic" >/dev/null 2>&1
+run_cli init-phase pull-basic.implementation.pull-basic >/dev/null 2>&1
+run_cli push pull-basic.implementation.pull-basic completed_tasks "task-1" >/dev/null 2>&1
+run_cli push pull-basic.implementation.pull-basic completed_tasks "task-2" >/dev/null 2>&1
+run_cli pull pull-basic.implementation.pull-basic completed_tasks "task-1" >/dev/null 2>&1
+output=$(run_cli_stdout get pull-basic.implementation.pull-basic completed_tasks)
+
+assert_not_contains "$output" "task-1" "Pull removed the value"
+assert_contains "$output" "task-2" "Pull kept other values"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: pull is no-op when value not in array${NC}"
+setup_fixture
+run_cli init pull-miss --work-type feature --description "Pull miss" >/dev/null 2>&1
+run_cli init-phase pull-miss.implementation.pull-miss >/dev/null 2>&1
+run_cli push pull-miss.implementation.pull-miss completed_tasks "task-1" >/dev/null 2>&1
+run_cli pull pull-miss.implementation.pull-miss completed_tasks "task-99" >/dev/null 2>&1
+output=$(run_cli_stdout get pull-miss.implementation.pull-miss completed_tasks)
+
+assert_contains "$output" "task-1" "Pull no-op preserves existing value"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: pull is no-op when field is not an array${NC}"
+setup_fixture
+run_cli init pull-noarr --work-type feature --description "Pull noarr" >/dev/null 2>&1
+run_cli init-phase pull-noarr.implementation.pull-noarr >/dev/null 2>&1
+exit_code=$(run_cli_exit_code pull pull-noarr.implementation.pull-noarr status "in-progress")
+
+assert_equals "$exit_code" "0" "Pull on non-array exits cleanly"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: pull is no-op when field does not exist${NC}"
+setup_fixture
+run_cli init pull-nofld --work-type feature --description "Pull nofld" >/dev/null 2>&1
+run_cli init-phase pull-nofld.implementation.pull-nofld >/dev/null 2>&1
+exit_code=$(run_cli_exit_code pull pull-nofld.implementation.pull-nofld nonexistent "value")
+
+assert_equals "$exit_code" "0" "Pull on missing field exits cleanly"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: pull at phase level${NC}"
+setup_fixture
+run_cli init pull-phase --work-type epic --description "Pull phase" >/dev/null 2>&1
+run_cli set pull-phase.research surfaced_topics '["topic-a","topic-b","topic-c"]' >/dev/null 2>&1
+run_cli pull pull-phase.research surfaced_topics "topic-b" >/dev/null 2>&1
+output=$(run_cli_stdout get pull-phase.research surfaced_topics)
+
+assert_contains "$output" "topic-a" "Phase-level pull kept topic-a"
+assert_not_contains "$output" "topic-b" "Phase-level pull removed topic-b"
+assert_contains "$output" "topic-c" "Phase-level pull kept topic-c"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: pull at work-unit level${NC}"
+setup_fixture
+run_cli init pull-wu --work-type feature --description "Pull WU" >/dev/null 2>&1
+run_cli push pull-wu tags "v1" >/dev/null 2>&1
+run_cli push pull-wu tags "v2" >/dev/null 2>&1
+run_cli pull pull-wu tags "v1" >/dev/null 2>&1
+output=$(run_cli_stdout get pull-wu tags)
+
+assert_not_contains "$output" "v1" "Work-unit-level pull removed v1"
+assert_contains "$output" "v2" "Work-unit-level pull kept v2"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: pull from project manifest${NC}"
+setup_fixture
+run_cli init pull-proj --work-type feature --description "Pull proj" >/dev/null 2>&1
+run_cli push project.defaults.project_skills "skill-a" >/dev/null 2>&1
+run_cli push project.defaults.project_skills "skill-b" >/dev/null 2>&1
+run_cli pull project.defaults.project_skills "skill-a" >/dev/null 2>&1
+output=$(run_cli_stdout get project.defaults.project_skills)
+
+assert_not_contains "$output" "skill-a" "Project-level pull removed skill-a"
+assert_contains "$output" "skill-b" "Project-level pull kept skill-b"
 
 echo ""
 
