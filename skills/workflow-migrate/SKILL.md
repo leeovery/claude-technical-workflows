@@ -46,6 +46,8 @@ Migrations Applied
 All documents up to date.
 ```
 
+**Do not stop here.** No migrations were needed — continue executing the calling skill immediately.
+
 → Return to caller.
 
 ---
