@@ -48,6 +48,8 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 ── Initialisation ───────────────────────────────
 ```
 
+Load **[casing-conventions.md](../workflow-shared/references/casing-conventions.md)** and follow its instructions as written.
+
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
@@ -55,11 +57,11 @@ Follow these steps EXACTLY as written. Do not skip steps or combine them.
 > This ensures everything is up to date before we proceed.
 ```
 
-Load **[casing-conventions.md](../workflow-shared/references/casing-conventions.md)** and follow its instructions as written.
-
 **Run migrations — this is mandatory. You must complete it before proceeding.**
 
 Invoke the `/workflow-migrate` skill and follow its instructions exactly — if it issues a STOP gate, you must stop.
+
+**CRITICAL**: When the migrate skill returns (either after committing changes or reporting no changes needed), you MUST continue to Step 1 below. Do not stop after migration completes.
 
 → Proceed to **Step 1**.
 
