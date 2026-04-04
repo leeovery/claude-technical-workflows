@@ -93,6 +93,9 @@ topic: {Topic Name}
 **Details**:
 {Explanation of what was found and why it matters}
 
+**Current**:
+{For Enhancement findings only — copy the existing specification content in the affected section that will be modified. This enables diff presentation to the user. Omit for New topic and Gap/Ambiguity findings.}
+
 **Proposed Addition**:
 {What you would add to the specification — leave blank until discussed}
 

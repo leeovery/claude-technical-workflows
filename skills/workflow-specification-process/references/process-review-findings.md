@@ -57,7 +57,7 @@ Work through each finding **sequentially**. For each finding: present it, show t
 
 ### Present Finding
 
-Show the finding with its proposed content, read directly from the tracking file.
+Show the finding metadata, read directly from the tracking file:
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -72,7 +72,40 @@ Show the finding with its proposed content, read directly from the tracking file
 - **Affects**: {from tracking file}
 
 **Details**: {from tracking file}
+```
 
+Then present the content based on **Category**:
+
+**If Category is `Enhancement to existing topic` and Current field is present:**
+
+Present the changes as a diff. Read Current and Proposed Addition from the tracking file. Show only the changed lines with 2 lines of context above and below:
+
+> *Output the next fenced block as a code block:*
+
+```
+╭─ Finding {N}: {brief_title:(titlecase)} ──────────╮
+```
+
+> *Output the next fenced block as a code block:*
+
+```diff
+ {2 context lines above}
+-{lines from Current}
++{lines from Proposed Addition}
+ {2 context lines below}
+```
+
+> *Output the next fenced block as a code block:*
+
+```
+╰───────────────────────────────────────────────────╯
+```
+
+**Otherwise:**
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
 **Proposed Addition**:
 {from tracking file — the content to add to the specification}
 ```
@@ -106,6 +139,9 @@ Finding {N} of {total}: {brief_title:(titlecase)} — approved. Added to specifi
 **Finding {N} of {total}: {brief_title:(titlecase)}**
 
 - **`y`/`yes`** — Add to the specification verbatim
+@if(Category is Enhancement to existing topic and Current field is present)
+- **`v`/`view full`** — Show full Current and Proposed Addition content
+@endif
 - **`a`/`auto`** — Approve this and all remaining findings automatically
 - **`s`/`skip`** — Leave as-is, move to next finding
 - **Provide feedback** — Adjust before approving
@@ -114,9 +150,15 @@ Finding {N} of {total}: {brief_title:(titlecase)} — approved. Added to specifi
 
 **STOP.** Wait for user response.
 
+#### If `view full`
+
+Re-present the finding's **Current** and **Proposed Addition** content in full from the tracking file. Then re-present the approval menu.
+
+→ Return to **B. Process One Item at a Time**.
+
 #### If the user provides feedback
 
-Incorporate feedback and re-present the proposed content **in full**. Update the tracking file with the revised content.
+Incorporate feedback and update the tracking file with the revised content. Re-present the finding using the same presentation format (diff or full) as the original.
 
 → Return to **B. Process One Item at a Time**.
 
