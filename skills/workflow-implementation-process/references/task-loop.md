@@ -132,7 +132,7 @@ NOTES:
 
 #### If `fix_attempts` >= 3
 
-→ Load **[convergence-analysis.md](../../workflow-shared/references/convergence-analysis.md)** with `loop_type: fix`, `work_unit`, `topic`, `internal_id`.
+→ Load **[convergence-analysis.md](../../workflow-shared/references/convergence-analysis.md)** with loop_type = `fix`, work_unit = `{work_unit}`, topic = `{topic}`, internal_id = `{internal_id}`.
 
 > *Output the next fenced block as a code block:*
 

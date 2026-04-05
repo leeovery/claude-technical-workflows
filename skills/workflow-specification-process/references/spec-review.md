@@ -58,7 +58,7 @@ Auto mode is active — pass through to review. Section E's safety cap (cycle 5)
 
 **Do NOT skip review autonomously.** This gate is an escape hatch for the user — not a signal to stop. The expected default is to continue running review until no issues are found. Present the choice and let the user decide.
 
-→ Load **[convergence-analysis.md](../../workflow-shared/references/convergence-analysis.md)** with `loop_type: spec-review`, `work_unit`, `topic`.
+→ Load **[convergence-analysis.md](../../workflow-shared/references/convergence-analysis.md)** with loop_type = `spec-review`, work_unit = `{work_unit}`, topic = `{topic}`.
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -163,7 +163,7 @@ Review cycle {N} complete — findings applied. Running follow-up cycle.
 
 #### If `finding_gate_mode` is `auto` and `review_cycle` >= 5
 
-→ Load **[convergence-analysis.md](../../workflow-shared/references/convergence-analysis.md)** with `loop_type: spec-review`, `work_unit`, `topic`.
+→ Load **[convergence-analysis.md](../../workflow-shared/references/convergence-analysis.md)** with loop_type = `spec-review`, work_unit = `{work_unit}`, topic = `{topic}`.
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -188,7 +188,7 @@ Run another review cycle?
 
 #### If `finding_gate_mode` is `gated`
 
-→ Load **[convergence-analysis.md](../../workflow-shared/references/convergence-analysis.md)** with `loop_type: spec-review`, `work_unit`, `topic`.
+→ Load **[convergence-analysis.md](../../workflow-shared/references/convergence-analysis.md)** with loop_type = `spec-review`, work_unit = `{work_unit}`, topic = `{topic}`.
 
 > *Output the next fenced block as markdown (not a code block):*
 
