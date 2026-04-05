@@ -27,9 +27,58 @@ When working with multiple sources, search each one — information about a sing
 
 When extraction reveals information that affects **already-logged topics**, resurface them immediately. Even mid-discussion — interrupt, flag what you found, and discuss whether it changes anything.
 
-If it does: summarize what's changing in the chat, then re-present the full updated topic. The summary is for discussion only — the specification just gets the clean replacement. **Standard workflow applies: user approves before you update.**
+If it does: summarize what's changing in the chat, then present the changes as a diff view. The summary is for discussion only — the specification just gets the clean replacement.
 
-> **CHECKPOINT**: Even when resurfacing content, you MUST NOT update the specification until the user explicitly approves the change. Present the updated version, wait for approval, then update.
+Read the current approved content from the specification file. Prepare the updated version. Present only the changed lines with 2 lines of context above and below, wrapped in a visual border:
+
+> *Output the next fenced block as a code block:*
+
+```
+╭─ Resurfacing: {section name} ─────────────────────╮
+```
+
+> *Output the next fenced block as a code block:*
+
+```diff
+ {2 context lines above}
+-{removed/changed lines}
++{new/replacement lines}
+ {2 context lines below}
+```
+
+> *Output the next fenced block as a code block:*
+
+```
+╰───────────────────────────────────────────────────╯
+```
+
+Then, **separately from the diff above** (clear visual break):
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+Record this to the specification verbatim?
+
+- **`y`/`yes`** — Apply changes to specification
+- **`v`/`view full`** — Show the full updated section, then decide
+- **Tell me what to change** — Revise before recording
+· · · · · · · · · · · ·
+```
+
+> **CHECKPOINT**: Even when resurfacing content, you MUST NOT update the specification until the user explicitly approves the change. STOP and wait for response.
+
+#### If `yes`
+
+Update the specification with the approved changes. Commit. Continue extraction.
+
+#### If `view full`
+
+Re-present the full updated section in the format it would appear in the specification. Then re-present the approval menu without `v`/`view full`.
+
+#### If the user provides feedback
+
+Work through the changes per **C. Discuss and Refine**, then re-present the diff with the revised content.
 
 Better to resurface and confirm "already covered" than let something slip past.
 

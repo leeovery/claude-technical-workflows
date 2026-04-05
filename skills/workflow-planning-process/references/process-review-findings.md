@@ -55,7 +55,7 @@ Work through each finding **sequentially**. For each finding: present it, show t
 
 ### Present Finding
 
-Show the finding with its full fix content, read directly from the tracking file.
+Show the finding metadata, read directly from the tracking file:
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -75,12 +75,49 @@ Show the finding with its full fix content, read directly from the tracking file
 @endif
 
 **Details**: {from tracking file}
+```
 
-**Current**:
-{from tracking file — the existing plan content}
+Then present the content based on **Change Type**:
 
+**If Change Type is `update-task`, `add-to-task`, or `remove-from-task`:**
+
+Present the changes as a diff. Read Current and Proposed from the tracking file. Show only the changed lines with 2 lines of context above and below:
+
+> *Output the next fenced block as a code block:*
+
+```
+╭─ Finding {N}: {Brief Title} ──────────────────────╮
+```
+
+> *Output the next fenced block as a code block:*
+
+```diff
+ {2 context lines above}
+-{lines from Current}
++{lines from Proposed}
+ {2 context lines below}
+```
+
+> *Output the next fenced block as a code block:*
+
+```
+╰───────────────────────────────────────────────────╯
+```
+
+**If Change Type is `add-task`, `add-phase`, `remove-task`, or `remove-phase`:**
+
+Present full content from the tracking file. Include **Proposed** for additions, **Current** for removals — as written by the review agent:
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+@if(Change Type is add-task or add-phase)
 **Proposed**:
-{from tracking file — the replacement content}
+{from tracking file — the new content}
+@else
+**Current**:
+{from tracking file — the content being removed}
+@endif
 ```
 
 ### Check Gate Mode
@@ -113,6 +150,9 @@ Finding {N} of {total}: {Brief Title} — approved. Applied to plan.
 **Finding {N} of {total}: {Brief Title}**
 
 - **`y`/`yes`** — Apply to the plan verbatim
+@if(Change Type is update-task, add-to-task, or remove-from-task)
+- **`v`/`view full`** — Show full Current and Proposed content
+@endif
 - **`a`/`auto`** — Approve this and all remaining findings automatically
 - **`s`/`skip`** — Leave as-is, move to next finding
 - **Provide feedback** — Adjust before approving
@@ -121,9 +161,15 @@ Finding {N} of {total}: {Brief Title} — approved. Applied to plan.
 
 **STOP.** Wait for user response.
 
+#### If `view full`
+
+Re-present the finding's **Current** and **Proposed** content in full from the tracking file. Then re-present the approval menu.
+
+→ Return to **B. Process One Item at a Time**.
+
 #### If the user provides feedback
 
-Incorporate feedback and re-present the proposed fix **in full**. Update the tracking file with the revised content.
+Incorporate feedback and update the tracking file with the revised content. Re-present the finding using the same presentation format (diff or full) as the original.
 
 → Return to **B. Process One Item at a Time**.
 
