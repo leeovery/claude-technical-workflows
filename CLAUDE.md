@@ -664,7 +664,7 @@ Task {M} of {total}: {Task Name} — authored. Logging to plan.
 - **`a`/`auto`** — Approve this and all remaining {items} automatically
 ```
 
-**Re-loop safety cap**: When auto-mode enables automatic re-analysis loops, cap at 5 cycles before escalating to the user. This prevents infinite cascading.
+**Re-loop safety cap**: When auto-mode enables automatic re-analysis loops, cap at 5 cycles before escalating to the user. This prevents infinite cascading. At escalation, a convergence analysis diagnostic (shared reference at `skills/workflow-shared/references/convergence-analysis.md`) reads prior cycle tracking files and presents what's resolving, what's recurring, and a trend assessment — replacing blind "continue or skip?" prompts with informed decisions.
 
 ### Rendering Instructions for Ask Blocks
 
