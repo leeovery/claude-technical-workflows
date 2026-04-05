@@ -164,7 +164,7 @@ Count review files in `.workflows/.cache/{work_unit}/discussion/{topic}/`.
   Dispatching now.
 ```
 
-Dispatch a review agent immediately (§ A of review-agent.md). Wait for results. Surface findings (§ C of review-agent.md).
+Dispatch a review agent as a foreground task (not background — results are needed before concluding). Follow **A. Dispatch** in review-agent.md but omit `run_in_background`. When results return, surface findings per **C. Surface Findings** in review-agent.md.
 
 → Return to **B. Session Loop**.
 
@@ -207,7 +207,9 @@ Continue the discussion. The user may want to revisit a decision, explore an edg
 
 When the user indicates they want to conclude the discussion (e.g., "that covers it", "let's wrap up", "I think we're done") before natural convergence:
 
-**First, check the review safety net:** Count review files in `.workflows/.cache/{work_unit}/discussion/{topic}/`. If zero review files exist, inform the user and dispatch before proceeding:
+**First, check the review safety net:** Count review files in `.workflows/.cache/{work_unit}/discussion/{topic}/`.
+
+**If zero review files exist:**
 
 > *Output the next fenced block as a code block:*
 
@@ -217,7 +219,11 @@ When the user indicates they want to conclude the discussion (e.g., "that covers
   Dispatching now.
 ```
 
-Dispatch a review agent immediately (§ A of review-agent.md). Wait for results. Surface findings (§ C of review-agent.md). Then continue with the conclusion flow below.
+Dispatch a review agent as a foreground task (not background — results are needed before concluding). Follow **A. Dispatch** in review-agent.md but omit `run_in_background`. When results return, surface findings per **C. Surface Findings** in review-agent.md. Then continue with the conclusion flow below.
+
+**If review files exist:**
+
+Continue with the conclusion flow below.
 
 #### If there are subtopics still `pending` or `exploring`
 

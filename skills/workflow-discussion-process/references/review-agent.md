@@ -13,11 +13,17 @@ These instructions are loaded into context at the start of the discussion sessio
 - □ Not the first commit? (the discussion needs enough content to review)
 - □ At least 2-3 conversational exchanges since the last review dispatch?
 
-All checked → dispatch now. → Proceed to **A. Dispatch**.
+**If all checked:**
 
-Any unchecked → no dispatch needed. Proceed with the session loop.
+→ Proceed to **A. Dispatch**.
 
-At natural conversational breaks, check for completed results → Proceed to **B. Check for Results**.
+**If any unchecked:**
+
+No dispatch needed. Continue with the session loop.
+
+At natural conversational breaks, check for completed results.
+
+→ Proceed to **B. Check for Results**.
 
 ---
 
