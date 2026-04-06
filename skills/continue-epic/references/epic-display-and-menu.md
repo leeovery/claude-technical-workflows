@@ -148,30 +148,28 @@ Show only statuses and categories that appear in the current display. No `---` s
 
 ## C. Menu
 
-Build a numbered menu with three sections:
+Build a menu with two types of options:
 
-**Section 1 — In-progress items** (always first):
-- Any item with status `in-progress` in any phase
-- Planning in-progress: `Continue "{topic:(titlecase)}" — planning [in-progress]`
-- Implementation in-progress with progress: `Continue "{topic:(titlecase)}" — implementation (Phase {N}, Task {M})`
-- Implementation in-progress without progress: `Continue "{topic:(titlecase)}" — implementation [in-progress]`
-- Other phases: `Continue "{topic:(titlecase)}" — {phase} [in-progress]`
+**Numbered items** — topic-targeting actions where you're selecting a specific topic. Use sequential numbers. These include:
+- Continue items: any item with status `in-progress` in any phase
+  - Planning in-progress: `Continue "{topic:(titlecase)}" — planning [in-progress]`
+  - Implementation in-progress with progress: `Continue "{topic:(titlecase)}" — implementation (Phase {N}, Task {M})`
+  - Implementation in-progress without progress: `Continue "{topic:(titlecase)}" — implementation [in-progress]`
+  - Other phases: `Continue "{topic:(titlecase)}" — {phase} [in-progress]`
+- Next-phase-ready items from `next_phase_ready` in discovery output:
+  - Completed spec with no plan: `Start planning for "{topic:(titlecase)}" — spec completed`
+  - Completed plan with no implementation:
+    - If `blocked`: show but mark as not selectable: `Start implementation of "{topic:(titlecase)}" — blocked by {dep_topic}:{internal_id}`
+    - Otherwise: `Start implementation of "{topic:(titlecase)}" — plan completed`
+  - Completed implementation with no review: `Start review for "{topic:(titlecase)}" — implementation completed`
 
-**Section 2 — Next-phase-ready items:**
-- From `next_phase_ready` in discovery output
-- Completed spec with no plan: `Start planning for "{topic:(titlecase)}" — spec completed`
-- Completed plan with no implementation:
-  - If `blocked`: show but mark as not selectable: `Start implementation of "{topic:(titlecase)}" — blocked by {dep_topic}:{internal_id}`
-  - Otherwise: `Start implementation of "{topic:(titlecase)}" — plan completed`
-- Completed implementation with no review: `Start review for "{topic:(titlecase)}" — implementation completed`
-- Unaccounted discussions (from `unaccounted_discussions`): `Start specification — {N} discussion(s) not yet in a spec`
-  - Only show if `gating.can_start_specification` is true (at least one completed discussion)
-
-**Section 3 — Standing options:**
-- `Start new discussion topic — {N} pending from research` (if `gating.has_pending_discussions` is true; show count from `pending_from_research.length`). Without pending topics: @if(gating.has_research) `Start new discussion topic (from research)` @else `Start new discussion topic` @endif
-- `Manage pending topics` (only shown when `gating.has_pending_discussions` is true)
-- `Start new research` (always present)
-- `Resume a completed topic` (only shown when `completed` items exist)
+**Command options** — entry-point actions that launch a flow handling its own selection. Use letter shortcuts (first letter of command; second letter if disambiguation needed):
+- **`s`/`spec`** — Start specification — {N} discussion(s) not yet in a spec (only shown if `gating.can_start_specification` is true and `unaccounted_discussions` has items)
+- **`d`/`discuss`** — Start new discussion (always present). When `gating.has_pending_discussions` is true, append ` — {N} pending from research` (count from `pending_from_research.length`)
+- **`p`/`pending`** — Manage pending topics (only shown when `gating.has_pending_discussions` is true)
+- **`r`/`research`** — Start new research (always present)
+- **`c`/`completed`** — Resume a completed topic (only shown when `completed` items exist)
+- **`m`/`map`** — View epic dependency map (always present when at least one phase has items)
 
 **Phase-forward gating:**
 - No "Start planning" unless `gating.can_start_planning` is true
@@ -179,13 +177,15 @@ Build a numbered menu with three sections:
 - No "Start review" unless `gating.can_start_review` is true
 - No "Start specification" unless `gating.can_start_specification` is true
 
-**Recommendation marking:** Mark one item as `(recommended)` based on phase completion state:
-- All discussions completed, no specifications exist, `gating.has_pending_discussions` is false → "Start specification (recommended)"
-- All discussions completed, no specifications exist, `gating.has_pending_discussions` is true → "Start new discussion topic (recommended)"
+**Ordering:** The recommended item always appears first. Mark one item as `(recommended)` based on phase completion state:
+- All discussions completed, no specifications exist, `gating.has_pending_discussions` is false → `s`/`spec` (recommended)
+- All discussions completed, no specifications exist, `gating.has_pending_discussions` is true → `d`/`discuss` (recommended)
 - All plannable specifications completed, some without plans → first plannable spec "(recommended)"
 - All plans completed (and deps satisfied), some without implementations → first implementable plan "(recommended)"
 - All implementations completed, some without reviews → first reviewable implementation "(recommended)"
 - Otherwise → no recommendation (complete in-progress work first)
+
+After the recommended item, list remaining numbered items, then command options.
 
 **Promoted items:** Items with `[promoted]` status are shown in the state display but are **not listed in the menu** — they've been moved to their own cross-cutting work unit and are no longer actionable in this epic.
 
@@ -197,22 +197,22 @@ Build a numbered menu with three sections:
 · · · · · · · · · · · ·
 What would you like to do?
 
-- **`1`** — Continue "Auth Flow" — discussion [in-progress]
-- **`2`** — Continue "Data Model" — specification [in-progress]
-- **`3`** — Start planning for "User Profiles" — spec completed
-- **`4`** — Continue "Caching" — planning [in-progress]
-- **`5`** — Start implementation of "Notifications" — plan completed (recommended)
-- **`6`** — Start implementation of "Reporting" — blocked by core-features:core-2-3
-- **`7`** — Start specification — 3 discussion(s) not yet in a spec
-- **`8`** — Start new discussion topic (from research)
-- **`9`** — Start new research
-- **`10`** — Resume a completed topic
+- **`1`** — Start implementation of "Notifications" — plan completed (recommended)
+- **`2`** — Continue "Auth Flow" — discussion [in-progress]
+- **`3`** — Continue "Caching" — planning [in-progress]
+- **`4`** — Start planning for "User Profiles" — spec completed
+- **`5`** — Start implementation of "Reporting" — blocked by core-features:core-2-3
+- **`s`/`spec`** — Start specification — 3 discussion(s) not yet in a spec
+- **`d`/`discuss`** — Start new discussion
+- **`r`/`research`** — Start new research
+- **`c`/`completed`** — Resume a completed topic
+- **`m`/`map`** — View epic dependency map
 
 Select an option:
 · · · · · · · · · · · ·
 ```
 
-Recreate with actual items from discovery. Blank line between sections.
+Recreate with actual items from discovery.
 
 **STOP.** Wait for user response.
 
@@ -263,11 +263,17 @@ Commit the change.
 
 → Return to **C. Menu**.
 
-#### If user chose `Manage pending topics`
+#### If user chose `m`/`map`
+
+Load **[display-epic-map.md](display-epic-map.md)** and follow its instructions as written.
+
+→ Return to **C. Menu**.
+
+#### If user chose `p`/`pending`
 
 → Proceed to **G. Manage Pending**.
 
-#### If user chose `Resume a completed topic`
+#### If user chose `c`/`completed`
 
 → Proceed to **F. Resume Completed**.
 
@@ -332,7 +338,7 @@ Store the selected action, phase, and topic (if applicable). Map to a routing en
 | Start implementation of {topic} | implementation | {topic} |
 | Start review for {topic} | review | {topic} |
 | Start specification | specification | — |
-| Start new discussion topic / Start new discussion topic (from research) | discussion | — |
+| Start new discussion | discussion | — |
 | Discuss pending topic {topic} | discussion | {topic} |
 | Start new research | research | — |
 
