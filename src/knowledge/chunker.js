@@ -40,8 +40,13 @@ function chunk(markdown, config) {
     skip_empty_sections: skipEmptySections = true,
   } = config;
 
+  // 0. Normalise line endings so CRLF fixtures chunk identically to LF.
+  const normalised = markdown.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
   // 1. Strip YAML frontmatter if configured.
-  const body = stripFrontmatter ? stripOpeningFrontmatter(markdown) : markdown;
+  const body = stripFrontmatter
+    ? stripOpeningFrontmatter(normalised)
+    : normalised;
 
   // Empty body after frontmatter stripping — no chunks.
   if (body.trim() === '') {
