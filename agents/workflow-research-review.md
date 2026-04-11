@@ -40,7 +40,7 @@ You receive via the orchestrator's prompt:
 
 ## Output File Format
 
-Write to the output file path provided. The orchestrator passes skeleton frontmatter (`type`, `status`, `created`, `set`, `surfaced: []`). You must add a `findings:` list containing one entry per unexplored area, shallow-coverage item, or unvalidated assumption with its stable ID, kind, and a short label. The body mirrors the same IDs as section headings so the orchestrator can look up full content for any ID.
+Write to the output file path provided. The orchestrator passes skeleton frontmatter (`type`, `status`, `created`, `set`, `surfaced: []`, `announced: false`). You must add a `findings:` list containing one entry per unexplored area, shallow-coverage item, or unvalidated assumption with its stable ID, kind, and a short label. The body mirrors the same IDs as section headings so the orchestrator can look up full content for any ID.
 
 ```markdown
 ---

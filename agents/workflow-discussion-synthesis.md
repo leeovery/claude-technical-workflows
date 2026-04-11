@@ -41,7 +41,7 @@ You receive via the orchestrator's prompt:
 
 ## Output File Format
 
-Write to the output file path provided. The orchestrator passes skeleton frontmatter (`type`, `status`, `created`, `set`, `decision`, `surfaced: []`). You must add a `tensions:` list containing one entry per key tension with its stable ID and a short label. The body mirrors the same IDs as section headings under "Key Tensions" so the orchestrator can look up full content for any ID.
+Write to the output file path provided. The orchestrator passes skeleton frontmatter (`type`, `status`, `created`, `set`, `decision`, `surfaced: []`, `announced: false`). You must add a `tensions:` list containing one entry per key tension with its stable ID and a short label. The body mirrors the same IDs as section headings under "Key Tensions" so the orchestrator can look up full content for any ID.
 
 ```markdown
 ---

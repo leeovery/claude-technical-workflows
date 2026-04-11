@@ -49,7 +49,7 @@ Choose based on the brief:
 
 ## Output File Format
 
-Write to the output file path provided. The orchestrator passes skeleton frontmatter (`type`, `status`, `created`, `set`, `thread`, `surfaced: []`). You must add a `findings:` list containing one entry per discrete key finding with its stable ID and a short label. The body's "Key Findings" section uses the same IDs as sub-section headings so the orchestrator can look up full content for any ID.
+Write to the output file path provided. The orchestrator passes skeleton frontmatter (`type`, `status`, `created`, `set`, `thread`, `surfaced: []`, `announced: false`). You must add a `findings:` list containing one entry per discrete key finding with its stable ID and a short label. The body's "Key Findings" section uses the same IDs as sub-section headings so the orchestrator can look up full content for any ID.
 
 ```markdown
 ---
