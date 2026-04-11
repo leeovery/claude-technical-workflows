@@ -191,12 +191,6 @@ After this, control belongs to the conversation. The user will engage (or deflec
 
 ---
 
-## When the User Wants Out
-
-If during presentation the user explicitly says they're done with the review ("skip the rest", "we're good", "that's enough findings"), treat all remaining unsurfaced IDs as implicitly parked — append them to `surfaced:` in bulk, and the next check will transition the file to `incorporated`. If any skipped items are worth noting, add them to the phase's Open Threads / Open Questions section.
-
----
-
 ## Never-Dump Checklist
 
 Before producing any surfacing output, verify:
