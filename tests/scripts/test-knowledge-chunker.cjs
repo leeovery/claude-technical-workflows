@@ -731,4 +731,233 @@ describe('knowledge chunker — real fixtures', () => {
       assert.notStrictEqual(c.content.trim(), '');
     }
   });
+
+  // -------------------------------------------------------------------------
+  // Additional real fixtures — structural diversity beyond the initial set.
+  // -------------------------------------------------------------------------
+
+  it('chunks a deeply-nested spec (tick-core) where a single H2 contains all H3s', () => {
+    // tick v1 tick-core/specification.md has only 2 H2s: "## Specification"
+    // (754 lines, gets fallback-split at H3) and "## Dependencies" (27
+    // lines, stays whole). Verifies that real artifacts with one huge
+    // parent H2 do not break the flat fallback chain.
+    const src = loadFixture('spec-deep-nested-fixture.md');
+    const cfg = loadConfig('specification');
+    const chunks = chunk(src, cfg);
+
+    assert.ok(chunks.length >= 11, 'expected >= 11 chunks, got ' + chunks.length);
+
+    // The final chunk must be the standalone "## Dependencies" H2.
+    const last = chunks[chunks.length - 1];
+    assert.match(last.content.split('\n')[0], /^## Dependencies/);
+
+    // The other chunks must be H3 sub-sections (fallback fired on the
+    // huge "## Specification" parent).
+    const h3Count = chunks.filter((c) =>
+      /^### /.test(c.content.split('\n')[0])
+    ).length;
+    assert.ok(h3Count >= 10, 'expected >= 10 H3 chunks, got ' + h3Count);
+
+    assertVerbatim(chunks, src);
+  });
+
+  it('chunks an oversized-H3 research fixture and keeps oversized H3s intact', () => {
+    // tick v1 research exploration.md has an H3 "Session 1" under "Open
+    // Questions to Explore" that is ~310 lines — well over max_lines=200.
+    // The flat fallback chain says: no recursion. This chunk stays as-is
+    // and `knowledge status` (Phase 4) will report it as oversized.
+    const src = loadFixture('research-oversized-h3-fixture.md');
+    const cfg = loadConfig('research');
+    const chunks = chunk(src, cfg);
+
+    const oversized = chunks.filter((c) => c.content.split('\n').length > cfg.max_lines);
+    assert.ok(
+      oversized.length >= 1,
+      'expected at least one oversized H3 chunk, got ' + oversized.length
+    );
+    // The oversized chunk should be an H3, not an H2 (fallback already
+    // fired once at H3, and flat chain forbids further recursion).
+    for (const c of oversized) {
+      assert.match(c.content.split('\n')[0], /^### /);
+    }
+    assertVerbatim(chunks, src);
+  });
+
+  it('chunks a Q-style discussion (Q1..Q6) where each question is an H2', () => {
+    // tick v1 cli-command-structure-ux.md uses a "## Context" / "## Questions"
+    // / "## Q1..Q6" / "## Summary" structure. No Discussion Map. Proves
+    // the chunker copes with discussion variants that don't match the
+    // design doc's canonical discussion shape.
+    const src = loadFixture('discussion-q-style-fixture.md');
+    const cfg = loadConfig('discussion');
+    const chunks = chunk(src, cfg);
+
+    assert.ok(chunks.length >= 8);
+    const headings = chunks.map((c) => c.content.split('\n')[0]);
+    assert.ok(headings.some((h) => /^## Context/.test(h)));
+    assert.ok(headings.some((h) => /^## Summary/.test(h)));
+    // At least 6 question chunks.
+    const qCount = headings.filter((h) => /^## Q\d/.test(h)).length;
+    assert.ok(qCount >= 6, 'expected >= 6 Q chunks, got ' + qCount);
+    assertVerbatim(chunks, src);
+  });
+
+  it('chunks a folio spec with a mix of fallback-split H3s and regular H2s', () => {
+    // folio template-authoring-system/specification.md has a wrapping H2
+    // whose children are H3 sections. Chunker output is 16 chunks of
+    // various sizes — structurally different from both portal and tick
+    // specs.
+    const src = loadFixture('spec-folio-fixture.md');
+    const cfg = loadConfig('specification');
+    const chunks = chunk(src, cfg);
+
+    assert.ok(chunks.length >= 10);
+    assertNoChunkExceedsMaxLines(chunks, cfg.max_lines);
+    assertVerbatim(chunks, src);
+  });
+
+  // -------------------------------------------------------------------------
+  // Sub-level special_sections — "own-chunk: regardless of heading level"
+  // -------------------------------------------------------------------------
+
+  it('extracts a sub-level own-chunk section from inside a regular parent', () => {
+    // The fixture puts "### Discussion Map" inside "## Plan" (a regular
+    // H2 with its own intro content). The discussion config declares
+    // Discussion Map as own-chunk. With sub-level matching, the H3
+    // Discussion Map must be extracted from its parent even though the
+    // split level is 2.
+    const src = loadFixture('sub-level-special-fixture.md');
+    const cfg = loadConfig('discussion');
+    const chunks = chunk(src, cfg);
+
+    const mapChunk = chunks.find((c) =>
+      /^### Discussion Map/.test(c.content.split('\n')[0])
+    );
+    assert.ok(mapChunk, 'sub-level Discussion Map must be extracted as own-chunk');
+    assert.match(mapChunk.content, /Option A/);
+    assert.match(mapChunk.content, /Option C/);
+
+    // The parent "## Plan" section should still emit as its own chunk,
+    // containing its intro content but NOT the Discussion Map body.
+    const planChunk = chunks.find((c) =>
+      /^## Plan/.test(c.content.split('\n')[0])
+    );
+    assert.ok(planChunk, 'parent Plan section still emitted after extraction');
+    assert.match(planChunk.content, /Plan intro paragraph one/);
+    assert.doesNotMatch(planChunk.content, /Option A/);
+
+    // "## Context" and "## Summary" must still be their own chunks — the
+    // surrounding H2 boundaries are unaffected by sub-level extraction.
+    const context = chunks.find((c) => /^## Context/.test(c.content.split('\n')[0]));
+    const summary = chunks.find((c) => /^## Summary/.test(c.content.split('\n')[0]));
+    assert.ok(context);
+    assert.ok(summary);
+
+    assertVerbatim(chunks, src);
+  });
+
+  it('preserves the parent-wins rule when a split-level heading matches special_sections', () => {
+    // When the parent H2 itself matches special_sections (e.g. the
+    // discussion fixture has "## Discussion Map" at H2), the parent's
+    // action wins and no sub-carving happens. The real discussion fixture
+    // already covers this — re-assert here to make the rule explicit.
+    const src = loadFixture('discussion-fixture.md');
+    const cfg = loadConfig('discussion');
+    const chunks = chunk(src, cfg);
+
+    // Only one Discussion Map chunk (the H2), not a carved-out H3 version.
+    const mapChunks = chunks.filter((c) =>
+      /^##+ Discussion Map/.test(c.content.split('\n')[0])
+    );
+    assert.strictEqual(mapChunks.length, 1);
+    assert.match(mapChunks[0].content, /^## Discussion Map/);
+  });
+
+  // -------------------------------------------------------------------------
+  // Merge-up verbatim invariant — Issue #1 fix validation
+  // -------------------------------------------------------------------------
+
+  it('merge-up chunks are verbatim source slices, even with non-empty separators', () => {
+    // Craft a source where the gap between the parent section and the
+    // merge-up section is NOT a plain "\n\n" — a blank line with trailing
+    // spaces, then two newlines. Under the old implementation (join with
+    // '\n\n'), the merged chunk content would not match the source
+    // verbatim. Under the new implementation (source slice), it does.
+    const md = [
+      '## Parent',          // 0
+      '',                   // 1
+      'parent body line 1', // 2
+      'parent body line 2', // 3
+      '   ',                // 4  (trailing-whitespace blank line)
+      '',                   // 5
+      '## Footnote',        // 6
+      'footnote body',      // 7
+      '',                   // 8
+      '## Other',           // 9
+      'other body',         // 10
+    ].join('\n');
+
+    const cfg = {
+      phase: 'test',
+      strategy: 'split-on-heading',
+      primary_level: 2,
+      fallback_level: 3,
+      max_lines: 200,
+      keep_whole_below: 0,
+      special_sections: { Footnote: 'merge-up' },
+      strip_frontmatter: false,
+      skip_empty_sections: true,
+    };
+    const chunks = chunk(md, cfg);
+
+    assert.strictEqual(chunks.length, 2);
+
+    // First chunk contains both Parent content and the merged Footnote —
+    // and critically, every character must appear verbatim in the source.
+    const merged = chunks[0];
+    assert.match(merged.content, /## Parent/);
+    assert.match(merged.content, /parent body line 1/);
+    assert.match(merged.content, /## Footnote/);
+    assert.match(merged.content, /footnote body/);
+
+    // Verbatim invariant — merged chunk must be a substring of the source.
+    assert.strictEqual(
+      md.includes(merged.content),
+      true,
+      'merged chunk must be a verbatim substring of the source, got:\n' +
+        merged.content
+    );
+
+    // Second chunk is the regular Other section.
+    assert.match(chunks[1].content, /^## Other/);
+  });
+
+  it('merge-up from the first section promotes to its own chunk and stays verbatim', () => {
+    const md = [
+      '## Footnote',
+      'footnote body',
+      '',
+      '## Parent',
+      'parent body',
+    ].join('\n');
+    const cfg = {
+      strategy: 'split-on-heading',
+      primary_level: 2,
+      fallback_level: 3,
+      max_lines: 200,
+      keep_whole_below: 0,
+      special_sections: { Footnote: 'merge-up' },
+      strip_frontmatter: false,
+      skip_empty_sections: true,
+    };
+    const chunks = chunk(md, cfg);
+    assert.strictEqual(chunks.length, 2);
+    for (const c of chunks) {
+      assert.strictEqual(
+        md.includes(c.content),
+        true,
+        'chunk must be a verbatim substring of the source'
+      );
+    }
+  });
 });

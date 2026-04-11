@@ -11,6 +11,13 @@
 // change. See the `chunk()` function for the execution order; the order
 // matters and resolves ambiguity between `keep_whole_below` (whole-file
 // gate) and `special_sections` (split-time behaviour).
+//
+// Content preservation invariant (design doc line 74 — "no lossy
+// compression anywhere in the pipeline"): every emitted chunk's content
+// must be a verbatim substring of the post-frontmatter source. The
+// implementation tracks source line ranges on sections and slices from
+// the source when merging, rather than concatenating with a synthetic
+// separator — which would violate the invariant.
 
 const FENCE_RE = /^\s*(```+|~~~+)/;
 const FRONTMATTER_DELIM = /^---\s*$/;
@@ -48,17 +55,14 @@ function chunk(markdown, config) {
     ? stripOpeningFrontmatter(normalised)
     : normalised;
 
-  // Empty body after frontmatter stripping — no chunks.
-  if (body.trim() === '') {
-    return [];
-  }
+  if (body.trim() === '') return [];
 
   const lines = body.split('\n');
 
-  // 2. Whole-file gate: below keep_whole_below lines returns whole file as a
-  //    single chunk. Do NOT proceed to heading parsing or special_sections.
+  // 2. Whole-file gate: below keep_whole_below lines returns whole file as
+  //    a single chunk. Do NOT proceed to heading parsing or special_sections.
   if (lines.length < keepWholeBelow) {
-    return [{ content: body.replace(/\s+$/, '') }];
+    return [{ content: rtrim(body) }];
   }
 
   // 3. Parse into headings, tracking fenced code blocks so headings inside
@@ -66,7 +70,7 @@ function chunk(markdown, config) {
   const headings = parseHeadings(lines);
 
   if (headings.length === 0) {
-    return [{ content: body.replace(/\s+$/, '') }];
+    return [{ content: rtrim(body) }];
   }
 
   // Fallback chain for missing headings: primary -> fallback -> whole file.
@@ -79,57 +83,93 @@ function chunk(markdown, config) {
   } else if (hasFallback) {
     splitLevel = fallbackLevel;
   } else {
-    return [{ content: body.replace(/\s+$/, '') }];
+    return [{ content: rtrim(body) }];
   }
 
-  // 4. Build sections at splitLevel. Content before the first splitLevel
-  //    heading (typically an H1 title + intro) becomes the first chunk,
-  //    with the H1 line serving as its heading.
+  // 4. Build sections at splitLevel with source line ranges. Content before
+  //    the first splitLevel heading (typically an H1 title + intro) becomes
+  //    the first section, with the H1 line used as its heading text.
   const sections = buildSections(lines, headings, splitLevel);
 
-  // 5. Apply special_sections, 6. size fallback, 7. skip empty.
-  const chunks = [];
-  for (let i = 0; i < sections.length; i += 1) {
-    const section = sections[i];
-    const trimmedHeading = section.heading ? section.heading.trim() : '';
-    const specialAction = specialSections[trimmedHeading];
+  // 5. Expand sections by applying sub-level special_sections rules. Any
+  //    heading inside a regular section whose text matches a special_sections
+  //    entry (at any level, not just the split level) is carved out of its
+  //    parent and emitted with its own action. If the parent itself matches
+  //    at the split level, the parent's action wins and no sub-carving
+  //    happens — "Discussion Map as H2" stays one chunk.
+  const items = expandSubLevelSpecials(
+    sections,
+    lines,
+    splitLevel,
+    specialSections,
+    headings
+  );
 
-    if (specialAction === 'skip') {
-      continue;
-    }
+  // 6. Apply special_sections segment rules (merge-up / skip), then
+  //    generate chunk content by slicing from the source line array. This
+  //    is how the verbatim invariant is maintained: chunks are never
+  //    assembled by concatenating strings with injected separators.
+  const segments = [];
+  for (const item of items) {
+    if (item.action === 'skip') continue;
 
-    if (specialAction === 'merge-up') {
-      if (chunks.length === 0) {
+    if (item.action === 'merge-up') {
+      if (segments.length === 0) {
         // First-section merge-up: promote to its own chunk.
-        if (skipEmptySections && isEmptySection(section)) continue;
-        chunks.push({ content: section.text });
+        segments.push({
+          action: 'regular',
+          startLine: item.startLine,
+          endLine: item.endLine,
+          heading: item.heading,
+          headingLine: item.headingLine,
+        });
       } else {
-        const prev = chunks[chunks.length - 1];
-        prev.content = prev.content + '\n\n' + section.text;
+        // Extend the previous segment's end line. The merged chunk is a
+        // contiguous source slice from prev.startLine to item.endLine, so
+        // the verbatim invariant holds even if the sections are separated
+        // by blank lines, code blocks, or other content in the source.
+        const prev = segments[segments.length - 1];
+        prev.endLine = item.endLine;
       }
       continue;
     }
 
-    if (specialAction === 'own-chunk') {
-      // Always its own chunk. No size fallback for special sections.
-      if (skipEmptySections && isEmptySection(section)) continue;
-      chunks.push({ content: section.text });
-      continue;
-    }
+    segments.push({
+      action: item.action || 'regular',
+      startLine: item.startLine,
+      endLine: item.endLine,
+      heading: item.heading,
+      headingLine: item.headingLine,
+    });
+  }
 
-    // Regular section.
-    if (skipEmptySections && isEmptySection(section)) continue;
+  // 7. Generate chunks from segments.
+  const chunks = [];
+  for (const seg of segments) {
+    const text = rtrim(lines.slice(seg.startLine, seg.endLine + 1).join('\n'));
+    const sectionLike = {
+      heading: seg.heading,
+      headingLine: seg.headingLine,
+      text,
+    };
 
-    const sectionLines = section.text.split('\n');
-    if (sectionLines.length > maxLines) {
-      // Split once at fallback_level. No recursion.
-      const subs = splitAtLevel(section, fallbackLevel);
+    if (skipEmptySections && isEmptySection(sectionLike)) continue;
+
+    // Size fallback only applies to regular sections. own-chunk sections
+    // stay whole regardless of size — "always its own chunk" is
+    // interpreted as literal one chunk, so a large Discussion Map stays
+    // intact even if it exceeds max_lines. This is a deliberate design
+    // choice: special_sections are semantic units the user has marked as
+    // atomic, and splitting them would defeat the purpose.
+    const segLines = text.split('\n');
+    if (seg.action === 'regular' && segLines.length > maxLines) {
+      const subs = splitAtFallback(sectionLike, fallbackLevel);
       for (const sub of subs) {
         if (skipEmptySections && isEmptySection(sub)) continue;
         chunks.push({ content: sub.text });
       }
     } else {
-      chunks.push({ content: section.text });
+      chunks.push({ content: text });
     }
   }
 
@@ -139,6 +179,10 @@ function chunk(markdown, config) {
 // ---------------------------------------------------------------------------
 // Internal helpers
 // ---------------------------------------------------------------------------
+
+function rtrim(s) {
+  return s.replace(/\s+$/, '');
+}
 
 /**
  * Strip only the opening YAML frontmatter block. A `---` on its own line at
@@ -156,7 +200,6 @@ function stripOpeningFrontmatter(markdown) {
       return lines.slice(i + 1).join('\n').replace(/^\n+/, '');
     }
   }
-  // Unclosed frontmatter — treat whole file as frontmatter (empty body).
   return '';
 }
 
@@ -200,9 +243,14 @@ function parseHeadings(lines) {
 }
 
 /**
- * Build a flat list of sections split at `splitLevel`. Content before the
- * first splitLevel heading — including an H1 and any intro text — becomes
- * the first section, with the H1 line used as its heading text if present.
+ * Build a flat list of sections split at `splitLevel`. Each section carries
+ * its source line range ({ startLine, endLine }) so the main loop can slice
+ * from the original line array when generating chunk content — this is how
+ * the verbatim invariant is maintained through merge-up operations.
+ *
+ * Content before the first splitLevel heading — typically an H1 title and
+ * any intro text — becomes the first section. The H1 line is recorded as
+ * the section's heading so it travels with the chunk as a semantic anchor.
  */
 function buildSections(lines, headings, splitLevel) {
   const splitIndices = headings
@@ -211,17 +259,20 @@ function buildSections(lines, headings, splitLevel) {
 
   const sections = [];
 
-  // Leading pre-split content (H1 + intro).
   const firstSplitLine =
     splitIndices.length > 0 ? splitIndices[0] : lines.length;
+
+  // Leading pre-split content (H1 + intro, or just intro if no H1).
   if (firstSplitLine > 0) {
     const preLines = lines.slice(0, firstSplitLine);
     const h1 = headings.find((h) => h.level === 1 && h.line < firstSplitLine);
-    const text = preLines.join('\n').replace(/\s+$/, '');
+    const text = rtrim(preLines.join('\n'));
     if (text.trim() !== '') {
       sections.push({
         heading: h1 ? h1.text : '',
         headingLine: h1 ? lines[h1.line] : '',
+        startLine: 0,
+        endLine: firstSplitLine - 1,
         text,
       });
     }
@@ -229,13 +280,15 @@ function buildSections(lines, headings, splitLevel) {
 
   for (let i = 0; i < splitIndices.length; i += 1) {
     const start = splitIndices[i];
-    const end = i + 1 < splitIndices.length ? splitIndices[i + 1] : lines.length;
-    const sliceLines = lines.slice(start, end);
+    const end =
+      i + 1 < splitIndices.length ? splitIndices[i + 1] - 1 : lines.length - 1;
     const headingText = /^#+\s+(.*)$/.exec(lines[start])[1].trim();
     sections.push({
       heading: headingText,
       headingLine: lines[start],
-      text: sliceLines.join('\n').replace(/\s+$/, ''),
+      startLine: start,
+      endLine: end,
+      text: rtrim(lines.slice(start, end + 1).join('\n')),
     });
   }
 
@@ -243,12 +296,148 @@ function buildSections(lines, headings, splitLevel) {
 }
 
 /**
+ * Expand a section list by applying sub-level special_sections rules.
+ *
+ * Precedence rule: if a split-level section's heading is itself in
+ * special_sections, that match wins and the section is emitted whole with
+ * the configured action. No sub-carving — "Discussion Map as an H2" stays
+ * one chunk regardless of any nested H3s.
+ *
+ * Otherwise, scan the section for sub-level headings (H3+, below the
+ * split level) whose text matches special_sections. Each match is carved
+ * out of its parent at its natural boundary (from the sub-heading line to
+ * the next heading at the same or higher level, bounded by the parent
+ * section's end). The parent's remaining content is emitted as one or
+ * more regular pieces around each carved-out sub-section.
+ *
+ * Each emitted item is `{ action, startLine, endLine, heading, headingLine }`
+ * with line ranges pointing into the original source line array.
+ *
+ * Note: sub-level matching only handles `own-chunk` and `skip`. `merge-up`
+ * is a split-level concept — it attaches a whole section to its
+ * predecessor, which does not have a meaningful interpretation at
+ * sub-level granularity, so sub-level merge-up entries are treated as
+ * regular sub-headings and left inside the parent chunk.
+ */
+function expandSubLevelSpecials(
+  sections,
+  lines,
+  splitLevel,
+  specialSections,
+  allHeadings
+) {
+  const result = [];
+
+  for (const section of sections) {
+    const trimmedHeading = section.heading ? section.heading.trim() : '';
+    const topAction = specialSections[trimmedHeading];
+
+    if (topAction) {
+      // Top-level match wins — emit the whole section with the top action.
+      result.push({
+        action: topAction,
+        startLine: section.startLine,
+        endLine: section.endLine,
+        heading: section.heading,
+        headingLine: section.headingLine,
+      });
+      continue;
+    }
+
+    // Scan for sub-level matches within this section's line range. Exclude
+    // H1 (already absorbed into the first section) and the split level
+    // itself (those are already section boundaries).
+    const subMatches = allHeadings.filter((h) => {
+      if (h.line <= section.startLine) return false;
+      if (h.line > section.endLine) return false;
+      if (h.level === 1) return false;
+      if (h.level === splitLevel) return false;
+      const action = specialSections[h.text];
+      return action === 'own-chunk' || action === 'skip';
+    });
+
+    if (subMatches.length === 0) {
+      result.push({
+        action: 'regular',
+        startLine: section.startLine,
+        endLine: section.endLine,
+        heading: section.heading,
+        headingLine: section.headingLine,
+      });
+      continue;
+    }
+
+    // For each sub-match, find its natural end line: the next heading at
+    // the same or higher level, bounded by the parent section's end.
+    const subRanges = subMatches.map((h) => {
+      let end = section.endLine;
+      for (const other of allHeadings) {
+        if (other.line <= h.line) continue;
+        if (other.line > section.endLine) break;
+        if (other.level <= h.level) {
+          end = other.line - 1;
+          break;
+        }
+      }
+      return {
+        action: specialSections[h.text],
+        startLine: h.line,
+        endLine: end,
+        heading: h.text,
+        headingLine: lines[h.line],
+      };
+    });
+
+    // Emit pieces: regular "before" chunks, each carved sub-match, and a
+    // trailing remainder chunk if any content follows the last sub-match.
+    let cursor = section.startLine;
+    let isFirstPiece = true;
+    for (const sub of subRanges) {
+      if (sub.startLine > cursor) {
+        result.push({
+          action: 'regular',
+          startLine: cursor,
+          endLine: sub.startLine - 1,
+          // The first piece inherits the parent section's heading as its
+          // semantic anchor. Subsequent pieces have no heading (they're
+          // mid-section content fragments) and will be dropped by
+          // skip_empty_sections if they consist only of whitespace.
+          heading: isFirstPiece ? section.heading : '',
+          headingLine: isFirstPiece ? section.headingLine : '',
+        });
+        isFirstPiece = false;
+      }
+      result.push({
+        action: sub.action,
+        startLine: sub.startLine,
+        endLine: sub.endLine,
+        heading: sub.heading,
+        headingLine: sub.headingLine,
+      });
+      cursor = sub.endLine + 1;
+    }
+    if (cursor <= section.endLine) {
+      result.push({
+        action: 'regular',
+        startLine: cursor,
+        endLine: section.endLine,
+        heading: '',
+        headingLine: '',
+      });
+    }
+  }
+
+  return result;
+}
+
+/**
  * Split an oversized section once at `fallbackLevel`. The original section's
  * heading and any content before the first fallbackLevel heading form the
  * first sub-section. No recursion — oversized sub-sections are returned as
- * they are and reported by `knowledge status` (Phase 4).
+ * they are and reported by `knowledge status` (Phase 4). This matches the
+ * flat fallback chain in design doc finding #9: H2 → H3 → whole file.
  */
-function splitAtLevel(section, fallbackLevel) {
+function splitAtFallback(section, fallbackLevel) {
   const lines = section.text.split('\n');
   const headings = parseHeadings(lines);
   const subIndices = headings
@@ -256,18 +445,15 @@ function splitAtLevel(section, fallbackLevel) {
     .map((h) => h.line);
 
   if (subIndices.length === 0) {
-    // Nothing to split at this level — keep as-is.
     return [section];
   }
 
   const subs = [];
 
-  // Leading content: the original heading + any content before the first
-  // fallbackLevel heading.
   const firstSub = subIndices[0];
   if (firstSub > 0) {
     const preLines = lines.slice(0, firstSub);
-    const text = preLines.join('\n').replace(/\s+$/, '');
+    const text = rtrim(preLines.join('\n'));
     if (text.trim() !== '') {
       subs.push({
         heading: section.heading,
@@ -285,7 +471,7 @@ function splitAtLevel(section, fallbackLevel) {
     subs.push({
       heading: headingText,
       headingLine: lines[start],
-      text: sliceLines.join('\n').replace(/\s+$/, ''),
+      text: rtrim(sliceLines.join('\n')),
     });
   }
 
@@ -293,8 +479,10 @@ function splitAtLevel(section, fallbackLevel) {
 }
 
 /**
- * A section is empty if, after removing its heading line, the remaining
- * text has no non-whitespace characters.
+ * A section is empty if, after removing any leading heading line, the
+ * remaining text has no non-whitespace content. Used to drop pieces that
+ * sub-level extraction leaves behind (e.g. `## Parent` with no intro text
+ * before the first extracted sub-section).
  */
 function isEmptySection(section) {
   if (!section || typeof section.text !== 'string') return true;
