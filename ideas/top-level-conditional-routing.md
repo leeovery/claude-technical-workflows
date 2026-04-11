@@ -44,7 +44,3 @@ A strict CLAUDE.md reading says all of these should be H4. In practice, bold-at-
 - `skills/workflow-research-process/references/deep-dive-agent.md`
 - `skills/workflow-review-process/references/review-actions-loop.md` — many STOP-gate-adjacent bold conditionals
 - ~53 files total match the `**If ...:**` pattern — full audit via `rg '^\*\*If [^*]+:\*\*$' skills/`
-
-## Surfaced From
-
-Flagged during convention audit of PR #246 (background-agent surfacing protocol). The bold pattern was encountered in both `review-agent.md` files and deemed out of scope for that PR because it pre-dates the work and is widespread across the codebase.
