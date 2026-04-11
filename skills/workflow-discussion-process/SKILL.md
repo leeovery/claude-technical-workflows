@@ -169,7 +169,28 @@ Load **[final-review.md](references/final-review.md)** and follow its instructio
 
 ---
 
-## Step 5: Compliance Self-Check
+## Step 5: Document Review
+
+> *Output the next fenced block as a code block:*
+
+```
+── Document Review ──────────────────────────────
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Reconciling the session conversation against the discussion file
+> to catch substance that was discussed but never captured.
+```
+
+Load **[document-review.md](references/document-review.md)** and follow its instructions as written.
+
+→ Proceed to **Step 6**.
+
+---
+
+## Step 6: Compliance Self-Check
 
 > *Output the next fenced block as a code block:*
 
@@ -185,11 +206,11 @@ Load **[final-review.md](references/final-review.md)** and follow its instructio
 
 Load **[compliance-check.md](../workflow-shared/references/compliance-check.md)** and follow its instructions as written.
 
-→ Proceed to **Step 6**.
+→ Proceed to **Step 7**.
 
 ---
 
-## Step 6: Conclude Discussion
+## Step 7: Conclude Discussion
 
 > *Output the next fenced block as a code block:*
 
