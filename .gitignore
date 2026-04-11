@@ -2,3 +2,8 @@
 .idea/
 .vscode/
 .claude/settings.local.json
+.tick/cache.db
+.tick/lock
+node_modules/
+.npm-cache/
+.workflows/.knowledge/store.msp
