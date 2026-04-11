@@ -116,6 +116,6 @@ All findings have been raised (or the review came back with zero gaps). The fina
 
 #### If `status: acknowledged`
 
-A finding was just raised (or the announce menu was just shown / the parenthetical fired). Control belongs to the conversation — return the user to the discussion session so they can engage naturally. The session loop's check-for-results will pick up subsequent findings at natural breaks. When the user signals done again, Step 4 re-runs and this flow resumes.
+Either a finding was just raised, or the announce menu was just shown and the user picked `later`. Control belongs to the conversation — return the user to the discussion session so they can engage naturally. The session loop's check-for-results will pick up subsequent findings at natural breaks. When the user signals done again, Step 4 re-runs and this flow resumes.
 
 → Return to **[the skill](../SKILL.md)** for **Step 3**.

@@ -185,7 +185,7 @@ This section runs once per invocation and then exits. It never waits in-protocol
 
 After this, control belongs to the conversation. The user will engage (or deflect, or redirect) naturally. Handle their response as normal discussion — not as protocol-driven routing.
 
-**Coverage guarantee**: the goal is natural flow during engagement AND eventual coverage of every finding. The `surfaced:` list ensures nothing is forgotten across turns — every natural break re-enters this protocol and raises the next unsurfaced finding. When the user has engaged with all of them, the next check transitions the file to `incorporated`.
+**Coverage guarantee**: the goal is natural flow during engagement AND eventual coverage of every finding. The `surfaced:` list ensures nothing is forgotten across turns — every session-loop iteration re-enters this protocol, and at each natural break the next unsurfaced finding is raised. When all findings have been raised (regardless of whether the user engaged or deflected), the next check transitions the file to `incorporated`.
 
 → Return to caller.
 
