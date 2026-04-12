@@ -8,7 +8,11 @@
 
 Not a rigid checklist — a natural cadence for productive research conversations:
 
-1. **Check for findings** — Before each conversational turn, scan the cache directory for pending or acknowledged background-agent files (review agents, deep-dive agents). If any are found, delegate handling to the shared surfacing protocol loaded by review-agent.md and deep-dive-agent.md. The protocol enforces the never-dump rules: two-phase surfacing, one finding at a time, mid-thread protection. **Do not surface findings directly in this step — always go through the shared protocol, which decides whether now is a natural break.** Skip this step on the first iteration (no agents have been dispatched yet).
+1. **Check for findings** — Before each conversational turn, run the check-for-results logic from the background-agent files loaded by the session wrapper. Each file knows its own rules; follow the named section in each:
+   - **Review agent**: follow **B. Check and Surface** in **[review-agent.md](review-agent.md)** — delegates to the shared surfacing protocol for review findings.
+   - **Deep-dive agent**: follow **C. Check and Surface** in **[deep-dive-agent.md](deep-dive-agent.md)** — delegates to the shared surfacing protocol for deep-dive findings.
+   
+   Both enforce the never-dump rules: two-phase surfacing, one finding at a time, mid-thread protection. **Do not surface findings directly — always go through the agent files, which route to the shared protocol.** Skip on the first iteration (no agents have been dispatched yet).
 
 2. **Explore** — Probe the topic from a relevant angle. Use the funnel technique: broad first, specific later. Choose your probe type deliberately. One question at a time — wait for the answer before asking the next.
 
