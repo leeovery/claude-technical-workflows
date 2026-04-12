@@ -908,13 +908,80 @@ function cmdKeyOf(args) {
 }
 
 // ---------------------------------------------------------------------------
+// Resolve — map work_unit.phase[.topic] to artifact file paths on disk.
+// Used by the knowledge CLI for artifact discovery.
+// ---------------------------------------------------------------------------
+
+const INDEXED_PHASES = ['research', 'discussion', 'investigation', 'specification'];
+
+function cmdResolve(args) {
+  if (!args[0]) {
+    die('Usage: manifest.cjs resolve <work_unit>.<phase>[.<topic>]\nResolves artifact file paths for indexed phases.');
+  }
+
+  const { workUnit, phase, topic } = parsePath(args[0]);
+
+  if (!phase) {
+    die('resolve requires at least 2 segments: <work_unit>.<phase>[.<topic>]');
+  }
+
+  if (!INDEXED_PHASES.includes(phase)) {
+    die(`Phase "${phase}" is not indexed by the knowledge base. Indexed phases: ${INDEXED_PHASES.join(', ')}`);
+  }
+
+  // Validate that the work unit exists by reading its manifest.
+  const manifest = readManifest(workUnit);
+  const wuDir = path.join(WORKFLOWS_DIR, workUnit);
+
+  if (phase === 'research') {
+    if (topic) {
+      // 3-segment: specific research item.
+      const filePath = path.join(wuDir, 'research', topic + '.md');
+      process.stdout.write(filePath + '\n');
+    } else {
+      // 2-segment: iterate phases.research.items from the manifest.
+      const items = manifest.phases && manifest.phases.research && manifest.phases.research.items;
+      if (!items || typeof items !== 'object') {
+        // No research items tracked — output nothing, exit 0.
+        return;
+      }
+      for (const itemName of Object.keys(items)) {
+        const filePath = path.join(wuDir, 'research', itemName + '.md');
+        process.stdout.write(filePath + '\n');
+      }
+    }
+    return;
+  }
+
+  // For non-research phases, topic is required (3 segments).
+  if (!topic) {
+    die(`resolve for ${phase} requires 3 segments: <work_unit>.${phase}.<topic>`);
+  }
+
+  if (phase === 'discussion') {
+    process.stdout.write(path.join(wuDir, 'discussion', topic + '.md') + '\n');
+    return;
+  }
+
+  if (phase === 'investigation') {
+    process.stdout.write(path.join(wuDir, 'investigation', topic + '.md') + '\n');
+    return;
+  }
+
+  if (phase === 'specification') {
+    process.stdout.write(path.join(wuDir, 'specification', topic, 'specification.md') + '\n');
+    return;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 
 const [command, ...args] = process.argv.slice(2);
 
 if (!command) {
-  die('Usage: manifest.cjs <command> [args]\nCommands: init, get, set, delete, list, init-phase, push, pull, exists, key-of, project');
+  die('Usage: manifest.cjs <command> [args]\nCommands: init, get, set, delete, list, init-phase, push, pull, exists, key-of, project, resolve');
 }
 
 switch (command) {
@@ -929,5 +996,6 @@ switch (command) {
   case 'exists':   cmdExists(args); break;
   case 'key-of':   cmdKeyOf(args); break;
   case 'project':  cmdProject(args); break;
+  case 'resolve':  cmdResolve(args); break;
   default:         die(`Unknown command "${command}"`);
 }
