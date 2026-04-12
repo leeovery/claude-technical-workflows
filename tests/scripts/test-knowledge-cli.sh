@@ -154,7 +154,7 @@ assert_eq "mentions unknown command" "true" "$(echo "$output" | grep -q 'Unknown
 
 # --- Test 3: Not-yet-implemented commands exit 1 ---
 echo "Test 3: Not-yet-implemented commands"
-for cmd in status compact rebuild setup; do
+for cmd in status rebuild setup; do
   exit_code=0
   output=$(node "$BUNDLE" "$cmd" 2>&1 || true)
   node "$BUNDLE" "$cmd" 2>/dev/null || exit_code=$?
@@ -857,6 +857,120 @@ assert_eq "pending item caught up" '[]' "$pending"
 # Verify spec chunks now exist.
 query_output=$(run_kb query "specification" --limit 10 2>&1)
 assert_eq "spec chunks indexed by catch-up" "true" "$(echo "$query_output" | grep -q 'specification |' && echo true || echo false)"
+teardown_project
+
+# ============================================================================
+# COMPACT COMMAND TESTS
+# ============================================================================
+
+echo ""
+echo "=== Compact Command Tests ==="
+
+# Helper: set completed status and completed_at on a work unit.
+set_completed_with_date() {
+  local wu="$1" date="$2"
+  cd "$TEST_ROOT"
+  node "$MANIFEST_JS" set "$wu" status completed >/dev/null 2>&1
+  node "$MANIFEST_JS" set "$wu" completed_at "$date" >/dev/null 2>&1
+}
+
+# Helper: write config with custom decay_months.
+write_config_with_decay() {
+  local decay="$1"
+  mkdir -p "$TEST_ROOT/.workflows/.knowledge"
+  cat > "$TEST_ROOT/.workflows/.knowledge/config.json" <<CONF
+{ "knowledge": { "provider": "stub", "dimensions": 128, "decay_months": $decay } }
+CONF
+}
+
+# --- Test 49: Compact removes expired non-spec chunks ---
+echo "Test 49: Compact removes expired non-spec chunks"
+setup_project
+create_work_unit "old-project" "feature" "Old"
+write_config_with_decay 6
+create_discussion_file "old-project" "old-project"
+create_spec_file "old-project" "old-project"
+run_kb index .workflows/old-project/discussion/old-project.md >/dev/null 2>&1
+run_kb index .workflows/old-project/specification/old-project/specification.md >/dev/null 2>&1
+set_completed_with_date "old-project" "2024-01-01"
+output=$(run_kb compact 2>&1)
+assert_eq "reports compacted chunks" "true" "$(echo "$output" | grep -q 'Compacted:' && echo true || echo false)"
+assert_eq "mentions discussion phase" "true" "$(echo "$output" | grep -q 'discussion' && echo true || echo false)"
+# Spec chunks should still exist.
+query_output=$(run_kb query "specification" --limit 10 2>&1)
+assert_eq "spec chunks preserved" "true" "$(echo "$query_output" | grep -q 'specification |' && echo true || echo false)"
+# Discussion chunks should be gone.
+query_output2=$(run_kb query "topic" --limit 10 2>&1)
+assert_eq "discussion chunks removed" "false" "$(echo "$query_output2" | grep -q 'discussion |' && echo true || echo false)"
+teardown_project
+
+# --- Test 50: Compact preserves in-progress work unit chunks ---
+echo "Test 50: Compact preserves in-progress chunks"
+setup_project
+create_work_unit "active" "feature" "Active"
+write_config_with_decay 6
+create_discussion_file "active" "active"
+run_kb index .workflows/active/discussion/active.md >/dev/null 2>&1
+# Work unit is in-progress (default) — compact should not touch it.
+output=$(run_kb compact 2>&1)
+assert_eq "no output (nothing to compact)" "" "$output"
+query_output=$(run_kb query "topic" --limit 10 2>&1)
+assert_eq "chunks preserved" "true" "$(echo "$query_output" | grep -q 'active' && echo true || echo false)"
+teardown_project
+
+# --- Test 51: Compact preserves recently completed chunks ---
+echo "Test 51: Compact preserves recent chunks"
+setup_project
+create_work_unit "recent" "feature" "Recent"
+write_config_with_decay 6
+create_discussion_file "recent" "recent"
+run_kb index .workflows/recent/discussion/recent.md >/dev/null 2>&1
+# Completed yesterday — within TTL.
+set_completed_with_date "recent" "$(date -v-1d +%Y-%m-%d 2>/dev/null || date -d '1 day ago' +%Y-%m-%d)"
+output=$(run_kb compact 2>&1)
+assert_eq "no output (within TTL)" "" "$output"
+teardown_project
+
+# --- Test 52: Dry-run shows plan without removing ---
+echo "Test 52: Dry-run shows plan without removing"
+setup_project
+create_work_unit "old2" "feature" "Old2"
+write_config_with_decay 6
+create_discussion_file "old2" "old2"
+run_kb index .workflows/old2/discussion/old2.md >/dev/null 2>&1
+set_completed_with_date "old2" "2024-01-01"
+output=$(run_kb compact --dry-run 2>&1)
+assert_eq "shows dry-run prefix" "true" "$(echo "$output" | grep -q '\[dry-run\]' && echo true || echo false)"
+# Chunks should still exist.
+query_output=$(run_kb query "topic" --limit 10 2>&1)
+assert_eq "chunks not removed in dry-run" "true" "$(echo "$query_output" | grep -q 'old2' && echo true || echo false)"
+teardown_project
+
+# --- Test 53: decay_months: false disables compaction ---
+echo "Test 53: decay_months false disables compaction"
+setup_project
+create_work_unit "disabled" "feature" "Disabled"
+mkdir -p "$TEST_ROOT/.workflows/.knowledge"
+cat > "$TEST_ROOT/.workflows/.knowledge/config.json" <<'CONF'
+{ "knowledge": { "provider": "stub", "dimensions": 128, "decay_months": false } }
+CONF
+create_discussion_file "disabled" "disabled"
+run_kb index .workflows/disabled/discussion/disabled.md >/dev/null 2>&1
+set_completed_with_date "disabled" "2020-01-01"
+output=$(run_kb compact 2>&1)
+assert_eq "shows disabled" "true" "$(echo "$output" | grep -q 'disabled' && echo true || echo false)"
+teardown_project
+
+# --- Test 54: decay_months: 0 expires immediately ---
+echo "Test 54: decay_months 0 expires immediately"
+setup_project
+create_work_unit "immediate" "feature" "Immediate"
+write_config_with_decay 0
+create_discussion_file "immediate" "immediate"
+run_kb index .workflows/immediate/discussion/immediate.md >/dev/null 2>&1
+set_completed_with_date "immediate" "$(date +%Y-%m-%d)"
+output=$(run_kb compact 2>&1)
+assert_eq "removes with decay 0" "true" "$(echo "$output" | grep -q 'Compacted:' && echo true || echo false)"
 teardown_project
 
 # --- Summary ---

@@ -961,6 +961,132 @@ function formatRemoveDesc(options) {
 }
 
 // ---------------------------------------------------------------------------
+// Compact command
+// ---------------------------------------------------------------------------
+
+/**
+ * Get work unit status and completed_at via manifest CLI.
+ * Returns { status, completed_at } or null on failure.
+ */
+function getWorkUnitMeta(workUnit) {
+  try {
+    const status = runManifest(['get', workUnit, 'status']).trim();
+    let completedAt = null;
+    try {
+      completedAt = runManifest(['get', workUnit, 'completed_at']).trim();
+      if (completedAt === '' || completedAt === 'undefined' || completedAt === 'null') {
+        completedAt = null;
+      }
+    } catch (_) {
+      // completed_at may not exist.
+    }
+    return { status, completed_at: completedAt };
+  } catch (_) {
+    // Manifest lookup failed (e.g., orphaned work unit).
+    return null;
+  }
+}
+
+async function cmdCompact(_args, options, cfg) {
+  const sp = storePath();
+  const lp = lockFilePath();
+
+  // Check decay config.
+  const decayMonths = cfg && cfg.decay_months !== undefined ? cfg.decay_months : config.DEFAULTS.decay_months;
+  if (decayMonths === false) {
+    process.stdout.write('Compaction disabled\n');
+    return;
+  }
+
+  if (!fs.existsSync(sp)) return;
+
+  const db = await store.loadStore(sp);
+
+  // Calculate cutoff date.
+  const now = new Date();
+  const cutoffDate = new Date(now);
+  cutoffDate.setMonth(cutoffDate.getMonth() - decayMonths);
+
+  // Discover unique work units in the store by searching for all docs.
+  const allResults = await store.searchFulltext(db, { term: '', limit: 100000 });
+  if (allResults.length === 0) return;
+
+  // Group by work unit.
+  const byWorkUnit = {};
+  for (const r of allResults) {
+    if (!byWorkUnit[r.work_unit]) byWorkUnit[r.work_unit] = [];
+    byWorkUnit[r.work_unit].push(r);
+  }
+
+  // Evaluate each work unit.
+  const removals = []; // { workUnit, count, phases: Set }
+  const toRemoveIds = [];
+
+  for (const [wu, chunks] of Object.entries(byWorkUnit)) {
+    const meta = getWorkUnitMeta(wu);
+    if (!meta) continue; // Orphaned — skip.
+    if (meta.status !== 'completed') continue;
+    if (!meta.completed_at) continue;
+
+    const completedDate = new Date(meta.completed_at);
+    if (isNaN(completedDate.getTime())) continue;
+
+    // Check if expired: completed_at + decay_months <= now.
+    const expiryDate = new Date(completedDate);
+    expiryDate.setMonth(expiryDate.getMonth() + decayMonths);
+    if (expiryDate > now) continue;
+
+    // Expired — collect non-spec chunks.
+    const candidates = chunks.filter((c) => c.phase !== 'specification');
+    if (candidates.length === 0) continue;
+
+    const phases = new Set(candidates.map((c) => c.phase));
+    removals.push({ workUnit: wu, count: candidates.length, phases });
+
+    for (const c of candidates) {
+      toRemoveIds.push({ work_unit: c.work_unit, phase: c.phase, topic: c.topic });
+    }
+  }
+
+  if (removals.length === 0) return; // Nothing to compact — silent exit.
+
+  const totalChunks = removals.reduce((sum, r) => sum + r.count, 0);
+
+  if (options.dryRun) {
+    const out = [];
+    out.push(`[dry-run] Compacted: removed ${totalChunks} chunks from ${removals.length} work units (completed > ${decayMonths} months ago)`);
+    for (const r of removals) {
+      out.push(`  - ${r.workUnit}: ${r.count} chunks (${Array.from(r.phases).join(', ')})`);
+    }
+    process.stdout.write(out.join('\n') + '\n');
+    return;
+  }
+
+  // Actual removal — acquire lock.
+  await store.withLock(lp, async () => {
+    const freshDb = await store.loadStore(sp);
+
+    // Deduplicate removal keys.
+    const seen = new Set();
+    for (const key of toRemoveIds) {
+      const k = `${key.work_unit}|${key.phase}|${key.topic}`;
+      if (seen.has(k)) continue;
+      seen.add(k);
+      await store.removeByIdentity(freshDb, key);
+    }
+
+    await store.saveStore(freshDb, sp);
+  });
+
+  const out = [];
+  out.push(`Compacted: removed ${totalChunks} chunks from ${removals.length} work units (completed > ${decayMonths} months ago)`);
+  for (const r of removals) {
+    out.push(`  - ${r.workUnit}: ${r.count} chunks (${Array.from(r.phases).join(', ')})`);
+  }
+  process.stdout.write(out.join('\n') + '\n');
+}
+
+// ---------------------------------------------------------------------------
 // Not-yet-implemented stub
 // ---------------------------------------------------------------------------
 
@@ -988,7 +1114,7 @@ async function main() {
   // Load config and resolve provider for commands that need them.
   let cfg = null;
   let provider = null;
-  if (['index', 'query', 'rebuild'].includes(command)) {
+  if (['index', 'query', 'rebuild', 'compact'].includes(command)) {
     cfg = config.loadConfig();
     provider = config.resolveProvider(cfg);
   }
@@ -999,7 +1125,7 @@ async function main() {
     case 'check':   await cmdCheck(commandArgs, options, cfg, provider); break;
     case 'status':  notYetImplemented('status'); break;
     case 'remove':  await cmdRemove(commandArgs, options, cfg, provider); break;
-    case 'compact': notYetImplemented('compact'); break;
+    case 'compact': await cmdCompact(commandArgs, options, cfg, provider); break;
     case 'rebuild': notYetImplemented('rebuild'); break;
     case 'setup':   notYetImplemented('setup'); break;
     default:
