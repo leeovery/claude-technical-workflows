@@ -1450,6 +1450,128 @@ output=$(run_cli_stdout get project.defaults.project_skills)
 assert_not_contains "$output" "skill-a" "Project-level pull removed skill-a"
 assert_contains "$output" "skill-b" "Project-level pull kept skill-b"
 
+# ============================================================================
+# RESOLVE COMMAND TESTS
+# ============================================================================
+
+echo -e "${YELLOW}Test: resolve discussion file path${NC}"
+setup_fixture
+run_cli init auth-flow --work-type feature --description "Auth" >/dev/null 2>&1
+output=$(run_cli_stdout resolve auth-flow.discussion.auth-flow)
+
+assert_contains "$output" "auth-flow/discussion/auth-flow.md" "Resolves discussion path"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: resolve specification file path${NC}"
+setup_fixture
+run_cli init auth-flow --work-type feature --description "Auth" >/dev/null 2>&1
+output=$(run_cli_stdout resolve auth-flow.specification.auth-flow)
+
+assert_contains "$output" "auth-flow/specification/auth-flow/specification.md" "Resolves spec path with nested topic dir"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: resolve investigation file path${NC}"
+setup_fixture
+run_cli init auth-flow --work-type bugfix --description "Bug" >/dev/null 2>&1
+output=$(run_cli_stdout resolve auth-flow.investigation.auth-flow)
+
+assert_contains "$output" "auth-flow/investigation/auth-flow.md" "Resolves investigation path"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: resolve single research file path (3-segment)${NC}"
+setup_fixture
+run_cli init payments --work-type epic --description "Payments" >/dev/null 2>&1
+run_cli set payments.research.exploration status in-progress >/dev/null 2>&1
+output=$(run_cli_stdout resolve payments.research.exploration)
+
+assert_contains "$output" "payments/research/exploration.md" "Resolves single research item path"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: resolve all research files (2-segment, from manifest items)${NC}"
+setup_fixture
+run_cli init payments --work-type epic --description "Payments" >/dev/null 2>&1
+run_cli set payments.research.exploration status in-progress >/dev/null 2>&1
+run_cli set payments.research.networking status in-progress >/dev/null 2>&1
+output=$(run_cli_stdout resolve payments.research)
+
+assert_contains "$output" "payments/research/exploration.md" "Lists exploration research item"
+assert_contains "$output" "payments/research/networking.md" "Lists networking research item"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: resolve does NOT include unlisted research files${NC}"
+setup_fixture
+run_cli init payments --work-type epic --description "Payments" >/dev/null 2>&1
+run_cli set payments.research.tracked status in-progress >/dev/null 2>&1
+# Create an untracked file on disk that is NOT in the manifest
+mkdir -p "$TEST_DIR/.workflows/payments/research"
+echo "untracked" > "$TEST_DIR/.workflows/payments/research/rogue.md"
+output=$(run_cli_stdout resolve payments.research)
+
+assert_contains "$output" "payments/research/tracked.md" "Includes tracked research item"
+assert_not_contains "$output" "rogue" "Does not include untracked research file"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: resolve errors for non-existent work unit${NC}"
+setup_fixture
+exit_code=$(run_cli_exit_code resolve nonexistent.discussion.foo)
+
+assert_equals "$exit_code" "1" "Non-existent work unit exits 1"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: resolve errors for non-indexed phase${NC}"
+setup_fixture
+run_cli init auth-flow --work-type feature --description "Auth" >/dev/null 2>&1
+exit_code=$(run_cli_exit_code resolve auth-flow.planning.auth-flow)
+output=$(run_cli resolve auth-flow.planning.auth-flow 2>&1 || true)
+
+assert_equals "$exit_code" "1" "Non-indexed phase exits 1"
+assert_contains "$output" "not indexed" "Error mentions not indexed"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: resolve errors for insufficient segments${NC}"
+setup_fixture
+run_cli init auth-flow --work-type feature --description "Auth" >/dev/null 2>&1
+exit_code=$(run_cli_exit_code resolve auth-flow)
+output=$(run_cli resolve auth-flow 2>&1 || true)
+
+assert_equals "$exit_code" "1" "Single segment exits 1"
+
+echo ""
+
+# ----------------------------------------------------------------------------
+
+echo -e "${YELLOW}Test: resolve outputs correct path even when file does not exist on disk${NC}"
+setup_fixture
+run_cli init auth-flow --work-type feature --description "Auth" >/dev/null 2>&1
+# Don't create the file on disk — resolve should still output the path
+output=$(run_cli_stdout resolve auth-flow.discussion.auth-flow)
+
+assert_contains "$output" "auth-flow/discussion/auth-flow.md" "Path returned even without file on disk"
+
 echo ""
 
 # ============================================================================
