@@ -209,13 +209,14 @@ describe('workflow-discussion-entry format', () => {
     assert.ok(out.includes('=== RESEARCH ==='));
     assert.ok(out.includes('=== DISCUSSIONS ==='));
     assert.ok(out.includes('=== CACHE ==='));
+    assert.ok(out.includes('=== GAP CACHE ==='));
     assert.ok(out.includes('=== STATE ==='));
   });
 
   it('shows (none) for empty sections', () => {
     const out = format(discover(dir));
     const noneCount = (out.match(/\(none\)/g) || []).length;
-    assert.strictEqual(noneCount, 3);
+    assert.strictEqual(noneCount, 4);
   });
 
   it('includes research files with checksum', () => {
