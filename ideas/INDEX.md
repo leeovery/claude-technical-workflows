@@ -65,3 +65,4 @@ Leverage multiple AI models by dispatching work to the best model for each task 
 | 15 | [Selection Menu Display Pattern](selection-menu-pattern.md) | All selection menus across skills |
 | 16 | [Background Sub-Agents in Research](research-background-agents.md) | Research processing skill |
 | 17 | [Top-Level Conditional Routing: Bold vs H4](top-level-conditional-routing.md) | Convention drift across ~53 skill files |
+| 18 | [Loop-Based Surfacing Nudge](loop-based-surfacing-nudge.md) | Background agent surfacing (discussion + spec) |
