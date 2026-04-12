@@ -1,0 +1,38 @@
+# Natural Breaks
+
+*Shared reference for identifying conversational breakpoints.*
+
+---
+
+Natural breaks are points in the conversation where introducing something new won't derail the current thread. Use this checklist when deciding whether to surface background-agent results or bring up deferred items.
+
+This is guidance, not hard-enforced. Err toward NOT interrupting when uncertain — deferring one turn is cheap, interrupting an active thread is expensive.
+
+## A. Signals That It IS a Natural Break
+
+Any of these qualifies:
+
+- A subtopic just transitioned to `decided` or `converging` — the current thread landed
+- The user just said "what's next?", "move on", "anything else?", "ok", "done", or similar navigation cues
+- The user just raised a new topic themselves (a clear pivot away from the current thread)
+- A commit just landed AND the exchange prior to that commit resolved your outstanding question
+- The phase is about to conclude (convergence menu, final review, wrap-up)
+- The user explicitly asked about background-agent state ("anything come back yet?", "any review results?")
+
+## B. Signals That It Is NOT a Natural Break
+
+Any of these means defer:
+
+- You asked the user a direct question in your previous response and their reply hasn't yet arrived
+- A subtopic is actively `exploring` and you are mid-probe on a specific concern within it
+- The user is mid-response to a question you initiated (said "hold on", "let me think", or has only partially answered)
+- You are mid-synthesis or mid-summary and haven't closed out the current point
+- The current exchange is the first turn of a newly started subtopic — momentum belongs there, not to a new announcement
+- The user just raised a new concern that you haven't yet engaged with
+- The user picked `later` on a background-agent announce menu in their most recent turn — treat the next few turns as continuation, not a fresh break. Re-raising the menu on the very next turn would ignore their deferral. Wait until the conversation has genuinely moved on before re-raising.
+
+## C. When Uncertain
+
+Default to NOT interrupting. The cache file persists; the `acknowledged` state is designed to let you defer safely. The next iteration of the session loop's check-for-results will reconsider the same question.
+
+→ Return to caller.

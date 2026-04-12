@@ -18,7 +18,11 @@ Two types of background agent operate during the discussion. Load their lifecycl
 
 The discussion is an organic conversation. The Discussion Map is your tracking backbone — it tells you where you are, what's been decided, what's still open, and where to go next. Follow this loop:
 
-1. **Check for findings** — At natural conversational breaks, check for completed agent results and surface them. Skip on the first iteration (no agents have been dispatched yet).
+1. **Check for findings** — Before each conversational turn, run the check-for-results logic from the background-agent files loaded above. Each file knows its own rules; follow the named section in each:
+   - **Review agent**: follow **B. Check and Surface** in **[review-agent.md](review-agent.md)** — delegates to the shared surfacing protocol for review findings.
+   - **Perspective agents**: follow **D. Check and Surface** in **[perspective-agents.md](perspective-agents.md)** — promotes completed perspective sets to synthesis, then delegates to the shared surfacing protocol for synthesis findings.
+   
+   Both enforce the never-dump rules: two-phase surfacing, one finding at a time, mid-thread protection. **Do not surface findings directly — always go through the agent files, which route to the shared protocol.** Skip on the first iteration (no agents have been dispatched yet).
 2. **Discuss** — Engage with the user on the current subtopic or wherever the conversation leads. Challenge thinking, push back, explore edge cases. Participate as an expert architect. Follow interesting threads — tangents that surface new concerns are valuable. New subtopics may emerge; add them to the Discussion Map as `pending`.
 3. **Navigate** — When a subtopic feels explored or a decision lands, update the Discussion Map and guide the user to what's still open. Don't force transitions — suggest them. The user can follow your suggestion or go wherever they want.
 4. **Document** — At natural pauses, update the discussion file. Update the Discussion Map states. When a subtopic reaches `decided`, write up its section (Context → Options → Journey → Decision). Capture provisional thinking for subtopics still in progress if context compaction is a risk.
@@ -35,7 +39,7 @@ Subtopics move through states as the conversation progresses:
 
 **exploring** → Actively being discussed. Options are surfacing, trade-offs being weighed, edge cases emerging. Only one or two subtopics should be `exploring` at a time — the conversation is linear.
 
-**converging** → Narrowing toward a decision. The options are clear, the trade-offs are understood, and the discussion is honing in on a choice. This signals to both Claude and the user that a decision is close.
+**converging** → Narrowing toward a decision. The options are clear, the trade-offs are understood, and the discussion is honing in on a choice. This signals to both you and the user that a decision is close.
 
 **decided** → Decision reached with rationale. The subtopic section gets written up with the full Context → Options → Journey → Decision structure. This is the terminal state.
 
@@ -47,7 +51,7 @@ Child subtopics can exist under parents. A parent might be `exploring` while one
 
 ## D. Navigation
 
-Claude owns transitions between subtopics. The goal is natural flow, not rigid sequencing.
+You own transitions between subtopics. The goal is natural flow, not rigid sequencing.
 
 **After a decision lands:**
 
@@ -61,11 +65,11 @@ Add it to the Discussion Map as `pending`. If it's closely related to the curren
 
 **When the user drives:**
 
-The user can jump to any subtopic at any time. Claude follows and tracks the state change on the map.
+The user can jump to any subtopic at any time. Follow their lead and track the state change on the map.
 
 **When circling back:**
 
-If a subtopic was partially explored and the conversation moved on, Claude remembers and suggests returning:
+If a subtopic was partially explored and the conversation moved on, remember it and suggest returning:
 
 > "We touched on {subtopic} earlier but didn't land a decision — worth circling back now that we've resolved {related subtopic}?"
 
@@ -147,7 +151,7 @@ Leave it as a subtopic on the map.
 Convergence is the natural end state — not a forced conclusion. The discussion converges when:
 
 - All subtopics on the Discussion Map are `decided` (or deliberately deferred)
-- Neither Claude nor the user can identify new subtopics without breaking scope
+- Neither you nor the user can identify new subtopics without breaking scope
 - At least one review cycle has completed (see safety net below)
 
 **Before rendering the convergence menu, verify:**
@@ -164,7 +168,7 @@ Count review files in `.workflows/.cache/{work_unit}/discussion/{topic}/`.
   Dispatching now.
 ```
 
-Dispatch a review agent as a foreground task (not background — results are needed before concluding). Follow **A. Dispatch** in review-agent.md but omit `run_in_background`. When results return, surface findings per **C. Surface Findings** in review-agent.md.
+Dispatch a review agent as a foreground task (not background — results are needed before concluding). Follow **A. Dispatch** in review-agent.md but omit `run_in_background`. When results return, delegate to **B. Check and Surface** in review-agent.md — the shared surfacing protocol applies the never-dump rules and presents findings one at a time.
 
 → Return to **B. Session Loop**.
 
@@ -219,7 +223,7 @@ When the user indicates they want to conclude the discussion (e.g., "that covers
   Dispatching now.
 ```
 
-Dispatch a review agent as a foreground task (not background — results are needed before concluding). Follow **A. Dispatch** in review-agent.md but omit `run_in_background`. When results return, surface findings per **C. Surface Findings** in review-agent.md. Then continue with the conclusion flow below.
+Dispatch a review agent as a foreground task (not background — results are needed before concluding). Follow **A. Dispatch** in review-agent.md but omit `run_in_background`. When results return, delegate to **B. Check and Surface** in review-agent.md — the shared surfacing protocol applies the never-dump rules and presents findings one at a time. Then continue with the conclusion flow below.
 
 **If review files exist:**
 
@@ -273,7 +277,7 @@ There are still {N} background agents working.
 
 **If `wait`:**
 
-Check for agent completion. When all agents have returned, check for findings and surface them.
+Check for agent completion. When all agents have returned, delegate surfacing to the shared protocol loaded by review-agent.md and perspective-agents.md. The protocol applies the never-dump rules: two-phase surfacing, one finding at a time. Treat the current moment as a natural break — we are at phase conclusion, so the break check will pass.
 
 → Return to **B. Session Loop**.
 
