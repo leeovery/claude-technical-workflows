@@ -353,6 +353,129 @@ pending=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_ROOT/.wo
 assert_eq "pending preserved after re-index" '[{"file":"test.md","failed_at":"2026-01-01T00:00:00Z","error":"test"}]' "$pending"
 teardown_project
 
+# ============================================================================
+# QUERY COMMAND TESTS
+# ============================================================================
+
+echo ""
+echo "=== Query Command Tests ==="
+
+# --- Test 17: Query returns formatted results ---
+echo "Test 17: Query returns formatted results"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+create_discussion_file "auth-flow" "auth-flow"
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+output=$(run_kb query "topic" 2>&1)
+assert_eq "has result count" "true" "$(echo "$output" | grep -qE '\[[0-9]+ results\]' && echo true || echo false)"
+assert_eq "has provenance line" "true" "$(echo "$output" | grep -q 'discussion | auth-flow/auth-flow' && echo true || echo false)"
+assert_eq "has source line" "true" "$(echo "$output" | grep -q 'Source:' && echo true || echo false)"
+teardown_project
+
+# --- Test 18: Query returns [0 results] for non-matching query ---
+echo "Test 18: Zero results"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+create_discussion_file "auth-flow" "auth-flow"
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+output=$(run_kb query "xyznonexistent123" 2>&1)
+assert_eq "shows 0 results" "true" "$(echo "$output" | grep -q '\[0 results\]' && echo true || echo false)"
+teardown_project
+
+# --- Test 19: Query filters by --phase ---
+echo "Test 19: Filter by --phase"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+create_discussion_file "auth-flow" "auth-flow"
+create_spec_file "auth-flow" "auth-flow"
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+run_kb index .workflows/auth-flow/specification/auth-flow/specification.md >/dev/null 2>&1
+output=$(run_kb query "content" --phase specification 2>&1)
+assert_eq "only spec results" "false" "$(echo "$output" | grep -q 'discussion |' && echo true || echo false)"
+teardown_project
+
+# --- Test 20: Query respects --limit ---
+echo "Test 20: Respects --limit"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+create_discussion_file "auth-flow" "auth-flow"
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+output=$(run_kb query "topic" --limit 1 2>&1)
+assert_eq "limited to 1 result" "true" "$(echo "$output" | grep -q '\[1 results\]' && echo true || echo false)"
+teardown_project
+
+# --- Test 21: Keyword-only mode shows stub note ---
+echo "Test 21: Keyword-only mode stub note"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_keyword_config
+create_discussion_file "auth-flow" "auth-flow"
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+output=$(run_kb query "topic" 2>&1)
+assert_eq "shows keyword-only note" "true" "$(echo "$output" | grep -q 'keyword-only mode' && echo true || echo false)"
+teardown_project
+
+# --- Test 22: Query refuses provider mismatch ---
+echo "Test 22: Provider mismatch refused"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+create_discussion_file "auth-flow" "auth-flow"
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+# Modify metadata to simulate different provider.
+node -e "
+  const fs = require('fs');
+  const mp = '$TEST_ROOT/.workflows/.knowledge/metadata.json';
+  const m = JSON.parse(fs.readFileSync(mp, 'utf8'));
+  m.provider = 'openai';
+  m.model = 'text-embedding-3-small';
+  m.dimensions = 1536;
+  fs.writeFileSync(mp, JSON.stringify(m, null, 2) + '\n');
+"
+exit_code=0
+output=$(run_kb query "topic" 2>&1 || true)
+run_kb query "topic" >/dev/null 2>&1 || exit_code=$?
+assert_eq "query refuses mismatch" "true" "$([ "$exit_code" -ne 0 ] && echo true || echo false)"
+assert_eq "mentions rebuild" "true" "$(echo "$output" | grep -q 'rebuild' && echo true || echo false)"
+teardown_project
+
+# --- Test 23: Stub-to-full upgrade note ---
+echo "Test 23: Stub-to-full upgrade note"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_keyword_config
+create_discussion_file "auth-flow" "auth-flow"
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+# Now switch config to have a provider.
+write_stub_config
+output=$(run_kb query "topic" 2>&1)
+assert_eq "shows upgrade note" "true" "$(echo "$output" | grep -q 'keyword-only mode store' && echo true || echo false)"
+teardown_project
+
+# --- Test 24: Query on empty store returns [0 results] ---
+echo "Test 24: Empty store"
+setup_project
+write_stub_config
+output=$(run_kb query "anything" 2>&1)
+assert_eq "0 results on empty store" "true" "$(echo "$output" | grep -q '\[0 results\]' && echo true || echo false)"
+teardown_project
+
+# --- Test 25: Output format has provenance, content, source ---
+echo "Test 25: Output format"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+create_discussion_file "auth-flow" "auth-flow"
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+output=$(run_kb query "topic" --limit 1 2>&1)
+# Check the provenance line format: [phase | wu/topic | confidence | date]
+assert_eq "provenance format" "true" "$(echo "$output" | grep -qE '\[discussion \| auth-flow/auth-flow \| .* \| [0-9]{4}-[0-9]{2}-[0-9]{2}\]' && echo true || echo false)"
+teardown_project
+
 # --- Summary ---
 echo ""
 echo "Results: $PASS passed, $FAIL failed"

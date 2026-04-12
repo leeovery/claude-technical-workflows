@@ -406,16 +406,209 @@ async function cmdIndex(args, options, cfg, provider) {
 }
 
 // ---------------------------------------------------------------------------
-// Placeholder command handlers — replaced by Tasks 3-4 and 3-5
+// Query command
+// ---------------------------------------------------------------------------
+
+// Confidence tiers for re-ranking — higher number = higher boost.
+const CONFIDENCE_RANK = {
+  'high': 4,
+  'medium': 3,
+  'low-medium': 2,
+  'low': 1,
+};
+
+/**
+ * Format a timestamp (epoch ms) as YYYY-MM-DD.
+ */
+function formatDate(ts) {
+  const d = new Date(ts);
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+/**
+ * Application-level re-ranking per design doc lines 566-574.
+ * Adjusts Orama scores based on work-unit proximity, confidence tier,
+ * and recency. Returns the array sorted by adjusted score (descending).
+ */
+function rerank(results, workUnitHint) {
+  if (results.length === 0) return results;
+
+  // Find the most recent timestamp for normalisation.
+  const maxTs = Math.max(...results.map((r) => r.timestamp || 0));
+  const minTs = Math.min(...results.map((r) => r.timestamp || 0));
+  const tsRange = maxTs - minTs || 1;
+
+  return results
+    .map((r) => {
+      let adjustedScore = r.score || 0;
+
+      // Work-unit proximity boost (0.1 when matching).
+      if (workUnitHint && r.work_unit === workUnitHint) {
+        adjustedScore += 0.1;
+      }
+
+      // Confidence tier boost (0 to 0.04).
+      const confRank = CONFIDENCE_RANK[r.confidence] || 0;
+      adjustedScore += confRank * 0.01;
+
+      // Recency boost (0 to 0.05).
+      const recency = ((r.timestamp || 0) - minTs) / tsRange;
+      adjustedScore += recency * 0.05;
+
+      return Object.assign({}, r, { score: adjustedScore });
+    })
+    .sort((a, b) => b.score - a.score);
+}
+
+/**
+ * Resolve provider state for query. Symmetric with index-time resolution
+ * but returns mode information instead of throwing for the upgrade case.
+ */
+function resolveQueryMode(metadata, cfg, provider) {
+  const metaProvider = metadata.provider;
+  const metaModel = metadata.model;
+  const metaDimensions = metadata.dimensions;
+
+  // Keyword-only store (metadata.provider is null).
+  if (metaProvider === null || metaProvider === undefined) {
+    if (provider) {
+      // Stub-to-full upgrade case — store has no vectors, can't use provider.
+      return { mode: 'upgrade-available', provider: null };
+    }
+    return { mode: 'keyword-only', provider: null };
+  }
+
+  // Store has vectors — check provider compatibility.
+  if (!provider) {
+    // Config has no provider but store has vectors — mismatch.
+    throw new Error(
+      'Provider/model changed since last index. Run `knowledge rebuild` to reindex.\n' +
+        `  Store was indexed with: provider=${metaProvider}, model=${metaModel}\n` +
+        '  Current config has no provider configured.'
+    );
+  }
+
+  const curModel = provider.model();
+  const curDimensions = provider.dimensions();
+
+  if (metaProvider === cfg.provider && metaModel === curModel && metaDimensions === curDimensions) {
+    return { mode: 'full', provider };
+  }
+
+  // Mismatch.
+  throw new Error(
+    'Provider/model changed since last index. Run `knowledge rebuild` to reindex.\n' +
+      `  Store: provider=${metaProvider}, model=${metaModel}, dimensions=${metaDimensions}\n` +
+      `  Config: provider=${cfg.provider}, model=${curModel}, dimensions=${curDimensions}`
+  );
+}
+
+async function cmdQuery(args, options, cfg, provider) {
+  if (args.length === 0) {
+    process.stderr.write('Usage: knowledge query <search_term> [--phase ...] [--work-type ...] [--work-unit ...] [--limit N]\n');
+    process.exit(1);
+  }
+
+  const searchTerm = args[0];
+  const limit = options.limit || 10;
+  const sp = storePath();
+  const mp = metadataPath();
+
+  // Load store.
+  if (!fs.existsSync(sp)) {
+    process.stdout.write('[0 results]\n');
+    return;
+  }
+
+  const db = await store.loadStore(sp);
+
+  // Determine query mode from metadata.
+  let queryMode = 'keyword-only';
+  let effectiveProvider = null;
+  let stubNote = null;
+
+  if (fs.existsSync(mp)) {
+    const metadata = store.readMetadata(mp);
+    const state = resolveQueryMode(metadata, cfg, provider);
+    queryMode = state.mode;
+    effectiveProvider = state.provider;
+  }
+
+  if (queryMode === 'keyword-only') {
+    stubNote = '[keyword-only mode — configure embedding provider for semantic search]';
+  } else if (queryMode === 'upgrade-available') {
+    stubNote = '[keyword-only mode store — run `knowledge rebuild` for semantic search with your configured provider]';
+  }
+
+  // Build where clause from filters.
+  const where = {};
+  if (options.phase) {
+    const phases = options.phase.split(',').map((s) => s.trim());
+    where.phase = phases.length === 1 ? { eq: phases[0] } : { in: phases };
+  }
+  if (options.workType) {
+    const types = options.workType.split(',').map((s) => s.trim());
+    where.work_type = types.length === 1 ? { eq: types[0] } : { in: types };
+  }
+
+  // Search.
+  let results;
+  const similarity = cfg.similarity_threshold || 0.8;
+
+  if (queryMode === 'full' && effectiveProvider) {
+    // Hybrid search — embed the query, then search.
+    const queryVector = effectiveProvider.embed(searchTerm);
+    results = await store.searchHybrid(db, {
+      term: searchTerm,
+      vector: queryVector,
+      where: Object.keys(where).length > 0 ? where : undefined,
+      limit,
+      similarity,
+    });
+  } else {
+    // Fulltext only.
+    results = await store.searchFulltext(db, {
+      term: searchTerm,
+      where: Object.keys(where).length > 0 ? where : undefined,
+      limit,
+    });
+  }
+
+  // Re-rank.
+  results = rerank(results, options.workUnit);
+
+  // Apply limit after re-ranking (Orama may have returned up to limit,
+  // but re-ranking could change nothing about count).
+  if (results.length > limit) {
+    results = results.slice(0, limit);
+  }
+
+  // Format output.
+  const out = [];
+  if (stubNote) out.push(stubNote);
+  out.push(`[${results.length} results]`);
+
+  for (const r of results) {
+    out.push('');
+    const date = formatDate(r.timestamp);
+    out.push(`[${r.phase} | ${r.work_unit}/${r.topic} | ${r.confidence} | ${date}]`);
+    out.push(r.content);
+    out.push(`Source: ${r.source_file}`);
+  }
+
+  process.stdout.write(out.join('\n') + '\n');
+}
+
+// ---------------------------------------------------------------------------
+// Placeholder command handlers — replaced by Task 3-5
 // ---------------------------------------------------------------------------
 
 function notYetImplemented(name) {
   process.stderr.write(`Command "${name}" is not yet implemented.\n`);
   process.exit(1);
-}
-
-async function cmdQuery(/* args, options, cfg, provider */) {
-  notYetImplemented('query');
 }
 
 async function cmdCheck(/* args, options, cfg, provider */) {
