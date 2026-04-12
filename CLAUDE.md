@@ -35,6 +35,8 @@ Skills are organised in two tiers:
 
 **Capture skills** (`workflow-log-idea`, `workflow-log-bug`, `workflow-log-quickfix`) are model-invocable, lightweight skills outside the pipeline. Capture ideas, bugs, or quick-fixes as markdown files in the inbox (`.workflows/.inbox/`). No manifest, no migrations, no step/reference structure — just natural language instructions with capture-only constraints.
 
+**Shared references** (`skills/workflow-shared/references/`) are loaded by multiple skills across phases. They define protocols and checks that apply uniformly regardless of the calling skill. Current shared references: compliance self-check, convergence analysis, background agent surfacing protocol, natural break detection.
+
 ### Phase Entry Skill Routing
 
 Phase entry skills (`workflow-*-entry`) receive positional arguments: `$0` = work_type, `$1` = work_unit, `$2` = topic (optional). Topic resolution: `topic = $2 || (wt !== 'epic' ? $1 : null)`.
