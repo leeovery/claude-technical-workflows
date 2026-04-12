@@ -606,7 +606,7 @@ async function cmdQuery(args, options, cfg, provider) {
 // Check command
 // ---------------------------------------------------------------------------
 
-async function cmdCheck() {
+async function cmdCheck(/* args, options, cfg, provider */) {
   const kDir = knowledgeDir();
   const configFile = path.join(kDir, 'config.json');
   const sp = storePath();
