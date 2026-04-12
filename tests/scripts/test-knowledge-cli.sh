@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-# CLI dispatch tests for the knowledge base bundle.
+# CLI dispatch and command tests for the knowledge base bundle.
 # Tests against the built bundle (knowledge.cjs).
 
 set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUNDLE="$SCRIPT_DIR/../../skills/workflow-knowledge/scripts/knowledge.cjs"
+MANIFEST_JS="$SCRIPT_DIR/../../skills/workflow-manifest/scripts/manifest.cjs"
 
 PASS=0
 FAIL=0
@@ -22,6 +23,118 @@ assert_eq() {
     FAIL=$((FAIL + 1))
   fi
 }
+
+# Create a temp dir as the project root for each test group.
+TEST_ROOT=""
+setup_project() {
+  TEST_ROOT=$(mktemp -d)
+  mkdir -p "$TEST_ROOT/.workflows/.knowledge"
+}
+
+teardown_project() {
+  [ -n "$TEST_ROOT" ] && rm -rf "$TEST_ROOT"
+  TEST_ROOT=""
+}
+
+# Create a work unit via the manifest CLI.
+create_work_unit() {
+  local name="$1" type="$2" desc="$3"
+  cd "$TEST_ROOT"
+  node "$MANIFEST_JS" init "$name" --work-type "$type" --description "$desc" >/dev/null 2>&1
+}
+
+# Write a stub config for the knowledge base.
+write_stub_config() {
+  mkdir -p "$TEST_ROOT/.workflows/.knowledge"
+  cat > "$TEST_ROOT/.workflows/.knowledge/config.json" <<'CONF'
+{ "knowledge": { "provider": "stub", "dimensions": 128 } }
+CONF
+}
+
+# Write a keyword-only config (no provider).
+write_keyword_config() {
+  mkdir -p "$TEST_ROOT/.workflows/.knowledge"
+  cat > "$TEST_ROOT/.workflows/.knowledge/config.json" <<'CONF'
+{ "knowledge": {} }
+CONF
+}
+
+# Create a discussion artifact file with some markdown content.
+create_discussion_file() {
+  local wu="$1" topic="$2"
+  mkdir -p "$TEST_ROOT/.workflows/$wu/discussion"
+  cat > "$TEST_ROOT/.workflows/$wu/discussion/$topic.md" <<'MD'
+---
+status: completed
+---
+
+# Discussion
+
+## Topic One
+
+Some content about topic one that has enough text to exceed the
+keep_whole_below threshold of the chunking config.
+
+More paragraphs to bulk up the content. This needs to be above
+50 lines to trigger normal chunking behaviour.
+
+Line after line of content to ensure we get past the threshold.
+Line 10. Line 11. Line 12. Line 13. Line 14. Line 15.
+Line 16. Line 17. Line 18. Line 19. Line 20.
+Line 21. Line 22. Line 23. Line 24. Line 25.
+Line 26. Line 27. Line 28. Line 29. Line 30.
+Line 31. Line 32. Line 33. Line 34. Line 35.
+Line 36. Line 37. Line 38. Line 39. Line 40.
+Line 41. Line 42. Line 43. Line 44. Line 45.
+Line 46. Line 47. Line 48. Line 49. Line 50.
+
+## Topic Two
+
+More content about topic two.
+More lines here as well.
+MD
+}
+
+# Create a specification artifact file.
+create_spec_file() {
+  local wu="$1" topic="$2"
+  mkdir -p "$TEST_ROOT/.workflows/$wu/specification/$topic"
+  cat > "$TEST_ROOT/.workflows/$wu/specification/$topic/specification.md" <<'MD'
+# Specification
+
+## Overview
+
+This is a specification document.
+
+## Requirements
+
+Requirement details here. Enough content to be chunked.
+Line after line. More content.
+MD
+}
+
+# Create a research artifact file.
+create_research_file() {
+  local wu="$1" filename="$2"
+  mkdir -p "$TEST_ROOT/.workflows/$wu/research"
+  cat > "$TEST_ROOT/.workflows/$wu/research/$filename.md" <<'MD'
+# Research
+
+Some research content.
+MD
+}
+
+# Run the knowledge CLI from the test project root.
+run_kb() {
+  cd "$TEST_ROOT"
+  node "$BUNDLE" "$@"
+}
+
+# ============================================================================
+# DISPATCH TESTS
+# ============================================================================
+
+echo "=== Dispatch Tests ==="
 
 # --- Test 1: No command prints usage and exits 1 ---
 echo "Test 1: No command prints usage"
@@ -50,14 +163,195 @@ for cmd in status remove compact rebuild setup; do
 done
 
 # --- Test 4: Known Phase 3 commands dispatch without unknown-command error ---
-# Note: index/query/check are stubbed to "not yet implemented" in Task 3-1,
-# but they should NOT print "Unknown command". They dispatch to the correct
-# handler. Once Task 3-3/3-4/3-5 land, these tests will be updated.
 echo "Test 4: Phase 3 commands dispatch correctly"
 for cmd in index query check; do
   output=$(node "$BUNDLE" "$cmd" 2>&1 || true)
   assert_eq "$cmd does not say unknown command" "false" "$(echo "$output" | grep -q 'Unknown command' && echo true || echo false)"
 done
+
+# ============================================================================
+# INDEX COMMAND TESTS
+# ============================================================================
+
+echo ""
+echo "=== Index Command Tests ==="
+
+# --- Test 5: Index a discussion file and report chunk count ---
+echo "Test 5: Index a discussion file"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+create_discussion_file "auth-flow" "auth-flow"
+output=$(run_kb index .workflows/auth-flow/discussion/auth-flow.md 2>&1)
+assert_eq "reports indexed chunks" "true" "$(echo "$output" | grep -q 'Indexed.*chunks from' && echo true || echo false)"
+assert_eq "metadata.json created" "true" "$([ -f "$TEST_ROOT/.workflows/.knowledge/metadata.json" ] && echo true || echo false)"
+assert_eq "store.msp created" "true" "$([ -f "$TEST_ROOT/.workflows/.knowledge/store.msp" ] && echo true || echo false)"
+teardown_project
+
+# --- Test 6: Index a specification file (nested path) ---
+echo "Test 6: Index a specification file"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+create_spec_file "auth-flow" "auth-flow"
+output=$(run_kb index .workflows/auth-flow/specification/auth-flow/specification.md 2>&1)
+assert_eq "indexes spec file" "true" "$(echo "$output" | grep -q 'Indexed.*chunks from' && echo true || echo false)"
+teardown_project
+
+# --- Test 7: Index a research file ---
+echo "Test 7: Index a research file"
+setup_project
+create_work_unit "payments" "epic" "Payments"
+write_stub_config
+create_research_file "payments" "exploration"
+output=$(run_kb index .workflows/payments/research/exploration.md 2>&1)
+assert_eq "indexes research file" "true" "$(echo "$output" | grep -q 'Indexed.*chunks from' && echo true || echo false)"
+teardown_project
+
+# --- Test 8: Re-index replaces previous chunks (not duplicates) ---
+echo "Test 8: Re-index replaces previous chunks"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+create_discussion_file "auth-flow" "auth-flow"
+output1=$(run_kb index .workflows/auth-flow/discussion/auth-flow.md 2>&1)
+count1=$(echo "$output1" | grep -oE 'Indexed [0-9]+' | grep -oE '[0-9]+')
+output2=$(run_kb index .workflows/auth-flow/discussion/auth-flow.md 2>&1)
+count2=$(echo "$output2" | grep -oE 'Indexed [0-9]+' | grep -oE '[0-9]+')
+assert_eq "chunk count stays same on re-index" "$count1" "$count2"
+teardown_project
+
+# --- Test 9: Provider mismatch is refused (case 2) ---
+echo "Test 9: Provider mismatch refused"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+create_discussion_file "auth-flow" "auth-flow"
+# Index with stub provider to populate metadata.
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+# Now change the metadata to simulate a different provider.
+node -e "
+  const fs = require('fs');
+  const mp = '$TEST_ROOT/.workflows/.knowledge/metadata.json';
+  const m = JSON.parse(fs.readFileSync(mp, 'utf8'));
+  m.provider = 'openai';
+  m.model = 'text-embedding-3-small';
+  m.dimensions = 1536;
+  fs.writeFileSync(mp, JSON.stringify(m, null, 2) + '\n');
+"
+exit_code=0
+output=$(run_kb index .workflows/auth-flow/discussion/auth-flow.md 2>&1 || true)
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1 || exit_code=$?
+assert_eq "exits non-zero on mismatch" "true" "$([ "$exit_code" -ne 0 ] && echo true || echo false)"
+assert_eq "mentions rebuild" "true" "$(echo "$output" | grep -q 'rebuild' && echo true || echo false)"
+teardown_project
+
+# --- Test 10: No provider in config but store has vectors (case 3) ---
+echo "Test 10: No provider in config but store has vectors"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+create_discussion_file "auth-flow" "auth-flow"
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+# Switch to keyword-only config.
+write_keyword_config
+exit_code=0
+output=$(run_kb index .workflows/auth-flow/discussion/auth-flow.md 2>&1 || true)
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1 || exit_code=$?
+assert_eq "exits non-zero on downgrade" "true" "$([ "$exit_code" -ne 0 ] && echo true || echo false)"
+assert_eq "mentions rebuild" "true" "$(echo "$output" | grep -q 'rebuild' && echo true || echo false)"
+teardown_project
+
+# --- Test 11: Keyword-only store indexes WITHOUT vectors when config has provider (case 4) ---
+echo "Test 11: Keyword-only store with provider in config (case 4)"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_keyword_config
+create_discussion_file "auth-flow" "auth-flow"
+# First index in keyword-only mode.
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+# Verify metadata has null provider.
+meta_provider=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_ROOT/.workflows/.knowledge/metadata.json','utf8'));process.stdout.write(String(m.provider))")
+assert_eq "metadata.provider is null" "null" "$meta_provider"
+# Now switch to stub config and re-index — should succeed (case 4).
+write_stub_config
+exit_code=0
+output=$(run_kb index .workflows/auth-flow/discussion/auth-flow.md 2>&1)
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1 || exit_code=$?
+assert_eq "succeeds in case 4" "0" "$exit_code"
+# Verify metadata provider NOT upgraded.
+meta_provider2=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_ROOT/.workflows/.knowledge/metadata.json','utf8'));process.stdout.write(String(m.provider))")
+assert_eq "metadata.provider still null after case 4" "null" "$meta_provider2"
+teardown_project
+
+# --- Test 12: Keyword-only mode from scratch ---
+echo "Test 12: Keyword-only mode from scratch"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_keyword_config
+create_discussion_file "auth-flow" "auth-flow"
+exit_code=0
+output=$(run_kb index .workflows/auth-flow/discussion/auth-flow.md 2>&1)
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1 || exit_code=$?
+assert_eq "succeeds in keyword-only from scratch" "0" "$exit_code"
+assert_eq "reports chunks" "true" "$(echo "$output" | grep -q 'Indexed.*chunks from' && echo true || echo false)"
+teardown_project
+
+# --- Test 13: Error for file not in .workflows/ ---
+echo "Test 13: Error for file not in .workflows/"
+setup_project
+echo "hello" > "$TEST_ROOT/random.md"
+exit_code=0
+cd "$TEST_ROOT"
+node "$BUNDLE" index random.md 2>/dev/null || exit_code=$?
+assert_eq "rejects non-workflow file" "1" "$exit_code"
+teardown_project
+
+# --- Test 14: Error for non-indexed phase ---
+echo "Test 14: Error for non-indexed phase"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+mkdir -p "$TEST_ROOT/.workflows/auth-flow/planning/auth-flow"
+echo "# Plan" > "$TEST_ROOT/.workflows/auth-flow/planning/auth-flow/planning.md"
+exit_code=0
+cd "$TEST_ROOT"
+output=$(node "$BUNDLE" index .workflows/auth-flow/planning/auth-flow/planning.md 2>&1 || true)
+node "$BUNDLE" index .workflows/auth-flow/planning/auth-flow/planning.md 2>/dev/null || exit_code=$?
+assert_eq "rejects non-indexed phase" "1" "$exit_code"
+teardown_project
+
+# --- Test 15: metadata.json created with empty pending array on first index ---
+echo "Test 15: metadata.json has empty pending array on first index"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+create_discussion_file "auth-flow" "auth-flow"
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+pending=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_ROOT/.workflows/.knowledge/metadata.json','utf8'));process.stdout.write(JSON.stringify(m.pending))")
+assert_eq "pending is empty array" "[]" "$pending"
+teardown_project
+
+# --- Test 16: last_indexed updated without touching pending ---
+echo "Test 16: last_indexed updated, pending untouched"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+create_discussion_file "auth-flow" "auth-flow"
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+# Inject a pending item.
+node -e "
+  const fs = require('fs');
+  const mp = '$TEST_ROOT/.workflows/.knowledge/metadata.json';
+  const m = JSON.parse(fs.readFileSync(mp, 'utf8'));
+  m.pending = [{file: 'test.md', failed_at: '2026-01-01T00:00:00Z', error: 'test'}];
+  fs.writeFileSync(mp, JSON.stringify(m, null, 2) + '\n');
+"
+# Re-index.
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+pending=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_ROOT/.workflows/.knowledge/metadata.json','utf8'));process.stdout.write(JSON.stringify(m.pending))")
+assert_eq "pending preserved after re-index" '[{"file":"test.md","failed_at":"2026-01-01T00:00:00Z","error":"test"}]' "$pending"
+teardown_project
 
 # --- Summary ---
 echo ""

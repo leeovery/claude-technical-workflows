@@ -6,10 +6,23 @@
 
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
 const store = require('./store');
 const chunker = require('./chunker');
 const { StubProvider } = require('./embeddings');
 const config = require('./config');
+
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
+const INDEXED_PHASES = ['research', 'discussion', 'investigation', 'specification'];
+
+// Default dimensions when creating a store in keyword-only mode.
+// The store schema requires a dimension parameter, but keyword-only docs
+// omit the embedding field entirely — this value just satisfies the schema.
+const KEYWORD_ONLY_DIMENSIONS = 1536;
 
 // ---------------------------------------------------------------------------
 // Flag parsing
@@ -32,7 +45,6 @@ function parseArgs(argv) {
         flags[key] = arg.slice(eqIdx + 1);
       } else {
         const key = arg.slice(2);
-        // Peek next arg — if it exists and is not a flag, it's the value.
         if (i + 1 < argv.length && !argv[i + 1].startsWith('--')) {
           flags[key] = argv[i + 1];
           i++;
@@ -87,18 +99,319 @@ Options:
   --dry-run            Preview without making changes`;
 
 // ---------------------------------------------------------------------------
-// Command stubs — Phase 3 implements index, query, check.
-// The rest error with "not yet implemented" until Phase 4.
+// Path helpers
+// ---------------------------------------------------------------------------
+
+function knowledgeDir() {
+  return path.resolve(process.cwd(), '.workflows', '.knowledge');
+}
+
+function storePath() {
+  return path.join(knowledgeDir(), 'store.msp');
+}
+
+function metadataPath() {
+  return path.join(knowledgeDir(), 'metadata.json');
+}
+
+function lockFilePath() {
+  return path.join(knowledgeDir(), '.lock');
+}
+
+// ---------------------------------------------------------------------------
+// Identity derivation — parse file path to extract work_unit, phase, topic
+// ---------------------------------------------------------------------------
+
+/**
+ * Derive identity fields from a workflow artifact file path.
+ * Returns { work_unit, phase, topic } or throws on invalid path.
+ */
+function deriveIdentity(filePath) {
+  // Normalise to forward slashes for pattern matching.
+  const norm = filePath.replace(/\\/g, '/');
+
+  // Match .workflows/{work_unit}/{phase}/{rest}
+  const match = /\.workflows\/([^/]+)\/(research|discussion|investigation|specification)\/(.+)$/.exec(norm);
+  if (!match) {
+    throw new Error(
+      `Cannot derive identity from path: ${filePath}\n` +
+        'Expected path matching: .workflows/{work_unit}/{phase}/...'
+    );
+  }
+
+  const workUnit = match[1];
+  const phase = match[2];
+  const rest = match[3];
+
+  // Validate indexed phase.
+  if (!INDEXED_PHASES.includes(phase)) {
+    throw new Error(`File is in phase "${phase}" which is not indexed.`);
+  }
+
+  let topic;
+  if (phase === 'specification') {
+    // .workflows/{wu}/specification/{topic}/specification.md
+    const specMatch = /^([^/]+)\/specification\.md$/.exec(rest);
+    if (!specMatch) {
+      throw new Error(
+        `Unexpected specification path structure: ${rest}\n` +
+          'Expected: .workflows/{work_unit}/specification/{topic}/specification.md'
+      );
+    }
+    topic = specMatch[1];
+  } else if (phase === 'discussion' || phase === 'investigation') {
+    // .workflows/{wu}/{phase}/{topic}.md
+    if (!rest.endsWith('.md')) {
+      throw new Error(`Expected .md file for ${phase}: ${rest}`);
+    }
+    topic = rest.replace(/\.md$/, '');
+  } else if (phase === 'research') {
+    // .workflows/{wu}/research/{filename}.md
+    if (!rest.endsWith('.md')) {
+      throw new Error(`Expected .md file for research: ${rest}`);
+    }
+    topic = rest.replace(/\.md$/, '');
+  }
+
+  return { workUnit, phase, topic };
+}
+
+/**
+ * Read the work_type from the work unit's manifest.json.
+ */
+function readWorkType(workUnit) {
+  const manifestFile = path.resolve(process.cwd(), '.workflows', workUnit, 'manifest.json');
+  if (!fs.existsSync(manifestFile)) {
+    throw new Error(`Work unit manifest not found: ${manifestFile}`);
+  }
+  const manifest = JSON.parse(fs.readFileSync(manifestFile, 'utf8'));
+  if (!manifest.work_type) {
+    throw new Error(`Work unit manifest missing work_type field: ${manifestFile}`);
+  }
+  return manifest.work_type;
+}
+
+// ---------------------------------------------------------------------------
+// Provider state resolution
+// ---------------------------------------------------------------------------
+
+/**
+ * Check provider state against metadata.
+ * Returns { mode: 'full'|'keyword-only', provider: object|null }
+ * Throws on mismatch (cases 2 and 3 from the task spec).
+ */
+function resolveProviderState(metadata, cfg, provider) {
+  const metaProvider = metadata.provider;
+  const metaModel = metadata.model;
+  const metaDimensions = metadata.dimensions;
+
+  // Case 4: metadata.provider is null (keyword-only store).
+  // Always allowed — index WITHOUT vectors regardless of current config.
+  if (metaProvider === null || metaProvider === undefined) {
+    return { mode: 'keyword-only', provider: null };
+  }
+
+  // Cases 1-3: metadata HAS a provider.
+  if (provider) {
+    // Current config has a provider.
+    const curModel = provider.model();
+    const curDimensions = provider.dimensions();
+
+    if (metaProvider === cfg.provider && metaModel === curModel && metaDimensions === curDimensions) {
+      // Case 1: match — proceed with full embedding.
+      return { mode: 'full', provider };
+    }
+
+    // Case 2: mismatch.
+    throw new Error(
+      'Provider/model changed since last index. Run `knowledge rebuild` to reindex.\n' +
+        `  Store: provider=${metaProvider}, model=${metaModel}, dimensions=${metaDimensions}\n` +
+        `  Config: provider=${cfg.provider}, model=${curModel}, dimensions=${curDimensions}`
+    );
+  }
+
+  // Case 3: metadata has provider but current config does not.
+  throw new Error(
+    'Provider/model changed since last index. Run `knowledge rebuild` to reindex.\n' +
+      `  Store was indexed with: provider=${metaProvider}, model=${metaModel}\n` +
+      '  Current config has no provider configured.'
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Index command
+// ---------------------------------------------------------------------------
+
+async function cmdIndex(args, options, cfg, provider) {
+  if (args.length === 0) {
+    process.stderr.write('Usage: knowledge index <source_file>\n');
+    process.exit(1);
+  }
+
+  const sourceFile = args[0];
+
+  // Validate file exists.
+  const absSource = path.resolve(sourceFile);
+  if (!fs.existsSync(absSource)) {
+    process.stderr.write(`File not found: ${absSource}\n`);
+    process.exit(1);
+  }
+
+  // Derive identity from path.
+  const identity = deriveIdentity(sourceFile);
+
+  // Read work_type from manifest.
+  const workType = readWorkType(identity.workUnit);
+
+  // Load chunking config.
+  const chunkConfigPath = path.join(__dirname, '..', 'chunking', identity.phase + '.json');
+  if (!fs.existsSync(chunkConfigPath)) {
+    process.stderr.write(`Chunking config not found: ${chunkConfigPath}\n`);
+    process.exit(1);
+  }
+  const chunkConfig = JSON.parse(fs.readFileSync(chunkConfigPath, 'utf8'));
+
+  // Read and chunk the source file.
+  const content = fs.readFileSync(absSource, 'utf8');
+  const chunks = chunker.chunk(content, chunkConfig);
+
+  // Resolve store and metadata.
+  const kDir = knowledgeDir();
+  const sp = storePath();
+  const mp = metadataPath();
+  const lp = lockFilePath();
+
+  // Ensure knowledge directory exists.
+  if (!fs.existsSync(kDir)) {
+    fs.mkdirSync(kDir, { recursive: true });
+  }
+
+  // Load or create store.
+  let db;
+  let metadata;
+  const storeExists = fs.existsSync(sp);
+  const metadataExists = fs.existsSync(mp);
+
+  if (storeExists) {
+    db = await store.loadStore(sp);
+  }
+
+  if (metadataExists) {
+    metadata = store.readMetadata(mp);
+    // Robustness: treat missing pending as empty array.
+    if (!Array.isArray(metadata.pending)) {
+      metadata.pending = [];
+    }
+  }
+
+  // Determine effective mode (full vs keyword-only).
+  let effectiveMode;
+  let effectiveProvider;
+
+  if (metadata) {
+    // Existing metadata — check provider state.
+    const state = resolveProviderState(metadata, cfg, provider);
+    effectiveMode = state.mode;
+    effectiveProvider = state.provider;
+  } else {
+    // First index — no metadata yet.
+    if (provider) {
+      effectiveMode = 'full';
+      effectiveProvider = provider;
+    } else {
+      effectiveMode = 'keyword-only';
+      effectiveProvider = null;
+    }
+  }
+
+  // Create store if it doesn't exist.
+  if (!db) {
+    const dims = effectiveProvider
+      ? effectiveProvider.dimensions()
+      : (cfg.dimensions || KEYWORD_ONLY_DIMENSIONS);
+    db = await store.createStore(dims);
+  }
+
+  // Embed chunks if in full mode.
+  let embeddings = null;
+  if (effectiveMode === 'full' && effectiveProvider && chunks.length > 0) {
+    const texts = chunks.map((c) => c.content);
+    embeddings = effectiveProvider.embedBatch(texts);
+  }
+
+  // Build chunk documents.
+  const now = Date.now();
+  const confidence = chunkConfig.confidence || 'medium';
+  const docs = chunks.map((chunk, idx) => {
+    const seq = String(idx + 1).padStart(3, '0');
+    const doc = {
+      id: `${identity.workUnit}-${identity.phase}-${identity.topic}-${seq}`,
+      content: chunk.content,
+      work_unit: identity.workUnit,
+      work_type: workType,
+      phase: identity.phase,
+      topic: identity.topic,
+      confidence,
+      source_file: sourceFile,
+      timestamp: now,
+    };
+    if (embeddings) {
+      doc.embedding = embeddings[idx];
+    }
+    return doc;
+  });
+
+  // Acquire lock, remove old chunks, insert new, save.
+  await store.withLock(lp, async () => {
+    // Re-load store inside lock for safety (another process may have written).
+    if (storeExists) {
+      db = await store.loadStore(sp);
+    }
+
+    // Remove existing chunks for this identity.
+    await store.removeByIdentity(db, {
+      work_unit: identity.workUnit,
+      phase: identity.phase,
+      topic: identity.topic,
+    });
+
+    // Insert new chunks.
+    for (const doc of docs) {
+      await store.insertDocument(db, doc);
+    }
+
+    // Save store.
+    await store.saveStore(db, sp);
+
+    // Write or update metadata.
+    if (!metadata) {
+      // First index — create metadata with full schema.
+      const newMeta = {
+        provider: effectiveProvider ? cfg.provider : null,
+        model: effectiveProvider ? effectiveProvider.model() : null,
+        dimensions: effectiveProvider ? effectiveProvider.dimensions() : null,
+        last_indexed: new Date().toISOString(),
+        pending: [],
+      };
+      store.writeMetadata(mp, newMeta);
+    } else {
+      // Update only last_indexed — do NOT touch provider/model/dimensions
+      // or pending (owned by Task 4-4).
+      metadata.last_indexed = new Date().toISOString();
+      store.writeMetadata(mp, metadata);
+    }
+  });
+
+  process.stdout.write(`Indexed ${docs.length} chunks from ${sourceFile}\n`);
+}
+
+// ---------------------------------------------------------------------------
+// Placeholder command handlers — replaced by Tasks 3-4 and 3-5
 // ---------------------------------------------------------------------------
 
 function notYetImplemented(name) {
   process.stderr.write(`Command "${name}" is not yet implemented.\n`);
   process.exit(1);
-}
-
-// Placeholder handlers — replaced when their implementing tasks land.
-async function cmdIndex(/* args, options, cfg, provider */) {
-  notYetImplemented('index');
 }
 
 async function cmdQuery(/* args, options, cfg, provider */) {
@@ -125,10 +438,18 @@ async function main() {
     process.exit(1);
   }
 
+  // Load config and resolve provider for commands that need them.
+  let cfg = null;
+  let provider = null;
+  if (['index', 'query', 'rebuild'].includes(command)) {
+    cfg = config.loadConfig();
+    provider = config.resolveProvider(cfg);
+  }
+
   switch (command) {
-    case 'index':   await cmdIndex(commandArgs, options, null, null); break;
-    case 'query':   await cmdQuery(commandArgs, options, null, null); break;
-    case 'check':   await cmdCheck(commandArgs, options, null, null); break;
+    case 'index':   await cmdIndex(commandArgs, options, cfg, provider); break;
+    case 'query':   await cmdQuery(commandArgs, options, cfg, provider); break;
+    case 'check':   await cmdCheck(commandArgs, options, cfg, provider); break;
     case 'status':  notYetImplemented('status'); break;
     case 'remove':  notYetImplemented('remove'); break;
     case 'compact': notYetImplemented('compact'); break;
@@ -140,7 +461,23 @@ async function main() {
   }
 }
 
-module.exports = { parseArgs, buildOptions, main, StubProvider, store, chunker, config };
+module.exports = {
+  parseArgs,
+  buildOptions,
+  deriveIdentity,
+  resolveProviderState,
+  main,
+  StubProvider,
+  store,
+  chunker,
+  config,
+  knowledgeDir,
+  storePath,
+  metadataPath,
+  lockFilePath,
+  INDEXED_PHASES,
+  KEYWORD_ONLY_DIMENSIONS,
+};
 
 if (require.main === module) {
   main().catch((err) => {
