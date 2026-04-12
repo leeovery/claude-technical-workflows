@@ -145,7 +145,7 @@ Refreshing analysis...
 Clear the cache metadata from the manifest and delete the cache files:
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.cjs delete {work_unit}.research analysis_cache
-node .claude/skills/workflow-manifest/scripts/manifest.cjs delete {work_unit}.research gap_analysis_cache
+node .claude/skills/workflow-manifest/scripts/manifest.cjs delete {work_unit}.discussion gap_analysis_cache
 rm .workflows/{work_unit}/.state/research-analysis.md
 rm .workflows/{work_unit}/.state/discussion-gap-analysis.md
 ```

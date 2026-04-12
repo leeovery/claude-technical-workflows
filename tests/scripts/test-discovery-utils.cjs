@@ -686,14 +686,14 @@ describe('discovery-utils', () => {
 
   describe('computePendingFromGaps', () => {
     it('returns empty when no gap_topics', () => {
-      const result = computePendingFromGaps({ phases: { research: {} } });
+      const result = computePendingFromGaps({ phases: { discussion: {} } });
       assert.deepStrictEqual(result, []);
     });
 
     it('returns all gap topics when no discussions exist', () => {
       const result = computePendingFromGaps({
         phases: {
-          research: { gap_topics: ['integration', 'error-handling'] },
+          discussion: { gap_topics: ['integration', 'error-handling'] },
         },
       });
       assert.deepStrictEqual(result, ['integration', 'error-handling']);
@@ -702,8 +702,10 @@ describe('discovery-utils', () => {
     it('returns only undiscussed gap topics', () => {
       const result = computePendingFromGaps({
         phases: {
-          research: { gap_topics: ['integration', 'error-handling', 'caching'] },
-          discussion: { items: { integration: { status: 'completed' } } },
+          discussion: {
+            gap_topics: ['integration', 'error-handling', 'caching'],
+            items: { integration: { status: 'completed' } },
+          },
         },
       });
       assert.deepStrictEqual(result, ['error-handling', 'caching']);
@@ -712,8 +714,8 @@ describe('discovery-utils', () => {
     it('returns empty when all gap topics have discussions', () => {
       const result = computePendingFromGaps({
         phases: {
-          research: { gap_topics: ['integration', 'caching'] },
           discussion: {
+            gap_topics: ['integration', 'caching'],
             items: {
               integration: { status: 'completed' },
               caching: { status: 'in-progress' },
@@ -724,7 +726,7 @@ describe('discovery-utils', () => {
       assert.deepStrictEqual(result, []);
     });
 
-    it('returns empty when no research phase exists', () => {
+    it('returns empty when no discussion phase exists', () => {
       const result = computePendingFromGaps({ phases: {} });
       assert.deepStrictEqual(result, []);
     });
@@ -736,7 +738,7 @@ describe('discovery-utils', () => {
 
     it('handles gap_topics that is not an array', () => {
       const result = computePendingFromGaps({
-        phases: { research: { gap_topics: 'not-an-array' } },
+        phases: { discussion: { gap_topics: 'not-an-array' } },
       });
       assert.deepStrictEqual(result, []);
     });
@@ -744,11 +746,11 @@ describe('discovery-utils', () => {
     it('is independent of surfaced_topics', () => {
       const result = computePendingFromGaps({
         phases: {
-          research: {
-            surfaced_topics: ['auth', 'billing'],
+          research: { surfaced_topics: ['auth', 'billing'] },
+          discussion: {
             gap_topics: ['integration'],
+            items: { auth: { status: 'completed' } },
           },
-          discussion: { items: { auth: { status: 'completed' } } },
         },
       });
       assert.deepStrictEqual(result, ['integration']);

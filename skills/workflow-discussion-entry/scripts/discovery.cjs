@@ -98,8 +98,8 @@ function discover(cwd, workUnit) {
   // --- Gap analysis cache state ---
   const gapCacheEntries = [];
   for (const m of manifests) {
-    const researchPhase = phaseData(m, 'research');
-    const gapCache = researchPhase.gap_analysis_cache;
+    const discussionPhase = phaseData(m, 'discussion');
+    const gapCache = discussionPhase.gap_analysis_cache;
     if (!gapCache || !gapCache.checksum) continue;
 
     let status = 'stale';

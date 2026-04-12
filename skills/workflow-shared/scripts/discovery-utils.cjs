@@ -216,8 +216,8 @@ function computePendingFromResearch(manifest) {
 }
 
 function computePendingFromGaps(manifest) {
-  const rd = (manifest.phases || {}).research || {};
-  const gaps = Array.isArray(rd.gap_topics) ? rd.gap_topics : [];
+  const dd = (manifest.phases || {}).discussion || {};
+  const gaps = Array.isArray(dd.gap_topics) ? dd.gap_topics : [];
   const discussed = new Set(phaseItems(manifest, 'discussion').map(i => i.name));
   return gaps.filter(t => !discussed.has(t));
 }

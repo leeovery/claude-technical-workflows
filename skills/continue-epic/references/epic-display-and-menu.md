@@ -479,7 +479,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs pull {work_unit}.rese
 
 **If topic is from gap analysis:**
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.cjs pull {work_unit}.research gap_topics "{topic}"
+node .claude/skills/workflow-manifest/scripts/manifest.cjs pull {work_unit}.discussion gap_topics "{topic}"
 ```
 
 > *Output the next fenced block as a code block:*

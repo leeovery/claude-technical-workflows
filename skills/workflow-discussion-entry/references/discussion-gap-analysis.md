@@ -115,15 +115,15 @@ Use `gap_input_checksum` from the discovery output parsed in Step 1. This checks
 
 Write cache metadata to manifest:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.research gap_analysis_cache.checksum "{gap_input_checksum from discovery}"
-node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.research gap_analysis_cache.generated "{ISO timestamp}"
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.discussion gap_analysis_cache.checksum "{gap_input_checksum from discovery}"
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.discussion gap_analysis_cache.generated "{ISO timestamp}"
 # Push one entry per discussion file that was read:
-node .claude/skills/workflow-manifest/scripts/manifest.cjs push {work_unit}.research gap_analysis_cache.discussion_files "{discussion-file}.md"
+node .claude/skills/workflow-manifest/scripts/manifest.cjs push {work_unit}.discussion gap_analysis_cache.discussion_files "{discussion-file}.md"
 ```
 
 If the research analysis file was also read, push it too:
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.cjs push {work_unit}.research gap_analysis_cache.discussion_files "research-analysis.md"
+node .claude/skills/workflow-manifest/scripts/manifest.cjs push {work_unit}.discussion gap_analysis_cache.discussion_files "research-analysis.md"
 ```
 
 Ensure the state directory exists:
@@ -152,7 +152,7 @@ Create/update `.workflows/{work_unit}/.state/discussion-gap-analysis.md` (pure m
 Write the list of gap topic names to the manifest for discovery:
 
 ```bash
-node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.research gap_topics '["topic-a-kebab","topic-b-kebab"]'
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.discussion gap_topics '["topic-a-kebab","topic-b-kebab"]'
 ```
 
 Construct the JSON array from all topic names defined in E, converted to kebab-case. This overwrites any previous list — no reconciliation needed.
