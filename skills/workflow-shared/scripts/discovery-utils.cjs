@@ -215,6 +215,13 @@ function computePendingFromResearch(manifest) {
   return surfaced.filter(t => !discussed.has(t));
 }
 
+function computePendingFromGaps(manifest) {
+  const rd = (manifest.phases || {}).research || {};
+  const gaps = Array.isArray(rd.gap_topics) ? rd.gap_topics : [];
+  const discussed = new Set(phaseItems(manifest, 'discussion').map(i => i.name));
+  return gaps.filter(t => !discussed.has(t));
+}
+
 module.exports = {
   listFiles,
   listDirs,
@@ -227,6 +234,7 @@ module.exports = {
   filesChecksum,
   computeNextPhase,
   computePendingFromResearch,
+  computePendingFromGaps,
   loadActiveManifests,
   loadAllManifests,
   loadProjectManifest,
