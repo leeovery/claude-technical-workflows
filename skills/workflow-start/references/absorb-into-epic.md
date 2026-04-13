@@ -185,11 +185,9 @@ Proceed?
 
 #### If user chose `y`/`yes`
 
-→ Proceed to **F. Execute Absorption**.
+→ Proceed to **F. Move Discussion**.
 
-## F. Execute Absorption
-
-Execute the following operations in order:
+## F. Move Discussion
 
 ```bash
 mkdir -p .workflows/{target_epic}/discussion/
@@ -199,14 +197,27 @@ mkdir -p .workflows/{target_epic}/discussion/
 mv .workflows/{selected.name}/discussion/{selected.name}.md .workflows/{target_epic}/discussion/{topic}.md
 ```
 
-Register the discussion topic in the epic manifest, preserving the original status:
+Register the discussion topic in the epic manifest:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.cjs init-phase {target_epic}.discussion.{topic}
-node .claude/skills/workflow-manifest/scripts/manifest.cjs set {target_epic}.discussion.{topic} status {discussion_status}
 ```
 
-**If `has_research` is `true`:**
+#### If `discussion_status` is `completed`
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {target_epic}.discussion.{topic} status completed
+```
+
+→ Proceed to **G. Move Research**.
+
+#### Otherwise
+
+→ Proceed to **G. Move Research**.
+
+## G. Move Research
+
+#### If `has_research` is `true`
 
 For each item in `research_moves` (original_name → target_name):
 
@@ -215,12 +226,25 @@ mkdir -p .workflows/{target_epic}/research/
 mv .workflows/{selected.name}/research/{original_name}.md .workflows/{target_epic}/research/{target_name}.md
 ```
 
-Register in the epic manifest, preserving the original status:
+Register in the epic manifest:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.cjs init-phase {target_epic}.research.{target_name}
-node .claude/skills/workflow-manifest/scripts/manifest.cjs set {target_epic}.research.{target_name} status {original_status}
 ```
+
+**If the original item status was `completed`:**
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {target_epic}.research.{target_name} status completed
+```
+
+→ Proceed to **H. Cleanup**.
+
+#### Otherwise
+
+→ Proceed to **H. Cleanup**.
+
+## H. Cleanup
 
 Remove the feature from the project manifest:
 
@@ -236,9 +260,9 @@ rm -rf .workflows/{selected.name}/
 
 Commit: `workflow({selected.name}): absorb into {target_epic}`
 
-→ Proceed to **G. Post-Absorption**.
+→ Proceed to **I. Post-Absorption**.
 
-## G. Post-Absorption
+## I. Post-Absorption
 
 > *Output the next fenced block as a code block:*
 
