@@ -4,7 +4,7 @@
 
 ---
 
-Manage an in-progress work unit's lifecycle. Self-contained four-step flow.
+Manage an in-progress work unit's lifecycle.
 
 ## A. Select
 
@@ -77,33 +77,27 @@ Store the selected work unit.
 
 Default `implementation_completed` = false, `has_plan` = false.
 
-Check whether the planning phase exists:
+Check whether the planning phase exists and store the result as `has_plan`:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {selected.name}.planning
 ```
 
-If the result is `true`, set `has_plan` = true.
-
-**If `selected.work_type` is `feature`:**
+#### If `selected.work_type` is `feature`
 
 Default `has_spec` = false, `has_discussion` = false, `has_in_progress_epics` = false.
 
-Check whether the specification phase exists:
+Check whether the specification phase exists and store the result as `has_spec`:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {selected.name}.specification
 ```
 
-If the result is `true`, set `has_spec` = true.
-
-Check whether the discussion phase exists:
+Check whether the discussion phase exists and store the result as `has_discussion`:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {selected.name}.discussion
 ```
-
-If the result is `true`, set `has_discussion` = true.
 
 List in-progress epics:
 
@@ -113,6 +107,14 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs list --status in-prog
 
 If the result is a non-empty JSON array, set `has_in_progress_epics` = true and store the array as `available_epics`.
 
+→ Proceed to **C. Implementation Check**.
+
+#### Otherwise
+
+→ Proceed to **C. Implementation Check**.
+
+## C. Implementation Check
+
 Check whether the implementation phase exists:
 
 ```bash
@@ -121,13 +123,13 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {selected.name
 
 #### If the implementation phase does not exist
 
-→ Proceed to **D. Action Menu**.
+→ Proceed to **E. Action Menu**.
 
 #### If the implementation phase exists
 
-→ Proceed to **C. Completion Check**.
+→ Proceed to **D. Completion Check**.
 
-## C. Completion Check
+## D. Completion Check
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.cjs get '{selected.name}.implementation.*' status
@@ -139,13 +141,13 @@ This returns all topic statuses in the implementation phase.
 
 Set `implementation_completed` = true.
 
-→ Proceed to **D. Action Menu**.
+→ Proceed to **E. Action Menu**.
 
 #### Otherwise
 
-→ Proceed to **D. Action Menu**.
+→ Proceed to **E. Action Menu**.
 
-## D. Action Menu
+## E. Action Menu
 
 > *Output the next fenced block as markdown (not a code block):*
 
@@ -231,7 +233,7 @@ Invoke the `/continue-epic` skill. This is terminal — do not return to the cal
 
 → Load **[view-plan.md](view-plan.md)** and follow its instructions as written.
 
-→ Return to **D. Action Menu**.
+→ Return to **E. Action Menu**.
 
 #### If user chose `c`/`cancel`
 
@@ -257,4 +259,4 @@ Commit: `workflow({selected.name}): mark as cancelled`
 
 Answer the question.
 
-→ Return to **D. Action Menu**.
+→ Return to **E. Action Menu**.
