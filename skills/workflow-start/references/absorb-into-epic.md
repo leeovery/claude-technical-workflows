@@ -125,7 +125,7 @@ For each research item, check for collision in the target epic:
 node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {target_epic}.research.{research_topic}
 ```
 
-If a collision exists, rename by appending `-{selected.name}` (e.g. `exploration` becomes `exploration-{selected.name}`). Store the mapping of original name → target name as `research_moves`.
+Collisions are resolved by appending `-{selected.name}` (e.g. `exploration` becomes `exploration-{selected.name}`). Store the mapping of original name → target name as `research_moves`.
 
 → Proceed to **E. Confirm**.
 
@@ -199,19 +199,14 @@ mkdir -p .workflows/{target_epic}/discussion/
 mv .workflows/{selected.name}/discussion/{selected.name}.md .workflows/{target_epic}/discussion/{topic}.md
 ```
 
-Register the discussion topic in the epic manifest:
+Register the discussion topic in the epic manifest, preserving the original status:
 
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.cjs init-phase {target_epic}.discussion.{topic}
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {target_epic}.discussion.{topic} status {discussion_status}
 ```
 
-**If `discussion_status` is `completed`:**
-
-```bash
-node .claude/skills/workflow-manifest/scripts/manifest.cjs set {target_epic}.discussion.{topic} status completed
-```
-
-**If `has_research` is true:**
+**If `has_research` is `true`:**
 
 For each item in `research_moves` (original_name → target_name):
 
@@ -220,14 +215,11 @@ mkdir -p .workflows/{target_epic}/research/
 mv .workflows/{selected.name}/research/{original_name}.md .workflows/{target_epic}/research/{target_name}.md
 ```
 
+Register in the epic manifest, preserving the original status:
+
 ```bash
 node .claude/skills/workflow-manifest/scripts/manifest.cjs init-phase {target_epic}.research.{target_name}
-```
-
-If the original research item status was `completed`:
-
-```bash
-node .claude/skills/workflow-manifest/scripts/manifest.cjs set {target_epic}.research.{target_name} status completed
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {target_epic}.research.{target_name} status {original_status}
 ```
 
 Remove the feature from the project manifest:
