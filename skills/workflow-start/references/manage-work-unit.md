@@ -75,7 +75,7 @@ Store the selected work unit.
 
 ## B. Pre-Checks
 
-Default `implementation_completed` = false, `has_plan` = false.
+Default `implementation_completed` = false, `has_plan` = false, `has_spec` = false, `has_discussion` = false, `has_in_progress_epics` = false.
 
 Check whether the planning phase exists:
 
@@ -84,6 +84,30 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {selected.name
 ```
 
 If the result is `true`, set `has_plan` = true.
+
+Check whether the specification phase exists:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {selected.name}.specification
+```
+
+If the result is `true`, set `has_spec` = true.
+
+Check whether the discussion phase exists:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {selected.name}.discussion
+```
+
+If the result is `true`, set `has_discussion` = true.
+
+List in-progress epics:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs list --status in-progress --work-type epic
+```
+
+If the result is a non-empty JSON array, set `has_in_progress_epics` = true and store the array as `available_epics`.
 
 Check whether the implementation phase exists:
 
@@ -124,7 +148,8 @@ Set `implementation_completed` = true.
 ```
 > Lifecycle actions for this work unit. Done marks it finished,
 > cancel abandons it, pivot converts a feature to an epic when the
-> scope grows beyond a single topic.
+> scope grows beyond a single topic, absorb merges a feature's
+> discussion into an existing epic.
 
 · · · · · · · · · · · ·
 **{selected.name:(titlecase)}** ({selected.work_type})
@@ -134,6 +159,9 @@ Set `implementation_completed` = true.
 @endif
 @if(selected.work_type == 'feature')
 - **`p`/`pivot`** — Convert to epic (enables multiple topics)
+@endif
+@if(selected.work_type == 'feature' and !has_spec and has_discussion and has_in_progress_epics)
+- **`a`/`absorb`** — Merge into an existing epic
 @endif
 @if(has_plan)
 - **`v`/`view-plan`** — View the implementation plan
@@ -186,6 +214,12 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs set {selected.name} w
 Invoke the `/continue-epic` skill. This is terminal — do not return to the caller.
 
 **If user chose `b`/`back`:**
+
+→ Return to caller.
+
+#### If user chose `a`/`absorb`
+
+→ Load **[absorb-into-epic.md](absorb-into-epic.md)** and follow its instructions as written.
 
 → Return to caller.
 

@@ -1,0 +1,250 @@
+# Absorb Feature into Epic
+
+*Reference for **[manage-work-unit](manage-work-unit.md)***
+
+---
+
+Merge a feature's discussion into an existing epic as a new topic, then remove the feature entirely.
+
+## A. Select Target Epic
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> This will move the feature's discussion into the selected epic as
+> a new topic and delete the feature work unit. Git history serves
+> as provenance.
+
+· · · · · · · · · · · ·
+Select a target epic:
+
+@foreach(epic in available_epics)
+- **`{N}`** — {epic.name:(titlecase)}
+@endforeach
+
+- **`b`/`back`** — Return
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If user chose `b`/`back`
+
+→ Return to caller.
+
+#### If user chose a number
+
+Store the selected epic as `target_epic`.
+
+→ Proceed to **B. Name Topic**.
+
+## B. Name Topic
+
+Default topic name = `{selected.name}` (the feature's work unit name).
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+Topic name in **{target_epic:(titlecase)}**: **{selected.name}**
+
+- **`y`/`yes`** — Use this name
+- **`r`/`rename`** — Enter a different name (kebab-case)
+- **`b`/`back`** — Return
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If user chose `b`/`back`
+
+→ Return to caller.
+
+#### If user chose `y`/`yes`
+
+Set `topic` = `{selected.name}`.
+
+→ Proceed to **C. Collision Check**.
+
+#### If user chose `r`/`rename`
+
+> *Output the next fenced block as a code block:*
+
+```
+Enter topic name (kebab-case):
+```
+
+**STOP.** Wait for user response.
+
+Set `topic` to the user's input.
+
+→ Proceed to **C. Collision Check**.
+
+## C. Collision Check
+
+Check if a discussion topic with this name already exists in the target epic:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {target_epic}.discussion.{topic}
+```
+
+#### If `true`
+
+> *Output the next fenced block as a code block:*
+
+```
+Topic "{topic}" already exists in {target_epic:(titlecase)}.
+Enter a different name (kebab-case):
+```
+
+**STOP.** Wait for user response.
+
+Set `topic` to the user's input.
+
+→ Return to **C. Collision Check**.
+
+#### If `false`
+
+→ Proceed to **D. Research Warning**.
+
+## D. Research Warning
+
+Check if the feature has research:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs exists {selected.name}.research
+```
+
+#### If `true`
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+> Research files for this feature won't be moved — their value is
+> already captured in the discussion. They will be deleted with the
+> feature directory.
+```
+
+→ Proceed to **E. Confirm**.
+
+#### Otherwise
+
+→ Proceed to **E. Confirm**.
+
+## E. Confirm
+
+Read the discussion status:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs get {selected.name}.discussion.{selected.name} status
+```
+
+Store the result as `discussion_status`.
+
+> *Output the next fenced block as a code block:*
+
+```
+Absorb Summary
+
+  Feature:    {selected.name:(titlecase)}
+  Target:     {target_epic:(titlecase)}
+  Topic:      {topic}
+  Discussion: [{discussion_status}]
+
+  Actions:
+  • Move discussion file to epic
+  • Register topic in epic manifest
+  • Remove feature work unit and directory
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+Proceed?
+- **`y`/`yes`**
+- **`n`/`no`**
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If user chose `n`/`no`
+
+→ Return to caller.
+
+#### If user chose `y`/`yes`
+
+→ Proceed to **F. Execute Absorption**.
+
+## F. Execute Absorption
+
+Execute the following operations in order:
+
+```bash
+mkdir -p .workflows/{target_epic}/discussion/
+```
+
+```bash
+mv .workflows/{selected.name}/discussion/{selected.name}.md .workflows/{target_epic}/discussion/{topic}.md
+```
+
+Register the topic in the epic manifest:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs init-phase {target_epic}.discussion.{topic}
+```
+
+**If `discussion_status` is `completed`:**
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs set {target_epic}.discussion.{topic} status completed
+```
+
+Remove the feature from the project manifest:
+
+```bash
+node .claude/skills/workflow-manifest/scripts/manifest.cjs delete project.work_units.{selected.name}
+```
+
+Remove the feature directory:
+
+```bash
+rm -rf .workflows/{selected.name}/
+```
+
+Commit: `workflow({selected.name}): absorb into {target_epic}`
+
+→ Proceed to **G. Post-Absorption**.
+
+## G. Post-Absorption
+
+> *Output the next fenced block as a code block:*
+
+```
+Absorbed into Epic
+
+  Topic "{topic:(titlecase)}" added to {target_epic:(titlecase)}.
+
+  • Discussion: moved
+  • Feature: removed
+```
+
+> *Output the next fenced block as markdown (not a code block):*
+
+```
+· · · · · · · · · · · ·
+- **`c`/`continue`** — Continue {target_epic:(titlecase)} as epic
+- **`b`/`back`** — Return to previous view
+· · · · · · · · · · · ·
+```
+
+**STOP.** Wait for user response.
+
+#### If user chose `c`/`continue`
+
+Invoke the `/continue-epic` skill. This is terminal — do not return to the caller.
+
+#### If user chose `b`/`back`
+
+→ Return to caller.
