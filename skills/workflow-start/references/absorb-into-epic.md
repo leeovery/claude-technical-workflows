@@ -105,7 +105,7 @@ Set `topic` to the user's input.
 
 #### If `false`
 
-→ Proceed to **D. Research Warning**.
+→ Proceed to **D. Research Check**.
 
 ## D. Research Check
 
