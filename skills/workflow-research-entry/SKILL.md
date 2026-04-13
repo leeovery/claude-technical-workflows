@@ -63,6 +63,8 @@ Resolve filename:
 
 #### If source is `import`
 
+If topic is not yet resolved, set `topic = exploration`.
+
 `resolved_filename = {topic}.md`
 
 → Proceed to **Step 5**.

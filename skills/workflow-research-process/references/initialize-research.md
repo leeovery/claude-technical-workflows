@@ -33,40 +33,6 @@
    node .claude/skills/workflow-manifest/scripts/manifest.cjs init-phase {work_unit}.research.{topic}
    ```
 4. Commit: `research({work_unit}): import {topic} research from existing files`
-5. Check if any import files are git-tracked:
-   ```bash
-   git ls-files --error-unmatch {path_1} {path_2} ...
-   ```
-
-**If no import files are git-tracked:**
-
-→ Return to caller.
-
-**If any import files are git-tracked:**
-
-> *Output the next fenced block as markdown (not a code block):*
-
-```
-· · · · · · · · · · · ·
-The following source files are tracked by git:
-
-• {tracked_path_1}
-• {tracked_path_2}
-
-- **`d`/`delete`** — Delete source files and commit cleanup
-- **`k`/`keep`** — Keep source files as they are
-· · · · · · · · · · · ·
-```
-
-**STOP.** Wait for user response.
-
-**If user chooses `delete`:**
-
-Delete the tracked files and commit: `research({work_unit}): remove imported source files`
-
-→ Return to caller.
-
-**If user chooses `keep`:**
 
 → Return to caller.
 
