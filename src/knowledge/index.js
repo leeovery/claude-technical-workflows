@@ -103,7 +103,7 @@ Commands:
 
 Options:
   --work-type <type>   Filter by work type
-  --work-unit <unit>   Filter by work unit
+  --work-unit <unit>   Re-rank boost for this work unit (not a filter)
   --phase <phase>      Filter by phase
   --topic <topic>      Filter by topic
   --limit <n>          Limit number of results
@@ -342,6 +342,14 @@ async function indexSingleFile(sourceFile, identity, cfg, provider) {
   const absSource = path.resolve(sourceFile);
   const content = fs.readFileSync(absSource, 'utf8');
   const chunks = chunker.chunk(content, chunkConfig);
+
+  if (chunks.length === 0) {
+    throw new Error(
+      `No chunks produced from ${sourceFile}. Refusing to index an empty file — ` +
+        'this would silently wipe any existing indexed chunks for this topic. ' +
+        'Use `knowledge remove` explicitly if that is what you want.'
+    );
+  }
 
   // Resolve store and metadata.
   const kDir = knowledgeDir();
@@ -609,10 +617,25 @@ async function cmdIndexBulk(options, cfg, provider) {
 
 function addToPendingQueue(file, errorMsg) {
   const mp = metadataPath();
-  if (!fs.existsSync(mp)) return;
-  const metadata = store.readMetadata(mp);
+  const kDir = knowledgeDir();
+  if (!fs.existsSync(kDir)) fs.mkdirSync(kDir, { recursive: true });
+
+  let metadata;
+  if (fs.existsSync(mp)) {
+    metadata = store.readMetadata(mp);
+  } else {
+    // First-ever failure before any successful index — create a minimal
+    // metadata file so failure tracking doesn't silently drop entries.
+    metadata = {
+      provider: null,
+      model: null,
+      dimensions: null,
+      last_indexed: null,
+      pending: [],
+    };
+  }
   if (!Array.isArray(metadata.pending)) metadata.pending = [];
-  // Don't duplicate — update if same file already queued.
+
   const existing = metadata.pending.findIndex((p) => p.file === file);
   const entry = { file, failed_at: new Date().toISOString(), error: errorMsg };
   if (existing >= 0) {
@@ -682,6 +705,23 @@ const CONFIDENCE_RANK = {
   'low-medium': 2,
   'low': 1,
 };
+
+/**
+ * Parse a date-only string "YYYY-MM-DD" as local midnight. Returns null
+ * on invalid input. Using `new Date("YYYY-MM-DD")` directly parses as
+ * UTC, which shifts the effective date in non-UTC timezones — this
+ * helper keeps the semantics consistent with `new Date()` (local).
+ */
+function parseLocalDate(str) {
+  if (typeof str !== 'string') return null;
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(str.trim());
+  if (!m) {
+    // Fall back to Date parser for ISO timestamps with time component.
+    const d = new Date(str);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  return new Date(parseInt(m[1], 10), parseInt(m[2], 10) - 1, parseInt(m[3], 10));
+}
 
 /**
  * Format a timestamp (epoch ms) as YYYY-MM-DD.
@@ -810,7 +850,9 @@ async function cmdQuery(args, options, cfg, provider) {
     stubNote = '[keyword-only mode but embedding provider configured — run knowledge rebuild for full hybrid search]';
   }
 
-  // Build where clause from filters.
+  // Build where clause from filters. --work-unit is NOT a filter — it's a
+  // re-rank proximity hint used after search, so other work units can still
+  // appear in results but rank lower.
   const where = {};
   if (options.phase) {
     const phases = options.phase.split(',').map((s) => s.trim());
@@ -819,6 +861,10 @@ async function cmdQuery(args, options, cfg, provider) {
   if (options.workType) {
     const types = options.workType.split(',').map((s) => s.trim());
     where.work_type = types.length === 1 ? { eq: types[0] } : { in: types };
+  }
+  if (options.topic) {
+    const topics = options.topic.split(',').map((s) => s.trim());
+    where.topic = topics.length === 1 ? { eq: topics[0] } : { in: topics };
   }
 
   const similarity = cfg.similarity_threshold || 0.8;
@@ -1256,8 +1302,11 @@ async function cmdCompact(_args, options, cfg) {
     if (meta.status !== 'completed') continue;
     if (!meta.completed_at) continue;
 
-    const completedDate = new Date(meta.completed_at);
-    if (isNaN(completedDate.getTime())) continue;
+    // Parse completed_at as local midnight to match `now` (also local).
+    // Using `new Date("YYYY-MM-DD")` parses as UTC, which can shift the
+    // date by ±1 day in non-UTC timezones.
+    const completedDate = parseLocalDate(meta.completed_at);
+    if (!completedDate || isNaN(completedDate.getTime())) continue;
 
     // Check if expired: completed_at + decay_months <= now.
     const expiryDate = new Date(completedDate);

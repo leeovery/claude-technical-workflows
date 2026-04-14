@@ -1187,6 +1187,59 @@ output=$(run_kb query "topic" 2>&1)
 assert_eq "no upgrade note pure keyword" "false" "$(echo "$output" | grep -q 'embedding provider configured' && echo true || echo false)"
 teardown_project
 
+# ============================================================================
+# REVIEW-DRIVEN FIX TESTS
+# ============================================================================
+
+echo ""
+echo "=== Review-Driven Fix Tests ==="
+
+# --- Test 70: Query --topic actually filters ---
+echo "Test 70: Query --topic filters"
+setup_project
+create_work_unit "payments" "epic" "Payments"
+write_stub_config
+create_spec_file "payments" "billing"
+create_spec_file "payments" "invoicing"
+run_kb index .workflows/payments/specification/billing/specification.md >/dev/null 2>&1
+run_kb index .workflows/payments/specification/invoicing/specification.md >/dev/null 2>&1
+output=$(run_kb query "specification" --topic billing --limit 10 2>&1)
+assert_eq "only billing in results" "false" "$(echo "$output" | grep -q 'invoicing' && echo true || echo false)"
+assert_eq "billing present" "true" "$(echo "$output" | grep -q 'billing' && echo true || echo false)"
+teardown_project
+
+# --- Test 71: Indexing empty file is rejected ---
+echo "Test 71: Empty file rejected"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+mkdir -p "$TEST_ROOT/.workflows/auth-flow/discussion"
+echo "" > "$TEST_ROOT/.workflows/auth-flow/discussion/auth-flow.md"
+exit_code=0
+output=$(run_kb index .workflows/auth-flow/discussion/auth-flow.md 2>&1 || true)
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1 || exit_code=$?
+assert_eq "rejects empty file" "true" "$([ "$exit_code" -ne 0 ] && echo true || echo false)"
+assert_eq "explains refusal" "true" "$(echo "$output" | grep -q 'No chunks produced' && echo true || echo false)"
+teardown_project
+
+# --- Test 72: First-ever bulk index failure tracks in pending queue ---
+echo "Test 72: First-ever failure goes to pending queue"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+mkdir -p "$TEST_ROOT/.workflows/auth-flow/discussion"
+echo "" > "$TEST_ROOT/.workflows/auth-flow/discussion/auth-flow.md"
+init_phase_topic "auth-flow" "discussion" "auth-flow" "completed"
+run_kb index >/dev/null 2>&1 || true
+[ -f "$TEST_ROOT/.workflows/.knowledge/metadata.json" ]
+exists=$?
+assert_eq "metadata.json created on first failure" "0" "$exists"
+if [ "$exists" = "0" ]; then
+  pending=$(node -e "const m=JSON.parse(require('fs').readFileSync('$TEST_ROOT/.workflows/.knowledge/metadata.json','utf8'));process.stdout.write(String(m.pending.length))")
+  assert_eq "pending has 1 item" "1" "$pending"
+fi
+teardown_project
+
 # --- Summary ---
 echo ""
 echo "Results: $PASS passed, $FAIL failed"
