@@ -242,6 +242,22 @@ Invoke the `/continue-epic` skill. This is terminal — do not return to the cal
 node .claude/skills/workflow-manifest/scripts/manifest.cjs set {selected.name} status cancelled
 ```
 
+Remove the cancelled work unit's chunks from the knowledge base:
+
+```bash
+node .claude/skills/workflow-knowledge/scripts/knowledge.cjs remove --work-unit {selected.name}
+```
+
+If the remove command fails, display the error but do not block — the cancellation itself is already recorded:
+
+> *Output the next fenced block as a code block:*
+
+```
+⚑ Knowledge removal warning
+  {error details}
+  The work unit is cancelled. You can run knowledge remove manually later.
+```
+
 Commit: `workflow({selected.name}): mark as cancelled`
 
 > *Output the next fenced block as a code block:*

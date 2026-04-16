@@ -97,6 +97,22 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.speci
 node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.specification.{topic} promoted_to {cc_work_unit}
 ```
 
+Remove the promoted spec's chunks from the original work unit (the new cross-cutting spec will be indexed when it completes):
+
+```bash
+node .claude/skills/workflow-knowledge/scripts/knowledge.cjs remove --work-unit {work_unit} --phase specification --topic {topic}
+```
+
+If the remove command fails, display the error but do not block — the promotion is already recorded:
+
+> *Output the next fenced block as a code block:*
+
+```
+⚑ Knowledge removal warning
+  {error details}
+  The spec is promoted. You can run knowledge remove manually later.
+```
+
 → Proceed to **F. Commit and Display**.
 
 ## F. Commit and Display
