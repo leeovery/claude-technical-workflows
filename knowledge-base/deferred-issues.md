@@ -107,6 +107,12 @@ Each entry records: where, what, why it was deferred, and a mitigation idea. Cir
 **Description:** After `process.stdin.resume()`, stdin stays flowing. Irrelevant for CLI but leaks if called as library.
 **Mitigation:** `process.stdin.pause()` after reading the line.
 
+### 17. Bulk discovery misses work units not in project manifest — Medium
+
+**Location:** `src/knowledge/index.js` `discoverArtifacts` → `manifest list`.
+**Description:** `manifest list` reads from the project manifest, not the filesystem. Work units created before the project manifest system (legacy) are invisible to bulk index and status unindexed-artifact detection. Real-data testing on Tick showed 9 work units on disk but only 1 registered in project manifest → only 2 files indexed.
+**Mitigation:** Fall back to filesystem scan (like `manifest list` already does when project manifest has no `work_units` key) or add a "register all" migration.
+
 ---
 
 ## How to use this file
