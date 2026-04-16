@@ -686,6 +686,11 @@ async function removePendingItem(file) {
   });
 }
 
+// IMPORTANT: The store lock is NOT reentrant. processPendingQueue calls
+// indexSingleFile (acquires lock) and removePendingItem (acquires lock)
+// from inside this function — each call must happen with no lock held
+// at entry. Never wrap a call to processPendingQueue in withLock —
+// doing so would cause a same-process deadlock.
 async function processPendingQueue(cfg, provider, limit) {
   const mp = metadataPath();
   if (!fs.existsSync(mp)) return;
@@ -1202,11 +1207,43 @@ async function cmdRebuild(_args, options, cfg, provider) {
     process.exit(1);
   }
 
+  // Discover artifacts BEFORE destroying the store. If discovery fails
+  // or returns zero, we'd be wiping the index for nothing — refuse.
+  const artifacts = discoverArtifacts();
+  if (artifacts.length === 0) {
+    process.stderr.write(
+      'No completed artifacts found to index. Aborting rebuild — ' +
+      'the existing index has NOT been modified.\n' +
+      '(If you believe this is wrong, check that .workflows/ exists and ' +
+      'that work units have items with status "completed".)\n'
+    );
+    process.exit(1);
+  }
+
   // Acquire lock before deleting files so a concurrent index/remove/
-  // compact does not race past and resurrect partial state.
+  // compact does not race past and resurrect partial state. Then write
+  // an empty placeholder store+metadata inside the same lock so there
+  // is no "uninitialised" window where another process could build a
+  // fresh store racing with our bulk-index.
   await store.withLock(lp, async () => {
     if (fs.existsSync(sp)) fs.unlinkSync(sp);
     if (fs.existsSync(mp)) fs.unlinkSync(mp);
+
+    // Write a sentinel empty store + keyword-only metadata so cmdCheck
+    // and concurrent invocations see a valid (empty) state. The bulk
+    // index below will overwrite these per-file.
+    const dims = provider
+      ? provider.dimensions()
+      : (cfg && cfg.dimensions) || KEYWORD_ONLY_DIMENSIONS;
+    const emptyDb = await store.createStore(dims);
+    await store.saveStore(emptyDb, sp);
+    store.writeMetadata(mp, {
+      provider: provider ? cfg.provider : null,
+      model: provider ? provider.model() : null,
+      dimensions: provider ? provider.dimensions() : null,
+      last_indexed: new Date().toISOString(),
+      pending: [],
+    });
   });
   process.stdout.write('Deleted existing index.\n');
 

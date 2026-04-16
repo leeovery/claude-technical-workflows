@@ -350,23 +350,32 @@ const LOCK_STALE_MS = 30000;
 const LOCK_RETRY_MS = 50;
 const LOCK_TIMEOUT_MS = 10000;
 
-function acquireLock(lockPath) {
+function tryAcquire(lockPath) {
+  try {
+    const fd = fs.openSync(lockPath, 'wx');
+    fs.writeSync(fd, String(process.pid));
+    fs.closeSync(fd);
+    return true;
+  } catch (e) {
+    if (e.code !== 'EEXIST') throw e;
+    return false;
+  }
+}
+
+function sleepMs(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function acquireLock(lockPath) {
   const deadline = Date.now() + LOCK_TIMEOUT_MS;
   while (true) {
-    try {
-      const fd = fs.openSync(lockPath, 'wx');
-      fs.writeSync(fd, String(process.pid));
-      fs.closeSync(fd);
-      return;
-    } catch (e) {
-      if (e.code !== 'EEXIST') throw e;
-    }
+    if (tryAcquire(lockPath)) return;
 
     // Stale lock detection
     try {
       const stat = fs.statSync(lockPath);
       if (Date.now() - stat.mtimeMs > LOCK_STALE_MS) {
-        fs.unlinkSync(lockPath);
+        try { fs.unlinkSync(lockPath); } catch (_) { /* already gone */ }
         continue;
       }
     } catch (_) {
@@ -375,11 +384,15 @@ function acquireLock(lockPath) {
     }
 
     if (Date.now() >= deadline) {
-      throw new Error(`knowledge store: timed out waiting for lock at ${lockPath}`);
+      throw new Error(
+        `knowledge store: timed out waiting for lock at ${lockPath}. ` +
+        'If no other process is running, delete the file manually.'
+      );
     }
 
-    const end = Date.now() + LOCK_RETRY_MS;
-    while (Date.now() < end) { /* spin */ }
+    // Async sleep — yields to the event loop so other work (including
+    // the lock holder's own release) can progress.
+    await sleepMs(LOCK_RETRY_MS);
   }
 }
 
@@ -388,7 +401,7 @@ function releaseLock(lockPath) {
 }
 
 async function withLock(lockPath, fn) {
-  acquireLock(lockPath);
+  await acquireLock(lockPath);
   try {
     return await fn();
   } finally {
