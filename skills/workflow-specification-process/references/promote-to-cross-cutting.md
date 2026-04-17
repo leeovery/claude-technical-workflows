@@ -86,6 +86,22 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs set {cc_work_unit}.sp
 node .claude/skills/workflow-manifest/scripts/manifest.cjs set {cc_work_unit}.specification.{cc_work_unit} date $(date +%Y-%m-%d)
 ```
 
+Index the specification at its new location in the knowledge base:
+
+```bash
+node .claude/skills/workflow-knowledge/scripts/knowledge.cjs index .workflows/{cc_work_unit}/specification/{cc_work_unit}/specification.md
+```
+
+If the index command fails, display the error but do not block — the artifact is already saved:
+
+> *Output the next fenced block as a code block:*
+
+```
+⚑ Knowledge indexing warning
+  {error details}
+  The artifact is saved. Indexing can be retried later.
+```
+
 → Proceed to **E. Update Epic Manifest**.
 
 ## E. Update Epic Manifest
@@ -97,7 +113,7 @@ node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.speci
 node .claude/skills/workflow-manifest/scripts/manifest.cjs set {work_unit}.specification.{topic} promoted_to {cc_work_unit}
 ```
 
-Remove the promoted spec's chunks from the original work unit (the new cross-cutting spec will be indexed when it completes):
+Remove the promoted spec's chunks from the original work unit (already re-indexed under the new cc work unit in section D):
 
 ```bash
 node .claude/skills/workflow-knowledge/scripts/knowledge.cjs remove --work-unit {work_unit} --phase specification --topic {topic}
