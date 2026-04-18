@@ -4,7 +4,13 @@
 
 ---
 
-Re-index every completed artifact in an indexed phase so that chunk metadata stays in sync with the manifest. Caller passes `work_unit`.
+Re-index every completed artifact in an indexed phase so that chunk metadata stays in sync with the manifest.
+
+## Parameters
+
+The caller provides these via context before loading:
+
+- `work_unit` — the work unit name whose completed artifacts should be re-indexed
 
 ## A. Loop Over Indexed Phases
 
