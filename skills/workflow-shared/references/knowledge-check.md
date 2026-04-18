@@ -4,7 +4,7 @@
 
 ---
 
-Check knowledge base readiness. If not ready, display a hard stop with setup instructions. If ready, run compaction to keep the index lean.
+Gate the workflow on knowledge base readiness, then run routine compaction. If the store isn't set up, hard stop with setup instructions. Otherwise, trim any expired chunks so the index stays lean.
 
 ## A. Check Readiness
 
