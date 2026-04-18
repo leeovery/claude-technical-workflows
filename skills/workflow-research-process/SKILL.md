@@ -208,3 +208,5 @@ Load **[contextual-query.md](../workflow-shared/references/contextual-query.md)*
 ```
 
 Load **[route-session.md](references/route-session.md)** and follow its instructions as written.
+
+*Knowledge-base nudge — if a thread feels familiar, or you're about to re-tread ground that might have been covered in another work unit, run a quick query before proceeding. See **[knowledge-usage.md](../workflow-shared/references/knowledge-usage.md)**.*

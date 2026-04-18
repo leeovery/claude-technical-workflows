@@ -139,6 +139,8 @@ Load **[knowledge-usage.md](../workflow-shared/references/knowledge-usage.md)** 
 
 Load **[gather-context.md](references/gather-context.md)** and follow its instructions as written.
 
+*Knowledge-base nudge — if the change touches an area with prior discussions, investigations, or specs, query the knowledge base while gathering context. A "mechanical change" often has a history. See **[knowledge-usage.md](../workflow-shared/references/knowledge-usage.md)**.*
+
 → Proceed to **Step 3**.
 
 ---

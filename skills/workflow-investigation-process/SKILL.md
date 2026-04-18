@@ -242,6 +242,8 @@ Synthesize findings into a clear root cause:
 
 Document in the investigation file and commit.
 
+*Knowledge-base nudge — if the root cause pattern feels familiar, query the knowledge base before moving on. A matching prior investigation can confirm the diagnosis or surface a related bug. See **[knowledge-usage.md](../workflow-shared/references/knowledge-usage.md)**.*
+
 → Proceed to **Step 7**.
 
 ---

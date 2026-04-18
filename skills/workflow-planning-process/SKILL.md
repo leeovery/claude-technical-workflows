@@ -264,6 +264,8 @@ Load **[verify-source-material.md](references/verify-source-material.md)** and f
 
 Load **[plan-construction.md](references/plan-construction.md)** and follow its instructions as written.
 
+*Knowledge-base nudge — when designing phases or tasks that touch adjacent areas, query the knowledge base for prior architectural decisions. Cross-cutting context was surfaced at planning entry; use autonomous querying for anything else. See **[knowledge-usage.md](../workflow-shared/references/knowledge-usage.md)**.*
+
 → Proceed to **Step 7**.
 
 ---

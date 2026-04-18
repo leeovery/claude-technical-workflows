@@ -186,6 +186,8 @@ Load **[contextual-query.md](../workflow-shared/references/contextual-query.md)*
 
 Load **[discussion-session.md](references/discussion-session.md)** and follow its instructions as written.
 
+*Knowledge-base nudge — before committing to a direction on a new subtopic, or when a decision might echo one made elsewhere, run a quick query. See **[knowledge-usage.md](../workflow-shared/references/knowledge-usage.md)**.*
+
 → Proceed to **Step 6**.
 
 ---

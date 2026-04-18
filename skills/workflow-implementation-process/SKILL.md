@@ -234,6 +234,8 @@ Load **[knowledge-usage.md](../workflow-shared/references/knowledge-usage.md)** 
 
 Load **[task-loop.md](references/task-loop.md)** and follow its instructions as written.
 
+*Knowledge-base nudge — when a task enters unfamiliar code or touches an area covered by prior work, query the knowledge base to check assumptions before writing code. See **[knowledge-usage.md](../workflow-shared/references/knowledge-usage.md)**.*
+
 After the loop completes:
 
 #### If the task loop exited early (user chose `stop`)
