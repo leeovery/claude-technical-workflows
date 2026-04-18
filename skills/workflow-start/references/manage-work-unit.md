@@ -203,6 +203,10 @@ Commit: `workflow({selected.name}): mark as completed`
 node .claude/skills/workflow-manifest/scripts/manifest.cjs set {selected.name} work_type epic
 ```
 
+Re-index all completed artifacts so their chunks carry the new `work_type: epic`:
+
+Load **[reindex-work-unit.md](../workflow-shared/references/reindex-work-unit.md)** with work_unit = `{selected.name}`.
+
 > *Output the next fenced block as markdown (not a code block):*
 
 ```
