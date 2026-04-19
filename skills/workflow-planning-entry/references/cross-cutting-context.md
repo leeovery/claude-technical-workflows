@@ -92,7 +92,7 @@ node .claude/skills/workflow-knowledge/scripts/knowledge.cjs query "{query_text}
 
 #### If the command exits with a non-zero code
 
-→ Load **[knowledge-usage.md](../../workflow-shared/references/knowledge-usage.md)** for **D. Query failure handling** and follow its instructions.
+→ Load **[knowledge-usage.md](../../workflow-knowledge/references/knowledge-usage.md)** for **D. Query failure handling** and follow its instructions.
 
 #### If stdout is `[0 results]`
 

@@ -256,7 +256,7 @@ Load **[load-project-skills.md](references/load-project-skills.md)** and follow 
 > proactive querying is available while verifying decisions.
 ```
 
-Load **[knowledge-usage.md](../workflow-shared/references/knowledge-usage.md)** and follow its instructions as written.
+Load **[knowledge-usage.md](../workflow-knowledge/references/knowledge-usage.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
 
@@ -280,7 +280,7 @@ Load **[knowledge-usage.md](../workflow-shared/references/knowledge-usage.md)** 
 
 Load **[invoke-task-verifiers.md](references/invoke-task-verifiers.md)** and follow its instructions as written.
 
-*Knowledge-base nudge — when a decision in the implementation looks inconsistent with how similar decisions were made elsewhere, query the knowledge base to verify before flagging it. See **[knowledge-usage.md](../workflow-shared/references/knowledge-usage.md)**.*
+*Knowledge-base nudge — when a decision in the implementation looks inconsistent with how similar decisions were made elsewhere, query the knowledge base to verify before flagging it. See **[knowledge-usage.md](../workflow-knowledge/references/knowledge-usage.md)**.*
 
 → Proceed to **Step 6**.
 

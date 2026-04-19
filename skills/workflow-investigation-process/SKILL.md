@@ -143,7 +143,7 @@ Load **[initialize-investigation.md](references/initialize-investigation.md)** a
 > proactive querying is available throughout the investigation.
 ```
 
-Load **[knowledge-usage.md](../workflow-shared/references/knowledge-usage.md)** and follow its instructions as written.
+Load **[knowledge-usage.md](../workflow-knowledge/references/knowledge-usage.md)** and follow its instructions as written.
 
 → Proceed to **Step 3**.
 
@@ -189,7 +189,7 @@ When symptoms are sufficiently understood to begin code analysis:
 > related work that matches the symptoms just gathered.
 ```
 
-Load **[contextual-query.md](../workflow-shared/references/contextual-query.md)** and follow its instructions as written.
+Load **[contextual-query.md](../workflow-knowledge/references/contextual-query.md)** and follow its instructions as written.
 
 → Proceed to **Step 5**.
 
@@ -242,7 +242,7 @@ Synthesize findings into a clear root cause:
 
 Document in the investigation file and commit.
 
-*Knowledge-base nudge — if the root cause pattern feels familiar, query the knowledge base before moving on. A matching prior investigation can confirm the diagnosis or surface a related bug. See **[knowledge-usage.md](../workflow-shared/references/knowledge-usage.md)**.*
+*Knowledge-base nudge — if the root cause pattern feels familiar, query the knowledge base before moving on. A matching prior investigation can confirm the diagnosis or surface a related bug. See **[knowledge-usage.md](../workflow-knowledge/references/knowledge-usage.md)**.*
 
 → Proceed to **Step 7**.
 

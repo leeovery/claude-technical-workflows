@@ -1,12 +1,12 @@
 # Knowledge Usage
 
-*Shared reference for processing skills (research, discussion, investigation, scoping, planning, implementation, review).*
+*Reference for **[workflow-knowledge](../SKILL.md)** — loaded by processing skills (research, discussion, investigation, scoping, planning, implementation, review).*
 
 ---
 
 This reference sets expectations for how you use the knowledge base *during* a phase — when to query, how to construct queries, how to interpret results, and what to do if a query fails. Load it early in the phase so the guidance is active from the first substantive step.
 
-For API details (commands, flags, output format, confidence tiers, two-step retrieval), load **[SKILL.md](../../workflow-knowledge/SKILL.md)** — the knowledge skill's API documentation.
+For API details (commands, flags, output format, confidence tiers, two-step retrieval), load **[SKILL.md](../SKILL.md)** — the knowledge skill's API documentation.
 
 ---
 

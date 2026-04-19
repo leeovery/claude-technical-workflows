@@ -210,7 +210,7 @@ Load **[linter-setup.md](references/linter-setup.md)** and follow its instructio
 > proactive querying is available while tasks execute.
 ```
 
-Load **[knowledge-usage.md](../workflow-shared/references/knowledge-usage.md)** and follow its instructions as written.
+Load **[knowledge-usage.md](../workflow-knowledge/references/knowledge-usage.md)** and follow its instructions as written.
 
 → Proceed to **Step 7**.
 
@@ -234,7 +234,7 @@ Load **[knowledge-usage.md](../workflow-shared/references/knowledge-usage.md)** 
 
 Load **[task-loop.md](references/task-loop.md)** and follow its instructions as written.
 
-*Knowledge-base nudge — when a task enters unfamiliar code or touches an area covered by prior work, query the knowledge base to check assumptions before writing code. See **[knowledge-usage.md](../workflow-shared/references/knowledge-usage.md)**.*
+*Knowledge-base nudge — when a task enters unfamiliar code or touches an area covered by prior work, query the knowledge base to check assumptions before writing code. See **[knowledge-usage.md](../workflow-knowledge/references/knowledge-usage.md)**.*
 
 After the loop completes:
 
