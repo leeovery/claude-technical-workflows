@@ -26,7 +26,14 @@ node .claude/skills/workflow-knowledge/scripts/knowledge.cjs query "<descriptive
 
 #### If the command exits with a non-zero code
 
-→ Load **[knowledge-usage.md](knowledge-usage.md)** for **D. Query failure handling** and follow its instructions.
+Load **[knowledge-usage.md](knowledge-usage.md)** for **D. Query failure handling** and follow its instructions. When D returns:
+
+- **If the user chose `skip`** — no results to interpret. → Return to caller.
+- **If a retry succeeded** — results are now available. → Proceed to **C. Interpret the results**.
+
+#### Otherwise
+
+→ Proceed to **C. Interpret the results**.
 
 ## C. Interpret the results
 

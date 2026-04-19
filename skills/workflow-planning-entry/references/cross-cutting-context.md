@@ -36,15 +36,11 @@ For each name, check specification status:
 node .claude/skills/workflow-manifest/scripts/manifest.cjs get {cc_work_unit}.specification.{cc_work_unit} status
 ```
 
-Collect work units whose spec status is `in-progress`.
+Collect work units whose spec status is `in-progress`, then assess whether any are relevant to the feature being planned (by topic overlap — a caching strategy is relevant if the feature involves data retrieval or API calls).
 
-#### If no in-progress specs
+**If no in-progress specs exist, or none are relevant:**
 
 → Proceed to **C. Query the knowledge base**.
-
-#### If in-progress specs exist
-
-Assess relevance of each in-progress spec to the feature being planned (by topic overlap — a caching strategy is relevant if the feature involves data retrieval or API calls).
 
 **If relevant in-progress specs exist:**
 
@@ -78,10 +74,6 @@ Proceed without these, or complete them first?
 
 → Proceed to **C. Query the knowledge base**.
 
-**If no in-progress specs are relevant:**
-
-→ Proceed to **C. Query the knowledge base**.
-
 ## C. Query the knowledge base
 
 Run a targeted semantic query filtered to completed cross-cutting specs:
@@ -92,7 +84,10 @@ node .claude/skills/workflow-knowledge/scripts/knowledge.cjs query "{query_text}
 
 #### If the command exits with a non-zero code
 
-→ Load **[knowledge-usage.md](../../workflow-knowledge/references/knowledge-usage.md)** for **D. Query failure handling** and follow its instructions.
+Load **[knowledge-usage.md](../../workflow-knowledge/references/knowledge-usage.md)** for **D. Query failure handling** and follow its instructions. When D returns:
+
+- **If the user chose `skip`** — → Return to caller (plan proceeds without cross-cutting context).
+- **If a retry succeeded** — re-evaluate stdout using the `[0 results]` or results-returned branches below.
 
 #### If stdout is `[0 results]`
 

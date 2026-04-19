@@ -67,11 +67,15 @@ How should I proceed?
 
 #### If `retry`
 
-Re-run the query. If it fails again, surface again. Same choice.
+Re-run the query. If it fails again, surface again (same choice). If it succeeds, the caller will interpret the fresh results.
+
+→ Return to caller.
 
 #### If `skip`
 
-Note in the current phase's working file that the knowledge query was skipped and continue. Example: append a short note under a relevant section — *"Knowledge base query skipped ({YYYY-MM-DD}) — prior context may be missing."* — so the user can audit later.
+Note in the current phase's working file that the knowledge query was skipped. Example: append a short note under a relevant section — *"Knowledge base query skipped ({YYYY-MM-DD}) — prior context may be missing."* — so the user can audit later.
+
+→ Return to caller.
 
 ## E. Phase-specific notes
 
