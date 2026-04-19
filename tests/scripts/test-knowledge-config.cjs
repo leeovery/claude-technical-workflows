@@ -6,8 +6,15 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
-const { loadConfig, readConfigFile, resolveProvider, DEFAULTS } = require('../../src/knowledge/config');
+const { loadConfig, readConfigFile, resolveProvider, writeConfigFile, DEFAULTS } = require('../../src/knowledge/config');
 const { StubProvider } = require('../../src/knowledge/embeddings');
+const {
+  buildSystemConfigOpenAI,
+  buildSystemConfigStub,
+  buildProjectConfigEmpty,
+  detectSystemConfig,
+  detectProjectInit,
+} = require('../../src/knowledge/setup');
 
 let tmpDir;
 
@@ -229,5 +236,194 @@ describe('resolveProvider', () => {
   it('throws when config is not an object', () => {
     assert.throws(() => resolveProvider(null), /config is required/);
     assert.throws(() => resolveProvider(undefined), /config is required/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// writeConfigFile
+// ---------------------------------------------------------------------------
+
+describe('writeConfigFile', () => {
+  beforeEach(setup);
+  afterEach(teardown);
+
+  it('writes a well-formed JSON file with the knowledge wrapper', () => {
+    const filePath = path.join(tmpDir, 'nested', 'config.json');
+    writeConfigFile(filePath, { knowledge: { provider: 'openai', dimensions: 1536 } });
+    const parsed = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    assert.deepStrictEqual(parsed, { knowledge: { provider: 'openai', dimensions: 1536 } });
+  });
+
+  it('creates parent directories when they do not exist', () => {
+    const filePath = path.join(tmpDir, 'a', 'b', 'c', 'config.json');
+    writeConfigFile(filePath, { knowledge: {} });
+    assert.ok(fs.existsSync(filePath));
+  });
+
+  it('uses atomic write (no .tmp left behind on success)', () => {
+    const filePath = path.join(tmpDir, 'config.json');
+    writeConfigFile(filePath, { knowledge: {} });
+    assert.ok(fs.existsSync(filePath));
+    assert.ok(!fs.existsSync(filePath + '.tmp'));
+  });
+
+  it('rejects payloads missing the knowledge wrapper', () => {
+    const filePath = path.join(tmpDir, 'config.json');
+    assert.throws(() => writeConfigFile(filePath, { provider: 'openai' }), /knowledge/);
+  });
+
+  it('overwrites an existing file', () => {
+    const filePath = path.join(tmpDir, 'config.json');
+    writeConfigFile(filePath, { knowledge: { provider: 'stub' } });
+    writeConfigFile(filePath, { knowledge: { provider: 'openai' } });
+    const parsed = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    assert.strictEqual(parsed.knowledge.provider, 'openai');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Setup config builders
+// ---------------------------------------------------------------------------
+
+describe('buildSystemConfigOpenAI', () => {
+  it('produces a config with provider, model, dimensions, api_key_env, and defaults', () => {
+    const cfg = buildSystemConfigOpenAI({
+      model: 'text-embedding-3-small',
+      dimensions: 1536,
+      apiKeyEnv: 'OPENAI_API_KEY',
+    });
+    assert.strictEqual(cfg.knowledge.provider, 'openai');
+    assert.strictEqual(cfg.knowledge.model, 'text-embedding-3-small');
+    assert.strictEqual(cfg.knowledge.dimensions, 1536);
+    assert.strictEqual(cfg.knowledge.api_key_env, 'OPENAI_API_KEY');
+    assert.strictEqual(cfg.knowledge.similarity_threshold, DEFAULTS.similarity_threshold);
+    assert.strictEqual(cfg.knowledge.decay_months, DEFAULTS.decay_months);
+  });
+});
+
+describe('buildSystemConfigStub', () => {
+  it('produces a stub-mode config with no provider field', () => {
+    const cfg = buildSystemConfigStub();
+    assert.strictEqual(cfg.knowledge.provider, undefined);
+    assert.strictEqual(cfg.knowledge.model, undefined);
+    assert.strictEqual(cfg.knowledge.dimensions, undefined);
+    assert.strictEqual(cfg.knowledge.api_key_env, undefined);
+    assert.strictEqual(cfg.knowledge.similarity_threshold, DEFAULTS.similarity_threshold);
+    assert.strictEqual(cfg.knowledge.decay_months, DEFAULTS.decay_months);
+  });
+
+  it('round-trips through loadConfig as keyword-only (no provider)', () => {
+    // Writing the stub config to disk then loading it should produce a
+    // config where resolveProvider returns null — the keyword-only path.
+    const sysPath = path.join(tmpDir, 'sys.json');
+    writeConfigFile(sysPath, buildSystemConfigStub());
+    const cfg = loadConfig({
+      systemPath: sysPath,
+      projectPath: path.join(tmpDir, 'proj.json'),
+    });
+    assert.strictEqual(cfg.provider, undefined);
+    assert.strictEqual(resolveProvider(cfg), null);
+  });
+});
+
+describe('buildProjectConfigEmpty', () => {
+  it('produces { knowledge: {} } for inheritance from system', () => {
+    const cfg = buildProjectConfigEmpty();
+    assert.deepStrictEqual(cfg, { knowledge: {} });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Detection helpers
+// ---------------------------------------------------------------------------
+
+describe('detectSystemConfig', () => {
+  beforeEach(setup);
+  afterEach(teardown);
+
+  it('reports exists=false when the file is missing', () => {
+    const result = detectSystemConfig(path.join(tmpDir, 'missing.json'));
+    assert.strictEqual(result.exists, false);
+    assert.strictEqual(result.valid, false);
+    assert.strictEqual(result.knowledge, null);
+  });
+
+  it('reports exists=true, valid=true for a well-formed config', () => {
+    const filePath = path.join(tmpDir, 'sys.json');
+    writeJSON(filePath, { knowledge: { provider: 'openai' } });
+    const result = detectSystemConfig(filePath);
+    assert.strictEqual(result.exists, true);
+    assert.strictEqual(result.valid, true);
+    assert.deepStrictEqual(result.knowledge, { provider: 'openai' });
+  });
+
+  it('reports exists=true, valid=false for invalid JSON', () => {
+    const filePath = path.join(tmpDir, 'bad.json');
+    fs.writeFileSync(filePath, '{not json', 'utf8');
+    const result = detectSystemConfig(filePath);
+    assert.strictEqual(result.exists, true);
+    assert.strictEqual(result.valid, false);
+    assert.ok(result.reason);
+  });
+
+  it('reports exists=true, valid=false for missing knowledge wrapper', () => {
+    const filePath = path.join(tmpDir, 'nowrap.json');
+    writeJSON(filePath, { provider: 'openai' });
+    const result = detectSystemConfig(filePath);
+    assert.strictEqual(result.exists, true);
+    assert.strictEqual(result.valid, false);
+  });
+
+  it('reports exists=true, valid=false when knowledge is an array', () => {
+    const filePath = path.join(tmpDir, 'arr.json');
+    writeJSON(filePath, { knowledge: [1, 2, 3] });
+    const result = detectSystemConfig(filePath);
+    assert.strictEqual(result.valid, false);
+  });
+});
+
+describe('detectProjectInit', () => {
+  beforeEach(setup);
+  afterEach(teardown);
+
+  it('reports all-absent when the directory does not exist', () => {
+    const result = detectProjectInit(path.join(tmpDir, '.workflows', '.knowledge'));
+    assert.strictEqual(result.dirExists, false);
+    assert.strictEqual(result.configExists, false);
+    assert.strictEqual(result.storeExists, false);
+    assert.strictEqual(result.metadataExists, false);
+    assert.strictEqual(result.fullyInitialised, false);
+    assert.strictEqual(result.partiallyInitialised, false);
+  });
+
+  it('reports partiallyInitialised when the directory exists but files are missing', () => {
+    const dir = path.join(tmpDir, '.workflows', '.knowledge');
+    fs.mkdirSync(dir, { recursive: true });
+    const result = detectProjectInit(dir);
+    assert.strictEqual(result.dirExists, true);
+    assert.strictEqual(result.fullyInitialised, false);
+    assert.strictEqual(result.partiallyInitialised, true);
+  });
+
+  it('reports partiallyInitialised when only some files are present', () => {
+    const dir = path.join(tmpDir, '.workflows', '.knowledge');
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'config.json'), '{}', 'utf8');
+    const result = detectProjectInit(dir);
+    assert.strictEqual(result.configExists, true);
+    assert.strictEqual(result.storeExists, false);
+    assert.strictEqual(result.fullyInitialised, false);
+    assert.strictEqual(result.partiallyInitialised, true);
+  });
+
+  it('reports fullyInitialised when all three files exist', () => {
+    const dir = path.join(tmpDir, '.workflows', '.knowledge');
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'config.json'), '{}', 'utf8');
+    fs.writeFileSync(path.join(dir, 'store.msp'), '', 'utf8');
+    fs.writeFileSync(path.join(dir, 'metadata.json'), '{}', 'utf8');
+    const result = detectProjectInit(dir);
+    assert.strictEqual(result.fullyInitialised, true);
+    assert.strictEqual(result.partiallyInitialised, false);
   });
 });

@@ -176,6 +176,31 @@ function resolveProvider(config) {
   return null;
 }
 
+/**
+ * Atomically write a config file. The payload is the full object as it
+ * should appear on disk (including the top-level `knowledge` wrapper).
+ * Writes to `<path>.tmp` then renames — matches the manifest/store
+ * convention so a crash mid-write never leaves a truncated JSON file.
+ *
+ * @param {string} filePath  Absolute path to write
+ * @param {object} payload   Full JSON object (must include `knowledge` key)
+ */
+function writeConfigFile(filePath, payload) {
+  if (!filePath) throw new Error('writeConfigFile: filePath is required');
+  if (payload == null || typeof payload !== 'object' || !payload.knowledge) {
+    throw new Error('writeConfigFile: payload must be an object with a top-level "knowledge" key');
+  }
+
+  const dir = path.dirname(filePath);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+
+  const tmp = filePath + '.tmp';
+  fs.writeFileSync(tmp, JSON.stringify(payload, null, 2) + '\n', 'utf8');
+  fs.renameSync(tmp, filePath);
+}
+
 module.exports = {
   DEFAULTS,
   AVAILABLE_PROVIDERS,
@@ -184,4 +209,5 @@ module.exports = {
   readConfigFile,
   loadConfig,
   resolveProvider,
+  writeConfigFile,
 };
