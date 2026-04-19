@@ -1,16 +1,18 @@
 // Knowledge base interactive setup wizard.
 //
 // Human-only. Uses Node's built-in readline for prompts. Aborts cleanly
-// on non-TTY invocation (Claude, pipes, CI). Idempotent — running on a
-// fully configured project exits with "already set up". Running on a
-// partial configuration completes the missing pieces.
+// on non-TTY invocation (Claude, pipes, CI). Idempotent — per-step
+// prompts detect existing state and offer skip or reconfigure.
 //
 // Wizard steps:
 //   1. System config at ~/.config/workflows/config.json (provider, model,
-//      dimensions, api_key_env — or stub mode when the user skips).
-//   2. Project init at .workflows/.knowledge/ (directory, config.json,
+//      dimensions — no secrets). Stub mode when the user chooses "skip".
+//   2. API key: read from $OPENAI_API_KEY if set, else ~/.config/workflows/
+//      credentials.json (mode 0600), else prompt inline and store to that
+//      file. Env wins over file.
+//   3. Project init at .workflows/.knowledge/ (directory, config.json,
 //      empty store.msp, metadata.json).
-//   3. Initial bulk indexing (wired in Task 2).
+//   4. Initial bulk indexing via cmdIndexBulk (injected by caller).
 
 'use strict';
 
@@ -24,7 +26,6 @@ const { OpenAIProvider } = require('./providers/openai');
 
 const OPENAI_DEFAULT_MODEL = 'text-embedding-3-small';
 const OPENAI_DEFAULT_DIMENSIONS = 1536;
-const OPENAI_DEFAULT_ENV_VAR = 'OPENAI_API_KEY';
 
 // Used when creating the initial store in stub / keyword-only mode —
 // Orama's schema requires a dimension parameter even when docs omit
@@ -91,17 +92,92 @@ async function askYesNo(rl, prompt, defaultYes) {
   });
 }
 
+/**
+ * Read a line from stdin without echoing the characters — one '*' is
+ * written per typed/pasted character so the prompt still feels alive,
+ * but the secret itself never lands in the terminal scrollback. Used
+ * for API keys.
+ *
+ * Bypasses the readline interface temporarily: pauses `rl`, switches
+ * stdin to raw mode, consumes keystrokes directly, then restores
+ * everything on Enter. Ctrl-C exits 130; Ctrl-D submits the current
+ * buffer. Backspace edits as you'd expect.
+ */
+function askSecret(rl, prompt) {
+  return new Promise((resolve) => {
+    const stdin = process.stdin;
+    const stdout = process.stdout;
+
+    // Fallback when stdin is not a TTY — no masking available, read a
+    // plain line. cmdSetup aborts before this in non-TTY mode, so this
+    // branch is defensive only.
+    if (!stdin.isTTY || typeof stdin.setRawMode !== 'function') {
+      rl.question(prompt, (ans) => resolve((ans || '').trim()));
+      return;
+    }
+
+    stdout.write(prompt);
+    rl.pause();
+
+    const wasRaw = stdin.isRaw === true;
+    stdin.setRawMode(true);
+    stdin.resume();
+    stdin.setEncoding('utf8');
+
+    let buf = '';
+    const cleanup = () => {
+      stdin.removeListener('data', onData);
+      try { stdin.setRawMode(wasRaw); } catch (_) { /* best effort */ }
+      stdin.pause();
+      rl.resume();
+    };
+
+    const onData = (chunk) => {
+      for (const ch of chunk.toString('utf8')) {
+        if (ch === '\n' || ch === '\r') {
+          cleanup();
+          stdout.write('\n');
+          return resolve(buf.trim());
+        }
+        if (ch === '\u0003') { // Ctrl-C
+          cleanup();
+          stdout.write('\n');
+          process.exit(130);
+          return;
+        }
+        if (ch === '\u0004') { // Ctrl-D — submit what's in the buffer
+          cleanup();
+          stdout.write('\n');
+          return resolve(buf.trim());
+        }
+        if (ch === '\u007f' || ch === '\b') { // Backspace / DEL
+          if (buf.length > 0) {
+            buf = buf.slice(0, -1);
+            stdout.write('\b \b');
+          }
+          continue;
+        }
+        // Ignore anything below space except the explicit cases above.
+        if (ch < ' ') continue;
+        buf += ch;
+        stdout.write('*');
+      }
+    };
+
+    stdin.on('data', onData);
+  });
+}
+
 // ---------------------------------------------------------------------------
 // Config shape builders — pure, unit-testable
 // ---------------------------------------------------------------------------
 
-function buildSystemConfigOpenAI({ model, dimensions, apiKeyEnv }) {
+function buildSystemConfigOpenAI({ model, dimensions }) {
   return {
     knowledge: {
       provider: 'openai',
       model,
       dimensions,
-      api_key_env: apiKeyEnv,
       similarity_threshold: config.DEFAULTS.similarity_threshold,
       decay_months: config.DEFAULTS.decay_months,
     },
@@ -175,6 +251,57 @@ async function validateApiKey({ apiKey, model, dimensions }) {
   return true;
 }
 
+/**
+ * Map a validation error to a human-friendly description and hint.
+ * Returns { message, hint } — caller renders both.
+ */
+function describeValidationError(err) {
+  const msg = (err && err.message) || String(err);
+
+  if (/401/.test(msg) || /invalid or expired/i.test(msg)) {
+    return {
+      message: 'The API key was rejected (HTTP 401).',
+      hint:
+        'Check that the key is active and not revoked. Free-tier keys also need billing enabled ' +
+        'for /v1/embeddings. Create a fresh key at https://platform.openai.com/api-keys and try again.',
+    };
+  }
+  if (/403/.test(msg) || /permission/i.test(msg)) {
+    return {
+      message: 'The API key does not have permission for embeddings (HTTP 403).',
+      hint:
+        'If this is a restricted key, check its allowed endpoints in the OpenAI dashboard. ' +
+        'Create a key with Embeddings access enabled.',
+    };
+  }
+  if (/429/.test(msg) || /rate limit/i.test(msg)) {
+    return {
+      message: 'Rate limit hit during validation (HTTP 429).',
+      hint:
+        'Your account may be out of quota, or the default rate limit is saturated. ' +
+        'Wait a moment and retry, or check billing at https://platform.openai.com/account.',
+    };
+  }
+  if (/network error/i.test(msg) || /ENOTFOUND/.test(msg) || /ECONN/.test(msg) || /ETIMEDOUT/.test(msg)) {
+    return {
+      message: 'Could not reach OpenAI (network error).',
+      hint:
+        'Check your internet connection, VPN, or corporate proxy. No key was written — ' +
+        'you can re-run `knowledge setup` once the connection is stable.',
+    };
+  }
+  if (/HTTP 5\d\d/.test(msg)) {
+    return {
+      message: 'OpenAI returned a server error during validation.',
+      hint: 'Transient on their side. Retry in a minute.',
+    };
+  }
+  return {
+    message: 'API key validation failed.',
+    hint: `Error detail: ${msg}`,
+  };
+}
+
 // ---------------------------------------------------------------------------
 // System config step
 // ---------------------------------------------------------------------------
@@ -190,7 +317,6 @@ async function runSystemConfigStep(rl) {
     process.stdout.write(`    provider:     ${k.provider == null ? '(none — stub mode)' : k.provider}\n`);
     if (k.model) process.stdout.write(`    model:        ${k.model}\n`);
     if (k.dimensions) process.stdout.write(`    dimensions:   ${k.dimensions}\n`);
-    if (k.api_key_env) process.stdout.write(`    api_key_env:  ${k.api_key_env}\n`);
     process.stdout.write('\n');
 
     const reconfigure = await askYesNo(rl, 'Reconfigure system settings?', false);
@@ -242,36 +368,126 @@ async function runSystemConfigStep(rl) {
     process.stderr.write(`Invalid dimensions: "${dimsRaw}". Must be a positive integer.\n`);
     process.exit(1);
   }
-  const apiKeyEnv = await ask(rl, 'API key environment variable', OPENAI_DEFAULT_ENV_VAR);
 
-  // Validate env var (non-blocking — warn only).
-  const apiKey = process.env[apiKeyEnv];
-  if (apiKey && apiKey.trim() !== '') {
-    process.stdout.write(`\nValidating API key via a test embed...\n`);
-    try {
-      await validateApiKey({ apiKey: apiKey.trim(), model, dimensions });
-      process.stdout.write('API key works.\n');
-    } catch (err) {
-      process.stdout.write(`API key validation failed: ${err.message}\n`);
-      const cont = await askYesNo(rl, 'Continue anyway (you can fix the key later)?', true);
-      if (!cont) {
-        process.stdout.write('Aborting setup.\n');
-        process.exit(1);
-      }
-    }
-  } else {
-    process.stdout.write(
-      `\nEnvironment variable ${apiKeyEnv} is not set. ` +
-      `Set it in your shell profile (e.g., ~/.zshrc) before using the knowledge base:\n` +
-      `  export ${apiKeyEnv}="sk-..."\n` +
-      `Setup will continue — the key is only needed at query/index time.\n`
-    );
-  }
-
-  config.writeConfigFile(sysPath, buildSystemConfigOpenAI({ model, dimensions, apiKeyEnv }));
+  // Write the non-secret config first so it's on disk even if the key
+  // step aborts or the user interrupts mid-prompt.
+  config.writeConfigFile(sysPath, buildSystemConfigOpenAI({ model, dimensions }));
   process.stdout.write(`\nWrote system config to ${sysPath}\n`);
 
+  // Resolve the API key: env first, then credentials file, then prompt.
+  const envVar = config.PROVIDER_ENV_VARS.openai;
+  await ensureOpenAIKey(rl, { envVar, model, dimensions });
+
   return { provider: 'openai', previouslyStub };
+}
+
+/**
+ * Ensure an OpenAI API key is available for this run and validate it.
+ * Resolution order: process.env → credentials file → inline prompt.
+ * Newly entered keys are written to the credentials file at 0600.
+ */
+async function ensureOpenAIKey(rl, { envVar, model, dimensions }) {
+  const credPath = config.credentialsPath();
+
+  // 1. Env var wins. Nothing is written to disk — env is authoritative.
+  const fromEnv = process.env[envVar];
+  if (fromEnv && fromEnv.trim() !== '') {
+    process.stdout.write(`\nUsing API key from $${envVar} — validating via a test embed...\n`);
+    try {
+      await validateApiKey({ apiKey: fromEnv.trim(), model, dimensions });
+      process.stdout.write('API key works.\n');
+    } catch (err) {
+      const { message, hint } = describeValidationError(err);
+      process.stdout.write(`${message}\n  ${hint}\n`);
+      process.stdout.write(
+        `The failing key came from $${envVar}. Fix or unset it in your shell, ` +
+        'then re-run `knowledge setup`. Setup will continue — indexing will queue until ' +
+        'the key is corrected.\n'
+      );
+    }
+    return;
+  }
+
+  // 2. Existing credentials file. Validate; let the user replace it if broken.
+  const fromFile = config.resolveApiKey('openai', { credentialsPath: credPath });
+  if (fromFile) {
+    process.stdout.write(`\nFound an existing API key in ${credPath} — validating via a test embed...\n`);
+    try {
+      await validateApiKey({ apiKey: fromFile, model, dimensions });
+      process.stdout.write('API key works.\n');
+      return;
+    } catch (err) {
+      const { message, hint } = describeValidationError(err);
+      process.stdout.write(`${message}\n  ${hint}\n`);
+      const replace = await askYesNo(rl, 'Enter a new key to replace it?', true);
+      if (!replace) {
+        process.stdout.write(
+          'Keeping the existing stored key. Indexing will fail until it is rotated.\n' +
+          `Edit ${credPath} or re-run \`knowledge setup\` when you have a new key.\n`
+        );
+        return;
+      }
+      // Fall through to prompt path to collect and store a replacement.
+    }
+  }
+
+  // 3. No valid key anywhere — prompt inline and store.
+  await promptForKeyAndStore(rl, { envVar, model, dimensions, credPath });
+}
+
+/**
+ * Print the OpenAI key explainer, prompt for a key, validate it, and
+ * write it to the credentials file at 0600. Loops on validation failure
+ * so the user can retry with a different key.
+ */
+async function promptForKeyAndStore(rl, { envVar, model, dimensions, credPath }) {
+  process.stdout.write(
+    '\nOpenAI API Key\n' +
+    '--------------\n' +
+    'Semantic search in the knowledge base relies on OpenAI embeddings.\n' +
+    'We recommend creating a dedicated key for this tool so you can rotate\n' +
+    'or revoke it independently from other integrations.\n' +
+    '\n' +
+    '  1. Create a key: https://platform.openai.com/api-keys\n' +
+    `     (Suggested name: "agentic-workflows")\n` +
+    '  2. Paste the full key (starting with "sk-") at the prompt below.\n' +
+    '\n' +
+    `Your key will be stored at:\n` +
+    `  ${credPath}  (mode 0600, user-private)\n` +
+    `Setting $${envVar} in your shell takes precedence and overrides the\n` +
+    'stored key, so you can swap it without editing the file.\n\n'
+  );
+
+  while (true) {
+    const key = await askSecret(rl, 'API key (input hidden): ');
+
+    if (key === '') {
+      process.stdout.write('Empty input — enter the key, or Ctrl-C to abort setup.\n\n');
+      continue;
+    }
+
+    process.stdout.write('\nValidating via a test embed...\n');
+    try {
+      await validateApiKey({ apiKey: key, model, dimensions });
+    } catch (err) {
+      const { message, hint } = describeValidationError(err);
+      process.stdout.write(`${message}\n  ${hint}\n\n`);
+      const retry = await askYesNo(rl, 'Try a different key?', true);
+      if (!retry) {
+        process.stdout.write(
+          'No key stored. Setup continues but indexing will skip until a key is provided.\n' +
+          `Set $${envVar} in your shell or re-run \`knowledge setup\`.\n`
+        );
+        return;
+      }
+      continue;
+    }
+
+    // Validated — write the credentials file.
+    config.writeCredentials(credPath, 'openai', key);
+    process.stdout.write(`API key works. Stored at ${credPath} (mode 0600).\n`);
+    return;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -413,17 +629,19 @@ module.exports = {
   createPrompter,
   ask,
   askYesNo,
+  askSecret,
   buildSystemConfigOpenAI,
   buildSystemConfigStub,
   buildProjectConfigEmpty,
   detectSystemConfig,
   detectProjectInit,
   validateApiKey,
+  describeValidationError,
+  ensureOpenAIKey,
   runSystemConfigStep,
   runProjectInitStep,
   runInitialIndexStep,
   KEYWORD_ONLY_DIMENSIONS,
   OPENAI_DEFAULT_MODEL,
   OPENAI_DEFAULT_DIMENSIONS,
-  OPENAI_DEFAULT_ENV_VAR,
 };

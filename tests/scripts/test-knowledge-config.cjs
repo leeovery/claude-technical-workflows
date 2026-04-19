@@ -24,6 +24,7 @@ const {
   buildProjectConfigEmpty,
   detectSystemConfig,
   detectProjectInit,
+  describeValidationError,
 } = require('../../src/knowledge/setup');
 
 let tmpDir;
@@ -542,16 +543,15 @@ describe('writeConfigFile', () => {
 // ---------------------------------------------------------------------------
 
 describe('buildSystemConfigOpenAI', () => {
-  it('produces a config with provider, model, dimensions, api_key_env, and defaults', () => {
+  it('produces a config with provider, model, dimensions, and defaults (no api_key_env)', () => {
     const cfg = buildSystemConfigOpenAI({
       model: 'text-embedding-3-small',
       dimensions: 1536,
-      apiKeyEnv: 'OPENAI_API_KEY',
     });
     assert.strictEqual(cfg.knowledge.provider, 'openai');
     assert.strictEqual(cfg.knowledge.model, 'text-embedding-3-small');
     assert.strictEqual(cfg.knowledge.dimensions, 1536);
-    assert.strictEqual(cfg.knowledge.api_key_env, 'OPENAI_API_KEY');
+    assert.strictEqual(cfg.knowledge.api_key_env, undefined);
     assert.strictEqual(cfg.knowledge.similarity_threshold, DEFAULTS.similarity_threshold);
     assert.strictEqual(cfg.knowledge.decay_months, DEFAULTS.decay_months);
   });
@@ -635,6 +635,38 @@ describe('detectSystemConfig', () => {
     writeJSON(filePath, { knowledge: [1, 2, 3] });
     const result = detectSystemConfig(filePath);
     assert.strictEqual(result.valid, false);
+  });
+});
+
+describe('describeValidationError', () => {
+  it('maps 401 to an invalid-key hint', () => {
+    const { message, hint } = describeValidationError(new Error('OpenAI API key is invalid or expired. Check your OPENAI_API_KEY environment variable.'));
+    assert.match(message, /rejected/i);
+    assert.match(hint, /active|revoked|create a fresh key/i);
+  });
+
+  it('maps 429 to a rate-limit hint', () => {
+    const { message, hint } = describeValidationError(new Error('OpenAI rate limit exceeded (HTTP 429).'));
+    assert.match(message, /rate limit/i);
+    assert.match(hint, /quota|retry/i);
+  });
+
+  it('maps network errors to a connection hint', () => {
+    const { message, hint } = describeValidationError(new Error('OpenAI embedding request failed (network error): fetch failed'));
+    assert.match(message, /Could not reach OpenAI/i);
+    assert.match(hint, /connection|VPN|proxy/i);
+  });
+
+  it('maps 5xx to a transient-server hint', () => {
+    const { message, hint } = describeValidationError(new Error('OpenAI embedding request failed (HTTP 503): service unavailable'));
+    assert.match(message, /server error/i);
+    assert.match(hint, /retry/i);
+  });
+
+  it('falls back to a generic message for unknown errors', () => {
+    const { message, hint } = describeValidationError(new Error('something weird happened'));
+    assert.match(message, /validation failed/i);
+    assert.match(hint, /something weird happened/);
   });
 });
 
