@@ -20,6 +20,16 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run migration tests
+        run: |
+          for test in tests/scripts/test-migration-*.sh; do
+            echo "=== Running $test ==="
+            /bin/bash "$test"
+          done
+
       - name: Run discovery tests
         run: |
           for test in tests/scripts/test-discovery-*.cjs; do
@@ -27,9 +37,19 @@ jobs:
             node --test "$test"
           done
 
-      - name: Run migration tests
+      - name: Run workflow-manifest tests
+        run: /bin/bash tests/scripts/test-workflow-manifest.sh
+
+      - name: Run knowledge Node tests
         run: |
-          for test in tests/scripts/test-migration-*.sh; do
+          for test in tests/scripts/test-knowledge-*.cjs; do
+            echo "=== Running $test ==="
+            node --test "$test"
+          done
+
+      - name: Run knowledge shell tests
+        run: |
+          for test in tests/scripts/test-knowledge-*.sh; do
             echo "=== Running $test ==="
             /bin/bash "$test"
           done
