@@ -26,10 +26,10 @@ assert_eq() {
 
 # Isolate tests from the developer's real system config (~/.config/workflows/).
 # Without this, a real OpenAI config leaks into keyword-only tests and breaks
-# Test 11 onward.
+# Test 11 onward. The knowledge CLI resolves the system path via os.homedir(),
+# which honours $HOME — that's the only var that matters.
 FAKE_HOME=$(mktemp -d)
 export HOME="$FAKE_HOME"
-export XDG_CONFIG_HOME="$FAKE_HOME/.config"
 trap 'rm -rf "$FAKE_HOME"' EXIT
 
 # Create a temp dir as the project root for each test group.
