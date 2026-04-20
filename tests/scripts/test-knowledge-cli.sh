@@ -1403,6 +1403,35 @@ status_output=$(run_kb status 2>&1)
 assert_eq "bulk index skipped cancelled wu" "true" "$(echo "$status_output" | grep -q 'cancelled-wu' && echo false || echo true)"
 teardown_project
 
+# --- Test 81: Failed remove queues for retry, subsequent remove drains queue ---
+echo "Test 81: Pending removal queue"
+setup_project
+create_work_unit "drop-me" "feature" "Drop"
+write_stub_config
+create_discussion_file "drop-me" "drop-me"
+run_kb index .workflows/drop-me/discussion/drop-me.md >/dev/null 2>&1
+# Seed a pending removal by editing metadata directly (simulates a prior failure)
+meta="$TEST_ROOT/.workflows/.knowledge/metadata.json"
+node -e "
+const fs=require('fs');
+const m=JSON.parse(fs.readFileSync('$meta','utf8'));
+m.pending_removals=[{workUnit:'stale-wu',phase:null,topic:null,queued_at:new Date().toISOString(),error:'seeded',attempts:1}];
+fs.writeFileSync('$meta', JSON.stringify(m));
+"
+# Status should surface the pending removal.
+status_output=$(run_kb status 2>&1)
+assert_eq "status shows pending removal" "true" "$(echo "$status_output" | grep -q 'Pending removals: 1' && echo true || echo false)"
+# A normal remove call drains the queue (stale-wu has no chunks; just removes the entry).
+run_kb remove --work-unit drop-me >/dev/null 2>&1
+meta_after=$(cat "$meta")
+assert_eq "pending queue drained after remove" "true" "$(echo "$meta_after" | node -e "
+let c='';process.stdin.on('data',d=>c+=d).on('end',()=>{
+const m=JSON.parse(c);
+process.stdout.write(String(!m.pending_removals || m.pending_removals.length===0));
+});
+")"
+teardown_project
+
 # --- Summary ---
 echo ""
 echo "Results: $PASS passed, $FAIL failed"

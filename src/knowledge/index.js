@@ -746,6 +746,134 @@ async function processPendingQueue(cfg, provider, limit) {
 }
 
 // ---------------------------------------------------------------------------
+// Pending removal queue — mirrors the pending-index queue but for failed
+// `knowledge remove` calls (lock timeout, store I/O error). Without this,
+// a cancelled/superseded/promoted work unit's stale chunks persist in the
+// store until the user manually retries.
+// ---------------------------------------------------------------------------
+
+const REMOVAL_MAX_ATTEMPTS = 10;
+
+function removalKey(r) {
+  return `${r.workUnit}|${r.phase || ''}|${r.topic || ''}`;
+}
+
+async function addPendingRemoval(opts, errorMsg) {
+  const mp = metadataPath();
+  const kDir = knowledgeDir();
+  const lp = lockFilePath();
+  if (!fs.existsSync(kDir)) fs.mkdirSync(kDir, { recursive: true });
+
+  await store.withLock(lp, async () => {
+    let metadata;
+    if (fs.existsSync(mp)) {
+      metadata = store.readMetadata(mp);
+    } else {
+      metadata = {
+        provider: null,
+        model: null,
+        dimensions: null,
+        last_indexed: null,
+        pending: [],
+        pending_removals: [],
+      };
+    }
+    if (!Array.isArray(metadata.pending_removals)) metadata.pending_removals = [];
+
+    const key = removalKey(opts);
+    const existing = metadata.pending_removals.findIndex((r) => removalKey(r) === key);
+    const base = {
+      workUnit: opts.workUnit,
+      phase: opts.phase || null,
+      topic: opts.topic || null,
+      queued_at: new Date().toISOString(),
+      error: errorMsg,
+    };
+    if (existing >= 0) {
+      const prior = metadata.pending_removals[existing];
+      metadata.pending_removals[existing] = { ...base, attempts: (prior.attempts || 0) + 1 };
+    } else {
+      metadata.pending_removals.push({ ...base, attempts: 1 });
+    }
+    store.writeMetadata(mp, metadata);
+  });
+}
+
+async function removePendingRemoval(opts) {
+  const mp = metadataPath();
+  const lp = lockFilePath();
+  if (!fs.existsSync(mp)) return;
+
+  await store.withLock(lp, async () => {
+    if (!fs.existsSync(mp)) return;
+    const metadata = store.readMetadata(mp);
+    if (!Array.isArray(metadata.pending_removals)) return;
+    const key = removalKey(opts);
+    metadata.pending_removals = metadata.pending_removals.filter((r) => removalKey(r) !== key);
+    store.writeMetadata(mp, metadata);
+  });
+}
+
+// Lock semantics mirror processPendingQueue: never call while holding the
+// store lock — each queued retry acquires the lock itself.
+async function processPendingRemovals() {
+  const mp = metadataPath();
+  if (!fs.existsSync(mp)) return;
+
+  const metadata = store.readMetadata(mp);
+  if (!Array.isArray(metadata.pending_removals) || metadata.pending_removals.length === 0) return;
+
+  const toProcess = metadata.pending_removals.slice();
+
+  for (const item of toProcess) {
+    if ((item.attempts || 0) >= REMOVAL_MAX_ATTEMPTS) {
+      process.stderr.write(
+        `Pending removal for ${removalKey(item)} exceeded ${REMOVAL_MAX_ATTEMPTS} attempts — evicting.\n`
+      );
+      await removePendingRemoval(item);
+      continue;
+    }
+
+    try {
+      await performRemoval({ workUnit: item.workUnit, phase: item.phase, topic: item.topic });
+      process.stderr.write(`Drained pending removal for ${removalKey(item)}.\n`);
+      await removePendingRemoval(item);
+    } catch (err) {
+      // Still failing — bump attempts so we eventually evict.
+      try {
+        await addPendingRemoval(
+          { workUnit: item.workUnit, phase: item.phase, topic: item.topic },
+          err.message
+        );
+      } catch (_) {
+        // Metadata write failed — the next invocation will retry.
+      }
+    }
+  }
+}
+
+// Perform the actual remove-by-filter operation under the store lock.
+// Extracted from cmdRemove so the pending-removal queue can invoke it
+// without re-running the CLI layer (argument parsing, exit codes).
+async function performRemoval(opts) {
+  const sp = storePath();
+  const lp = lockFilePath();
+
+  if (!fs.existsSync(sp)) return 0;
+
+  let removed = 0;
+  await store.withLock(lp, async () => {
+    const db = await store.loadStore(sp);
+    const where = { work_unit: { eq: opts.workUnit } };
+    if (opts.phase) where.phase = { eq: opts.phase };
+    if (opts.topic) where.topic = { eq: opts.topic };
+    removed = await store.removeByFilter(db, where);
+    await store.saveStore(db, sp);
+  });
+  return removed;
+}
+
+// ---------------------------------------------------------------------------
 // Query command
 // ---------------------------------------------------------------------------
 
@@ -1103,6 +1231,15 @@ async function cmdStatus() {
       }
     }
 
+    // 4b. Pending removals.
+    if (Array.isArray(metadata.pending_removals) && metadata.pending_removals.length > 0) {
+      out.push('');
+      out.push(`Pending removals: ${metadata.pending_removals.length}`);
+      for (const r of metadata.pending_removals) {
+        out.push(`  ${removalKey(r)} — ${r.error} (attempt ${r.attempts || 1}/${REMOVAL_MAX_ATTEMPTS})`);
+      }
+    }
+
     // 6. Provider mismatch warning.
     let cfg;
     try { cfg = config.loadConfig(); } catch (_) { cfg = null; }
@@ -1318,30 +1455,29 @@ async function cmdRemove(_args, options) {
     process.exit(1);
   }
 
-  const sp = storePath();
-  const lp = lockFilePath();
+  // Drain any previously-failed removals first so stale chunks from earlier
+  // cancellations/supersessions don't linger just because the store was
+  // briefly locked.
+  await processPendingRemovals();
 
+  const sp = storePath();
   if (!fs.existsSync(sp)) {
     const desc = formatRemoveDesc(options);
     process.stdout.write(`Removed 0 chunks for ${desc}\n`);
     return;
   }
 
-  let removed = 0;
-
-  await store.withLock(lp, async () => {
-    const db = await store.loadStore(sp);
-
-    const where = { work_unit: { eq: options.workUnit } };
-    if (options.phase) where.phase = { eq: options.phase };
-    if (options.topic) where.topic = { eq: options.topic };
-
-    removed = await store.removeByFilter(db, where);
-    await store.saveStore(db, sp);
-  });
-
   const desc = formatRemoveDesc(options);
-  process.stdout.write(`Removed ${removed} chunks for ${desc}\n`);
+  try {
+    const removed = await performRemoval(options);
+    process.stdout.write(`Removed ${removed} chunks for ${desc}\n`);
+  } catch (err) {
+    await addPendingRemoval(options, err.message);
+    process.stderr.write(
+      `Removal of ${desc} failed (${err.message}). Queued for automatic retry on next remove/compact.\n`
+    );
+    process.exit(1);
+  }
 }
 
 function formatRemoveDesc(options) {
@@ -1378,6 +1514,9 @@ function getWorkUnitMeta(workUnit) {
 }
 
 async function cmdCompact(_args, options, cfg) {
+  // Drain any previously-failed removals first.
+  await processPendingRemovals();
+
   const sp = storePath();
   const lp = lockFilePath();
 

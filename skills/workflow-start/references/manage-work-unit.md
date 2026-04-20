@@ -259,7 +259,7 @@ If the remove command fails, display the error but do not block — the cancella
 ```
 ⚑ Knowledge removal warning
   {error details}
-  The work unit is cancelled. You can run knowledge remove manually later.
+  The work unit is cancelled. The removal has been queued and will retry automatically on the next `knowledge remove` or `knowledge compact` call.
 ```
 
 Commit: `workflow({selected.name}): mark as cancelled`
