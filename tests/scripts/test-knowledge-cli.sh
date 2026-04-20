@@ -1432,6 +1432,25 @@ process.stdout.write(String(!m.pending_removals || m.pending_removals.length===0
 ")"
 teardown_project
 
+# --- Test 82: Rebuild cleans up .bak files on success and on leftover ---
+echo "Test 82: Rebuild backup handling"
+setup_project
+create_work_unit "wu-a" "feature" "A"
+write_stub_config
+create_discussion_file "wu-a" "wu-a"
+cd "$TEST_ROOT" && node "$MANIFEST_JS" init-phase wu-a.discussion.wu-a >/dev/null 2>&1
+cd "$TEST_ROOT" && node "$MANIFEST_JS" set wu-a.discussion.wu-a status completed >/dev/null 2>&1
+run_kb index .workflows/wu-a/discussion/wu-a.md >/dev/null 2>&1
+# Simulate a leftover .bak from a prior aborted rebuild.
+touch "$TEST_ROOT/.workflows/.knowledge/store.msp.bak"
+touch "$TEST_ROOT/.workflows/.knowledge/metadata.json.bak"
+echo "rebuild" | run_kb rebuild >/dev/null 2>&1
+assert_eq "leftover .bak cleaned after successful rebuild" "true" \
+  "$([ ! -f "$TEST_ROOT/.workflows/.knowledge/store.msp.bak" ] && [ ! -f "$TEST_ROOT/.workflows/.knowledge/metadata.json.bak" ] && echo true || echo false)"
+assert_eq "store still present after rebuild" "true" \
+  "$([ -f "$TEST_ROOT/.workflows/.knowledge/store.msp" ] && echo true || echo false)"
+teardown_project
+
 # --- Summary ---
 echo ""
 echo "Results: $PASS passed, $FAIL failed"

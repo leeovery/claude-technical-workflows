@@ -1405,14 +1405,24 @@ async function cmdRebuild(_args, options, cfg, provider) {
     process.exit(1);
   }
 
-  // Acquire lock before deleting files so a concurrent index/remove/
+  const spBak = sp + '.bak';
+  const mpBak = mp + '.bak';
+
+  // Acquire lock before mutating files so a concurrent index/remove/
   // compact does not race past and resurrect partial state. Then write
   // an empty placeholder store+metadata inside the same lock so there
   // is no "uninitialised" window where another process could build a
   // fresh store racing with our bulk-index.
+  //
+  // Use .bak rename rather than delete so a bulk-index failure (network
+  // outage, provider down, Ctrl-C) can be rolled back — otherwise a
+  // transient failure leaves the user with no store and no metadata.
   await store.withLock(lp, async () => {
-    if (fs.existsSync(sp)) fs.unlinkSync(sp);
-    if (fs.existsSync(mp)) fs.unlinkSync(mp);
+    // Clean any leftover .bak from a prior aborted rebuild.
+    if (fs.existsSync(spBak)) fs.unlinkSync(spBak);
+    if (fs.existsSync(mpBak)) fs.unlinkSync(mpBak);
+    if (fs.existsSync(sp)) fs.renameSync(sp, spBak);
+    if (fs.existsSync(mp)) fs.renameSync(mp, mpBak);
 
     // Write a sentinel empty store + keyword-only metadata so cmdCheck
     // and concurrent invocations see a valid (empty) state. The bulk
@@ -1432,8 +1442,40 @@ async function cmdRebuild(_args, options, cfg, provider) {
   });
   process.stdout.write('Deleted existing index.\n');
 
-  // Run bulk index (acquires the lock per-file internally).
-  await cmdIndexBulk(options, cfg, provider);
+  try {
+    // Run bulk index (acquires the lock per-file internally).
+    await cmdIndexBulk(options, cfg, provider);
+  } catch (err) {
+    // Roll back to the pre-rebuild state. Best-effort: if the rollback
+    // itself fails (disk full, permission change), we surface both errors
+    // so the user has enough to recover manually.
+    try {
+      await store.withLock(lp, async () => {
+        if (fs.existsSync(spBak)) {
+          if (fs.existsSync(sp)) fs.unlinkSync(sp);
+          fs.renameSync(spBak, sp);
+        }
+        if (fs.existsSync(mpBak)) {
+          if (fs.existsSync(mp)) fs.unlinkSync(mp);
+          fs.renameSync(mpBak, mp);
+        }
+      });
+      process.stderr.write(
+        'Rebuild failed; restored previous index from backup.\n'
+      );
+    } catch (rollbackErr) {
+      process.stderr.write(
+        `Rebuild failed and rollback also failed. Previous index is at:\n` +
+        `  ${spBak}\n  ${mpBak}\n` +
+        `Rename them back manually to recover. Rollback error: ${rollbackErr.message}\n`
+      );
+    }
+    throw err;
+  }
+
+  // Bulk index succeeded — discard the backup.
+  if (fs.existsSync(spBak)) fs.unlinkSync(spBak);
+  if (fs.existsSync(mpBak)) fs.unlinkSync(mpBak);
 }
 
 /**
