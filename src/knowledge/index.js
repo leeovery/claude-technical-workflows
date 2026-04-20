@@ -41,6 +41,7 @@ const MANIFEST_JS = (() => {
 
 const DEFAULT_RETRY_BACKOFF = [1000, 2000, 4000];
 const PENDING_CATCHUP_LIMIT = 5;
+const PENDING_MAX_ATTEMPTS = 10;
 
 // Default dimensions when creating a store in keyword-only mode.
 // The store schema requires a dimension parameter, but keyword-only docs
@@ -709,11 +710,12 @@ async function addToPendingQueue(file, errorMsg) {
     if (!Array.isArray(metadata.pending)) metadata.pending = [];
 
     const existing = metadata.pending.findIndex((p) => p.file === file);
-    const entry = { file, failed_at: new Date().toISOString(), error: errorMsg };
+    const base = { file, failed_at: new Date().toISOString(), error: errorMsg };
     if (existing >= 0) {
-      metadata.pending[existing] = entry;
+      const prior = metadata.pending[existing];
+      metadata.pending[existing] = { ...base, attempts: (prior.attempts || 1) + 1 };
     } else {
-      metadata.pending.push(entry);
+      metadata.pending.push({ ...base, attempts: 1 });
     }
     store.writeMetadata(mp, metadata);
   });
@@ -748,6 +750,15 @@ async function processPendingQueue(cfg, provider, limit) {
   const toProcess = metadata.pending.slice(0, limit);
 
   for (const item of toProcess) {
+    if ((item.attempts || 0) >= PENDING_MAX_ATTEMPTS) {
+      // Permanent failure — evict so the queue doesn't grow forever.
+      process.stderr.write(
+        `Pending item ${item.file} exceeded ${PENDING_MAX_ATTEMPTS} attempts — evicting. Last error: ${item.error}\n`
+      );
+      await removePendingItem(item.file);
+      continue;
+    }
+
     const absFile = path.resolve(item.file);
     if (!fs.existsSync(absFile)) {
       // File no longer exists — remove from queue.
@@ -771,8 +782,9 @@ async function processPendingQueue(cfg, provider, limit) {
         { maxAttempts: 3, backoff: DEFAULT_RETRY_BACKOFF }
       );
       await removePendingItem(item.file);
-    } catch (_) {
-      // Still failing — leave in queue.
+    } catch (err) {
+      // Still failing — bump attempts so eviction eventually fires.
+      await addToPendingQueue(item.file, err.message);
     }
   }
 }
@@ -1259,7 +1271,8 @@ async function cmdStatus() {
       out.push('');
       out.push(`Pending items: ${metadata.pending.length}`);
       for (const p of metadata.pending) {
-        out.push(`  ${p.file} — ${p.error} (${p.failed_at})`);
+        const a = p.attempts || 1;
+        out.push(`  ${p.file} — ${p.error} (attempt ${a}/${PENDING_MAX_ATTEMPTS}, ${p.failed_at})`);
       }
     }
 
