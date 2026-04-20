@@ -562,18 +562,16 @@ function runManifest(args) {
 }
 
 /**
- * Distinguish expected "not found" errors from broken-manifest / corrupt-JSON
+ * Distinguish expected "not found" misses from broken-manifest / corrupt-JSON
  * / bad-path errors. Knowledge-base helpers swallow the former (lookups are
  * best-effort); the latter must be surfaced or bulk operations become silent
  * no-ops (deferred-issue #4).
+ *
+ * manifest.cjs uses exit code 2 for expected misses, 1 for real errors —
+ * stable and unambiguous. execFileSync surfaces the code on err.status.
  */
-function isManifestKeyNotFound(err) {
-  const s = err && err.stderr ? String(err.stderr) : '';
-  return /not found|does not exist/i.test(s);
-}
-
 function reportUnexpectedManifestError(context, err) {
-  if (isManifestKeyNotFound(err)) return;
+  if (err && err.status === 2) return;
   const msg = err && err.stderr ? String(err.stderr).trim() : err.message;
   process.stderr.write(`Warning: manifest CLI failed in ${context}: ${msg}\n`);
 }

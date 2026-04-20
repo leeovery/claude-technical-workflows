@@ -33,9 +33,10 @@ Items below marked **RESOLVED** were addressed during the pre-merge cleanup pass
 
 ### 4. `getWorkUnitMeta` / `discoverArtifacts` / `runManifest` swallow all errors — Medium — **RESOLVED**
 
-**Location:** Multiple helpers in `src/knowledge/index.js`.
+**Location:** Multiple helpers in `src/knowledge/index.js`; convention in `skills/workflow-manifest/scripts/manifest.cjs`.
 **Description:** Catch-alls return null/empty on manifest CLI failure. Hides broken MANIFEST_JS path, corrupt manifest JSON, etc. Compact and status consistency checks silently skip work units; bulk index reports "0 files" on broken manifest.
 **Mitigation:** Distinguish exit-code-1 (key not found) from other errors; surface unexpected errors to stderr at minimum.
+**Resolution:** `manifest.cjs` `die()` now takes an optional exit code — 2 for "expected miss" (not-found paths, missing work units, missing values), 1 for real errors (corrupt JSON, validation failures, bad args). Knowledge-base helpers classify via `err.status === 2` on execFileSync — stable and not reliant on stderr-text regex. 10 die() sites updated; 4 tests updated to assert the new codes; one new test covers the exit-code contract directly.
 
 ### 5. `MANIFEST_JS` fallback resolves silently to non-existent path — Medium — **RESOLVED**
 
