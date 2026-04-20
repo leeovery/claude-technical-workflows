@@ -646,19 +646,16 @@ function cmdList(args) {
     return;
   }
 
-  // Union project manifest registry with filesystem scan. Using the registry
-  // alone misses legacy work units (dirs created before the registry existed);
-  // using the filesystem alone misses nothing but discards the registry's
-  // purpose. Either source independently leaves gaps — union both.
+  // Use project manifest for work unit names, fall back to filesystem scan
   const proj = readProjectManifest();
-  const namesSet = new Set();
-  if (proj.work_units) {
-    for (const n of Object.keys(proj.work_units)) namesSet.add(n);
+  let names;
+  if (proj.work_units && Object.keys(proj.work_units).length > 0) {
+    names = Object.keys(proj.work_units);
+  } else {
+    names = fs.readdirSync(WORKFLOWS_DIR, { withFileTypes: true })
+      .filter(e => e.isDirectory() && !e.name.startsWith('.'))
+      .map(e => e.name);
   }
-  for (const e of fs.readdirSync(WORKFLOWS_DIR, { withFileTypes: true })) {
-    if (e.isDirectory() && !e.name.startsWith('.')) namesSet.add(e.name);
-  }
-  const names = Array.from(namesSet);
 
   const results = [];
 

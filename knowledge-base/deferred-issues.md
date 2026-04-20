@@ -109,11 +109,11 @@ Items below marked **RESOLVED** were addressed during the pre-merge cleanup pass
 **Description:** After `process.stdin.resume()`, stdin stays flowing. Irrelevant for CLI but leaks if called as library.
 **Mitigation:** `process.stdin.pause()` after reading the line.
 
-### 17. Bulk discovery misses work units not in project manifest — Medium — **RESOLVED**
+### 17. Bulk discovery misses work units not in project manifest — **WITHDRAWN**
 
 **Location:** `src/knowledge/index.js` `discoverArtifacts` → `manifest list`.
-**Description:** `manifest list` reads from the project manifest, not the filesystem. Work units created before the project manifest system (legacy) are invisible to bulk index and status unindexed-artifact detection. Real-data testing on Tick showed 9 work units on disk but only 1 registered in project manifest → only 2 files indexed.
-**Mitigation:** Fall back to filesystem scan (like `manifest list` already does when project manifest has no `work_units` key) or add a "register all" migration.
+**Original claim:** `manifest list` reads from the project manifest, not the filesystem. Legacy work units invisible to bulk index.
+**Why withdrawn:** The Tick-project data that motivated this entry (9 dirs on disk, 1 registered) was the result of a one-off project-manifest corruption bug — not a systemic code issue. Migration 031 already populates the registry from the filesystem; once it has run, the registry is authoritative and reading it directly is correct. Work units are created via `manifest init`, which registers them atomically. A work unit that exists on disk but not in the registry is either mid-migration or the registry has been corrupted externally — neither is something `manifest list` should paper over.
 
 ---
 
