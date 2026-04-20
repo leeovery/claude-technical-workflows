@@ -55,11 +55,11 @@ Items below marked **RESOLVED** were addressed during the pre-merge cleanup pass
 **Description:** `--work-unit` is a re-rank proximity boost, not a hard filter. Inconsistent with `--phase`/`--work-type`/`--topic` which are filters.
 **Status:** Code behaviour deliberately preserved (cross-work-unit context is the point of the KB). `SKILL.md` lines 61 + 134 document the boost semantics explicitly. Any CLI-level split (`--boost-work-unit` vs `--filter-work-unit`) is a scope-expanding redesign, kept deferred.
 
-### 8. Migration `report_update` called unconditionally — Low — **RESOLVED**
+### 8. Migration `report_update` called unconditionally — Low — **WITHDRAWN**
 
 **Location:** `skills/workflow-migrate/scripts/migrations/036-completed-at.sh` (and pattern from 035).
 **Description:** `report_update` is called even when 0 work units were modified. Inflates orchestrator counter; may trigger false "review changes" prompt.
-**Mitigation:** Cross-migration cleanup — have node script exit 2 when nothing modified; bash dispatches `report_update` vs `report_skip` on exit code.
+**Why withdrawn:** Migrations are point-in-time snapshots. Once a migration id is recorded in `.workflows/.state/migrations`, it never re-runs — editing the bash wrapper helps only users who haven't yet run it. The counter is a one-time UX nit during a single migration pass; the fix-vs-snapshot-principle tradeoff isn't worth it.
 
 ### 9. `withRetry` swallows programming errors like network errors — Low — **RESOLVED**
 

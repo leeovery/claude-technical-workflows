@@ -170,7 +170,12 @@ async function withRetry(fn, opts) {
     } catch (err) {
       // Don't retry programming errors — retrying a TypeError just burns
       // 7s of backoff before the stack trace reaches the user.
-      if (err instanceof TypeError || err instanceof ReferenceError || err instanceof SyntaxError) {
+      if (
+        err instanceof TypeError ||
+        err instanceof ReferenceError ||
+        err instanceof SyntaxError ||
+        err instanceof RangeError
+      ) {
         throw err;
       }
       lastErr = err;
