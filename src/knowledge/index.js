@@ -479,6 +479,23 @@ async function indexSingleFile(sourceFile, identity, cfg, provider) {
       db = await store.loadStore(sp);
     }
 
+    // Re-validate provider state inside the lock. A concurrent rebuild or
+    // another indexer could have rewritten the store with different
+    // dimensions between our embedBatch call (outside the lock) and now
+    // (deferred-issue #1 TOCTOU). If dimensions diverged, our embeddings
+    // are the wrong width — abort, and withRetry at the CLI layer will
+    // re-enter with fresh state.
+    if (effectiveMode === 'full' && fs.existsSync(mp)) {
+      const reloadedMeta = store.readMetadata(mp);
+      const expectedDims = effectiveProvider.dimensions();
+      if (reloadedMeta.provider && reloadedMeta.dimensions !== expectedDims) {
+        throw new Error(
+          'Store schema changed during index (concurrent rebuild). ' +
+          `Embeddings produced for dims=${expectedDims}, store now has dims=${reloadedMeta.dimensions}. Retrying.`
+        );
+      }
+    }
+
     await store.removeByIdentity(db, {
       work_unit: identity.workUnit,
       phase: identity.phase,
