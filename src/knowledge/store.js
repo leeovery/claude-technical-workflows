@@ -425,7 +425,9 @@ async function withLock(lockPath, fn) {
 // provides the read/write primitives.
 // ---------------------------------------------------------------------------
 
-const METADATA_FIELDS = ['provider', 'model', 'dimensions', 'last_indexed', 'pending'];
+const METADATA_FIELDS = [
+  'provider', 'model', 'dimensions', 'last_indexed', 'pending', 'pending_removals',
+];
 
 function writeMetadata(metadataPath, data) {
   if (!metadataPath) throw new Error('writeMetadata: metadataPath is required');
@@ -435,12 +437,18 @@ function writeMetadata(metadataPath, data) {
   // Every call writes the full schema — no partial updates. Missing
   // fields are normalised to explicit null so keyword-only mode round-
   // trips as { provider: null, model: null, dimensions: null }.
+  //
+  // IMPORTANT: every persisted field must be listed here. A missing field
+  // silently strips across writes and every downstream feature using that
+  // field stops working (see deferred-issue #18 pending_removals, which
+  // shipped broken because this whitelist was not updated).
   const full = {
     provider: data.provider === undefined ? null : data.provider,
     model: data.model === undefined ? null : data.model,
     dimensions: data.dimensions === undefined ? null : data.dimensions,
     last_indexed: data.last_indexed === undefined ? null : data.last_indexed,
     pending: Array.isArray(data.pending) ? data.pending : [],
+    pending_removals: Array.isArray(data.pending_removals) ? data.pending_removals : [],
   };
   const tmp = metadataPath + '.tmp';
   fs.writeFileSync(tmp, JSON.stringify(full, null, 2) + '\n', 'utf8');
