@@ -57,15 +57,33 @@ let stubUpgradeWarned = false;
 // ---------------------------------------------------------------------------
 
 /**
- * Parse argv-style args into { positional: string[], flags: object }.
- * Handles --flag value and --flag=value forms.
+ * Parse argv-style args into { positional, flags, boosts }.
+ * Handles --flag value and --flag=value forms for regular flags.
+ *
+ * `--boost:<field> <value>` is special — repeatable, collected into an
+ * ordered list. The field name is embedded in the flag name (not the value)
+ * so skill templates never have to parse or escape a key/value separator.
  */
 function parseArgs(argv) {
   const positional = [];
   const flags = {};
+  const boosts = [];
   let i = 0;
   while (i < argv.length) {
     const arg = argv[i];
+    if (arg.startsWith('--boost:')) {
+      const field = arg.slice('--boost:'.length);
+      if (i + 1 < argv.length && !argv[i + 1].startsWith('--')) {
+        boosts.push({ field, value: argv[i + 1] });
+        i += 2;
+      } else {
+        // Missing value — leave null so the command handler can error out
+        // with a clear message at validation time.
+        boosts.push({ field, value: null });
+        i++;
+      }
+      continue;
+    }
     if (arg.startsWith('--')) {
       const eqIdx = arg.indexOf('=');
       if (eqIdx !== -1) {
@@ -85,26 +103,24 @@ function parseArgs(argv) {
     }
     i++;
   }
-  return { positional, flags };
+  return { positional, flags, boosts };
 }
 
 /**
  * Build an options object from parsed flags for command handlers.
+ * `--work-unit` is a hard filter on every command that accepts it
+ * (consistent with --phase, --topic, --work-type). Re-ranking happens
+ * exclusively through --boost:<field>.
  */
-function buildOptions(flags) {
+function buildOptions(flags, boosts) {
   return {
     workType: flags['work-type'] || null,
     phase: flags['phase'] || null,
-    // `remove` uses this as a filter ("what to delete"). The filter semantics
-    // match --phase / --topic / --work-type, so the name is consistent.
     workUnit: flags['work-unit'] || null,
-    // `query` uses this as a re-rank boost ("bias results toward this work
-    // unit, don't filter out cross-work-unit hits"). Separate flag name so
-    // boost and filter never share a spelling.
-    preferWorkUnit: flags['prefer-work-unit'] || null,
     topic: flags['topic'] || null,
     limit: flags['limit'] ? parseInt(flags['limit'], 10) : null,
     dryRun: flags['dry-run'] === true || flags['dry-run'] === 'true',
+    boosts: boosts || [],
   };
 }
 
@@ -124,12 +140,18 @@ Commands:
   rebuild   Rebuild the knowledge base from scratch
   setup     Interactive setup wizard
 
-Options:
+Filter options (hard filters — non-matching chunks excluded):
   --work-type <type>        Filter by work type
-  --work-unit <unit>        Filter by work unit (for remove)
-  --prefer-work-unit <unit> Re-rank boost toward this work unit (for query)
+  --work-unit <unit>        Filter by work unit
   --phase <phase>           Filter by phase
   --topic <topic>           Filter by topic
+
+Re-ranking (query only, additive; repeat for multiple boosts):
+  --boost:<field> <value>   Boost chunks matching <field>:<value> by +0.1
+                            Valid fields: work-unit, work-type, phase,
+                            topic, confidence
+
+Other options:
   --limit <n>               Limit number of results
   --dry-run                 Preview without making changes`;
 
@@ -991,15 +1013,31 @@ function formatDate(ts) {
   return `${yyyy}-${mm}-${dd}`;
 }
 
+// CLI boost field → store schema field. Kebab-case on the CLI surface,
+// snake_case in the schema. Keeps the CLI consistent with --work-unit /
+// --work-type while matching the indexed field names internally.
+const BOOST_FIELD_MAP = {
+  'work-unit': 'work_unit',
+  'work-type': 'work_type',
+  'phase': 'phase',
+  'topic': 'topic',
+  'confidence': 'confidence',
+};
+const BOOST_AMOUNT = 0.1;
+
 /**
  * Application-level re-ranking per design doc lines 566-574.
- * Adjusts Orama scores based on work-unit proximity, confidence tier,
- * and recency. Returns the array sorted by adjusted score (descending).
+ * Adjusts Orama scores based on user-specified boosts (+0.1 per match,
+ * additive across boosts), plus always-on confidence tier and recency
+ * signals. Returns the array sorted by adjusted score (descending).
+ *
+ * @param {Array} results  raw result rows
+ * @param {Array<{field: string, value: string}>} boosts  normalised boost
+ *        list — field is already mapped to the store schema name
  */
-function rerank(results, workUnitHint) {
+function rerank(results, boosts) {
   if (results.length === 0) return results;
 
-  // Find the most recent timestamp for normalisation.
   const maxTs = Math.max(...results.map((r) => r.timestamp || 0));
   const minTs = Math.min(...results.map((r) => r.timestamp || 0));
   const tsRange = maxTs - minTs || 1;
@@ -1008,22 +1046,49 @@ function rerank(results, workUnitHint) {
     .map((r) => {
       let adjustedScore = r.score || 0;
 
-      // Work-unit proximity boost (0.1 when matching).
-      if (workUnitHint && r.work_unit === workUnitHint) {
-        adjustedScore += 0.1;
+      // User-specified boosts — +0.1 per match, additive.
+      if (Array.isArray(boosts)) {
+        for (const b of boosts) {
+          if (r[b.field] === b.value) {
+            adjustedScore += BOOST_AMOUNT;
+          }
+        }
       }
 
-      // Confidence tier boost (0 to 0.04).
+      // Always-on confidence tier boost (0 to 0.04).
       const confRank = CONFIDENCE_RANK[r.confidence] || 0;
       adjustedScore += confRank * 0.01;
 
-      // Recency boost (0 to 0.05).
+      // Always-on recency boost (0 to 0.05).
       const recency = ((r.timestamp || 0) - minTs) / tsRange;
       adjustedScore += recency * 0.05;
 
       return Object.assign({}, r, { score: adjustedScore });
     })
     .sort((a, b) => b.score - a.score);
+}
+
+/**
+ * Validate user-supplied boost directives and map CLI field names to the
+ * store schema field names. Exits with a clear error on unknown field or
+ * missing value so skill-template typos don't silently no-op.
+ */
+function normaliseBoosts(boosts) {
+  const out = [];
+  for (const b of boosts) {
+    if (!b.field || !BOOST_FIELD_MAP[b.field]) {
+      process.stderr.write(
+        `Unknown --boost field: "${b.field}". Valid fields: ${Object.keys(BOOST_FIELD_MAP).join(', ')}\n`
+      );
+      process.exit(1);
+    }
+    if (b.value == null || b.value === '') {
+      process.stderr.write(`--boost:${b.field} requires a value\n`);
+      process.exit(1);
+    }
+    out.push({ field: BOOST_FIELD_MAP[b.field], value: b.value });
+  }
+  return out;
 }
 
 /**
@@ -1071,7 +1136,7 @@ function resolveQueryMode(metadata, cfg, provider) {
 
 async function cmdQuery(args, options, cfg, provider) {
   if (args.length === 0) {
-    process.stderr.write('Usage: knowledge query <search_term> [<term2>...] [--phase ...] [--work-type ...] [--prefer-work-unit ...] [--topic ...] [--limit N]\n');
+    process.stderr.write('Usage: knowledge query <search_term> [<term2>...] [--work-unit ...] [--work-type ...] [--phase ...] [--topic ...] [--boost:<field> <value>]... [--limit N]\n');
     process.exit(1);
   }
 
@@ -1107,9 +1172,8 @@ async function cmdQuery(args, options, cfg, provider) {
     stubNote = '[keyword-only mode but embedding provider configured — run knowledge rebuild for full hybrid search]';
   }
 
-  // Build where clause from hard filters. --prefer-work-unit is NOT here —
-  // it's a re-rank proximity hint applied after search, so other work units
-  // can still appear in results but rank lower.
+  // Build where clause from hard filters. Every --flag that names a
+  // dimension is a filter; re-ranking happens exclusively via --boost:<field>.
   const where = {};
   if (options.phase) {
     const phases = options.phase.split(',').map((s) => s.trim());
@@ -1118,6 +1182,10 @@ async function cmdQuery(args, options, cfg, provider) {
   if (options.workType) {
     const types = options.workType.split(',').map((s) => s.trim());
     where.work_type = types.length === 1 ? { eq: types[0] } : { in: types };
+  }
+  if (options.workUnit) {
+    const units = options.workUnit.split(',').map((s) => s.trim());
+    where.work_unit = units.length === 1 ? { eq: units[0] } : { in: units };
   }
   if (options.topic) {
     const topics = options.topic.split(',').map((s) => s.trim());
@@ -1161,8 +1229,9 @@ async function cmdQuery(args, options, cfg, provider) {
     }
   }
 
-  // Re-rank merged results using the boost hint (--prefer-work-unit).
-  let results = rerank(Array.from(allResults.values()), options.preferWorkUnit);
+  // Re-rank merged results using --boost:<field> directives.
+  const normalisedBoosts = normaliseBoosts(options.boosts);
+  let results = rerank(Array.from(allResults.values()), normalisedBoosts);
 
   if (results.length > limit) {
     results = results.slice(0, limit);
@@ -1774,10 +1843,10 @@ async function cmdCompact(_args, options, cfg) {
 
 async function main() {
   const rawArgs = process.argv.slice(2);
-  const { positional, flags } = parseArgs(rawArgs);
+  const { positional, flags, boosts } = parseArgs(rawArgs);
   const command = positional[0];
   const commandArgs = positional.slice(1);
-  const options = buildOptions(flags);
+  const options = buildOptions(flags, boosts);
 
   if (!command) {
     process.stderr.write(USAGE + '\n');

@@ -608,11 +608,71 @@ Line 48. Line 49. Line 50. Line 51. Line 52. Line 53.
 MD
 run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
 run_kb index .workflows/data-model/discussion/data-model.md >/dev/null 2>&1
-# Query with --prefer-work-unit auth-flow: auth-flow results should appear first.
-output=$(run_kb query "token refresh" --prefer-work-unit auth-flow --limit 2 2>&1)
+# Query with --boost:work-unit auth-flow: auth-flow results should appear first.
+output=$(run_kb query "token refresh" --boost:work-unit auth-flow --limit 2 2>&1)
 # Extract the first provenance line's work_unit.
 first_wu=$(echo "$output" | grep -m1 '^\[discussion' | sed 's/.*| \([^/]*\)\/.*/\1/')
 assert_eq "boosted work-unit appears first" "auth-flow" "$first_wu"
+# Cross-work-unit context still surfaces — data-model should be present too.
+assert_eq "boost keeps cross-work-unit results" "true" \
+  "$(echo "$output" | grep -q 'data-model' && echo true || echo false)"
+teardown_project
+
+# --- Test 31b: --work-unit is a hard filter on query (excludes other units) ---
+echo "Test 31b: --work-unit filters on query"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+create_work_unit "data-model" "feature" "Data"
+write_stub_config
+mkdir -p "$TEST_ROOT/.workflows/auth-flow/discussion"
+mkdir -p "$TEST_ROOT/.workflows/data-model/discussion"
+cat > "$TEST_ROOT/.workflows/auth-flow/discussion/auth-flow.md" <<'MD'
+# Auth Discussion
+## Token refresh
+Token refresh design. Rate limiting. Padding line 1. Padding line 2. Padding line 3.
+Padding line 4. Padding line 5. Padding line 6. Padding line 7. Padding line 8.
+Padding line 9. Padding line 10. Padding line 11. Padding line 12. Padding line 13.
+MD
+cat > "$TEST_ROOT/.workflows/data-model/discussion/data-model.md" <<'MD'
+# Data Model Discussion
+## Token storage
+Token refresh storage. Rate limiting. Padding line 1. Padding line 2. Padding line 3.
+Padding line 4. Padding line 5. Padding line 6. Padding line 7. Padding line 8.
+Padding line 9. Padding line 10. Padding line 11. Padding line 12. Padding line 13.
+MD
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+run_kb index .workflows/data-model/discussion/data-model.md >/dev/null 2>&1
+output=$(run_kb query "token" --work-unit auth-flow --limit 10 2>&1)
+assert_eq "filter includes auth-flow" "true" "$(echo "$output" | grep -q 'auth-flow/' && echo true || echo false)"
+assert_eq "filter excludes data-model" "false" "$(echo "$output" | grep -q 'data-model/' && echo true || echo false)"
+teardown_project
+
+# --- Test 31c: unknown boost field errors out ---
+echo "Test 31c: Unknown --boost field errors"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+create_discussion_file "auth-flow" "auth-flow"
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+exit_code=0
+output=$(run_kb query "anything" --boost:bogus foo 2>&1) || exit_code=$?
+assert_eq "unknown boost field exits non-zero" "true" "$([ "$exit_code" -ne 0 ] && echo true || echo false)"
+assert_eq "unknown boost field error mentions valid fields" "true" \
+  "$(echo "$output" | grep -q 'work-unit, work-type, phase, topic, confidence' && echo true || echo false)"
+teardown_project
+
+# --- Test 31d: missing --boost value errors out ---
+echo "Test 31d: Missing --boost value errors"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+create_discussion_file "auth-flow" "auth-flow"
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+exit_code=0
+output=$(run_kb query "anything" --boost:work-unit 2>&1) || exit_code=$?
+assert_eq "missing boost value exits non-zero" "true" "$([ "$exit_code" -ne 0 ] && echo true || echo false)"
+assert_eq "missing boost value error explicit" "true" \
+  "$(echo "$output" | grep -q 'requires a value' && echo true || echo false)"
 teardown_project
 
 # --- Test 32: Query errors when metadata missing but store exists ---

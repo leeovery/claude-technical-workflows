@@ -52,9 +52,9 @@ Items below marked **RESOLVED** were addressed during the pre-merge cleanup pass
 
 ### 7. `--work-unit` filter vs boost semantics — Low (UX) — **RESOLVED**
 
-**Location:** `src/knowledge/index.js` `cmdQuery`.
+**Location:** `src/knowledge/index.js` `cmdQuery`, `cmdRemove`.
 **Description:** `--work-unit` was a re-rank proximity boost on `query` but a hard filter on `remove` — same flag name, opposite semantics. Inconsistent with `--phase`/`--work-type`/`--topic` (all filters). Docs alone weren't enough; the flag spelling itself invited misuse.
-**Resolution:** Split into two distinctly-named flags. `query` now takes `--prefer-work-unit` for the boost behaviour; `remove` keeps `--work-unit` as a filter. No single spelling overloaded across commands, and the `--prefer-` prefix makes the re-ranking semantics obvious at the call site. Skill files and tests updated.
+**Resolution:** Fully orthogonal CLI — every `--<dimension>` flag is a hard filter on every command that accepts it (`--work-unit`, `--work-type`, `--phase`, `--topic`). Re-ranking happens exclusively through `--boost:<field> <value>`, which is repeatable, composable across dimensions, and validated against a fixed set of fields (`work-unit`, `work-type`, `phase`, `topic`, `confidence`). `+0.1` per match, additive. Unknown field or missing value → fail-fast error. Skill templates can now compose multi-dimensional bias (e.g. `--boost:work-unit auth-flow --boost:phase research`) that wasn't expressible before.
 
 ### 8. Migration `report_update` called unconditionally — Low — **WITHDRAWN**
 
