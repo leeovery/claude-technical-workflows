@@ -53,6 +53,24 @@ const KEYWORD_ONLY_DIMENSIONS = 1536;
 let stubUpgradeWarned = false;
 
 // ---------------------------------------------------------------------------
+// UserError — marker class for user-visible validation failures. Thrown at
+// input-validation sites (bad path, provider mismatch, missing chunking
+// config, etc.) where the error message is actionable advice for the user.
+//
+// Two behavioural contracts:
+//   1. withRetry does not retry UserError (same treatment as programming
+//      errors — retry would waste backoff budget on a permanent failure).
+//   2. The top-level main().catch prints the message alone, no stack trace.
+// ---------------------------------------------------------------------------
+
+class UserError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'UserError';
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Flag parsing
 // ---------------------------------------------------------------------------
 
@@ -199,7 +217,10 @@ async function withRetry(fn, opts) {
     } catch (err) {
       // Don't retry programming errors — retrying a TypeError just burns
       // 7s of backoff before the stack trace reaches the user.
+      // Also don't retry UserError: these are user-input validation
+      // failures and will fail identically on every retry.
       if (
+        err instanceof UserError ||
         err instanceof TypeError ||
         err instanceof ReferenceError ||
         err instanceof SyntaxError ||
@@ -232,7 +253,7 @@ function deriveIdentity(filePath) {
   // Match .workflows/{work_unit}/{phase}/{rest}
   const match = /\.workflows\/([^/]+)\/(research|discussion|investigation|specification)\/(.+)$/.exec(norm);
   if (!match) {
-    throw new Error(
+    throw new UserError(
       `Cannot derive identity from path: ${filePath}\n` +
         'Expected path matching: .workflows/{work_unit}/{phase}/...'
     );
@@ -246,12 +267,12 @@ function deriveIdentity(filePath) {
   // anything-without-slash, which would otherwise accept `..` or `.`
   // and escape the .workflows directory when path.resolve() is applied.
   if (workUnit === '.' || workUnit === '..' || workUnit.startsWith('.')) {
-    throw new Error(`Invalid work unit name: "${workUnit}"`);
+    throw new UserError(`Invalid work unit name: "${workUnit}"`);
   }
 
   // Validate indexed phase.
   if (!INDEXED_PHASES.includes(phase)) {
-    throw new Error(`File is in phase "${phase}" which is not indexed.`);
+    throw new UserError(`File is in phase "${phase}" which is not indexed.`);
   }
 
   let topic;
@@ -259,7 +280,7 @@ function deriveIdentity(filePath) {
     // .workflows/{wu}/specification/{topic}/specification.md
     const specMatch = /^([^/]+)\/specification\.md$/.exec(rest);
     if (!specMatch) {
-      throw new Error(
+      throw new UserError(
         `Unexpected specification path structure: ${rest}\n` +
           'Expected: .workflows/{work_unit}/specification/{topic}/specification.md'
       );
@@ -269,7 +290,7 @@ function deriveIdentity(filePath) {
     // .workflows/{wu}/{phase}/{topic}.md — flat file, no subdirectories.
     const flatMatch = /^([^/]+)\.md$/.exec(rest);
     if (!flatMatch) {
-      throw new Error(
+      throw new UserError(
         `Unexpected ${phase} path structure: ${rest}\n` +
           `Expected: .workflows/{work_unit}/${phase}/{topic}.md`
       );
@@ -279,7 +300,7 @@ function deriveIdentity(filePath) {
     // .workflows/{wu}/research/{filename}.md — flat file.
     const resMatch = /^([^/]+)\.md$/.exec(rest);
     if (!resMatch) {
-      throw new Error(
+      throw new UserError(
         `Unexpected research path structure: ${rest}\n` +
           'Expected: .workflows/{work_unit}/research/{filename}.md'
       );
@@ -288,7 +309,7 @@ function deriveIdentity(filePath) {
   }
 
   if (topic === '.' || topic === '..' || topic.startsWith('.')) {
-    throw new Error(`Invalid topic name: "${topic}"`);
+    throw new UserError(`Invalid topic name: "${topic}"`);
   }
 
   return { workUnit, phase, topic };
@@ -300,11 +321,11 @@ function deriveIdentity(filePath) {
 function readWorkType(workUnit) {
   const manifestFile = path.resolve(process.cwd(), '.workflows', workUnit, 'manifest.json');
   if (!fs.existsSync(manifestFile)) {
-    throw new Error(`Work unit manifest not found: ${manifestFile}`);
+    throw new UserError(`Work unit manifest not found: ${manifestFile}`);
   }
   const manifest = JSON.parse(fs.readFileSync(manifestFile, 'utf8'));
   if (!manifest.work_type) {
-    throw new Error(`Work unit manifest missing work_type field: ${manifestFile}`);
+    throw new UserError(`Work unit manifest missing work_type field: ${manifestFile}`);
   }
   return manifest.work_type;
 }
@@ -350,7 +371,7 @@ function resolveProviderState(metadata, cfg, provider) {
     }
 
     // Case 2: mismatch.
-    throw new Error(
+    throw new UserError(
       'Provider/model changed since last index. Run `knowledge rebuild` to reindex.\n' +
         `  Store: provider=${metaProvider}, model=${metaModel}, dimensions=${metaDimensions}\n` +
         `  Config: provider=${cfg.provider}, model=${curModel}, dimensions=${curDimensions}`
@@ -358,7 +379,7 @@ function resolveProviderState(metadata, cfg, provider) {
   }
 
   // Case 3: metadata has provider but current config does not.
-  throw new Error(
+  throw new UserError(
     'Provider/model changed since last index. Run `knowledge rebuild` to reindex.\n' +
       `  Store was indexed with: provider=${metaProvider}, model=${metaModel}\n` +
       '  Current config has no provider configured.'
@@ -410,7 +431,7 @@ async function indexSingleFile(sourceFile, identity, cfg, provider) {
   // Load chunking config.
   const chunkConfigPath = path.join(__dirname, '..', 'chunking', identity.phase + '.json');
   if (!fs.existsSync(chunkConfigPath)) {
-    throw new Error(`Chunking config not found: ${chunkConfigPath}`);
+    throw new UserError(`Chunking config not found: ${chunkConfigPath}`);
   }
   const chunkConfig = JSON.parse(fs.readFileSync(chunkConfigPath, 'utf8'));
 
@@ -420,7 +441,7 @@ async function indexSingleFile(sourceFile, identity, cfg, provider) {
   const chunks = chunker.chunk(content, chunkConfig);
 
   if (chunks.length === 0) {
-    throw new Error(
+    throw new UserError(
       `No chunks produced from ${sourceFile}. Refusing to index an empty file — ` +
         'this would silently wipe any existing indexed chunks for this topic. ' +
         'Use `knowledge remove` explicitly if that is what you want.'
@@ -1112,7 +1133,7 @@ function resolveQueryMode(metadata, cfg, provider) {
   // Store has vectors — check provider compatibility.
   if (!provider) {
     // Config has no provider but store has vectors — mismatch.
-    throw new Error(
+    throw new UserError(
       'Provider/model changed since last index. Run `knowledge rebuild` to reindex.\n' +
         `  Store was indexed with: provider=${metaProvider}, model=${metaModel}\n` +
         '  Current config has no provider configured.'
@@ -1127,7 +1148,7 @@ function resolveQueryMode(metadata, cfg, provider) {
   }
 
   // Mismatch.
-  throw new Error(
+  throw new UserError(
     'Provider/model changed since last index. Run `knowledge rebuild` to reindex.\n' +
       `  Store: provider=${metaProvider}, model=${metaModel}, dimensions=${metaDimensions}\n` +
       `  Config: provider=${cfg.provider}, model=${curModel}, dimensions=${curDimensions}`
@@ -1911,6 +1932,7 @@ module.exports = {
   deriveIdentity,
   resolveProviderState,
   withRetry,
+  UserError,
   main,
   cmdIndexBulk,
   StubProvider,
@@ -1929,7 +1951,13 @@ module.exports = {
 
 if (require.main === module) {
   main().catch((err) => {
-    process.stderr.write(String(err && err.stack ? err.stack : err) + '\n');
+    // UserError: validation failure — show the message alone, no stack.
+    // Anything else: full stack (likely a bug worth investigating).
+    if (err instanceof UserError) {
+      process.stderr.write('Error: ' + err.message + '\n');
+    } else {
+      process.stderr.write(String(err && err.stack ? err.stack : err) + '\n');
+    }
     process.exit(1);
   });
 }

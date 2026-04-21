@@ -331,6 +331,27 @@ cd "$TEST_ROOT"
 output=$(node "$BUNDLE" index .workflows/auth-flow/planning/auth-flow/planning.md 2>&1 || true)
 node "$BUNDLE" index .workflows/auth-flow/planning/auth-flow/planning.md 2>/dev/null || exit_code=$?
 assert_eq "rejects non-indexed phase" "1" "$exit_code"
+# User-visible validation error should be a clean message — no stack
+# trace noise. UserError class handles this centrally. Note: for
+# /planning/ paths the regex rejects first, producing the 'Cannot
+# derive identity' message rather than 'not indexed'.
+assert_eq "no node stack frames in error" "false" \
+  "$(echo "$output" | grep -qE '^    at [A-Za-z_]+ \(' && echo true || echo false)"
+assert_eq "error message surfaces" "true" \
+  "$(echo "$output" | grep -qE 'Cannot derive identity|not indexed' && echo true || echo false)"
+teardown_project
+
+# --- Test 14b: Non-.workflows path also produces clean user-facing error ---
+echo "Test 14b: Non-.workflows path — clean error, no stack"
+setup_project
+write_stub_config
+echo "hello" > "$TEST_ROOT/outside.md"
+cd "$TEST_ROOT"
+output=$(node "$BUNDLE" index outside.md 2>&1 || true)
+assert_eq "no stack frames" "false" \
+  "$(echo "$output" | grep -qE '^    at [A-Za-z_]+ \(' && echo true || echo false)"
+assert_eq "error message surfaces" "true" \
+  "$(echo "$output" | grep -q 'Cannot derive identity' && echo true || echo false)"
 teardown_project
 
 # --- Test 15: metadata.json created with empty pending array on first index ---
