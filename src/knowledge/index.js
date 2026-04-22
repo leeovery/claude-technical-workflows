@@ -1707,6 +1707,29 @@ async function cmdRemove(_args, options) {
     process.exit(1);
   }
 
+  // Validate the work unit exists in the project registry. Without this,
+  // `remove --work-unit <typo>` silently succeeds with "Removed 0 chunks"
+  // — a fat-finger is indistinguishable from a real no-op. The registry
+  // is authoritative (migration 031 backfills it from the filesystem),
+  // so a miss here means the caller has the wrong name.
+  //
+  // This check lives in cmdRemove only, not performRemoval — the pending-
+  // removal queue's drain path may legitimately target a WU that has since
+  // been removed from the registry (e.g. after absorption), and the stored
+  // chunks can still be cleaned up even when the WU entry is gone.
+  try {
+    runManifest(['project', 'get', options.workUnit]);
+  } catch (err) {
+    if (err && err.status === 2) {
+      throw new UserError(
+        `Work unit "${options.workUnit}" not found in project manifest. ` +
+          'Check the name, or run `knowledge status` to see what is indexed.'
+      );
+    }
+    // Any other manifest error is unexpected — rethrow so the stack shows.
+    throw err;
+  }
+
   const sp = storePath();
   const desc = formatRemoveDesc(options);
 

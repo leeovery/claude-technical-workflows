@@ -937,15 +937,30 @@ assert_eq "invoicing chunks unaffected" "true" "$(echo "$query_output" | grep -q
 assert_eq "billing chunks gone" "false" "$(echo "$query_output" | grep -q 'billing' && echo true || echo false)"
 teardown_project
 
-# --- Test 41: Remove reports 0 when no chunks match ---
-echo "Test 41: Remove 0 when no match"
+# --- Test 41: Remove rejects unknown work unit (registry lookup) ---
+# Previously this silently succeeded with 'Removed 0 chunks' — a fat-fingered
+# --work-unit looked identical to a legitimate no-op removal. Now the work
+# unit must exist in the project registry (migration 031 keeps the registry
+# in sync with the filesystem).
+echo "Test 41: Remove rejects unknown work unit"
 setup_project
 create_work_unit "auth-flow" "feature" "Auth"
 write_stub_config
 create_discussion_file "auth-flow" "auth-flow"
 run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
-output=$(run_kb remove --work-unit nonexistent 2>&1)
-assert_eq "reports 0 removed" "true" "$(echo "$output" | grep -q 'Removed 0 chunks' && echo true || echo false)"
+exit_code=0
+output=$(run_kb remove --work-unit nonexistent 2>&1) || exit_code=$?
+assert_eq "exits non-zero on unknown wu" "true" "$([ "$exit_code" -ne 0 ] && echo true || echo false)"
+assert_eq "error names the wu" "true" \
+  "$(echo "$output" | grep -q '"nonexistent"' && echo true || echo false)"
+assert_eq "error mentions project manifest" "true" \
+  "$(echo "$output" | grep -q 'project manifest' && echo true || echo false)"
+# Legitimate removal of an existing wu with 0 matching chunks still succeeds.
+exit_code=0
+output=$(run_kb remove --work-unit auth-flow --phase research --topic nothing 2>&1) || exit_code=$?
+assert_eq "wu-exists + no-match still succeeds" "0" "$exit_code"
+assert_eq "reports 0 removed on real miss" "true" \
+  "$(echo "$output" | grep -q 'Removed 0 chunks' && echo true || echo false)"
 teardown_project
 
 # --- Test 42: Remove errors when --topic given without --phase ---
@@ -970,10 +985,12 @@ assert_eq "exits 1" "1" "$exit_code"
 assert_eq "shows usage" "true" "$(echo "$output" | grep -q 'Usage:' && echo true || echo false)"
 teardown_project
 
-# --- Test 44: Remove from empty store reports 0 ---
+# --- Test 44: Remove from empty/nonexistent store reports 0 (WU exists) ---
 echo "Test 44: Remove from empty/nonexistent store"
 setup_project
+create_work_unit "auth-flow" "feature" "Auth"
 write_stub_config
+# WU exists in registry but no store yet — should cleanly no-op.
 output=$(run_kb remove --work-unit auth-flow 2>&1)
 assert_eq "reports 0 removed" "true" "$(echo "$output" | grep -q 'Removed 0 chunks' && echo true || echo false)"
 teardown_project
