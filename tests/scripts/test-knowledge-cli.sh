@@ -476,6 +476,41 @@ assert_eq "query refuses mismatch" "true" "$([ "$exit_code" -ne 0 ] && echo true
 assert_eq "mentions rebuild" "true" "$(echo "$output" | grep -q 'rebuild' && echo true || echo false)"
 teardown_project
 
+# --- Test 22b: Bulk index also refuses provider/dimension mismatch ---
+# Previously: bulk index with a mismatching config short-circuited at
+# isIndexed() for every file, reported 'N already indexed' as if fine,
+# and the stored embeddings silently diverged from the configured dims.
+# Now: preflight resolveProviderState check fires before the per-file
+# loop, same 'Run knowledge rebuild' message as query.
+echo "Test 22b: Bulk index refuses provider mismatch"
+setup_project
+create_work_unit "auth-flow" "feature" "Auth"
+write_stub_config
+create_discussion_file "auth-flow" "auth-flow"
+run_kb index .workflows/auth-flow/discussion/auth-flow.md >/dev/null 2>&1
+# Simulate a provider/dimension change by editing metadata.
+node -e "
+  const fs = require('fs');
+  const mp = '$TEST_ROOT/.workflows/.knowledge/metadata.json';
+  const m = JSON.parse(fs.readFileSync(mp, 'utf8'));
+  m.provider = 'openai';
+  m.model = 'text-embedding-3-small';
+  m.dimensions = 1536;
+  fs.writeFileSync(mp, JSON.stringify(m, null, 2) + '\n');
+"
+cd "$TEST_ROOT" && node "$MANIFEST_JS" set auth-flow.discussion.auth-flow status completed >/dev/null 2>&1
+exit_code=0
+# Bulk-index (no file arg) should now error on the mismatch instead of
+# silently reporting 'N already indexed'.
+output=$(run_kb index 2>&1) || exit_code=$?
+assert_eq "bulk index refuses mismatch" "true" \
+  "$([ "$exit_code" -ne 0 ] && echo true || echo false)"
+assert_eq "error mentions rebuild" "true" \
+  "$(echo "$output" | grep -q 'rebuild' && echo true || echo false)"
+assert_eq "bulk did NOT report 'already indexed'" "false" \
+  "$(echo "$output" | grep -q 'already indexed' && echo true || echo false)"
+teardown_project
+
 # --- Test 23: Stub-to-full upgrade note ---
 echo "Test 23: Stub-to-full upgrade note"
 setup_project

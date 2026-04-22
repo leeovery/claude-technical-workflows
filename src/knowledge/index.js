@@ -697,10 +697,24 @@ async function cmdIndexBulk(options, cfg, provider) {
 
   const kDir = knowledgeDir();
   const sp = storePath();
+  const mp = metadataPath();
 
   // Ensure knowledge directory exists.
   if (!fs.existsSync(kDir)) {
     fs.mkdirSync(kDir, { recursive: true });
+  }
+
+  // Preflight: if a prior store exists, validate the current config's
+  // provider/model/dimensions match what the store was built with. Without
+  // this check, a config change (e.g. 128-dim stub → 1536-dim OpenAI) that
+  // triggers bulk index would short-circuit at the isIndexed() step for
+  // every file and report "Indexed 0 files. N already indexed." as though
+  // everything were fine — while the stored embeddings are still at the old
+  // dimensions. resolveProviderState throws a UserError with the "Run
+  // `knowledge rebuild`" hint, same as `query` surfaces on mismatch.
+  if (fs.existsSync(mp)) {
+    const meta = store.readMetadata(mp);
+    resolveProviderState(meta, cfg, provider);
   }
 
   // Load existing store to check what's already indexed.
