@@ -192,7 +192,8 @@ Expected: .workflows/{work_unit}/research/{filename}.md`);o=c[1]}if(o==="."||o==
 `)+`
 `)}async function kl(t,e,n,r){let s=Q(),i=q(),o=se();process.stderr.write(`Warning: This will delete the existing index and rebuild from scratch.
 This is non-deterministic \u2014 the rebuilt index will differ from the original.
-Type 'rebuild' to confirm: `),await Tl()!=="rebuild"&&(process.stderr.write(`Aborted.
+Type 'rebuild' to confirm: `),await Tl()!=="rebuild"&&(process.stderr.write(`
+Aborted.
 `),process.exit(1)),yr().length===0&&(process.stderr.write(`No completed artifacts found to index. Aborting rebuild \u2014 the existing index has NOT been modified.
 (If you believe this is wrong, check that .workflows/ exists and that work units have items with status "completed".)
 `),process.exit(1));let l=s+".bak",d=i+".bak";await k.withLock(o,async()=>{E.existsSync(l)&&E.unlinkSync(l),E.existsSync(d)&&E.unlinkSync(d),E.existsSync(s)&&E.renameSync(s,l),E.existsSync(i)&&E.renameSync(i,d);let u=r?r.dimensions():n&&n.dimensions||hr,f=await k.createStore(u);await k.saveStore(f,s),k.writeMetadata(i,{provider:r?n.provider:null,model:r?r.model():null,dimensions:r?r.dimensions():null,last_indexed:new Date().toISOString(),pending:[]})}),process.stdout.write(`Deleted existing index.

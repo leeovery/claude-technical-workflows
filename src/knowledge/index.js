@@ -1580,7 +1580,9 @@ async function cmdRebuild(_args, options, cfg, provider) {
   const input = await readStdinLine();
 
   if (input !== 'rebuild') {
-    process.stderr.write('Aborted.\n');
+    // Leading newline so the message doesn't run into whatever the user
+    // typed at the prompt line.
+    process.stderr.write('\nAborted.\n');
     process.exit(1);
   }
 
