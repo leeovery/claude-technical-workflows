@@ -172,6 +172,23 @@ async function removeByFilter(db, where) {
   return removed;
 }
 
+/**
+ * Count chunks matching `where` without deleting. Used by `remove --dry-run`.
+ * Same query shape as removeByFilter so the count is guaranteed to match
+ * what a non-dry-run invocation would actually remove.
+ */
+async function countByFilter(db, where) {
+  if (!where || Object.keys(where).length === 0) {
+    throw new Error('countByFilter: where clause is required');
+  }
+  const res = await orama.search(db, {
+    term: '',
+    where,
+    limit: 100000,
+  });
+  return res.hits.length;
+}
+
 function normaliseHit(hit) {
   const d = hit.document || {};
   return {
@@ -348,7 +365,7 @@ async function loadStore(storePath) {
 
 const LOCK_STALE_MS = 30000;
 const LOCK_RETRY_MS = 50;
-const LOCK_TIMEOUT_MS = 10000;
+const LOCK_TIMEOUT_MS = 30000;
 
 function tryAcquire(lockPath) {
   try {
@@ -415,7 +432,9 @@ async function withLock(lockPath, fn) {
 // provides the read/write primitives.
 // ---------------------------------------------------------------------------
 
-const METADATA_FIELDS = ['provider', 'model', 'dimensions', 'last_indexed', 'pending'];
+const METADATA_FIELDS = [
+  'provider', 'model', 'dimensions', 'last_indexed', 'pending', 'pending_removals',
+];
 
 function writeMetadata(metadataPath, data) {
   if (!metadataPath) throw new Error('writeMetadata: metadataPath is required');
@@ -425,12 +444,18 @@ function writeMetadata(metadataPath, data) {
   // Every call writes the full schema — no partial updates. Missing
   // fields are normalised to explicit null so keyword-only mode round-
   // trips as { provider: null, model: null, dimensions: null }.
+  //
+  // IMPORTANT: every persisted field must be listed here. A missing field
+  // silently strips across writes and every downstream feature using that
+  // field stops working (see deferred-issue #18 pending_removals, which
+  // shipped broken because this whitelist was not updated).
   const full = {
     provider: data.provider === undefined ? null : data.provider,
     model: data.model === undefined ? null : data.model,
     dimensions: data.dimensions === undefined ? null : data.dimensions,
     last_indexed: data.last_indexed === undefined ? null : data.last_indexed,
     pending: Array.isArray(data.pending) ? data.pending : [],
+    pending_removals: Array.isArray(data.pending_removals) ? data.pending_removals : [],
   };
   const tmp = metadataPath + '.tmp';
   fs.writeFileSync(tmp, JSON.stringify(full, null, 2) + '\n', 'utf8');
@@ -465,6 +490,7 @@ module.exports = {
   insertDocument,
   removeByIdentity,
   removeByFilter,
+  countByFilter,
   searchFulltext,
   searchVector,
   searchHybrid,
